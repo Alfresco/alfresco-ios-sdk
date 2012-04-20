@@ -11,7 +11,7 @@
 #import "ISO8601DateFormatter.h"
 
 @interface CMISObject ()
-@property (nonatomic, strong, readwrite) id<CMISBindingDelegate> binding;
+@property (nonatomic, strong, readwrite) id<CMISBinding> binding;
 @property (nonatomic, strong, readwrite) NSString *name;
 @property (nonatomic, strong, readwrite) NSString *createdBy;
 @property (nonatomic, strong, readwrite) NSDate *creationDate;
@@ -28,7 +28,7 @@
 @synthesize lastModifiedBy = _lastModifiedBy;
 @synthesize lastModificationDate = _lastModificationDate;
 
-- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBindingDelegate>)binding;
+- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 //- (id)initWithObjectData:(CMISObjectData *)objectData
 {
     if (self = [super initWithString:objectData.identifier]) 

@@ -15,11 +15,16 @@
 
 @interface CMISSession : NSObject
 
+// Flag to indicate whether the session has been authenticated.
 @property (nonatomic, assign, readonly) BOOL isAuthenticated;
-@property (nonatomic, strong, readonly) id<CMISBindingDelegate> binding;
 
-// NOTE: None of these properties should be used until the session is authenticated, until that point they will be nil
+// The binding object being used for the session.
+@property (nonatomic, strong, readonly) id<CMISBinding> binding;
+
+// The root folder of the repository the session is connected to, will be nil until the session is authenticated.
 @property (nonatomic, strong, readonly) CMISFolder *rootFolder;
+
+// Information about the repository the session is connected to, will be nil until the session is authenticated.
 @property (nonatomic, strong, readonly) CMISRepositoryInfo *repositoryInfo;
 
 // *** setup ***
@@ -39,6 +44,7 @@
 
 // *** object retrieval ***
 
+// Retrieves the object with the given identifier
 - (CMISObject *)retrieveObject:(CMISObjectId *)objectId error:(NSError **)error;
 
 @end

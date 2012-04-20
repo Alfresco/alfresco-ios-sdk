@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "CMISObjectId.h"
 #import "CMISObjectData.h"
-#import "CMISBindingProtocols.h"
+#import "CMISBinding.h"
 
 @interface CMISObject : CMISObjectId
 
@@ -29,10 +29,10 @@
 
 //- (id) propertyValueWithId:(NSString *)id;
 
-@property (nonatomic, strong, readonly) id<CMISBindingDelegate> binding;
+@property (nonatomic, strong, readonly) id<CMISBinding> binding;
 
 
-- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBindingDelegate>)binding;
+- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 
 @end
 

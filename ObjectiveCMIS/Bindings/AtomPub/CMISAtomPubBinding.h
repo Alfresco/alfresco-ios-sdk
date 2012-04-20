@@ -10,7 +10,7 @@
 #import "CMISBinding.h"
 #import "CMISSessionParameters.h"
 
-@interface CMISAtomPubBinding : NSObject <CMISBindingDelegate>
+@interface CMISAtomPubBinding : NSObject <CMISBinding>
 
 - (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters;
 

@@ -10,14 +10,14 @@
 #import "CMISConstants.h"
 #import "CMISObjectConverter.h"
 #import "CMISStandardAuthenticationProvider.h"
+#import "CMISBindingFactory.h"
 
 @interface CMISSession ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
 @property (nonatomic, strong) CMISObjectConverter *objectConverter;
 @property (nonatomic, strong) id<CMISSessionAuthenticationDelegate> authenticationDelegate;
-// redefine properties below as readwrite
 @property (nonatomic, assign, readwrite) BOOL isAuthenticated;
-@property (nonatomic, strong, readwrite) id<CMISBindingDelegate> binding;
+@property (nonatomic, strong, readwrite) id<CMISBinding> binding;
 @property (nonatomic, strong, readwrite) CMISFolder *rootFolder;
 @property (nonatomic, strong, readwrite) CMISRepositoryInfo *repositoryInfo;
 @end
@@ -46,7 +46,7 @@
     // TODO: validate session parameters?
     
     // return list of repositories
-    return [session.binding.repositoryService arrayOfRepositories];
+    return [session.binding.repositoryService arrayOfRepositoriesAndReturnError:error];
 }
 
 + (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters
@@ -55,14 +55,9 @@
     session.sessionParameters = sessionParameters;
     session.isAuthenticated = NO;
     
-    // setup binding delegate (if not present)
-    if (sessionParameters.binding == nil)
-    {
-        // TODO: Do we need to cache the instance in the session parameters
-        sessionParameters.binding = [CMISBinding createCMISBinding:sessionParameters];
-    }
-    
-    session.binding = sessionParameters.binding;
+    // create the binding the session will use
+    CMISBindingFactory *bindingFactory = [[CMISBindingFactory alloc] init];
+    session.binding = [bindingFactory bindingWithParameters:sessionParameters];
     
     // setup authentication provider delegate (if not present)
     if (sessionParameters.authenticationProvider == nil)
@@ -121,7 +116,7 @@
     if (self.sessionParameters.repositoryId != nil)
     {
         // get repository info
-        self.repositoryInfo = [self.binding.repositoryService repositoryInfoForId:self.sessionParameters.repositoryId];
+        self.repositoryInfo = [self.binding.repositoryService repositoryInfoForId:self.sessionParameters.repositoryId error:error];
         
         // TODO: capture any error and return
         

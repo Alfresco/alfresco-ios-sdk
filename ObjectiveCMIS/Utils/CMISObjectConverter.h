@@ -13,7 +13,7 @@
 
 @interface CMISObjectConverter : NSObject
 
-- (id)initWithCMISBinding:(id<CMISBindingDelegate>)binding;
+- (id)initWithCMISBinding:(id<CMISBinding>)binding;
 
 - (CMISObject *)convertObject:(CMISObjectData *)objectData;
 - (CMISCollection *)convertObjects:(NSArray *)objects;

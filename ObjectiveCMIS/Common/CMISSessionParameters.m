@@ -19,7 +19,6 @@
 @synthesize repositoryId = _repositoryId;
 @synthesize bindingType = _bindingType;
 @synthesize atomPubUrl = _atomPubUrl;
-@synthesize binding = _binding;
 @synthesize authenticationProvider = _authenticationProvider;
 
 - (id)init

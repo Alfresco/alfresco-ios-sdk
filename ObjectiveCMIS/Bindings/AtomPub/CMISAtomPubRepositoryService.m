@@ -25,15 +25,15 @@
 
 @synthesize repositories = _repositories;
 
-- (NSArray *)arrayOfRepositories
+- (NSArray *)arrayOfRepositoriesAndReturnError:(NSError **)outError
 {
-    [self retrieveRepositoriesAndReturnError:nil];
+    [self retrieveRepositoriesAndReturnError:outError];
     return [self.repositories allValues];
 }
 
-- (CMISRepositoryInfo *)repositoryInfoForId:(NSString *)repositoryId
+- (CMISRepositoryInfo *)repositoryInfoForId:(NSString *)repositoryId error:(NSError **)outError
 {
-    [self retrieveRepositoriesAndReturnError:nil];
+    [self retrieveRepositoriesAndReturnError:outError];
     return [self.repositories objectForKey:repositoryId];
 }
 

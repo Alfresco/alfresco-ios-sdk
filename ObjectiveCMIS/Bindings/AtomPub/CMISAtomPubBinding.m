@@ -14,7 +14,6 @@
 @interface CMISAtomPubBinding ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
 @property (nonatomic, strong, readwrite) id<CMISAclService> aclService;
-@property (nonatomic, strong, readwrite) id<CMISAuthenticationProvider> authenticationProvider;
 @property (nonatomic, strong, readwrite) id<CMISDiscoveryService> discoveryService;
 @property (nonatomic, strong, readwrite) id<CMISMultiFilingService> multiFilingService;
 @property (nonatomic, strong, readwrite) id<CMISObjectService> objectService;
@@ -23,13 +22,13 @@
 @property (nonatomic, strong, readwrite) id<CMISRepositoryService> repositoryService;
 @property (nonatomic, strong, readwrite) id<CMISNavigationService> navigationService;
 @property (nonatomic, strong, readwrite) id<CMISVersioningService> versioningService;
+@property (nonatomic, strong, readwrite) id<CMISAuthenticationProvider> authenticationProvider;
 @end
 
 @implementation CMISAtomPubBinding
 
 @synthesize sessionParameters = _sessionParameters;
 @synthesize aclService = _aclService;
-@synthesize authenticationProvider = _authenticationProvider;
 @synthesize discoveryService = _discoveryService;
 @synthesize multiFilingService = _multiFilingService;
 @synthesize objectService = _objectService;
@@ -38,6 +37,7 @@
 @synthesize repositoryService = _repositoryService;
 @synthesize navigationService = _navigationService;
 @synthesize versioningService = _versioningService;
+@synthesize authenticationProvider = _authenticationProvider;
 
 - (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters
 {
@@ -45,6 +45,7 @@
     {
         self.sessionParameters = sessionParameters;
         
+        self.authenticationProvider = self.sessionParameters.authenticationProvider;
         self.repositoryService = [[CMISAtomPubRepositoryService alloc] initWithSessionParameters:self.sessionParameters];
         self.objectService = [[CMISAtomPubObjectService alloc] initWithSessionParameters:self.sessionParameters];
         self.navigationService = [[CMISAtomPubNavigationService alloc] initWithSessionParameters:self.sessionParameters];
@@ -53,17 +54,17 @@
     return self;
 }
 
-- (void) clearAllCaches
+- (void)clearAllCaches
 {
     // do nothing for now
 }
 
-- (void) clearRepositoryCache:(NSString*)repositoryId
+- (void)clearCacheForRepositoryId:(NSString*)repositoryId
 {
     // do nothing for now
 }
 
-- (void) close
+- (void)close
 {
     // do nothing for now
 }

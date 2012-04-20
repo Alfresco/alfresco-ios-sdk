@@ -11,14 +11,14 @@
 #import "CMISFolder.h"
 
 @interface CMISObjectConverter ()
-@property (nonatomic, strong) id<CMISBindingDelegate> binding;
+@property (nonatomic, strong) id<CMISBinding> binding;
 @end
 
 @implementation CMISObjectConverter
 
 @synthesize binding = _binding;
 
-- (id)initWithCMISBinding:(id<CMISBindingDelegate>)binding
+- (id)initWithCMISBinding:(id<CMISBinding>)binding
 {
     if (self = [super init])
     {
