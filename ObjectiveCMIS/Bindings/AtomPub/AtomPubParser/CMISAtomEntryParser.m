@@ -9,19 +9,19 @@
 #import "CMISAtomEntryParser.h"
 
 @interface CMISAtomEntryParser ()
-@property (nonatomic, strong, readwrite) NSDictionary *links;
+
 @property (nonatomic, strong, readwrite) CMISObjectData *objectData;
 
 @property (nonatomic, strong) NSData *atomData;
 @property (nonatomic, strong) NSString *elementBeingParsed;
 @property (nonatomic, strong) CMISPropertyData *currentPropertyData;
 @property (nonatomic, strong) CMISProperties *currentObjectProperties;
+
 @end
 
 
 @implementation CMISAtomEntryParser
 
-@synthesize links = _links;
 @synthesize objectData = _objectData;
 @synthesize atomData = _atomData;
 @synthesize elementBeingParsed = _elementBeingParsed;
@@ -30,7 +30,8 @@
 
 - (id)initWithData:(NSData*)atomData
 {
-    if (self = [super init]) 
+    self = [super init];
+    if (self)
     {
         self.atomData = atomData;
     }
@@ -43,7 +44,6 @@
     BOOL parseSuccessful = YES;
     
     // create objects to populate during parse
-    self.links = [NSMutableDictionary dictionary];
     self.objectData = [[CMISObjectData alloc] init];
     
     // parse the AtomPub data
@@ -85,6 +85,21 @@
     else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryLink])
     {
         // TODO: define interface for a link, parse link elements and add to dictionary
+
+        // TODO: this is quick-and-dirty parsing for the 'down' link
+        NSString *linkType = [attributeDict objectForKey:@"type"];
+        NSString *rel = [attributeDict objectForKey:@"rel"];
+        if (linkType != nil && [linkType isEqualToString:@"application/atom+xml;type=feed"]
+                && rel != nil && [rel isEqualToString:@"down"])
+        {
+
+            if (self.objectData.links == nil)
+            {
+                self.objectData.links = [[NSMutableDictionary alloc] init];
+            }
+
+            [self.objectData.links setObject:[attributeDict objectForKey:@"href"] forKey:@"down"];
+        }
     }
 }
 

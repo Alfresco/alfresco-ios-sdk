@@ -13,5 +13,6 @@
 @synthesize identifier = _identifier;
 @synthesize baseType = _baseType;
 @synthesize properties = _properties;
+@synthesize links = _links;
 
 @end

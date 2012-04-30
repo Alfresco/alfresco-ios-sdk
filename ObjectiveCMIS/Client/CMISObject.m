@@ -31,7 +31,8 @@
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 //- (id)initWithObjectData:(CMISObjectData *)objectData
 {
-    if (self = [super initWithString:objectData.identifier]) 
+    self =  [super initWithString:objectData.identifier];
+    if (self)
     {
         self.binding = binding;
         

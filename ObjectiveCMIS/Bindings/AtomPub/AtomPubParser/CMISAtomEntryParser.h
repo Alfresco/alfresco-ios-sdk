@@ -14,7 +14,6 @@
 
 @interface CMISAtomEntryParser : NSObject <NSXMLParserDelegate>
 
-@property (nonatomic, strong, readonly) NSDictionary *links;
 @property (nonatomic, strong, readonly) CMISObjectData *objectData;
 
 - (id)initWithData:(NSData*)atomData;

@@ -10,12 +10,25 @@
 #import "CMISObjectConverter.h"
 
 @interface CMISFolder ()
+@property (nonatomic, strong) NSString *downLinkHref;
 @property (nonatomic, strong) CMISCollection *children;
 @end
 
 @implementation CMISFolder
 
+@synthesize downLinkHref = _downLinkHref;
 @synthesize children = _children;
+
+- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id <CMISBinding>)binding
+{
+    self = [super initWithObjectData:objectData binding:binding];
+    if (self)
+    {
+        _downLinkHref = [objectData.links objectForKey:@"down"];
+    }
+    return self;
+}
+
 
 - (CMISCollection *)collectionOfChildrenAndReturnError:(NSError *)error
 {

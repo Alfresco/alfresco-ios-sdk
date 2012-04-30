@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class CMISFolder;
+
 @protocol CMISNavigationService <NSObject>
 
 // Retrieves the children for the given object identifier.

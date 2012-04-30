@@ -15,5 +15,6 @@
 @property (nonatomic, strong) NSString *identifier; 
 @property (nonatomic, assign) CMISBaseType baseType;
 @property (nonatomic, strong) CMISProperties *properties;
+@property (nonatomic, strong) NSMutableDictionary *links;
 
 @end
