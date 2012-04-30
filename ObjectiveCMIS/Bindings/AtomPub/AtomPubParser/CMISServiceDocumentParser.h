@@ -11,16 +11,10 @@
 
 @interface CMISServiceDocumentParser : NSObject <NSXMLParserDelegate>
 
+// Available after parsing the service document
 @property (nonatomic, strong, readonly) NSArray *workspaces;
 
 - (id)initWithData:(NSData*)atomData;
 - (BOOL)parseAndReturnError:(NSError **)error;
-
-@end
-
-
-@interface CMISWorkspace : NSObject 
-
-@property (nonatomic, strong) CMISRepositoryInfo *repositoryInfo;
 
 @end

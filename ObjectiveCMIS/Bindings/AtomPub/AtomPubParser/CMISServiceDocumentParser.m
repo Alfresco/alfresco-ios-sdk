@@ -7,24 +7,39 @@
 //
 
 #import "CMISServiceDocumentParser.h"
+#import "CMISWorkspace.h"
 
 @interface CMISServiceDocumentParser ()
+
 @property (nonatomic, strong) NSData *atomData;
-@property (nonatomic, strong) NSString *elementBeingParsed;
 @property (nonatomic, strong) CMISRepositoryInfo *currentRepositoryInfo;
 @property (nonatomic, strong) NSMutableArray *internalWorkspaces;
+
+@property (nonatomic, strong) NSMutableString *currentString;
+@property (nonatomic, strong) CMISWorkspace *currentWorkSpace;
+@property (nonatomic, strong) NSString *currentTemplate;
+@property (nonatomic, strong) NSString *currentType;
+@property (nonatomic, strong) NSString *currentMediaType;
+
 @end
 
 @implementation CMISServiceDocumentParser
 
 @synthesize atomData = _atomData;
-@synthesize elementBeingParsed = _elementBeingParsed;
 @synthesize currentRepositoryInfo = _currentRepositoryInfo;
 @synthesize internalWorkspaces = _internalWorkspaces;
 
+@synthesize currentString = _currentString;
+@synthesize currentWorkSpace = _currentWorkSpace;
+@synthesize currentTemplate = _currentTemplate;
+@synthesize currentType = _currentType;
+@synthesize currentMediaType = _currentMediaType;
+
+
 - (id)initWithData:(NSData*)atomData
 {
-    if (self = [super init]) 
+    self = [super init];
+    if (self)
     {
         self.atomData = atomData;
     }
@@ -47,9 +62,9 @@
     
     if (!parseSuccessful)
     {
+        NSLog(@"Parsing error : %@", [parser parserError]);
         *error = [parser parserError];
     }
-    
     return parseSuccessful;
 }
 
@@ -63,71 +78,101 @@
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict 
 {
-    self.elementBeingParsed = elementName;
-    
-    if ([self.elementBeingParsed isEqualToString:@"repositoryInfo"])
+    self.currentString = [[NSMutableString alloc] init];
+
+    if ([elementName isEqualToString:@"workspace"])
+    {
+        self.currentWorkSpace = [[CMISWorkspace alloc] init];
+    }
+    else if ([elementName isEqualToString:@"repositoryInfo"])
     {
         self.currentRepositoryInfo = [[CMISRepositoryInfo alloc] init];
     }
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 
-{    
-    if ([self.elementBeingParsed isEqualToString:@"repositoryId"])
-    {
-        self.currentRepositoryInfo.identifier = string;
-    }
-    else if ([self.elementBeingParsed isEqualToString:@"repositoryName"])
-    {
-        self.currentRepositoryInfo.name = string;
-    }
-    else if ([self.elementBeingParsed isEqualToString:@"repositoryDescription"])
-    {
-        self.currentRepositoryInfo.desc = string;
-    }
-    else if ([self.elementBeingParsed isEqualToString:@"vendorName"])
-    {
-        self.currentRepositoryInfo.vendorName = string;
-    }
-    else if ([self.elementBeingParsed isEqualToString:@"productName"])
-    {
-        self.currentRepositoryInfo.productName = string;
-    }
-    else if ([self.elementBeingParsed isEqualToString:@"productVersion"])
-    {
-        self.currentRepositoryInfo.productVersion = string;
-    }
-    else if ([self.elementBeingParsed isEqualToString:@"rootFolderId"])
-    {
-        self.currentRepositoryInfo.rootFolderId = string;
-    }
-    else if ([self.elementBeingParsed isEqualToString:@"cmisVersionSupported"])
-    {
-        self.currentRepositoryInfo.cmisVersionSupported = string;
-    }
+{
+    // Simply add the parsed string to the current string
+    // Do not add any logic here, since the parser splits up data rather easily
+    // (eg when an ampersand is used within a url, it will split it up and call this this method a few times)
+    [self.currentString appendString:string];
 }
 
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
 {
-    if ([elementName isEqualToString:@"repositoryInfo"])
+    if ([elementName isEqualToString:@"workspace"])
     {
-        // create a workspace object and add the repo info to it
-        CMISWorkspace *workspace = [[CMISWorkspace alloc] init];
-        workspace.repositoryInfo = self.currentRepositoryInfo;
-        
-        // add workspace to list
-        [self.internalWorkspaces addObject:workspace];
+        [self.internalWorkspaces addObject:self.currentWorkSpace];
     }
-    
-    self.elementBeingParsed = nil;
+    else if ([elementName isEqualToString:@"repositoryInfo"])
+    {
+        self.currentWorkSpace.repositoryInfo = self.currentRepositoryInfo;
+    }
+    else if ([elementName isEqualToString:@"uritemplate"])
+    {
+        if ([self.currentType isEqualToString:@"objectbyid"])
+        {
+            self.currentWorkSpace.objectByIdUriTemplate = self.currentTemplate;
+        }
+        else if ([self.currentType isEqualToString:@"objectbypath"])
+        {
+            self.currentWorkSpace.objectByPathUriTemplate = self.currentTemplate;
+        }
+        else if ([self.currentType isEqualToString:@"typebyid"])
+        {
+            self.currentWorkSpace.typeByIdUriTemplate = self.currentTemplate;
+        }
+        else if ([self.currentType isEqualToString:@"query"])
+        {
+            self.currentWorkSpace.queryUriTemplate = self.currentTemplate;
+        }
+    } else if ([elementName isEqualToString:@"repositoryId"])
+    {
+        self.currentRepositoryInfo.identifier = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"repositoryName"])
+    {
+        self.currentRepositoryInfo.name = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"repositoryDescription"])
+    {
+        self.currentRepositoryInfo.desc = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"vendorName"])
+    {
+        self.currentRepositoryInfo.vendorName = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"productName"])
+    {
+        self.currentRepositoryInfo.productName = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"productVersion"])
+    {
+        self.currentRepositoryInfo.productVersion = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"rootFolderId"])
+    {
+        self.currentRepositoryInfo.rootFolderId = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"cmisVersionSupported"])
+    {
+        self.currentRepositoryInfo.cmisVersionSupported = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"template"])
+    {
+        self.currentTemplate = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"type"])
+    {
+        self.currentType = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"mediaType"])
+    {
+        self.currentMediaType = self.currentString;
+    }
+
+    self.currentString = nil;
 }
-
-@end
-
-
-@implementation CMISWorkspace
-
-@synthesize repositoryInfo = _repositoryInfo;
 
 @end

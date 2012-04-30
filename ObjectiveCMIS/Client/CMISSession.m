@@ -55,10 +55,6 @@
     session.sessionParameters = sessionParameters;
     session.isAuthenticated = NO;
     
-    // create the binding the session will use
-    CMISBindingFactory *bindingFactory = [[CMISBindingFactory alloc] init];
-    session.binding = [bindingFactory bindingWithParameters:sessionParameters];
-    
     // setup authentication provider delegate (if not present)
     if (sessionParameters.authenticationProvider == nil)
     {
@@ -67,7 +63,11 @@
                                                     initWithUsername:sessionParameters.username 
                                                     andPassword:sessionParameters.password];
     }
-    
+
+    // create the binding the session will use
+    CMISBindingFactory *bindingFactory = [[CMISBindingFactory alloc] init];
+    session.binding = [bindingFactory bindingWithParameters:sessionParameters];
+
     session.objectConverter = [[CMISObjectConverter alloc] initWithCMISBinding:session.binding];
     
     // TODO: setup locale
@@ -127,7 +127,6 @@
         
         // get root folder info
         CMISObjectId *objectId = [[CMISObjectId alloc] initWithString:self.repositoryInfo.rootFolderId];
-        
         CMISObject *obj = [self retrieveObject:objectId error:error];
         
         if (obj == nil)
@@ -138,6 +137,8 @@
         if ([obj isKindOfClass:[CMISFolder class]])
         {
             self.rootFolder = (CMISFolder *)obj;
+        } else {
+            NSLog(@"Warning: rootFolderId %@ did not point to a folder", self.repositoryInfo.rootFolderId);
         }
     }
     
@@ -150,13 +151,10 @@
 
 - (CMISObject *)retrieveObject:(CMISObjectId *)objectId error:(NSError **)error
 {
-    // TODO: check the cache for the object
+    // TODO: cache the object
     
     CMISObjectData *objectData = [self.binding.objectService retrieveObject:objectId.identifier error:error];
-    
     CMISObject *obj = [self.objectConverter convertObject:objectData];
-    
-    // TODO: cache the object
     
     return obj;
 }

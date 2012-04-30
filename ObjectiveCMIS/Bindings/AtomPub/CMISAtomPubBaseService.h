@@ -9,11 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "CMISSessionParameters.h"
 
+@class CMISWorkspace;
+
 @interface CMISAtomPubBaseService : NSObject
 
 @property (nonatomic, strong, readonly) CMISSessionParameters *sessionParameters;
+@property (nonatomic, strong, readonly) NSArray *cmisWorkspaces;
 
-- (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters;
+- (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters andWithCMISWorkspaces:(NSArray *)cmisWorkspaces;
 
 - (NSData *)executeRequest:(NSURL *)url error:(NSError **)outError;
 

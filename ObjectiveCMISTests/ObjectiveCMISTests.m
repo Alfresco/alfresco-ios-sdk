@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Alfresco. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "ObjectiveCMISTests.h"
 #import "CMISSession.h"
 #import "CMISConstants.h"
@@ -22,11 +23,9 @@
     [super setUp];
     
     self.parameters = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
-    
     self.parameters.username = @"admin";
-    self.parameters.password = @"admin";
-    
-    self.parameters.atomPubUrl = [[NSURL alloc] initWithString:@"http://cmis.alfresco.com/service/cmis"];
+    self.parameters.password = @"alzheimer";
+    self.parameters.atomPubUrl = [[NSURL alloc] initWithString:@"http://ec2-79-125-44-131.eu-west-1.compute.amazonaws.com/alfresco/service/api/cmis"];
 }
 
 - (void)tearDown
@@ -36,8 +35,11 @@
 
 - (void)testRepositories
 {
-    NSArray *repos = [CMISSession arrayOfRepositories:self.parameters error:nil];
+    NSError *error = nil;
+    NSArray *repos = [CMISSession arrayOfRepositories:self.parameters error:&error];
+    STAssertNil(error, @"Error when calling arrayOfRepositories : %@", [error description]);
     STAssertNotNil(repos, @"repos object should not be nil");
+    STAssertTrue(repos.count > 0, @"There should be at least one repository");
     
     for (CMISRepositoryInfo *repo in repos) 
     {
@@ -51,8 +53,7 @@
 - (void)testRootFolder
 {
     // TODO: find a way to pass values between test runs
-    //self.parameters.repositoryId = self.repositoryId;
-    self.parameters.repositoryId = @"371554cd-ac06-40ba-98b8-e6b60275cca7";
+    self.parameters.repositoryId = @"246b1d64-9a1f-4c56-8900-594a4b85bd05";
     
     CMISSession *session = [CMISSession sessionWithParameters:self.parameters];
     STAssertNotNil(session, @"session object should not be nil");
@@ -60,7 +61,7 @@
     // authenticate the session, we should use the delegate to check for success but
     // we can't in a unit test so wait for a couple of seconds then check the authenticated flag
     [session authenticateWithDelegate:nil];
-    sleep(2);
+    sleep(10);
     STAssertTrue(session.isAuthenticated, @"session should be authenticated");
     
     if (session.isAuthenticated)
@@ -70,14 +71,14 @@
         STAssertNotNil(repoInfo, @"repoInfo object should not be nil");
         
         // check the repository info is what we expect
-        STAssertTrue([repoInfo.productVersion isEqualToString:@"4.0.0 (b @build-number@)"], @"Product Version should be 4.0.0 (b @build-number@)");
+        STAssertTrue([repoInfo.productVersion rangeOfString:@"4.0.0"].length > 0, @"Product Version should be 4.0.0 (b @build-number@), but was %@", repoInfo.productVersion);
         STAssertTrue([repoInfo.vendorName isEqualToString:@"Alfresco"], @"Vendor name should be Alfresco");
         
         // retrieve the root folder
         CMISFolder *rootFolder = [session rootFolder];
         STAssertNotNil(rootFolder, @"rootFolder object should not be nil");
         NSString *rootName = rootFolder.name;
-        STAssertTrue([rootName isEqualToString:@"Company Home"], @"rootName should be Company Home");
+        STAssertTrue([rootName isEqualToString:@"Company Home"], @"rootName should be Company Home, but was %@", rootName);
         
         // check it was modified and created by System and the dates are not nil
         NSString *createdBy = rootFolder.createdBy;

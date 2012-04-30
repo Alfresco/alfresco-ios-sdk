@@ -11,6 +11,7 @@
 #import "CMISServiceDocumentParser.h"
 
 #import "ASIHTTPRequest.h"
+#import "CMISWorkspace.h"
 
 @interface CMISAtomPubRepositoryService ()
 @property (nonatomic, strong) NSMutableDictionary *repositories;
@@ -40,23 +41,9 @@
 - (void)retrieveRepositoriesAndReturnError:(NSError **)error
 {
     self.repositories = [NSMutableDictionary dictionary];
-    
-    // get the CMIS service document URL from the parameters
-    NSURL *serviceDocUrl = self.sessionParameters.atomPubUrl;
-    NSLog(@"CMISAtomPubRepositoryService GET: %@", [serviceDocUrl absoluteString]);
-    
-    // execute the request
-    NSData *data = [self executeRequest:serviceDocUrl error:error];
-    if (data != nil)
+    for (CMISWorkspace *workspace in self.cmisWorkspaces)
     {
-        CMISServiceDocumentParser *parser = [[CMISServiceDocumentParser alloc] initWithData:data];
-        if ([parser parseAndReturnError:error])
-        {
-            for (CMISWorkspace *workspace in [parser workspaces]) 
-            {
-                [self.repositories setObject:workspace.repositoryInfo forKey:workspace.repositoryInfo.identifier];
-            }
-        }
+        [self.repositories setObject:workspace.repositoryInfo forKey:workspace.repositoryInfo.identifier];
     }
 }
 

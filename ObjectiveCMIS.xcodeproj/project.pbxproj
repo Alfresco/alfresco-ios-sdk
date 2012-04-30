@@ -102,6 +102,10 @@
 		82C1C63B1535790B009B7B3D /* CMISAtomFeedParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C6391535790B009B7B3D /* CMISAtomFeedParser.m */; };
 		82C1C63E15358733009B7B3D /* CMISAtomPubConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63C15358733009B7B3D /* CMISAtomPubConstants.h */; };
 		82C1C63F15358733009B7B3D /* CMISAtomPubConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63D15358733009B7B3D /* CMISAtomPubConstants.m */; };
+		82C1C63F15358733009B7B3F /* CMISWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B3E /* CMISWorkspace.m */; };
+		82C1C63F15358733009B7B41 /* CMISWorkspace.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B40 /* CMISWorkspace.h */; };
+		82C1C63F15358733009B7B43 /* CMISObjectByIdUriBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B42 /* CMISObjectByIdUriBuilder.m */; };
+		82C1C63F15358733009B7B45 /* CMISObjectByIdUriBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B44 /* CMISObjectByIdUriBuilder.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -230,6 +234,10 @@
 		82C1C6391535790B009B7B3D /* CMISAtomFeedParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomFeedParser.m; sourceTree = "<group>"; };
 		82C1C63C15358733009B7B3D /* CMISAtomPubConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAtomPubConstants.h; sourceTree = "<group>"; };
 		82C1C63D15358733009B7B3D /* CMISAtomPubConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomPubConstants.m; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B3E /* CMISWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISWorkspace.m; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B40 /* CMISWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISWorkspace.h; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B42 /* CMISObjectByIdUriBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISObjectByIdUriBuilder.m; path = Bindings/AtomPub/CMISObjectByIdUriBuilder.m; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B44 /* CMISObjectByIdUriBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISObjectByIdUriBuilder.h; path = Bindings/AtomPub/CMISObjectByIdUriBuilder.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -387,6 +395,10 @@
 		828072D315153EC100EF635C /* Bindings */ = {
 			isa = PBXGroup;
 			children = (
+				82C1C63F15358733009B7B42 /* CMISObjectByIdUriBuilder.m */,
+				82C1C63F15358733009B7B44 /* CMISObjectByIdUriBuilder.h */,
+				82C1C63F15358733009B7B40 /* CMISWorkspace.h */,
+				82C1C63F15358733009B7B3E /* CMISWorkspace.m */,
 				828073191515405C00EF635C /* CMISBinding.h */,
 				82AD4AEE15416A150012DDB6 /* CMISAclService.h */,
 				82AD4AF115416A5F0012DDB6 /* CMISDiscoveryService.h */,
@@ -570,6 +582,8 @@
 				82AD4AFA15416AD50012DDB6 /* CMISRepositoryService.h in Headers */,
 				82AD4AFC15416AEC0012DDB6 /* CMISNavigationService.h in Headers */,
 				82AD4AFE15416C3C0012DDB6 /* CMISVersioningService.h in Headers */,
+				82C1C63F15358733009B7B41 /* CMISWorkspace.h in Headers */,
+				82C1C63F15358733009B7B45 /* CMISObjectByIdUriBuilder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -713,6 +727,8 @@
 				82C1C63B1535790B009B7B3D /* CMISAtomFeedParser.m in Sources */,
 				82C1C63F15358733009B7B3D /* CMISAtomPubConstants.m in Sources */,
 				82AD4AEC1541642A0012DDB6 /* CMISBindingFactory.m in Sources */,
+				82C1C63F15358733009B7B3F /* CMISWorkspace.m in Sources */,
+				82C1C63F15358733009B7B43 /* CMISObjectByIdUriBuilder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -766,6 +782,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				"OTHER_CFLAGS[arch=*]" = "-DDEBUG";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
