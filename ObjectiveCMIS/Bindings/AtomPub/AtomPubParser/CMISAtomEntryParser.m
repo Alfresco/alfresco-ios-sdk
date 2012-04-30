@@ -89,7 +89,7 @@
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 
-{    
+{
     if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryValue])
     {
         // TODO: Deal with multi-valued properties

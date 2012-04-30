@@ -100,7 +100,7 @@
         NSArray *children = childrenCollection.items;
         STAssertNotNil(children, @"children should not be nil");
         NSLog(@"There are %d children", [children count]);
-        STAssertTrue([children count] > 10, @"There should be at least 10 children");
+        STAssertTrue([children count] > 5, @"There should be at least 5 children");
         
         for (CMISObject *object in children) 
         {

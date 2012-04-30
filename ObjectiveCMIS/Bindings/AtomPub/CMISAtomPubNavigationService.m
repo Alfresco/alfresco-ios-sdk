@@ -16,14 +16,16 @@
     NSArray *children = nil;    
     
     // build URL to get object data
-    NSString *urlTemplate = @"%@/s/%@/children?includeAllowableActions=false&includePolicyIds=false&includeRelationships=false&includeACL=false&renditionFilter=cmis:none&includePathSegment=false&maxItems=50";
-    //&maxItems=50
-    
+
     // TODO: store links,retrieve children link and build URL for this object!?
+    // TODO: replace hardcoded url!
+
+    NSString *urlTemplate = @"http://ec2-79-125-44-131.eu-west-1.compute.amazonaws.com:80/alfresco/service/cmis/s/%@/children?includeAllowableActions=false&includePolicyIds=false&includeRelationships=false&includeACL=false&renditionFilter=cmis:none&includePathSegment=false&maxItems=50";
+
     NSString *nodeRef = [[objectId stringByReplacingOccurrencesOfString:@"://" withString:@":"] 
                          stringByReplacingOccurrencesOfString:@"/" withString:@"/i/"];
     
-    NSURL *childrenUrl = [NSURL URLWithString:[NSString stringWithFormat:urlTemplate, [self.sessionParameters.atomPubUrl absoluteString], nodeRef]];
+    NSURL *childrenUrl = [NSURL URLWithString:[NSString stringWithFormat:urlTemplate, nodeRef]];
     NSLog(@"CMISAtomPubNavigationService GET: %@", [childrenUrl absoluteString]);
     
     // execute the request
