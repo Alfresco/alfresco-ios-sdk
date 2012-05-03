@@ -132,8 +132,7 @@
         }
         
         // get root folder info
-        CMISObjectId *objectId = [[CMISObjectId alloc] initWithString:self.repositoryInfo.rootFolderId];
-        CMISObject *obj = [self retrieveObject:objectId error:error];
+        CMISObject *obj = [self retrieveObject:self.repositoryInfo.rootFolderId error:error];
         
         if (obj == nil)
         {
@@ -155,11 +154,11 @@
 
 #pragma mark Object retrieval
 
-- (CMISObject *)retrieveObject:(CMISObjectId *)objectId error:(NSError **)error
+- (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error
 {
     // TODO: cache the object
     
-    CMISObjectData *objectData = [self.binding.objectService retrieveObject:objectId.identifier error:error];
+    CMISObjectData *objectData = [self.binding.objectService retrieveObject:objectId error:error];
     CMISObject *obj = [self.objectConverter convertObject:objectData];
     
     return obj;

@@ -46,7 +46,7 @@
 // *** object retrieval ***
 
 // Retrieves the object with the given identifier
-- (CMISObject *)retrieveObject:(CMISObjectId *)objectId error:(NSError **)error;
+- (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error;
 
 @end
 

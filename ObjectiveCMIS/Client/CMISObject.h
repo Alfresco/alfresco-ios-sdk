@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CMISObjectId.h"
 #import "CMISObjectData.h"
 #import "CMISBinding.h"
 
-@interface CMISObject : CMISObjectId
+@interface CMISObject : NSObject
 
 // list of CMISProperty objects
 //@property (nonatomic, strong, readonly) NSArray *properties;
+@property (nonatomic, strong, readonly) NSString *identifier;
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSString *createdBy;
 @property (nonatomic, strong, readonly) NSDate *creationDate;

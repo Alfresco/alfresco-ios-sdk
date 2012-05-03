@@ -23,8 +23,6 @@
 		828072EC1515403800EF635C /* CMISFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 828072DE1515403800EF635C /* CMISFolder.m */; };
 		828072ED1515403800EF635C /* CMISObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 828072DF1515403800EF635C /* CMISObject.h */; };
 		828072EE1515403800EF635C /* CMISObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 828072E01515403800EF635C /* CMISObject.m */; };
-		828072EF1515403800EF635C /* CMISObjectId.h in Headers */ = {isa = PBXBuildFile; fileRef = 828072E11515403800EF635C /* CMISObjectId.h */; };
-		828072F01515403800EF635C /* CMISObjectId.m in Sources */ = {isa = PBXBuildFile; fileRef = 828072E21515403800EF635C /* CMISObjectId.m */; };
 		828072F11515403800EF635C /* CMISSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 828072E31515403800EF635C /* CMISSession.h */; };
 		828072F21515403800EF635C /* CMISSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 828072E41515403800EF635C /* CMISSession.m */; };
 		828073001515404F00EF635C /* CMISConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 828072F31515404F00EF635C /* CMISConstants.h */; };
@@ -128,8 +126,6 @@
 		828072DE1515403800EF635C /* CMISFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISFolder.m; path = Client/CMISFolder.m; sourceTree = "<group>"; };
 		828072DF1515403800EF635C /* CMISObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISObject.h; path = Client/CMISObject.h; sourceTree = "<group>"; };
 		828072E01515403800EF635C /* CMISObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISObject.m; path = Client/CMISObject.m; sourceTree = "<group>"; };
-		828072E11515403800EF635C /* CMISObjectId.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISObjectId.h; path = Client/CMISObjectId.h; sourceTree = "<group>"; };
-		828072E21515403800EF635C /* CMISObjectId.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISObjectId.m; path = Client/CMISObjectId.m; sourceTree = "<group>"; };
 		828072E31515403800EF635C /* CMISSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISSession.h; path = Client/CMISSession.h; sourceTree = "<group>"; };
 		828072E41515403800EF635C /* CMISSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISSession.m; path = Client/CMISSession.m; sourceTree = "<group>"; };
 		828072F31515404F00EF635C /* CMISConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISConstants.h; path = Common/CMISConstants.h; sourceTree = "<group>"; };
@@ -322,8 +318,6 @@
 				828072DE1515403800EF635C /* CMISFolder.m */,
 				828072DF1515403800EF635C /* CMISObject.h */,
 				828072E01515403800EF635C /* CMISObject.m */,
-				828072E11515403800EF635C /* CMISObjectId.h */,
-				828072E21515403800EF635C /* CMISObjectId.m */,
 				828072E31515403800EF635C /* CMISSession.h */,
 				828072E41515403800EF635C /* CMISSession.m */,
 			);
@@ -474,7 +468,6 @@
 				828072E91515403800EF635C /* CMISFileableObject.h in Headers */,
 				828072EB1515403800EF635C /* CMISFolder.h in Headers */,
 				828072ED1515403800EF635C /* CMISObject.h in Headers */,
-				828072EF1515403800EF635C /* CMISObjectId.h in Headers */,
 				828072F11515403800EF635C /* CMISSession.h in Headers */,
 				828073001515404F00EF635C /* CMISConstants.h in Headers */,
 				828073021515404F00EF635C /* CMISEnums.h in Headers */,
@@ -615,7 +608,6 @@
 				828072EA1515403800EF635C /* CMISFileableObject.m in Sources */,
 				828072EC1515403800EF635C /* CMISFolder.m in Sources */,
 				828072EE1515403800EF635C /* CMISObject.m in Sources */,
-				828072F01515403800EF635C /* CMISObjectId.m in Sources */,
 				828072F21515403800EF635C /* CMISSession.m in Sources */,
 				828073011515404F00EF635C /* CMISConstants.m in Sources */,
 				828073041515404F00EF635C /* CMISObjectData.m in Sources */,

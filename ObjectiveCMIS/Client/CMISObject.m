@@ -12,6 +12,7 @@
 
 @interface CMISObject ()
 @property (nonatomic, strong, readwrite) id<CMISBinding> binding;
+@property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *name;
 @property (nonatomic, strong, readwrite) NSString *createdBy;
 @property (nonatomic, strong, readwrite) NSDate *creationDate;
@@ -22,6 +23,7 @@
 @implementation CMISObject
 
 @synthesize binding = _binding;
+@synthesize identifier = _identifier;
 @synthesize name = _name;
 @synthesize createdBy = _createdBy;
 @synthesize creationDate = _creationDate;
@@ -31,11 +33,12 @@
 
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 {
-    self =  [super initWithString:objectData.identifier];
+    self =  [super init];
     if (self)
     {
         self.binding = binding;
-        
+
+        self.identifier = objectData.identifier;
         self.name = [[objectData.properties.properties objectForKey:kCMISPropertyName] firstValue];
         self.createdBy = [[objectData.properties.properties objectForKey:kCMISPropertyCreatedBy] firstValue];
         self.lastModifiedBy = [[objectData.properties.properties objectForKey:kCMISPropertyModifiedBy] firstValue];
