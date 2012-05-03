@@ -25,7 +25,7 @@
 
 - (id)init
 {
-    _sessionData = [[NSMutableDictionary alloc] init];
+    self.sessionData = [[NSMutableDictionary alloc] init];
     return [self initWithBindingType:CMISBindingTypeAtomPub];
 }
 
@@ -34,7 +34,7 @@
     self = [super init];
     if (self)
     {
-        _sessionData = [[NSMutableDictionary alloc] init];
+        self.sessionData = [[NSMutableDictionary alloc] init];
         self.bindingType = bindingType;
     }
     return self;

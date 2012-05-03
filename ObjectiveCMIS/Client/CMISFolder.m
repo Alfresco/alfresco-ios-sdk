@@ -24,7 +24,7 @@
     self = [super initWithObjectData:objectData binding:binding];
     if (self)
     {
-        _downLinkHref = [objectData.links objectForKey:@"down"];
+        self.downLinkHref = [objectData.links objectForKey:@"down"];
     }
     return self;
 }

@@ -36,9 +36,6 @@
     else if (error && error != NULL && *error != nil)
     {
         log(@"Error while doing HTTP GET %@ : %@", [url absoluteString], [*error description]);
-    } else {
-        NSLog(@"Received %d bytes", data.length);
-        //NSLog([[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     }
 
 //    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];

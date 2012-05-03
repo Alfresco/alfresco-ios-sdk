@@ -27,8 +27,8 @@
     self = [super initWithObjectData:objectData binding:binding];
     if (self)
     {
-        _contentStreamId = [[objectData.properties.properties objectForKey:kCMISProperyContentStreamId] firstValue];
-        _contentURL = objectData.contentUrl;
+        self.contentStreamId = [[objectData.properties.properties objectForKey:kCMISProperyContentStreamId] firstValue];
+        self.contentURL = objectData.contentUrl;
     }
     return self;
 }

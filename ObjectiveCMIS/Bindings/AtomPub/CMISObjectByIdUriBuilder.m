@@ -24,7 +24,7 @@
     self = [super init];
     if (self)
     {
-        _templateUrl = templateUrl;
+        self.templateUrl = templateUrl;
     }
     return self;
 }

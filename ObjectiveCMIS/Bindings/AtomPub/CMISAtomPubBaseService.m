@@ -12,7 +12,7 @@
 #import "CMISConstants.h"
 
 @interface CMISAtomPubBaseService ()
-
+@property (nonatomic, strong, readwrite) CMISSessionParameters *sessionParameters;
 @end
 
 @implementation CMISAtomPubBaseService
@@ -24,7 +24,7 @@
     self = [super init];
     if (self)
     {
-        _sessionParameters = sessionParameters;
+        self.sessionParameters = sessionParameters;
     }
     return self;
 }
