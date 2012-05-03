@@ -44,16 +44,20 @@
     STAssertTrue(repos.count > 0, @"There should be at least one repository");
 }
 
-- (void)testRootFolder
+- (void)testAuthenticateWithInvalidCredentials
 {
 
-    NSError *error = nil;
+}
+
+- (void)testGetRootFolder
+{
+
     CMISSession *session = [CMISSession sessionWithParameters:self.parameters];
     STAssertNotNil(session, @"session object should not be nil");
     
     // authenticate the session, we should use the delegate to check for success but
     // we can't in a unit test so wait for a couple of seconds then check the authenticated flag
-    error = nil;
+    NSError *error = nil;
     [session authenticateAndReturnError:&error];
     STAssertTrue(session.isAuthenticated, @"session should be authenticated");
     STAssertNil(error, @"Error while authenticating session: %@", [error description]);
@@ -95,13 +99,37 @@
         STAssertNotNil(children, @"children should not be nil");
         NSLog(@"There are %d children", [children count]);
         STAssertTrue([children count] > 5, @"There should be at least 5 children");
+    }
+}
+
+- (void)testFileDownload
+{
+
+    NSError *error = nil;
+    CMISSession *session = [CMISSession sessionWithParameters:self.parameters];
+
+    error = nil;
+    [session authenticateAndReturnError:&error];
+    STAssertTrue(session.isAuthenticated, @"session should be authenticated");
+    STAssertNil(error, @"Error while authenticating session: %@", [error description]);
+
+    if (session.isAuthenticated)
+    {
+        CMISFolder *rootFolder = [session rootFolder];
+        STAssertNotNil(rootFolder, @"rootFolder object should not be nil");
+
+        CMISCollection *childrenCollection = [rootFolder collectionOfChildrenAndReturnError:nil];
+        STAssertNotNil(childrenCollection, @"childrenCollection should not be nil");
+
+        NSArray *children = childrenCollection.items;
+        STAssertNotNil(children, @"children should not be nil");
+        STAssertTrue([children count] > 5, @"There should be at least 5 children");
 
         CMISDocument *randomDoc = nil;
-        for (CMISObject *object in children) 
+        for (CMISObject *object in children)
         {
-            NSLog(@"%@", object.name);
-
-            if ([object class] == [CMISDocument class]) {
+            if ([object class] == [CMISDocument class])
+            {
                 randomDoc = (CMISDocument *)object;
             }
         }
@@ -109,15 +137,21 @@
         STAssertNotNil(randomDoc, @"Can only continue test if root folder contains at least one document");
         NSLog(@"Fetching content stream for document %@", randomDoc.name);
 
-        // Temporary test code! does not yet return correct file path!
-        error = nil;
-        [randomDoc writeContentToFile:@"testfile.pdf" withError:&error];
+        // Writing content of CMIS document to local file
+        NSString *filePath = @"testfile";
+        [randomDoc writeContentToFile:filePath withError:&error];
         STAssertNil(error, @"Error while writing content: %@", [error description]);
 
-        // TODO: check file
-        // TODO: remove file
-    }
+        // Assert File exists and check file length
+        STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
+        STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
+        STAssertTrue([fileAttributes fileSize] > 512000, @"Expected a file large than 500 kb, but found one of %d kb", [fileAttributes fileSize]/1024);
 
+        // Nice boys clean up after themselves
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+        STAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
+    }
 }
 
 @end
