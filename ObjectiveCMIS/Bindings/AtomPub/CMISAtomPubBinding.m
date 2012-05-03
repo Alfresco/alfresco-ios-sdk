@@ -10,7 +10,6 @@
 #import "CMISAtomPubRepositoryService.h"
 #import "CMISAtomPubObjectService.h"
 #import "CMISAtomPubNavigationService.h"
-#import "ASIHTTPRequest.h"
 #import "CMISServiceDocumentParser.h"
 #import "CMISConstants.h"
 #import "HttpUtil.h"
