@@ -42,7 +42,7 @@
 
 + (NSArray *)arrayOfRepositories:(CMISSessionParameters *)sessionParameters error:(NSError **)error
 {
-    CMISSession *session = [CMISSession sessionWithParameters:sessionParameters withError:error];
+    CMISSession *session = [CMISSession sessionWithParameters:sessionParameters];
 
     if (*error) {
         log(@"Error while creating session : %@", [*error description]);
@@ -55,7 +55,7 @@
     return [session.binding.repositoryService arrayOfRepositoriesAndReturnError:error];
 }
 
-+ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters withError:(NSError * *)error
++ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters
 {
     CMISSession *session = [[CMISSession alloc] init];
     session.sessionParameters = sessionParameters;
@@ -72,7 +72,7 @@
 
     // create the binding the session will use
     CMISBindingFactory *bindingFactory = [[CMISBindingFactory alloc] init];
-    session.binding = [bindingFactory bindingWithParameters:sessionParameters withError:error];
+    session.binding = [bindingFactory bindingWithParameters:sessionParameters];
 
     session.objectConverter = [[CMISObjectConverter alloc] initWithCMISBinding:session.binding];
     

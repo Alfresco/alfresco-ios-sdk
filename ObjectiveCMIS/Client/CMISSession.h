@@ -34,7 +34,7 @@
 + (NSArray *)arrayOfRepositories:(CMISSessionParameters *)sessionParameters error:(NSError **)error;
 
 // Returns a CMISSession using the given session parameters.
-+ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters withError:(NSError * *)error;
++ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters;
 
 // Authenticates the session
 // TODO: Is this ok? (follows NSURLConnection initWithRequest:delegate) or should

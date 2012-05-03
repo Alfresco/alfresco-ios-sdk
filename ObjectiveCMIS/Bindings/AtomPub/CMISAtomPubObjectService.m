@@ -16,7 +16,7 @@
 - (CMISObjectData *)retrieveObject:(NSString *)objectId error:(NSError **)error
 {
     // build URL to get object data
-    NSArray *cmisWorkSpaces = (NSArray *) [self.sessionParameters objectForKey:kCMISSessionKeyWorkspaces];
+    NSArray *cmisWorkSpaces = [self retrieveCMISWorkspacesWithError:error];
 
     // TODO: discuss what to do with multiple workspaces. Is this even possible?
     NSString *urlTemplate = [(CMISWorkspace *)[cmisWorkSpaces objectAtIndex:0] objectByIdUriTemplate];

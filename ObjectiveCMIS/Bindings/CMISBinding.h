@@ -47,8 +47,6 @@
 // The versioning service object for the binding
 @property (nonatomic, strong, readonly) id<CMISVersioningService> versioningService;
 
-// The authentication delegate object
-@property (nonatomic, strong, readonly) id<CMISAuthenticationProvider> authenticationProvider;
 
 - (void)close;
 

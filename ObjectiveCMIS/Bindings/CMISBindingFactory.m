@@ -12,7 +12,7 @@
 
 @implementation CMISBindingFactory
 
-- (id<CMISBinding>)bindingWithParameters:(CMISSessionParameters *)sessionParameters withError:(NSError * *)error
+- (id<CMISBinding>)bindingWithParameters:(CMISSessionParameters *)sessionParameters
 {
     // TODO: Add default parameters to the session, if not already present.
     
@@ -21,7 +21,7 @@
     id<CMISBinding> binding = nil;
     if (sessionParameters.bindingType == CMISBindingTypeAtomPub)
     {
-        binding = [[CMISAtomPubBinding alloc] initWithSessionParameters:sessionParameters withError:error];
+        binding = [[CMISAtomPubBinding alloc] initWithSessionParameters:sessionParameters];
     }
 
     [sessionParameters setObject:binding forKey:kCMISSessionKeyBinding];

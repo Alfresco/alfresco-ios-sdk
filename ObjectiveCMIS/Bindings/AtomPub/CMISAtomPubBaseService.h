@@ -17,6 +17,8 @@
 
 - (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters;
 
+- (NSArray *)retrieveCMISWorkspacesWithError:(NSError * *)error;
+
 - (NSData *)executeRequest:(NSURL *)url error:(NSError **)outError;
 
 @end

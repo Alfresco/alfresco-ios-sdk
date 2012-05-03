@@ -12,6 +12,6 @@
 
 @interface CMISAtomPubBinding : NSObject <CMISBinding>
 
-- (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters withError:(NSError * *)error;
+- (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters;
 
 @end

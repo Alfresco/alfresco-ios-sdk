@@ -57,8 +57,7 @@
     self.parameters.repositoryId = @"246b1d64-9a1f-4c56-8900-594a4b85bd05";
 
     NSError *error = nil;
-    CMISSession *session = [CMISSession sessionWithParameters:self.parameters withError:&error];
-    STAssertNil(error, @"Error while creating session : %@", [error description]);
+    CMISSession *session = [CMISSession sessionWithParameters:self.parameters];
     STAssertNotNil(session, @"session object should not be nil");
     
     // authenticate the session, we should use the delegate to check for success but
