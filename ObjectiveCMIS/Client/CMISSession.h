@@ -36,12 +36,8 @@
 // Returns a CMISSession using the given session parameters.
 + (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters;
 
-// Authenticates the session
-// TODO: Is this ok? (follows NSURLConnection initWithRequest:delegate) or should
-//       there be a separate delegate property for the object as a whole?
-//       OR should we combine this with the sessionWithParameters method?
-//       i.e. sessionWithParameters:authenticationDelegate?
-- (void)authenticateWithDelegate:(id<CMISSessionAuthenticationDelegate>)delegate;
+// Authenticates using the CMISSessionParameters and returns if the authentication was succesful
+- (BOOL)authenticateAndReturnError:(NSError **)error;
 
 // *** object retrieval ***
 

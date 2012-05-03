@@ -43,11 +43,6 @@
 + (NSArray *)arrayOfRepositories:(CMISSessionParameters *)sessionParameters error:(NSError **)error
 {
     CMISSession *session = [CMISSession sessionWithParameters:sessionParameters];
-
-    if (*error) {
-        log(@"Error while creating session : %@", [*error description]);
-        return nil;
-    }
     
     // TODO: validate session parameters?
     
@@ -81,16 +76,6 @@
     // TODO: setup caches
     
     return session;
-}
-
-- (void)authenticateWithDelegate:(id<CMISSessionAuthenticationDelegate>)delegate
-{
-    // TODO: Use an NSOperationQueue to call the authenticateAndReturnError method
-    //       on a background thread
-    if ([self authenticateAndReturnError:nil])
-    {
-        self.isAuthenticated = YES;
-    }
 }
 
 - (BOOL)authenticateAndReturnError:(NSError **)error

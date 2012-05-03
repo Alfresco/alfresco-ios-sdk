@@ -27,6 +27,7 @@
     self.parameters.username = @"admin";
     self.parameters.password = @"alzheimer";
     self.parameters.atomPubUrl = [[NSURL alloc] initWithString:@"http://ec2-79-125-44-131.eu-west-1.compute.amazonaws.com/alfresco/service/api/cmis"];
+    self.parameters.repositoryId = @"246b1d64-9a1f-4c56-8900-594a4b85bd05";
 }
 
 - (void)tearDown
@@ -41,20 +42,10 @@
     STAssertNil(error, @"Error when calling arrayOfRepositories : %@", [error description]);
     STAssertNotNil(repos, @"repos object should not be nil");
     STAssertTrue(repos.count > 0, @"There should be at least one repository");
-    
-    for (CMISRepositoryInfo *repo in repos) 
-    {
-        NSLog(@"Repository ID: %@", [repo identifier]);
-        
-        // remember the last repository id
-        self.repositoryId = repo.identifier; 
-    }
 }
 
 - (void)testRootFolder
 {
-    // TODO: find a way to pass values between test runs
-    self.parameters.repositoryId = @"246b1d64-9a1f-4c56-8900-594a4b85bd05";
 
     NSError *error = nil;
     CMISSession *session = [CMISSession sessionWithParameters:self.parameters];
@@ -62,9 +53,10 @@
     
     // authenticate the session, we should use the delegate to check for success but
     // we can't in a unit test so wait for a couple of seconds then check the authenticated flag
-    [session authenticateWithDelegate:nil];
-    sleep(10);
+    error = nil;
+    [session authenticateAndReturnError:&error];
     STAssertTrue(session.isAuthenticated, @"session should be authenticated");
+    STAssertNil(error, @"Error while authenticating session: %@", [error description]);
     
     if (session.isAuthenticated)
     {
@@ -121,6 +113,9 @@
         error = nil;
         [randomDoc writeContentToFile:@"testfile.pdf" withError:&error];
         STAssertNil(error, @"Error while writing content: %@", [error description]);
+
+        // TODO: check file
+        // TODO: remove file
     }
 
 }
