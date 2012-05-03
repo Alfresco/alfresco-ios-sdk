@@ -12,6 +12,7 @@
 #import "CMISBinding.h"
 #import "CMISFolder.h"
 @protocol CMISSessionAuthenticationDelegate;
+@class CMISDocument;
 
 @interface CMISSession : NSObject
 
@@ -33,7 +34,7 @@
 + (NSArray *)arrayOfRepositories:(CMISSessionParameters *)sessionParameters error:(NSError **)error;
 
 // Returns a CMISSession using the given session parameters.
-+ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters;
++ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters withError:(NSError * *)error;
 
 // Authenticates the session
 // TODO: Is this ok? (follows NSURLConnection initWithRequest:delegate) or should
@@ -54,8 +55,5 @@
 
 // Sent when authentication of the session is successful
 - (void)didAuthenticateSession:(CMISSession *)session;
-
-// Sent when authentication of the session failed
-- (void)session:(CMISSession *)session didFailToAuthenticateWithError:(NSError *)error;
 
 @end

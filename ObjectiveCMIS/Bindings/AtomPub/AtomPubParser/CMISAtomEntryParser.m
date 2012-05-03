@@ -50,6 +50,7 @@
     NSXMLParser *parser = [[NSXMLParser alloc] initWithData:self.atomData];
     [parser setShouldProcessNamespaces:YES];
     [parser setDelegate:self];
+
     parseSuccessful = [parser parse];
     
     if (!parseSuccessful)
@@ -99,6 +100,17 @@
             }
 
             [self.objectData.links setObject:[attributeDict objectForKey:@"href"] forKey:@"down"];
+        }
+
+
+        // TODO: Quick-hack to get service url
+        if (rel != nil && [rel isEqualToString:@"service"])
+        {
+            if (self.objectData.links == nil)
+            {
+                self.objectData.links = [[NSMutableDictionary alloc] init];
+            }
+            [self.objectData.links setObject:[attributeDict objectForKey:@"href"] forKey:@"service"];
         }
     }
 }

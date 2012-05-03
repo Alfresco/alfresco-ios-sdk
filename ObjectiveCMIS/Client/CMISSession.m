@@ -11,6 +11,7 @@
 #import "CMISObjectConverter.h"
 #import "CMISStandardAuthenticationProvider.h"
 #import "CMISBindingFactory.h"
+#import "CMISDocument.h"
 
 @interface CMISSession ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
@@ -41,7 +42,12 @@
 
 + (NSArray *)arrayOfRepositories:(CMISSessionParameters *)sessionParameters error:(NSError **)error
 {
-    CMISSession *session = [CMISSession sessionWithParameters:sessionParameters];
+    CMISSession *session = [CMISSession sessionWithParameters:sessionParameters withError:error];
+
+    if (*error) {
+        log(@"Error while creating session : %@", [*error description]);
+        return nil;
+    }
     
     // TODO: validate session parameters?
     
@@ -49,7 +55,7 @@
     return [session.binding.repositoryService arrayOfRepositoriesAndReturnError:error];
 }
 
-+ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters
++ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters withError:(NSError * *)error
 {
     CMISSession *session = [[CMISSession alloc] init];
     session.sessionParameters = sessionParameters;
@@ -58,7 +64,7 @@
     // setup authentication provider delegate (if not present)
     if (sessionParameters.authenticationProvider == nil)
     {
-        // TODO: Do we need to cache the instance in the session parameters
+        // TODO: Do we need to cache the instance in the session parameters?
         sessionParameters.authenticationProvider = [[CMISStandardAuthenticationProvider alloc] 
                                                     initWithUsername:sessionParameters.username 
                                                     andPassword:sessionParameters.password];
@@ -66,7 +72,7 @@
 
     // create the binding the session will use
     CMISBindingFactory *bindingFactory = [[CMISBindingFactory alloc] init];
-    session.binding = [bindingFactory bindingWithParameters:sessionParameters];
+    session.binding = [bindingFactory bindingWithParameters:sessionParameters withError:error];
 
     session.objectConverter = [[CMISObjectConverter alloc] initWithCMISBinding:session.binding];
     

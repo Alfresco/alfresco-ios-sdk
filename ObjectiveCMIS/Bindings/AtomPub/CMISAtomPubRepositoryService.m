@@ -8,9 +8,6 @@
 
 #import "CMISAtomPubRepositoryService.h"
 #import "CMISConstants.h"
-#import "CMISServiceDocumentParser.h"
-
-#import "ASIHTTPRequest.h"
 #import "CMISWorkspace.h"
 
 @interface CMISAtomPubRepositoryService ()
@@ -41,7 +38,8 @@
 - (void)retrieveRepositoriesAndReturnError:(NSError **)error
 {
     self.repositories = [NSMutableDictionary dictionary];
-    for (CMISWorkspace *workspace in self.cmisWorkspaces)
+    NSArray *cmisWorkSpaces = (NSArray *) [self.sessionParameters objectForKey:kCMISSessionKeyWorkspaces];
+    for (CMISWorkspace *workspace in cmisWorkSpaces)
     {
         [self.repositories setObject:workspace.repositoryInfo forKey:workspace.repositoryInfo.identifier];
     }

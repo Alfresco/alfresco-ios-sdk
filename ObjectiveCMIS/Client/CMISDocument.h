@@ -8,6 +8,15 @@
 
 #import "CMISFileableObject.h"
 
-@interface CMISDocument : CMISFileableObject
+@interface CMISDocument : CMISFileableObject <NSURLConnectionDataDelegate>
+
+@property (nonatomic, strong, readonly) NSString *contentStreamId;
+@property (nonatomic, strong, readonly) NSURL *contentURL;
+
+/**
+* Downloads the content to a local file and returns the filepath.
+* This is a synchronous call and will not return until the file is written to the given path.
+*/
+- (void)writeContentToFile:(NSString *)filePath withError:(NSError * *)error;
 
 @end

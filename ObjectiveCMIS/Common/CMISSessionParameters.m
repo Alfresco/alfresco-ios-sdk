@@ -10,6 +10,7 @@
 
 @interface CMISSessionParameters ()
 @property (nonatomic, assign, readwrite) CMISBindingType bindingType;
+@property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;
 @end
 
 @implementation CMISSessionParameters
@@ -20,19 +21,22 @@
 @synthesize bindingType = _bindingType;
 @synthesize atomPubUrl = _atomPubUrl;
 @synthesize authenticationProvider = _authenticationProvider;
+@synthesize sessionData = _sessionData;
 
 - (id)init
 {
+    _sessionData = [[NSMutableDictionary alloc] init];
     return [self initWithBindingType:CMISBindingTypeAtomPub];
 }
 
 - (id)initWithBindingType:(CMISBindingType)bindingType
 {
-    if (self = [super init]) 
+    self = [super init];
+    if (self)
     {
+        _sessionData = [[NSMutableDictionary alloc] init];
         self.bindingType = bindingType;
     }
-    
     return self;
 }
 
@@ -41,5 +45,32 @@
     return [NSString stringWithFormat:@"bindingType: %@, username: %@, password: %@, atomPubUrl: %@", 
             self.bindingType, self.username, self.password, self.atomPubUrl];
 }
+
+- (NSArray *)allKeys
+{
+    return [self.sessionData allKeys];
+}
+
+- (NSObject *)objectForKey:(NSString *)key
+{
+    return [self.sessionData objectForKey:key];
+}
+
+- (NSObject *)objectForKey:(NSString *)key withDefaultValue:(NSObject *)defaultValue
+{
+    NSObject *value = [self.sessionData objectForKey:key];
+    return value != nil ? value : defaultValue;
+}
+
+- (void)setObject:(NSObject *)object forKey:(NSString *)key
+{
+    [self.sessionData setObject:object forKey:key];
+}
+
+- (void)removeKey:(NSString *)key
+{
+    [self.sessionData removeObjectForKey:key];
+}
+
 
 @end

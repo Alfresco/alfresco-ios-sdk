@@ -10,16 +10,14 @@
 #import "CMISEnums.h"
 #import "CMISBinding.h"
 #import "CMISAuthenticationProvider.h"
+#import "CMISBindingSession.h"
 
-// TODO: Add mutable dictionary methods to allow arbitary objects to be added
-
-@interface CMISSessionParameters : NSObject
+@interface CMISSessionParameters : NSObject <CMISBindingSession>
 
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *repositoryId;
 @property (nonatomic, strong) NSURL *atomPubUrl;
-@property (nonatomic, strong) id<CMISAuthenticationProvider> authenticationProvider;
 
 @property (nonatomic, assign, readonly) CMISBindingType bindingType;
 

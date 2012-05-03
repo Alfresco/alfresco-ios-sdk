@@ -16,5 +16,6 @@
 @property (nonatomic, assign) CMISBaseType baseType;
 @property (nonatomic, strong) CMISProperties *properties;
 @property (nonatomic, strong) NSMutableDictionary *links;
+@property (nonatomic, strong) NSURL *contentUrl;
 
 @end

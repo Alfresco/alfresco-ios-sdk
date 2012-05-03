@@ -12,6 +12,6 @@
 @interface CMISBindingFactory : NSObject
 
 // Returns an instance of a CMISBinding using the given session parameters
-- (id<CMISBinding>)bindingWithParameters:(CMISSessionParameters *)sessionParameters;
+- (id<CMISBinding>)bindingWithParameters:(CMISSessionParameters *)sessionParameters withError:(NSError * *)error;
 
 @end

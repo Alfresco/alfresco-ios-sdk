@@ -13,3 +13,7 @@ NSString * const kCMISPropertyCreatedBy = @"cmis:createdBy";
 NSString * const kCMISPropertyCreationDate = @"cmis:creationDate";
 NSString * const kCMISPropertyModifiedBy = @"cmis:lastModifiedBy";
 NSString * const kCMISPropertyModificationDate = @"cmis:lastModificationDate";
+NSString * const kCMISProperyContentStreamId = @"cmis:contentStreamId";
+
+NSString * const kCMISSessionKeyWorkspaces = @"cmis_session_key_workspaces";
+NSString * const kCMISSessionKeyBinding = @"cmis_session_key_binding";

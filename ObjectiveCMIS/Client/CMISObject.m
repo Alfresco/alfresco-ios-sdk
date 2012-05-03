@@ -28,8 +28,8 @@
 @synthesize lastModifiedBy = _lastModifiedBy;
 @synthesize lastModificationDate = _lastModificationDate;
 
+
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
-//- (id)initWithObjectData:(CMISObjectData *)objectData
 {
     self =  [super initWithString:objectData.identifier];
     if (self)
@@ -39,19 +39,17 @@
         self.name = [[objectData.properties.properties objectForKey:kCMISPropertyName] firstValue];
         self.createdBy = [[objectData.properties.properties objectForKey:kCMISPropertyCreatedBy] firstValue];
         self.lastModifiedBy = [[objectData.properties.properties objectForKey:kCMISPropertyModifiedBy] firstValue];
-        
+
         // convert properties to NSDate
         ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter alloc] init];
         
         NSString *date = [[objectData.properties.properties objectForKey:kCMISPropertyCreationDate] firstValue];
-        //NSLog(@"created on: %@", date);
         if (date != nil)
         {
             self.creationDate = [isoFormatter dateFromString:date];
         }
         
         date = [[objectData.properties.properties objectForKey:kCMISPropertyModificationDate] firstValue];
-        //NSLog(@"modified on: %@", date);
         if (date != nil)
         {
             self.lastModificationDate = [isoFormatter dateFromString:date];

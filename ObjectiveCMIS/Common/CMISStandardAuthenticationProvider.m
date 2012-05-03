@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Alfresco. All rights reserved.
 //
 
+#import "CMISBase64Encoder.h"
 #import "CMISStandardAuthenticationProvider.h"
 
 @interface CMISStandardAuthenticationProvider ()
@@ -19,16 +20,24 @@
 @synthesize password = _password;
 @synthesize httpHeadersToApply = _httpHeadersToApply;
 
-
 - (id)initWithUsername:(NSString *)username andPassword:(NSString *)password
 {
-    if (self = [super init]) 
+    self = [super init];
+    if (self)
     {
         self.username = username;
         self.password = password;
     }
     
     return self;
+}
+
+- (NSDictionary *)httpHeadersToApply
+{
+    NSMutableString *loginString = [NSMutableString stringWithFormat:@"%@:%@", self.username, self.password];
+    NSString *encodedLoginData = [CMISBase64Encoder encode:[loginString dataUsingEncoding:NSUTF8StringEncoding]];
+    NSString *authHeader = [NSString stringWithFormat:@"Basic %@", encodedLoginData];
+    return [NSDictionary dictionaryWithObject:authHeader forKey:@"Authorization"];
 }
 
 @end

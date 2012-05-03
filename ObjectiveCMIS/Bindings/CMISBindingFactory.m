@@ -8,21 +8,24 @@
 
 #import "CMISBindingFactory.h"
 #import "CMISAtomPubBinding.h"
+#import "CMISConstants.h"
 
 @implementation CMISBindingFactory
 
-- (id<CMISBinding>)bindingWithParameters:(CMISSessionParameters *)sessionParameters;
+- (id<CMISBinding>)bindingWithParameters:(CMISSessionParameters *)sessionParameters withError:(NSError * *)error
 {
     // TODO: Add default parameters to the session, if not already present.
     
     // TODO: Allow for the creation of custom binding implementations using NSClassFromString.
-    
+
+    id<CMISBinding> binding = nil;
     if (sessionParameters.bindingType == CMISBindingTypeAtomPub)
     {
-        return [[CMISAtomPubBinding alloc] initWithSessionParameters:sessionParameters];
+        binding = [[CMISAtomPubBinding alloc] initWithSessionParameters:sessionParameters withError:error];
     }
-    
-    return nil;
+
+    [sessionParameters setObject:binding forKey:kCMISSessionKeyBinding];
+    return binding;
 }
 
 

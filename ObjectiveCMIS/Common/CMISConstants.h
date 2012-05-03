@@ -13,4 +13,8 @@ extern NSString * const kCMISPropertyCreatedBy;
 extern NSString * const kCMISPropertyCreationDate;
 extern NSString * const kCMISPropertyModifiedBy;
 extern NSString * const kCMISPropertyModificationDate;
+extern NSString * const kCMISProperyContentStreamId;
+
+extern NSString * const kCMISSessionKeyWorkspaces;
+extern NSString * const kCMISSessionKeyBinding;
 

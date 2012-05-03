@@ -65,7 +65,7 @@
     {
         *error = [parser parserError];
     }
-    
+
     return parseSuccessful;
 }
 
@@ -86,7 +86,9 @@
         self.currentPropertyData.queryName = [attributeDict objectForKey:kCMISAtomEntryQueryName];
         self.currentPropertyData.displayName = [attributeDict objectForKey:kCMISAtomEntryDisplayName];
     }
-    else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryObject])
+//    else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryObject])
+    // [JORAM]: links are part of entry, not of object...
+    else if ([self.elementBeingParsed isEqualToString:@"entry"])
     {
         // create the current object data object
         self.currentObjectData = [[CMISObjectData alloc] init];
@@ -96,7 +98,36 @@
     }
     else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryLink])
     {
-        // TODO: define interface for a link, parse link elements and add to dictionary
+          // TODO: this is quick-and-dirty parsing for the 'down' link
+        NSString *linkType = [attributeDict objectForKey:@"type"];
+        NSString *rel = [attributeDict objectForKey:kCMISAtomEntryRel];
+        if (linkType != nil
+                && [linkType isEqualToString:@"application/atom+xml;type=feed"]
+                && rel != nil
+                && [rel isEqualToString:@"down"])
+        {
+
+            if (self.currentObjectData.links == nil)
+            {
+                self.currentObjectData.links = [[NSMutableDictionary alloc] init];
+            }
+
+            [self.currentObjectData.links setObject:[attributeDict objectForKey:kCMISAtomEntryHref] forKey:@"down"];
+        }
+
+
+        // TODO: Quick-hack to get service url
+        if (rel != nil && [rel isEqualToString:@"service"])
+        {
+            if (self.currentObjectData.links == nil)
+            {
+                self.currentObjectData.links = [[NSMutableDictionary alloc] init];
+            }
+            [self.currentObjectData.links setObject:[attributeDict objectForKey:kCMISAtomEntryHref] forKey:@"service"];
+        }
+    } else if ([self.elementBeingParsed isEqualToString:@"content"])
+    {
+        self.currentObjectData.contentUrl = [NSURL URLWithString:[attributeDict objectForKey:@"src"]];
     }
 }
 

@@ -11,6 +11,7 @@
 #import "CMISSession.h"
 #import "CMISConstants.h"
 #import "CMISFolder.h"
+#import "CMISDocument.h"
 
 @implementation ObjectiveCMISTests
 
@@ -54,8 +55,10 @@
 {
     // TODO: find a way to pass values between test runs
     self.parameters.repositoryId = @"246b1d64-9a1f-4c56-8900-594a4b85bd05";
-    
-    CMISSession *session = [CMISSession sessionWithParameters:self.parameters];
+
+    NSError *error = nil;
+    CMISSession *session = [CMISSession sessionWithParameters:self.parameters withError:&error];
+    STAssertNil(error, @"Error while creating session : %@", [error description]);
     STAssertNotNil(session, @"session object should not be nil");
     
     // authenticate the session, we should use the delegate to check for success but
@@ -101,12 +104,26 @@
         STAssertNotNil(children, @"children should not be nil");
         NSLog(@"There are %d children", [children count]);
         STAssertTrue([children count] > 5, @"There should be at least 5 children");
-        
+
+        CMISDocument *randomDoc = nil;
         for (CMISObject *object in children) 
         {
             NSLog(@"%@", object.name);
+
+            if ([object class] == [CMISDocument class]) {
+                randomDoc = (CMISDocument *)object;
+            }
         }
+
+        STAssertNotNil(randomDoc, @"Can only continue test if root folder contains at least one document");
+        NSLog(@"Fetching content stream for document %@", randomDoc.name);
+
+        // Temporary test code! does not yet return correct file path!
+        error = nil;
+        [randomDoc writeContentToFile:@"testfile.pdf" withError:&error];
+        STAssertNil(error, @"Error while writing content: %@", [error description]);
     }
+
 }
 
 @end
