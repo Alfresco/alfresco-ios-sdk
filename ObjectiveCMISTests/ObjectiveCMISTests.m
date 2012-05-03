@@ -44,10 +44,10 @@
     STAssertTrue(repos.count > 0, @"There should be at least one repository");
 }
 
-- (void)testAuthenticateWithInvalidCredentials
-{
-
-}
+//- (void)testAuthenticateWithInvalidCredentials
+//{
+//
+//}
 
 - (void)testGetRootFolder
 {

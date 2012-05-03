@@ -113,6 +113,10 @@
             [self.objectData.links setObject:[attributeDict objectForKey:@"href"] forKey:@"service"];
         }
     }
+    else if ([self.elementBeingParsed isEqualToString:@"content"])
+    {
+        self.objectData.contentUrl = [NSURL URLWithString:[attributeDict objectForKey:@"src"]];
+    }
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 

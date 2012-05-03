@@ -51,7 +51,6 @@
                 log(@"Error while parsing service document: %@", [*error description]);
             }
         }
-        return nil;
     }
 
     return (NSArray *) [self.sessionParameters objectForKey:kCMISSessionKeyWorkspaces];

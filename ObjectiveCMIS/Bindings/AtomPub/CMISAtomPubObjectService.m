@@ -27,6 +27,7 @@
     // Execute actual call
     CMISObjectData *objectData = nil;
     NSData *data = [self executeRequest:objectIdUrl error:error];
+
     if (data != nil)
     {
         CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:data];
@@ -52,12 +53,12 @@
             [data writeToFile:filePath atomically:YES];
         } else
         {
-            log(@"Could not fetch data for object id %@ : %@", objectId, [*error description]);
+            log(@"Could not fetch data from url %@ : %@", objectData.contentUrl.absoluteString, [*error description]);
         }
 
     } else
     {
-        log(@"Error while retrieving CMIS object for object id %@ : %@", objectId, [*error description]);
+        log(@"Error while retrieving CMIS object for object id '%@' : %@", objectId, [*error description]);
     }
 }
 
