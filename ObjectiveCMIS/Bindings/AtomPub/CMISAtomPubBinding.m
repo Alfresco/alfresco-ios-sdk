@@ -7,13 +7,14 @@
 //
 
 #import "CMISAtomPubBinding.h"
+#import "CMISBindingSession.h"
 #import "CMISAtomPubRepositoryService.h"
 #import "CMISAtomPubObjectService.h"
 #import "CMISAtomPubNavigationService.h"
 
 @interface CMISAtomPubBinding ()
 
-@property (nonatomic, strong) CMISSessionParameters *sessionParameters;
+@property (nonatomic, strong) CMISBindingSession *session;
 @property (nonatomic, strong, readwrite) id<CMISAclService> aclService;
 @property (nonatomic, strong, readwrite) id<CMISDiscoveryService> discoveryService;
 @property (nonatomic, strong, readwrite) id<CMISMultiFilingService> multiFilingService;
@@ -28,7 +29,7 @@
 
 @implementation CMISAtomPubBinding
 
-@synthesize sessionParameters = _sessionParameters;
+@synthesize session = _session;
 @synthesize aclService = _aclService;
 @synthesize discoveryService = _discoveryService;
 @synthesize multiFilingService = _multiFilingService;
@@ -44,10 +45,11 @@
     self = [super init];
     if (self)
     {
-        self.sessionParameters = sessionParameters;
-        self.repositoryService = [[CMISAtomPubRepositoryService alloc] initWithSessionParameters:sessionParameters];
-        self.objectService = [[CMISAtomPubObjectService alloc] initWithSessionParameters:sessionParameters];
-        self.navigationService = [[CMISAtomPubNavigationService alloc] initWithSessionParameters:sessionParameters];
+        self.session = [[CMISBindingSession alloc] initWithSessionParameters:sessionParameters];
+        
+        self.repositoryService = [[CMISAtomPubRepositoryService alloc] initWithBindingSession:self.session];
+        self.objectService = [[CMISAtomPubObjectService alloc] initWithBindingSession:self.session];
+        self.navigationService = [[CMISAtomPubNavigationService alloc] initWithBindingSession:self.session];
     }
     return self;
 }

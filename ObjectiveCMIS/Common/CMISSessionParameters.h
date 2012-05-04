@@ -10,17 +10,25 @@
 #import "CMISEnums.h"
 #import "CMISBinding.h"
 #import "CMISAuthenticationProvider.h"
-#import "CMISBindingSession.h"
 
-@interface CMISSessionParameters : NSObject <CMISBindingSession>
+@interface CMISSessionParameters : NSObject
 
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *repositoryId;
 @property (nonatomic, strong) NSURL *atomPubUrl;
 
+@property (nonatomic, strong) id<CMISAuthenticationProvider> authenticationProvider;
+
 @property (nonatomic, assign, readonly) CMISBindingType bindingType;
 
 - (id)initWithBindingType:(CMISBindingType)bindingType;
+
+// Object storage methods
+- (NSArray *)allKeys;
+- (id)objectForKey:(id)key;
+- (id)objectForKey:(id)key withDefaultValue:(id)defaultValue;
+- (void)setObject:(id)object forKey:(id)key;
+- (void)removeKey:(id)key;
 
 @end

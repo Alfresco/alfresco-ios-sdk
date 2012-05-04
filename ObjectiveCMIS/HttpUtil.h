@@ -6,12 +6,10 @@
 
 
 #import <Foundation/Foundation.h>
-
-@protocol CMISBindingSession;
-
+#import "CMISBindingSession.h"
 
 @interface HttpUtil : NSObject
 
-+ (NSData *)invokeGET:(NSURL *)url withSession:(id<CMISBindingSession>)session error:(NSError **)outError;
++ (NSData *)invokeGET:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError;
 
 @end

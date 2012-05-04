@@ -6,13 +6,11 @@
 
 
 #import "HttpUtil.h"
-#import "CMISBindingSession.h"
 #import "CMISAuthenticationProvider.h"
-
 
 @implementation HttpUtil
 
-+ (NSData *)invokeGET:(NSURL *)url withSession:(id<CMISBindingSession>)session error:(NSError **)error
++ (NSData *)invokeGET:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)error
 {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     log(@"HTTP GET: %@", [url absoluteString]);

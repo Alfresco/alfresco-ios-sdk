@@ -51,23 +51,23 @@
     return [self.sessionData allKeys];
 }
 
-- (NSObject *)objectForKey:(NSString *)key
+- (id)objectForKey:(id)key
 {
     return [self.sessionData objectForKey:key];
 }
 
-- (NSObject *)objectForKey:(NSString *)key withDefaultValue:(NSObject *)defaultValue
+- (id)objectForKey:(id)key withDefaultValue:(id)defaultValue
 {
     NSObject *value = [self.sessionData objectForKey:key];
     return value != nil ? value : defaultValue;
 }
 
-- (void)setObject:(NSObject *)object forKey:(NSString *)key
+- (void)setObject:(id)object forKey:(id)key
 {
     [self.sessionData setObject:object forKey:key];
 }
 
-- (void)removeKey:(NSString *)key
+- (void)removeKey:(id)key
 {
     [self.sessionData removeObjectForKey:key];
 }

@@ -7,6 +7,7 @@
 //
 
 #import "CMISAtomPubNavigationService.h"
+#import "CMISAtomPubBaseService+Protected.h"
 #import "CMISAtomFeedParser.h"
 #import "CMISConstants.h"
 
@@ -15,8 +16,7 @@
 - (NSArray *)retrieveChildren:(NSString *)objectId error:(NSError **)error
 {
     // Get Object for objectId
-    id<CMISBinding> binding = (id<CMISBinding>) [self.sessionParameters objectForKey:kCMISSessionKeyBinding];
-    CMISObjectData *cmisObjectData = [binding.objectService retrieveObject:objectId error:error];
+    CMISObjectData *cmisObjectData = [self retrieveObjectInternal:objectId error:error];
     NSString *downLink = [cmisObjectData.links objectForKey:@"down"];
 
     // Get children for object
