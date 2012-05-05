@@ -51,8 +51,7 @@
 
 - (void)testGetRootFolder
 {
-
-    CMISSession *session = [CMISSession sessionWithParameters:self.parameters];
+    CMISSession *session = [[CMISSession alloc] initWithSessionParameters:self.parameters];
     STAssertNotNil(session, @"session object should not be nil");
     
     // authenticate the session, we should use the delegate to check for success but
@@ -106,7 +105,7 @@
 {
 
     NSError *error = nil;
-    CMISSession *session = [CMISSession sessionWithParameters:self.parameters];
+    CMISSession *session = [[CMISSession alloc] initWithSessionParameters:self.parameters];
 
     error = nil;
     [session authenticateAndReturnError:&error];

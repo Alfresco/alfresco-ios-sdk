@@ -11,8 +11,6 @@
 #import "CMISRepositoryInfo.h"
 #import "CMISBinding.h"
 #import "CMISFolder.h"
-@protocol CMISSessionAuthenticationDelegate;
-@class CMISDocument;
 
 @interface CMISSession : NSObject
 
@@ -34,7 +32,7 @@
 + (NSArray *)arrayOfRepositories:(CMISSessionParameters *)sessionParameters error:(NSError **)error;
 
 // Returns a CMISSession using the given session parameters.
-+ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters;
+- (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters;
 
 // Authenticates using the CMISSessionParameters and returns if the authentication was succesful
 - (BOOL)authenticateAndReturnError:(NSError **)error;
@@ -43,13 +41,5 @@
 
 // Retrieves the object with the given identifier
 - (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error;
-
-@end
-
-
-@protocol CMISSessionAuthenticationDelegate <NSObject>
-
-// Sent when authentication of the session is successful
-- (void)didAuthenticateSession:(CMISSession *)session;
 
 @end

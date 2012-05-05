@@ -16,7 +16,6 @@
 @interface CMISSession ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
 @property (nonatomic, strong) CMISObjectConverter *objectConverter;
-@property (nonatomic, strong) id<CMISSessionAuthenticationDelegate> authenticationDelegate;
 @property (nonatomic, assign, readwrite) BOOL isAuthenticated;
 @property (nonatomic, strong, readwrite) id<CMISBinding> binding;
 @property (nonatomic, strong, readwrite) CMISFolder *rootFolder;
@@ -35,14 +34,13 @@
 @synthesize isAuthenticated = _isAuthenticated;
 @synthesize objectConverter = _objectConverter;
 @synthesize sessionParameters = _sessionParameters;
-@synthesize authenticationDelegate = _authenticationDelegate;
 
 #pragma mark -
 #pragma mark Setup
 
 + (NSArray *)arrayOfRepositories:(CMISSessionParameters *)sessionParameters error:(NSError **)error
 {
-    CMISSession *session = [CMISSession sessionWithParameters:sessionParameters];
+    CMISSession *session = [[CMISSession alloc] initWithSessionParameters:sessionParameters];
     
     // TODO: validate session parameters?
     
@@ -50,32 +48,34 @@
     return [session.binding.repositoryService arrayOfRepositoriesAndReturnError:error];
 }
 
-+ (CMISSession *)sessionWithParameters:(CMISSessionParameters *)sessionParameters
+- (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters
 {
-    CMISSession *session = [[CMISSession alloc] init];
-    session.sessionParameters = sessionParameters;
-    session.isAuthenticated = NO;
-    
-    // setup authentication provider delegate (if not present)
-    if (sessionParameters.authenticationProvider == nil)
+    if (self = [super init])
     {
-        // TODO: Do we need to cache the instance in the session parameters?
-        sessionParameters.authenticationProvider = [[CMISStandardAuthenticationProvider alloc] 
-                                                    initWithUsername:sessionParameters.username 
-                                                    andPassword:sessionParameters.password];
+        self.sessionParameters = sessionParameters;
+        self.isAuthenticated = NO;
+    
+        // setup authentication provider delegate (if not present)
+        if (self.sessionParameters.authenticationProvider == nil)
+        {
+            // TODO: Do we need to cache the instance in the session parameters?
+            self.sessionParameters.authenticationProvider = [[CMISStandardAuthenticationProvider alloc] 
+                                                             initWithUsername:self.sessionParameters.username 
+                                                             andPassword:self.sessionParameters.password];
+        }
+
+        // create the binding the session will use
+        CMISBindingFactory *bindingFactory = [[CMISBindingFactory alloc] init];
+        self.binding = [bindingFactory bindingWithParameters:sessionParameters];
+
+        self.objectConverter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    
+        // TODO: setup locale
+        // TODO: setup default session parameters
+        // TODO: setup caches
     }
-
-    // create the binding the session will use
-    CMISBindingFactory *bindingFactory = [[CMISBindingFactory alloc] init];
-    session.binding = [bindingFactory bindingWithParameters:sessionParameters];
-
-    session.objectConverter = [[CMISObjectConverter alloc] initWithCMISBinding:session.binding];
     
-    // TODO: setup locale
-    // TODO: setup default session parameters
-    // TODO: setup caches
-    
-    return session;
+    return self;
 }
 
 - (BOOL)authenticateAndReturnError:(NSError **)error
