@@ -15,5 +15,6 @@
 @synthesize properties = _properties;
 @synthesize links = _links;
 @synthesize contentUrl = _contentUrl;
+@synthesize allowableActions = _allowableActions;
 
 @end

@@ -17,5 +17,6 @@
 @property (nonatomic, strong) CMISProperties *properties;
 @property (nonatomic, strong) NSMutableDictionary *links;
 @property (nonatomic, strong) NSURL *contentUrl;
+@property (nonatomic, strong) NSMutableDictionary *allowableActions;
 
 @end

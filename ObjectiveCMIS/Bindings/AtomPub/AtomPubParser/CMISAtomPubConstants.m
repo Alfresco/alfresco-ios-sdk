@@ -11,6 +11,7 @@
 NSString * const kCMISAtomEntryLink = @"link";
 NSString * const kCMISAtomEntryRel = @"rel";
 NSString * const kCMISAtomEntryHref = @"href";
+NSString * const kCMISAtomEntryType = @"type";
 NSString * const kCMISAtomEntryObject = @"object";
 NSString * const kCMISAtomEntryObjectId = @"cmis:objectId";
 NSString * const kCMISAtomEntryProperties = @"properties";
@@ -22,3 +23,4 @@ NSString * const kCMISAtomEntryDisplayName = @"displayName";
 NSString * const kCMISAtomEntryQueryName = @"queryName";
 NSString * const kCMISAtomEntryValue = @"value";
 NSString * const kCMISAtomEntryBaseTypeId = @"cmis:baseTypeId";
+NSString * const kCMISAtomEntryAllowableActions = @"allowableActions";
