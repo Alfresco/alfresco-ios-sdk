@@ -8,16 +8,24 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol CMISAllowableActionsParserDelegate;
+
 @interface CMISAllowableActionsParser : NSObject <NSXMLParserDelegate>
 
 // TODO: Define AllowableActions Interface and populate
 
 // Simple Model to hold parsed AllowableActions
-@property (nonatomic, copy) NSMutableDictionary *allowableActionsArray;
+@property (nonatomic, strong) NSMutableDictionary *allowableActionsArray;
 
 - (id)initWithData:(NSData*)atomData;
 - (BOOL)parseAndReturnError:(NSError **)error;
 
-+ (id)elementWithName:(NSString *)elementName attributes:(NSDictionary *)attributesDict parent:(id<NSXMLParserDelegate>)parent parser:(NSXMLParser *)parser;
++ (id)parent:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parent parser:(NSXMLParser *)parser;
 
+@end
+
+
+@protocol CMISAllowableActionsParserDelegate <NSObject>
+@optional
+- (void)allowableActionsParserDidFinish:(CMISAllowableActionsParser *)parser;
 @end

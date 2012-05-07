@@ -10,19 +10,19 @@
 #import "CMISAtomPubConstants.h"
 
 @interface CMISAllowableActionsParser ()
-@property (nonatomic, weak) id<NSXMLParserDelegate> parent;
+@property (nonatomic, weak) id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate> parentDelegate;
 @property (nonatomic, strong) NSMutableString *string;
 @property (nonatomic, strong) NSString *elementBeingParsed;
 @property (nonatomic, strong) NSData *atomData;
 
 // Private Init Used for child delegate parser
-- (id)initWithName:(NSString *)elementName attributes:(NSDictionary *)attributes parent:(id)parent parser:(NSXMLParser *)parser;
+- (id)initWithParentDelegate:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 @end
 
 
 @implementation CMISAllowableActionsParser
 
-@synthesize parent = _parent;
+@synthesize parentDelegate = _parentDelegate;
 @synthesize string = _string;
 @synthesize elementBeingParsed = _elementBeingParsed;
 @synthesize atomData = _atomData;
@@ -32,12 +32,12 @@
 #pragma mark - 
 #pragma Init Methods - allowableActions Delegated Child Parser
 
-- (id)initWithName:(NSString *)elementName attributes:(NSDictionary *)attributes parent:(id)parent parser:(NSXMLParser *)parser 
+- (id)initWithParentDelegate:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser 
 {
     self = [self init];
     if (self) 
     {
-        [self setParent:parent];
+        [self setParentDelegate:parentDelegate];
         [self setAllowableActionsArray:[NSMutableDictionary dictionary]];
         [self setAllowableActionsArray:[NSMutableDictionary dictionary]];
         
@@ -111,14 +111,19 @@
 {
     if ([elementName isEqualToString:kCMISAtomEntryAllowableActions])
     {
-        if (self.parent)
+        if (self.parentDelegate)
         {
-            // Reset Delegate to parent
-            [parser setDelegate:self.parent];
-            // Message the parent that the element ended
-            [self.parent parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
+            if ([self.parentDelegate respondsToSelector:@selector(allowableActionsParserDidFinish:)])
+            {
+                [self.parentDelegate performSelector:@selector(allowableActionsParserDidFinish:) withObject:self];
+            }
             
-            self.parent = nil;
+            // Reset Delegate to parent
+            [parser setDelegate:self.parentDelegate];
+            // Message the parent that the element ended
+            [self.parentDelegate parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
+            
+            self.parentDelegate = nil;
         }
     }
     else
@@ -135,9 +140,9 @@
 #pragma mark - 
 #pragma mark TODO 
 
-+ (id)elementWithName:(NSString *)elementName attributes:(NSDictionary *)attributesDict parent:(id<NSXMLParserDelegate>)parent parser:(NSXMLParser *)parser;
++ (id)parent:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 {
-    return [[[self class] alloc] initWithName:elementName attributes:attributesDict parent:parent parser:parser];
+    return [[[self class] alloc] initWithParentDelegate:parentDelegate parser:parser];
 }
 
 @end
