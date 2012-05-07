@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "CMISObjectData.h"
 #import "CMISBinding.h"
+#import "CMISObjectId.h"
 
-@interface CMISObject : NSObject
+@interface CMISObject : CMISObjectId
 
 // list of CMISProperty objects
 //@property (nonatomic, strong, readonly) NSArray *properties;
-@property (nonatomic, strong, readonly) NSString *identifier;
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSString *createdBy;
 @property (nonatomic, strong, readonly) NSDate *creationDate;
@@ -30,7 +30,6 @@
 //- (id) propertyValueWithId:(NSString *)id;
 
 @property (nonatomic, strong, readonly) id<CMISBinding> binding;
-
 
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 

@@ -33,12 +33,11 @@
 
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 {
-    self =  [super init];
+    self =  [super initWithString:objectData.identifier];
     if (self)
     {
         self.binding = binding;
 
-        self.identifier = objectData.identifier;
         self.name = [[objectData.properties.properties objectForKey:kCMISPropertyName] firstValue];
         self.createdBy = [[objectData.properties.properties objectForKey:kCMISPropertyCreatedBy] firstValue];
         self.lastModifiedBy = [[objectData.properties.properties objectForKey:kCMISPropertyModifiedBy] firstValue];
