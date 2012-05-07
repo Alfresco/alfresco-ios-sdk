@@ -10,7 +10,6 @@
 #import "ObjectiveCMISTests.h"
 #import "CMISSession.h"
 #import "CMISConstants.h"
-#import "CMISFolder.h"
 #import "CMISDocument.h"
 
 @implementation ObjectiveCMISTests
@@ -158,6 +157,41 @@
         [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
         STAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
     }
+}
+
+- (void)testCreateDocument
+{
+    NSError *error = nil;
+    CMISSession *session = [[CMISSession alloc] initWithSessionParameters:self.parameters];
+
+    error = nil;
+    [session authenticateAndReturnError:&error];
+    STAssertTrue(session.isAuthenticated, @"Session should be authenticated");
+
+    CMISFolder *rootFolder = [session rootFolder];
+    STAssertNotNil(rootFolder, @"rootFolder object should not be nil");
+
+    // Check if test file exists
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
+    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"Test file 'test_file.txt' cannot be found as resource for the test");
+
+    // Upload test file
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat: @"yyyy-MM-dd'T'HH-mm-ss-Z'"];
+    NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [formatter stringFromDate:[NSDate date]]];
+    NSDictionary *documentProperties = [NSDictionary dictionaryWithObject:documentName forKey:kCMISPropertyName];
+    NSString *objectId = [rootFolder createDocumentFromFilePath:filePath withProperties:documentProperties error:&error];
+    STAssertNil(error, @"Got error while creating document: %@", [error description]);
+    STAssertNotNil(objectId, @"Object id received should be non-nil");
+
+    // Verify created
+    CMISDocument *document = (CMISDocument *) [session retrieveObject:objectId error:&error];
+    STAssertTrue([documentName isEqualToString:document.name], @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
+
+    // Cleanup after ourselves
+    BOOL documentDeleted = [document deleteAllVersionsAndReturnError:&error];
+    STAssertNil(error, @"Error while deleting created document: %@", [error description]);
+    STAssertTrue(documentDeleted, @"Document was not deleted");
 }
 
 @end

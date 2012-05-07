@@ -39,5 +39,9 @@
     [self.binding.objectService writeContentOfCMISObject:self.identifier toFile:filePath withError:error];
 }
 
+- (BOOL)deleteAllVersionsAndReturnError:(NSError **)error
+{
+    return [self.binding.objectService deleteObject:self.identifier allVersions:YES error:error];
+}
 
 @end

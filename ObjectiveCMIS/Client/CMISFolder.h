@@ -10,9 +10,13 @@
 #import "CMISFileableObject.h"
 #import "CMISCollection.h"
 
+@class CMISDocument;
+
 @interface CMISFolder : CMISFileableObject
 
 - (CMISCollection *)collectionOfChildrenAndReturnError:(NSError *)error;
+
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withProperties:(NSDictionary *)properties error:(NSError **)error;
 
 @end
 

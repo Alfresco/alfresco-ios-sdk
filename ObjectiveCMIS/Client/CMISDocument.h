@@ -19,4 +19,9 @@
 */
 - (void)writeContentToFile:(NSString *)filePath withError:(NSError * *)error;
 
+/**
+* Deletes the document from the document store.
+*/
+- (BOOL)deleteAllVersionsAndReturnError:(NSError **)error;
+
 @end

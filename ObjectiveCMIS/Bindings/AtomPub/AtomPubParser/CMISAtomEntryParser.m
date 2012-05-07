@@ -85,13 +85,11 @@
     }
     else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryLink])
     {
-        // TODO: define interface for a link, parse link elements and add to dictionary
-
-        // TODO: this is quick-and-dirty parsing for the 'down' link
+        // TODO: this is quick-and-dirty parsing
         NSString *linkType = [attributeDict objectForKey:@"type"];
         NSString *rel = [attributeDict objectForKey:@"rel"];
-        if (linkType != nil && [linkType isEqualToString:@"application/atom+xml;type=feed"]
-                && rel != nil && [rel isEqualToString:@"down"])
+
+        if (linkType == nil || (linkType != nil && [linkType isEqualToString:@"application/atom+xml;type=feed"]))
         {
 
             if (self.objectData.links == nil)
@@ -99,19 +97,9 @@
                 self.objectData.links = [[NSMutableDictionary alloc] init];
             }
 
-            [self.objectData.links setObject:[attributeDict objectForKey:@"href"] forKey:@"down"];
+            [self.objectData.links setObject:[attributeDict objectForKey:@"href"] forKey:rel];
         }
 
-
-        // TODO: Quick-hack to get service url
-        if (rel != nil && [rel isEqualToString:@"service"])
-        {
-            if (self.objectData.links == nil)
-            {
-                self.objectData.links = [[NSMutableDictionary alloc] init];
-            }
-            [self.objectData.links setObject:[attributeDict objectForKey:@"href"] forKey:@"service"];
-        }
     }
     else if ([self.elementBeingParsed isEqualToString:@"content"])
     {

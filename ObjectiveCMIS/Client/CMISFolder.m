@@ -8,26 +8,15 @@
 
 #import "CMISFolder.h"
 #import "CMISObjectConverter.h"
+#import "CMISDocument.h"
 
 @interface CMISFolder ()
-@property (nonatomic, strong) NSString *downLinkHref;
 @property (nonatomic, strong) CMISCollection *children;
 @end
 
 @implementation CMISFolder
 
-@synthesize downLinkHref = _downLinkHref;
 @synthesize children = _children;
-
-- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id <CMISBinding>)binding
-{
-    self = [super initWithObjectData:objectData binding:binding];
-    if (self)
-    {
-        self.downLinkHref = [objectData.links objectForKey:@"down"];
-    }
-    return self;
-}
 
 
 - (CMISCollection *)collectionOfChildrenAndReturnError:(NSError *)error
@@ -43,5 +32,9 @@
     return self.children;
 }
 
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withProperties:(NSDictionary *)properties error:(NSError **)error
+{
+    return [self.binding.objectService createDocumentFromFilePath:filePath withProperties:properties inFolder:self.identifier error:error];
+}
 
 @end
