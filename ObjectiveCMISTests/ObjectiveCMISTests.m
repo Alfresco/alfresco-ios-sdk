@@ -44,18 +44,25 @@
     STAssertTrue(repos.count > 0, @"There should be at least one repository");
 }
 
-//- (void)testAuthenticateWithInvalidCredentials
-//{
-//
-//}
+- (void)testAuthenticateWithInvalidCredentials
+{
+    self.parameters.username = @"bogus";
+    self.parameters.password = @"sugob";
+
+    CMISSession *session = [[CMISSession alloc] initWithSessionParameters:self.parameters];
+    STAssertNotNil(session, @"session object should not be nil");
+
+    NSError *error = nil;
+    [session authenticateAndReturnError:&error];
+    STAssertFalse(session.isAuthenticated, @"session should NOT be authenticated");
+    STAssertNotNil(error, @"Error should not be nil");
+}
 
 - (void)testGetRootFolder
 {
     CMISSession *session = [[CMISSession alloc] initWithSessionParameters:self.parameters];
     STAssertNotNil(session, @"session object should not be nil");
-    
-    // authenticate the session, we should use the delegate to check for success but
-    // we can't in a unit test so wait for a couple of seconds then check the authenticated flag
+
     NSError *error = nil;
     [session authenticateAndReturnError:&error];
     STAssertTrue(session.isAuthenticated, @"session should be authenticated");

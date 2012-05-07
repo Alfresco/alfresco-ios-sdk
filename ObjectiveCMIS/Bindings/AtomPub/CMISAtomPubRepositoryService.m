@@ -39,7 +39,7 @@
 - (void)retrieveRepositoriesAndReturnError:(NSError **)error
 {
     self.repositories = [NSMutableDictionary dictionary];
-    NSArray *cmisWorkSpaces = [self retrieveCMISWorkspacesWithError:error];
+    NSArray *cmisWorkSpaces = [self retrieveCMISWorkspacesAndReturnError:error];
     for (CMISWorkspace *workspace in cmisWorkSpaces)
     {
         [self.repositories setObject:workspace.repositoryInfo forKey:workspace.repositoryInfo.identifier];

@@ -16,8 +16,12 @@
 #import "CMISObjectByIdUriBuilder.h"
 
 @interface CMISAtomPubBaseService ()
+
 @property (nonatomic, strong, readwrite) CMISBindingSession *session;
 @property (nonatomic, strong, readwrite) NSURL *atomPubUrl;
+
+- (id) retrieveFromCache:(NSString *)cacheKey error:(NSError * *)error;
+
 @end
 
 @implementation CMISAtomPubBaseService
@@ -42,7 +46,60 @@
 #pragma mark -
 #pragma mark Protected methods
 
-- (NSArray *)retrieveCMISWorkspacesWithError:(NSError * *)error
+- (id)retrieveFromCache:(NSString *)cacheKey error:(NSError * *)error
+{
+    id object = [self.session objectForKey:cacheKey];
+
+    if (!object)
+    {
+         // if object is nil, first populate cache
+        [self fetchRepositoryInfoAndReturnError:error];
+        object = [self.session objectForKey:cacheKey];
+    }
+
+    if (!object && !*error)
+    {
+        // TODO: proper error initialisation
+        *error = [[NSError alloc] init];
+        log(@"Could not get object from cache with key '%@'", cacheKey);
+    }
+
+    return object;
+}
+
+- (void)fetchRepositoryInfoAndReturnError:(NSError * *)error
+{
+    NSArray *cmisWorkSpaces = [self retrieveCMISWorkspacesAndReturnError:error];
+
+    if (!*error)
+    {
+        BOOL repositoryFound = NO;
+        uint index = 0;
+        while (!repositoryFound && index < cmisWorkSpaces.count)
+        {
+            CMISWorkspace *workspace = [cmisWorkSpaces objectAtIndex:index];
+            if ([workspace.repositoryInfo.identifier isEqualToString:self.session.repositoryId])
+            {
+                repositoryFound = YES;
+
+                CMISObjectByIdUriBuilder *objectByIdUriBuilder = [[CMISObjectByIdUriBuilder alloc] initWithTemplateUrl:workspace.objectByIdUriTemplate];
+                [self.session setObject:objectByIdUriBuilder forKey:kCMISBindingSessionKeyObjectByIdUriBuilder];
+            }
+            else {
+                index++;
+           }
+        }
+
+        if (!repositoryFound)
+        {
+            log(@"No matching repository found for repository id %@", self.session.repositoryId);
+            // TODO: populate error properly
+            *error = [[NSError alloc] init];
+        }
+    }
+}
+
+- (NSArray *)retrieveCMISWorkspacesAndReturnError:(NSError * *)error
 {
     if ([self.session objectForKey:kCMISSessionKeyWorkspaces] == nil)
     {
@@ -68,13 +125,7 @@
 
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error
 {
-    // build URL to get object data
-    NSArray *cmisWorkSpaces = [self retrieveCMISWorkspacesWithError:error];
-    
-    // TODO: discuss what to do with multiple workspaces. Is this even possible?
-    // TODO: Retrieve the URI templates from the CMISBindingSession (once they've been stored!)
-    NSString *urlTemplate = [(CMISWorkspace *)[cmisWorkSpaces objectAtIndex:0] objectByIdUriTemplate];
-    CMISObjectByIdUriBuilder *objectByIdUriBuilder = [[CMISObjectByIdUriBuilder alloc] initWithTemplateUrl:urlTemplate];
+    CMISObjectByIdUriBuilder *objectByIdUriBuilder = [self retrieveFromCache:kCMISBindingSessionKeyObjectByIdUriBuilder error:error];
     objectByIdUriBuilder.objectId = objectId;
     NSURL *objectIdUrl = [objectByIdUriBuilder buildUrl];
     

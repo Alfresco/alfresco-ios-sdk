@@ -9,6 +9,7 @@
 #import "CMISBindingSession.h"
 
 NSString * const kCMISBindingSessionKeyAtomPubUrl = @"cmis_session_key_atompub_url";
+NSString * const kCMISBindingSessionKeyObjectByIdUriBuilder = @"cmis_session_key_objectbyid_uri_builder";
 
 @interface CMISBindingSession ()
 @property (nonatomic, strong, readwrite) NSString *username;

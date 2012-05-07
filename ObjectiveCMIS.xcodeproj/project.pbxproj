@@ -193,8 +193,8 @@
 		82C1C6391535790B009B7B3D /* CMISAtomFeedParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomFeedParser.m; sourceTree = "<group>"; };
 		82C1C63C15358733009B7B3D /* CMISAtomPubConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAtomPubConstants.h; sourceTree = "<group>"; };
 		82C1C63D15358733009B7B3D /* CMISAtomPubConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomPubConstants.m; sourceTree = "<group>"; };
-		82C1C63F15358733009B7B3E /* CMISWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISWorkspace.m; sourceTree = "<group>"; };
-		82C1C63F15358733009B7B40 /* CMISWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISWorkspace.h; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B3E /* CMISWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISWorkspace.m; path = ../../CMISWorkspace.m; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B40 /* CMISWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISWorkspace.h; path = ../../CMISWorkspace.h; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B42 /* CMISObjectByIdUriBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISObjectByIdUriBuilder.m; path = Bindings/AtomPub/CMISObjectByIdUriBuilder.m; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B44 /* CMISObjectByIdUriBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISObjectByIdUriBuilder.h; path = Bindings/AtomPub/CMISObjectByIdUriBuilder.h; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B47 /* CMISBase64Encoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISBase64Encoder.m; sourceTree = "<group>"; };
@@ -362,8 +362,6 @@
 			children = (
 				82C1C63F15358733009B7B42 /* CMISObjectByIdUriBuilder.m */,
 				82C1C63F15358733009B7B44 /* CMISObjectByIdUriBuilder.h */,
-				82C1C63F15358733009B7B40 /* CMISWorkspace.h */,
-				82C1C63F15358733009B7B3E /* CMISWorkspace.m */,
 				828073191515405C00EF635C /* CMISBinding.h */,
 				82ABA0461554655900935225 /* CMISBindingSession.h */,
 				82ABA0471554655A00935225 /* CMISBindingSession.m */,
@@ -396,6 +394,8 @@
 		8280730D1515405C00EF635C /* AtomPub */ = {
 			isa = PBXGroup;
 			children = (
+				82C1C63F15358733009B7B3E /* CMISWorkspace.m */,
+				82C1C63F15358733009B7B40 /* CMISWorkspace.h */,
 				8280730E1515405C00EF635C /* AtomPubParser */,
 				828073131515405C00EF635C /* CMISAtomPubBinding.h */,
 				828073141515405C00EF635C /* CMISAtomPubBinding.m */,

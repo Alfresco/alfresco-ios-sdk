@@ -7,10 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CMISAtomPubBaseService.h"
+
+@class CMISObjectData;
 
 @interface CMISAtomPubBaseService (Protected)
 
-- (NSArray *)retrieveCMISWorkspacesWithError:(NSError * *)error;
+- (void)fetchRepositoryInfoAndReturnError:(NSError * *)error;
+
+- (NSArray *)retrieveCMISWorkspacesAndReturnError:(NSError * *)error;
 
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error;
 
