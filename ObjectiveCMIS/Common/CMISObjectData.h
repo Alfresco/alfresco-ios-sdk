@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "CMISEnums.h"
 #import "CMISProperties.h"
+#import "CMISAllowableActions.h"
 
 @interface CMISObjectData : NSObject
 
@@ -17,6 +18,6 @@
 @property (nonatomic, strong) CMISProperties *properties;
 @property (nonatomic, strong) NSMutableDictionary *links;
 @property (nonatomic, strong) NSURL *contentUrl;
-@property (nonatomic, strong) NSMutableDictionary *allowableActions;
+@property (nonatomic, strong) CMISAllowableActions *allowableActions;
 
 @end

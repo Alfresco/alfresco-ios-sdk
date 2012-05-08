@@ -7,6 +7,7 @@
 //
 
 #import "CMISAtomEntryParser.h"
+#import "CMISAllowableActions.h"
 
 @interface CMISAtomEntryParser ()
 
@@ -173,7 +174,8 @@
 #pragma mark CMISAllowableActionsParserDelegate Methods
 - (void)allowableActionsParserDidFinish:(CMISAllowableActionsParser *)parser
 {
-    self.objectData.allowableActions = [parser allowableActionsArray];
+    NSDictionary *parsedAllowableActionsDict = [parser allowableActionsArray];
+    self.objectData.allowableActions = [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:parsedAllowableActionsDict];
 }
 
 @end
