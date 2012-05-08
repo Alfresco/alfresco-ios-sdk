@@ -17,7 +17,10 @@
 
 - (NSData *)generateAtomEntry
 {
-    // TODO: discuss .... no xml writer in default sdk ... no 3th party ... ?
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat: @"yyyy-MM-dd'T'HH-mm-ss-Z'"];
+    NSString *fileName = [NSString stringWithFormat:@"%@-%@",
+                    [self.cmisProperties objectForKey:kCMISPropertyName], [formatter stringFromDate:[NSDate date]]];
 
     NSMutableString *string = [[NSMutableString alloc] init];
     [string appendString:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"];
@@ -26,7 +29,7 @@
     [string appendString:[NSString stringWithFormat:@"<title>%@</title>", [self.cmisProperties objectForKey:kCMISPropertyName]]];
 
     [string appendString:@"<cmisra:content>"];
-    [string appendString:@"<cmisra:mediatype>text/plain</cmisra:mediatype>"];  // TODO: get real mimetype!
+    [string appendString:@"<cmisra:mediatype>text/plain</cmisra:mediatype>"];  // TODO: get real mimetype!!!
     [string appendString:[NSString stringWithFormat:@"<cmisra:base64>%@</cmisra:base64>",[self generateBase64ForFilePath]]];
     [string appendString:@"</cmisra:content>"];
 

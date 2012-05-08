@@ -173,20 +173,23 @@
 
     // Check if test file exists
     NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
-    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"Test file 'test_file.txt' cannot be found as resource for the test");
+    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath],
+        @"Test file 'test_file.txt' cannot be found as resource for the test");
 
     // Upload test file
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat: @"yyyy-MM-dd'T'HH-mm-ss-Z'"];
     NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [formatter stringFromDate:[NSDate date]]];
     NSDictionary *documentProperties = [NSDictionary dictionaryWithObject:documentName forKey:kCMISPropertyName];
+
     NSString *objectId = [rootFolder createDocumentFromFilePath:filePath withProperties:documentProperties error:&error];
     STAssertNil(error, @"Got error while creating document: %@", [error description]);
     STAssertNotNil(objectId, @"Object id received should be non-nil");
 
     // Verify created
     CMISDocument *document = (CMISDocument *) [session retrieveObject:objectId error:&error];
-    STAssertTrue([documentName isEqualToString:document.name], @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
+    STAssertTrue([documentName isEqualToString:document.name],
+        @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
 
     // Cleanup after ourselves
     BOOL documentDeleted = [document deleteAllVersionsAndReturnError:&error];

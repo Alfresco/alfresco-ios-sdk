@@ -199,8 +199,8 @@
 		82C1C63D15358733009B7B3D /* CMISAtomPubConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomPubConstants.m; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B3E /* CMISWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISWorkspace.m; path = ../../CMISWorkspace.m; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B40 /* CMISWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISWorkspace.h; path = ../../CMISWorkspace.h; sourceTree = "<group>"; };
-		82C1C63F15358733009B7B42 /* CMISObjectByIdUriBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISObjectByIdUriBuilder.m; path = Bindings/AtomPub/CMISObjectByIdUriBuilder.m; sourceTree = "<group>"; };
-		82C1C63F15358733009B7B44 /* CMISObjectByIdUriBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISObjectByIdUriBuilder.h; path = Bindings/AtomPub/CMISObjectByIdUriBuilder.h; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B42 /* CMISObjectByIdUriBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISObjectByIdUriBuilder.m; path = CMISObjectByIdUriBuilder.m; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B44 /* CMISObjectByIdUriBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISObjectByIdUriBuilder.h; path = CMISObjectByIdUriBuilder.h; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B47 /* CMISBase64Encoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISBase64Encoder.m; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B49 /* CMISBase64Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISBase64Encoder.h; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B51 /* HttpUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpUtil.m; sourceTree = "<group>"; };
@@ -368,8 +368,6 @@
 		828072D315153EC100EF635C /* Bindings */ = {
 			isa = PBXGroup;
 			children = (
-				82C1C63F15358733009B7B42 /* CMISObjectByIdUriBuilder.m */,
-				82C1C63F15358733009B7B44 /* CMISObjectByIdUriBuilder.h */,
 				828073191515405C00EF635C /* CMISBinding.h */,
 				82ABA0461554655900935225 /* CMISBindingSession.h */,
 				82ABA0471554655A00935225 /* CMISBindingSession.m */,
@@ -385,7 +383,6 @@
 				82AD4AE9154164290012DDB6 /* CMISBindingFactory.h */,
 				82AD4AEA1541642A0012DDB6 /* CMISBindingFactory.m */,
 				8280730D1515405C00EF635C /* AtomPub */,
-				82C1C63F15358733009B7B46 /* Util */,
 			);
 			name = Bindings;
 			sourceTree = "<group>";
@@ -393,6 +390,10 @@
 		828072D615153F1300EF635C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				82C1C63F15358733009B7B51 /* HttpUtil.m */,
+				82C1C63F15358733009B7B53 /* HttpUtil.h */,
+				82C1C63F15358733009B7B47 /* CMISBase64Encoder.m */,
+				82C1C63F15358733009B7B49 /* CMISBase64Encoder.h */,
 				828073291515407000EF635C /* CMISObjectConverter.h */,
 				8280732A1515407000EF635C /* CMISObjectConverter.m */,
 			);
@@ -402,6 +403,8 @@
 		8280730D1515405C00EF635C /* AtomPub */ = {
 			isa = PBXGroup;
 			children = (
+				82C1C63F15358733009B7B42 /* CMISObjectByIdUriBuilder.m */,
+				82C1C63F15358733009B7B44 /* CMISObjectByIdUriBuilder.h */,
 				82C1C63F15358733009B7B3E /* CMISWorkspace.m */,
 				82C1C63F15358733009B7B40 /* CMISWorkspace.h */,
 				8280730E1515405C00EF635C /* AtomPubParser */,
@@ -465,17 +468,6 @@
 			);
 			name = Reachability;
 			path = 3rdParty/Reachability;
-			sourceTree = "<group>";
-		};
-		82C1C63F15358733009B7B46 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				82C1C63F15358733009B7B53 /* HttpUtil.h */,
-				82C1C63F15358733009B7B51 /* HttpUtil.m */,
-				82C1C63F15358733009B7B49 /* CMISBase64Encoder.h */,
-				82C1C63F15358733009B7B47 /* CMISBase64Encoder.m */,
-			);
-			name = Util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
