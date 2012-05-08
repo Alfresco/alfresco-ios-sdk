@@ -11,6 +11,9 @@
 
 @class CMISDocument;
 
+typedef void (^CMISContentRetrievalCompletionBlock)(void);
+typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
+
 @protocol CMISObjectService <NSObject>
 
 // Retrieves the object with the given object identifier
@@ -18,9 +21,11 @@
 
 /**
 * Downloads the content to a local file and returns the filepath.
-* This is a synchronous call and will not return until the file is written to the given path.
+*
+* Do note that this is an ASYNCHRONOUS call, as a synchronous call would have
+* bad performance/memory implications.
 */
-- (void)writeContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath withError:(NSError * *)error;
+- (void)writeContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
 
 /**
 * uploads the file from the given path to the given folder.

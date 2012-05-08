@@ -103,7 +103,7 @@
 {
     if ([self.session objectForKey:kCMISSessionKeyWorkspaces] == nil)
     {
-        NSData *data = [HttpUtil invokeGET:self.atomPubUrl withSession:self.session error:error];
+        NSData *data = [HttpUtil invokeGETSynchronous:self.atomPubUrl withSession:self.session error:error];
 
         // Parse the cmis service document
         if (data != nil)
@@ -147,7 +147,7 @@
 
 - (NSData *)executeRequest:(NSURL *)url error:(NSError **)error
 {
-    return [HttpUtil invokeGET:url withSession:self.session error:error];
+    return [HttpUtil invokeGETSynchronous:url withSession:self.session error:error];
 }
 
 @end

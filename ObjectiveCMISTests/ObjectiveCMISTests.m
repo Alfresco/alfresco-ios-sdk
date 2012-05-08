@@ -12,11 +12,19 @@
 #import "CMISConstants.h"
 #import "CMISDocument.h"
 
+@interface ObjectiveCMISTests()
+
+@property BOOL callbackCompleted;
+
+@end
+
 @implementation ObjectiveCMISTests
 
 @synthesize parameters = _parameters;
 @synthesize repositoryId = _repositoryId;
 @synthesize rootFolderId = _rootFolderId;
+@synthesize callbackCompleted = _callbackCompleted;
+
 
 - (void)setUp
 {
@@ -144,8 +152,13 @@
 
         // Writing content of CMIS document to local file
         NSString *filePath = @"testfile";
-        [randomDoc writeContentToFile:filePath withError:&error];
-        STAssertNil(error, @"Error while writing content: %@", [error description]);
+        [randomDoc writeContentToFile:filePath completionBlock:^{
+            self.callbackCompleted = YES;
+        } failureBlock:^(NSError *failureError) {
+            STAssertNil(failureError, @"Error while writing content: %@", [error description]);
+            self.callbackCompleted = YES;
+        }];
+        [self waitForCompletion:60];
 
         // Assert File exists and check file length
         STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
@@ -195,6 +208,21 @@
     BOOL documentDeleted = [document deleteAllVersionsAndReturnError:&error];
     STAssertNil(error, @"Error while deleting created document: %@", [error description]);
     STAssertTrue(documentDeleted, @"Document was not deleted");
+}
+
+#pragma mark Helper Methods
+
+- (BOOL)waitForCompletion:(NSTimeInterval)timeoutSecs
+{
+    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:timeoutSecs];
+    do
+    {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
+        if ([timeoutDate timeIntervalSinceNow] < 0.0)
+            break;
+    } while (!self.callbackCompleted);
+
+    return self.callbackCompleted;
 }
 
 @end
