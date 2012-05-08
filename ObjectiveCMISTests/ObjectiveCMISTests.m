@@ -11,12 +11,21 @@
 #import "CMISSession.h"
 #import "CMISConstants.h"
 #import "CMISDocument.h"
+#import "FileUtil.h"
+
+@interface ObjectiveCMISTests()
+
+@property BOOL callbackCompleted;
+
+@end
 
 @implementation ObjectiveCMISTests
 
 @synthesize parameters = _parameters;
 @synthesize repositoryId = _repositoryId;
 @synthesize rootFolderId = _rootFolderId;
+@synthesize callbackCompleted = _callbackCompleted;
+
 
 - (void)setUp
 {
@@ -144,8 +153,13 @@
 
         // Writing content of CMIS document to local file
         NSString *filePath = @"testfile";
-        [randomDoc writeContentToFile:filePath withError:&error];
-        STAssertNil(error, @"Error while writing content: %@", [error description]);
+        [randomDoc writeContentToFile:filePath completionBlock:^{
+            self.callbackCompleted = YES;
+        } failureBlock:^(NSError *failureError) {
+            STAssertNil(failureError, @"Error while writing content: %@", [error description]);
+            self.callbackCompleted = YES;
+        }];
+        [self waitForCompletion:60];
 
         // Assert File exists and check file length
         STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
@@ -182,7 +196,7 @@
     NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [formatter stringFromDate:[NSDate date]]];
     NSDictionary *documentProperties = [NSDictionary dictionaryWithObject:documentName forKey:kCMISPropertyName];
 
-    NSString *objectId = [rootFolder createDocumentFromFilePath:filePath withProperties:documentProperties error:&error];
+    NSString *objectId = [rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain" withProperties:documentProperties error:&error];
     STAssertNil(error, @"Got error while creating document: %@", [error description]);
     STAssertNotNil(objectId, @"Object id received should be non-nil");
 
@@ -195,6 +209,76 @@
     BOOL documentDeleted = [document deleteAllVersionsAndReturnError:&error];
     STAssertNil(error, @"Error while deleting created document: %@", [error description]);
     STAssertTrue(documentDeleted, @"Document was not deleted");
+}
+
+- (void)testCreateBigDocument
+{
+    NSError *error = nil;
+    CMISSession *session = [[CMISSession alloc] initWithSessionParameters:self.parameters];
+
+    error = nil;
+    [session authenticateAndReturnError:&error];
+    STAssertTrue(session.isAuthenticated, @"Session should be authenticated");
+
+    CMISFolder *rootFolder = [session rootFolder];
+    STAssertNotNil(rootFolder, @"rootFolder object should not be nil");
+
+    // Check if test file exists
+    NSString *fileToUploadPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"cmis-spec-v1.0.pdf" ofType:nil];
+    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:fileToUploadPath],
+        @"Test file 'cmis-spec-v1.0.pdf' cannot be found as resource for the test");
+
+    // Upload test file
+    NSString *documentName = @"cmis-spec-v1.0.pdf";
+    NSDictionary *documentProperties = [NSDictionary dictionaryWithObject:documentName forKey:kCMISPropertyName];
+    NSString *objectId = [rootFolder createDocumentFromFilePath:fileToUploadPath withMimeType:@"application/pdf" withProperties:documentProperties error:&error];
+    STAssertNil(error, @"Got error while creating document: %@", [error description]);
+    STAssertNotNil(objectId, @"Object id received should be non-nil");
+
+    // Verify created file by downloading it again
+    CMISDocument *document = (CMISDocument *) [session retrieveObject:objectId error:&error];
+    STAssertTrue([documentName isEqualToString:document.name],
+        @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
+
+    NSString *downloadedFilePath = @"testfile.pdf";
+    [document writeContentToFile:downloadedFilePath completionBlock:^{
+        NSLog(@"File upload completed");
+        self.callbackCompleted = YES;
+    } failureBlock:^(NSError *failureError) {
+        STAssertNil(failureError, @"Error while writing content: %@", [error description]);
+        self.callbackCompleted = YES;
+    }];
+    [self waitForCompletion:60];
+
+    // Compare file sizes
+    long long originalFileSize = [FileUtil fileSizeForFileAtPath:fileToUploadPath error:&error];
+    STAssertNil(error, @"Got error while getting file size for %@: %@", fileToUploadPath, [error description]);
+    long long downloadedFileSize = [FileUtil fileSizeForFileAtPath:downloadedFilePath error:&error];
+    STAssertNil(error, @"Got error while getting file size for %@: %@", downloadedFilePath, [error description]);
+    STAssertTrue(originalFileSize == downloadedFileSize, @"Original file size (%lld) is not equal to downloaded file size (%lld)", originalFileSize, downloadedFilePath);
+
+    // Cleanup after ourselves
+    BOOL documentDeleted = [document deleteAllVersionsAndReturnError:&error];
+    STAssertNil(error, @"Error while deleting created document: %@", [error description]);
+    STAssertTrue(documentDeleted, @"Document was not deleted");
+
+    [[NSFileManager defaultManager] removeItemAtPath:downloadedFilePath error:&error];
+    STAssertNil(error, @"Could not remove file %@: %@", downloadedFilePath, [error description]);
+}
+
+#pragma mark Helper Methods
+
+- (BOOL)waitForCompletion:(NSTimeInterval)timeoutSecs
+{
+    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:timeoutSecs];
+    do
+    {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
+        if ([timeoutDate timeIntervalSinceNow] < 0.0)
+            break;
+    } while (!self.callbackCompleted);
+
+    return self.callbackCompleted;
 }
 
 @end

@@ -10,18 +10,20 @@
 
 @implementation HttpUtil
 
-+ (NSData *)invokeGET:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
+#pragma mark synchronous methods
+
++ (NSData *)invokeGETSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"GET" usingSession:session];
-    return [self executeRequest:request error:outError];
+    return [self executeRequestSynchronous:request error:outError];
 }
 
-+ (NSData *)invokePOST:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body error:(NSError **)outError
++ (NSData *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body error:(NSError **)outError
 {
-    return [self invokePOST:url withSession:session body:body headers:nil error:outError];
+    return [self invokePOSTSynchronous:url withSession:session body:body headers:nil error:outError];
 }
 
-+ (NSData *)invokePOST:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
++ (NSData *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"POST" usingSession:session];
     [request setHTTPBody:body];
@@ -31,20 +33,44 @@
         [self addHeaders:additionalHeaders toURLRequest:request];
     }
 
-    return [self executeRequest:request error:outError];
+    return [self executeRequestSynchronous:request error:outError];
 }
 
-+ (NSData *)invokeDELETE:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
++ (NSData *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
+{
+    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"POST" usingSession:session];
+   [request setHTTPBodyStream:bodyStream];
+
+   if (additionalHeaders)
+   {
+       [self addHeaders:additionalHeaders toURLRequest:request];
+   }
+
+   return [self executeRequestSynchronous:request error:outError];
+}
+
++ (NSData *)invokeDELETESynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"DELETE" usingSession:session];
-    return [self executeRequest:request error:outError];
+    return [self executeRequestSynchronous:request error:outError];
+}
+
+#pragma mark asynchronous methods
+
++ (void)invokeGETAsynchronous:(NSURL *)url withSession:(CMISBindingSession *)session withDelegate:(id<NSURLConnectionDataDelegate>)delegate
+{
+    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"GET" usingSession:session];
+    NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:delegate];
+    [connection start];
 }
 
 #pragma mark Helper methods
 
 + (NSMutableURLRequest *)createRequestForUrl:(NSURL *)url withHttpMethod:(NSString *)httpMethod usingSession:(CMISBindingSession *)session
 {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                        cachePolicy:NSURLRequestReloadIgnoringCacheData
+                                                        timeoutInterval:60];
     [request setHTTPMethod:httpMethod];
     log(@"HTTP %@: %@", httpMethod, [url absoluteString]);
 
@@ -66,7 +92,7 @@
     }
 }
 
-+ (NSData *)executeRequest:(NSMutableURLRequest *)request error:(NSError * *)outError
++ (NSData *)executeRequestSynchronous:(NSMutableURLRequest *)request error:(NSError * *)outError
 {
     NSURLResponse *response = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:outError];

@@ -17,7 +17,7 @@
 * Downloads the content to a local file and returns the filepath.
 * This is a synchronous call and will not return until the file is written to the given path.
 */
-- (void)writeContentToFile:(NSString *)filePath withError:(NSError * *)error;
+- (void)writeContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
 
 /**
 * Deletes the document from the document store.

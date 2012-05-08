@@ -32,9 +32,9 @@
     return self.children;
 }
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withProperties:(NSDictionary *)properties error:(NSError **)error
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties error:(NSError **)error
 {
-    return [self.binding.objectService createDocumentFromFilePath:filePath withProperties:properties inFolder:self.identifier error:error];
+    return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:properties inFolder:self.identifier error:error];
 }
 
 @end

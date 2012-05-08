@@ -10,42 +10,98 @@
 #import "HttpUtil.h"
 #import "CMISAtomEntryWriter.h"
 #import "CMISAtomEntryParser.h"
+#import "FileUtil.h"
+
+@interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
+
+@property (nonatomic, strong) NSString *filePathForContentRetrieval;
+@property (nonatomic, strong) CMISContentRetrievalCompletionBlock fileRetrievalCompletionBlock;
+@property (nonatomic, strong) CMISContentRetrievalFailureBlock fileRetrievalFailureBlock;
+
+@end
 
 @implementation CMISAtomPubObjectService
+
+@synthesize filePathForContentRetrieval = _filePathForContentRetrieval;
+@synthesize fileRetrievalCompletionBlock = _fileRetrievalCompletionBlock;
+@synthesize fileRetrievalFailureBlock = _fileRetrievalFailureBlock;
 
 - (CMISObjectData *)retrieveObject:(NSString *)objectId error:(NSError **)error
 {
     return [self retrieveObjectInternal:objectId error:error];
 }
 
-- (void)writeContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath withError:(NSError * *)error
+- (void)writeContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {
-    CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:error];
+    NSError *objectRetrievalError = nil;
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&objectRetrievalError];
 
-    if (*error == nil)
+    if (objectRetrievalError)
     {
-        // TODO: must be done more efficient, now the whole file is stored in memory!
-        NSData *data = [self executeRequest:objectData.contentUrl error:error];
-        if (data != nil && *error == nil)
+        log(@"Error while retrieving CMIS object for object id '%@' : %@", objectId, [objectRetrievalError description]);
+        if (failureBlock)
         {
-            [data writeToFile:filePath atomically:YES];
-        } 
-        else
-        {
-            log(@"Could not fetch data from url %@ : %@", objectData.contentUrl.absoluteString, [*error description]);
+            failureBlock(objectRetrievalError);
         }
-
-    } 
+    }
     else
     {
-        log(@"Error while retrieving CMIS object for object id '%@' : %@", objectId, [*error description]);
+        self.filePathForContentRetrieval = filePath;
+        self.fileRetrievalCompletionBlock = completionBlock;
+        self.fileRetrievalFailureBlock = failureBlock;
+        [HttpUtil invokeGETAsynchronous:objectData.contentUrl withSession:self.session withDelegate:self];
     }
 }
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
+    [[NSFileManager defaultManager] createFileAtPath:self.filePathForContentRetrieval contents:nil attributes:nil];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+      // Log out how much data was downloaded
+//    log(@"%d bytes downloaded.", [data length]);
+
+    [FileUtil appendToFileAtPath:self.filePathForContentRetrieval data:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    if (self.fileRetrievalFailureBlock)
+    {
+        self.fileRetrievalFailureBlock(error);
+    }
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    // Fire completion to block
+    if (self.fileRetrievalCompletionBlock)
+    {
+        self.fileRetrievalCompletionBlock();
+    }
+
+    // Cleanup
+    self.filePathForContentRetrieval = nil;
+    self.fileRetrievalCompletionBlock = nil;
+    self.fileRetrievalFailureBlock = nil;
+}
+
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+                  withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError * *)error
+{
+    // Validate params
+    if (!mimeType)
+    {
+        *error = [[NSError alloc] init];         // TODO: proper init error
+        log(@"Must provide a mimetype when creating a cmis document");
+    }
+
+    // Fetch object
     CMISObjectData *folderData = [self retrieveObjectInternal:folderObjectId error:error];
 
+    // Use down link to create the document
     if (!*error)
     {
         NSString *downLink = [folderData.links objectForKey:@"down"];
@@ -53,18 +109,27 @@
         {
             NSURL *downUrl = [NSURL URLWithString:downLink];
 
+            // Atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
+            // Hence, we're storing the atom entry xml in a temporary file and stream the body of the http post
             CMISAtomEntryWriter *atomEntryWriter = [[CMISAtomEntryWriter alloc] init];
-            atomEntryWriter.filePath = filePath;
+            atomEntryWriter.contentFilePath = filePath;
+            atomEntryWriter.mimeType = mimeType;
             atomEntryWriter.cmisProperties = properties;
-            NSData *atomEntry = [atomEntryWriter generateAtomEntry];
+            NSString *filePathToGeneratedAtomEntry = [atomEntryWriter filePathToGeneratedAtomEntry];
 
-            NSData *response = [HttpUtil invokePOST:downUrl
+            NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:filePathToGeneratedAtomEntry];
+            NSData *response = [HttpUtil invokePOSTSynchronous:downUrl
                                          withSession:self.session
-                                         body:atomEntry
+                                         bodyStream:bodyStream
                                          headers:[NSDictionary dictionaryWithObject:@"application/atom+xml;type=entry" forKey:@"Content-type"]
                                          error:error];
 
-            if (!*error)
+            // Close stream and delete temporary file
+            [bodyStream close];
+            [[NSFileManager defaultManager] removeItemAtPath:filePathToGeneratedAtomEntry error:error];
+
+            // Parse the returned response (ie the newly created document)
+            if (*error == nil)
             {
                 CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response];
                 [atomEntryParser parseAndReturnError:error];
@@ -88,7 +153,7 @@
         if (selfLink)
         {
             NSURL *selfUrl = [NSURL URLWithString:selfLink];
-            [HttpUtil invokeDELETE:selfUrl withSession:self.session error:error];
+            [HttpUtil invokeDELETESynchronous:selfUrl withSession:self.session error:error];
 
             if (!*error)
             {

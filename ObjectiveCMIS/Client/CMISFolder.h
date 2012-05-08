@@ -16,7 +16,7 @@
 
 - (CMISCollection *)collectionOfChildrenAndReturnError:(NSError *)error;
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withProperties:(NSDictionary *)properties error:(NSError **)error;
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties error:(NSError **)error;
 
 @end
 

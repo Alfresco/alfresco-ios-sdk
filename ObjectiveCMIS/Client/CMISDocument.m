@@ -34,9 +34,9 @@
 }
 
 
-- (void)writeContentToFile:(NSString *)filePath withError:(NSError * *)error
+- (void)writeContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {
-    [self.binding.objectService writeContentOfCMISObject:self.identifier toFile:filePath withError:error];
+    [self.binding.objectService writeContentOfCMISObject:self.identifier toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
 }
 
 - (BOOL)deleteAllVersionsAndReturnError:(NSError **)error
