@@ -35,7 +35,7 @@
 - (NSDictionary *)httpHeadersToApply
 {
     NSMutableString *loginString = [NSMutableString stringWithFormat:@"%@:%@", self.username, self.password];
-    NSString *encodedLoginData = [CMISBase64Encoder encode:[loginString dataUsingEncoding:NSUTF8StringEncoding]];
+    NSString *encodedLoginData = [CMISBase64Encoder stringByEncodingText:[loginString dataUsingEncoding:NSUTF8StringEncoding]];
     NSString *authHeader = [NSString stringWithFormat:@"Basic %@", encodedLoginData];
     return [NSDictionary dictionaryWithObject:authHeader forKey:@"Authorization"];
 }

@@ -36,6 +36,19 @@
     return [self executeRequestSynchronous:request error:outError];
 }
 
++ (NSData *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
+{
+    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"POST" usingSession:session];
+   [request setHTTPBodyStream:bodyStream];
+
+   if (additionalHeaders)
+   {
+       [self addHeaders:additionalHeaders toURLRequest:request];
+   }
+
+   return [self executeRequestSynchronous:request error:outError];
+}
+
 + (NSData *)invokeDELETESynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"DELETE" usingSession:session];

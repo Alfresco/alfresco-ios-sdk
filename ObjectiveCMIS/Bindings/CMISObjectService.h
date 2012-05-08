@@ -32,7 +32,7 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
 *
 * This is a synchronous call and will not return until the file is completely uploaded to the server.
 */
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError * *)error;
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError * *)error;
 
 /**
 * Deletes the given object.

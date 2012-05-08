@@ -10,6 +10,10 @@
 
 @interface CMISBase64Encoder : NSObject
 
-+(NSString *)encode:(NSData *)plainText;
++ (NSString *)stringByEncodingText:(NSData *)plainText;
+
++ (NSData *)dataByEncodingText:(NSData *)plainText;
+
++ (void)encodeContentOfFile:(NSString *)sourceFilePath andAppendToFile:(NSString *)destinationFilePath;
 
 @end

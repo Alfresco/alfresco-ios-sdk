@@ -10,6 +10,7 @@
 #import "HttpUtil.h"
 #import "CMISAtomEntryWriter.h"
 #import "CMISAtomEntryParser.h"
+#import "FileUtil.h"
 
 @interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
 
@@ -59,18 +60,10 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-  NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:self.filePathForContentRetrieval];
-
-  if (fileHandle) {
-    [fileHandle seekToEndOfFile];
-    [fileHandle writeData:data];
-
-    // Log out how much data was downloaded
+      // Log out how much data was downloaded
 //    log(@"%d bytes downloaded.", [data length]);
-  }
 
-  // Always clean up after the file is written to
-  [fileHandle closeFile];
+    [FileUtil appendToFileAtPath:self.filePathForContentRetrieval data:data];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -95,11 +88,20 @@
     self.fileRetrievalFailureBlock = nil;
 }
 
-
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+                  withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError * *)error
 {
+    // Validate params
+    if (!mimeType)
+    {
+        *error = [[NSError alloc] init];         // TODO: proper init error
+        log(@"Must provide a mimetype when creating a cmis document");
+    }
+
+    // Fetch object
     CMISObjectData *folderData = [self retrieveObjectInternal:folderObjectId error:error];
 
+    // Use down link to create the document
     if (!*error)
     {
         NSString *downLink = [folderData.links objectForKey:@"down"];
@@ -107,18 +109,27 @@
         {
             NSURL *downUrl = [NSURL URLWithString:downLink];
 
+            // Atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
+            // Hence, we're storing the atom entry xml in a temporary file and stream the body of the http post
             CMISAtomEntryWriter *atomEntryWriter = [[CMISAtomEntryWriter alloc] init];
-            atomEntryWriter.filePath = filePath;
+            atomEntryWriter.contentFilePath = filePath;
+            atomEntryWriter.mimeType = mimeType;
             atomEntryWriter.cmisProperties = properties;
-            NSData *atomEntry = [atomEntryWriter generateAtomEntry];
+            NSString *filePathToGeneratedAtomEntry = [atomEntryWriter filePathToGeneratedAtomEntry];
 
+            NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:filePathToGeneratedAtomEntry];
             NSData *response = [HttpUtil invokePOSTSynchronous:downUrl
                                          withSession:self.session
-                                         body:atomEntry
+                                         bodyStream:bodyStream
                                          headers:[NSDictionary dictionaryWithObject:@"application/atom+xml;type=entry" forKey:@"Content-type"]
                                          error:error];
 
-            if (!*error)
+            // Close stream and delete temporary file
+            [bodyStream close];
+            [[NSFileManager defaultManager] removeItemAtPath:filePathToGeneratedAtomEntry error:error];
+
+            // Parse the returned response (ie the newly created document)
+            if (*error == nil)
             {
                 CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response];
                 [atomEntryParser parseAndReturnError:error];
