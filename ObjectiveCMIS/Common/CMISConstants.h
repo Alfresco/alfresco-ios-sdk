@@ -14,7 +14,18 @@ extern NSString * const kCMISPropertyCreationDate;
 extern NSString * const kCMISPropertyModifiedBy;
 extern NSString * const kCMISPropertyModificationDate;
 extern NSString * const kCMISProperyContentStreamId;
+extern NSString * const kCMISPropertyObjectTypeId;
+
+extern NSString * const kCMISPropertyObjectTypeIdValueDocument;
+extern NSString * const kCMISPropertyObjectTypeIdValueFolder;
 
 extern NSString * const kCMISSessionKeyWorkspaces;
 extern NSString * const kCMISSessionKeyBinding;
+
+
+// TODO: should these be moved to another class? How to separate constants?
+
+extern NSString * const kCMISLinkRelationDown;
+extern NSString * const kCMISLinkRelationSelf;
+extern NSString * const kCMISLinkRelationFolderTree;
 

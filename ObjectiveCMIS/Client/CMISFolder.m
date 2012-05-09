@@ -32,9 +32,20 @@
     return self.children;
 }
 
+- (NSString *)createFolder:(NSDictionary *)properties error:(NSError **)error;
+{
+    return [self.binding.objectService createFolderInParentFolder:self.identifier withProperties:properties error:error];
+}
+
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties error:(NSError **)error
 {
     return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:properties inFolder:self.identifier error:error];
 }
+
+- (NSArray *)deleteTreeAndReturnError:(NSError **)error
+{
+    return [self.binding.objectService deleteTree:self.identifier error:error];
+}
+
 
 @end

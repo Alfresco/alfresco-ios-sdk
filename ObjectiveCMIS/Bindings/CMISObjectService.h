@@ -41,4 +41,18 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
 */
 - (BOOL)deleteObject:(NSString *)objectId allVersions:(BOOL)allVersions error:(NSError * *)error;
 
+/**
+* Creates a new folder with given properties under the provided parent folder.
+*/
+- (NSString *)createFolderInParentFolder:(NSString *)folderObjectId withProperties:(NSDictionary *)properties error:(NSError * *)error;
+
+/**
+* Deletes the given folder and all of its subfolder and files
+*
+* Returns a list of objects which failed to be deleted.
+*
+* TODO: support for other parameters (see spec)
+*/
+- (NSArray *)deleteTree:(NSString *)folderObjectId error:(NSError * *)error;
+
 @end

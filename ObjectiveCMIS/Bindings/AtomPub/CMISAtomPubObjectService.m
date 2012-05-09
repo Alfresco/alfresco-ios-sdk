@@ -11,6 +11,7 @@
 #import "CMISAtomEntryWriter.h"
 #import "CMISAtomEntryParser.h"
 #import "FileUtil.h"
+#import "CMISConstants.h"
 
 @interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
 
@@ -104,42 +105,8 @@
     // Use down link to create the document
     if (!*error)
     {
-        NSString *downLink = [folderData.links objectForKey:@"down"];
-        if (downLink)
-        {
-            NSURL *downUrl = [NSURL URLWithString:downLink];
-
-            // Atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
-            // Hence, we're storing the atom entry xml in a temporary file and stream the body of the http post
-            CMISAtomEntryWriter *atomEntryWriter = [[CMISAtomEntryWriter alloc] init];
-            atomEntryWriter.contentFilePath = filePath;
-            atomEntryWriter.mimeType = mimeType;
-            atomEntryWriter.cmisProperties = properties;
-            NSString *filePathToGeneratedAtomEntry = [atomEntryWriter filePathToGeneratedAtomEntry];
-
-            NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:filePathToGeneratedAtomEntry];
-            NSData *response = [HttpUtil invokePOSTSynchronous:downUrl
-                                         withSession:self.session
-                                         bodyStream:bodyStream
-                                         headers:[NSDictionary dictionaryWithObject:@"application/atom+xml;type=entry" forKey:@"Content-type"]
-                                         error:error];
-
-            // Close stream and delete temporary file
-            [bodyStream close];
-            [[NSFileManager defaultManager] removeItemAtPath:filePathToGeneratedAtomEntry error:error];
-
-            // Parse the returned response (ie the newly created document)
-            if (*error == nil)
-            {
-                CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response];
-                [atomEntryParser parseAndReturnError:error];
-                return atomEntryParser.objectData.identifier;
-            }
-        }
-        else
-        {
-            log(@"Could not retrieve 'down' link for folder with object id %@", folderObjectId);
-        }
+        NSString *downLink = [folderData.links objectForKey:kCMISLinkRelationDown];
+        return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:filePath withContentMimeType:mimeType error:error];
     }
     return nil;
 }
@@ -149,7 +116,7 @@
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:error];
     if (!*error)
     {
-        NSString *selfLink = [objectData.links objectForKey:@"self"];
+        NSString *selfLink = [objectData.links objectForKey:kCMISLinkRelationSelf];
         if (selfLink)
         {
             NSURL *selfUrl = [NSURL URLWithString:selfLink];
@@ -166,6 +133,106 @@
         }
     }
     return NO;
+}
+
+- (NSString *)createFolderInParentFolder:(NSString *)folderObjectId withProperties:(NSDictionary *)properties error:(NSError **)error
+{
+      // Validate params
+    if (!folderObjectId)
+    {
+        *error = [[NSError alloc] init];         // TODO: proper init error
+        log(@"Must provide a parent folder object id when creating a new folder");
+    }
+
+    // Fetch folder data
+    CMISObjectData *parentFolderData = [self retrieveObjectInternal:folderObjectId error:error];
+
+    // Use down link to create the folder
+    if (*error == nil)
+    {
+        NSString *downLink = [parentFolderData.links objectForKey:kCMISLinkRelationDown];
+        return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:nil withContentMimeType:nil error:error];
+    }
+    return nil;
+}
+
+- (NSArray *)deleteTree:(NSString *)folderObjectId error:(NSError * *)error
+{
+    // Validate params
+    if (!folderObjectId)
+    {
+        *error = [[NSError alloc] init];         // TODO: proper init error
+        log(@"Must provide a folder object id when deleting a folder tree");
+    }
+
+    // Fetch folder data
+    CMISObjectData *folderData = [self retrieveObjectInternal:folderObjectId error:error];
+
+    // Use foldertree link to delete the folder and its subfolders
+    if (*error == nil)
+    {
+        NSString *folderTreeLink = [folderData.links objectForKey:kCMISLinkRelationFolderTree];
+        [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:folderTreeLink] withSession:self.session error:error];
+
+        // TODO: handle response status code (see opencmis impl)
+    }
+
+    // TODO: retrieve failed folders and files and return
+    return [NSArray array];
+}
+
+
+#pragma mark Helper methods
+
+- (NSString *)postAtomEntryXmlToDownLink:(NSString *)downLink withProperties:(NSDictionary *)properties
+                                                        withContentFilePath:(NSString *)contentFilePath
+                                                        withContentMimeType:(NSString *)contentMimeType
+                                                        error:(NSError * *)error
+{
+    // Validate properties
+    if ([properties objectForKey:kCMISPropertyName] == nil || [properties objectForKey:kCMISPropertyObjectTypeId] == nil)
+    {
+        *error = [[NSError alloc] init]; // TODO: proper error initialisation
+        log(@"Must provide %@ and %@ as properties", kCMISPropertyName, kCMISPropertyObjectTypeId);
+        return nil;
+    }
+
+    if (*error == nil && downLink != nil)
+    {
+        NSURL *downUrl = [NSURL URLWithString:downLink];
+
+        // Atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
+        // Hence, we're storing the atom entry xml in a temporary file and stream the body of the http post
+        CMISAtomEntryWriter *atomEntryWriter = [[CMISAtomEntryWriter alloc] init];
+        atomEntryWriter.contentFilePath = contentFilePath;
+        atomEntryWriter.mimeType = contentMimeType;
+        atomEntryWriter.cmisProperties = properties;
+        NSString *filePathToGeneratedAtomEntry = [atomEntryWriter filePathToGeneratedAtomEntry];
+
+        NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:filePathToGeneratedAtomEntry];
+        NSData *response = [HttpUtil invokePOSTSynchronous:downUrl
+                                               withSession:self.session
+                                               bodyStream:bodyStream
+                                               headers:[NSDictionary dictionaryWithObject:@"application/atom+xml;type=entry" forKey:@"Content-type"]
+                                               error:error];
+
+        // Close stream and delete temporary file
+        [bodyStream close];
+
+        [[NSFileManager defaultManager] removeItemAtPath:filePathToGeneratedAtomEntry error:error];
+
+        // Parse the returned response (ie the newly created document)
+        if (*error == nil)
+        {
+            CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response];
+            [atomEntryParser parseAndReturnError:error];
+            return atomEntryParser.objectData.identifier;
+        }
+    } else {
+        *error = [[NSError alloc] init]; //TODO proper init
+        log(@"Could not retrieve 'down' link");
+    }
+    return nil;
 }
 
 

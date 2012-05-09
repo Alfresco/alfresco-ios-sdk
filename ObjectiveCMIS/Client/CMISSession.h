@@ -37,9 +37,20 @@
 // Authenticates using the CMISSessionParameters and returns if the authentication was succesful
 - (BOOL)authenticateAndReturnError:(NSError **)error;
 
-// *** object retrieval ***
+// *** CMIS operations ***
 
 // Retrieves the object with the given identifier
 - (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error;
+
+- (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error;
+
+- (void)writeContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath
+                                                      completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
+                                                      failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
+
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+                                                              withProperties:(NSDictionary *)properties
+                                                              inFolder:(NSString *)folderObjectId
+                                                              error:(NSError * *)error;
 
 @end

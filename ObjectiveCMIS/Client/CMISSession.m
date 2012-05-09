@@ -137,7 +137,7 @@
     return YES;
 }
 
-#pragma mark Object retrieval
+#pragma mark CMIS operations
 
 - (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error
 {
@@ -148,5 +148,21 @@
     
     return obj;
 }
+
+- (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+{
+    return [self.binding.objectService createFolderInParentFolder:folderObjectId withProperties:properties error:error];
+}
+
+- (void)writeContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+{
+    [self.binding.objectService writeContentOfCMISObject:objectId toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
+}
+
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+{
+    return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:properties inFolder:folderObjectId error:error];
+}
+
 
 @end

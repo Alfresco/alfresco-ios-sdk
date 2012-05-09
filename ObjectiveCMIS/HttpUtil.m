@@ -106,8 +106,9 @@
         log(@"Error while doing HTTP %@ %@ : %@", request.HTTPMethod, [request.URL absoluteString], [*outError description]);
     }
 
-    //    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    //    log(@"Response for %@ : %@", [url absoluteString], dataString);
+    // Uncomment to see the actual response from the server
+//    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//    log(@"Response for %@ : %@", [request.URL absoluteString], dataString);
 
     return data;
 }
