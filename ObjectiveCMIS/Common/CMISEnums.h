@@ -23,3 +23,46 @@ typedef enum
     CMISBaseTypeRelationship,
     CMISBaseTypePolicy
 } CMISBaseType;
+
+// Allowable action type
+typedef enum
+{
+    CMISActionCanDeleteObject,
+    CMISActionCanUpdateProperties,
+    CMISActionCanGetProperties,
+    CMISActionCanGetObjectRelationships,
+    CMISActionCanGetObjectParents,
+    CMISActionCanGetFolderParent,
+    CMISActionCanGetFolderTree,
+    CMISActionCanGetDescendants,
+    CMISActionCanMoveObject,
+    CMISActionCanDeleteContentStream,
+    CMISActionCanCheckOut,
+    CMISActionCanCancelCheckOut,
+    CMISActionCanCheckIn,
+    CMISActionCanSetContentStream,
+    CMISActionCanGetAllVersions,
+    CMISActionCanAddObjectToFolder,
+    CMISActionCanRemoveObjectFromFolder,
+    CMISActionCanGetContentStream,
+    CMISActionCanApplyPolicy,
+    CMISActionCanGetAppliedPolicies,
+    CMISActionCanRemovePolicy,
+    CMISActionCanGetChildren,
+    CMISActionCanCreateDocument,
+    CMISActionCanCreateFolder,
+    CMISActionCanCreateRelationship,
+    CMISActionCanDeleteTree,
+    CMISActionCanGetRenditions,
+    CMISActionCanGetACL,
+    CMISActionCanApplyACL
+} CMISActionType;
+
+// AllowableAction String Array, the objects defined MUST be in the same order as those in enum CMISActionType
+#define CMISAllowableActionsArray @"canDeleteObject", @"canUpdateProperties", @"canGetProperties", \
+    @"canGetObjectRelationships", @"canGetObjectParents", @"canGetFolderParent", @"canGetFolderTree", \
+    @"canGetDescendants", @"canMoveObject", @"canDeleteContentStream", @"canCheckOut", \
+    @"canCancelCheckOut",  @"canCheckIn", @"canSetContentStream", @"canGetAllVersions", \
+    @"canAddObjectToFolder", @"canRemoveObjectFromFolder", @"canGetContentStream", @"canApplyPolicy", \
+    @"canGetAppliedPolicies", @"canRemovePolicy", @"canGetChildren", @"canCreateDocument", @"canCreateFolder", \
+    @"canCreateRelationship", @"canDeleteTree", @"canGetRenditions", @"canGetACL", @"canApplyACL", nil

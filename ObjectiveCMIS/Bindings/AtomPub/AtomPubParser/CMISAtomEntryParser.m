@@ -7,6 +7,7 @@
 //
 
 #import "CMISAtomEntryParser.h"
+#import "CMISAllowableActions.h"
 
 @interface CMISAtomEntryParser ()
 
@@ -16,6 +17,8 @@
 @property (nonatomic, strong) NSString *elementBeingParsed;
 @property (nonatomic, strong) CMISPropertyData *currentPropertyData;
 @property (nonatomic, strong) CMISProperties *currentObjectProperties;
+
+@property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
 
 @end
 
@@ -27,6 +30,7 @@
 @synthesize elementBeingParsed = _elementBeingParsed;
 @synthesize currentPropertyData = _currentPropertyData;
 @synthesize currentObjectProperties = _currentObjectProperties;
+@synthesize childParserDelegate = _childParserDelegate;
 
 - (id)initWithData:(NSData*)atomData
 {
@@ -105,6 +109,10 @@
     {
         self.objectData.contentUrl = [NSURL URLWithString:[attributeDict objectForKey:@"src"]];
     }
+    else if ([self.elementBeingParsed isEqualToString:@"allowableActions"]) 
+    {
+        self.childParserDelegate = [CMISAllowableActionsParser parent:self parser:parser];
+    }
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 
@@ -154,8 +162,20 @@
         
         self.currentObjectProperties = nil;
     }
+    else if ([elementName isEqualToString:kCMISAtomEntryAllowableActions]) 
+    {
+        self.childParserDelegate = nil;
+    }
     
     self.elementBeingParsed = nil;
+}
+
+#pragma mark -
+#pragma mark CMISAllowableActionsParserDelegate Methods
+- (void)allowableActionsParserDidFinish:(CMISAllowableActionsParser *)parser
+{
+    NSDictionary *parsedAllowableActionsDict = [parser allowableActionsArray];
+    self.objectData.allowableActions = [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:parsedAllowableActionsDict];
 }
 
 @end
