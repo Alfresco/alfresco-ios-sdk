@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ObjectiveCMISTests.h"
+#import "ObjectiveCMISTests+Environment.h"
 #import "CMISSession.h"
 #import "CMISConstants.h"
 #import "CMISDocument.h"
@@ -35,11 +36,13 @@
 {
     [super setUp];
     
+    NSString *urlString = [self environmentStringForKey:kCMISTestAtomPubUrlKey defaultValue:@"http://ec2-79-125-44-131.eu-west-1.compute.amazonaws.com/alfresco/service/api/cmis"];
+    
     self.parameters = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
-    self.parameters.username = @"admin";
-    self.parameters.password = @"alzheimer";
-    self.parameters.atomPubUrl = [[NSURL alloc] initWithString:@"http://ec2-79-125-44-131.eu-west-1.compute.amazonaws.com/alfresco/service/api/cmis"];
-    self.parameters.repositoryId = @"246b1d64-9a1f-4c56-8900-594a4b85bd05";
+    self.parameters.username = [self environmentStringForKey:kCMISTestUsernameKey defaultValue:@"admin"];
+    self.parameters.password = [self environmentStringForKey:kCMISTestPasswordKey defaultValue:@"alzheimer"];
+    self.parameters.atomPubUrl = [[NSURL alloc] initWithString:urlString];
+    self.parameters.repositoryId = [self environmentStringForKey:kCMISTestRepoIdKey defaultValue:@"246b1d64-9a1f-4c56-8900-594a4b85bd05"];
 }
 
 - (void)tearDown
