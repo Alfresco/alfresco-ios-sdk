@@ -17,6 +17,14 @@
 
 - (CMISObject *)retrieveObjectOfLatestVersion:(NSString *)objectId error:(NSError **)error
 {
+    // Validate params
+    if (!objectId)
+    {
+        *error = [[NSError alloc] init]; // TODO: proper error init
+        log(@"Must provide an objectId when retrieving all versions");
+    }
+
+
     CMISObjectByIdUriBuilder *objectByIdUriBuilder = [self retrieveFromCache:kCMISBindingSessionKeyObjectByIdUriBuilder error:error];
     objectByIdUriBuilder.objectId = objectId;
     objectByIdUriBuilder.returnVersion = LATEST;
@@ -40,7 +48,7 @@
 
 - (CMISCollection *)retrieveAllVersions:(NSString *)objectId error:(NSError **)error
 {
-    // Validate param
+    // Validate params
     if (!objectId)
     {
         *error = [[NSError alloc] init]; // TODO: proper error init
@@ -53,7 +61,6 @@
     {
         NSString *versionHistoryLink = [objectData.links objectForKey:kCMISLinkVersionHistory];
         NSData *data = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:versionHistoryLink] withSession:self.session error:error];
-
         if (*error == nil)
         {
             CMISAtomFeedParser *feedParser = [[CMISAtomFeedParser alloc] initWithData:data];

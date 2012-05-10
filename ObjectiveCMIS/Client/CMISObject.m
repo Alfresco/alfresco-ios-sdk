@@ -18,6 +18,7 @@
 @property (nonatomic, strong, readwrite) NSDate *creationDate;
 @property (nonatomic, strong, readwrite) NSString *lastModifiedBy;
 @property (nonatomic, strong, readwrite) NSDate *lastModificationDate;
+@property (nonatomic, strong, readwrite) NSString *objectType;
 @end
 
 @implementation CMISObject
@@ -29,7 +30,7 @@
 @synthesize creationDate = _creationDate;
 @synthesize lastModifiedBy = _lastModifiedBy;
 @synthesize lastModificationDate = _lastModificationDate;
-
+@synthesize objectType = _objectType;
 
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 {
@@ -43,6 +44,7 @@
         self.lastModifiedBy = [[objectData.properties.properties objectForKey:kCMISPropertyModifiedBy] firstValue];
         self.creationDate = [[objectData.properties.properties objectForKey:kCMISPropertyCreationDate] firstValue];
         self.lastModificationDate = [[objectData.properties.properties objectForKey:kCMISPropertyModificationDate] firstValue];
+        self.objectType = [[objectData.properties.properties objectForKey:kCMISPropertyObjectTypeId] firstValue];
     }
     
     return self;

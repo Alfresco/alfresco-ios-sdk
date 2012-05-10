@@ -12,6 +12,11 @@
 
 @interface CMISDocument()
 
+@property (nonatomic, strong, readwrite) NSString *contentStreamId;
+@property (nonatomic, strong, readwrite) NSString *contentStreamFileName;
+@property (nonatomic, strong, readwrite) NSString *contentStreamMediaType;
+@property (readwrite) NSInteger contentStreamLength;
+
 @property (nonatomic, strong, readwrite) NSString *versionLabel;
 @property (readwrite) BOOL isLatestVersion;
 @property (readwrite) BOOL isMajorVersion;
@@ -22,6 +27,10 @@
 
 @implementation CMISDocument
 
+@synthesize contentStreamId = _contentStreamId;
+@synthesize contentStreamFileName = _contentStreamFileName;
+@synthesize contentStreamMediaType = _contentStreamMediaType;
+@synthesize contentStreamLength = _contentStreamLength;
 @synthesize versionLabel = _versionLabel;
 @synthesize isLatestVersion = _isLatestVersion;
 @synthesize isMajorVersion = _isMajorVersion;
@@ -33,6 +42,11 @@
     self = [super initWithObjectData:objectData binding:binding];
     if (self)
     {
+        self.contentStreamId = [[objectData.properties.properties objectForKey:kCMISProperyContentStreamId] firstValue];
+        self.contentStreamMediaType = [[objectData.properties.properties objectForKey:kCMISPropertyContentStreamMediaType] firstValue];
+        self.contentStreamLength = [[[objectData.properties.properties objectForKey:kCMISPropertyContentStreamLength] firstValue] integerValue];
+        self.contentStreamFileName = [[objectData.properties.properties objectForKey:kCMISPropertyContentStreamFileName] firstValue];
+
         self.versionLabel = [[objectData.properties.properties objectForKey:kCMISPropertyVersionLabel] firstValue];
         self.versionSeriesId = [[objectData.properties.properties objectForKey:kCMISPropertyVersionSeriesId] firstValue];
         self.isLatestVersion = [[[objectData.properties.properties objectForKey:kCMISPropertyIsLatestVersion] firstValue] boolValue];
@@ -47,9 +61,9 @@
     return [self.binding.versioningService retrieveAllVersions:self.identifier error:error];
 }
 
-- (CMISObject *)retrieveObjectOfLatestVersionAndReturnError:(NSError **)error
+- (CMISDocument *)retrieveObjectOfLatestVersionAndReturnError:(NSError **)error
 {
-    return [self.binding.versioningService retrieveObjectOfLatestVersion:self.identifier error:error];
+    return (CMISDocument *) [self.binding.versioningService retrieveObjectOfLatestVersion:self.identifier error:error];
 }
 
 
