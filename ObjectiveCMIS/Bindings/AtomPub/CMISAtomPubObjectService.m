@@ -213,7 +213,7 @@
         NSData *response = [HttpUtil invokePOSTSynchronous:downUrl
                                                withSession:self.session
                                                bodyStream:bodyStream
-                                               headers:[NSDictionary dictionaryWithObject:@"application/atom+xml;type=entry" forKey:@"Content-type"]
+                                               headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
                                                error:error];
 
         // Close stream and delete temporary file
