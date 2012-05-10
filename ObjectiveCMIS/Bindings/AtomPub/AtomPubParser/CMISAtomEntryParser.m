@@ -12,8 +12,9 @@
 
 @interface CMISAtomEntryParser ()
 
-@property (nonatomic, strong, readwrite) CMISObjectData *objectData;
+@property (nonatomic, weak) id<NSXMLParserDelegate, CMISAtomEntryParserDelegate> parentDelegate;
 
+@property (nonatomic, strong, readwrite) CMISObjectData *objectData;
 @property (nonatomic, strong) NSData *atomData;
 @property (nonatomic, strong) NSString *currentPropertyType;
 @property (nonatomic, strong) NSString *elementBeingParsed;
@@ -25,11 +26,15 @@
 
 @property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
 
+// Private Init Used for child delegate parser
+- (id)initWithParentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
+
 @end
 
 
 @implementation CMISAtomEntryParser
 
+@synthesize parentDelegate = _parentDelegate;
 @synthesize objectData = _objectData;
 @synthesize atomData = _atomData;
 @synthesize elementBeingParsed = _elementBeingParsed;
@@ -50,6 +55,21 @@
     
     return self;
 }
+
+- (id)initWithParentDelegate:(id <NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
+{
+    self = [self init];
+    if (self)
+    {
+        [self setParentDelegate:parentDelegate];
+        self.objectData = [[CMISObjectData alloc] init];
+
+        // Setting Child Parser Delegate, parser events will now be captured by this class
+        [parser setDelegate:self];
+    }
+    return self;
+}
+
 
 - (BOOL)parseAndReturnError:(NSError **)error;
 {
@@ -101,10 +121,10 @@
     else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryLink])
     {
         // TODO: this is quick-and-dirty parsing
-        NSString *linkType = [attributeDict objectForKey:@"type"];
-        NSString *rel = [attributeDict objectForKey:@"rel"];
+        NSString *linkType = [attributeDict objectForKey:kCMISAtomEntryType];
+        NSString *rel = [attributeDict objectForKey:kCMISAtomEntryRel];
 
-        if (linkType == nil || (linkType != nil && [linkType isEqualToString:@"application/atom+xml;type=feed"]))
+        if (linkType == nil || (linkType != nil && [linkType isEqualToString:kCMISAtomEntryLinkTypeAtomFeed]))
         {
 
             if (self.objectData.links == nil)
@@ -112,15 +132,15 @@
                 self.objectData.links = [[NSMutableDictionary alloc] init];
             }
 
-            [self.objectData.links setObject:[attributeDict objectForKey:@"href"] forKey:rel];
+            [self.objectData.links setObject:[attributeDict objectForKey:kCMISAtomEntryHref] forKey:rel];
         }
 
     }
-    else if ([self.elementBeingParsed isEqualToString:@"content"])
+    else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryContent])
     {
-        self.objectData.contentUrl = [NSURL URLWithString:[attributeDict objectForKey:@"src"]];
+        self.objectData.contentUrl = [NSURL URLWithString:[attributeDict objectForKey:kCMISAtomEntrySrc]];
     }
-    else if ([self.elementBeingParsed isEqualToString:@"allowableActions"]) 
+    else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryAllowableActions])
     {
         self.childParserDelegate = [CMISAllowableActionsParser parent:self parser:parser];
     }
@@ -144,7 +164,7 @@
         }
         else if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyBoolean])
         {
-            self.currentPropertyData.values = [NSArray arrayWithObject:[NSNumber numberWithBool:[string isEqualToString:@"true"]]];
+            self.currentPropertyData.values = [NSArray arrayWithObject:[NSNumber numberWithBool:[string isEqualToString:kCMISAtomEntryValueTrue]]];
         }
         else if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyDateTime])
         {
@@ -160,10 +180,29 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
 {
-    if ([elementName isEqualToString:kCMISAtomEntryPropertyId] ||
-        [elementName isEqualToString:kCMISAtomEntryPropertyString] ||
-        [elementName isEqualToString:kCMISAtomEntryPropertyDateTime])
+    if ([elementName isEqualToString:kCMISAtomEntry])
     {
+        if (self.parentDelegate)
+        {
+            if ([self.parentDelegate respondsToSelector:@selector(atomEntryParserDidFinish:)])
+            {
+                [self.parentDelegate performSelector:@selector(atomEntryParserDidFinish:) withObject:self];
+            }
+
+            // Reset Delegate to parent, now funneling events to the parent again
+            [parser setDelegate:self.parentDelegate];
+            // Message the parent that the element ended
+            [self.parentDelegate parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
+
+            self.parentDelegate = nil;
+        }
+    }
+    else if ([elementName isEqualToString:kCMISAtomEntryPropertyId] ||
+        [elementName isEqualToString:kCMISAtomEntryPropertyString] ||
+        [elementName isEqualToString:kCMISAtomEntryPropertyInteger] ||
+        [elementName isEqualToString:kCMISAtomEntryPropertyDateTime] ||
+        [elementName isEqualToString:kCMISAtomEntryPropertyBoolean])
+        {
         // TODO: distinguish between core CMIS properties and ExtensionData properties
         
         // add the property to the properties dictionary
@@ -182,11 +221,11 @@
         // set the objectData baseType
         CMISPropertyData *baseTypeProperty = [self.currentObjectProperties.properties objectForKey:kCMISAtomEntryBaseTypeId];
         NSString *baseType = [baseTypeProperty firstValue];
-        if ([baseType isEqualToString:@"cmis:document"])
+        if ([baseType isEqualToString:kCMISAtomEntryBaseTypeDocument])
         {
             self.objectData.baseType = CMISBaseTypeDocument;
         }
-        else if ([baseType isEqualToString:@"cmis:folder"])
+        else if ([baseType isEqualToString:kCMISAtomEntryBaseTypeFolder])
         {
             self.objectData.baseType = CMISBaseTypeFolder;
         }
@@ -208,5 +247,13 @@
     NSDictionary *parsedAllowableActionsDict = [parser allowableActionsArray];
     self.objectData.allowableActions = [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:parsedAllowableActionsDict];
 }
+
+#pragma mark Parser delegation
+
++ (id)delegateToAtomEntryParserFrom:(id <NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentParserDelegate withParser:(NSXMLParser *)parser
+{
+    return [[[self class] alloc] initWithParentDelegate:parentParserDelegate parser:parser];
+}
+
 
 @end

@@ -11,8 +11,9 @@
 #import "CMISObjectData.h"
 #import "CMISPropertyData.h"
 #import "CMISProperties.h"
+#import "CMISAtomEntryParser.h"
 
-@interface CMISAtomFeedParser : NSObject <NSXMLParserDelegate>
+@interface CMISAtomFeedParser : NSObject <NSXMLParserDelegate, CMISAtomEntryParserDelegate>
 
 @property (nonatomic, strong, readonly) NSArray *entries;
 

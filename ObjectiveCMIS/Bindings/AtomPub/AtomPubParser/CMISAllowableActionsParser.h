@@ -26,6 +26,6 @@
 
 
 @protocol CMISAllowableActionsParserDelegate <NSObject>
-@optional
+@required
 - (void)allowableActionsParserDidFinish:(CMISAllowableActionsParser *)parser;
 @end
