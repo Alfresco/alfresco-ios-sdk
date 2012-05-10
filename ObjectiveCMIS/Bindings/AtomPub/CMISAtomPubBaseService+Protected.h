@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISAtomPubBaseService.h"
+#import "CMISObjectByIdUriBuilder.h"
 
 @class CMISObjectData;
 
@@ -20,5 +21,7 @@
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error;
 
 - (NSData *)executeRequest:(NSURL *)url error:(NSError **)outError;
+
+- (id) retrieveFromCache:(NSString *)cacheKey error:(NSError * *)error;
 
 @end

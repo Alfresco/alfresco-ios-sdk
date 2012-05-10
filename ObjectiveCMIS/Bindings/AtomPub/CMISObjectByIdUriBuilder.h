@@ -8,6 +8,14 @@
 #import <Foundation/Foundation.h>
 
 
+typedef enum
+{
+    NOT_PROVIDED,
+    THIS,
+    LATEST,
+    LATEST_MAJOR
+} CMISReturnVersion;
+
 @interface CMISObjectByIdUriBuilder : NSObject
 
 @property (nonatomic, strong) NSString *templateUrl;
@@ -18,6 +26,7 @@
 @property BOOL includeRelationships;
 @property BOOL includeACL;
 @property (nonatomic, strong) NSString *renditionFilter;
+@property CMISReturnVersion returnVersion;
 
 - (id)initWithTemplateUrl:(NSString *)templateUrl;
 - (NSURL *)buildUrl;

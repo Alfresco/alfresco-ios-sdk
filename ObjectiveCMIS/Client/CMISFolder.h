@@ -14,9 +14,9 @@
 
 @interface CMISFolder : CMISFileableObject
 
-- (CMISCollection *)collectionOfChildrenAndReturnError:(NSError *)error;
+- (CMISCollection *)collectionOfChildrenAndReturnError:(NSError * *)error;
 
-- (NSString *)createFolder:(NSDictionary *)properties error:(NSError **)error;
+- (NSString *)createFolder:(NSDictionary *)properties error:(NSError * *)error;
 
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties error:(NSError **)error;
 

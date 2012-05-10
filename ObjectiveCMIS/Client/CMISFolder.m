@@ -19,11 +19,11 @@
 @synthesize children = _children;
 
 
-- (CMISCollection *)collectionOfChildrenAndReturnError:(NSError *)error
+- (CMISCollection *)collectionOfChildrenAndReturnError:(NSError * *)error
 {
     if (self.children == nil)
     {
-        NSArray *children = [self.binding.navigationService retrieveChildren:[self identifier] error:&error];
+        NSArray *children = [self.binding.navigationService retrieveChildren:[self identifier] error:error];
         
         CMISObjectConverter *objConverter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
         self.children = [objConverter convertObjects:children];

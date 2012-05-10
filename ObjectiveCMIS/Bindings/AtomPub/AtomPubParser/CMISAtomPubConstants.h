@@ -33,3 +33,10 @@ extern NSString * const kCMISAtomEntryBaseTypeFolder;
 extern NSString * const kCMISAtomEntryContent;
 extern NSString * const kCMISAtomEntrySrc;
 extern NSString * const kCMISAtomEntryAllowableActions;
+
+
+extern NSString * const kCMISLinkRelationDown;
+extern NSString * const kCMISLinkRelationSelf;
+extern NSString * const kCMISLinkRelationFolderTree;
+extern NSString * const kCMISLinkVersionHistory;
+

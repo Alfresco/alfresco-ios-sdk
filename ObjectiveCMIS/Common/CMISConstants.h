@@ -31,12 +31,3 @@ extern NSString * const kCMISPropertyObjectTypeIdValueFolder;
 
 extern NSString * const kCMISSessionKeyWorkspaces;
 extern NSString * const kCMISSessionKeyBinding;
-
-
-// Object links
-// TODO: should these be moved to another class? How to separate constants?
-
-extern NSString * const kCMISLinkRelationDown;
-extern NSString * const kCMISLinkRelationSelf;
-extern NSString * const kCMISLinkRelationFolderTree;
-

@@ -21,9 +21,7 @@
 @property (nonatomic, strong) CMISPropertyData *currentPropertyData;
 @property (nonatomic, strong) CMISProperties *currentObjectProperties;
 
-// lazily initialized when needed
 @property (nonatomic, strong) ISO8601DateFormatter *dateFormatter;
-
 @property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
 
 // Private Init Used for child delegate parser

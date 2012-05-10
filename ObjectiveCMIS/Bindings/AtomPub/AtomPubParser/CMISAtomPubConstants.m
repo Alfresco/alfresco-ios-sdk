@@ -33,3 +33,9 @@ NSString * const kCMISAtomEntryBaseTypeFolder = @"cmis:folder";
 NSString * const kCMISAtomEntryContent = @"content";
 NSString * const kCMISAtomEntrySrc = @"src";
 NSString * const kCMISAtomEntryAllowableActions = @"allowableActions";
+
+
+NSString * const kCMISLinkRelationDown = @"down";
+NSString * const kCMISLinkRelationSelf = @"self";
+NSString * const kCMISLinkRelationFolderTree = @"http://docs.oasis-open.org/ns/cmis/link/200908/foldertree";
+NSString * const kCMISLinkVersionHistory = @"version-history";

@@ -42,6 +42,16 @@
     return self;
 }
 
+- (CMISCollection *)retrieveAllVersionsAndReturnError:(NSError **)error
+{
+    return [self.binding.versioningService retrieveAllVersions:self.identifier error:error];
+}
+
+- (CMISObject *)retrieveObjectOfLatestVersionAndReturnError:(NSError **)error
+{
+    return [self.binding.versioningService retrieveObjectOfLatestVersion:self.identifier error:error];
+}
+
 
 - (void)writeContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {

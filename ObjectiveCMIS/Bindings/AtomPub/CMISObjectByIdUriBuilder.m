@@ -18,6 +18,7 @@
 @synthesize includeRelationships = _includeRelationships;
 @synthesize includeACL = _includeACL;
 @synthesize renditionFilter = _renditionFilter;
+@synthesize returnVersion = _returnVersion;
 
 - (id)initWithTemplateUrl:(NSString *)templateUrl
 {
@@ -25,6 +26,7 @@
     if (self)
     {
         self.templateUrl = templateUrl;
+        self.returnVersion = NOT_PROVIDED;
     }
     return self;
 }
@@ -38,6 +40,26 @@
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeRelationships}" withString:(self.includeRelationships ? @"true" : @"false")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeACL}" withString:(self.includeACL ? @"true" : @"false")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{renditionFilter}" withString:(self.renditionFilter != nil ? self.renditionFilter : @"")];
+
+    if (self.returnVersion != NOT_PROVIDED)
+    {
+        NSString *returnVersionParam = nil;
+        if (self.returnVersion == THIS)
+        {
+            returnVersionParam = @"this";
+        }
+        else if (self.returnVersion == LATEST)
+        {
+            returnVersionParam = @"latest";
+        }
+        else
+        {
+            returnVersionParam = @"latestmajor";
+        }
+
+        urlString = [NSString stringWithFormat:@"%@&returnVersion=%@", urlString, returnVersionParam];
+    }
+
     return [NSURL URLWithString:urlString];
 }
 

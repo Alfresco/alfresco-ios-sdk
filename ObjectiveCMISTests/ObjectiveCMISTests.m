@@ -161,7 +161,7 @@
 
 }
 
-- (void)testCreateDocument
+- (void)testCreateAndDeleteDocument
 {
     NSError *error = nil;
     [self setupCmisSession];
@@ -245,7 +245,7 @@
     STAssertNil(error, @"Could not remove file %@: %@", downloadedFilePath, [error description]);
 }
 
-- (void)testCreateFolder
+- (void)testCreateAndDeleteFolder
 {
     NSError *error = nil;
     [self setupCmisSession];
@@ -264,6 +264,61 @@
     STAssertNotNil(newFolder, @"New folder should not be nil");
     [newFolder deleteTreeAndReturnError:&error];
     STAssertNil(error, @"Error while deleting newly created folder: %@", [error description]);
+}
+
+- (void)testRetrieveAllVersionsOfDocument
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    // First find the document which we know that has some versions
+    CMISDocument *document = nil;
+    for (CMISObject *cmisObject in [self.rootFolder collectionOfChildrenAndReturnError:&error].items)
+    {
+        if ([cmisObject.name isEqualToString:@"versioned-quote.txt"])
+        {
+            document = (CMISDocument *) cmisObject;
+        }
+    }
+    STAssertNil(error, @"Error while retrieving children of rootfolder : %@", [error description]);
+    STAssertNotNil(document, @"Did not find test document for versioning test");
+    STAssertTrue(document.isLatestVersion, @"Should have 'true' for the property 'isLatestVersion");
+    STAssertFalse(document.isLatestMajorVersion, @"Should have 'false' for the property 'isLatestMajorVersion"); // the latest version is a minor one
+    STAssertFalse(document.isMajorVersion, @"Should have 'false' for the property 'isMajorVersion");
+
+    // Get all the versions of the document
+    CMISCollection *allVersionsOfDocument = [document retrieveAllVersionsAndReturnError:&error];
+    STAssertNil(error, @"Error while retrieving all versions of document : %@", [error description]);
+    STAssertTrue(allVersionsOfDocument.items.count == 5, @"Expected 5 versions of document, but was %d", allVersionsOfDocument.items.count);
+
+    // Print out the version labels and verify them, while also verifying that they are ordered by creation date, descending
+    NSDate *previousCreationDate = document.creationDate;
+    for (CMISDocument *versionOfDocument in allVersionsOfDocument.items)
+    {
+        NSLog(@"%@ - version %@", versionOfDocument.name, versionOfDocument.versionLabel);
+
+        if (!versionOfDocument.isLatestVersion) // latest version is the one we got originally
+        {
+            STAssertTrue([document.name isEqualToString:versionOfDocument.name], @"Other version of same document does not have the same name");
+            STAssertFalse([document.versionLabel isEqualToString:versionOfDocument.versionLabel], @"Other version of same document should have different version label");
+        }
+
+        STAssertTrue([previousCreationDate compare:versionOfDocument.creationDate] == NSOrderedDescending
+            || [previousCreationDate compare:versionOfDocument.creationDate] == NSOrderedSame,
+            @"Versions of document should be ordered descending by creation date");
+        previousCreationDate = versionOfDocument.creationDate;
+    }
+
+    // Take an older version, and verify its version properties
+    CMISDocument *olderVersionOfDocument = [allVersionsOfDocument.items objectAtIndex:3]; // In the test data, this should be version 1.0 of doc.
+    STAssertFalse(olderVersionOfDocument.isLatestVersion, @"Older version of document should have 'false' for the property 'isLatestVersion");
+    STAssertFalse(olderVersionOfDocument.isLatestMajorVersion, @"Older version of document should have 'false' for the property 'isLatestMajorVersion");
+    STAssertTrue(olderVersionOfDocument.isMajorVersion, @"Older version of document should have 'true' for the property 'isMajorVersion");
+}
+
+-(void)testRetrieveLatestVersionOfDocument
+{
+    STAssertTrue(YES,@"");
 }
 
 #pragma mark Helper Methods

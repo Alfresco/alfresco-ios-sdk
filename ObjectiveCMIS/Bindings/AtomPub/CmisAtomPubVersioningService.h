@@ -9,5 +9,5 @@
 #import "CMISAtomPubBaseService.h"
 
 
-@interface CmisAtomPubVersioningService : CMISAtomPubBaseService <CMISVersioningService>
+@interface CMISAtomPubVersioningService : CMISAtomPubBaseService <CMISVersioningService>
 @end

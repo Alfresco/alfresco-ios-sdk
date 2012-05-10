@@ -11,7 +11,7 @@
 #import "CMISAtomPubRepositoryService.h"
 #import "CMISAtomPubObjectService.h"
 #import "CMISAtomPubNavigationService.h"
-#import "CmisAtomPubVersioningService.h"
+#import "CMISAtomPubVersioningService.h"
 
 @interface CMISAtomPubBinding ()
 
@@ -51,7 +51,7 @@
         self.repositoryService = [[CMISAtomPubRepositoryService alloc] initWithBindingSession:self.session];
         self.objectService = [[CMISAtomPubObjectService alloc] initWithBindingSession:self.session];
         self.navigationService = [[CMISAtomPubNavigationService alloc] initWithBindingSession:self.session];
-        self.versioningService = [[CmisAtomPubVersioningService alloc] initWithBindingSession:self.session];
+        self.versioningService = [[CMISAtomPubVersioningService alloc] initWithBindingSession:self.session];
     }
     return self;
 }

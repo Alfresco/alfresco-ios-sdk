@@ -20,8 +20,6 @@
 @property (nonatomic, strong, readwrite) CMISBindingSession *session;
 @property (nonatomic, strong, readwrite) NSURL *atomPubUrl;
 
-- (id) retrieveFromCache:(NSString *)cacheKey error:(NSError * *)error;
-
 @end
 
 @implementation CMISAtomPubBaseService

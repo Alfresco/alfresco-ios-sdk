@@ -8,16 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
+@class CMISCollection;
+@class CMISObject;
+
 @protocol CMISVersioningService <NSObject>
 
 // TODO: according to spec must return all kinds of properties (see 4094 in spec), for now, we just return the objectId
-- (NSString *)retrieveObjectOfLatestVersion:(NSString *)objectId error:(NSError * *)error;
+- (CMISObject *)retrieveObjectOfLatestVersion:(NSString *)objectId error:(NSError * *)error;
 
 /*
  * Returns the list of all Document Object in the given version series, sorted by creationDate descending (ie youngest first)
  *
  * // TODO: according to spec must return an array of all kinds of properties (see 4141 in spec), for now, we just return an array objectId
  */
-- (NSArray *)retrieveAllVersions:(NSString *)objectId error:(NSError * *)error;
+- (CMISCollection *)retrieveAllVersions:(NSString *)objectId error:(NSError * *)error;
 
 @end

@@ -17,6 +17,16 @@
 @property (nonatomic, strong, readonly) NSString *versionSeriesId;
 
 /**
+* Retrieves a collection of all versions of this document.
+*/
+- (CMISCollection *)retrieveAllVersionsAndReturnError:(NSError **)error;
+
+/**
+* Retrieves the lastest version of this document.
+*/
+- (CMISObject *)retrieveObjectOfLatestVersionAndReturnError:(NSError **)error;
+
+/**
 * Downloads the content to a local file and returns the filepath.
 * This is a synchronous call and will not return until the file is written to the given path.
 */
