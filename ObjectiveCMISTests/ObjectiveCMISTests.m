@@ -354,18 +354,16 @@
     STAssertNil(error, @"Error while retrieving all versions: %@", [error description]);
 
     CMISDocument *olderVersionOfDocument = [allVersionsOfDocument.items objectAtIndex:1];
-    STAssertNil(error, @"Error while retrieving older version of document");
     STAssertFalse([document.versionLabel isEqualToString:olderVersionOfDocument.versionLabel], @"Version label should NOT match");
     STAssertTrue([document.creationDate isEqualToDate:olderVersionOfDocument.creationDate], @"Creation dates should match");
     STAssertFalse([document.lastModificationDate isEqual:olderVersionOfDocument.lastModificationDate], @"Creation dates should NOT match");
 
-    // TODO: verify!
-//    latestVersionOfDocument = [olderVersionOfDocument retrieveObjectOfLatestVersionAndReturnError:&error];
-//    STAssertNil(error, @"Error while retrieving latest version of document");
-//    STAssertNotNil(latestVersionOfDocument, @"Latest version should not be nil");
-//    STAssertTrue([document.name isEqualToString:latestVersionOfDocument.name], @"Name should match: expected %@ but was %@", document.name, latestVersionOfDocument.name);
-//    STAssertTrue([document.versionLabel isEqualToString:latestVersionOfDocument.versionLabel], @"Version label should match");
-//    STAssertTrue([document.lastModificationDate isEqual:latestVersionOfDocument.lastModificationDate], @"Creation dates should be equal");
+    latestVersionOfDocument = [olderVersionOfDocument retrieveObjectOfLatestVersionAndReturnError:&error];
+    STAssertNil(error, @"Error while retrieving latest version of document");
+    STAssertNotNil(latestVersionOfDocument, @"Latest version should not be nil");
+    STAssertTrue([document.name isEqualToString:latestVersionOfDocument.name], @"Name should match: expected %@ but was %@", document.name, latestVersionOfDocument.name);
+    STAssertTrue([document.versionLabel isEqualToString:latestVersionOfDocument.versionLabel], @"Version label should match");
+    STAssertTrue([document.lastModificationDate isEqual:latestVersionOfDocument.lastModificationDate], @"Creation dates should be equal");
 }
 
 #pragma mark Helper Methods

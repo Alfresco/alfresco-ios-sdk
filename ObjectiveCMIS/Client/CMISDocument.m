@@ -9,6 +9,7 @@
 #import "CMISDocument.h"
 #import "CMISConstants.h"
 #import "HttpUtil.h"
+#import "CMISObjectConverter.h"
 
 @interface CMISDocument()
 
@@ -58,12 +59,26 @@
 
 - (CMISCollection *)retrieveAllVersionsAndReturnError:(NSError **)error
 {
-    return [self.binding.versioningService retrieveAllVersions:self.identifier error:error];
+    NSArray *entries = [self.binding.versioningService retrieveAllVersions:self.identifier error:error];
+
+    if (*error == nil)
+    {
+        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+        return [converter convertObjects:entries];
+    }
+    return nil;
 }
 
 - (CMISDocument *)retrieveObjectOfLatestVersionAndReturnError:(NSError **)error
 {
-    return (CMISDocument *) [self.binding.versioningService retrieveObjectOfLatestVersion:self.identifier error:error];
+    CMISObjectData *objectData = [self.binding.versioningService retrieveObjectOfLatestVersion:self.identifier error:error];
+
+    if (*error == nil)
+    {
+        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+        return (CMISDocument *) [converter convertObject:objectData];
+    }
+    return nil;
 }
 
 

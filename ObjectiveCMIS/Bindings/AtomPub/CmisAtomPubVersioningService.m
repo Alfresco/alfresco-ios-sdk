@@ -15,7 +15,7 @@
 
 @implementation CMISAtomPubVersioningService
 
-- (CMISObject *)retrieveObjectOfLatestVersion:(NSString *)objectId error:(NSError **)error
+- (CMISObjectData *)retrieveObjectOfLatestVersion:(NSString *)objectId error:(NSError **)error
 {
     // Validate params
     if (!objectId)
@@ -37,16 +37,14 @@
         CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:data];
         if ([parser parseAndReturnError:error])
         {
-            CMISObjectData *objectData = parser.objectData;
-            CMISObjectConverter *converter = [[CMISObjectConverter alloc] init];
-            return [converter convertObject:objectData];
+            return parser.objectData;
         }
     }
 
     return nil;
 }
 
-- (CMISCollection *)retrieveAllVersions:(NSString *)objectId error:(NSError **)error
+- (NSArray *)retrieveAllVersions:(NSString *)objectId error:(NSError **)error
 {
     // Validate params
     if (!objectId)
@@ -66,8 +64,7 @@
             CMISAtomFeedParser *feedParser = [[CMISAtomFeedParser alloc] initWithData:data];
             if ([feedParser parseAndReturnError:error])
             {
-                CMISObjectConverter *converter = [[CMISObjectConverter alloc] init];
-                return [converter convertObjects:feedParser.entries];
+                return feedParser.entries;
             }
         }
     }
