@@ -11,6 +11,7 @@
 		75C5E2F81559172B0065550A /* CMISAllowableActionsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */; };
 		75C8D0861559B7EA00B63D2B /* CMISAllowableActions.h in Headers */ = {isa = PBXBuildFile; fileRef = 75C8D0841559B7EA00B63D2B /* CMISAllowableActions.h */; };
 		75C8D0871559B7EA00B63D2B /* CMISAllowableActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 75C8D0851559B7EA00B63D2B /* CMISAllowableActions.m */; };
+		75E77899155B982800191BAE /* (null) in Sources */ = {isa = PBXBuildFile; };
 		828072A715153DE800EF635C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 828072A615153DE800EF635C /* Foundation.framework */; };
 		828072B515153DE900EF635C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 828072B415153DE900EF635C /* SenTestingKit.framework */; };
 		828072B815153DE900EF635C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 828072A615153DE800EF635C /* Foundation.framework */; };
@@ -105,11 +106,10 @@
 		82C1C63F15358733009B7B5A /* CMISAtomEntryWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B59 /* CMISAtomEntryWriter.m */; };
 		82C1C63F15358733009B7B5C /* CMISAtomEntryWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B5B /* CMISAtomEntryWriter.h */; };
 		82C1C63F15358733009B7B5E /* test_file.txt in Resources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B5D /* test_file.txt */; };
-		82C1C63F15358733009B7B60 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		82C1C63F15358733009B7B62 /* FileUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B61 /* FileUtil.m */; };
 		82C1C63F15358733009B7B64 /* FileUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B63 /* FileUtil.h */; };
 		82C1C63F15358733009B7B66 /* cmis-spec-v1.0.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B65 /* cmis-spec-v1.0.pdf */; };
-		82C1C63F15358733009B7B68 /* Test.m in Sources */ = {isa = PBXBuildFile; };
+		82C1C63F15358733009B7B68 /* (null) in Sources */ = {isa = PBXBuildFile; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -680,12 +680,11 @@
 				82ABA0491554655A00935225 /* CMISBindingSession.m in Sources */,
 				82C1C63F15358733009B7B56 /* CMISObjectId.m in Sources */,
 				82C1C63F15358733009B7B5A /* CMISAtomEntryWriter.m in Sources */,
-				82C1C63F15358733009B7B60 /* (null) in Sources */,
+				75E77899155B982800191BAE /* (null) in Sources */,
 				75C5E2F81559172B0065550A /* CMISAllowableActionsParser.m in Sources */,
-				82C1C63F15358733009B7B60 /* (null) in Sources */,
 				82C1C63F15358733009B7B62 /* FileUtil.m in Sources */,
 				75C8D0871559B7EA00B63D2B /* CMISAllowableActions.m in Sources */,
-				82C1C63F15358733009B7B68 /* Test.m in Sources */,
+				82C1C63F15358733009B7B68 /* (null) in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
