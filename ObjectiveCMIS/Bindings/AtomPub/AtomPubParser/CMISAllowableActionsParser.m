@@ -10,27 +10,28 @@
 #import "CMISAtomPubConstants.h"
 
 @interface CMISAllowableActionsParser ()
+@property (nonatomic, strong) NSMutableDictionary *internalAllowableActionsDict;
 @property (nonatomic, weak) id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate> parentDelegate;
 @property (nonatomic, strong) NSMutableString *string;
 @property (nonatomic, strong) NSString *elementBeingParsed;
 @property (nonatomic, strong) NSData *atomData;
 
-// Private Init Used for child delegate parser
+// Private init Used for child delegate parser
 - (id)initWithParentDelegate:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 @end
 
 
 @implementation CMISAllowableActionsParser
 
+@synthesize internalAllowableActionsDict = _internalAllowableActionsDict;
 @synthesize parentDelegate = _parentDelegate;
 @synthesize string = _string;
 @synthesize elementBeingParsed = _elementBeingParsed;
 @synthesize atomData = _atomData;
-@synthesize allowableActionsArray = _allowableActionsArray;
 
 
 #pragma mark - 
-#pragma Init Methods - allowableActions Delegated Child Parser
+#pragma mark Init/Create methods
 
 - (id)initWithParentDelegate:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser 
 {
@@ -38,8 +39,7 @@
     if (self) 
     {
         [self setParentDelegate:parentDelegate];
-        [self setAllowableActionsArray:[NSMutableDictionary dictionary]];
-        [self setAllowableActionsArray:[NSMutableDictionary dictionary]];
+        [self setInternalAllowableActionsDict:[NSMutableDictionary dictionary]];
         
         // Setting Child Parser Delegate
         [parser setDelegate:self];
@@ -47,7 +47,10 @@
     return self;
 }
 
-#pragma mark Init for Standalone allowableActions Parser
++ (id)allowableActionsParserWithParentDelegate:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
+{
+    return [[[self class] alloc] initWithParentDelegate:parentDelegate parser:parser];
+}
 
 - (id)initWithData:(NSData*)atomData
 {
@@ -79,6 +82,14 @@
     return parseSuccessful;
 }
 
+#pragma mark -
+#pragma mark Properties
+
+- (NSDictionary *)allowableActionsDict
+{
+    return [self.internalAllowableActionsDict copy];
+}
+
 
 #pragma mark - 
 #pragma mark NSXMLParserDelegate Methods
@@ -91,7 +102,7 @@
     
     if ([elementName isEqualToString:kCMISAtomEntryAllowableActions]) 
     {
-        [self setAllowableActionsArray:[NSMutableDictionary dictionary]];
+        [self setInternalAllowableActionsDict:[NSMutableDictionary dictionary]];
     }
     else
     {
@@ -113,9 +124,9 @@
     {
         if (self.parentDelegate)
         {
-            if ([self.parentDelegate respondsToSelector:@selector(allowableActionsParserDidFinish:)])
+            if ([self.parentDelegate respondsToSelector:@selector(allowableActionsParser:didFinishParsingAllowableActionsDict:)])
             {
-                [self.parentDelegate performSelector:@selector(allowableActionsParserDidFinish:) withObject:self];
+                [self.parentDelegate performSelector:@selector(allowableActionsParser:didFinishParsingAllowableActionsDict:) withObject:self withObject:[self allowableActionsDict]];
             }
             
             // Reset Delegate to parent
@@ -129,20 +140,12 @@
     else
     {
         // TODO: Should check that the elements are valid AllowableActions?
-        [self.allowableActionsArray setObject:self.string forKey:elementName];
+        [self.internalAllowableActionsDict setObject:self.string forKey:elementName];
     }
 
     self.elementBeingParsed = nil;
     self.string = nil;
 }
 
-
-#pragma mark - 
-#pragma mark TODO 
-
-+ (id)parent:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
-{
-    return [[[self class] alloc] initWithParentDelegate:parentDelegate parser:parser];
-}
 
 @end

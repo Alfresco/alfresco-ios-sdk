@@ -17,9 +17,12 @@
 @property (nonatomic, strong) NSString *elementBeingParsed;
 @property (nonatomic, strong) CMISPropertyData *currentPropertyData;
 @property (nonatomic, strong) CMISProperties *currentObjectProperties;
-
+// Properties used if child parser
 @property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
+@property (nonatomic, weak) id<NSXMLParserDelegate, CMISAtomEntryParserDelegate> parentDelegate;
+@property (nonatomic, strong) NSDictionary *entryAttributesDict;
 
+- (id)initWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 @end
 
 
@@ -31,8 +34,10 @@
 @synthesize currentPropertyData = _currentPropertyData;
 @synthesize currentObjectProperties = _currentObjectProperties;
 @synthesize childParserDelegate = _childParserDelegate;
+@synthesize parentDelegate = _parentDelegate;
+@synthesize entryAttributesDict = _entryAttributesDict;
 
-- (id)initWithData:(NSData*)atomData
+- (id)initWithData:(NSData *)atomData
 {
     self = [super init];
     if (self)
@@ -63,6 +68,26 @@
     }
     
     return parseSuccessful;
+}
+
+- (id)initWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
+{
+    self = [self initWithData:nil];
+    if (self)
+    {
+        self.objectData = [[CMISObjectData alloc] init];
+        self.entryAttributesDict = attributes;
+        self.parentDelegate = parentDelegate;
+        
+        // Setting ourself, the entry parser, as the delegate, we reset back to our parent when we're done
+        [parser setDelegate:self];
+    }
+    return self;
+}
+
++ (id)atomEntryParserWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate,CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
+{
+    return [[self alloc] initWithAtomEntryAttributes:attributes parentDelegate:parentDelegate parser:parser];
 }
 
 #pragma mark -
@@ -109,9 +134,10 @@
     {
         self.objectData.contentUrl = [NSURL URLWithString:[attributeDict objectForKey:@"src"]];
     }
-    else if ([self.elementBeingParsed isEqualToString:@"allowableActions"]) 
+    else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryAllowableActions]) 
     {
-        self.childParserDelegate = [CMISAllowableActionsParser parent:self parser:parser];
+        // Delegate parsing to child parser for allowableActions element
+        self.childParserDelegate = [CMISAllowableActionsParser allowableActionsParserWithParentDelegate:self parser:parser];
     }
 }
 
@@ -166,16 +192,32 @@
     {
         self.childParserDelegate = nil;
     }
+    else if (self.parentDelegate && [elementName isEqualToString:@"entry"])
+    {
+        if ([self.parentDelegate respondsToSelector:@selector(cmisAtomEntryParser:didFinishParsingCMISObjectData:)])
+        {
+            // Message the parent delegate the parsed ObjectData
+            [self.parentDelegate performSelector:@selector(cmisAtomEntryParser:didFinishParsingCMISObjectData:) 
+                                      withObject:self withObject:self.objectData];
+        }
+        
+        // Reseting our parent as the delegate since we're done
+        [parser setDelegate:self.parentDelegate];
+        
+        // Message the parent that the element ended
+        [self.parentDelegate parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
+        self.parentDelegate = nil;
+    }
     
     self.elementBeingParsed = nil;
 }
 
 #pragma mark -
 #pragma mark CMISAllowableActionsParserDelegate Methods
-- (void)allowableActionsParserDidFinish:(CMISAllowableActionsParser *)parser
+
+- (void)allowableActionsParser:(CMISAllowableActionsParser *)parser didFinishParsingAllowableActionsDict:(NSDictionary *)allowableActionsDict
 {
-    NSDictionary *parsedAllowableActionsDict = [parser allowableActionsArray];
-    self.objectData.allowableActions = [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:parsedAllowableActionsDict];
+    self.objectData.allowableActions = [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:allowableActionsDict];
 }
 
 @end

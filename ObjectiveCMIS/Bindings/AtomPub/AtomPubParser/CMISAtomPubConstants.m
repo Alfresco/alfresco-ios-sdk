@@ -24,3 +24,21 @@ NSString * const kCMISAtomEntryQueryName = @"queryName";
 NSString * const kCMISAtomEntryValue = @"value";
 NSString * const kCMISAtomEntryBaseTypeId = @"cmis:baseTypeId";
 NSString * const kCMISAtomEntryAllowableActions = @"allowableActions";
+
+// Namespaces
+NSString * const kCMISNamespaceCmis = @"http://docs.oasis-open.org/ns/cmis/core/200908/";
+NSString * const kCMISNamespaceCmisRestAtom = @"http://docs.oasis-open.org/ns/cmis/restatom/200908/";
+NSString * const kCMISNamespaceAtom = @"http://www.w3.org/2005/Atom";
+NSString * const kCMISNamespaceApp = @"http://www.w3.org/2007/app";
+
+// Media Types
+NSString * const kCMISMediaTypeService = @"application/atomsvc+xml";
+NSString * const kCMISMediaTypeFeed = @"application/atom+xml;type=feed";
+NSString * const kCMISMediaTypeEntry = @"application/atom+xml;type=entry";
+NSString * const kCMISMediaTypeChildren = @"application/atom+xml;type=feed";
+NSString * const kCMISMediaTypeDescendants = @"application/cmistree+xml";
+NSString * const kCMISMediaTypeQuery = @"application/cmisquery+xml";
+NSString * const kCMISMediaTypeAllowableAction  = @"application/cmisallowableactions+xml";
+NSString * const kCMISMediaTypeAcl = @"application/cmisacl+xml";
+NSString * const kCMISMediaTypeCmisAtom = @"application/cmisatom+xml";
+NSString * const kCMISMediaTypeOctetStream = @"application/octet-stream";
