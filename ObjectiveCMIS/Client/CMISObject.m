@@ -41,21 +41,8 @@
         self.name = [[objectData.properties.properties objectForKey:kCMISPropertyName] firstValue];
         self.createdBy = [[objectData.properties.properties objectForKey:kCMISPropertyCreatedBy] firstValue];
         self.lastModifiedBy = [[objectData.properties.properties objectForKey:kCMISPropertyModifiedBy] firstValue];
-
-        // convert properties to NSDate
-        ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter alloc] init];
-        
-        NSString *date = [[objectData.properties.properties objectForKey:kCMISPropertyCreationDate] firstValue];
-        if (date != nil)
-        {
-            self.creationDate = [isoFormatter dateFromString:date];
-        }
-        
-        date = [[objectData.properties.properties objectForKey:kCMISPropertyModificationDate] firstValue];
-        if (date != nil)
-        {
-            self.lastModificationDate = [isoFormatter dateFromString:date];
-        }
+        self.creationDate = [[objectData.properties.properties objectForKey:kCMISPropertyCreationDate] firstValue];
+        self.lastModificationDate = [[objectData.properties.properties objectForKey:kCMISPropertyModificationDate] firstValue];
     }
     
     return self;

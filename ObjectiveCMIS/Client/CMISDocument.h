@@ -10,8 +10,11 @@
 
 @interface CMISDocument : CMISFileableObject <NSURLConnectionDataDelegate>
 
-@property (nonatomic, strong, readonly) NSString *contentStreamId;
-@property (nonatomic, strong, readonly) NSURL *contentURL;
+@property (nonatomic, strong, readonly) NSString *versionLabel;
+@property (readonly) BOOL isLatestVersion;
+@property (readonly) BOOL isMajorVersion;
+@property (readonly) BOOL isLatestMajorVersion;
+@property (nonatomic, strong, readonly) NSString *versionSeriesId;
 
 /**
 * Downloads the content to a local file and returns the filepath.

@@ -8,6 +8,8 @@
 
 #import "CMISConstants.h"
 
+// Properties
+
 NSString * const kCMISPropertyName = @"cmis:name";
 NSString * const kCMISPropertyCreatedBy = @"cmis:createdBy";
 NSString * const kCMISPropertyCreationDate = @"cmis:creationDate";
@@ -15,12 +17,23 @@ NSString * const kCMISPropertyModifiedBy = @"cmis:lastModifiedBy";
 NSString * const kCMISPropertyModificationDate = @"cmis:lastModificationDate";
 NSString * const kCMISProperyContentStreamId = @"cmis:contentStreamId";
 NSString * const kCMISPropertyObjectTypeId = @"cmis:objectTypeId";
+NSString * const kCMISPropertyVersionSeriesId = @"cmis:versionSeriesId";
+NSString * const kCMISPropertyVersionLabel = @"cmis:versionLabel";
+NSString * const kCMISPropertyIsLatestVersion = @"cmis:isLatestVersion";
+NSString * const kCMISPropertyIsMajorVersion = @"cmis:isMajorVersion";
+NSString * const kCMISPropertyIsLatestMajorVersion = @"cmis:isLatestMajorVersion";
+
+// Property values
 
 NSString * const kCMISPropertyObjectTypeIdValueDocument = @"cmis:document";
 NSString * const kCMISPropertyObjectTypeIdValueFolder = @"cmis:folder";
 
+// Session cache keys
+
 NSString * const kCMISSessionKeyWorkspaces = @"cmis_session_key_workspaces";
 NSString * const kCMISSessionKeyBinding = @"cmis_session_key_binding";
+
+// Cmis object links
 
 NSString * const kCMISLinkRelationDown = @"down";
 NSString * const kCMISLinkRelationSelf = @"self";

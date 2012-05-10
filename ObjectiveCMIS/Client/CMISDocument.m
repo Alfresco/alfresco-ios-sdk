@@ -12,23 +12,32 @@
 
 @interface CMISDocument()
 
-@property (nonatomic, strong, readwrite) NSString *contentStreamId;
-@property (nonatomic, strong, readwrite) NSURL *contentURL;
+@property (nonatomic, strong, readwrite) NSString *versionLabel;
+@property (readwrite) BOOL isLatestVersion;
+@property (readwrite) BOOL isMajorVersion;
+@property (readwrite) BOOL isLatestMajorVersion;
+@property (nonatomic, strong, readwrite) NSString *versionSeriesId;
 
 @end
 
 @implementation CMISDocument
 
-@synthesize contentStreamId = _contentStreamId;
-@synthesize contentURL = _contentURL;
+@synthesize versionLabel = _versionLabel;
+@synthesize isLatestVersion = _isLatestVersion;
+@synthesize isMajorVersion = _isMajorVersion;
+@synthesize versionSeriesId = _versionSeriesId;
+@synthesize isLatestMajorVersion = _isLatestMajorVersion;
 
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id <CMISBinding>)binding
 {
     self = [super initWithObjectData:objectData binding:binding];
     if (self)
     {
-        self.contentStreamId = [[objectData.properties.properties objectForKey:kCMISProperyContentStreamId] firstValue];
-        self.contentURL = objectData.contentUrl;
+        self.versionLabel = [[objectData.properties.properties objectForKey:kCMISPropertyVersionLabel] firstValue];
+        self.versionSeriesId = [[objectData.properties.properties objectForKey:kCMISPropertyVersionSeriesId] firstValue];
+        self.isLatestVersion = [[[objectData.properties.properties objectForKey:kCMISPropertyIsLatestVersion] firstValue] boolValue];
+        self.isLatestMajorVersion = [[[objectData.properties.properties objectForKey:kCMISPropertyIsLatestMajorVersion] firstValue] boolValue];
+        self.isMajorVersion = [[[objectData.properties.properties objectForKey:kCMISPropertyIsMajorVersion] firstValue] boolValue];
     }
     return self;
 }

@@ -8,15 +8,20 @@
 
 #import "CMISAtomEntryParser.h"
 #import "CMISAllowableActions.h"
+#import "ISO8601DateFormatter.h"
 
 @interface CMISAtomEntryParser ()
 
 @property (nonatomic, strong, readwrite) CMISObjectData *objectData;
 
 @property (nonatomic, strong) NSData *atomData;
+@property (nonatomic, strong) NSString *currentPropertyType;
 @property (nonatomic, strong) NSString *elementBeingParsed;
 @property (nonatomic, strong) CMISPropertyData *currentPropertyData;
 @property (nonatomic, strong) CMISProperties *currentObjectProperties;
+
+// lazily initialized when needed
+@property (nonatomic, strong) ISO8601DateFormatter *dateFormatter;
 
 @property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
 
@@ -31,6 +36,9 @@
 @synthesize currentPropertyData = _currentPropertyData;
 @synthesize currentObjectProperties = _currentObjectProperties;
 @synthesize childParserDelegate = _childParserDelegate;
+@synthesize dateFormatter = _dateFormatter;
+@synthesize currentPropertyType = _currentPropertyType;
+
 
 - (id)initWithData:(NSData*)atomData
 {
@@ -74,9 +82,12 @@
     
     if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyId] ||
         [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyString] ||
-        [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyDateTime])
+        [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyInteger] ||
+        [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyDateTime] ||
+        [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyBoolean])
     {
         // store attribute values in CMISPropertyData object
+        self.currentPropertyType = self.elementBeingParsed;
         self.currentPropertyData = [[CMISPropertyData alloc] init];
         self.currentPropertyData.identifier = [attributeDict objectForKey:kCMISAtomEntryPropertyDefId];
         self.currentPropertyData.queryName = [attributeDict objectForKey:kCMISAtomEntryQueryName];
@@ -122,7 +133,27 @@
         // TODO: Deal with multi-valued properties
         
         // add the value to the current property
-        self.currentPropertyData.values = [NSArray arrayWithObject:string];
+        if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyString] ||
+                [self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyId])
+        {
+            self.currentPropertyData.values = [NSArray arrayWithObject:string];
+        }
+        else if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyInteger])
+        {
+            self.currentPropertyData.values = [NSArray arrayWithObject:[NSNumber numberWithInt:[string intValue]]];
+        }
+        else if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyBoolean])
+        {
+            self.currentPropertyData.values = [NSArray arrayWithObject:[NSNumber numberWithBool:[string isEqualToString:@"true"]]];
+        }
+        else if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyDateTime])
+        {
+            if (!self.dateFormatter)
+            {
+                self.dateFormatter = [[ISO8601DateFormatter alloc] init];
+            }
+            self.currentPropertyData.values = [NSArray arrayWithObject:[self.dateFormatter dateFromString:string]];
+        }
     }
 }
 

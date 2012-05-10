@@ -153,7 +153,7 @@
     STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
     STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
-    STAssertTrue([fileAttributes fileSize] > 512000, @"Expected a file large than 500 kb, but found one of %d kb", [fileAttributes fileSize]/1024);
+    STAssertTrue([fileAttributes fileSize] > 10, @"Expected a file of at least 10 bytes, but found one of %d bytes", [fileAttributes fileSize]);
 
     // Nice boys clean up after themselves
     [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
