@@ -11,6 +11,8 @@
 		75C5E2F81559172B0065550A /* CMISAllowableActionsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */; };
 		75C8D0861559B7EA00B63D2B /* CMISAllowableActions.h in Headers */ = {isa = PBXBuildFile; fileRef = 75C8D0841559B7EA00B63D2B /* CMISAllowableActions.h */; };
 		75C8D0871559B7EA00B63D2B /* CMISAllowableActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 75C8D0851559B7EA00B63D2B /* CMISAllowableActions.m */; };
+		75E77899155B982800191BAE /* (null) in Sources */ = {isa = PBXBuildFile; };
+		75E7789D155BA59D00191BAE /* ObjectiveCMISTests+Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E7789C155BA59D00191BAE /* ObjectiveCMISTests+Environment.m */; };
 		828072A715153DE800EF635C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 828072A615153DE800EF635C /* Foundation.framework */; };
 		828072B515153DE900EF635C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 828072B415153DE900EF635C /* SenTestingKit.framework */; };
 		828072B815153DE900EF635C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 828072A615153DE800EF635C /* Foundation.framework */; };
@@ -105,11 +107,10 @@
 		82C1C63F15358733009B7B5A /* CMISAtomEntryWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B59 /* CMISAtomEntryWriter.m */; };
 		82C1C63F15358733009B7B5C /* CMISAtomEntryWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B5B /* CMISAtomEntryWriter.h */; };
 		82C1C63F15358733009B7B5E /* test_file.txt in Resources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B5D /* test_file.txt */; };
-		82C1C63F15358733009B7B60 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		82C1C63F15358733009B7B62 /* FileUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B61 /* FileUtil.m */; };
 		82C1C63F15358733009B7B64 /* FileUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B63 /* FileUtil.h */; };
 		82C1C63F15358733009B7B66 /* cmis-spec-v1.0.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B65 /* cmis-spec-v1.0.pdf */; };
-		82C1C63F15358733009B7B68 /* Test.m in Sources */ = {isa = PBXBuildFile; };
+		82C1C63F15358733009B7B68 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		82C1C63F15358733009B7B6C /* DateUtil.h in Headers */ = {isa = PBXBuildFile; };
 		82C1C63F15358733009B7B6E /* CMISAtomPubVersioningService.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B6D /* CMISAtomPubVersioningService.m */; };
 		82C1C63F15358733009B7B70 /* CMISAtomPubVersioningService.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B6F /* CMISAtomPubVersioningService.h */; };
@@ -130,6 +131,8 @@
 		75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAllowableActionsParser.m; sourceTree = "<group>"; };
 		75C8D0841559B7EA00B63D2B /* CMISAllowableActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActions.h; path = Common/CMISAllowableActions.h; sourceTree = "<group>"; };
 		75C8D0851559B7EA00B63D2B /* CMISAllowableActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISAllowableActions.m; path = Common/CMISAllowableActions.m; sourceTree = "<group>"; };
+		75E7789B155BA59D00191BAE /* ObjectiveCMISTests+Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ObjectiveCMISTests+Environment.h"; sourceTree = "<group>"; };
+		75E7789C155BA59D00191BAE /* ObjectiveCMISTests+Environment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ObjectiveCMISTests+Environment.m"; sourceTree = "<group>"; };
 		828072A315153DE800EF635C /* libObjectiveCMIS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libObjectiveCMIS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		828072A615153DE800EF635C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		828072AA15153DE800EF635C /* ObjectiveCMIS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjectiveCMIS-Prefix.pch"; sourceTree = "<group>"; };
@@ -328,6 +331,8 @@
 				82C1C63F15358733009B7B5D /* test_file.txt */,
 				828072C215153DE900EF635C /* ObjectiveCMISTests.h */,
 				828072C315153DE900EF635C /* ObjectiveCMISTests.m */,
+				75E7789B155BA59D00191BAE /* ObjectiveCMISTests+Environment.h */,
+				75E7789C155BA59D00191BAE /* ObjectiveCMISTests+Environment.m */,
 				828072BD15153DE900EF635C /* Supporting Files */,
 			);
 			path = ObjectiveCMISTests;
@@ -689,13 +694,14 @@
 				82ABA0491554655A00935225 /* CMISBindingSession.m in Sources */,
 				82C1C63F15358733009B7B56 /* CMISObjectId.m in Sources */,
 				82C1C63F15358733009B7B5A /* CMISAtomEntryWriter.m in Sources */,
-				82C1C63F15358733009B7B60 /* (null) in Sources */,
+				75E77899155B982800191BAE /* (null) in Sources */,
 				75C5E2F81559172B0065550A /* CMISAllowableActionsParser.m in Sources */,
-				82C1C63F15358733009B7B60 /* (null) in Sources */,
 				82C1C63F15358733009B7B62 /* FileUtil.m in Sources */,
 				75C8D0871559B7EA00B63D2B /* CMISAllowableActions.m in Sources */,
-				82C1C63F15358733009B7B68 /* Test.m in Sources */,
+				82C1C63F15358733009B7B68 /* (null) in Sources */,
+				82C1C63F15358733009B7B68 /* (null) in Sources */,
 				82C1C63F15358733009B7B6E /* CMISAtomPubVersioningService.m in Sources */,
+				82C1C63F15358733009B7B68 /* (null) in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -704,6 +710,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				828072C415153DE900EF635C /* ObjectiveCMISTests.m in Sources */,
+				75E7789D155BA59D00191BAE /* ObjectiveCMISTests+Environment.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

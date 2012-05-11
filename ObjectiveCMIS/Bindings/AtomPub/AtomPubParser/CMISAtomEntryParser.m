@@ -12,38 +12,40 @@
 
 @interface CMISAtomEntryParser ()
 
-@property (nonatomic, weak) id<NSXMLParserDelegate, CMISAtomEntryParserDelegate> parentDelegate;
-
 @property (nonatomic, strong, readwrite) CMISObjectData *objectData;
+
 @property (nonatomic, strong) NSData *atomData;
-@property (nonatomic, strong) NSString *currentPropertyType;
 @property (nonatomic, strong) NSString *elementBeingParsed;
+@property (nonatomic, strong) NSString *currentPropertyType;
 @property (nonatomic, strong) CMISPropertyData *currentPropertyData;
 @property (nonatomic, strong) CMISProperties *currentObjectProperties;
 
 @property (nonatomic, strong) ISO8601DateFormatter *dateFormatter;
+
+// Properties used if child parser
 @property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
+@property (nonatomic, weak) id<NSXMLParserDelegate, CMISAtomEntryParserDelegate> parentDelegate;
+@property (nonatomic, strong) NSDictionary *entryAttributesDict;
 
-// Private Init Used for child delegate parser
-- (id)initWithParentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
-
+- (id)initWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 @end
 
 
 @implementation CMISAtomEntryParser
 
-@synthesize parentDelegate = _parentDelegate;
 @synthesize objectData = _objectData;
 @synthesize atomData = _atomData;
 @synthesize elementBeingParsed = _elementBeingParsed;
+@synthesize currentPropertyType = _currentPropertyType;
 @synthesize currentPropertyData = _currentPropertyData;
 @synthesize currentObjectProperties = _currentObjectProperties;
-@synthesize childParserDelegate = _childParserDelegate;
 @synthesize dateFormatter = _dateFormatter;
-@synthesize currentPropertyType = _currentPropertyType;
+@synthesize childParserDelegate = _childParserDelegate;
+@synthesize parentDelegate = _parentDelegate;
+@synthesize entryAttributesDict = _entryAttributesDict;
 
 
-- (id)initWithData:(NSData*)atomData
+- (id)initWithData:(NSData *)atomData
 {
     self = [super init];
     if (self)
@@ -53,21 +55,6 @@
     
     return self;
 }
-
-- (id)initWithParentDelegate:(id <NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
-{
-    self = [self init];
-    if (self)
-    {
-        [self setParentDelegate:parentDelegate];
-        self.objectData = [[CMISObjectData alloc] init];
-
-        // Setting Child Parser Delegate, parser events will now be captured by this class
-        [parser setDelegate:self];
-    }
-    return self;
-}
-
 
 - (BOOL)parseAndReturnError:(NSError **)error;
 {
@@ -91,6 +78,26 @@
     return parseSuccessful;
 }
 
+- (id)initWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
+{
+    self = [self initWithData:nil];
+    if (self)
+    {
+        self.objectData = [[CMISObjectData alloc] init];
+        self.entryAttributesDict = attributes;
+        self.parentDelegate = parentDelegate;
+        
+        // Setting ourself, the entry parser, as the delegate, we reset back to our parent when we're done
+        [parser setDelegate:self];
+    }
+    return self;
+}
+
++ (id)atomEntryParserWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate,CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
+{
+    return [[self alloc] initWithAtomEntryAttributes:attributes parentDelegate:parentDelegate parser:parser];
+}
+
 #pragma mark -
 #pragma mark NSXMLParser delegate methods
 
@@ -99,11 +106,11 @@
     self.elementBeingParsed = elementName;
     
     if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyId] ||
-        [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyString] ||
-        [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyInteger] ||
-        [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyDateTime] ||
-        [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyBoolean])
-    {
+          [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyString] ||
+          [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyInteger] ||
+          [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyDateTime] ||
+          [self.elementBeingParsed isEqualToString:kCMISAtomEntryPropertyBoolean])
+      {
         // store attribute values in CMISPropertyData object
         self.currentPropertyType = self.elementBeingParsed;
         self.currentPropertyData = [[CMISPropertyData alloc] init];
@@ -118,38 +125,37 @@
     }
     else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryLink])
     {
-        // TODO: this is quick-and-dirty parsing
         NSString *linkType = [attributeDict objectForKey:kCMISAtomEntryType];
-        NSString *rel = [attributeDict objectForKey:kCMISAtomEntryRel];
+         NSString *rel = [attributeDict objectForKey:kCMISAtomEntryRel];
 
-        if (linkType == nil || (linkType != nil && [linkType isEqualToString:kCMISAtomEntryLinkTypeAtomFeed]))
-        {
+         if (linkType == nil || (linkType != nil && [linkType isEqualToString:kCMISAtomEntryLinkTypeAtomFeed]))
+         {
 
-            if (self.objectData.links == nil)
-            {
-                self.objectData.links = [[NSMutableDictionary alloc] init];
-            }
+             if (self.objectData.links == nil)
+             {
+                 self.objectData.links = [[NSMutableDictionary alloc] init];
+             }
 
-            [self.objectData.links setObject:[attributeDict objectForKey:kCMISAtomEntryHref] forKey:rel];
-        }
-
+             [self.objectData.links setObject:[attributeDict objectForKey:kCMISAtomEntryHref] forKey:rel];
+         }
     }
     else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryContent])
     {
         self.objectData.contentUrl = [NSURL URLWithString:[attributeDict objectForKey:kCMISAtomEntrySrc]];
     }
-    else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryAllowableActions])
+    else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryAllowableActions]) 
     {
-        self.childParserDelegate = [CMISAllowableActionsParser parent:self parser:parser];
+        // Delegate parsing to child parser for allowableActions element
+        self.childParserDelegate = [CMISAllowableActionsParser allowableActionsParserWithParentDelegate:self parser:parser];
     }
 }
 
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
 {
     if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryValue])
     {
         // TODO: Deal with multi-valued properties
-        
+
         // add the value to the current property
         if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyString] ||
                 [self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyId])
@@ -178,29 +184,12 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
 {
-    if ([elementName isEqualToString:kCMISAtomEntry])
-    {
-        if (self.parentDelegate)
-        {
-            if ([self.parentDelegate respondsToSelector:@selector(atomEntryParserDidFinish:)])
-            {
-                [self.parentDelegate performSelector:@selector(atomEntryParserDidFinish:) withObject:self];
-            }
-
-            // Reset Delegate to parent, now funneling events to the parent again
-            [parser setDelegate:self.parentDelegate];
-            // Message the parent that the element ended
-            [self.parentDelegate parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
-
-            self.parentDelegate = nil;
-        }
-    }
-    else if ([elementName isEqualToString:kCMISAtomEntryPropertyId] ||
+    if ([elementName isEqualToString:kCMISAtomEntryPropertyId] ||
         [elementName isEqualToString:kCMISAtomEntryPropertyString] ||
         [elementName isEqualToString:kCMISAtomEntryPropertyInteger] ||
         [elementName isEqualToString:kCMISAtomEntryPropertyDateTime] ||
         [elementName isEqualToString:kCMISAtomEntryPropertyBoolean])
-        {
+    {
         // TODO: distinguish between core CMIS properties and ExtensionData properties
         
         // add the property to the properties dictionary
@@ -234,24 +223,32 @@
     {
         self.childParserDelegate = nil;
     }
+    else if (self.parentDelegate && [elementName isEqualToString:kCMISAtomEntry])
+    {
+        if ([self.parentDelegate respondsToSelector:@selector(cmisAtomEntryParser:didFinishParsingCMISObjectData:)])
+        {
+            // Message the parent delegate the parsed ObjectData
+            [self.parentDelegate performSelector:@selector(cmisAtomEntryParser:didFinishParsingCMISObjectData:) 
+                                      withObject:self withObject:self.objectData];
+        }
+        
+        // Reseting our parent as the delegate since we're done
+        [parser setDelegate:self.parentDelegate];
+        
+        // Message the parent that the element ended
+        [self.parentDelegate parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
+        self.parentDelegate = nil;
+    }
     
     self.elementBeingParsed = nil;
 }
 
 #pragma mark -
 #pragma mark CMISAllowableActionsParserDelegate Methods
-- (void)allowableActionsParserDidFinish:(CMISAllowableActionsParser *)parser
+
+- (void)allowableActionsParser:(CMISAllowableActionsParser *)parser didFinishParsingAllowableActionsDict:(NSDictionary *)allowableActionsDict
 {
-    NSDictionary *parsedAllowableActionsDict = [parser allowableActionsArray];
-    self.objectData.allowableActions = [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:parsedAllowableActionsDict];
+    self.objectData.allowableActions = [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:allowableActionsDict];
 }
-
-#pragma mark Parser delegation
-
-+ (id)delegateToAtomEntryParserFrom:(id <NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentParserDelegate withParser:(NSXMLParser *)parser
-{
-    return [[[self class] alloc] initWithParentDelegate:parentParserDelegate parser:parser];
-}
-
 
 @end

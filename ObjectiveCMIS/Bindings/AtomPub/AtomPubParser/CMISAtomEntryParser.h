@@ -19,16 +19,18 @@
 
 @property (nonatomic, strong, readonly) CMISObjectData *objectData;
 
-- (id)initWithData:(NSData*)atomData;
+// Designated Initializer
+- (id)initWithData:(NSData *)atomData;
 - (BOOL)parseAndReturnError:(NSError **)error;
 
-+ (id)delegateToAtomEntryParserFrom:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentParserDelegate withParser:(NSXMLParser *)parser;
+// Initializes a child parser for an Atom Entry and takes over parsing control while parsing the Atom Entry
++ (id)atomEntryParserWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 
 @end
 
-@protocol CMISAtomEntryParserDelegate <NSObject>
 
-@required
-- (void)atomEntryParserDidFinish:(CMISAtomEntryParser *)parser;
+@protocol CMISAtomEntryParserDelegate <NSObject>
+@optional
+- (void)cmisAtomEntryParser:(id)entryParser didFinishParsingCMISObjectData:(CMISObjectData *)cmisObjectData;
 
 @end

@@ -40,3 +40,20 @@ extern NSString * const kCMISLinkRelationSelf;
 extern NSString * const kCMISLinkRelationFolderTree;
 extern NSString * const kCMISLinkVersionHistory;
 
+// Namespaces
+extern NSString * const kCMISNamespaceCmis;
+extern NSString * const kCMISNamespaceCmisRestAtom;
+extern NSString * const kCMISNamespaceAtom;
+extern NSString * const kCMISNamespaceApp;
+
+// Media Types
+extern NSString * const kCMISMediaTypeService;
+extern NSString * const kCMISMediaTypeFeed;
+extern NSString * const kCMISMediaTypeEntry;
+extern NSString * const kCMISMediaTypeChildren;
+extern NSString * const kCMISMediaTypeDescendants;
+extern NSString * const kCMISMediaTypeQuery;
+extern NSString * const kCMISMediaTypeAllowableAction;
+extern NSString * const kCMISMediaTypeAcl;
+extern NSString * const kCMISMediaTypeCmisAtom;
+extern NSString * const kCMISMediaTypeOctetStream;

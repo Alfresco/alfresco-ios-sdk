@@ -9,13 +9,10 @@
 #import "CMISAtomFeedParser.h"
 
 @interface CMISAtomFeedParser ()
-
 @property (nonatomic, strong) NSData *feedData;
 @property (nonatomic, strong) NSMutableArray *internalEntries;
 @property (nonatomic, strong) NSString *elementBeingParsed;
-
-@property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
-
+@property (nonatomic, weak) id childParserDelegate;
 @end
 
 @implementation CMISAtomFeedParser
@@ -27,8 +24,7 @@
 
 - (id)initWithData:(NSData*)feedData
 {
-    self = [super init];
-    if (self)
+    if (self = [super init]) 
     {
         self.feedData = feedData;
     }
@@ -78,22 +74,35 @@
     
     if ([self.elementBeingParsed isEqualToString:kCMISAtomEntry])
     {
-        self.childParserDelegate = [CMISAtomEntryParser delegateToAtomEntryParserFrom:self withParser:parser];
+        // Delegate parsing of AtomEntry element to the entry child parser
+        self.childParserDelegate = [CMISAtomEntryParser atomEntryParserWithAtomEntryAttributes:attributeDict parentDelegate:self parser:parser];
     }
 }
+
+//- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
+//{
+//    // Nothing to do here ...
+//    // TODO Remove method if we're not going to parse anything else
+//}
+
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
 {
-    if ([elementName isEqualToString:kCMISAtomEntry])
+   if ([elementName isEqualToString:@"entry"])
     {
         self.childParserDelegate = nil;
     }
+    
+    self.elementBeingParsed = nil;
 }
 
-- (void)atomEntryParserDidFinish:(CMISAtomEntryParser *)parser
+
+#pragma mark -
+#pragma mark CMISAtomEntryParserDelegate Methods
+
+- (void)cmisAtomEntryParser:(CMISAtomEntryParser *)entryParser didFinishParsingCMISObjectData:(CMISObjectData *)cmisObjectData
 {
-    [self.internalEntries addObject:parser.objectData];
+    [self.internalEntries addObject:cmisObjectData];
 }
-
 
 @end

@@ -18,5 +18,15 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ObjectiveCMISTestUsername</key>
+	<string>${OBJECTIVE_CMIS_TEST_USERNAME}</string>
+	<key>ObjectiveCMISTestPassword</key>
+	<string>${OBJECTIVE_CMIS_TEST_PASSWORD}</string>
+	<key>ObjectiveCMISTestAtomPubUrl</key>
+	<string>${OBJECTIVE_CMIS_TEST_ATOMPUB_URL}</string>
+	<key>ObjectiveCMISTestRepoId</key>
+	<string>${OBJECTIVE_CMIS_TEST_REPOID}</string>
+	<key>QuickofficePartnerKey</key>
+	<string>${QUICKOFFICE_PARTNER_KEY}</string>
 </dict>
 </plist>

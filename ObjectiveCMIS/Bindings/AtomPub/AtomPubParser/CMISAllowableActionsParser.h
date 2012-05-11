@@ -10,22 +10,21 @@
 
 @protocol CMISAllowableActionsParserDelegate;
 
+
 @interface CMISAllowableActionsParser : NSObject <NSXMLParserDelegate>
-
-// TODO: Define AllowableActions Interface and populate
-
-// Simple Model to hold parsed AllowableActions
-@property (nonatomic, strong) NSMutableDictionary *allowableActionsArray;
+// Simple Model to hold parsed AllowableActions, The keys are the action type names and the value for each key is 'true' or 'false'
+@property (nonatomic, strong, readonly) NSDictionary *allowableActionsDict;
 
 - (id)initWithData:(NSData*)atomData;
 - (BOOL)parseAndReturnError:(NSError **)error;
 
-+ (id)parent:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parent parser:(NSXMLParser *)parser;
+// Delegates parsing to child parser, ensure that the Element is 'allowableActions'
++ (id)allowableActionsParserWithParentDelegate:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 
 @end
 
 
 @protocol CMISAllowableActionsParserDelegate <NSObject>
-@required
-- (void)allowableActionsParserDidFinish:(CMISAllowableActionsParser *)parser;
+@optional
+- (void)allowableActionsParser:(CMISAllowableActionsParser *)parser didFinishParsingAllowableActionsDict:(NSDictionary *)allowableActionsDict;
 @end
