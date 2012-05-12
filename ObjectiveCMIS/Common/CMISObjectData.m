@@ -1,6 +1,6 @@
 //
 //  CMISObjectData.m
-//  HybridApp
+//  ObjectiveCMIS
 //
 //  Created by Cornwell Gavin on 22/02/2012.
 //  Copyright (c) 2012 Alfresco. All rights reserved.

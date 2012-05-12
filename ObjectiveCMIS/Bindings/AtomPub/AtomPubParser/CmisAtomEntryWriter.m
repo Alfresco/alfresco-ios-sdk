@@ -1,5 +1,5 @@
 //
-// Alfresco Focus
+// ObjectiveCMIS
 //
 // Created by Joram Barrez
 //
