@@ -44,7 +44,7 @@
 
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error;
 
-- (void)writeContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath
+- (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath
                                                       completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
                                                       failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
 

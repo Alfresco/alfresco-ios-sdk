@@ -24,7 +24,6 @@
         binding = [[CMISAtomPubBinding alloc] initWithSessionParameters:sessionParameters];
     }
 
-    [sessionParameters setObject:binding forKey:kCMISSessionKeyBinding];
     return binding;
 }
 

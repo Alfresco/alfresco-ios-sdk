@@ -33,4 +33,3 @@ extern NSString * const kCMISPropertyObjectTypeIdValueFolder;
 // Session cache keys
 
 extern NSString * const kCMISSessionKeyWorkspaces;
-extern NSString * const kCMISSessionKeyBinding;

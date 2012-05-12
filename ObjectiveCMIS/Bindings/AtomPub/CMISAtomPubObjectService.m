@@ -7,10 +7,10 @@
 
 #import "CMISAtomPubObjectService.h"
 #import "CMISAtomPubBaseService+Protected.h"
-#import "HttpUtil.h"
+#import "CMISHttpUtil.h"
 #import "CMISAtomEntryWriter.h"
 #import "CMISAtomEntryParser.h"
-#import "FileUtil.h"
+#import "CMISFileUtil.h"
 #import "CMISConstants.h"
 
 @interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
@@ -32,7 +32,7 @@
     return [self retrieveObjectInternal:objectId error:error];
 }
 
-- (void)writeContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+- (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {
     NSError *objectRetrievalError = nil;
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&objectRetrievalError];

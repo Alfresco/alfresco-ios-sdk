@@ -10,8 +10,8 @@
 #import "CMISStandardAuthenticationProvider.h"
 
 @interface CMISStandardAuthenticationProvider ()
-@property (nonatomic, strong, readwrite) NSString *username;
-@property (nonatomic, strong, readwrite) NSString *password;
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *password;
 @end
 
 @implementation CMISStandardAuthenticationProvider

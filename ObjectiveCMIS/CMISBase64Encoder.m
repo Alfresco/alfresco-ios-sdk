@@ -7,7 +7,7 @@
 //
 
 #import "CMISBase64Encoder.h"
-#import "FileUtil.h"
+#import "CMISFileUtil.h"
 
 static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 

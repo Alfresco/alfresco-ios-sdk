@@ -8,7 +8,7 @@
 
 #import "CMISDocument.h"
 #import "CMISConstants.h"
-#import "HttpUtil.h"
+#import "CMISHttpUtil.h"
 #import "CMISObjectConverter.h"
 
 @interface CMISDocument()
@@ -82,9 +82,9 @@
 }
 
 
-- (void)writeContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+- (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {
-    [self.binding.objectService writeContentOfCMISObject:self.identifier toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
+    [self.binding.objectService downloadContentOfCMISObject:self.identifier toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
 }
 
 - (BOOL)deleteAllVersionsAndReturnError:(NSError **)error

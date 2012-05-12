@@ -12,7 +12,7 @@
 #import "CMISSession.h"
 #import "CMISConstants.h"
 #import "CMISDocument.h"
-#import "FileUtil.h"
+#import "CMISFileUtil.h"
 
 @interface ObjectiveCMISTests()
 
@@ -174,7 +174,7 @@
 
     // Writing content of CMIS document to local file
     NSString *filePath = @"testfile";
-    [randomDoc writeContentToFile:filePath completionBlock:^{
+    [randomDoc downloadContentToFile:filePath completionBlock:^{
         self.callbackCompleted = YES;
     } failureBlock:^(NSError *failureError) {
         STAssertNil(failureError, @"Error while writing content: %@", [error description]);
@@ -253,7 +253,7 @@
         @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
 
     NSString *downloadedFilePath = @"testfile.pdf";
-    [document writeContentToFile:downloadedFilePath completionBlock:^{
+    [document downloadContentToFile:downloadedFilePath completionBlock:^{
         NSLog(@"File upload completed");
         self.callbackCompleted = YES;
     } failureBlock:^(NSError *failureError) {

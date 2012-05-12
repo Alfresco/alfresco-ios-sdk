@@ -67,6 +67,11 @@
     [self.sessionData setObject:object forKey:key];
 }
 
+- (void)addEntriesFromDictionary:(NSDictionary *)dictionary
+{
+    [self.sessionData addEntriesFromDictionary:dictionary];
+}
+
 - (void)removeKey:(id)key
 {
     [self.sessionData removeObjectForKey:key];

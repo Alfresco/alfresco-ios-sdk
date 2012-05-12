@@ -8,7 +8,7 @@
 
 #import "CMISAtomPubBaseService.h"
 #import "CMISAtomPubBaseService+Protected.h"
-#import "HttpUtil.h"
+#import "CMISHttpUtil.h"
 #import "CMISServiceDocumentParser.h"
 #import "CMISConstants.h"
 #import "CMISAtomEntryParser.h"

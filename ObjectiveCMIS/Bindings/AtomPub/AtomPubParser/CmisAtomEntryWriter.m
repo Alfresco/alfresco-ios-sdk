@@ -8,7 +8,7 @@
 #import "CMISAtomEntryWriter.h"
 #import "CMISBase64Encoder.h"
 #import "CMISConstants.h"
-#import "FileUtil.h"
+#import "CMISFileUtil.h"
 
 @implementation CMISAtomEntryWriter
 

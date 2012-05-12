@@ -5,7 +5,7 @@
 //
 
 
-#import "HttpUtil.h"
+#import "CMISHttpUtil.h"
 #import "CMISAuthenticationProvider.h"
 
 @implementation HttpUtil

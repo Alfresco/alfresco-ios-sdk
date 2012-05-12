@@ -34,5 +34,4 @@ NSString * const kCMISPropertyObjectTypeIdValueFolder = @"cmis:folder";
 // Session cache keys
 
 NSString * const kCMISSessionKeyWorkspaces = @"cmis_session_key_workspaces";
-NSString * const kCMISSessionKeyBinding = @"cmis_session_key_binding";
 

@@ -25,7 +25,7 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
 * Do note that this is an ASYNCHRONOUS call, as a synchronous call would have
 * bad performance/memory implications.
 */
-- (void)writeContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
+- (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
 
 /**
 * uploads the file from the given path to the given folder.

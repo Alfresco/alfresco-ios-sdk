@@ -5,7 +5,7 @@
 //
 
 
-#import "FileUtil.h"
+#import "CMISFileUtil.h"
 
 
 @implementation FileUtil

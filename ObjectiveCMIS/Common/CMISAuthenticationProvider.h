@@ -10,9 +10,6 @@
 
 @protocol CMISAuthenticationProvider
 
-@property (nonatomic, strong, readonly) NSString *username;
-@property (nonatomic, strong, readonly) NSString *password;
-
 /**
 * Returns a set of HTTP headers (key-value pairs) that should be added to a
 * HTTP call. This will be called by the AtomPub and the Web Services
