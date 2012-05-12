@@ -22,6 +22,9 @@
 		8276E132155E355D00344A29 /* CMISFileUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 8276E12C155E355D00344A29 /* CMISFileUtil.m */; };
 		8276E133155E355D00344A29 /* CMISHttpUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 8276E12D155E355D00344A29 /* CMISHttpUtil.h */; };
 		8276E134155E355D00344A29 /* CMISHttpUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 8276E12E155E355D00344A29 /* CMISHttpUtil.m */; };
+		8276E159155E392A00344A29 /* CMISNavigationService.h in Headers */ = {isa = PBXBuildFile; fileRef = 8276E156155E392A00344A29 /* CMISNavigationService.h */; };
+		8276E15A155E392A00344A29 /* CMISRepositoryService.h in Headers */ = {isa = PBXBuildFile; fileRef = 8276E157155E392A00344A29 /* CMISRepositoryService.h */; };
+		8276E15B155E392A00344A29 /* CMISVersioningService.h in Headers */ = {isa = PBXBuildFile; fileRef = 8276E158155E392A00344A29 /* CMISVersioningService.h */; };
 		828072A715153DE800EF635C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 828072A615153DE800EF635C /* Foundation.framework */; };
 		828072B515153DE900EF635C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 828072B415153DE900EF635C /* SenTestingKit.framework */; };
 		828072B815153DE900EF635C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 828072A615153DE800EF635C /* Foundation.framework */; };
@@ -137,6 +140,9 @@
 		8276E12C155E355D00344A29 /* CMISFileUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CMISFileUtil.m; path = Utils/CMISFileUtil.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8276E12D155E355D00344A29 /* CMISHttpUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = CMISHttpUtil.h; path = Utils/CMISHttpUtil.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8276E12E155E355D00344A29 /* CMISHttpUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CMISHttpUtil.m; path = Utils/CMISHttpUtil.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		8276E156155E392A00344A29 /* CMISNavigationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISNavigationService.h; path = Bindings/CMISNavigationService.h; sourceTree = "<group>"; };
+		8276E157155E392A00344A29 /* CMISRepositoryService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISRepositoryService.h; path = Bindings/CMISRepositoryService.h; sourceTree = "<group>"; };
+		8276E158155E392A00344A29 /* CMISVersioningService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISVersioningService.h; path = Bindings/CMISVersioningService.h; sourceTree = "<group>"; };
 		828072A315153DE800EF635C /* libObjectiveCMIS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libObjectiveCMIS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		828072A615153DE800EF635C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		828072AA15153DE800EF635C /* ObjectiveCMIS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjectiveCMIS-Prefix.pch"; sourceTree = "<group>"; };
@@ -388,14 +394,17 @@
 				828073191515405C00EF635C /* CMISBinding.h */,
 				82ABA0461554655900935225 /* CMISBindingSession.h */,
 				82ABA0471554655A00935225 /* CMISBindingSession.m */,
+				82AD4AE9154164290012DDB6 /* CMISBindingFactory.h */,
+				82AD4AEA1541642A0012DDB6 /* CMISBindingFactory.m */,
 				82AD4AEE15416A150012DDB6 /* CMISAclService.h */,
 				82AD4AF115416A5F0012DDB6 /* CMISDiscoveryService.h */,
 				82AD4AF215416A7B0012DDB6 /* CMISMultiFilingService.h */,
 				82AD4AED154168440012DDB6 /* CMISObjectService.h */,
 				82AD4AF515416AA90012DDB6 /* CMISPolicyService.h */,
 				82AD4AF715416AC10012DDB6 /* CMISRelationshipService.h */,
-				82AD4AE9154164290012DDB6 /* CMISBindingFactory.h */,
-				82AD4AEA1541642A0012DDB6 /* CMISBindingFactory.m */,
+				8276E156155E392A00344A29 /* CMISNavigationService.h */,
+				8276E157155E392A00344A29 /* CMISRepositoryService.h */,
+				8276E158155E392A00344A29 /* CMISVersioningService.h */,
 				8280730D1515405C00EF635C /* AtomPub */,
 			);
 			name = Bindings;
@@ -530,6 +539,9 @@
 				8276E12F155E355D00344A29 /* CMISBase64Encoder.h in Headers */,
 				8276E131155E355D00344A29 /* CMISFileUtil.h in Headers */,
 				8276E133155E355D00344A29 /* CMISHttpUtil.h in Headers */,
+				8276E159155E392A00344A29 /* CMISNavigationService.h in Headers */,
+				8276E15A155E392A00344A29 /* CMISRepositoryService.h in Headers */,
+				8276E15B155E392A00344A29 /* CMISVersioningService.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
