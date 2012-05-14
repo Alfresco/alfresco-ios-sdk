@@ -81,9 +81,8 @@
         // Delegate parsing of AtomEntry element to the entry child parser
         self.childParserDelegate = [CMISAtomEntryParser atomEntryParserWithAtomEntryAttributes:attributeDict parentDelegate:self parser:parser];
     }
-    else if ([self.elementBeingParsed isEqualToString:@"link"])
+    else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryLink])
     {
-        // TODO: Why do we not care about link relations for a feed? Adding the parse for now, remove if really not necessary
         CMISAtomLink *link = [[CMISAtomLink alloc] init];
         [link setValuesForKeysWithDictionary:attributeDict];
         [self.feedLinkRelations addObject:link];
