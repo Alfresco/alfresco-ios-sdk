@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E44E03A1560F2C300EC9317 /* CMISErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E44E0381560F2C300EC9317 /* CMISErrors.h */; };
+		4E44E03B1560F2C300EC9317 /* CMISErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E44E0391560F2C300EC9317 /* CMISErrors.m */; };
 		75C5E2F71559172B0065550A /* CMISAllowableActionsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 75C5E2F51559172B0065550A /* CMISAllowableActionsParser.h */; };
 		75C5E2F81559172B0065550A /* CMISAllowableActionsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */; };
 		75C8D0861559B7EA00B63D2B /* CMISAllowableActions.h in Headers */ = {isa = PBXBuildFile; fileRef = 75C8D0841559B7EA00B63D2B /* CMISAllowableActions.h */; };
@@ -124,6 +126,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E44E0381560F2C300EC9317 /* CMISErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISErrors.h; sourceTree = "<group>"; };
+		4E44E0391560F2C300EC9317 /* CMISErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISErrors.m; sourceTree = "<group>"; };
 		75C5E2F51559172B0065550A /* CMISAllowableActionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAllowableActionsParser.h; sourceTree = "<group>"; };
 		75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAllowableActionsParser.m; sourceTree = "<group>"; };
 		75C8D0841559B7EA00B63D2B /* CMISAllowableActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActions.h; path = Common/CMISAllowableActions.h; sourceTree = "<group>"; };
@@ -366,6 +370,8 @@
 		828072D215153EB300EF635C /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				4E44E0381560F2C300EC9317 /* CMISErrors.h */,
+				4E44E0391560F2C300EC9317 /* CMISErrors.m */,
 				828072F31515404F00EF635C /* CMISConstants.h */,
 				828072F41515404F00EF635C /* CMISConstants.m */,
 				828072F51515404F00EF635C /* CMISEnums.h */,
@@ -542,6 +548,7 @@
 				8276E159155E392A00344A29 /* CMISNavigationService.h in Headers */,
 				8276E15A155E392A00344A29 /* CMISRepositoryService.h in Headers */,
 				8276E15B155E392A00344A29 /* CMISVersioningService.h in Headers */,
+				4E44E03A1560F2C300EC9317 /* CMISErrors.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -681,6 +688,7 @@
 				8276E130155E355D00344A29 /* CMISBase64Encoder.m in Sources */,
 				8276E132155E355D00344A29 /* CMISFileUtil.m in Sources */,
 				8276E134155E355D00344A29 /* CMISHttpUtil.m in Sources */,
+				4E44E03B1560F2C300EC9317 /* CMISErrors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
