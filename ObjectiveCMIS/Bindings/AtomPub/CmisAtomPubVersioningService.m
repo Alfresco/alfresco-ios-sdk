@@ -57,7 +57,8 @@
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:error];
     if (*error == nil)
     {
-        NSString *versionHistoryLink = [objectData.links objectForKey:kCMISLinkVersionHistory];
+        NSString *versionHistoryLink = [objectData.linkRelations linkHrefForRel:kCMISLinkVersionHistory];
+        //[objectData.links objectForKey:kCMISLinkVersionHistory];
         NSData *data = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:versionHistoryLink] withSession:self.session error:error];
         if (*error == nil)
         {

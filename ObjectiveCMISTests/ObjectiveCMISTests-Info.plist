@@ -26,7 +26,5 @@
 	<string>${OBJECTIVE_CMIS_TEST_ATOMPUB_URL}</string>
 	<key>ObjectiveCMISTestRepoId</key>
 	<string>${OBJECTIVE_CMIS_TEST_REPOID}</string>
-	<key>QuickofficePartnerKey</key>
-	<string>${QUICKOFFICE_PARTNER_KEY}</string>
 </dict>
 </plist>
