@@ -105,7 +105,8 @@
     // Use down link to create the document
     if (!*error)
     {
-        NSString *downLink = [folderData.links objectForKey:kCMISLinkRelationDown];
+        NSString *downLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
+        //[folderData.links objectForKey:kCMISLinkRelationDown];
         return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:filePath withContentMimeType:mimeType error:error];
     }
     return nil;
@@ -116,7 +117,7 @@
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:error];
     if (!*error)
     {
-        NSString *selfLink = [objectData.links objectForKey:kCMISLinkRelationSelf];
+        NSString *selfLink = [objectData.linkRelations linkHrefForRel:kCMISLinkRelationSelf];
         if (selfLink)
         {
             NSURL *selfUrl = [NSURL URLWithString:selfLink];
@@ -150,7 +151,7 @@
     // Use down link to create the folder
     if (*error == nil)
     {
-        NSString *downLink = [parentFolderData.links objectForKey:kCMISLinkRelationDown];
+        NSString *downLink = [parentFolderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
         return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:nil withContentMimeType:nil error:error];
     }
     return nil;
@@ -171,7 +172,7 @@
     // Use foldertree link to delete the folder and its subfolders
     if (*error == nil)
     {
-        NSString *folderTreeLink = [folderData.links objectForKey:kCMISLinkRelationFolderTree];
+        NSString *folderTreeLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationFolderTree];
         [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:folderTreeLink] withSession:self.session error:error];
 
         // TODO: handle response status code (see opencmis impl)

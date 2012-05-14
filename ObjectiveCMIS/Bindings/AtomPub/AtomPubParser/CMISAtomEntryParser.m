@@ -9,6 +9,8 @@
 #import "CMISAtomEntryParser.h"
 #import "CMISAllowableActions.h"
 #import "ISO8601DateFormatter.h"
+#import "CMISAtomLink.h"
+#import "CMISLinkRelations.h"
 
 @interface CMISAtomEntryParser ()
 
@@ -19,6 +21,7 @@
 @property (nonatomic, strong) NSString *currentPropertyType;
 @property (nonatomic, strong) CMISPropertyData *currentPropertyData;
 @property (nonatomic, strong) CMISProperties *currentObjectProperties;
+@property (nonatomic, strong) NSMutableSet *currentLinkRelations;
 
 @property (nonatomic, strong) ISO8601DateFormatter *dateFormatter;
 
@@ -27,6 +30,9 @@
 @property (nonatomic, weak) id<NSXMLParserDelegate, CMISAtomEntryParserDelegate> parentDelegate;
 @property (nonatomic, strong) NSDictionary *entryAttributesDict;
 
+// Designated initializer
+- (id)init;
+// Initilizer used if this parser is a delegated child parser
 - (id)initWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 @end
 
@@ -39,15 +45,27 @@
 @synthesize currentPropertyType = _currentPropertyType;
 @synthesize currentPropertyData = _currentPropertyData;
 @synthesize currentObjectProperties = _currentObjectProperties;
+@synthesize currentLinkRelations = _currentLinkRelations;
 @synthesize dateFormatter = _dateFormatter;
 @synthesize childParserDelegate = _childParserDelegate;
 @synthesize parentDelegate = _parentDelegate;
 @synthesize entryAttributesDict = _entryAttributesDict;
 
 
-- (id)initWithData:(NSData *)atomData
+// Designated Initializer
+- (id)init
 {
     self = [super init];
+    if (self)
+    {
+        self.currentLinkRelations = [NSMutableSet set];
+    }
+    return self;
+}
+
+- (id)initWithData:(NSData *)atomData
+{
+    self = [self init];
     if (self)
     {
         self.atomData = atomData;
@@ -80,7 +98,7 @@
 
 - (id)initWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
 {
-    self = [self initWithData:nil];
+    self = [self init];
     if (self)
     {
         self.objectData = [[CMISObjectData alloc] init];
@@ -126,18 +144,11 @@
     else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryLink])
     {
         NSString *linkType = [attributeDict objectForKey:kCMISAtomEntryType];
-         NSString *rel = [attributeDict objectForKey:kCMISAtomEntryRel];
-
-         if (linkType == nil || (linkType != nil && [linkType isEqualToString:kCMISAtomEntryLinkTypeAtomFeed]))
-         {
-
-             if (self.objectData.links == nil)
-             {
-                 self.objectData.links = [[NSMutableDictionary alloc] init];
-             }
-
-             [self.objectData.links setObject:[attributeDict objectForKey:kCMISAtomEntryHref] forKey:rel];
-         }
+        NSString *rel = [attributeDict objectForKey:kCMISAtomEntryRel];
+        NSString *href = [attributeDict objectForKey:kCMISAtomEntryHref]; 
+        
+        CMISAtomLink *link = [[CMISAtomLink alloc] initWithRelation:rel type:linkType href:href];
+        [self.currentLinkRelations addObject:link];
     }
     else if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryContent])
     {
@@ -200,6 +211,9 @@
     {
         // set the properties on the objectData object
         self.objectData.properties = self.currentObjectProperties;
+        
+        // set the link relations on the objectData object
+        self.objectData.linkRelations = [[CMISLinkRelations alloc] initWithLinkRelationSet:[self.currentLinkRelations copy]];
         
         // set the objectData identifier
         CMISPropertyData *objectId = [self.currentObjectProperties.properties objectForKey:kCMISAtomEntryObjectId];

@@ -7,11 +7,13 @@
 //
 
 #import "CMISAtomFeedParser.h"
+#import "CMISAtomLink.h"
 
 @interface CMISAtomFeedParser ()
 @property (nonatomic, strong) NSData *feedData;
 @property (nonatomic, strong) NSMutableArray *internalEntries;
 @property (nonatomic, strong) NSString *elementBeingParsed;
+@property (nonatomic, strong) NSMutableSet *feedLinkRelations;
 @property (nonatomic, weak) id childParserDelegate;
 @end
 
@@ -20,6 +22,7 @@
 @synthesize feedData = _feedData;
 @synthesize internalEntries = _internalEntries;
 @synthesize elementBeingParsed = _elementBeingParsed;
+@synthesize feedLinkRelations = _feedLinkRelations;
 @synthesize childParserDelegate = _childParserDelegate;
 
 - (id)initWithData:(NSData*)feedData
@@ -27,6 +30,7 @@
     if (self = [super init]) 
     {
         self.feedData = feedData;
+        self.feedLinkRelations = [NSMutableSet set];
     }
     
     return self;
@@ -77,6 +81,13 @@
         // Delegate parsing of AtomEntry element to the entry child parser
         self.childParserDelegate = [CMISAtomEntryParser atomEntryParserWithAtomEntryAttributes:attributeDict parentDelegate:self parser:parser];
     }
+    else if ([self.elementBeingParsed isEqualToString:@"link"])
+    {
+        // TODO: Why do we not care about link relations for a feed? Adding the parse for now, remove if really not necessary
+        CMISAtomLink *link = [[CMISAtomLink alloc] init];
+        [link setValuesForKeysWithDictionary:attributeDict];
+        [self.feedLinkRelations addObject:link];
+    }
 }
 
 //- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
@@ -88,7 +99,7 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
 {
-   if ([elementName isEqualToString:@"entry"])
+   if ([elementName isEqualToString:kCMISAtomEntry])
     {
         self.childParserDelegate = nil;
     }

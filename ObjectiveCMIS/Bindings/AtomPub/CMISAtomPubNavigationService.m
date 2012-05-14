@@ -10,6 +10,7 @@
 #import "CMISAtomPubBaseService+Protected.h"
 #import "CMISAtomFeedParser.h"
 #import "CMISConstants.h"
+#import "CMISAtomPubConstants.h"
 
 @implementation CMISAtomPubNavigationService
 
@@ -17,7 +18,7 @@
 {
     // Get Object for objectId
     CMISObjectData *cmisObjectData = [self retrieveObjectInternal:objectId error:error];
-    NSString *downLink = [cmisObjectData.links objectForKey:@"down"];
+    NSString *downLink = [cmisObjectData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
 
     // Get children for object
     NSArray *children = nil;
