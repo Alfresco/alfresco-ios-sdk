@@ -7,9 +7,22 @@
 //
 
 #import "CMISFileableObject.h"
+#import "CMISObjectConverter.h"
 
 @implementation CMISFileableObject
 
-@synthesize parents = _parents;
+- (NSArray *)retrieveParentsAndReturnError:(NSError **)error
+{
+    NSArray *parentObjectDataArray = [self.binding.navigationService retrieveParentsForObject:self.identifier error:error];
+
+    NSMutableArray *parentFolders = [NSMutableArray array];
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    for (CMISObjectData *parentObjectData in parentObjectDataArray)
+    {
+        [parentFolders addObject:[converter convertObject:parentObjectData]];
+    }
+
+    return parentFolders;
+}
 
 @end

@@ -10,6 +10,7 @@
 
 // Properties
 
+NSString * const kCMISPropertyObjectId = @"cmis:objectId";
 NSString * const kCMISPropertyName = @"cmis:name";
 NSString * const kCMISPropertyCreatedBy = @"cmis:createdBy";
 NSString * const kCMISPropertyCreationDate = @"cmis:creationDate";

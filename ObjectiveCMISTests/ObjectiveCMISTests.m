@@ -454,6 +454,45 @@
     STAssertNil([firstResult.properties propertyForId:kCMISPropertyContentStreamLength], @"Content stream length property should be nil");
 }
 
+- (void)testRetrieveParents
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    // First, do a query for our test document
+    NSString *queryStmt = @"SELECT * FROM cmis:document WHERE cmis:name = 'thumbsup-ios-test-retrieve-parents.gif'";
+    NSArray *results = [self.session query:queryStmt searchAllVersions:NO error:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertTrue(results.count == 1, @"Expected one result for query");
+    CMISQueryResult *result = [results objectAtIndex:0];
+
+    // Retrieve the document as CMISDocument
+    NSString *objectId = [[result propertyForId:kCMISPropertyObjectId] firstValue];
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
+    STAssertNil(error, @"Got an error while retrieving test document: %@", [error description]);
+    STAssertNotNil(document, @"Test document should not be nil");
+
+    // Verify the parents of this document
+    CMISFileableObject *currentObject = document;
+    NSArray *expectedParentFolderNames = [NSArray arrayWithObjects:@"ios-subsubfolder", @"ios-subfolder", @"ios-test", @"Company Home", nil];
+
+    for (NSString *expectedFolderName in expectedParentFolderNames)
+    {
+        NSArray *parentFolders = [currentObject retrieveParentsAndReturnError:&error];
+        STAssertNil(error, @"Got an error while retrieving parent folders: %@", [error description]);
+        STAssertTrue(parentFolders.count == 1, @"Expecting only 1 parent, but found %d parents", parentFolders.count);
+        currentObject = [parentFolders objectAtIndex:0];
+        STAssertEqualObjects(expectedFolderName, currentObject.name, @"Wrong parent folder");
+    }
+
+    // Check if the root folder parent is empty
+    NSArray *parentFolders = [currentObject retrieveParentsAndReturnError:&error];
+    STAssertNil(error, @"Got an error while retrieving parent folders: %@", [error description]);
+    STAssertTrue(parentFolders.count == 0, @"Root folder should not have any parents");
+}
+
+
+
 #pragma mark Helper Methods
 
 - (void)setupCmisSession

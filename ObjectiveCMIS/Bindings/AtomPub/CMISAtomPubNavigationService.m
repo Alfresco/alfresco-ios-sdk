@@ -11,6 +11,7 @@
 #import "CMISAtomFeedParser.h"
 #import "CMISConstants.h"
 #import "CMISAtomPubConstants.h"
+#import "CMISHttpUtil.h"
 
 @implementation CMISAtomPubNavigationService
 
@@ -25,10 +26,10 @@
     NSURL *childrenUrl = [NSURL URLWithString:downLink];
     
     // execute the request
-    NSData *data = [self executeRequest:childrenUrl error:error];
-    if (data != nil)
+    NSData *response = [self executeRequest:childrenUrl error:error];
+    if (response != nil)
     {
-        CMISAtomFeedParser *parser = [[CMISAtomFeedParser alloc] initWithData:data];
+        CMISAtomFeedParser *parser = [[CMISAtomFeedParser alloc] initWithData:response];
         if ([parser parseAndReturnError:error])
         {
             children = parser.entries;
@@ -36,6 +37,30 @@
     }
 
     return children;
+}
+
+- (NSArray *)retrieveParentsForObject:(NSString *)objectId error:(NSError **)error
+{
+    // Get object data
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:error];
+    if (*error == nil)
+    {
+        NSString *upLink = [objectData.linkRelations linkHrefForRel:kCMISLinkRelationUp];
+
+        if (upLink != nil) // root folder does not have uplink!
+        {
+            NSData *response = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:upLink] withSession:self.session error:error];
+            if (*error == nil)
+            {
+                CMISAtomFeedParser *parser = [[CMISAtomFeedParser alloc] initWithData:response];
+                if ([parser parseAndReturnError:error])
+                {
+                    return parser.entries;
+                }
+            }
+        }
+    }
+    return [NSArray array];
 }
 
 @end

@@ -43,6 +43,7 @@ NSString * const kCMISAtomCollectionQuery = @"query";
 
 // Links
 NSString * const kCMISLinkRelationDown = @"down";
+NSString * const kCMISLinkRelationUp = @"up";
 NSString * const kCMISLinkRelationSelf = @"self";
 NSString * const kCMISLinkRelationFolderTree = @"http://docs.oasis-open.org/ns/cmis/link/200908/foldertree";
 NSString * const kCMISLinkVersionHistory = @"version-history";

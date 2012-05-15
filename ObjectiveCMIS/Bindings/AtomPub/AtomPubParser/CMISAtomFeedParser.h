@@ -16,7 +16,7 @@
 @interface CMISAtomFeedParser : NSObject <NSXMLParserDelegate, CMISAtomEntryParserDelegate>
 
 /**
-* The entries contained in the feed.
+* The entries contained in the feed (array of CMISObjectData objects).
 */
 @property (nonatomic, strong, readonly) NSArray *entries;
 

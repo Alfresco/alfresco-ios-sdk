@@ -10,6 +10,11 @@
 
 @interface CMISFileableObject : CMISObject
 
-@property (nonatomic, strong, readonly) NSArray *parents;
+/**
+* Returns all the parents of this object as an array of CMISFolder objects.
+*
+* Will be nil for root folder and non-fileable objects.
+*/
+- (NSArray *)retrieveParentsAndReturnError:(NSError * *)error;
 
 @end

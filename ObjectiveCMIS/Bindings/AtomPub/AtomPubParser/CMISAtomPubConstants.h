@@ -43,6 +43,7 @@ extern NSString * const kCMISAtomCollectionQuery;
 
 // Links
 extern NSString * const kCMISLinkRelationDown;
+extern NSString * const kCMISLinkRelationUp;
 extern NSString * const kCMISLinkRelationSelf;
 extern NSString * const kCMISLinkRelationFolderTree;
 extern NSString * const kCMISLinkVersionHistory;

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 // Properties
-
+extern NSString * const kCMISPropertyObjectId;
 extern NSString * const kCMISPropertyName;
 extern NSString * const kCMISPropertyCreatedBy;
 extern NSString * const kCMISPropertyCreationDate;
