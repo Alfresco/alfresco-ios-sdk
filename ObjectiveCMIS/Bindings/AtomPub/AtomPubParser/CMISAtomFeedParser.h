@@ -15,7 +15,15 @@
 
 @interface CMISAtomFeedParser : NSObject <NSXMLParserDelegate, CMISAtomEntryParserDelegate>
 
+/**
+* The entries contained in the feed.
+*/
 @property (nonatomic, strong, readonly) NSArray *entries;
+
+/**
+* Number of items will be returned when executing a query.
+*/
+@property (readonly) NSInteger numItems;
 
 - (id)initWithData:(NSData*)feedData;
 - (BOOL)parseAndReturnError:(NSError **)error;

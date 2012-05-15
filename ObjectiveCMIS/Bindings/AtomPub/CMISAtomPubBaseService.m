@@ -80,8 +80,15 @@
             {
                 repositoryFound = YES;
 
+                // Cache collections
+               [self.session setObject:[workspace collectionHrefForCollectionType:kCMISAtomCollectionQuery] forKey:kCMISBindingSessionKeyQueryCollection];
+
+
+                // Cache uri's and uri templates
                 CMISObjectByIdUriBuilder *objectByIdUriBuilder = [[CMISObjectByIdUriBuilder alloc] initWithTemplateUrl:workspace.objectByIdUriTemplate];
                 [self.session setObject:objectByIdUriBuilder forKey:kCMISBindingSessionKeyObjectByIdUriBuilder];
+
+                [self.session setObject:workspace.queryUriTemplate forKey:kCMISBindingSessionKeyQueryUri];
             }
             else {
                 index++;

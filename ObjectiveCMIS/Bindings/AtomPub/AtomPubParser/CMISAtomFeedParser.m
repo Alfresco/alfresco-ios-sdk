@@ -10,24 +10,27 @@
 #import "CMISAtomLink.h"
 
 @interface CMISAtomFeedParser ()
-@property (nonatomic, strong) NSData *feedData;
-@property (nonatomic, strong) NSMutableArray *internalEntries;
-@property (nonatomic, strong) NSString *elementBeingParsed;
-@property (nonatomic, strong) NSMutableSet *feedLinkRelations;
-@property (nonatomic, weak) id childParserDelegate;
+@property (nonatomic, strong, readwrite) NSData *feedData;
+@property (nonatomic, strong, readwrite) NSMutableArray *internalEntries;
+@property (readwrite) NSInteger numItems;
+@property (nonatomic, strong, readwrite) NSString *elementBeingParsed;
+@property (nonatomic, strong, readwrite) NSMutableSet *feedLinkRelations;
+@property (nonatomic, weak, readwrite) id childParserDelegate;
 @end
 
 @implementation CMISAtomFeedParser
 
 @synthesize feedData = _feedData;
 @synthesize internalEntries = _internalEntries;
+@synthesize numItems = _numItems;
 @synthesize elementBeingParsed = _elementBeingParsed;
 @synthesize feedLinkRelations = _feedLinkRelations;
 @synthesize childParserDelegate = _childParserDelegate;
 
 - (id)initWithData:(NSData*)feedData
 {
-    if (self = [super init]) 
+    self = [super init];
+    if (self)
     {
         self.feedData = feedData;
         self.feedLinkRelations = [NSMutableSet set];
@@ -89,11 +92,13 @@
     }
 }
 
-//- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
-//{
-//    // Nothing to do here ...
-//    // TODO Remove method if we're not going to parse anything else
-//}
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
+{
+    if ([self.elementBeingParsed isEqualToString:kCMISAtomFeedNumItems])
+    {
+        self.numItems = [string integerValue];
+    }
+}
 
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 

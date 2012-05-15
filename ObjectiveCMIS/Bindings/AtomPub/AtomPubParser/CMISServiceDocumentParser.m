@@ -8,6 +8,7 @@
 
 #import "CMISServiceDocumentParser.h"
 #import "CMISWorkspace.h"
+#import "CMISAtomCollection.h"
 
 @interface CMISServiceDocumentParser ()
 
@@ -17,6 +18,7 @@
 
 @property (nonatomic, strong) NSMutableString *currentString;
 @property (nonatomic, strong) CMISWorkspace *currentWorkSpace;
+@property (nonatomic, strong) CMISAtomCollection *currentCollection;
 @property (nonatomic, strong) NSString *currentTemplate;
 @property (nonatomic, strong) NSString *currentType;
 @property (nonatomic, strong) NSString *currentMediaType;
@@ -31,6 +33,7 @@
 
 @synthesize currentString = _currentString;
 @synthesize currentWorkSpace = _currentWorkSpace;
+@synthesize currentCollection = _currentCollection;
 @synthesize currentTemplate = _currentTemplate;
 @synthesize currentType = _currentType;
 @synthesize currentMediaType = _currentMediaType;
@@ -88,6 +91,11 @@
     {
         self.currentRepositoryInfo = [[CMISRepositoryInfo alloc] init];
     }
+    else if ([elementName isEqualToString:@"collection"])
+    {
+        self.currentCollection = [[CMISAtomCollection alloc] init];
+        self.currentCollection.href = [attributeDict objectForKey:@"href"];
+    }
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 
@@ -101,6 +109,11 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
 {
+
+    // TODO: define constants for all the elements!
+
+    // TODO: parser needs refactoring!
+
     if ([elementName isEqualToString:@"workspace"])
     {
         [self.internalWorkspaces addObject:self.currentWorkSpace];
@@ -170,6 +183,27 @@
     else if ([elementName isEqualToString:@"mediaType"])
     {
         self.currentMediaType = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"collection"])
+    {
+        if (self.currentWorkSpace.collections == nil)
+        {
+            self.currentWorkSpace.collections = [[NSMutableArray alloc] init];
+        }
+        [self.currentWorkSpace.collections addObject:self.currentCollection];
+        self.currentCollection = nil;
+    }
+    else if ([elementName isEqualToString:@"title"])
+    {
+        self.currentCollection.title = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"accept"])
+    {
+        self.currentCollection.accept = self.currentString;
+    }
+    else if ([elementName isEqualToString:@"collectionType"])
+    {
+        self.currentCollection.type = self.currentString;
     }
 
     self.currentString = nil;

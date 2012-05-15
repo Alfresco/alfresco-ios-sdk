@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+// Feed
+extern NSString * const kCMISAtomFeedNumItems;
+
+// Entry
 extern NSString * const kCMISAtomEntry;
 extern NSString * const kCMISAtomEntryLink;
 extern NSString * const kCMISAtomEntryLinkTypeAtomFeed;
@@ -34,7 +38,10 @@ extern NSString * const kCMISAtomEntryContent;
 extern NSString * const kCMISAtomEntrySrc;
 extern NSString * const kCMISAtomEntryAllowableActions;
 
+// Collections
+extern NSString * const kCMISAtomCollectionQuery;
 
+// Links
 extern NSString * const kCMISLinkRelationDown;
 extern NSString * const kCMISLinkRelationSelf;
 extern NSString * const kCMISLinkRelationFolderTree;

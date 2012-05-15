@@ -15,6 +15,7 @@
 #import "CMISFileUtil.h"
 #import "CMISAtomLink.h"
 #import "CMISAtomPubConstants.h"
+#import "CMISObjectList.h"
 
 @interface ObjectiveCMISTests()
 
@@ -386,6 +387,43 @@
     STAssertEquals([linkRelations linkHrefForRel:@"down" type:kCMISMediaTypeChildren], @"http://down/children", @"The down relation for the children media type should have been returned");
     STAssertEquals([linkRelations linkHrefForRel:@"down" type:kCMISMediaTypeDescendants], @"http://down/descendants", @"The down relation for the descendants media type should have been returned");
     
+}
+
+- (void)testQueryThroughDiscoveryService
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    id<CMISDiscoveryService> discoveryService = self.session.binding.discoveryService;
+    STAssertNotNil(discoveryService, @"Discovery service should not be nil");
+
+    // Basic check if the service returns results that are usable
+    CMISObjectList *objectList = [discoveryService query:@"SELECT * FROM cmis:document" searchAllVersions:NO
+                                                maxItems:[NSNumber numberWithInt:3] skipCount:[NSNumber numberWithInt:0] error:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertNotNil(objectList, @"Object list after query should not be nil");
+    STAssertTrue(objectList.numItems > 100, @"Expecting at least 100 items when querying for all documents, but got %d", objectList.numItems);
+    STAssertTrue(objectList.objects.count == 3, @"Expected 3 items to be returned, but was %d", objectList.objects.count);
+
+    for (CMISObjectData *objectData in objectList.objects)
+    {
+        STAssertTrue(objectData.properties.properties.count > 10, @"Expecting properties to be passed when querying");
+    }
+
+    // Doing a query without any maxItems or skipCount
+    objectList = [discoveryService query:@"SELECT cmis:name FROM cmis:document WHERE cmis:name LIKE '%quote%'" searchAllVersions:NO maxItems:nil skipCount:nil error:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertNotNil(objectList, @"Object list after query should not be nil");
+    STAssertTrue(objectList.objects.count > 0, @"Returned # objects is repo specific, but should be at least 1");
+
+    CMISObjectData *firstResult = [objectList.objects objectAtIndex:0];
+    STAssertTrue(firstResult.properties.properties.count == 1, @"Only querying for 1 property, but got %d properties back", firstResult.properties.properties.count);
+
+}
+
+- (void)testQueryThroughSession
+{
+    STAssertTrue(YES, @"");
 }
 
 #pragma mark Helper Methods

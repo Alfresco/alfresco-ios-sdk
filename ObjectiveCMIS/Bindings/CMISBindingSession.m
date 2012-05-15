@@ -10,6 +10,9 @@
 
 NSString * const kCMISBindingSessionKeyAtomPubUrl = @"cmis_session_key_atompub_url";
 NSString * const kCMISBindingSessionKeyObjectByIdUriBuilder = @"cmis_session_key_objectbyid_uri_builder";
+NSString * const kCMISBindingSessionKeyQueryUri = @"cmis_session_key_query_uri";
+
+NSString * const kCMISBindingSessionKeyQueryCollection = @"cmis_session_key_query_collection";
 
 @interface CMISBindingSession ()
 @property (nonatomic, strong, readwrite) NSString *username;
@@ -27,7 +30,8 @@ NSString * const kCMISBindingSessionKeyObjectByIdUriBuilder = @"cmis_session_key
 
 - (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters
 {
-    if (self = [super init])
+    self = [super init];
+    if (self)
     {
         self.sessionData = [[NSMutableDictionary alloc] init];
         
