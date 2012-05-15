@@ -12,6 +12,8 @@
 #import "CMISStandardAuthenticationProvider.h"
 #import "CMISBindingFactory.h"
 #import "CMISDocument.h"
+#import "CMISObjectList.h"
+#import "CMISQueryResult.h"
 
 @interface CMISSession ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
@@ -149,17 +151,34 @@
     return obj;
 }
 
+- (NSArray *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error
+{
+    CMISObjectList *objectList = [self.binding.discoveryService query:statement searchAllVersions:searchAllVersion
+                                                                maxItems:nil skipCount:nil error:error];
+
+    NSMutableArray *queryResults = [NSMutableArray array];
+    for (CMISObjectData *objectData in objectList.objects)
+    {
+        [queryResults addObject:[CMISQueryResult queryResultUsingCmisObjectData:objectData]];
+    }
+
+    return queryResults;
+}
+
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
     return [self.binding.objectService createFolderInParentFolder:folderObjectId withProperties:properties error:error];
 }
 
-- (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+- (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath
+                    completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
+                    failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {
     [self.binding.objectService downloadContentOfCMISObject:objectId toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
 }
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+                   withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
     return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:properties inFolder:folderObjectId error:error];
 }

@@ -16,6 +16,7 @@
 #import "CMISAtomLink.h"
 #import "CMISAtomPubConstants.h"
 #import "CMISObjectList.h"
+#import "CMISQueryResult.h"
 
 @interface ObjectiveCMISTests()
 
@@ -317,7 +318,6 @@
 
     // Print out the version labels and verify them, while also verifying that they are ordered by creation date, descending
     NSDate *previousModifiedDate = document.lastModificationDate;
-    NSLog(@"Origineel: %@", previousModifiedDate);
     for (CMISDocument *versionOfDocument in allVersionsOfDocument.items)
     {
         NSLog(@"%@ - version %@", versionOfDocument.name, versionOfDocument.versionLabel);
@@ -410,7 +410,7 @@
         STAssertTrue(objectData.properties.properties.count > 10, @"Expecting properties to be passed when querying");
     }
 
-    // Doing a query without any maxItems or skipCount
+    // Doing a query without any maxItems or skipCount, and also only requesting one property 'column'
     objectList = [discoveryService query:@"SELECT cmis:name FROM cmis:document WHERE cmis:name LIKE '%quote%'" searchAllVersions:NO maxItems:nil skipCount:nil error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
     STAssertNotNil(objectList, @"Object list after query should not be nil");
@@ -423,7 +423,35 @@
 
 - (void)testQueryThroughSession
 {
-    STAssertTrue(YES, @"");
+   [self setupCmisSession];
+    NSError *error = nil;
+
+    // Query all properties
+    NSArray *results = [self.session query:@"SELECT * FROM cmis:document WHERE cmis:name LIKE '%activiti%'" searchAllVersions:YES error:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertTrue(results.count > 0, @"Expected at least one result for query");
+
+    CMISQueryResult *firstResult = [results objectAtIndex:0];
+    STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyName], @"Name property should not be nil");
+    STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyVersionLabel], @"Version label property should not be nil");
+    STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyCreationDate], @"Creation date property should not be nil");
+    STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyContentStreamLength], @"Content stream length property should not be nil");
+
+    STAssertNotNil([firstResult.properties propertyForQueryName:kCMISPropertyName], @"Name property should not be nil");
+    STAssertNotNil([firstResult.properties propertyForQueryName:kCMISPropertyVersionLabel], @"Version label property should not be nil");
+    STAssertNotNil([firstResult.properties propertyForQueryName:kCMISPropertyCreationDate], @"Creation date property should not be nil");
+    STAssertNotNil([firstResult.properties propertyForQueryName:kCMISPropertyContentStreamLength], @"Content stream length property should not be nil");
+
+    // Query a limited set of properties
+    results = [self.session query:@"SELECT cmis:name, cmis:creationDate FROM cmis:document WHERE cmis:name LIKE '%activiti%'" searchAllVersions:NO error:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertTrue(results.count > 0, @"Expected at least one result for query");
+
+    firstResult = [results objectAtIndex:0];
+    STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyName], @"Name property should not be nil");
+    STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyCreationDate], @"Creation date property should not be nil");
+    STAssertNil([firstResult.properties propertyForId:kCMISPropertyVersionLabel], @"Version label property should be nil");
+    STAssertNil([firstResult.properties propertyForId:kCMISPropertyContentStreamLength], @"Content stream length property should be nil");
 }
 
 #pragma mark Helper Methods

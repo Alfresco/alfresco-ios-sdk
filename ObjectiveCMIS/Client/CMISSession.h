@@ -39,8 +39,17 @@
 
 // *** CMIS operations ***
 
-// Retrieves the object with the given identifier
+/**
+ *Retrieves the object with the given identifier
+ */
 - (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error;
+
+/**
+ * Retrieves all objects matching the given cmis query.
+ *
+ * @return An array of CMISQueryResult objects.
+ */
+- (NSArray *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error;
 
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error;
 

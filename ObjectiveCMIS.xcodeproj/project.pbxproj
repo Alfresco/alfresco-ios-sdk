@@ -125,6 +125,8 @@
 		82C1C63F15358733009B7B7C /* CMISObjectList.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B7B /* CMISObjectList.h */; };
 		82C1C63F15358733009B7B7E /* CMISAtomCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B7D /* CMISAtomCollection.m */; };
 		82C1C63F15358733009B7B80 /* CMISAtomCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B7F /* CMISAtomCollection.h */; };
+		82C1C63F15358733009B7B82 /* CMISQueryResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B81 /* CMISQueryResult.m */; };
+		82C1C63F15358733009B7B84 /* CMISQueryResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B83 /* CMISQueryResult.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -256,6 +258,8 @@
 		82C1C63F15358733009B7B7B /* CMISObjectList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISObjectList.h; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B7D /* CMISAtomCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomCollection.m; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B7F /* CMISAtomCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAtomCollection.h; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B81 /* CMISQueryResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISQueryResult.m; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B83 /* CMISQueryResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISQueryResult.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,6 +438,8 @@
 		828072D315153EC100EF635C /* Bindings */ = {
 			isa = PBXGroup;
 			children = (
+				82C1C63F15358733009B7B83 /* CMISQueryResult.h */,
+				82C1C63F15358733009B7B81 /* CMISQueryResult.m */,
 				82C1C63F15358733009B7B7B /* CMISObjectList.h */,
 				82C1C63F15358733009B7B79 /* CMISObjectList.m */,
 				828073191515405C00EF635C /* CMISBinding.h */,
@@ -599,6 +605,7 @@
 				82C1C63F15358733009B7B78 /* CMISAtomPubDiscoveryService.h in Headers */,
 				82C1C63F15358733009B7B7C /* CMISObjectList.h in Headers */,
 				82C1C63F15358733009B7B80 /* CMISAtomCollection.h in Headers */,
+				82C1C63F15358733009B7B84 /* CMISQueryResult.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -745,6 +752,7 @@
 				82C1C63F15358733009B7B76 /* CMISAtomPubDiscoveryService.m in Sources */,
 				82C1C63F15358733009B7B7A /* CMISObjectList.m in Sources */,
 				82C1C63F15358733009B7B7E /* CMISAtomCollection.m in Sources */,
+				82C1C63F15358733009B7B82 /* CMISQueryResult.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

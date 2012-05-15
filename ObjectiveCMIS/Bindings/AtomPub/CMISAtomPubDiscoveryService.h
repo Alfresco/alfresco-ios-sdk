@@ -1,9 +1,7 @@
 //
-// Alfresco Focus
+//  Created by Joram Barrez
+//  Copyright (c) 2012 Alfresco. All rights reserved.
 //
-// Created by Joram Barrez
-//
-
 
 #import <Foundation/Foundation.h>
 #import "CMISAtomPubBaseService.h"

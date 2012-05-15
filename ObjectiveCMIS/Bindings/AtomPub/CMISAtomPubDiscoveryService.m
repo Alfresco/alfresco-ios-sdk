@@ -1,7 +1,6 @@
 //
-// Alfresco Focus
-//
-// Created by Joram Barrez
+//  Created by Joram Barrez
+//  Copyright (c) 2012 Alfresco. All rights reserved.
 //
 
 
