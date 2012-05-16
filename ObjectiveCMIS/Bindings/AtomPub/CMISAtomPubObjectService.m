@@ -311,6 +311,39 @@
     return [NSArray array];
 }
 
+- (void)updatePropertiesForObject:(CMISStringInOutParameter *)objectId withProperties:(CMISProperties *)properties
+                  withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError **)error
+{
+    // Validate params
+    if (objectId == nil || objectId.inParameter == nil)
+    {
+        log(@"Object id is nil or inParameter of objectId is nil");
+        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        return;+    }
+
+    // Get object data
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId.inParameter error:error];
+    if (objectData == nil || (error != NULL && *error != nil))
+    {
+        log(@"Could not retrieve object with id %@", objectId.inParameter);
+        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        return;
+    }
+
+    // Get self link
+    NSString *selfLink = [objectData.linkRelations linkHrefForRel:kCMISLinkRelationSelf];
+
+    // Append optional params
+    if (changeToken != nil && changeToken.inParameter != nil)
+    {
+        selfLink = [URLUtil urlStringByAppendingParameter:kCMISParameterChangeToken
+                                                withValue:changeToken.inParameter toUrlString:selfLink];
+    }
+
+    // Create XML needed as body of html
+    CMISAtomEntryWriter *entryWriter = [[CMISAtomEntryWriter alloc] init];
+}
+
 
 #pragma mark Helper methods
 

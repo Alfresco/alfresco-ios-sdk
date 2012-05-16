@@ -91,4 +91,10 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
 */
 - (NSArray *)deleteTree:(NSString *)folderObjectId error:(NSError * *)error;
 
+/**
+ * Updates the properties of the given object.
+ */
+- (void)updatePropertiesForObject:(CMISStringInOutParameter *)objectId withProperties:(CMISProperties *)properties
+                  withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError **)error;
+
 @end
