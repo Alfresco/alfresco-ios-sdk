@@ -10,6 +10,7 @@
 
 NSString * const kCMISBindingSessionKeyAtomPubUrl = @"cmis_session_key_atompub_url";
 NSString * const kCMISBindingSessionKeyObjectByIdUriBuilder = @"cmis_session_key_objectbyid_uri_builder";
+NSString * const kCMISBindingSessionKeyObjectByPathUriBuilder = @"cmis_session_key_objectbypath_uri_builder";
 NSString * const kCMISBindingSessionKeyQueryUri = @"cmis_session_key_query_uri";
 
 NSString * const kCMISBindingSessionKeyQueryCollection = @"cmis_session_key_query_collection";

@@ -48,7 +48,7 @@
                                  withSession:self.session
                                  body:[[atomEntryWriter generateAtomEntryXML] dataUsingEncoding:NSUTF8StringEncoding]
                                  headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeQuery forKey:@"Content-type"]
-                                 error:error];
+                                 error:error].data;
 
     // TODO: check response HTTP status code?
 

@@ -127,6 +127,8 @@
 		82C1C63F15358733009B7B80 /* CMISAtomCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B7F /* CMISAtomCollection.h */; };
 		82C1C63F15358733009B7B82 /* CMISQueryResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B81 /* CMISQueryResult.m */; };
 		82C1C63F15358733009B7B84 /* CMISQueryResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B83 /* CMISQueryResult.h */; };
+		82C1C63F15358733009B7B86 /* CMISObjectByPathUriBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B85 /* CMISObjectByPathUriBuilder.m */; };
+		82C1C63F15358733009B7B88 /* CMISObjectByPathUriBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7B87 /* CMISObjectByPathUriBuilder.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -260,6 +262,8 @@
 		82C1C63F15358733009B7B7F /* CMISAtomCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAtomCollection.h; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B81 /* CMISQueryResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISQueryResult.m; sourceTree = "<group>"; };
 		82C1C63F15358733009B7B83 /* CMISQueryResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISQueryResult.h; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B85 /* CMISObjectByPathUriBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISObjectByPathUriBuilder.m; sourceTree = "<group>"; };
+		82C1C63F15358733009B7B87 /* CMISObjectByPathUriBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISObjectByPathUriBuilder.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -479,6 +483,8 @@
 		8280730D1515405C00EF635C /* AtomPub */ = {
 			isa = PBXGroup;
 			children = (
+				82C1C63F15358733009B7B87 /* CMISObjectByPathUriBuilder.h */,
+				82C1C63F15358733009B7B85 /* CMISObjectByPathUriBuilder.m */,
 				82C1C63F15358733009B7B77 /* CMISAtomPubDiscoveryService.h */,
 				82C1C63F15358733009B7B75 /* CMISAtomPubDiscoveryService.m */,
 				82C1C63F15358733009B7B73 /* CMISQueryAtomEntryWriter.h */,
@@ -606,6 +612,7 @@
 				82C1C63F15358733009B7B7C /* CMISObjectList.h in Headers */,
 				82C1C63F15358733009B7B80 /* CMISAtomCollection.h in Headers */,
 				82C1C63F15358733009B7B84 /* CMISQueryResult.h in Headers */,
+				82C1C63F15358733009B7B88 /* CMISObjectByPathUriBuilder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -753,6 +760,7 @@
 				82C1C63F15358733009B7B7A /* CMISObjectList.m in Sources */,
 				82C1C63F15358733009B7B7E /* CMISAtomCollection.m in Sources */,
 				82C1C63F15358733009B7B82 /* CMISQueryResult.m in Sources */,
+				82C1C63F15358733009B7B86 /* CMISObjectByPathUriBuilder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

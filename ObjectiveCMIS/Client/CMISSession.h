@@ -40,9 +40,14 @@
 // *** CMIS operations ***
 
 /**
- *Retrieves the object with the given identifier
- */
+  * Retrieves the object with the given identifier.
+  */
 - (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error;
+
+/**
+  * Retrieves the object for the given path.
+  */
+- (CMISObject *)retrieveObjectByPath:(NSString *)path error:(NSError **)error;
 
 /**
  * Retrieves all objects matching the given cmis query.

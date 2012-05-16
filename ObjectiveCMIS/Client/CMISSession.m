@@ -146,10 +146,27 @@
     // TODO: cache the object
     
     CMISObjectData *objectData = [self.binding.objectService retrieveObject:objectId error:error];
-    CMISObject *obj = [self.objectConverter convertObject:objectData];
-    
-    return obj;
+    if (objectData != nil && *error == nil)
+    {
+        return [self.objectConverter convertObject:objectData];
+    }
+
+    return nil;
 }
+
+- (CMISObject *)retrieveObjectByPath:(NSString *)path error:(NSError **)error
+{
+    // TODO: cache object
+
+    CMISObjectData *objectData = [self.binding.objectService retrieveObjectByPath:path error:error];
+    if (objectData != nil && *error == nil)
+    {
+        return [self.objectConverter convertObject:objectData];
+    }
+
+    return nil;
+}
+
 
 - (NSArray *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error
 {

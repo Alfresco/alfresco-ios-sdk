@@ -12,6 +12,7 @@
 
 extern NSString * const kCMISBindingSessionKeyAtomPubUrl;
 extern NSString * const kCMISBindingSessionKeyObjectByIdUriBuilder;
+extern NSString * const kCMISBindingSessionKeyObjectByPathUriBuilder;
 extern NSString * const kCMISBindingSessionKeyQueryUri;
 
 extern NSString * const kCMISBindingSessionKeyQueryCollection;

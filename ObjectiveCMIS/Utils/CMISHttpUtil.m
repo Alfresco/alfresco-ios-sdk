@@ -12,18 +12,18 @@
 
 #pragma mark synchronous methods
 
-+ (NSData *)invokeGETSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
++ (HTTPResponse *)invokeGETSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"GET" usingSession:session];
     return [self executeRequestSynchronous:request error:outError];
 }
 
-+ (NSData *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body error:(NSError **)outError
++ (HTTPResponse *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body error:(NSError **)outError
 {
     return [self invokePOSTSynchronous:url withSession:session body:body headers:nil error:outError];
 }
 
-+ (NSData *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
++ (HTTPResponse *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"POST" usingSession:session];
     [request setHTTPBody:body];
@@ -36,7 +36,7 @@
     return [self executeRequestSynchronous:request error:outError];
 }
 
-+ (NSData *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
++ (HTTPResponse *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"POST" usingSession:session];
    [request setHTTPBodyStream:bodyStream];
@@ -49,7 +49,7 @@
    return [self executeRequestSynchronous:request error:outError];
 }
 
-+ (NSData *)invokeDELETESynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
++ (HTTPResponse *)invokeDELETESynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"DELETE" usingSession:session];
     return [self executeRequestSynchronous:request error:outError];
@@ -92,9 +92,9 @@
     }
 }
 
-+ (NSData *)executeRequestSynchronous:(NSMutableURLRequest *)request error:(NSError * *)outError
++ (HTTPResponse *)executeRequestSynchronous:(NSMutableURLRequest *)request error:(NSError * *)outError
 {
-    NSURLResponse *response = nil;
+    NSHTTPURLResponse *response = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:outError];
 
     if (data == nil)
@@ -110,8 +110,34 @@
 //    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 //    log(@"Response for %@ : %@", [request.URL absoluteString], dataString);
 
-    return data;
+    return [HTTPResponse responseUsingURLHTTPResponse:response andData:data];
 }
 
+
+@end
+
+
+#pragma mark HTTPRespons implementation
+
+
+@interface HTTPResponse ()
+
+@property (readwrite) NSInteger statusCode;
+@property (nonatomic, strong, readwrite) NSData *data;
+
+@end
+
+@implementation HTTPResponse
+
+@synthesize statusCode = _statusCode;
+@synthesize data = _data;
+
++ (HTTPResponse *)responseUsingURLHTTPResponse:(NSHTTPURLResponse *)HTTPURLResponse andData:(NSData *)data
+{
+    HTTPResponse *httpResponse = [[HTTPResponse alloc] init];
+    httpResponse.statusCode = HTTPURLResponse.statusCode;
+    httpResponse.data = data;
+    return httpResponse;
+}
 
 @end

@@ -11,6 +11,7 @@
 // Properties
 extern NSString * const kCMISPropertyObjectId;
 extern NSString * const kCMISPropertyName;
+extern NSString * const kCMISPropertyPath;
 extern NSString * const kCMISPropertyCreatedBy;
 extern NSString * const kCMISPropertyCreationDate;
 extern NSString * const kCMISPropertyModifiedBy;

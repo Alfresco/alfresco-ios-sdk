@@ -1,29 +1,27 @@
 //
-// ObjectiveCMIS
+//  Created by Joram Barrez
+//  Copyright (c) 2012 Alfresco. All rights reserved.
 //
-// Created by Joram Barrez
-//
 
+#import "CMISObjectByPathUriBuilder.h"
 
-#import "CMISObjectByIdUriBuilder.h"
-
-@interface CMISObjectByIdUriBuilder ()
+@interface CMISObjectByPathUriBuilder ()
 
 @property (nonatomic, strong) NSString *templateUrl;
 
 @end
 
-@implementation CMISObjectByIdUriBuilder
+
+@implementation CMISObjectByPathUriBuilder
 
 @synthesize templateUrl = _templateUrl;
-@synthesize objectId = _objectId;
+@synthesize path = _path;
 @synthesize filter = _filter;
 @synthesize includeAllowableActions = _includeAllowableActions;
 @synthesize includePolicyIds = _includePolicyIds;
 @synthesize includeRelationships = _includeRelationships;
 @synthesize includeACL = _includeACL;
 @synthesize renditionFilter = _renditionFilter;
-@synthesize returnVersion = _returnVersion;
 
 - (id)initWithTemplateUrl:(NSString *)templateUrl
 {
@@ -31,14 +29,13 @@
     if (self)
     {
         self.templateUrl = templateUrl;
-        self.returnVersion = NOT_PROVIDED;
     }
     return self;
 }
 
 - (NSURL *)buildUrl
 {
-    NSString *urlString = [self.templateUrl stringByReplacingOccurrencesOfString:@"{id}" withString:self.objectId];
+    NSString *urlString = [self.templateUrl stringByReplacingOccurrencesOfString:@"{path}" withString:self.path];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{filter}" withString:(self.filter != nil ? self.filter : @"")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeAllowableActions}" withString:(self.includeAllowableActions ? @"true" : @"false")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includePolicyIds}" withString:(self.includePolicyIds ? @"true" : @"false")];
@@ -46,26 +43,8 @@
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeACL}" withString:(self.includeACL ? @"true" : @"false")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{renditionFilter}" withString:(self.renditionFilter != nil ? self.renditionFilter : @"")];
 
-    if (self.returnVersion != NOT_PROVIDED)
-    {
-        NSString *returnVersionParam = nil;
-        if (self.returnVersion == THIS)
-        {
-            returnVersionParam = @"this";
-        }
-        else if (self.returnVersion == LATEST)
-        {
-            returnVersionParam = @"latest";
-        }
-        else
-        {
-            returnVersionParam = @"latestmajor";
-        }
-
-        urlString = [NSString stringWithFormat:@"%@&returnVersion=%@", urlString, returnVersionParam];
-    }
-
     return [NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]];
 }
+
 
 @end

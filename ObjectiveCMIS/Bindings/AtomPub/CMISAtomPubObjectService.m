@@ -32,6 +32,11 @@
     return [self retrieveObjectInternal:objectId error:error];
 }
 
+- (CMISObjectData *)retrieveObjectByPath:(NSString *)path error:(NSError **)error
+{
+    return [self retrieveObjectByPathInternal:path error:error];
+}
+
 - (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {
     NSError *objectRetrievalError = nil;
@@ -215,7 +220,7 @@
                                                withSession:self.session
                                                bodyStream:bodyStream
                                                headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
-                                               error:error];
+                                               error:error].data;
 
         // Close stream and delete temporary file
         [bodyStream close];

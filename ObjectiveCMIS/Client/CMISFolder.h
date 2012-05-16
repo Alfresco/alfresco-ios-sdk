@@ -14,6 +14,8 @@
 
 @interface CMISFolder : CMISFileableObject
 
+@property (nonatomic, strong, readonly) NSString *path;
+
 - (CMISCollection *)collectionOfChildrenAndReturnError:(NSError * *)error;
 
 - (NSString *)createFolder:(NSDictionary *)properties error:(NSError * *)error;
