@@ -493,6 +493,42 @@
     STAssertTrue(parentFolders.count == 0, @"Root folder should not have any parents");
 }
 
+- (void)testRetrieveNonExistingObject
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    // test with non existing object id
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:@"bogus" error:&error];
+    STAssertNil(error, @"Error while retrieving object by bogus id");
+    STAssertNil(document, @"Document should be nil");
+
+     // Test with a non existing path
+    NSString *path = @"/bogus/i_do_not_exist.pdf";
+    document = (CMISDocument *) [self.session retrieveObjectByPath:path error:&error];
+    STAssertNil(error, @"Error while retrieving object with path %@", path);
+    STAssertNil(document, @"Document should be nil");
+}
+
+- (void)testRetrieveObjectByPath
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    // Use a document that has spaces in them (should be correctly encoded)
+    NSString *path = [NSString stringWithFormat:@"%@Activiti - Redtree event - light.pdf", self.rootFolder.path];
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:path error:&error];
+    STAssertNil(error, @"Error while retrieving object with path %@", path);
+    STAssertNotNil(document, @"Document should not be nil");
+    STAssertEqualObjects(@"Activiti - Redtree event - light.pdf", document.name, @"When retrieving document by path, name does not match");
+
+    // Test with a few folders
+    path = @"/ios-test/ios-subfolder/ios-subsubfolder/activiti-logo.png";
+    document = (CMISDocument *) [self.session retrieveObjectByPath:path error:&error];
+    STAssertNil(error, @"Error while retrieving object with path %@", path);
+    STAssertNotNil(document, @"Document should not be nil");
+}
+
 
 
 #pragma mark Helper Methods

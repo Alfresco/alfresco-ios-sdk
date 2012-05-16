@@ -12,6 +12,7 @@
 
 NSString * const kCMISPropertyObjectId = @"cmis:objectId";
 NSString * const kCMISPropertyName = @"cmis:name";
+NSString * const kCMISPropertyPath = @"cmis:path";
 NSString * const kCMISPropertyCreatedBy = @"cmis:createdBy";
 NSString * const kCMISPropertyCreationDate = @"cmis:creationDate";
 NSString * const kCMISPropertyModifiedBy = @"cmis:lastModifiedBy";

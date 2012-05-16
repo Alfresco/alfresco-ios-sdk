@@ -31,7 +31,7 @@
     NSURL *objectIdUrl = [objectByIdUriBuilder buildUrl];
 
 
-    NSData *data = [self executeRequest:objectIdUrl error:error];
+    NSData *data = [HttpUtil invokeGETSynchronous:objectIdUrl withSession:self.session error:error].data;
     if (data != nil)
     {
         CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:data];
@@ -59,7 +59,7 @@
     {
         NSString *versionHistoryLink = [objectData.linkRelations linkHrefForRel:kCMISLinkVersionHistory];
         //[objectData.links objectForKey:kCMISLinkVersionHistory];
-        NSData *data = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:versionHistoryLink] withSession:self.session error:error];
+        NSData *data = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:versionHistoryLink] withSession:self.session error:error].data;
         if (*error == nil)
         {
             CMISAtomFeedParser *feedParser = [[CMISAtomFeedParser alloc] initWithData:data];

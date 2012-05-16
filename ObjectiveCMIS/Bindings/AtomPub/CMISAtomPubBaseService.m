@@ -15,6 +15,7 @@
 #import "CMISWorkspace.h"
 #import "CMISObjectByIdUriBuilder.h"
 #import "CMISErrors.h"
+#import "CMISObjectByPathUriBuilder.h"
 
 @interface CMISAtomPubBaseService ()
 
@@ -89,6 +90,9 @@
                 CMISObjectByIdUriBuilder *objectByIdUriBuilder = [[CMISObjectByIdUriBuilder alloc] initWithTemplateUrl:workspace.objectByIdUriTemplate];
                 [self.session setObject:objectByIdUriBuilder forKey:kCMISBindingSessionKeyObjectByIdUriBuilder];
 
+                CMISObjectByPathUriBuilder *objectByPathUriBuilder = [[CMISObjectByPathUriBuilder alloc] initWithTemplateUrl:workspace.objectByPathUriTemplate];
+                [self.session setObject:objectByPathUriBuilder forKey:kCMISBindingSessionKeyObjectByPathUriBuilder];
+
                 [self.session setObject:workspace.queryUriTemplate forKey:kCMISBindingSessionKeyQueryUri];
             }
             else {
@@ -113,7 +117,7 @@
 {
     if ([self.session objectForKey:kCMISSessionKeyWorkspaces] == nil)
     {
-        NSData *data = [HttpUtil invokeGETSynchronous:self.atomPubUrl withSession:self.session error:error];
+        NSData *data = [HttpUtil invokeGETSynchronous:self.atomPubUrl withSession:self.session error:error].data;
         // Parse the cmis service document
         if (data != nil && (!error || error == NULL || *error == nil))
         {
@@ -140,23 +144,41 @@
     
     // Execute actual call
     CMISObjectData *objectData = nil;
-    NSData *data = [self executeRequest:objectIdUrl error:error];
-    
-    if (data != nil)
+    HTTPResponse *response = [HttpUtil invokeGETSynchronous:objectIdUrl withSession:self.session error:error];
+
+    if (response.statusCode == 200 && response.data != nil)
     {
-        CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:data];
+        CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:response.data];
         if ([parser parseAndReturnError:error])
         {
             objectData = parser.objectData;
+            return objectData;
         }
     }
     
-    return objectData;
+    return nil;
 }
 
-- (NSData *)executeRequest:(NSURL *)url error:(NSError **)error
+- (CMISObjectData *)retrieveObjectByPathInternal:(NSString *)path error:(NSError **)error
 {
-    return [HttpUtil invokeGETSynchronous:url withSession:self.session error:error];
+    CMISObjectByPathUriBuilder *objectByPathUriBuilder = [self retrieveFromCache:kCMISBindingSessionKeyObjectByPathUriBuilder error:error];
+    objectByPathUriBuilder.path = path;
+
+    // Execute actual call
+    CMISObjectData *objectData = nil;
+    HTTPResponse *response = [HttpUtil invokeGETSynchronous:[objectByPathUriBuilder buildUrl] withSession:self.session error:error];
+
+    if (response.statusCode == 200 && response.data != nil)
+    {
+        CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:response.data];
+        if ([parser parseAndReturnError:error])
+        {
+            objectData = parser.objectData;
+            return objectData;
+        }
+    }
+
+    return nil;
 }
 
 @end

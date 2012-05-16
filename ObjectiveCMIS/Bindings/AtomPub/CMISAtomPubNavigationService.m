@@ -26,10 +26,10 @@
     NSURL *childrenUrl = [NSURL URLWithString:downLink];
     
     // execute the request
-    NSData *response = [self executeRequest:childrenUrl error:error];
-    if (response != nil)
+    HTTPResponse *response = [HttpUtil invokeGETSynchronous:childrenUrl withSession:self.session error:error];
+    if (response.data != nil)
     {
-        CMISAtomFeedParser *parser = [[CMISAtomFeedParser alloc] initWithData:response];
+        CMISAtomFeedParser *parser = [[CMISAtomFeedParser alloc] initWithData:response.data];
         if ([parser parseAndReturnError:error])
         {
             children = parser.entries;
@@ -49,7 +49,7 @@
 
         if (upLink != nil) // root folder does not have uplink!
         {
-            NSData *response = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:upLink] withSession:self.session error:error];
+            NSData *response = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:upLink] withSession:self.session error:error].data;
             if (*error == nil)
             {
                 CMISAtomFeedParser *parser = [[CMISAtomFeedParser alloc] initWithData:response];

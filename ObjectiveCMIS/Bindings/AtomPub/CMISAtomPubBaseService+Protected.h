@@ -20,7 +20,7 @@
 
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error;
 
-- (NSData *)executeRequest:(NSURL *)url error:(NSError **)outError;
+- (CMISObjectData *)retrieveObjectByPathInternal:(NSString *)path error:(NSError **)error;
 
 - (id) retrieveFromCache:(NSString *)cacheKey error:(NSError * *)error;
 

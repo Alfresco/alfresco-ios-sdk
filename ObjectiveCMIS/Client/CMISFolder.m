@@ -8,23 +8,36 @@
 
 #import "CMISFolder.h"
 #import "CMISObjectConverter.h"
-#import "CMISDocument.h"
+#import "CMISConstants.h"
 
 @interface CMISFolder ()
-@property (nonatomic, strong) CMISCollection *children;
+
+@property (nonatomic, strong, readwrite) NSString *path;
+@property (nonatomic, strong, readwrite) CMISCollection *children;
 @end
 
 @implementation CMISFolder
 
+@synthesize path = _path;
 @synthesize children = _children;
+
+- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id <CMISBinding>)binding
+{
+    self = [super initWithObjectData:objectData binding:binding];
+    if (self)
+    {
+        self.path = [[objectData.properties propertyForId:kCMISPropertyPath] firstValue];
+    }
+    return self;
+}
 
 
 - (CMISCollection *)collectionOfChildrenAndReturnError:(NSError * *)error
 {
     if (self.children == nil)
     {
-        NSArray *children = [self.binding.navigationService retrieveChildren:[self identifier] error:error];
-        
+        NSArray *children = [self.binding.navigationService retrieveChildren:self.identifier error:error];
+
         CMISObjectConverter *objConverter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
         self.children = [objConverter convertObjects:children];
     }

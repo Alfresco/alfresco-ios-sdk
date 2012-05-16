@@ -16,8 +16,17 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
 
 @protocol CMISObjectService <NSObject>
 
-// Retrieves the object with the given object identifier
-- (CMISObjectData *)retrieveObject:(NSString *)objectId error:(NSError **)error;
+/**
+ *Retrieves the object with the given object identifier.
+ *
+ */
+- (CMISObjectData *)retrieveObject:(NSString *)objectId error:(NSError * *)error;
+
+/**
+ *Retrieves an object using its path.
+ *
+ */
+-(CMISObjectData *)retrieveObjectByPath:(NSString *)path error:(NSError * *)error;
 
 /**
 * Downloads the content to a local file and returns the filepath.
