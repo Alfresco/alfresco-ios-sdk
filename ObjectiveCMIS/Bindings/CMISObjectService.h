@@ -43,9 +43,12 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
  * Deletes the content stream for the specified document object.
   *
   * A Repository MAY automatically create new Document versions as part of this service method.
-  * Therefore, the objectId output NEED NOT be identical to the objectId input.
+  * Therefore, the objectId output NEED NOT be identical to the objectId input
+  *
+  * NOTE for atom pub binding: deleteContentStream: This does not return the new object id and change token as specified by the domain model.
+  * This is not possible without introducing a new HTTP header.
  */
-- (void)deleteContentOfObject:(NSString *)objectId withChangeToken:(NSString *)changeToken error:(NSError * *)error;
+- (void)deleteContentOfObject:(CMISStringInOutParameter *)objectId withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError * *)error;
 
 /**
  * Changes the content of the given document to the content of the given file.
@@ -53,6 +56,9 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
  * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
  * object (if any) with the input contentStream. If FALSE, then the Repository MUST only set the input
  * contentStream for the object if the object currently does not have a content-stream.
+ *
+ * NOTE for atom pub binding: This does not return the new object id and change token as specified by the domain model.
+ * This is not possible without introducing a new HTTP header.
  */
 - (void)changeContentOfObject:(CMISStringInOutParameter *)objectId toContentOfFile:(NSString *)filePath
               withOverwriteExisting:(BOOL)overwrite withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError * *)error;

@@ -100,9 +100,41 @@
     self.fileRetrievalFailureBlock = nil;
 }
 
-- (void)deleteContentOfObject:(NSString *)objectId withChangeToken:(NSString *)changeToken error:(NSError **)error
+- (void)deleteContentOfObject:(CMISStringInOutParameter *)objectId withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError **)error
 {
-    // todo: implement
+    // Validate object id param
+    if (objectId == nil || objectId.inParameter == nil)
+    {
+        log(@"Object id is nil or inParameter of objectId is nil");
+        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        return;
+    }
+
+        // Get object data
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId.inParameter error:error];
+    if (objectData == nil || (error != NULL && *error != nil))
+    {
+        log(@"Could not retrieve object with id %@", objectId.inParameter);
+        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        return;
+    }
+
+    // Get edit media link
+    NSString *editMediaLink = [objectData.linkRelations linkHrefForRel:kCMISLinkEditMedia];
+
+    // Append optional change token parameters
+    if (changeToken != nil && changeToken.inParameter != nil)
+    {
+        editMediaLink = [URLUtil urlStringByAppendingParameter:kCMISParameterChangeToken
+                                                     withValue:changeToken.inParameter toUrlString:editMediaLink];
+    }
+
+    [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:editMediaLink] withSession:self.session error:error];
+
+    // Atompub DOES NOT SUPPORT returning the new object id and change token
+    // See http://docs.oasis-open.org/cmis/CMIS/v1.0/cs01/cmis-spec-v1.0.html#_Toc243905498
+    objectId.outParameter = nil;
+    changeToken.outParameter = nil;
 }
 
 - (void)changeContentOfObject:(CMISStringInOutParameter *)objectId toContentOfFile:(NSString *)filePath
@@ -163,7 +195,8 @@
         return;
     }
 
-    // For some reason, this is how it is done in the opencmis code ... dunno why
+    // Atompub DOES NOT SUPPORT returning the new object id and change token
+    // See http://docs.oasis-open.org/cmis/CMIS/v1.0/cs01/cmis-spec-v1.0.html#_Toc243905498
     objectId.outParameter = nil;
     changeToken.outParameter = nil;
 }

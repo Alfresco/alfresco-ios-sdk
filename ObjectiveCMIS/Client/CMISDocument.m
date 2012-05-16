@@ -79,6 +79,13 @@
                                 error:error];
 }
 
+- (void)deleteContentAndReturnError:(NSError **)error
+{
+    [self.binding.objectService deleteContentOfObject:[CMISStringInOutParameter inOutParameterUsingInParameter:self.identifier]
+                                      withChangeToken:[CMISStringInOutParameter inOutParameterUsingInParameter:self.changeToken]
+                                      error:error];
+}
+
 - (CMISDocument *)retrieveObjectOfLatestVersionAndReturnError:(NSError **)error
 {
     CMISObjectData *objectData = [self.binding.versioningService retrieveObjectOfLatestVersion:self.identifier error:error];
