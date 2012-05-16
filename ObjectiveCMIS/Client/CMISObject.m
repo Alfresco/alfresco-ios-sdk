@@ -11,7 +11,9 @@
 #import "ISO8601DateFormatter.h"
 
 @interface CMISObject ()
+
 @property (nonatomic, strong, readwrite) id<CMISBinding> binding;
+
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *name;
 @property (nonatomic, strong, readwrite) NSString *createdBy;
@@ -19,6 +21,9 @@
 @property (nonatomic, strong, readwrite) NSString *lastModifiedBy;
 @property (nonatomic, strong, readwrite) NSDate *lastModificationDate;
 @property (nonatomic, strong, readwrite) NSString *objectType;
+
+@property (nonatomic, strong, readwrite) CMISProperties *properties;
+
 @end
 
 @implementation CMISObject
@@ -31,6 +36,7 @@
 @synthesize lastModifiedBy = _lastModifiedBy;
 @synthesize lastModificationDate = _lastModificationDate;
 @synthesize objectType = _objectType;
+@synthesize properties = _properties;
 
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 {
@@ -39,12 +45,13 @@
     {
         self.binding = binding;
 
-        self.name = [[objectData.properties.properties objectForKey:kCMISPropertyName] firstValue];
-        self.createdBy = [[objectData.properties.properties objectForKey:kCMISPropertyCreatedBy] firstValue];
-        self.lastModifiedBy = [[objectData.properties.properties objectForKey:kCMISPropertyModifiedBy] firstValue];
-        self.creationDate = [[objectData.properties.properties objectForKey:kCMISPropertyCreationDate] firstValue];
-        self.lastModificationDate = [[objectData.properties.properties objectForKey:kCMISPropertyModificationDate] firstValue];
-        self.objectType = [[objectData.properties.properties objectForKey:kCMISPropertyObjectTypeId] firstValue];
+        self.properties = objectData.properties;
+        self.name = [[self.properties propertyForId:kCMISPropertyName] firstValue];
+        self.createdBy = [[self.properties propertyForId:kCMISPropertyCreatedBy] firstValue];
+        self.lastModifiedBy = [[self.properties propertyForId:kCMISPropertyModifiedBy] firstValue];
+        self.creationDate = [[self.properties propertyForId:kCMISPropertyCreationDate] firstValue];
+        self.lastModificationDate = [[self.properties propertyForId:kCMISPropertyModificationDate] firstValue];
+        self.objectType = [[self.properties propertyForId:kCMISPropertyObjectTypeId] firstValue];
     }
     
     return self;

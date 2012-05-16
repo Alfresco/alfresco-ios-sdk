@@ -13,8 +13,8 @@
 
 @interface CMISObject : CMISObjectId
 
-// list of CMISProperty objects
-//@property (nonatomic, strong, readonly) NSArray *properties;
+@property (nonatomic, strong, readonly) id<CMISBinding> binding;
+
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSString *createdBy;
 @property (nonatomic, strong, readonly) NSDate *creationDate;
@@ -26,11 +26,7 @@
 //@property (nonatomic, strong, readonly) CMISObjectType *type;
 //@property (nonatomic, strong, readonly) NSString *changeToken;
 
-//- (CMISProperty *) propertyWithId:(NSString *)id;
-
-//- (id) propertyValueWithId:(NSString *)id;
-
-@property (nonatomic, strong, readonly) id<CMISBinding> binding;
+@property (nonatomic, strong, readonly) CMISProperties *properties;
 
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 
