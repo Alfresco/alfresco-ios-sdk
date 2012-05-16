@@ -13,6 +13,8 @@
 #import "CMISFileUtil.h"
 #import "CMISConstants.h"
 #import "CMISErrors.h"
+#import "CMISStringInOutParameter.h"
+#import "URLUtil.h"
 
 @interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
 
@@ -38,7 +40,7 @@
     return [self retrieveObjectByPathInternal:path error:error];
 }
 
-- (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+- (void)downloadContentOfObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {
     NSError *objectRetrievalError = nil;
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&objectRetrievalError];
@@ -97,6 +99,75 @@
     self.fileRetrievalCompletionBlock = nil;
     self.fileRetrievalFailureBlock = nil;
 }
+
+- (void)deleteContentOfObject:(NSString *)objectId withChangeToken:(NSString *)changeToken error:(NSError **)error
+{
+    // todo: implement
+}
+
+- (void)changeContentOfObject:(CMISStringInOutParameter *)objectId toContentOfFile:(NSString *)filePath
+        withOverwriteExisting:(BOOL)overwrite withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError **)error
+{
+    // Validate object id param
+    if (objectId == nil || objectId.inParameter == nil)
+    {
+        log(@"Object id is nil or inParameter of objectId is nil");
+        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        return;
+    }
+
+    // Validate file path param
+    if (filePath == nil || ![[NSFileManager defaultManager] isReadableFileAtPath:filePath])
+    {
+        log(@"Invalid file path: '%@' is not valid", filePath);
+        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        return;
+    }
+
+    // Get object data
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId.inParameter error:error];
+    if (objectData == nil || (error != NULL && *error != nil))
+    {
+        log(@"Could not retrieve object with id %@", objectId.inParameter);
+        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        return;
+    }
+
+    // Get edit media link
+    NSString *editMediaLink = [objectData.linkRelations linkHrefForRel:kCMISLinkEditMedia];
+
+    // Append optional change token parameters
+    if (changeToken != nil && changeToken.inParameter != nil)
+    {
+        editMediaLink = [URLUtil urlStringByAppendingParameter:kCMISParameterChangeToken
+                                                     withValue:changeToken.inParameter toUrlString:editMediaLink];
+    }
+
+    // Append overwrite flag
+    editMediaLink = [URLUtil urlStringByAppendingParameter:kCMISParameterOverwriteFlag
+                                                 withValue:(overwrite ? @"true" : @"false") toUrlString:editMediaLink];
+
+    // Execute HTTP call on edit media link, passing the a stream to the file
+    NSDictionary *additionalHeader = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"attachment; filename=%@", [filePath lastPathComponent]] forKey:@"Content-Disposition"];
+    HTTPResponse *response = [HttpUtil invokePUTSynchronous:[NSURL URLWithString:editMediaLink]
+                               withSession:self.session
+                               bodyStream:[NSInputStream inputStreamWithFileAtPath:filePath]
+                               headers:additionalHeader
+                               error:error];
+
+    // Check response status
+    if (response.statusCode != 200 && response.statusCode != 201 && response.statusCode != 204)
+    {
+        log(@"Invalid http response status code when updating content: %d", response.statusCode);
+        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        return;
+    }
+
+    // For some reason, this is how it is done in the opencmis code ... dunno why
+    objectId.outParameter = nil;
+    changeToken.outParameter = nil;
+}
+
 
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
                   withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError * *)error

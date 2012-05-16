@@ -10,6 +10,7 @@
 #import "CMISObjectData.h"
 
 @class CMISDocument;
+@class CMISStringInOutParameter;
 
 typedef void (^CMISContentRetrievalCompletionBlock)(void);
 typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
@@ -34,7 +35,27 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
 * Do note that this is an ASYNCHRONOUS call, as a synchronous call would have
 * bad performance/memory implications.
 */
-- (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
+- (void)downloadContentOfObject:(NSString *)objectId toFile:(NSString *)filePath
+                                completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
+                                failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
+
+/**
+ * Deletes the content stream for the specified document object.
+  *
+  * A Repository MAY automatically create new Document versions as part of this service method.
+  * Therefore, the objectId output NEED NOT be identical to the objectId input.
+ */
+- (void)deleteContentOfObject:(NSString *)objectId withChangeToken:(NSString *)changeToken error:(NSError * *)error;
+
+/**
+ * Changes the content of the given document to the content of the given file.
+ *
+ * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
+ * object (if any) with the input contentStream. If FALSE, then the Repository MUST only set the input
+ * contentStream for the object if the object currently does not have a content-stream.
+ */
+- (void)changeContentOfObject:(CMISStringInOutParameter *)objectId toContentOfFile:(NSString *)filePath
+              withOverwriteExisting:(BOOL)overwrite withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError * *)error;
 
 /**
 * uploads the file from the given path to the given folder.

@@ -201,7 +201,7 @@
                     completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
                     failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {
-    [self.binding.objectService downloadContentOfCMISObject:objectId toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
+    [self.binding.objectService downloadContentOfObject:objectId toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
 }
 
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType

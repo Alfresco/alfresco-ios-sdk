@@ -10,6 +10,7 @@
 #import "CMISConstants.h"
 #import "CMISHttpUtil.h"
 #import "CMISObjectConverter.h"
+#import "CMISStringInOutParameter.h"
 
 @interface CMISDocument()
 
@@ -69,6 +70,15 @@
     return nil;
 }
 
+- (void)changeContentToContentOfFile:(NSString *)filePath withOverwriteExisting:(BOOL)overwrite error:(NSError **)error
+{
+    [self.binding.objectService changeContentOfObject:[CMISStringInOutParameter inOutParameterUsingInParameter:self.identifier]
+                                toContentOfFile:filePath
+                                withOverwriteExisting:overwrite
+                                withChangeToken:[CMISStringInOutParameter inOutParameterUsingInParameter:self.changeToken]
+                                error:error];
+}
+
 - (CMISDocument *)retrieveObjectOfLatestVersionAndReturnError:(NSError **)error
 {
     CMISObjectData *objectData = [self.binding.versioningService retrieveObjectOfLatestVersion:self.identifier error:error];
@@ -81,10 +91,9 @@
     return nil;
 }
 
-
 - (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
 {
-    [self.binding.objectService downloadContentOfCMISObject:self.identifier toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
+    [self.binding.objectService downloadContentOfObject:self.identifier toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
 }
 
 - (BOOL)deleteAllVersionsAndReturnError:(NSError **)error

@@ -47,6 +47,11 @@ extern NSString * const kCMISLinkRelationUp;
 extern NSString * const kCMISLinkRelationSelf;
 extern NSString * const kCMISLinkRelationFolderTree;
 extern NSString * const kCMISLinkVersionHistory;
+extern NSString * const kCMISLinkEditMedia;
+
+// Parameters
+extern NSString * const kCMISParameterChangeToken;
+extern NSString * const kCMISParameterOverwriteFlag;
 
 // Namespaces
 extern NSString * const kCMISNamespaceCmis;
