@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4E44E03A1560F2C300EC9317 /* CMISErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E44E0381560F2C300EC9317 /* CMISErrors.h */; };
 		4E44E03B1560F2C300EC9317 /* CMISErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E44E0391560F2C300EC9317 /* CMISErrors.m */; };
+		4EEF6211156270E500347193 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EEF6213156270E500347193 /* Localizable.strings */; };
 		75C5E2F71559172B0065550A /* CMISAllowableActionsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 75C5E2F51559172B0065550A /* CMISAllowableActionsParser.h */; };
 		75C5E2F81559172B0065550A /* CMISAllowableActionsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */; };
 		75C8D0861559B7EA00B63D2B /* CMISAllowableActions.h in Headers */ = {isa = PBXBuildFile; fileRef = 75C8D0841559B7EA00B63D2B /* CMISAllowableActions.h */; };
@@ -128,6 +129,7 @@
 /* Begin PBXFileReference section */
 		4E44E0381560F2C300EC9317 /* CMISErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISErrors.h; sourceTree = "<group>"; };
 		4E44E0391560F2C300EC9317 /* CMISErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISErrors.m; sourceTree = "<group>"; };
+		4EEF6212156270E500347193 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		75C5E2F51559172B0065550A /* CMISAllowableActionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAllowableActionsParser.h; sourceTree = "<group>"; };
 		75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAllowableActionsParser.m; sourceTree = "<group>"; };
 		75C8D0841559B7EA00B63D2B /* CMISAllowableActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActions.h; path = Common/CMISAllowableActions.h; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 			isa = PBXGroup;
 			children = (
 				828072AA15153DE800EF635C /* ObjectiveCMIS-Prefix.pch */,
+				4EEF6213156270E500347193 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -626,6 +629,7 @@
 				828072C115153DE900EF635C /* InfoPlist.strings in Resources */,
 				82C1C63F15358733009B7B5E /* test_file.txt in Resources */,
 				82C1C63F15358733009B7B66 /* cmis-spec-v1.0.pdf in Resources */,
+				4EEF6211156270E500347193 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -712,6 +716,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		4EEF6213156270E500347193 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4EEF6212156270E500347193 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		828072BF15153DE900EF635C /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

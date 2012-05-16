@@ -7,6 +7,7 @@
 
 #import "CMISHttpUtil.h"
 #import "CMISAuthenticationProvider.h"
+#import "CMISErrors.h"
 
 @implementation HttpUtil
 
@@ -94,18 +95,20 @@
 
 + (NSData *)executeRequestSynchronous:(NSMutableURLRequest *)request error:(NSError * *)outError
 {
-    NSURLResponse *response = nil;
+    NSHTTPURLResponse *response = nil;    
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:outError];
-
-    if (data == nil)
-    {
-        log(@"Did not receive any data for HTTP %@ %@", request.HTTPMethod, [request.URL absoluteString]);
+    if (data == nil || (outError && outError != NULL && *outError != nil) ) {
+        log(@"Error while doing HTTP %@ %@ : %@", request.HTTPMethod, [request.URL absoluteString], [*outError description]);
     }
+    else {
+        log(@"HTTP response with code = %d, code String = %@",[response statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]]);
+    }
+    /*
     else if (outError && outError != NULL && *outError != nil)
     {
         log(@"Error while doing HTTP %@ %@ : %@", request.HTTPMethod, [request.URL absoluteString], [*outError description]);
     }
-
+     */
     // Uncomment to see the actual response from the server
 //    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 //    log(@"Response for %@ : %@", [request.URL absoluteString], dataString);

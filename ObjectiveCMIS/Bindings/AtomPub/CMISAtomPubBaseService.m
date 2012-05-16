@@ -14,6 +14,7 @@
 #import "CMISAtomEntryParser.h"
 #import "CMISWorkspace.h"
 #import "CMISObjectByIdUriBuilder.h"
+#import "CMISErrors.h"
 
 @interface CMISAtomPubBaseService ()
 
@@ -92,7 +93,11 @@
         {
             log(@"No matching repository found for repository id %@", self.session.repositoryId);
             // TODO: populate error properly
-            *error = [[NSError alloc] init];
+            NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+            [errorInfo setObject:kCMISObjectNotFoundErrorDescription forKey:NSLocalizedDescriptionKey];
+            NSString *detailedDescription = [NSString stringWithFormat:@"No matching repository found for repository id %@", self.session.repositoryId];
+            [errorInfo setObject:detailedDescription forKey:NSLocalizedFailureReasonErrorKey];
+            *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISObjectNotFoundError userInfo:errorInfo];
         }
     }
 }
@@ -102,9 +107,8 @@
     if ([self.session objectForKey:kCMISSessionKeyWorkspaces] == nil)
     {
         NSData *data = [HttpUtil invokeGETSynchronous:self.atomPubUrl withSession:self.session error:error];
-
         // Parse the cmis service document
-        if (data != nil)
+        if (data != nil && (!error || error == NULL || *error == nil))
         {
             CMISServiceDocumentParser *parser = [[CMISServiceDocumentParser alloc] initWithData:data];
             if ([parser parseAndReturnError:error])

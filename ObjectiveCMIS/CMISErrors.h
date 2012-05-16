@@ -23,6 +23,8 @@ typedef enum
     kCMISConnectionError = 1,
     kCMISProxyAuthenticationError = 2,
     kCMISUnauthorizedError = 3,
+    kCMISNoRootFolderFoundError = 4,
+    kCMISRepositoryNotFoundError = 5,
     
     //error ranges for General errors
     kCMISGeneralErrorMinimum = 256,
@@ -52,6 +54,7 @@ typedef enum
     
 }CMISErrorCodes;
 
+
 extern NSString * const kCMISErrorDomainName;
 //to be used in the userInfo dictionary as Localized error description
 //Basic Errors
@@ -59,6 +62,8 @@ extern NSString * const kCMISNoReturnErrorDescription;
 extern NSString * const kCMISConnectionErrorDescription;
 extern NSString * const kCMISProxyAuthenticationErrorDescription;
 extern NSString * const kCMISUnauthorizedErrorDescription;
+extern NSString * const kCMISNoRootFolderFoundErrorDescription;
+extern NSString * const kCMISRepositoryNotFoundErrorDescription;
 //General errors as defined in 2.2.1.4.1 of spec
 extern NSString * const kCMISInvalidArgumentErrorDescription;
 extern NSString * const kCMISObjectNotFoundErrorDescription;
@@ -74,4 +79,8 @@ extern NSString * const kCMISStorageErrorDescription;
 extern NSString * const kCMISStreamNotSupportedErrorDescription;
 extern NSString * const kCMISUpdateConflictErrorDescription;
 extern NSString * const kCMISVersioningErrorDescription;
+
+@interface CMISErrors : NSObject
++ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(NSInteger)code withCMISLocalizedDescription:(NSString *)localizedDescription;
+@end
 

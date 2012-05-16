@@ -12,6 +12,7 @@
 #import "CMISStandardAuthenticationProvider.h"
 #import "CMISBindingFactory.h"
 #import "CMISDocument.h"
+#import "CMISErrors.h"
 
 @interface CMISSession ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
@@ -82,21 +83,24 @@
 {
     // TODO: validate session parameters, extract the checks below?
     
+    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
     // check repository id is present
     if (self.sessionParameters.repositoryId == nil)
     {
-        // TODO: populate NSError object appropriately
-        *error = [[NSError alloc] init];
+        [errorInfo setValue:NSLocalizedString(kCMISInvalidArgumentErrorDescription,nil) forKey:NSLocalizedDescriptionKey];        
+        *error = [[NSError alloc] initWithDomain:kCMISErrorDomainName code:kCMISInvalidArgumentError userInfo:errorInfo];
+        log(@"Error: %@",[*error description]);
         return NO;
     }
     
-    // check we have enough authentication credentials
+    // check if we have enough authentication credentials
     NSString *username = self.sessionParameters.username;
     NSString *password = self.sessionParameters.password;
     if (self.sessionParameters.authenticationProvider == nil && username == nil && password == nil)
     {
-        // TODO: populate NSError object appropriately
-        *error = [[NSError alloc] init];
+        [errorInfo setValue:NSLocalizedString(kCMISUnauthorizedErrorDescription,nil) forKey:NSLocalizedDescriptionKey];        
+        *error = [[NSError alloc] initWithDomain:kCMISErrorDomainName code:kCMISUnauthorizedError userInfo:errorInfo];
+        log(@"Error: %@",[*error description]);
         return NO;
     }
     
@@ -109,18 +113,21 @@
         // get repository info
         self.repositoryInfo = [self.binding.repositoryService repositoryInfoForId:self.sessionParameters.repositoryId error:error];
         
-        // TODO: capture any error and return
         
-        if (self.repositoryInfo == nil)
+        if (self.repositoryInfo == nil || (*error != nil))
         {
+            log(@"Error because repositoryInfo is nil: %@",[*error description]);
             return NO;
         }
         
         // get root folder info
         CMISObject *obj = [self retrieveObject:self.repositoryInfo.rootFolderId error:error];
         
-        if (obj == nil)
+        if (obj == nil || (error && error != NULL && *error != nil))
         {
+            [errorInfo setValue:NSLocalizedString(kCMISNoRootFolderFoundErrorDescription,nil) forKey:NSLocalizedDescriptionKey];        
+            *error = [[NSError alloc] initWithDomain:kCMISErrorDomainName code:kCMISNoRootFolderFoundError userInfo:errorInfo];
+            log(@"Error because CMISObject returns as nil: %@",[*error description]);
             return NO;
         }
         
@@ -128,7 +135,10 @@
         {
             self.rootFolder = (CMISFolder *)obj;
         } else {
-            NSLog(@"Warning: rootFolderId %@ did not point to a folder", self.repositoryInfo.rootFolderId);
+            [errorInfo setValue:NSLocalizedString(kCMISNoRootFolderFoundErrorDescription,nil) forKey:NSLocalizedDescriptionKey];
+            *error = [[NSError alloc] initWithDomain:kCMISErrorDomainName code:kCMISNoRootFolderFoundError userInfo:errorInfo];
+            log(@"Error because obj is not of kind CMISFolder: %@",[*error description]);
+            return NO;
         }
     }
     
