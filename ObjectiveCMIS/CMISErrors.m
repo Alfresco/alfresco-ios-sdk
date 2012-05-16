@@ -51,7 +51,7 @@ NSString * const kCMISVersioningErrorDescription = @"Versioning Error";
         return *error;
     }
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:localizedDescription forKey:NSLocalizedDescriptionKey];
+    [errorInfo setValue:NSLocalizedString(localizedDescription,localizedDescription) forKey:NSLocalizedDescriptionKey];
     if (error && error != NULL && *error != nil) {
         [errorInfo setObject:*error forKey:NSUnderlyingErrorKey];
     }

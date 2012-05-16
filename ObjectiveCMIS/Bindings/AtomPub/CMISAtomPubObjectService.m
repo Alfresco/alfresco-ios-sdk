@@ -41,12 +41,7 @@
     if (objectRetrievalError)
     {
         log(@"Error while retrieving CMIS object for object id '%@' : %@", objectId, [objectRetrievalError description]);
-        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[objectRetrievalError userInfo]allKeys]count]];
-        [errorInfo setDictionary:[objectRetrievalError userInfo]];
-        [errorInfo setObject:NSLocalizedString(kCMISObjectNotFoundErrorDescription, kCMISObjectNotFoundErrorDescription) forKey:NSLocalizedDescriptionKey];
-        [errorInfo setObject:[NSString stringWithFormat:@"Error while retrieving CMIS object for object id '%@'", objectId] forKey:NSLocalizedFailureReasonErrorKey];
-        NSError *cmisError = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISObjectNotFoundError userInfo:errorInfo];
-        
+        NSError *cmisError = [CMISErrors cmisError:&objectRetrievalError withCMISErrorCode:kCMISObjectNotFoundError withCMISLocalizedDescription:kCMISObjectNotFoundErrorDescription];
         if (failureBlock)
         {
             failureBlock(cmisError);
@@ -76,11 +71,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[error userInfo]allKeys]count]];
-    [errorInfo setDictionary:[error userInfo]];
-    [errorInfo setObject:NSLocalizedString(kCMISConstraintErrorDescription, kCMISConstraintErrorDescription) forKey:NSLocalizedDescriptionKey];
-    [errorInfo setObject:@"Requesting object deletion asynchronously failed" forKey:NSLocalizedFailureReasonErrorKey];
-    NSError *cmisError = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISConstraintError userInfo:errorInfo];                 
+    NSError *cmisError = [CMISErrors cmisError:&error withCMISErrorCode:kCMISObjectNotFoundError withCMISLocalizedDescription:kCMISObjectNotFoundErrorDescription];
 
     if (self.fileRetrievalFailureBlock)
     {
@@ -108,71 +99,50 @@
     // Validate params
     if (!mimeType)
     {
-        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[*error userInfo]allKeys]count]];
-        [errorInfo setDictionary:[*error userInfo]];
-        [errorInfo setObject:NSLocalizedString(kCMISConstraintErrorDescription, kCMISConstraintErrorDescription) forKey:NSLocalizedDescriptionKey];
-        [errorInfo setObject:@"Mime Type is missing" forKey:NSLocalizedFailureReasonErrorKey];
-        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISConstraintError userInfo:errorInfo];         
+        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+        [errorInfo setObject:NSLocalizedString(kCMISInvalidArgumentErrorDescription, kCMISInvalidArgumentErrorDescription) forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISInvalidArgumentError userInfo:errorInfo];         
         // TODO: proper init error
         log(@"Must provide a mimetype when creating a cmis document");
+        return nil;
     }
 
     // Fetch object
-    CMISObjectData *folderData = [self retrieveObjectInternal:folderObjectId error:error];
+    NSError *internalError = nil;
+    CMISObjectData *folderData = [self retrieveObjectInternal:folderObjectId error:&internalError];
+    
+    if (internalError) {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISObjectNotFoundError withCMISLocalizedDescription:kCMISObjectNotFoundErrorDescription];
+        return nil;
+    }
+    NSString *downLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
+    //[folderData.links objectForKey:kCMISLinkRelationDown];
+    return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:filePath withContentMimeType:mimeType error:error];
 
-    // Use down link to create the document
-    if (!*error)
-    {
-        NSString *downLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
-        //[folderData.links objectForKey:kCMISLinkRelationDown];
-        return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:filePath withContentMimeType:mimeType error:error];
-    }
-    else 
-    {
-        //TODO handle error
-    }
-    return nil;
 }
 
 - (BOOL)deleteObject:(NSString *)objectId allVersions:(BOOL)allVersions error:(NSError * *)error
 {
-    NSError *retrieveError = nil;
-    CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&retrieveError];
-    if (!retrieveError)
-    {
-        NSString *selfLink = [objectData.linkRelations linkHrefForRel:kCMISLinkRelationSelf];
-        if (selfLink)
-        {
-            NSURL *selfUrl = [NSURL URLWithString:selfLink];
-            [HttpUtil invokeDELETESynchronous:selfUrl withSession:self.session error:&retrieveError];
-
-            if (!retrieveError)
-            {
-                return YES;
-            }
-            else
-            {
-                NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[retrieveError userInfo]allKeys]count]];
-                [errorInfo setDictionary:[retrieveError userInfo]];
-                [errorInfo setObject:NSLocalizedString(kCMISConstraintErrorDescription, kCMISConstraintErrorDescription) forKey:NSLocalizedDescriptionKey];
-                [errorInfo setObject:@"Error deleting object in repository" forKey:NSLocalizedFailureReasonErrorKey];
-                *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISConstraintError userInfo:errorInfo];                 
-            }
-        }
-        else
-        {
-            log(@"Could not retrieve 'self' link for object with object id %@", objectId);
-        }
+    NSError *internalError = nil;
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&internalError];
+    if (internalError) {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISObjectNotFoundError withCMISLocalizedDescription:kCMISObjectNotFoundErrorDescription];
+        return NO;        
     }
-    else
-    {
-        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[retrieveError userInfo]allKeys]count]];
-        [errorInfo setDictionary:[retrieveError userInfo]];
-        [errorInfo setObject:NSLocalizedString(kCMISConstraintErrorDescription, kCMISConstraintErrorDescription) forKey:NSLocalizedDescriptionKey];
-        [errorInfo setObject:@"Error retrieving the Object to be deleted" forKey:NSLocalizedFailureReasonErrorKey];
-        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISConstraintError userInfo:errorInfo];                 
+    NSString *selfLink = [objectData.linkRelations linkHrefForRel:kCMISLinkRelationSelf];
+    if (!selfLink) {
+        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+        [errorInfo setValue:NSLocalizedString(kCMISInvalidArgumentErrorDescription, kCMISInvalidArgumentErrorDescription) forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISInvalidArgumentError userInfo:errorInfo];
+        return NO;
     }
-    return NO;
+    NSURL *selfUrl = [NSURL URLWithString:selfLink];
+    [HttpUtil invokeDELETESynchronous:selfUrl withSession:self.session error:&internalError];
+    if (internalError) {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISUpdateConflictError withCMISLocalizedDescription:kCMISUpdateConflictErrorDescription];
+        return NO;
+    }
+    return YES;
 }
 
 - (NSString *)createFolderInParentFolder:(NSString *)folderObjectId withProperties:(NSDictionary *)properties error:(NSError **)error
@@ -180,41 +150,50 @@
       // Validate params
     if (!folderObjectId)
     {
-        *error = [[NSError alloc] init];         // TODO: proper init error
+        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+        [errorInfo setObject:NSLocalizedString(kCMISObjectNotFoundErrorDescription, kCMISObjectNotFoundErrorDescription) forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISObjectNotFoundError userInfo:errorInfo];         
         log(@"Must provide a parent folder object id when creating a new folder");
     }
 
     // Fetch folder data
-    CMISObjectData *parentFolderData = [self retrieveObjectInternal:folderObjectId error:error];
-
-    // Use down link to create the folder
-    if (*error == nil)
-    {
-        NSString *downLink = [parentFolderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
-        return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:nil withContentMimeType:nil error:error];
+    NSError *internalError = nil;
+    CMISObjectData *parentFolderData = [self retrieveObjectInternal:folderObjectId error:&internalError];
+    if (internalError) {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISObjectNotFoundError withCMISLocalizedDescription:kCMISObjectNotFoundErrorDescription];
+        return nil;
     }
-    return nil;
+
+    NSString *downLink = [parentFolderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
+    return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:nil withContentMimeType:nil error:error];
 }
+
 
 - (NSArray *)deleteTree:(NSString *)folderObjectId error:(NSError * *)error
 {
     // Validate params
     if (!folderObjectId)
     {
-        *error = [[NSError alloc] init];         // TODO: proper init error
+        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+        [errorInfo setObject:NSLocalizedString(kCMISObjectNotFoundErrorDescription, kCMISObjectNotFoundErrorDescription) forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISObjectNotFoundError userInfo:errorInfo];         
         log(@"Must provide a folder object id when deleting a folder tree");
     }
 
     // Fetch folder data
-    CMISObjectData *folderData = [self retrieveObjectInternal:folderObjectId error:error];
+    NSError *internalError = nil;
+    CMISObjectData *folderData = [self retrieveObjectInternal:folderObjectId error:&internalError];
+    if (internalError) {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISObjectNotFoundError withCMISLocalizedDescription:kCMISObjectNotFoundErrorDescription];
+        return nil;//should we return nil or an empty array here?
+    }
 
-    // Use foldertree link to delete the folder and its subfolders
-    if (*error == nil)
-    {
-        NSString *folderTreeLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationFolderTree];
-        [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:folderTreeLink] withSession:self.session error:error];
-
-        // TODO: handle response status code (see opencmis impl)
+    NSString *folderTreeLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationFolderTree];
+    [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:folderTreeLink] withSession:self.session error:&internalError];
+    
+    if (internalError) {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISConnectionError withCMISLocalizedDescription:kCMISConnectionErrorDescription];
+        return nil;//should we return nil or an empty array here?
     }
 
     // TODO: retrieve failed folders and files and return
@@ -232,13 +211,16 @@
     // Validate properties
     if ([properties objectForKey:kCMISPropertyName] == nil || [properties objectForKey:kCMISPropertyObjectTypeId] == nil)
     {
-        *error = [[NSError alloc] init]; // TODO: proper error initialisation
+        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+        [errorInfo setObject:NSLocalizedString(kCMISInvalidArgumentErrorDescription, kCMISInvalidArgumentErrorDescription) forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISInvalidArgumentError userInfo:errorInfo];         
         log(@"Must provide %@ and %@ as properties", kCMISPropertyName, kCMISPropertyObjectTypeId);
         return nil;
     }
 
     if (*error == nil && downLink != nil)
     {
+        NSError *internalError = nil;
         NSURL *downUrl = [NSURL URLWithString:downLink];
 
         // Atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
@@ -254,22 +236,29 @@
                                                withSession:self.session
                                                bodyStream:bodyStream
                                                headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
-                                               error:error];
+                                               error:&internalError];
 
         // Close stream and delete temporary file
         [bodyStream close];
-
-        [[NSFileManager defaultManager] removeItemAtPath:filePathToGeneratedAtomEntry error:error];
-
-        // Parse the returned response (ie the newly created document)
-        if (*error == nil)
-        {
-            CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response];
-            [atomEntryParser parseAndReturnError:error];
-            return atomEntryParser.objectData.identifier;
+        if (internalError) {
+            *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISConnectionError withCMISLocalizedDescription:kCMISConnectionErrorDescription];
+            return nil;
+        }        
+        
+        [[NSFileManager defaultManager] removeItemAtPath:filePathToGeneratedAtomEntry error:&internalError];
+        if (internalError) {
+            *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISStorageError withCMISLocalizedDescription:kCMISStorageErrorDescription];
+            return nil;
         }
+        CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response];
+        [atomEntryParser parseAndReturnError:error];
+        return atomEntryParser.objectData.identifier;
+                        
+
     } else {
-        *error = [[NSError alloc] init]; //TODO proper init
+        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+        [errorInfo setObject:NSLocalizedString(kCMISInvalidArgumentErrorDescription, kCMISInvalidArgumentErrorDescription) forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISInvalidArgumentError userInfo:errorInfo];         
         log(@"Could not retrieve 'down' link");
     }
     return nil;

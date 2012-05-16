@@ -10,6 +10,7 @@
 #import "CMISAtomPubBaseService+Protected.h"
 #import "CMISConstants.h"
 #import "CMISWorkspace.h"
+#import "CMISErrors.h"
 
 @interface CMISAtomPubRepositoryService ()
 @property (nonatomic, strong) NSMutableDictionary *repositories;
@@ -26,13 +27,21 @@
 
 - (NSArray *)arrayOfRepositoriesAndReturnError:(NSError **)outError
 {
-    [self retrieveRepositoriesAndReturnError:outError];
+    NSError *internalError = nil;
+    [self retrieveRepositoriesAndReturnError:&internalError];
+    if (internalError) {
+        *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISObjectNotFoundError withCMISLocalizedDescription:kCMISObjectNotFoundErrorDescription];
+    }
     return [self.repositories allValues];
 }
 
 - (CMISRepositoryInfo *)repositoryInfoForId:(NSString *)repositoryId error:(NSError **)outError
 {
-    [self retrieveRepositoriesAndReturnError:outError];
+    NSError *internalError = nil;
+    [self retrieveRepositoriesAndReturnError:&internalError];
+    if (internalError) {
+        *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISUnauthorizedError withCMISLocalizedDescription:kCMISUnauthorizedErrorDescription];
+    }
     return [self.repositories objectForKey:repositoryId];
 }
 
