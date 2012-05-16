@@ -72,7 +72,9 @@
     STAssertNotNil(session, @"session object should not be nil");
 
     NSError *error = nil;
-    [session authenticateAndReturnError:&error];
+    if (![session authenticateAndReturnError:&error]) {
+        log(@"*** testAuthenticateWithInvalidCredentials: error domain is %@, error code is %d and error description is %@",[error domain], [error code], [error description]);
+    }
     STAssertFalse(session.isAuthenticated, @"session should NOT be authenticated");
     STAssertNotNil(error, @"Error should not be nil");
 }

@@ -12,6 +12,7 @@
 #import "CMISAtomEntryParser.h"
 #import "CMISFileUtil.h"
 #import "CMISConstants.h"
+#import "CMISErrors.h"
 
 @interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
 
@@ -40,9 +41,15 @@
     if (objectRetrievalError)
     {
         log(@"Error while retrieving CMIS object for object id '%@' : %@", objectId, [objectRetrievalError description]);
+        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[objectRetrievalError userInfo]allKeys]count]];
+        [errorInfo setDictionary:[objectRetrievalError userInfo]];
+        [errorInfo setObject:NSLocalizedString(kCMISObjectNotFoundErrorDescription, kCMISObjectNotFoundErrorDescription) forKey:NSLocalizedDescriptionKey];
+        [errorInfo setObject:[NSString stringWithFormat:@"Error while retrieving CMIS object for object id '%@'", objectId] forKey:NSLocalizedFailureReasonErrorKey];
+        NSError *cmisError = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISObjectNotFoundError userInfo:errorInfo];
+        
         if (failureBlock)
         {
-            failureBlock(objectRetrievalError);
+            failureBlock(cmisError);
         }
     }
     else
@@ -69,9 +76,15 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[error userInfo]allKeys]count]];
+    [errorInfo setDictionary:[error userInfo]];
+    [errorInfo setObject:NSLocalizedString(kCMISConstraintErrorDescription, kCMISConstraintErrorDescription) forKey:NSLocalizedDescriptionKey];
+    [errorInfo setObject:@"Requesting object deletion asynchronously failed" forKey:NSLocalizedFailureReasonErrorKey];
+    NSError *cmisError = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISConstraintError userInfo:errorInfo];                 
+
     if (self.fileRetrievalFailureBlock)
     {
-        self.fileRetrievalFailureBlock(error);
+        self.fileRetrievalFailureBlock(cmisError);
     }
 }
 
@@ -95,7 +108,12 @@
     // Validate params
     if (!mimeType)
     {
-        *error = [[NSError alloc] init];         // TODO: proper init error
+        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[*error userInfo]allKeys]count]];
+        [errorInfo setDictionary:[*error userInfo]];
+        [errorInfo setObject:NSLocalizedString(kCMISConstraintErrorDescription, kCMISConstraintErrorDescription) forKey:NSLocalizedDescriptionKey];
+        [errorInfo setObject:@"Mime Type is missing" forKey:NSLocalizedFailureReasonErrorKey];
+        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISConstraintError userInfo:errorInfo];         
+        // TODO: proper init error
         log(@"Must provide a mimetype when creating a cmis document");
     }
 
@@ -109,29 +127,50 @@
         //[folderData.links objectForKey:kCMISLinkRelationDown];
         return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:filePath withContentMimeType:mimeType error:error];
     }
+    else 
+    {
+        //TODO handle error
+    }
     return nil;
 }
 
 - (BOOL)deleteObject:(NSString *)objectId allVersions:(BOOL)allVersions error:(NSError * *)error
 {
-    CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:error];
-    if (!*error)
+    NSError *retrieveError = nil;
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&retrieveError];
+    if (!retrieveError)
     {
         NSString *selfLink = [objectData.linkRelations linkHrefForRel:kCMISLinkRelationSelf];
         if (selfLink)
         {
             NSURL *selfUrl = [NSURL URLWithString:selfLink];
-            [HttpUtil invokeDELETESynchronous:selfUrl withSession:self.session error:error];
+            [HttpUtil invokeDELETESynchronous:selfUrl withSession:self.session error:&retrieveError];
 
-            if (!*error)
+            if (!retrieveError)
             {
                 return YES;
+            }
+            else
+            {
+                NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[retrieveError userInfo]allKeys]count]];
+                [errorInfo setDictionary:[retrieveError userInfo]];
+                [errorInfo setObject:NSLocalizedString(kCMISConstraintErrorDescription, kCMISConstraintErrorDescription) forKey:NSLocalizedDescriptionKey];
+                [errorInfo setObject:@"Error deleting object in repository" forKey:NSLocalizedFailureReasonErrorKey];
+                *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISConstraintError userInfo:errorInfo];                 
             }
         }
         else
         {
             log(@"Could not retrieve 'self' link for object with object id %@", objectId);
         }
+    }
+    else
+    {
+        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithCapacity:[[[retrieveError userInfo]allKeys]count]];
+        [errorInfo setDictionary:[retrieveError userInfo]];
+        [errorInfo setObject:NSLocalizedString(kCMISConstraintErrorDescription, kCMISConstraintErrorDescription) forKey:NSLocalizedDescriptionKey];
+        [errorInfo setObject:@"Error retrieving the Object to be deleted" forKey:NSLocalizedFailureReasonErrorKey];
+        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISConstraintError userInfo:errorInfo];                 
     }
     return NO;
 }

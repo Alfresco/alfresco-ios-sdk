@@ -10,25 +10,53 @@
 
 NSString * const kCMISErrorDomainName = @"org.apache.chemistry.opencmis";
 //to be used in the userInfo dictionary as Localized error description
+
+/**
+ Note, the string definitions below should not be used by themselves. Rather, they should be used to 
+ obtain the localized string. Therefore, the proper use in the code would be e.g.
+ NSLocalizedString(kCMISNoReturnErrorDescription,kCMISNoReturnErrorDescription)
+ (the second parameter in NSLocalizedString is a Comment and may be set to nil)
+ */
 //Basic Errors
-NSString * const kCMISNoReturnErrorDescription = @"";//should be NULL?
+
+NSString * const kCMISNoReturnErrorDescription = @"Unknown Error";
 NSString * const kCMISConnectionErrorDescription = @"Connection Error";
 NSString * const kCMISProxyAuthenticationErrorDescription = @"Proxy Authentication Error";
 NSString * const kCMISUnauthorizedErrorDescription = @"Unauthorized access error";
+NSString * const kCMISNoRootFolderFoundErrorDescription =  @"Root Folder Not Found Error";
+NSString * const kCMISRepositoryNotFoundErrorDescription =  @"Repository Not Found Error";
 
 //General errors as defined in 2.2.1.4.1 of spec
-NSString * const kCMISInvalidArgumentErrorDescription = @"Invalid Argument Error: One or more of the input parameters to the service method is missing or invalid";
-NSString * const kCMISObjectNotFoundErrorDescription = @"Object Not Found Error: The service call has specified an object that does not exist in the repository";
-NSString * const kCMISNotSupportedErrorDescription = @"Not supported Error: The service method invoked requires an optional capability not supported by the repository.";
-NSString * const kCMISPermissionDeniedErrorDescription = @"Permission Denied Error: The caller of the service method does not have sufficient permissions to perform the operation";
-NSString * const kCMISRuntimeErrorDescription = @"Runtime Error: Any other cause not expressible by another CMIS errors has occurred";
+NSString * const kCMISInvalidArgumentErrorDescription = @"Invalid Argument Error";
+NSString * const kCMISObjectNotFoundErrorDescription = @"Object Not Found Error";
+NSString * const kCMISNotSupportedErrorDescription = @"Not supported Error";
+NSString * const kCMISPermissionDeniedErrorDescription = @"Permission Denied Error";
+NSString * const kCMISRuntimeErrorDescription = @"Runtime Error";
 
 //Specific errors as defined in 2.2.1.4.2
-NSString * const kCMISConstraintErrorDescription = @"Constraint Error: The operation violates a Repository- or Object-level constraint defined in the CMIS domain model.";
-NSString * const kCMISContentAlreadyExistsErrorDescription = @"Content Already Exists Error: The operation attempts to set the content stream for a Document that already has a content stream without explicitly specifying the 'overwriteFlag' parameter.";
-NSString * const kCMISFilterNotValidErrorDescription = @"Filter Not Valid Error: The property filter or rendition filter input to the operation is not valid.";
-NSString * const kCMISNameConstraintViolationErrorDescription = @"Name Constraint Violation Error: The repository is not able to store the object that the user is creating/updating due to a name constraint violation.";
-NSString * const kCMISStorageErrorDescription = @"Storage Error: The repository is not able to store the object that the user is creating/updating due to an internal storage problem.";
-NSString * const kCMISStreamNotSupportedErrorDescription = @"Stream Not Supported Error: The operation is attempting to get or set a contentStream for a Document whose Object-type specifies that a content stream is not allowed for Document‟s of that type.";
-NSString * const kCMISUpdateConflictErrorDescription = @"Update Conflict Error: The operation is attempting to update an object that is no longer current (as determined by the repository).";
-NSString * const kCMISVersioningErrorDescription = @"Versioning Error: The operation is attempting to perform an action on a non-current version of a Document that cannot be performed on a non-current version.";
+NSString * const kCMISConstraintErrorDescription = @"Constraint Error";
+NSString * const kCMISContentAlreadyExistsErrorDescription = @"Content Already Exists Error";
+NSString * const kCMISFilterNotValidErrorDescription = @"Filter Not Valid Error";
+NSString * const kCMISNameConstraintViolationErrorDescription = @"Name Constraint Violation Error";
+NSString * const kCMISStorageErrorDescription = @"Storage Error";
+NSString * const kCMISStreamNotSupportedErrorDescription = @"Stream Not Supported Error";
+NSString * const kCMISUpdateConflictErrorDescription = @"Update Conflict Error";
+NSString * const kCMISVersioningErrorDescription = @"Versioning Error";
+
+@implementation CMISErrors
+
++ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(NSInteger)code withCMISLocalizedDescription:(NSString *)localizedDescription
+{
+    if ([[*error domain] isEqualToString:kCMISErrorDomainName]) {
+        return *error;
+    }
+    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+    [errorInfo setValue:localizedDescription forKey:NSLocalizedDescriptionKey];
+    if (error && error != NULL && *error != nil) {
+        [errorInfo setObject:*error forKey:NSUnderlyingErrorKey];
+    }
+    return [NSError errorWithDomain:kCMISErrorDomainName code:code userInfo:errorInfo];
+}
+
+
+@end
