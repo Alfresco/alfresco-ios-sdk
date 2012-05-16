@@ -222,51 +222,56 @@
         log(@"Must provide %@ and %@ as properties", kCMISPropertyName, kCMISPropertyObjectTypeId);
         return nil;
     }
-
-    if (*error == nil && downLink != nil)
-    {
-        NSError *internalError = nil;
-        NSURL *downUrl = [NSURL URLWithString:downLink];
-
-        // Atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
-        // Hence, we're storing the atom entry xml in a temporary file and stream the body of the http post
-        CMISAtomEntryWriter *atomEntryWriter = [[CMISAtomEntryWriter alloc] init];
-        atomEntryWriter.contentFilePath = contentFilePath;
-        atomEntryWriter.mimeType = contentMimeType;
-        atomEntryWriter.cmisProperties = properties;
-        NSString *filePathToGeneratedAtomEntry = [atomEntryWriter filePathToGeneratedAtomEntry];
-
-        NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:filePathToGeneratedAtomEntry];
-        NSData *response = [HttpUtil invokePOSTSynchronous:downUrl
-                                               withSession:self.session
-                                               bodyStream:bodyStream
-                                               headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
-                                               error:&internalError].data;
-
-        // Close stream and delete temporary file
-        [bodyStream close];
-        if (internalError) {
-            *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISConnectionError withCMISLocalizedDescription:kCMISConnectionErrorDescription];
-            return nil;
-        }        
-        
-        [[NSFileManager defaultManager] removeItemAtPath:filePathToGeneratedAtomEntry error:&internalError];
-        if (internalError) {
-            *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISStorageError withCMISLocalizedDescription:kCMISStorageErrorDescription];
-            return nil;
-        }
-        CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response];
-        [atomEntryParser parseAndReturnError:error];
-        return atomEntryParser.objectData.identifier;
-                        
-
-    } else {
+    
+    if (downLink == nil) {
         NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
         [errorInfo setObject:NSLocalizedString(kCMISInvalidArgumentErrorDescription, kCMISInvalidArgumentErrorDescription) forKey:NSLocalizedDescriptionKey];
         *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISInvalidArgumentError userInfo:errorInfo];         
         log(@"Could not retrieve 'down' link");
+        return nil;
     }
-    return nil;
+
+    NSError *internalError = nil;
+    NSURL *downUrl = [NSURL URLWithString:downLink];
+    
+    // Atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
+    // Hence, we're storing the atom entry xml in a temporary file and stream the body of the http post
+    CMISAtomEntryWriter *atomEntryWriter = [[CMISAtomEntryWriter alloc] init];
+    atomEntryWriter.contentFilePath = contentFilePath;
+    atomEntryWriter.mimeType = contentMimeType;
+    atomEntryWriter.cmisProperties = properties;
+    NSString *filePathToGeneratedAtomEntry = [atomEntryWriter filePathToGeneratedAtomEntry];
+    
+    NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:filePathToGeneratedAtomEntry];
+    NSData *response = [HttpUtil invokePOSTSynchronous:downUrl
+                                           withSession:self.session
+                                            bodyStream:bodyStream
+                                               headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
+                                                 error:&internalError].data;
+    
+    // Close stream and delete temporary file
+    [bodyStream close];
+    if (internalError) {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISConnectionError withCMISLocalizedDescription:kCMISConnectionErrorDescription];
+        return nil;
+    }        
+    
+    [[NSFileManager defaultManager] removeItemAtPath:filePathToGeneratedAtomEntry error:&internalError];
+    if (internalError) {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISStorageError withCMISLocalizedDescription:kCMISStorageErrorDescription];
+        return nil;
+    }
+    CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response];
+    [atomEntryParser parseAndReturnError:&internalError];
+    if (internalError) 
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISUpdateConflictError withCMISLocalizedDescription:kCMISUpdateConflictErrorDescription];
+        return nil;
+    }
+        
+    return atomEntryParser.objectData.identifier;
+                        
+
 }
 
 
