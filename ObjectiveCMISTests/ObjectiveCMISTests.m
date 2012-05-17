@@ -17,6 +17,7 @@
 #import "CMISAtomPubConstants.h"
 #import "CMISObjectList.h"
 #import "CMISQueryResult.h"
+#import "CMISStringInOutParameter.h"
 
 @interface ObjectiveCMISTests()
 
@@ -211,9 +212,7 @@
         @"Test file 'test_file.txt' cannot be found as resource for the test");
 
     // Upload test file
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat: @"yyyy-MM-dd'T'HH-mm-ss-Z'"];
-    NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [formatter stringFromDate:[NSDate date]]];
+    NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
     NSMutableDictionary *documentProperties = [[NSMutableDictionary alloc] init];
     [documentProperties setObject:documentName forKey:kCMISPropertyName];
     [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
@@ -529,7 +528,69 @@
     STAssertNotNil(document, @"Document should not be nil");
 }
 
+// In this test, we'll upload a test file
+// Change the content of that test file
+// And verify of the content is correct
+- (void)testChangeContentOfDocument
+{
+    [self setupCmisSession];
+    NSError *error = nil;
 
+    // Upload test file
+    CMISDocument *originalDocument = [self uploadTestFile];
+
+    // Change content of test file using overwrite
+    NSString *newContentFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file_2.txt" ofType:nil];
+    [self.session.binding.objectService changeContentOfObject:[CMISStringInOutParameter inOutParameterUsingInParameter:originalDocument.identifier]
+                                        toContentOfFile:newContentFilePath
+                                        withOverwriteExisting:YES
+                                        withChangeToken:nil
+                                        error:&error];
+    STAssertNil(error, @"Got error while changing content of document: %@", [error description]);
+
+    // Verify content of document
+    NSString *tempDownloadFilePath = @"temp_download_file.txt";
+    CMISDocument *latestVersionOfDocument = [originalDocument retrieveObjectOfLatestVersionAndReturnError:&error]; // some repos will up the version when uploading new content
+    [latestVersionOfDocument downloadContentToFile:tempDownloadFilePath completionBlock:^{
+        self.callbackCompleted = YES;
+    } failureBlock:^(NSError *failureError) {
+        STAssertNil(failureError, @"Error while writing content: %@", [error description]);
+        self.callbackCompleted = YES;
+    }];
+    [self waitForCompletion:60];
+
+    NSString *contentOfDownloadedFile = [NSString stringWithContentsOfFile:tempDownloadFilePath encoding:NSUTF8StringEncoding error:nil];
+    STAssertEqualObjects(@"In theory, there is no difference between theory and practice. But in practice, there is.",
+        contentOfDownloadedFile, @"Downloaded file content does not match: '%@'", contentOfDownloadedFile);
+
+    // Delete downloaded file
+    [[NSFileManager defaultManager] removeItemAtPath:tempDownloadFilePath error:&error];
+    STAssertNil(error, @"Error when deleting temporary downloaded file: %@", [error description]);
+
+    // Delete test document from server
+    [self deleteDocumentAndVerify:originalDocument];
+}
+
+- (void)testDeleteContentStream
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    // Upload test file
+    CMISDocument *originalDocument = [self uploadTestFile];
+
+    // Delete its content
+    [originalDocument deleteContentAndReturnError:&error];
+    STAssertNil(error, @"Got error while deleting content of document: %@", [error description]);
+
+    // Get latest version and verify content length
+    CMISDocument *latestVersion = [originalDocument retrieveObjectOfLatestVersionAndReturnError:&error];
+    STAssertNil(error, @"Got error while getting latest version of documet: %@", [error description]);
+    STAssertTrue(latestVersion.contentStreamLength == 0, @"Expected zero content length for document with no content, but was %d", latestVersion.contentStreamLength);
+
+    // Delete test document from server
+    [self deleteDocumentAndVerify:originalDocument];
+}
 
 #pragma mark Helper Methods
 
@@ -570,6 +631,27 @@
     return document;
 }
 
+- (CMISDocument *)uploadTestFile
+{
+    // Set properties on test file
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
+    NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
+    NSMutableDictionary *documentProperties = [[NSMutableDictionary alloc] init];
+    [documentProperties setObject:documentName forKey:kCMISPropertyName];
+    [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
+
+    // Upload test file
+    NSError *error = nil;
+    NSString *objectId = [self.rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
+                                                      withProperties:documentProperties error:&error];
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
+    STAssertNil(error, @"Got error while creating document: %@", [error description]);
+    STAssertNotNil(objectId, @"Object id received should be non-nil");
+    STAssertNotNil(document, @"Retrieved document should not be nil");
+
+    return document;
+}
+
 - (BOOL)waitForCompletion:(NSTimeInterval)timeoutSecs
 {
     NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:timeoutSecs];
@@ -581,6 +663,26 @@
     } while (!self.callbackCompleted);
 
     return self.callbackCompleted;
+}
+
+- (void)deleteDocumentAndVerify:(CMISDocument *)document
+{
+    NSError *error = nil;
+    BOOL documentDeleted = [document deleteAllVersionsAndReturnError:&error];
+    STAssertNil(error, @"Error while deleting created document: %@", [error description]);
+    STAssertTrue(documentDeleted, @"Document was not deleted");
+}
+
+- (NSDateFormatter *)testDateFormatter
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat: @"yyyy-MM-dd'T'HH-mm-ss-Z'"];
+    return formatter;
+}
+
+- (NSString *)stringFromCurrentDate
+{
+    return [[self testDateFormatter] stringFromDate:[NSDate date]];
 }
 
 @end

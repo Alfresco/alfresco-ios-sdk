@@ -38,6 +38,20 @@
 - (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
 
 /**
+ * Changes the content of this document to the content of the given file.
+ *
+ * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
+ * object (if any) with the input contentStream. If FALSE, then the Repository MUST only set the input
+ * contentStream for the object if the object currently does not have a content-stream.
+ */
+- (void)changeContentToContentOfFile:(NSString *)filePath withOverwriteExisting:(BOOL)overwrite error:(NSError * *)error;
+
+/**
+ * Deletes the content of this document.
+ */
+- (void)deleteContentAndReturnError:(NSError * *)error;;
+
+/**
 * Deletes the document from the document store.
 */
 - (BOOL)deleteAllVersionsAndReturnError:(NSError **)error;

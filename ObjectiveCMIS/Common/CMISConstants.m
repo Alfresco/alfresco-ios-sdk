@@ -27,6 +27,7 @@ NSString * const kCMISPropertyVersionLabel = @"cmis:versionLabel";
 NSString * const kCMISPropertyIsLatestVersion = @"cmis:isLatestVersion";
 NSString * const kCMISPropertyIsMajorVersion = @"cmis:isMajorVersion";
 NSString * const kCMISPropertyIsLatestMajorVersion = @"cmis:isLatestMajorVersion";
+NSString * const kCMISPropertyChangeToken = @"cmis:changeToken";
 
 // Property values
 

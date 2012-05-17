@@ -16,6 +16,7 @@
 #import "CMISObjectByIdUriBuilder.h"
 #import "CMISErrors.h"
 #import "CMISObjectByPathUriBuilder.h"
+#import "CMISObject.h"
 
 @interface CMISAtomPubBaseService ()
 

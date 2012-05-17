@@ -47,6 +47,11 @@ NSString * const kCMISLinkRelationUp = @"up";
 NSString * const kCMISLinkRelationSelf = @"self";
 NSString * const kCMISLinkRelationFolderTree = @"http://docs.oasis-open.org/ns/cmis/link/200908/foldertree";
 NSString * const kCMISLinkVersionHistory = @"version-history";
+NSString * const kCMISLinkEditMedia = @"edit-media";
+
+// Parameters
+NSString * const kCMISParameterChangeToken = @"changeToken";
+NSString * const kCMISParameterOverwriteFlag = @"overwriteFlag";
 
 // Namespaces
 NSString * const kCMISNamespaceCmis = @"http://docs.oasis-open.org/ns/cmis/core/200908/";

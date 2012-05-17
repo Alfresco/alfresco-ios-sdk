@@ -21,10 +21,10 @@
 @property (nonatomic, strong, readonly) NSString *lastModifiedBy;
 @property (nonatomic, strong, readonly) NSDate *lastModificationDate;
 @property (nonatomic, strong, readonly) NSString *objectType;
+@property (nonatomic, strong, readonly) NSString *changeToken;
 //@property (nonatomic, strong, readonly) CMISBaseTypeId *baseTypeId;
 //@property (nonatomic, strong, readonly) CMISObjectType *baseType;
 //@property (nonatomic, strong, readonly) CMISObjectType *type;
-//@property (nonatomic, strong, readonly) NSString *changeToken;
 
 @property (nonatomic, strong, readonly) CMISProperties *properties;
 
