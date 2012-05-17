@@ -20,4 +20,10 @@
 @property (nonatomic, strong) NSString *productVersion;
 @property (nonatomic, strong) NSString *vendorName;
 
+// TODO the repositoryCapabilities property is currently not types.  
+//  CMISRepositoryCapabilities needs to be created and replace the raw NSDictionary object
+//  that is currently being set from the CMISRepositoryInfoParser
+//  ** Use keypaths to get values until the property is properly typed **
+@property (nonatomic, strong) id repositoryCapabilities;
+
 @end

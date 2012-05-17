@@ -9,34 +9,41 @@
 #import "CMISServiceDocumentParser.h"
 #import "CMISWorkspace.h"
 #import "CMISAtomCollection.h"
+#import "CMISAtomLink.h"
+#import "CMISAtomPubConstants.h"
+#import "CMISRepositoryInfo.h"
+#import "CMISLinkRelations.h"
 
 @interface CMISServiceDocumentParser ()
 
 @property (nonatomic, strong) NSData *atomData;
-@property (nonatomic, strong) CMISRepositoryInfo *currentRepositoryInfo;
 @property (nonatomic, strong) NSMutableArray *internalWorkspaces;
 
 @property (nonatomic, strong) NSMutableString *currentString;
 @property (nonatomic, strong) CMISWorkspace *currentWorkSpace;
 @property (nonatomic, strong) CMISAtomCollection *currentCollection;
+@property (nonatomic, strong) NSMutableSet *currentAtomLinks;
 @property (nonatomic, strong) NSString *currentTemplate;
 @property (nonatomic, strong) NSString *currentType;
 @property (nonatomic, strong) NSString *currentMediaType;
+@property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
 
 @end
+
 
 @implementation CMISServiceDocumentParser
 
 @synthesize atomData = _atomData;
-@synthesize currentRepositoryInfo = _currentRepositoryInfo;
 @synthesize internalWorkspaces = _internalWorkspaces;
 
 @synthesize currentString = _currentString;
 @synthesize currentWorkSpace = _currentWorkSpace;
 @synthesize currentCollection = _currentCollection;
+@synthesize currentAtomLinks = _currentAtomLinks;
 @synthesize currentTemplate = _currentTemplate;
 @synthesize currentType = _currentType;
 @synthesize currentMediaType = _currentMediaType;
+@synthesize childParserDelegate = _childParserDelegate;
 
 
 - (id)initWithData:(NSData*)atomData
@@ -83,18 +90,30 @@
 {
     self.currentString = [[NSMutableString alloc] init];
 
-    if ([elementName isEqualToString:@"workspace"])
+    if ([elementName isEqualToString:kCMISAppWorkspace])
     {
         self.currentWorkSpace = [[CMISWorkspace alloc] init];
     }
-    else if ([elementName isEqualToString:@"repositoryInfo"])
+    else if ([elementName isEqualToString:kCMISRestAtomRepositoryInfo])
     {
-        self.currentRepositoryInfo = [[CMISRepositoryInfo alloc] init];
+        self.childParserDelegate = [CMISRepositoryInfoParser repositoryInfoParserWithParentDelegate:self parser:parser];
     }
-    else if ([elementName isEqualToString:@"collection"])
+    else if ([elementName isEqualToString:kCMISAppCollection])
     {
         self.currentCollection = [[CMISAtomCollection alloc] init];
-        self.currentCollection.href = [attributeDict objectForKey:@"href"];
+        self.currentCollection.href = [attributeDict objectForKey:kCMISAtomLinkAttrHref];
+    }
+    else if ([elementName isEqualToString:kCMISAtomLink])
+    {
+        if (self.currentAtomLinks == nil)
+        {
+            self.currentAtomLinks = [[NSMutableSet alloc] init];
+        }
+        
+        CMISAtomLink *atomLink = [[CMISAtomLink alloc] initWithRelation:[attributeDict objectForKey:kCMISAtomLinkAttrRel]  
+                                                                   type:[attributeDict objectForKey:kCMISAtomLinkAttrType] 
+                                                                   href:[attributeDict objectForKey:kCMISAtomLinkAttrHref]];
+        [self.currentAtomLinks addObject:atomLink];
     }
 }
 
@@ -109,82 +128,51 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
 {
-
-    // TODO: define constants for all the elements!
-
     // TODO: parser needs refactoring!
 
-    if ([elementName isEqualToString:@"workspace"])
+    if ([elementName isEqualToString:kCMISAppWorkspace])
     {
+        self.currentWorkSpace.linkRelations = [[CMISLinkRelations alloc] initWithLinkRelationSet:[self.currentAtomLinks copy]];
+        self.currentAtomLinks = nil;
+        
         [self.internalWorkspaces addObject:self.currentWorkSpace];
     }
-    else if ([elementName isEqualToString:@"repositoryInfo"])
+    else if ([elementName isEqualToString:kCMISRestAtomRepositoryInfo])
     {
-        self.currentWorkSpace.repositoryInfo = self.currentRepositoryInfo;
+        self.childParserDelegate = nil;
     }
-    else if ([elementName isEqualToString:@"uritemplate"])
+    else if ([elementName isEqualToString:kCMISRestAtomUritemplate])
     {
-        if ([self.currentType isEqualToString:@"objectbyid"])
+        if ([self.currentType isEqualToString:kCMISUriTemplateObjectById])
         {
             self.currentWorkSpace.objectByIdUriTemplate = self.currentTemplate;
         }
-        else if ([self.currentType isEqualToString:@"objectbypath"])
+        else if ([self.currentType isEqualToString:kCMISUriTemplateObjectByPath])
         {
             self.currentWorkSpace.objectByPathUriTemplate = self.currentTemplate;
         }
-        else if ([self.currentType isEqualToString:@"typebyid"])
+        else if ([self.currentType isEqualToString:kCMISUriTemplateTypeById])
         {
             self.currentWorkSpace.typeByIdUriTemplate = self.currentTemplate;
         }
-        else if ([self.currentType isEqualToString:@"query"])
+        else if ([self.currentType isEqualToString:kCMISUriTemplateQuery])
         {
             self.currentWorkSpace.queryUriTemplate = self.currentTemplate;
         }
-    } else if ([elementName isEqualToString:@"repositoryId"])
-    {
-        self.currentRepositoryInfo.identifier = self.currentString;
     }
-    else if ([elementName isEqualToString:@"repositoryName"])
-    {
-        self.currentRepositoryInfo.name = self.currentString;
-    }
-    else if ([elementName isEqualToString:@"repositoryDescription"])
-    {
-        self.currentRepositoryInfo.desc = self.currentString;
-    }
-    else if ([elementName isEqualToString:@"vendorName"])
-    {
-        self.currentRepositoryInfo.vendorName = self.currentString;
-    }
-    else if ([elementName isEqualToString:@"productName"])
-    {
-        self.currentRepositoryInfo.productName = self.currentString;
-    }
-    else if ([elementName isEqualToString:@"productVersion"])
-    {
-        self.currentRepositoryInfo.productVersion = self.currentString;
-    }
-    else if ([elementName isEqualToString:@"rootFolderId"])
-    {
-        self.currentRepositoryInfo.rootFolderId = self.currentString;
-    }
-    else if ([elementName isEqualToString:@"cmisVersionSupported"])
-    {
-        self.currentRepositoryInfo.cmisVersionSupported = self.currentString;
-    }
-    else if ([elementName isEqualToString:@"template"])
+    else if ([elementName isEqualToString:kCMISRestAtomTemplate])
     {
         self.currentTemplate = self.currentString;
     }
-    else if ([elementName isEqualToString:@"type"])
+    else if ([elementName isEqualToString:kCMISRestAtomType])
     {
         self.currentType = self.currentString;
     }
-    else if ([elementName isEqualToString:@"mediaType"])
+    else if ([elementName isEqualToString:kCMISRestAtomMediaType])
     {
         self.currentMediaType = self.currentString;
     }
-    else if ([elementName isEqualToString:@"collection"])
+    else if ([elementName isEqualToString:kCMISAppCollection])
     {
         if (self.currentWorkSpace.collections == nil)
         {
@@ -193,20 +181,27 @@
         [self.currentWorkSpace.collections addObject:self.currentCollection];
         self.currentCollection = nil;
     }
-    else if ([elementName isEqualToString:@"title"])
+    else if ([elementName isEqualToString:kCMISAtomTitle])
     {
         self.currentCollection.title = self.currentString;
     }
-    else if ([elementName isEqualToString:@"accept"])
+    else if ([elementName isEqualToString:kCMISAppAccept])
     {
         self.currentCollection.accept = self.currentString;
     }
-    else if ([elementName isEqualToString:@"collectionType"])
+    else if ([elementName isEqualToString:kCMISRestAtomCollectionType])
     {
         self.currentCollection.type = self.currentString;
     }
 
     self.currentString = nil;
+}
+
+#pragma mark -
+#pragma mark CMISRepositoryInfoParserDelegate methods
+- (void)repositoryInfoParser:(CMISRepositoryInfoParser *)repositoryInfoParser didFinishParsingRepositoryInfo:(CMISRepositoryInfo *)repositoryInfo
+{
+    self.currentWorkSpace.repositoryInfo = repositoryInfo;
 }
 
 @end

@@ -27,6 +27,8 @@
 		75803D421560BD5300C738C1 /* CMISAtomLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 75803D401560BD5300C738C1 /* CMISAtomLink.m */; };
 		75803D4F1560CFCB00C738C1 /* CMISLinkRelations.h in Headers */ = {isa = PBXBuildFile; fileRef = 75803D4D1560CFCA00C738C1 /* CMISLinkRelations.h */; };
 		75803D501560CFCB00C738C1 /* CMISLinkRelations.m in Sources */ = {isa = PBXBuildFile; fileRef = 75803D4E1560CFCA00C738C1 /* CMISLinkRelations.m */; };
+		758B5A78156506840050D034 /* CMISRepositoryInfoParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 758B5A76156506840050D034 /* CMISRepositoryInfoParser.h */; };
+		758B5A79156506840050D034 /* CMISRepositoryInfoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 758B5A77156506840050D034 /* CMISRepositoryInfoParser.m */; };
 		75C5E2F71559172B0065550A /* CMISAllowableActionsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 75C5E2F51559172B0065550A /* CMISAllowableActionsParser.h */; };
 		75C5E2F81559172B0065550A /* CMISAllowableActionsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */; };
 		75C8D0861559B7EA00B63D2B /* CMISAllowableActions.h in Headers */ = {isa = PBXBuildFile; fileRef = 75C8D0841559B7EA00B63D2B /* CMISAllowableActions.h */; };
@@ -168,6 +170,8 @@
 		75803D401560BD5300C738C1 /* CMISAtomLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomLink.m; sourceTree = "<group>"; };
 		75803D4D1560CFCA00C738C1 /* CMISLinkRelations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISLinkRelations.h; sourceTree = "<group>"; };
 		75803D4E1560CFCA00C738C1 /* CMISLinkRelations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISLinkRelations.m; sourceTree = "<group>"; };
+		758B5A76156506840050D034 /* CMISRepositoryInfoParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISRepositoryInfoParser.h; sourceTree = "<group>"; };
+		758B5A77156506840050D034 /* CMISRepositoryInfoParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISRepositoryInfoParser.m; sourceTree = "<group>"; };
 		75C5E2F51559172B0065550A /* CMISAllowableActionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAllowableActionsParser.h; sourceTree = "<group>"; };
 		75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAllowableActionsParser.m; sourceTree = "<group>"; };
 		75C8D0841559B7EA00B63D2B /* CMISAllowableActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActions.h; path = Common/CMISAllowableActions.h; sourceTree = "<group>"; };
@@ -539,6 +543,8 @@
 		8280730E1515405C00EF635C /* AtomPubParser */ = {
 			isa = PBXGroup;
 			children = (
+				758B5A76156506840050D034 /* CMISRepositoryInfoParser.h */,
+				758B5A77156506840050D034 /* CMISRepositoryInfoParser.m */,
 				75C5E2F51559172B0065550A /* CMISAllowableActionsParser.h */,
 				75C5E2F61559172B0065550A /* CMISAllowableActionsParser.m */,
 				82C1C63F15358733009B7B5B /* CMISAtomEntryWriter.h */,
@@ -638,6 +644,7 @@
 				4EA61BE11564F73900C759E4 /* CMISObjectList.h in Headers */,
 				4EA61BE41564F73900C759E4 /* CMISQueryResult.h in Headers */,
 				4EA61BE91564F75000C759E4 /* CMISErrors.h in Headers */,
+				758B5A78156506840050D034 /* CMISRepositoryInfoParser.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,6 +797,7 @@
 				4EA61BE21564F73900C759E4 /* CMISObjectList.m in Sources */,
 				4EA61BE51564F73900C759E4 /* CMISQueryResult.m in Sources */,
 				4EA61BEA1564F75000C759E4 /* CMISErrors.m in Sources */,
+				758B5A79156506840050D034 /* CMISRepositoryInfoParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

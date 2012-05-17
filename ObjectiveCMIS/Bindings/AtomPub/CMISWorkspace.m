@@ -16,6 +16,7 @@
 @synthesize repositoryInfo = _repositoryInfo;
 
 @synthesize collections = _collections;
+@synthesize linkRelations = _linkRelations;
 
 @synthesize objectByIdUriTemplate = _objectByIdUriTemplate;
 @synthesize queryUriTemplate = _queryUriTemplate;

@@ -70,3 +70,56 @@ extern NSString * const kCMISMediaTypeAllowableAction;
 extern NSString * const kCMISMediaTypeAcl;
 extern NSString * const kCMISMediaTypeCmisAtom;
 extern NSString * const kCMISMediaTypeOctetStream;
+
+// App Element Names
+extern NSString * const kCMISAppWorkspace;
+extern NSString * const kCMISAppCollection;
+extern NSString * const kCMISAppAccept;
+
+// Atom Element Names
+extern NSString * const kCMISAtomTitle;
+extern NSString * const kCMISAtomLink;
+
+// CMIS RestAtom Element Names
+extern NSString * const kCMISRestAtomRepositoryInfo;
+extern NSString * const kCMISRestAtomCollectionType;
+extern NSString * const kCMISRestAtomUritemplate;
+extern NSString * const kCMISRestAtomMediaType;
+extern NSString * const kCMISRestAtomType;
+extern NSString * const kCMISRestAtomTemplate;
+
+// CMIS Core Element Names
+extern NSString * const kCMISCoreRepositoryId;
+extern NSString * const kCMISCoreRepositoryName;
+extern NSString * const kCMISCoreRepositoryDescription;
+extern NSString * const kCMISCoreVendorName;
+extern NSString * const kCMISCoreProductName;
+extern NSString * const kCMISCoreProductVersion;
+extern NSString * const kCMISCoreRootFolderId;
+extern NSString * const kCMISCoreCapabilities;
+extern NSString * const _kCMISCoreCapabilityPrefix;
+extern NSString * const kCMISCoreAclCapability;
+extern NSString * const kCMISCorePermissions;
+extern NSString * const kCMISCorePermission;
+extern NSString * const kCMISCoreDescription;
+extern NSString * const kCMISCoreMapping;
+extern NSString * const kCMISCoreKey;
+extern NSString * const kCMISCoreSupportedPermissions;
+extern NSString * const kCMISCorePropagation;
+extern NSString * const kCMISCoreCmisVersionSupported;
+extern NSString * const kCMISCoreChangesIncomplete;
+extern NSString * const kCMISCoreChangesOnType;
+extern NSString * const kCMISCorePrincipalAnonymous;
+extern NSString * const kCMISCorePrincipalAnyone;
+
+// URI Templates
+extern NSString * const kCMISUriTemplateObjectById;
+extern NSString * const kCMISUriTemplateObjectByPath;
+extern NSString * const kCMISUriTemplateTypeById;
+extern NSString * const kCMISUriTemplateQuery;
+
+// Common Attributes
+// TODO Consolidate the common attributes or define individually for each element?
+extern NSString * const kCMISAtomLinkAttrHref;
+extern NSString * const kCMISAtomLinkAttrType;
+extern NSString * const kCMISAtomLinkAttrRel;
