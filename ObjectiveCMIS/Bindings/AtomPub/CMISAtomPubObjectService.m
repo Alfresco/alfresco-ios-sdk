@@ -14,7 +14,7 @@
 #import "CMISConstants.h"
 #import "CMISErrors.h"
 #import "CMISStringInOutParameter.h"
-#import "URLUtil.h"
+#import "CMISURLUtil.h"
 
 @interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
 

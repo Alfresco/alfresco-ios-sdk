@@ -4,7 +4,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "URLUtil.h"
+#import "CMISURLUtil.h"
 
 
 @implementation URLUtil
