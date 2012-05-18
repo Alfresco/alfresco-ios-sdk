@@ -9,6 +9,7 @@
 
 @class CMISRepositoryInfo;
 @class CMISSessionParameters;
+@class CMISLinkRelations;
 
 @interface CMISWorkspace : NSObject
 
@@ -19,6 +20,11 @@
 * An array containing the parsed CMISAtomCollections.
 */
 @property (nonatomic, strong) NSMutableArray *collections;
+
+/**
+ * An array of CMISAtomLink objects for the workspace
+ */
+@property (nonatomic, strong) CMISLinkRelations *linkRelations;
 
 @property (nonatomic, strong) NSString *objectByIdUriTemplate;
 @property (nonatomic, strong) NSString *objectByPathUriTemplate;

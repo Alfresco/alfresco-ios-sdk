@@ -18,6 +18,7 @@
 @synthesize productName = _productName;
 @synthesize productVersion = _productVersion;
 @synthesize vendorName = _vendorName;
+@synthesize repositoryCapabilities = _repositoryCapabilities;
 
 - (NSString *)description
 {

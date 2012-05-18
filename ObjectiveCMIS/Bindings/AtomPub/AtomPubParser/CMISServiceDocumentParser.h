@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CMISRepositoryInfo.h"
+#import "CMISRepositoryInfoParser.h"
 
-@interface CMISServiceDocumentParser : NSObject <NSXMLParserDelegate>
+@interface CMISServiceDocumentParser : NSObject <NSXMLParserDelegate, CMISRepositoryInfoParserDelegate>
 
 // Available after parsing the service document
 @property (nonatomic, strong, readonly) NSArray *workspaces;

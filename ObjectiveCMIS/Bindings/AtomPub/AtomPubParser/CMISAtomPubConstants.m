@@ -70,3 +70,55 @@ NSString * const kCMISMediaTypeAllowableAction  = @"application/cmisallowableact
 NSString * const kCMISMediaTypeAcl = @"application/cmisacl+xml";
 NSString * const kCMISMediaTypeCmisAtom = @"application/cmisatom+xml";
 NSString * const kCMISMediaTypeOctetStream = @"application/octet-stream";
+
+// App Element Names
+NSString * const kCMISAppWorkspace = @"workspace";
+NSString * const kCMISAppCollection = @"collection";
+NSString * const kCMISAppAccept = @"accept";
+
+// Atom Element Names
+NSString * const kCMISAtomTitle = @"title";
+NSString * const kCMISAtomLink = @"link";
+
+// CMIS-RestAtom Element Names
+NSString * const kCMISRestAtomRepositoryInfo = @"repositoryInfo";
+NSString * const kCMISRestAtomCollectionType = @"collectionType";
+NSString * const kCMISRestAtomUritemplate = @"uritemplate";
+NSString * const kCMISRestAtomMediaType = @"mediaType";
+NSString * const kCMISRestAtomType = @"type";
+NSString * const kCMISRestAtomTemplate = @"template";
+
+// CMIS-Core Element Names
+NSString * const kCMISCoreRepositoryId = @"repositoryId";
+NSString * const kCMISCoreRepositoryName = @"repositoryName";
+NSString * const kCMISCoreRepositoryDescription = @"repositoryDescription";
+NSString * const kCMISCoreVendorName = @"vendorName";
+NSString * const kCMISCoreProductName = @"productName";
+NSString * const kCMISCoreProductVersion = @"productVersion";
+NSString * const kCMISCoreRootFolderId = @"rootFolderId";
+NSString * const kCMISCoreCapabilities = @"capabilities";
+NSString * const _kCMISCoreCapabilityPrefix = @"capability";
+NSString * const kCMISCoreAclCapability = @"aclCapability";
+NSString * const kCMISCorePermissions = @"permissions";
+NSString * const kCMISCorePermission = @"permission";
+NSString * const kCMISCoreDescription = @"description";
+NSString * const kCMISCoreMapping = @"mapping";
+NSString * const kCMISCoreKey = @"key";
+NSString * const kCMISCoreSupportedPermissions = @"supportedPermissions";
+NSString * const kCMISCorePropagation = @"propagation";
+NSString * const kCMISCoreCmisVersionSupported = @"cmisVersionSupported";
+NSString * const kCMISCoreChangesIncomplete = @"changesIncomplete";
+NSString * const kCMISCoreChangesOnType = @"changesOnType";
+NSString * const kCMISCorePrincipalAnonymous = @"principalAnonymous";
+NSString * const kCMISCorePrincipalAnyone = @"principalAnyone";
+
+// URI Templates
+NSString * const kCMISUriTemplateObjectById = @"objectbyid";
+NSString * const kCMISUriTemplateObjectByPath = @"objectbypath";
+NSString * const kCMISUriTemplateTypeById = @"typebyid";
+NSString * const kCMISUriTemplateQuery = @"query";
+
+// Common Attributes
+NSString * const kCMISAtomLinkAttrHref = @"href";
+NSString * const kCMISAtomLinkAttrType = @"type";
+NSString * const kCMISAtomLinkAttrRel = @"rel";
