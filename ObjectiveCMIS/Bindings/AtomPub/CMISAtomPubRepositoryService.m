@@ -30,7 +30,7 @@
     NSError *internalError = nil;
     [self retrieveRepositoriesAndReturnError:&internalError];
     if (internalError) {
-        *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISObjectNotFoundError withCMISLocalizedDescription:kCMISObjectNotFoundErrorDescription];
+        *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
     }
     return [self.repositories allValues];
 }
@@ -40,7 +40,7 @@
     NSError *internalError = nil;
     [self retrieveRepositoriesAndReturnError:&internalError];
     if (internalError) {
-        *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISUnauthorizedError withCMISLocalizedDescription:kCMISUnauthorizedErrorDescription];
+        *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeUnauthorized];
     }
     return [self.repositories objectForKey:repositoryId];
 }

@@ -105,11 +105,8 @@
         {
             log(@"No matching repository found for repository id %@", self.session.repositoryId);
             // TODO: populate error properly
-            NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-            [errorInfo setObject:kCMISObjectNotFoundErrorDescription forKey:NSLocalizedDescriptionKey];
             NSString *detailedDescription = [NSString stringWithFormat:@"No matching repository found for repository id %@", self.session.repositoryId];
-            [errorInfo setObject:detailedDescription forKey:NSLocalizedFailureReasonErrorKey];
-            *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISObjectNotFoundError userInfo:errorInfo];
+            *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeNoRepositoryFound withDetailedDescription:detailedDescription];
         }
     }
 }

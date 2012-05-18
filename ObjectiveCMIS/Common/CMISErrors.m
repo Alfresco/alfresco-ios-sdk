@@ -8,7 +8,7 @@
 
 #import "CMISErrors.h"
 
-NSString * const kCMISErrorDomainName = @"org.apache.chemistry.opencmis";
+NSString * const kCMISErrorDomainName = @"org.apache.chemistry.objectivecmis";
 //to be used in the userInfo dictionary as Localized error description
 
 /**
@@ -19,44 +19,105 @@ NSString * const kCMISErrorDomainName = @"org.apache.chemistry.opencmis";
  */
 //Basic Errors
 
-NSString * const kCMISNoReturnErrorDescription = @"Unknown Error";
-NSString * const kCMISConnectionErrorDescription = @"Connection Error";
-NSString * const kCMISProxyAuthenticationErrorDescription = @"Proxy Authentication Error";
-NSString * const kCMISUnauthorizedErrorDescription = @"Unauthorized access error";
-NSString * const kCMISNoRootFolderFoundErrorDescription =  @"Root Folder Not Found Error";
-NSString * const kCMISRepositoryNotFoundErrorDescription =  @"Repository Not Found Error";
+NSString * const kCMISErrorDescriptionNoReturn = @"Unknown Error";
+NSString * const kCMISErrorDescriptionConnection = @"Connection Error";
+NSString * const kCMISErrorDescriptionProxyAuthentication = @"Proxy Authentication Error";
+NSString * const kCMISErrorDescriptionUnauthorized = @"Unauthorized access error";
+NSString * const kCMISErrorDescriptionNoRootFolderFound =  @"Root Folder Not Found Error";
+NSString * const kCMISErrorDescriptionRepositoryNotFound =  @"Repository Not Found Error";
 
 //General errors as defined in 2.2.1.4.1 of spec
-NSString * const kCMISInvalidArgumentErrorDescription = @"Invalid Argument Error";
-NSString * const kCMISObjectNotFoundErrorDescription = @"Object Not Found Error";
-NSString * const kCMISNotSupportedErrorDescription = @"Not supported Error";
-NSString * const kCMISPermissionDeniedErrorDescription = @"Permission Denied Error";
-NSString * const kCMISRuntimeErrorDescription = @"Runtime Error";
+NSString * const kCMISErrorDescriptionInvalidArgument = @"Invalid Argument Error";
+NSString * const kCMISErrorDescriptionObjectNotFound = @"Object Not Found Error";
+NSString * const kCMISErrorDescriptionNotSupported = @"Not supported Error";
+NSString * const kCMISErrorDescriptionPermissionDenied = @"Permission Denied Error";
+NSString * const kCMISErrorDescriptionRuntime = @"Runtime Error";
 
 //Specific errors as defined in 2.2.1.4.2
-NSString * const kCMISConstraintErrorDescription = @"Constraint Error";
-NSString * const kCMISContentAlreadyExistsErrorDescription = @"Content Already Exists Error";
-NSString * const kCMISFilterNotValidErrorDescription = @"Filter Not Valid Error";
-NSString * const kCMISNameConstraintViolationErrorDescription = @"Name Constraint Violation Error";
-NSString * const kCMISStorageErrorDescription = @"Storage Error";
-NSString * const kCMISStreamNotSupportedErrorDescription = @"Stream Not Supported Error";
-NSString * const kCMISUpdateConflictErrorDescription = @"Update Conflict Error";
-NSString * const kCMISVersioningErrorDescription = @"Versioning Error";
+NSString * const kCMISErrorDescriptionConstraint = @"Constraint Error";
+NSString * const kCMISErrorDescriptionContentAlreadyExists = @"Content Already Exists Error";
+NSString * const kCMISErrorDescriptionFilterNotValid = @"Filter Not Valid Error";
+NSString * const kCMISErrorDescriptionNameConstraintViolation = @"Name Constraint Violation Error";
+NSString * const kCMISErrorDescriptionStorage = @"Storage Error";
+NSString * const kCMISErrorDescriptionStreamNotSupported = @"Stream Not Supported Error";
+NSString * const kCMISErrorDescriptionUpdateConflict = @"Update Conflict Error";
+NSString * const kCMISErrorDescriptionVersioning = @"Versioning Error";
+
+@interface CMISErrors ()
++ (NSString *)localizedDescriptionForCode:(NSInteger)code;
+@end
 
 @implementation CMISErrors
 
-+ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(NSInteger)code withCMISLocalizedDescription:(NSString *)localizedDescription
++ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(NSInteger)code
 {
     if ([[*error domain] isEqualToString:kCMISErrorDomainName]) {
         return *error;
     }
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:NSLocalizedString(localizedDescription,localizedDescription) forKey:NSLocalizedDescriptionKey];
+    [errorInfo setValue:[self localizedDescriptionForCode:code] forKey:NSLocalizedDescriptionKey];
     if (error && error != NULL && *error != nil) {
         [errorInfo setObject:*error forKey:NSUnderlyingErrorKey];
     }
     return [NSError errorWithDomain:kCMISErrorDomainName code:code userInfo:errorInfo];
 }
 
++ (NSError *)createCMISErrorWithCode:(NSInteger)code withDetailedDescription:(NSString *)detailedDescription
+{
+    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+    [errorInfo setValue:[self localizedDescriptionForCode:code] forKey:NSLocalizedDescriptionKey];
+    if (detailedDescription != nil) {
+        [errorInfo setValue:detailedDescription forKey:NSLocalizedFailureReasonErrorKey];
+    }
+    
+    return [NSError errorWithDomain:kCMISErrorDomainName code:code userInfo:errorInfo];
+}
+
++ (NSString *)localizedDescriptionForCode:(NSInteger)code
+{
+    switch (code) {
+        case kCMISErrorCodeNoReturn:
+            return NSLocalizedString(kCMISErrorDescriptionNoReturn, kCMISErrorDescriptionNoReturn);
+        case kCMISErrorCodeConnection:
+            return NSLocalizedString(kCMISErrorDescriptionConnection, kCMISErrorDescriptionConnection);
+        case kCMISErrorCodeProxyAuthentication:
+            return NSLocalizedString(kCMISErrorDescriptionProxyAuthentication, kCMISErrorDescriptionProxyAuthentication);
+        case kCMISErrorCodeUnauthorized:
+            return NSLocalizedString(kCMISErrorDescriptionUnauthorized, kCMISErrorDescriptionUnauthorized);
+        case kCMISErrorCodeNoRootFolderFound:
+            return NSLocalizedString(kCMISErrorDescriptionNoRootFolderFound, kCMISErrorDescriptionNoRootFolderFound);
+        case kCMISErrorCodeNoRepositoryFound:
+            return NSLocalizedString(kCMISErrorDescriptionRepositoryNotFound, kCMISErrorDescriptionRepositoryNotFound);
+        case kCMISErrorCodeInvalidArgument:
+            return NSLocalizedString(kCMISErrorDescriptionInvalidArgument, kCMISErrorDescriptionInvalidArgument);
+        case kCMISErrorCodeObjectNotFound:
+            return NSLocalizedString(kCMISErrorDescriptionObjectNotFound, kCMISErrorDescriptionObjectNotFound);
+        case kCMISErrorCodeNotSupported:
+            return NSLocalizedString(kCMISErrorDescriptionNotSupported, kCMISErrorDescriptionNotSupported);
+        case kCMISErrorCodePermissionDenied:
+            return NSLocalizedString(kCMISErrorDescriptionPermissionDenied, kCMISErrorDescriptionPermissionDenied);
+        case kCMISErrorCodeRuntime:
+            return NSLocalizedString(kCMISErrorDescriptionRuntime, kCMISErrorDescriptionRuntime);
+        case kCMISErrorCodeConstraint:
+            return NSLocalizedString(kCMISErrorDescriptionConstraint, kCMISErrorDescriptionConstraint);
+        case kCMISErrorCodeContentAlreadyExists:
+            return NSLocalizedString(kCMISErrorDescriptionContentAlreadyExists, kCMISErrorDescriptionContentAlreadyExists);
+        case kCMISErrorCodeFilterNotValid:
+            return NSLocalizedString(kCMISErrorDescriptionFilterNotValid, kCMISErrorDescriptionFilterNotValid);
+        case kCMISErrorCodeNameConstraintViolation:
+            return NSLocalizedString(kCMISErrorDescriptionNameConstraintViolation, kCMISErrorDescriptionNameConstraintViolation);
+        case kCMISErrorCodeStorage:
+            return NSLocalizedString(kCMISErrorDescriptionStorage, kCMISErrorDescriptionStorage);
+        case kCMISErrorCodeStreamNotSupported:
+            return NSLocalizedString(kCMISErrorDescriptionStreamNotSupported, kCMISErrorDescriptionStreamNotSupported);
+        case kCMISErrorCodeUpdateConflict:
+            return NSLocalizedString(kCMISErrorDescriptionUpdateConflict, kCMISErrorDescriptionUpdateConflict);
+        case kCMISErrorCodeVersioning:
+            return NSLocalizedString(kCMISErrorDescriptionVersioning, kCMISErrorDescriptionVersioning);
+        default:
+            return NSLocalizedString(kCMISErrorDescriptionNoReturn, kCMISErrorDescriptionNoReturn);
+    }
+    
+}
 
 @end

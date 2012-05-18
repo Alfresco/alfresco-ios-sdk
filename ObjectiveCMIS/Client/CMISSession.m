@@ -85,12 +85,10 @@
 {
     // TODO: validate session parameters, extract the checks below?
     
-    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
     // check repository id is present
     if (self.sessionParameters.repositoryId == nil)
     {
-        [errorInfo setValue:NSLocalizedString(kCMISInvalidArgumentErrorDescription,kCMISInvalidArgumentErrorDescription) forKey:NSLocalizedDescriptionKey];        
-        *error = [[NSError alloc] initWithDomain:kCMISErrorDomainName code:kCMISInvalidArgumentError userInfo:errorInfo];
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
         log(@"Error: %@",[*error description]);
         return NO;
     }
@@ -100,8 +98,7 @@
     NSString *password = self.sessionParameters.password;
     if (self.sessionParameters.authenticationProvider == nil && username == nil && password == nil)
     {
-        [errorInfo setValue:NSLocalizedString(kCMISUnauthorizedErrorDescription,kCMISUnauthorizedErrorDescription) forKey:NSLocalizedDescriptionKey];        
-        *error = [[NSError alloc] initWithDomain:kCMISErrorDomainName code:kCMISUnauthorizedError userInfo:errorInfo];
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeUnauthorized withDetailedDescription:nil];
         log(@"Error: %@",[*error description]);
         return NO;
     }
@@ -127,8 +124,7 @@
         
         if (obj == nil || (error && error != NULL && *error != nil))
         {
-            [errorInfo setValue:NSLocalizedString(kCMISNoRootFolderFoundErrorDescription,kCMISNoRootFolderFoundErrorDescription) forKey:NSLocalizedDescriptionKey];        
-            *error = [[NSError alloc] initWithDomain:kCMISErrorDomainName code:kCMISNoRootFolderFoundError userInfo:errorInfo];
+            *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeNoRootFolderFound withDetailedDescription:nil];
             log(@"Error because CMISObject returns as nil: %@",[*error description]);
             return NO;
         }
@@ -137,8 +133,7 @@
         {
             self.rootFolder = (CMISFolder *)obj;
         } else {
-            [errorInfo setValue:NSLocalizedString(kCMISNoRootFolderFoundErrorDescription,kCMISNoRootFolderFoundErrorDescription) forKey:NSLocalizedDescriptionKey];
-            *error = [[NSError alloc] initWithDomain:kCMISErrorDomainName code:kCMISNoRootFolderFoundError userInfo:errorInfo];
+            *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeNoRootFolderFound withDetailedDescription:nil];
             log(@"Error because obj is not of kind CMISFolder: %@",[*error description]);
             return NO;
         }

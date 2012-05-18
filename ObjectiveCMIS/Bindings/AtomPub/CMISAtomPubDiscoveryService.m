@@ -20,9 +20,7 @@
     if (statement == nil)
     {
         log(@"Must provide 'statement' parameter when executing a cmis query");
-        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-        [errorInfo setValue:NSLocalizedString(kCMISInvalidArgumentErrorDescription, kCMISInvalidArgumentErrorDescription) forKey:NSLocalizedDescriptionKey];        
-        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISInvalidArgumentError userInfo:errorInfo];
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
         return nil;
     }
 
@@ -31,9 +29,7 @@
     if (queryUrlString == nil)
     {
         log(@"Unknown repository or query not supported!");
-        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-        [errorInfo setValue:NSLocalizedString(kCMISObjectNotFoundErrorDescription, kCMISObjectNotFoundErrorDescription) forKey:NSLocalizedDescriptionKey];        
-        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISObjectNotFoundError userInfo:errorInfo];
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound withDetailedDescription:nil];
         return nil;
     }
 
@@ -68,7 +64,7 @@
     }
     else 
     {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISConnectionError withCMISLocalizedDescription:kCMISConnectionErrorDescription];
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
     }
 
     return nil;

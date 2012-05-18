@@ -15,42 +15,42 @@ typedef enum
 {
     //error range for basic errors - not covered in the spec but
     // present in the OpenCMIS Java lib
-    kCMISBasicErrorMinimum = 0,
-    kCMISBasicErrorMaximum = 255,
+    kCMISErrorCodeBasicMinimum = 0,
+    kCMISErrorCodeBasicMaximum = 255,
 
     //basic CMIS errors
-    kCMISNoReturnErrorCode = 0,
-    kCMISConnectionError = 1,
-    kCMISProxyAuthenticationError = 2,
-    kCMISUnauthorizedError = 3,
-    kCMISNoRootFolderFoundError = 4,
-    kCMISRepositoryNotFoundError = 5,
+    kCMISErrorCodeNoReturn = 0,
+    kCMISErrorCodeConnection = 1,
+    kCMISErrorCodeProxyAuthentication = 2,
+    kCMISErrorCodeUnauthorized = 3,
+    kCMISErrorCodeNoRootFolderFound = 4,
+    kCMISErrorCodeNoRepositoryFound = 5,
     
     //error ranges for General errors
-    kCMISGeneralErrorMinimum = 256,
-    kCMISGeneralErrorMaximum = 511,
+    kCMISErrorCodeGeneralMinimum = 256,
+    kCMISErrorCodeGeneralMaximum = 511,
     
     //General errors/exceptions as defined in 2.2.1.4.1
-    kCMISInvalidArgumentError = 256,
-    kCMISObjectNotFoundError = 257,
-    kCMISNotSupportedError = 258,
-    kCMISPermissionDeniedError = 259,
-    kCMISRuntimeError = 260,
+    kCMISErrorCodeInvalidArgument = 256,
+    kCMISErrorCodeObjectNotFound = 257,
+    kCMISErrorCodeNotSupported = 258,
+    kCMISErrorCodePermissionDenied = 259,
+    kCMISErrorCodeRuntime = 260,
     
     
     //error ranges for CMIS specific errors
-    kCMISSpecificErrorMinimum = 512,
-    kCMISSpecificErrorMaximum = 1023,
+    kCMISErrorCodeSpecificMinimum = 512,
+    kCMISErrorCodeSpecificMaximum = 1023,
     
     //Specific errors/exceptions as defined in 2.2.1.4.2
-    kCMISConstraintError = 512,
-    kCMISContentAlreadyExistsError = 513,
-    kCMISFilterNotValidError = 514,
-    kCMISNameConstraintViolationError = 515,
-    kCMISStorageError = 516,
-    kCMISStreamNotSupportedError = 517,
-    kCMISUpdateConflictError = 518,
-    kCMISVersioningError = 519
+    kCMISErrorCodeConstraint = 512,
+    kCMISErrorCodeContentAlreadyExists = 513,
+    kCMISErrorCodeFilterNotValid = 514,
+    kCMISErrorCodeNameConstraintViolation = 515,
+    kCMISErrorCodeStorage = 516,
+    kCMISErrorCodeStreamNotSupported = 517,
+    kCMISErrorCodeUpdateConflict = 518,
+    kCMISErrorCodeVersioning = 519
     
 }CMISErrorCodes;
 
@@ -58,29 +58,30 @@ typedef enum
 extern NSString * const kCMISErrorDomainName;
 //to be used in the userInfo dictionary as Localized error description
 //Basic Errors
-extern NSString * const kCMISNoReturnErrorDescription;
-extern NSString * const kCMISConnectionErrorDescription;
-extern NSString * const kCMISProxyAuthenticationErrorDescription;
-extern NSString * const kCMISUnauthorizedErrorDescription;
-extern NSString * const kCMISNoRootFolderFoundErrorDescription;
-extern NSString * const kCMISRepositoryNotFoundErrorDescription;
+extern NSString * const kCMISErrorDescriptionNoReturn;
+extern NSString * const kCMISErrorDescriptionConnection;
+extern NSString * const kCMISErrorDescriptionProxyAuthentication;
+extern NSString * const kCMISErrorDescriptionUnauthorized;
+extern NSString * const kCMISErrorDescriptionNoRootFolderFound;
+extern NSString * const kCMISErrorDescriptionRepositoryNotFound;
 //General errors as defined in 2.2.1.4.1 of spec
-extern NSString * const kCMISInvalidArgumentErrorDescription;
-extern NSString * const kCMISObjectNotFoundErrorDescription;
-extern NSString * const kCMISNotSupportedErrorDescription;
-extern NSString * const kCMISPermissionDeniedErrorDescription;
-extern NSString * const kCMISRuntimeErrorDescription;
+extern NSString * const kCMISErrorDescriptionInvalidArgument;
+extern NSString * const kCMISErrorDescriptionObjectNotFound;
+extern NSString * const kCMISErrorDescriptionNotSupported;
+extern NSString * const kCMISErrorDescriptionPermissionDenied;
+extern NSString * const kCMISErrorDescriptionRuntime;
 //Specific errors as defined in 2.2.1.4.2
-extern NSString * const kCMISConstraintErrorDescription;
-extern NSString * const kCMISContentAlreadyExistsErrorDescription;
-extern NSString * const kCMISFilterNotValidErrorDescription;
-extern NSString * const kCMISNameConstraintViolationErrorDescription;
-extern NSString * const kCMISStorageErrorDescription;
-extern NSString * const kCMISStreamNotSupportedErrorDescription;
-extern NSString * const kCMISUpdateConflictErrorDescription;
-extern NSString * const kCMISVersioningErrorDescription;
+extern NSString * const kCMISErrorDescriptionConstraint;
+extern NSString * const kCMISErrorDescriptionContentAlreadyExists;
+extern NSString * const kCMISErrorDescriptionFilterNotValid;
+extern NSString * const kCMISErrorDescriptionNameConstraintViolation;
+extern NSString * const kCMISErrorDescriptionStorage;
+extern NSString * const kCMISErrorDescriptionStreamNotSupported;
+extern NSString * const kCMISErrorDescriptionUpdateConflict;
+extern NSString * const kCMISErrorDescriptionVersioning;
 
 @interface CMISErrors : NSObject
-+ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(NSInteger)code withCMISLocalizedDescription:(NSString *)localizedDescription;
++ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(NSInteger)code;
++ (NSError *)createCMISErrorWithCode:(NSInteger)code withDetailedDescription:(NSString *)detailedDescription;
 @end
 

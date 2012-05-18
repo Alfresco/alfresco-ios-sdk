@@ -20,9 +20,7 @@
     // Validate params
     if (!objectId)
     {
-        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-        [errorInfo setValue:NSLocalizedString(kCMISObjectNotFoundErrorDescription, kCMISObjectNotFoundErrorDescription) forKey:NSLocalizedDescriptionKey];
-        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISObjectNotFoundError userInfo:errorInfo];
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound withDetailedDescription:nil];
         log(@"Must provide an objectId when retrieving all versions");
         return nil;
     }
@@ -41,13 +39,13 @@
 
     NSData *data = [HttpUtil invokeGETSynchronous:objectIdUrl withSession:self.session error:&internalError].data;
     if (internalError || data == nil) {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISConnectionError withCMISLocalizedDescription:kCMISConnectionErrorDescription];
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;
     }
     CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:data];
     if (![parser parseAndReturnError:&internalError])
     {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISVersioningError withCMISLocalizedDescription:kCMISVersioningErrorDescription];
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeVersioning];
         return nil;
     }
     return parser.objectData;
@@ -58,9 +56,7 @@
     // Validate params
     if (!objectId)
     {
-        NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-        [errorInfo setValue:NSLocalizedString(kCMISObjectNotFoundErrorDescription, kCMISObjectNotFoundErrorDescription) forKey:NSLocalizedDescriptionKey];
-        *error = [NSError errorWithDomain:kCMISErrorDomainName code:kCMISObjectNotFoundError userInfo:errorInfo];
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound withDetailedDescription:nil];
         log(@"Must provide an objectId when retrieving all versions");
         return nil;
     }
@@ -69,20 +65,20 @@
     NSError *internalError = nil;
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&internalError];
     if (internalError) {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISObjectNotFoundError withCMISLocalizedDescription:kCMISObjectNotFoundErrorDescription];
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
         return nil;
     }
     NSString *versionHistoryLink = [objectData.linkRelations linkHrefForRel:kCMISLinkVersionHistory];
     NSData *data = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:versionHistoryLink] 
                                       withSession:self.session error:&internalError].data;
     if (internalError) {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISConnectionError withCMISLocalizedDescription:kCMISConnectionErrorDescription];
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;
     }
     CMISAtomFeedParser *feedParser = [[CMISAtomFeedParser alloc] initWithData:data];
     if (![feedParser parseAndReturnError:&internalError])
     {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISVersioningError withCMISLocalizedDescription:kCMISVersioningErrorDescription];
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeVersioning];
         return nil;
     }
     return feedParser.entries;
