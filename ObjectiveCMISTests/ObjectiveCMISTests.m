@@ -75,6 +75,10 @@
     NSError *error = nil;
     if (![session authenticateAndReturnError:&error]) {
         log(@"*** testAuthenticateWithInvalidCredentials: error domain is %@, error code is %d and error description is %@",[error domain], [error code], [error description]);
+        NSError *underlyingError = [[error userInfo] valueForKey:NSUnderlyingErrorKey];
+        if (underlyingError) {
+            log(@"There is an underlying error with reason %@ and error code %d",[underlyingError localizedDescription], [underlyingError code]);
+        }
     }
     STAssertFalse(session.isAuthenticated, @"session should NOT be authenticated");
     STAssertNotNil(error, @"Error should not be nil");
