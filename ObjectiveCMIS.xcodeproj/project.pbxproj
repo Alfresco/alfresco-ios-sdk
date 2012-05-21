@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		4EEB82E715668857006500F0 /* Documentation */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 4EEB82EA15668857006500F0 /* Build configuration list for PBXAggregateTarget "Documentation" */;
+			buildPhases = (
+				4EEB82EC156688B6006500F0 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Documentation;
+			productName = Documentation;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		4EA61BD71564F70C00C759E4 /* CMISStringInOutParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA61BD31564F70C00C759E4 /* CMISStringInOutParameter.h */; };
 		4EA61BD81564F70C00C759E4 /* CMISStringInOutParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA61BD41564F70C00C759E4 /* CMISStringInOutParameter.m */; };
@@ -710,6 +724,7 @@
 			targets = (
 				828072A215153DE800EF635C /* ObjectiveCMIS */,
 				828072B215153DE900EF635C /* ObjectiveCMISTests */,
+				4EEB82E715668857006500F0 /* Documentation */,
 			);
 		};
 /* End PBXProject section */
@@ -730,6 +745,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		4EEB82EC156688B6006500F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/bin/appledoc \\\n--project-name \"ObjectiveCMIS\" \\\n--project-company \"Apache Chemistry Project\" \\\n--company-id org.apache.chemistry \\\n--output ~/help \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--keep-undocumented-objects \\\n--keep-undocumented-members \\\n--exit-threshold 2 \\\n--ignore .m \\\n--ignore ObjectiveCMISTests \\\n\"${PROJECT_DIR}\"\n\n";
+		};
 		828072B115153DE900EF635C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -845,6 +873,20 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		4EEB82E815668857006500F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4EEB82E915668857006500F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		828072C515153DE900EF635C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -945,6 +987,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4EEB82EA15668857006500F0 /* Build configuration list for PBXAggregateTarget "Documentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EEB82E815668857006500F0 /* Debug */,
+				4EEB82E915668857006500F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		8280729D15153DE800EF635C /* Build configuration list for PBXProject "ObjectiveCMIS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

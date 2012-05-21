@@ -10,7 +10,10 @@
 #import <Foundation/FoundationErrors.h>
 #import <Foundation/NSURLError.h>
 
-//error types as defined in the CMIS spec
+
+
+/** error codes defined in CMIS
+ */
 typedef enum
 {
     //error range for basic errors - not covered in the spec but
@@ -80,8 +83,33 @@ extern NSString * const kCMISErrorDescriptionStreamNotSupported;
 extern NSString * const kCMISErrorDescriptionUpdateConflict;
 extern NSString * const kCMISErrorDescriptionVersioning;
 
+/** This class defines Errors in the Objective-C CMIS library
+ 
+ All CMIS errors are based on NSError class.
+ CMIS errors are created either 
+ 
+ - directly. This is the case when an error is captured by one of the methods/classes in the CMIS library
+ - indirectly. Errors have been created by classes/methods outside the CMIS library. Example errors created through NSURLConnection. In this case, the underlying error is copied into the CMIS error using the NSUnderlyingErrorKey in the userInfo Dictionary.
+ 
+ */
 @interface CMISErrors : NSObject
+/** Create a CMIS error based on an underlying error
+ 
+ This is the indirect way of creating CMIS errors
+ 
+ @param error The reference to the underlying NSError object
+ @param code the CMIS error code
+ @return the CMIS error as NSError object with error domain org.apache.chemistry.objectivecmis
+ */
 + (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(NSInteger)code;
+/** Creates a new CMIS error
+ 
+ This is the direct way of creating CMIS errors
+ 
+ @param code the CMIS Error code to be used
+ @param detailedDescription a detailed description to be added to the localizedDescription. Use nil if none is available/needed.
+ @return the CMIS error as NSError object with error domain org.apache.chemistry.objectivecmis
+ */
 + (NSError *)createCMISErrorWithCode:(NSInteger)code withDetailedDescription:(NSString *)detailedDescription;
 @end
 
