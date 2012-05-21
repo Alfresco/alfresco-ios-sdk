@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISRepositoryInfo.h"
+#import "CMISAtomPubExtensionElementParser.h"
 
 @class CMISRepositoryInfoParser;
 
@@ -17,7 +18,7 @@
 @end
 
 
-@interface CMISRepositoryInfoParser : NSObject<NSXMLParserDelegate>
+@interface CMISRepositoryInfoParser : NSObject<NSXMLParserDelegate, CMISAtomPubExtensionElementParserDelegate>
 
 @property (nonatomic, strong, readonly) CMISRepositoryInfo *currentRepositoryInfo;
 

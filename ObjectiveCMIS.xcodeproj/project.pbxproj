@@ -41,6 +41,8 @@
 		752067F6156AC06300231A5D /* CMISExtensionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 752067F4156AC06300231A5D /* CMISExtensionData.m */; };
 		752067FA156AC0FE00231A5D /* CMISExtensionElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 752067F8156AC0FE00231A5D /* CMISExtensionElement.h */; };
 		752067FB156AC0FE00231A5D /* CMISExtensionElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 752067F9156AC0FE00231A5D /* CMISExtensionElement.m */; };
+		75206802156AE29900231A5D /* CMISAtomPubExtensionElementParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 75206800156AE29900231A5D /* CMISAtomPubExtensionElementParser.h */; };
+		75206803156AE29900231A5D /* CMISAtomPubExtensionElementParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 75206801156AE29900231A5D /* CMISAtomPubExtensionElementParser.m */; };
 		75803D411560BD5300C738C1 /* CMISAtomLink.h in Headers */ = {isa = PBXBuildFile; fileRef = 75803D3F1560BD5300C738C1 /* CMISAtomLink.h */; };
 		75803D421560BD5300C738C1 /* CMISAtomLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 75803D401560BD5300C738C1 /* CMISAtomLink.m */; };
 		75803D4F1560CFCB00C738C1 /* CMISLinkRelations.h in Headers */ = {isa = PBXBuildFile; fileRef = 75803D4D1560CFCA00C738C1 /* CMISLinkRelations.h */; };
@@ -200,6 +202,8 @@
 		752067F4156AC06300231A5D /* CMISExtensionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISExtensionData.m; path = Common/CMISExtensionData.m; sourceTree = "<group>"; };
 		752067F8156AC0FE00231A5D /* CMISExtensionElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISExtensionElement.h; path = Common/CMISExtensionElement.h; sourceTree = "<group>"; };
 		752067F9156AC0FE00231A5D /* CMISExtensionElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISExtensionElement.m; path = Common/CMISExtensionElement.m; sourceTree = "<group>"; };
+		75206800156AE29900231A5D /* CMISAtomPubExtensionElementParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAtomPubExtensionElementParser.h; sourceTree = "<group>"; };
+		75206801156AE29900231A5D /* CMISAtomPubExtensionElementParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomPubExtensionElementParser.m; sourceTree = "<group>"; };
 		75803D3F1560BD5300C738C1 /* CMISAtomLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAtomLink.h; sourceTree = "<group>"; };
 		75803D401560BD5300C738C1 /* CMISAtomLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomLink.m; sourceTree = "<group>"; };
 		75803D4D1560CFCA00C738C1 /* CMISLinkRelations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISLinkRelations.h; sourceTree = "<group>"; };
@@ -619,6 +623,8 @@
 				758B5A77156506840050D034 /* CMISRepositoryInfoParser.m */,
 				82C1C6381535790B009B7B3D /* CMISAtomFeedParser.h */,
 				82C1C6391535790B009B7B3D /* CMISAtomFeedParser.m */,
+				75206800156AE29900231A5D /* CMISAtomPubExtensionElementParser.h */,
+				75206801156AE29900231A5D /* CMISAtomPubExtensionElementParser.m */,
 			);
 			path = AtomPubParser;
 			sourceTree = "<group>";
@@ -715,6 +721,7 @@
 				82C1C63F15358733009B7BAB /* CMISPropertyDefinitionParser.h in Headers */,
 				752067F5156AC06300231A5D /* CMISExtensionData.h in Headers */,
 				752067FA156AC0FE00231A5D /* CMISExtensionElement.h in Headers */,
+				75206802156AE29900231A5D /* CMISAtomPubExtensionElementParser.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -890,6 +897,7 @@
 				82C1C63F15358733009B7BA9 /* CMISPropertyDefinitionParser.m in Sources */,
 				752067F6156AC06300231A5D /* CMISExtensionData.m in Sources */,
 				752067FB156AC0FE00231A5D /* CMISExtensionElement.m in Sources */,
+				75206803156AE29900231A5D /* CMISAtomPubExtensionElementParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

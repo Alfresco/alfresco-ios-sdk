@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CMISExtensionData.h"
 
-@interface CMISRepositoryInfo : NSObject
+@interface CMISRepositoryInfo : CMISExtensionData
 
 @property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *name;

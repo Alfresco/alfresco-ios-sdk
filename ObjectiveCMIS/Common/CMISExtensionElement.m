@@ -16,9 +16,9 @@
 @property (nonatomic, strong, readwrite) NSDictionary *attributes;
 @property (nonatomic, strong, readwrite) NSArray *children;
 
-/** Designated Initializer.  This initializer is private since we do not want the user to use one of the two public init methods defined in the header
- */
+/// Designated Initializer.  This initializer is private since we do not want the user to use one of the two public init methods defined in the header
 - (id)initWithName:(NSString *)name namespaceUri:(NSString *)namespaceUri;
+
 @end
 
 @implementation CMISExtensionElement
@@ -72,8 +72,11 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"CMISExtensionElement: {%@}%@ %@:%@", 
-            self.namespaceUri, self.name, self.attributes, self.children];
+    return [NSString stringWithFormat:@"CMISExtensionElement: %@%@ %@: %@", 
+            (self.namespaceUri ? ([NSString stringWithFormat:@"{%@}", self.namespaceUri]) : @""), 
+            self.name, 
+            (([self.attributes count] > 0) ? self.attributes : @"{}"), 
+            ((self.children.count == 0)  ? self.value : self.children)];
 }
 
 

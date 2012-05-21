@@ -16,7 +16,10 @@
 @property (nonatomic, strong, readonly) NSDictionary *attributes;
 @property (nonatomic, strong, readonly) NSArray *children;
 
+
+/// Node Initializer
 - (id)initNodeWithName:(NSString *)name namespaceUri:(NSString *)namespaceUri attributes:(NSDictionary *)attributesDict children:(NSArray *)children;
+/// Leaf Initializer
 - (id)initLeafWithName:(NSString *)name namespaceUri:(NSString *)namespaceUri attributes:(NSDictionary *)attributesDict value:(NSString *)value;
 
 // TODO GHL Should children be nil or empty array?
