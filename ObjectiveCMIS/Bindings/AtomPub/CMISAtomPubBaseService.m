@@ -17,6 +17,7 @@
 #import "CMISErrors.h"
 #import "CMISObjectByPathUriBuilder.h"
 #import "CMISObject.h"
+#import "CMISTypeByIdUriBuilder.h"
 
 @interface CMISAtomPubBaseService ()
 
@@ -93,6 +94,9 @@
 
                 CMISObjectByPathUriBuilder *objectByPathUriBuilder = [[CMISObjectByPathUriBuilder alloc] initWithTemplateUrl:workspace.objectByPathUriTemplate];
                 [self.session setObject:objectByPathUriBuilder forKey:kCMISBindingSessionKeyObjectByPathUriBuilder];
+
+                CMISTypeByIdUriBuilder *typeByIdUriBuilder = [[CMISTypeByIdUriBuilder alloc] initWithTemplateUrl:workspace.typeByIdUriTemplate];
+                [self.session setObject:typeByIdUriBuilder forKey:kCMISBindingSessionKeyTypeByIdUriBuilder];
 
                 [self.session setObject:workspace.queryUriTemplate forKey:kCMISBindingSessionKeyQueryUri];
             }

@@ -32,7 +32,7 @@
 
 // Designated initializer
 - (id)init;
-// Initilizer used if this parser is a delegated child parser
+// Initializer used if this parser is a delegated child parser
 - (id)initWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 @end
 

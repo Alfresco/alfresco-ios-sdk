@@ -11,6 +11,9 @@
 #import "CMISConstants.h"
 #import "CMISWorkspace.h"
 #import "CMISErrors.h"
+#import "CMISTypeByIdUriBuilder.h"
+#import "CMISHttpUtil.h"
+#import "CMISTypeDefinitionAtomEntryParser.h"
 
 @interface CMISAtomPubRepositoryService ()
 @property (nonatomic, strong) NSMutableDictionary *repositories;
@@ -53,6 +56,33 @@
     {
         [self.repositories setObject:workspace.repositoryInfo forKey:workspace.repositoryInfo.identifier];
     }
+}
+
+- (CMISTypeDefinition *)retrieveTypeDefinition:(NSString *)typeId error:(NSError **)outError
+{
+    if (typeId == nil)
+    {
+        log(@"Parameter typeId is required");
+        *outError = [[NSError alloc] init]; // TODO: proper error init
+        return nil;
+    }
+
+    CMISTypeByIdUriBuilder *typeByIdUriBuilder = [self.session objectForKey:kCMISBindingSessionKeyTypeByIdUriBuilder];
+    typeByIdUriBuilder.id = typeId;
+
+    HTTPResponse *response = [HttpUtil invokeGETSynchronous:[typeByIdUriBuilder buildUrl] withSession:self.session error:outError];
+
+    if (response.data != nil)
+    {
+        CMISTypeDefinitionAtomEntryParser *parser = [[CMISTypeDefinitionAtomEntryParser alloc] initWithData:response.data];
+        if ([parser parseAndReturnError:outError])
+        {
+            return  parser.typeDefinition;
+        }
+    }
+
+    return nil;
+
 }
 
 @end

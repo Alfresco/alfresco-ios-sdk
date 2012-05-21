@@ -24,6 +24,35 @@ typedef enum
     CMISBaseTypePolicy
 } CMISBaseType;
 
+// Property types
+typedef enum
+{
+    CMISPropertyTypeBoolean,
+    CMISPropertyTypeId,
+    CMISPropertyTypeInteger,
+    CMISPropertyTypeDateTime,
+    CMISPropertyTypeDecimal,
+    CMISPropertyTypeHtml,
+    CMISPropertyTypeString,
+    CMISPropertyTypeUri
+} CMISPropertyType;
+
+// Property cardinality options
+typedef enum
+{
+    CMISCardinalitySingle,
+    CMISCardinalityMulti
+} CMISCardinality;
+
+// Property updatability options
+typedef enum
+{
+    CMISUpdatabilityReadOnly,
+    CMISUpdatabilityReadWrite,
+    CMISUpdatabilityWhenCheckedOut,
+    CMISUpdatabilityOnCreate
+} CMISUpdatability;
+
 // Allowable action type
 typedef enum
 {
