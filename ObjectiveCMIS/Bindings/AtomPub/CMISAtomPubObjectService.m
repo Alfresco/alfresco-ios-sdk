@@ -319,7 +319,8 @@
     {
         log(@"Object id is nil or inParameter of objectId is nil");
         *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
-        return;+    }
+        return;
+    }
 
     // Get object data
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId.inParameter error:error];
