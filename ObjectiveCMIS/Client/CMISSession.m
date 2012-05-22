@@ -187,7 +187,7 @@
     return queryResults;
 }
 
-- (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+- (NSString *)createFolder:(CMISProperties *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
     return [self.binding.objectService createFolderInParentFolder:folderObjectId withProperties:properties error:error];
 }
@@ -200,7 +200,7 @@
 }
 
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
-                   withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+                   withProperties:(CMISProperties *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
     return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:properties inFolder:folderObjectId error:error];
 }

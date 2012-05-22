@@ -13,6 +13,35 @@
 
 #pragma mark synchronous methods
 
++ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod
+                        withSession:(CMISBindingSession *)session body:(NSData *)body
+                        headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
+{
+    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:[self stringForHttpRequestMethod:httpRequestMethod] usingSession:session];
+    [request setHTTPBody:body];
+
+    if (additionalHeaders)
+    {
+        [self addHeaders:additionalHeaders toURLRequest:request];
+    }
+
+    return [self executeRequestSynchronous:request error:outError];
+}
+
++ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
+{
+    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:[self stringForHttpRequestMethod:httpRequestMethod] usingSession:session];
+    [request setHTTPBodyStream:bodyStream];
+
+    if (additionalHeaders)
+    {
+        [self addHeaders:additionalHeaders toURLRequest:request];
+    }
+
+    return [self executeRequestSynchronous:request error:outError];
+}
+
+
 + (HTTPResponse *)invokeGETSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"GET" usingSession:session];
@@ -144,6 +173,23 @@
     return [HTTPResponse responseUsingURLHTTPResponse:response andData:data];
 }
 
++ (NSString *)stringForHttpRequestMethod:(HTTPRequestMethod)httpRequestMethod
+{
+    switch (httpRequestMethod)
+    {
+        case HTTP_GET:
+            return @"GET";
+        case HTTP_POST:
+            return @"POST";
+        case HTTP_DELETE:
+            return @"DELETE";
+        case HTTP_PUT:
+            return @"PUT";
+    }
+
+    log(@"Could not find matching http request for %@", httpRequestMethod);
+    return nil;
+}
 
 @end
 

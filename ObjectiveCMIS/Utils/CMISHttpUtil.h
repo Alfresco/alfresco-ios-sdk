@@ -8,6 +8,13 @@
 #import <Foundation/Foundation.h>
 #import "CMISBindingSession.h"
 
+typedef enum {
+    HTTP_GET,
+    HTTP_POST,
+    HTTP_PUT,
+    HTTP_DELETE
+} HTTPRequestMethod;
+
 @interface HTTPResponse : NSObject
 
 @property (readonly) NSInteger statusCode;
@@ -20,6 +27,10 @@
 @interface HttpUtil : NSObject
 
 // Synchronous calls
+
++ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod withSession:(CMISBindingSession *)session body:(NSData *)body headers:(NSDictionary *)additionalHeaders error:(NSError **)outError;
+
++ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError;
 
 + (HTTPResponse *)invokeGETSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError;
 

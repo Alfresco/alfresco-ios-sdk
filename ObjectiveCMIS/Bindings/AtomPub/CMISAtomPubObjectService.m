@@ -15,7 +15,6 @@
 #import "CMISErrors.h"
 #import "CMISStringInOutParameter.h"
 #import "CMISURLUtil.h"
-#import "CMISUpdateObjectAtomEntryWriter.h"
 
 @interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
 
@@ -214,13 +213,20 @@
 
 
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
-                  withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError * *)error
+                  withProperties:(CMISProperties *)properties inFolder:(NSString *)folderObjectId error:(NSError * *)error
 {
-    // Validate params
+    // Validate properties
+    if ([properties propertyValueForId:kCMISPropertyName] == nil || [properties propertyValueForId:kCMISPropertyObjectTypeId] == nil)
+    {
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
+        log(@"Must provide %@ and %@ as properties", kCMISPropertyName, kCMISPropertyObjectTypeId);
+        return nil;
+    }
+
+    // Validate mimetype
     if (!mimeType)
     {
         *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
-        // TODO: proper init error
         log(@"Must provide a mimetype when creating a cmis document");
         return nil;
     }
@@ -234,9 +240,13 @@
         return nil;
     }
     NSString *downLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
-    //[folderData.links objectForKey:kCMISLinkRelationDown];
-    return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:filePath withContentMimeType:mimeType error:error];
 
+    return [self sendAtomEntryXmlToLink:downLink withHttpRequestMethod:HTTP_POST
+                         withProperties:properties
+                         withContentFilePath:filePath
+                         withContentMimeType:mimeType
+                         storeInMemory:NO
+                         error:error].identifier;
 }
 
 - (BOOL)deleteObject:(NSString *)objectId allVersions:(BOOL)allVersions error:(NSError * *)error
@@ -261,9 +271,16 @@
     return YES;
 }
 
-- (NSString *)createFolderInParentFolder:(NSString *)folderObjectId withProperties:(NSDictionary *)properties error:(NSError **)error
+- (NSString *)createFolderInParentFolder:(NSString *)folderObjectId withProperties:(CMISProperties *)properties error:(NSError **)error
 {
-      // Validate params
+    if ([properties propertyValueForId:kCMISPropertyName] == nil || [properties propertyValueForId:kCMISPropertyObjectTypeId] == nil)
+    {
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
+        log(@"Must provide %@ and %@ as properties", kCMISPropertyName, kCMISPropertyObjectTypeId);
+        return nil;
+    }
+
+    // Validate parent folder id
     if (!folderObjectId)
     {
         *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound withDetailedDescription:nil];
@@ -279,7 +296,13 @@
     }
 
     NSString *downLink = [parentFolderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
-    return [self postAtomEntryXmlToDownLink:downLink withProperties:properties withContentFilePath:nil withContentMimeType:nil error:error];
+    return [self sendAtomEntryXmlToLink:downLink
+                         withHttpRequestMethod:HTTP_POST
+                         withProperties:properties
+                         withContentFilePath:nil
+                         withContentMimeType:nil
+                         storeInMemory:YES
+                         error:error].identifier;
 }
 
 
@@ -342,9 +365,20 @@
                                                 withValue:changeToken.inParameter toUrlString:selfLink];
     }
 
+    // Execute request
+    [self sendAtomEntryXmlToLink:selfLink
+                  withHttpRequestMethod:HTTP_PUT
+                  withProperties:properties
+                  withContentFilePath:nil
+                  withContentMimeType:nil
+                  storeInMemory:YES
+                  error:error];
+
     // Create XML needed as body of html
-    CMISUpdateObjectAtomEntryWriter *xmlWriter = [[CMISUpdateObjectAtomEntryWriter alloc] init];
-    xmlWriter.properties = properties;
+
+    CMISAtomEntryWriter *xmlWriter = [[CMISAtomEntryWriter alloc] init];
+    xmlWriter.cmisProperties = properties;
+    xmlWriter.generateXmlInMemory = YES;
 
     NSError *internalError = nil;
     HTTPResponse *response = [HttpUtil invokePUTSynchronous:[NSURL URLWithString:selfLink]
@@ -376,27 +410,23 @@
 
 #pragma mark Helper methods
 
-- (NSString *)postAtomEntryXmlToDownLink:(NSString *)downLink withProperties:(NSDictionary *)properties
-                                                        withContentFilePath:(NSString *)contentFilePath
-                                                        withContentMimeType:(NSString *)contentMimeType
-                                                        error:(NSError * *)error
+- (CMISObjectData *)sendAtomEntryXmlToLink:(NSString *)link
+                            withHttpRequestMethod:(HTTPRequestMethod)httpRequestMethod
+                            withProperties:(CMISProperties *)properties
+                            withContentFilePath:(NSString *)contentFilePath
+                            withContentMimeType:(NSString *)contentMimeType
+                            storeInMemory:(BOOL)isXmlStoredInMemory
+                            error:(NSError * *)error
 {
-    // Validate properties
-    if ([properties objectForKey:kCMISPropertyName] == nil || [properties objectForKey:kCMISPropertyObjectTypeId] == nil)
-    {
-        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
-        log(@"Must provide %@ and %@ as properties", kCMISPropertyName, kCMISPropertyObjectTypeId);
-        return nil;
-    }
     
-    if (downLink == nil) {
+    if (link == nil) {
         *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
-        log(@"Could not retrieve 'down' link");
+        log(@"Could not retrieve link from object to do creation or update");
         return nil;
     }
 
     NSError *internalError = nil;
-    NSURL *downUrl = [NSURL URLWithString:downLink];
+    NSURL *url = [NSURL URLWithString:link];
     
     // Atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
     // Hence, we're storing the atom entry xml in a temporary file and stream the body of the http post
@@ -404,28 +434,45 @@
     atomEntryWriter.contentFilePath = contentFilePath;
     atomEntryWriter.mimeType = contentMimeType;
     atomEntryWriter.cmisProperties = properties;
-    NSString *filePathToGeneratedAtomEntry = [atomEntryWriter filePathToGeneratedAtomEntry];
-    
-    NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:filePathToGeneratedAtomEntry];
-    NSData *response = [HttpUtil invokePOSTSynchronous:downUrl
+    atomEntryWriter.generateXmlInMemory = isXmlStoredInMemory;
+    NSString *writeResult = [atomEntryWriter generateAtomEntryXml];
+
+    NSData *responseData = nil;
+    if (isXmlStoredInMemory)
+    {
+        responseData = [HttpUtil invokeSynchronous:url
+                withHttpMethod:httpRequestMethod
+                withSession:self.session
+                body:[writeResult dataUsingEncoding:NSUTF8StringEncoding]
+                headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
+                error:&internalError].data;
+    }
+    else
+    {
+        NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:writeResult];
+        responseData = [HttpUtil invokeSynchronous:url
+                                           withHttpMethod:httpRequestMethod
                                            withSession:self.session
                                            bodyStream:bodyStream
                                            headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
                                            error:&internalError].data;
-    
-    // Close stream and delete temporary file
-    [bodyStream close];
+
+        // Close stream and delete temporary file
+        [bodyStream close];
+
+        [[NSFileManager defaultManager] removeItemAtPath:writeResult error:&internalError];
+        if (internalError) {
+            *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeStorage];
+            return nil;
+        }
+    }
+
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;
     }        
-    
-    [[NSFileManager defaultManager] removeItemAtPath:filePathToGeneratedAtomEntry error:&internalError];
-    if (internalError) {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeStorage];
-        return nil;
-    }
-    CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response];
+
+    CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:responseData];
     [atomEntryParser parseAndReturnError:&internalError];
     if (internalError) 
     {
@@ -433,9 +480,7 @@
         return nil;
     }
         
-    return atomEntryParser.objectData.identifier;
-                        
-
+    return atomEntryParser.objectData;
 }
 
 

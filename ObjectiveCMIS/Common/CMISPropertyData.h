@@ -41,18 +41,18 @@
 - (NSNumber *)propertyBooleanValue;
 
 /** Creation of a string property */
-+ (CMISPropertyData *)createPropertyStringData:(NSString *)id value:(NSString *)value;
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withStringValue:(NSString *)value;
 
 /** Creation of an integer property */
-+ (CMISPropertyData *)createPropertyIntegerData:(NSString *)id value:(NSInteger)value;
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withIntegerValue:(NSInteger)value;
 
 /** Creation of an id property */
-+ (CMISPropertyData *)createPropertyIdData:(NSString *)id value:(NSString *)value;
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withIdValue:(NSString *)value;
 
 /** Creation of a datetime property */
-+ (CMISPropertyData *)createPropertyDataTimeData:(NSString *)id value:(NSDate *)value;
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withDateTimeValue:(NSDate *)value;
 
 /** Creation of a boolean property */
-+ (CMISPropertyData *)createPropertyBooleanData:(NSString *)id value:(BOOL)value;
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withBoolValue:(BOOL)value;
 
 @end

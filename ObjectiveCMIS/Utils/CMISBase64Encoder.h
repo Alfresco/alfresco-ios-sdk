@@ -14,6 +14,8 @@
 
 + (NSData *)dataByEncodingText:(NSData *)plainText;
 
++ (NSString *)encodeContentOfFile:(NSString *)sourceFilePath;
+
 + (void)encodeContentOfFile:(NSString *)sourceFilePath andAppendToFile:(NSString *)destinationFilePath;
 
 @end

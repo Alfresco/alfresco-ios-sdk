@@ -56,14 +56,14 @@
  */
 - (NSArray *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error;
 
-- (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error;
+- (NSString *)createFolder:(CMISProperties *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error;
 
 - (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath
                                                       completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
                                                       failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
 
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
-                                                              withProperties:(NSDictionary *)properties
+                                                              withProperties:(CMISProperties *)properties
                                                               inFolder:(NSString *)folderObjectId
                                                               error:(NSError * *)error;
 

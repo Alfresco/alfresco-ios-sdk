@@ -98,27 +98,27 @@
     return propertyData;
 }
 
-+ (CMISPropertyData *)createPropertyStringData:(NSString *)id value:(NSString *)value
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withStringValue:(NSString *)value
 {
     return [self createPropertyInternal:id value:value type:CMISPropertyTypeString];
 }
 
-+ (CMISPropertyData *)createPropertyIntegerData:(NSString *)id value:(NSInteger)value
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withIntegerValue:(NSInteger)value
 {
     return [self createPropertyInternal:id value:[NSNumber numberWithInteger:value] type:CMISPropertyTypeInteger];
 }
 
-+ (CMISPropertyData *)createPropertyIdData:(NSString *)id value:(NSString *)value
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withIdValue:(NSString *)value
 {
     return [self createPropertyInternal:id value:value type:CMISPropertyTypeId];
 }
 
-+ (CMISPropertyData *)createPropertyDataTimeData:(NSString *)id value:(NSDate *)value
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withDateTimeValue:(NSDate *)value
 {
     return [self createPropertyInternal:id value:value type:CMISPropertyTypeDateTime];
 }
 
-+ (CMISPropertyData *)createPropertyBooleanData:(NSString *)id value:(BOOL)value
++ (CMISPropertyData *)createPropertyForId:(NSString *)id withBoolValue:(BOOL)value
 {
     return [self createPropertyInternal:id value:[NSNumber numberWithBool:value] type:CMISPropertyTypeBoolean];
 }
