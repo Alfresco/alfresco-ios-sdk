@@ -35,16 +35,6 @@
     return self;
 }
 
-- (id)initWithData:(NSData *)atomData
-{
-    return nil;
-}
-
-- (BOOL)parseAndReturnError:(NSError **)error
-{
-    return NO;
-}
-
 - (id)initWithPropertyDefinition:(NSString *)propertyDefinitionElementName
               withParentDelegate:(id <NSXMLParserDelegate, CMISPropertyDefinitionDelegate>)parentDelegate
               parser:(NSXMLParser *)parser
@@ -95,12 +85,13 @@
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
 {
+    NSString *cleanedString = [string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (!self.currentString)
     {
-        self.currentString = string;
+        self.currentString = cleanedString;
     }
     else {
-        self.currentString = [self.currentString stringByAppendingString:string];
+        self.currentString = [self.currentString stringByAppendingString:cleanedString];
     }
 }
 
@@ -157,7 +148,7 @@
         {
             self.propertyDefinition.cardinality = CMISCardinalityMulti;
         }
-        else if ([self.currentString isEqualToString:@"multi"])
+        else if ([self.currentString isEqualToString:@"single"])
         {
             self.propertyDefinition.cardinality = CMISCardinalitySingle;
         }
@@ -211,7 +202,7 @@
         self.propertyDefinition.isOpenChoice = [self parseBooleanValue:self.currentString];
     }
 
-
+    self.currentString = nil;
 }
 
 #pragma mark Helper methods

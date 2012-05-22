@@ -612,21 +612,23 @@
     STAssertNotNil(typeDefinition.description, @"Type description should not be nil");
     STAssertNotNil(typeDefinition.displayName, @"Type displayName should not be nil");
     STAssertNotNil(typeDefinition.id, @"Type id should not be nil");
+    STAssertTrue([typeDefinition.id isEqualToString:@"cmis:document"], @"Wrong id for type");
     STAssertNotNil(typeDefinition.localName, @"Type local name should not be nil");
     STAssertNotNil(typeDefinition.localNameSpace, @"Type local namespace should not be nil");
     STAssertNotNil(typeDefinition.queryName, @"Type query name should not be nil");
 
     // Check property definitions
-//    STAssertTrue(typeDefinition.propertyDefinitions.count > 0, @"Expected at least one propery definition, but got %d", typeDefinition.propertyDefinitions.count);
-//    for (CMISPropertyDefinition *propertyDefinition in typeDefinition.propertyDefinitions)
-//    {
-//        STAssertNotNil(propertyDefinition.description, @"Property definition description should not be nil");
-//        STAssertNotNil(propertyDefinition.displayName, @"Property definition display name should not be nil");
-//        STAssertNotNil(propertyDefinition.id, @"Property definition id should not be nil");
-//        STAssertNotNil(propertyDefinition.localName, @"Property definition local name should not be nil");
-//        STAssertNotNil(propertyDefinition.localNamespace, @"Property definition local namespace should not be nil");
-//        STAssertNotNil(propertyDefinition.queryName, @"Property definition query name should not be nil");
-//    }
+    STAssertTrue(typeDefinition.propertyDefinitions.count > 0, @"Expected at least one propery definition, but got %d", typeDefinition.propertyDefinitions.count);
+    for (id key in typeDefinition.propertyDefinitions)
+    {
+        CMISPropertyDefinition *propertyDefinition = [typeDefinition.propertyDefinitions objectForKey:key];
+        STAssertNotNil(propertyDefinition.description, @"Property definition description should not be nil");
+        STAssertNotNil(propertyDefinition.displayName, @"Property definition display name should not be nil");
+        STAssertNotNil(propertyDefinition.id, @"Property definition id should not be nil");
+        STAssertNotNil(propertyDefinition.localName, @"Property definition local name should not be nil");
+        STAssertNotNil(propertyDefinition.localNamespace, @"Property definition local namespace should not be nil");
+        STAssertNotNil(propertyDefinition.queryName, @"Property definition query name should not be nil");
+    }
 }
 
 #pragma mark Helper Methods

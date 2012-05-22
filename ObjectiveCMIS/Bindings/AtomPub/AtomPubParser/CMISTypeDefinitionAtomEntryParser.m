@@ -78,12 +78,13 @@
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
 {
+    NSString *cleanedString = [string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (!self.currentString)
     {
-        self.currentString = string;
+        self.currentString = cleanedString;
     }
     else {
-        self.currentString = [self.currentString stringByAppendingString:string];
+        self.currentString = [self.currentString stringByAppendingString:cleanedString];
     }
 }
 
@@ -198,6 +199,8 @@
             self.typeDefinition.isControllablePolicy = self.currentString.lowercaseString == @"true";
         }
     }
+
+    self.currentString = nil;
 }
 
 #pragma mark CMISPropertyDefinitionDelegate delegates

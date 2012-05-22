@@ -10,10 +10,6 @@
 
 @interface CMISPropertyDefinitionParser : NSObject <NSXMLParserDelegate>
 
-// Designated Initializer
-- (id)initWithData:(NSData *)atomData;
-- (BOOL)parseAndReturnError:(NSError **)error;
-
 // Initializes a child parser for an Atom Entry and takes over parsing control while parsing the Atom Entry
 + (id)parserForPropertyDefinition:(NSString *)propertyDefinitionElementName
                withParentDelegate:(id<NSXMLParserDelegate, CMISPropertyDefinitionDelegate>)parentDelegate

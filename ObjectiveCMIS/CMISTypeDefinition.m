@@ -34,7 +34,7 @@
 
 - (NSDictionary *)propertyDefinitions
 {
-    return self.propertyDefinitions;
+    return self.internalPropertyDefinitions;
 }
 
 - (void)addPropertyDefinition:(CMISPropertyDefinition *)propertyDefinition
