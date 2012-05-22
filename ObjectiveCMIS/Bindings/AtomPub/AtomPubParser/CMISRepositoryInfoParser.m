@@ -23,6 +23,10 @@
 // TODO Temporary object, replace with CMISRepositoryCapabilities object or similar when available
 @property (nonatomic, strong) id currentCapabilities;
 
+// Child Delegate Properties
+@property (nonatomic, weak) id<NSXMLParserDelegate> childDelegate;
+@property (nonatomic, strong) NSMutableArray *extensionElements;
+@property (nonatomic, assign) BOOL isParsingExtensionElement;
 @end
 
 @implementation CMISRepositoryInfoParser
@@ -32,6 +36,9 @@
 @synthesize currentString = _currentString;
 @synthesize currentCollection = _currentCollection;
 @synthesize currentCapabilities = _currentCapabilities;
+@synthesize extensionElements = _extensionElements;
+@synthesize childDelegate = _childDelegate;
+@synthesize isParsingExtensionElement = _isParsingExtensionElement;
 
 
 - (id)initRepositoryInfoParserWithParentDelegate:(id<NSXMLParserDelegate, CMISRepositoryInfoParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
@@ -42,6 +49,8 @@
         self.currentString = [[NSMutableString alloc] init];
         self.currentRepositoryInfo = [[CMISRepositoryInfo alloc] init];
         self.parentDelegate = parentDelegate;
+        
+        self.isParsingExtensionElement = NO;
         
         [parser setDelegate:self];
     }
@@ -60,9 +69,18 @@
 {
     self.currentString = [[NSMutableString alloc] init];
     
-    if ([elementName isEqualToString:kCMISCoreCapabilities])
+    if ([namespaceURI isEqualToString:kCMISNamespaceCmis])
     {
-        self.currentCapabilities = [NSMutableDictionary dictionaryWithCapacity:14];
+        if ([elementName isEqualToString:kCMISCoreCapabilities])
+        {
+            self.currentCapabilities = [NSMutableDictionary dictionaryWithCapacity:14];
+        }
+    }
+    else if ( ![namespaceURI isEqualToString:kCMISNamespaceCmis] && ![namespaceURI isEqualToString:kCMISNamespaceApp] 
+              && ![namespaceURI isEqualToString:kCMISNamespaceAtom] && ![namespaceURI isEqualToString:kCMISNamespaceCmisRestAtom]) 
+    {
+        self.isParsingExtensionElement = YES;
+        self.childDelegate = [CMISAtomPubExtensionElementParser extensionElementParserWithElementName:elementName namespaceUri:namespaceURI attributes:attributeDict parentDelegate:self parser:parser];
     }
     
     // TODO Parse ACL Capabilities
@@ -149,10 +167,15 @@
             //log(@"TODO Cmis-Core Element was ignored: ElementName=%@, Value=%@",elementName, self.currentString);
         } 
     }
-    else if ([namespaceURI isEqualToString:kCMISNamespaceCmisRestAtom] && [elementName isEqualToString:kCMISRestAtomRepositoryInfo])
+    else if ([namespaceURI isEqualToString:kCMISNamespaceCmisRestAtom])
     {
-        if (self.parentDelegate)
+        if ([elementName isEqualToString:kCMISRestAtomRepositoryInfo] && self.parentDelegate)
         {
+            if (self.extensionElements)
+            {
+                self.currentRepositoryInfo.extensions = [self.extensionElements copy];                
+            }
+
             // Reset the parser's delegate to its parent since we're done with the repositoryInfo node
             [self.parentDelegate repositoryInfoParser:self didFinishParsingRepositoryInfo:self.currentRepositoryInfo];
             [parser setDelegate:self.parentDelegate];
@@ -160,8 +183,30 @@
             self.parentDelegate = nil;
         }
     }
+    else if ([namespaceURI isEqualToString:kCMISNamespaceApp] || [namespaceURI isEqualToString:kCMISNamespaceAtom])
+    {
+        NSLog(@"WARNING: We should not get here");
+    }
+    else if (self.isParsingExtensionElement)
+    {
+        self.isParsingExtensionElement = NO;
+        self.childDelegate = nil;
+    }
     
     self.currentString = nil;
+}
+
+#pragma mark -
+#pragma mark CMISAtomPubExtensionElementParserDelegate Methods
+
+- (void)extensionElementParser:(CMISAtomPubExtensionElementParser *)parser didFinishParsingExtensionElement:(CMISExtensionElement *)extensionElement
+{
+    if (self.extensionElements == nil)
+    {
+        self.extensionElements = [[NSMutableArray alloc] init];
+    }
+    
+    [self.extensionElements addObject:extensionElement];
 }
 
 @end
