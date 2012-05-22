@@ -12,7 +12,7 @@
 @interface CMISProperties : NSObject
 
 // Dictionary of property id -> CMISPropertyData
-@property (nonatomic, strong, readonly) NSDictionary *properties;
+@property (nonatomic, strong, readonly) NSDictionary *propertiesDictionary;
 
 // List of CMISPropertyData objects
 @property (nonatomic, strong, readonly) NSArray *propertyList;

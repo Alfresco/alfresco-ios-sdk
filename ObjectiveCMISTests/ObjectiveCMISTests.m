@@ -414,7 +414,7 @@
 
     for (CMISObjectData *objectData in objectList.objects)
     {
-        STAssertTrue(objectData.properties.properties.count > 10, @"Expecting properties to be passed when querying");
+        STAssertTrue(objectData.properties.propertiesDictionary.count > 10, @"Expecting properties to be passed when querying");
     }
 
     // Doing a query without any maxItems or skipCount, and also only requesting one property 'column'
@@ -424,7 +424,7 @@
     STAssertTrue(objectList.objects.count > 0, @"Returned # objects is repo specific, but should be at least 1");
 
     CMISObjectData *firstResult = [objectList.objects objectAtIndex:0];
-    STAssertTrue(firstResult.properties.properties.count == 1, @"Only querying for 1 property, but got %d properties back", firstResult.properties.properties.count);
+    STAssertTrue(firstResult.properties.propertiesDictionary.count == 1, @"Only querying for 1 property, but got %d properties back", firstResult.properties.propertiesDictionary.count);
 
 }
 
@@ -629,6 +629,44 @@
         STAssertNotNil(propertyDefinition.localNamespace, @"Property definition local namespace should not be nil");
         STAssertNotNil(propertyDefinition.queryName, @"Property definition query name should not be nil");
     }
+}
+
+- (void)testUpdateDocumentPropertiesThroughObjectService
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    id<CMISObjectService> objectService = self.session.binding.objectService;
+
+    // Create test document
+    CMISDocument *document = [self uploadTestFile];
+
+    // Prepare params
+    CMISStringInOutParameter *objectIdInOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:document.identifier];
+    CMISProperties *properties = [[CMISProperties alloc] init];
+    [properties addProperty:[CMISPropertyData createPropertyStringData:kCMISPropertyName value:@"name_has_changed"]];
+
+    // Update properties and verify
+    [objectService updatePropertiesForObject:objectIdInOutParam withProperties:properties withChangeToken:nil error:&error];
+    STAssertNil(error, @"Got error while updating properties: %@", [error description]);
+    STAssertNotNil(objectIdInOutParam.outParameter, @"When updating properties, the object id should be returned");
+
+    NSString *newObjectId = objectIdInOutParam.outParameter;
+    document = (CMISDocument *) [self.session retrieveObject:newObjectId error:&error];
+    STAssertNil(error, @"Got error while retrieving test document: %@", [error description]);
+    STAssertEqualObjects(document.name, @"name_has_changed", @"Name was not updated");
+
+    // Cleanup
+    [self deleteDocumentAndVerify:document];
+}
+
+- (void)testUpdateFolderPropertiesThroughObjectService
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+//    [self.rootFolder createFolder:@"temp_test_folder" error:&error];
+//    STAssertNil(error, @"Got error while updating properties: %@", [error description]);
 }
 
 #pragma mark Helper Methods

@@ -216,11 +216,11 @@
         self.objectData.linkRelations = [[CMISLinkRelations alloc] initWithLinkRelationSet:[self.currentLinkRelations copy]];
         
         // set the objectData identifier
-        CMISPropertyData *objectId = [self.currentObjectProperties.properties objectForKey:kCMISAtomEntryObjectId];
+        CMISPropertyData *objectId = [self.currentObjectProperties.propertiesDictionary objectForKey:kCMISAtomEntryObjectId];
         self.objectData.identifier = [objectId firstValue];
         
         // set the objectData baseType
-        CMISPropertyData *baseTypeProperty = [self.currentObjectProperties.properties objectForKey:kCMISAtomEntryBaseTypeId];
+        CMISPropertyData *baseTypeProperty = [self.currentObjectProperties.propertiesDictionary objectForKey:kCMISAtomEntryBaseTypeId];
         NSString *baseType = [baseTypeProperty firstValue];
         if ([baseType isEqualToString:kCMISAtomEntryBaseTypeDocument])
         {

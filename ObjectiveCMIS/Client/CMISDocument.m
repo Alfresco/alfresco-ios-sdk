@@ -44,16 +44,16 @@
     self = [super initWithObjectData:objectData binding:binding];
     if (self)
     {
-        self.contentStreamId = [[objectData.properties.properties objectForKey:kCMISProperyContentStreamId] firstValue];
-        self.contentStreamMediaType = [[objectData.properties.properties objectForKey:kCMISPropertyContentStreamMediaType] firstValue];
-        self.contentStreamLength = [[[objectData.properties.properties objectForKey:kCMISPropertyContentStreamLength] firstValue] integerValue];
-        self.contentStreamFileName = [[objectData.properties.properties objectForKey:kCMISPropertyContentStreamFileName] firstValue];
+        self.contentStreamId = [[objectData.properties.propertiesDictionary objectForKey:kCMISProperyContentStreamId] firstValue];
+        self.contentStreamMediaType = [[objectData.properties.propertiesDictionary objectForKey:kCMISPropertyContentStreamMediaType] firstValue];
+        self.contentStreamLength = [[[objectData.properties.propertiesDictionary objectForKey:kCMISPropertyContentStreamLength] firstValue] integerValue];
+        self.contentStreamFileName = [[objectData.properties.propertiesDictionary objectForKey:kCMISPropertyContentStreamFileName] firstValue];
 
-        self.versionLabel = [[objectData.properties.properties objectForKey:kCMISPropertyVersionLabel] firstValue];
-        self.versionSeriesId = [[objectData.properties.properties objectForKey:kCMISPropertyVersionSeriesId] firstValue];
-        self.isLatestVersion = [[[objectData.properties.properties objectForKey:kCMISPropertyIsLatestVersion] firstValue] boolValue];
-        self.isLatestMajorVersion = [[[objectData.properties.properties objectForKey:kCMISPropertyIsLatestMajorVersion] firstValue] boolValue];
-        self.isMajorVersion = [[[objectData.properties.properties objectForKey:kCMISPropertyIsMajorVersion] firstValue] boolValue];
+        self.versionLabel = [[objectData.properties.propertiesDictionary objectForKey:kCMISPropertyVersionLabel] firstValue];
+        self.versionSeriesId = [[objectData.properties.propertiesDictionary objectForKey:kCMISPropertyVersionSeriesId] firstValue];
+        self.isLatestVersion = [[[objectData.properties.propertiesDictionary objectForKey:kCMISPropertyIsLatestVersion] firstValue] boolValue];
+        self.isLatestMajorVersion = [[[objectData.properties.propertiesDictionary objectForKey:kCMISPropertyIsLatestMajorVersion] firstValue] boolValue];
+        self.isMajorVersion = [[[objectData.properties.propertiesDictionary objectForKey:kCMISPropertyIsMajorVersion] firstValue] boolValue];
     }
     return self;
 }

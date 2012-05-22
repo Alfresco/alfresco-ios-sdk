@@ -15,6 +15,7 @@
 #import "CMISErrors.h"
 #import "CMISStringInOutParameter.h"
 #import "CMISURLUtil.h"
+#import "CMISUpdateObjectAtomEntryWriter.h"
 
 @interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
 
@@ -342,7 +343,34 @@
     }
 
     // Create XML needed as body of html
-    CMISAtomEntryWriter *entryWriter = [[CMISAtomEntryWriter alloc] init];
+    CMISUpdateObjectAtomEntryWriter *xmlWriter = [[CMISUpdateObjectAtomEntryWriter alloc] init];
+    xmlWriter.properties = properties;
+
+    NSError *internalError = nil;
+    HTTPResponse *response = [HttpUtil invokePUTSynchronous:[NSURL URLWithString:selfLink]
+                                withSession:self.session
+                                body:[xmlWriter.generateAtomEntryXml dataUsingEncoding:NSUTF8StringEncoding]
+                                headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
+                                error:&internalError];
+
+    // Object id and changeToken might have changed because of this operation
+    if (internalError == nil)
+    {
+        CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response.data];
+        if ([atomEntryParser parseAndReturnError:error])
+        {
+            objectId.outParameter = [[atomEntryParser.objectData.properties propertyForId:kCMISPropertyObjectId] firstValue];
+
+            if (changeToken != nil)
+            {
+                changeToken.outParameter = [[atomEntryParser.objectData.properties propertyForId:kCMISPropertyChangeToken] firstValue];
+            }
+        }
+    }
+    else
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
+    }
 }
 
 
@@ -381,9 +409,9 @@
     NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:filePathToGeneratedAtomEntry];
     NSData *response = [HttpUtil invokePOSTSynchronous:downUrl
                                            withSession:self.session
-                                            bodyStream:bodyStream
-                                               headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
-                                                 error:&internalError].data;
+                                           bodyStream:bodyStream
+                                           headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
+                                           error:&internalError].data;
     
     // Close stream and delete temporary file
     [bodyStream close];

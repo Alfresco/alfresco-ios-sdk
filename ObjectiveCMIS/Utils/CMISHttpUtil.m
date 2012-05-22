@@ -70,6 +70,20 @@
     return [self executeRequestSynchronous:request error:outError];
 }
 
++ (HTTPResponse *)invokePUTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body
+                                                    headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
+{
+    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"PUT" usingSession:session];
+    [request setHTTPBody:body];
+
+    if (additionalHeaders)
+    {
+        [self addHeaders:additionalHeaders toURLRequest:request];
+    }
+
+    return [self executeRequestSynchronous:request error:outError];
+}
+
 #pragma mark asynchronous methods
 
 + (void)invokeGETAsynchronous:(NSURL *)url withSession:(CMISBindingSession *)session withDelegate:(id<NSURLConnectionDataDelegate>)delegate

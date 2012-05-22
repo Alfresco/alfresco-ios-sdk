@@ -17,7 +17,7 @@
 
 @synthesize internalPropertiesByIdDict = _internalPropertiesByIdDict;
 @synthesize internalPropertiesByQueryNameDict = _internalPropertiesByQueryNameDict;
-@synthesize properties = _properties;
+@synthesize propertiesDictionary = _propertiesDictionary;
 @synthesize propertyList = _propertyList;
 
 
@@ -29,14 +29,17 @@
     }
     [self.internalPropertiesByIdDict setObject:propertyData forKey:propertyData.identifier];
 
-    if (self.internalPropertiesByQueryNameDict == nil)
+    if (propertyData.queryName != nil)
     {
-        self.internalPropertiesByQueryNameDict = [NSMutableDictionary dictionary];
+        if (self.internalPropertiesByQueryNameDict == nil)
+        {
+            self.internalPropertiesByQueryNameDict = [NSMutableDictionary dictionary];
+        }
+        [self.internalPropertiesByQueryNameDict setObject:propertyData forKey:propertyData.queryName];
     }
-    [self.internalPropertiesByQueryNameDict setObject:propertyData forKey:propertyData.queryName];
 }
 
-- (NSDictionary *)properties
+- (NSDictionary *)propertiesDictionary
 {
     return [NSDictionary dictionaryWithDictionary:self.internalPropertiesByIdDict];
 }

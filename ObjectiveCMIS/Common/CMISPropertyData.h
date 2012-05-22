@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CMISEnums.h"
 
 @interface CMISPropertyData : NSObject
 
@@ -15,11 +16,43 @@
 @property (nonatomic, strong) NSString *displayName;
 @property (nonatomic, strong) NSString *queryName;
 
+@property CMISPropertyType type;
+
 // Returns the list of values of this property. 
 // For a single value property this is a list with one entry
 @property (nonatomic, strong) NSArray *values;
 
 // Returns the first entry of the list of values.
 @property (nonatomic, assign, readonly) id firstValue;
+
+/** Convenience method for retrieving the string value. Returns nil if property is not of string type */
+- (NSString *)propertyStringValue;
+
+/** Convenience method for retrieving the integer value. Returns nil if property is not of integer type */
+- (NSNumber *)propertyIntegerValue;
+
+/** Convenience method for retrieving the id value. Returns nil if property is not of id type */
+- (NSString *)propertyIdValue;
+
+/** Convenience method for retrieving the datetime value. Returns nil if property is not of datetime type */
+- (NSDate *)propertyDateTimeValue;
+
+/** Convenience method for retrieving the boolean value. Returns nil if property is not of boolean type */
+- (NSNumber *)propertyBooleanValue;
+
+/** Creation of a string property */
++ (CMISPropertyData *)createPropertyStringData:(NSString *)id value:(NSString *)value;
+
+/** Creation of an integer property */
++ (CMISPropertyData *)createPropertyIntegerData:(NSString *)id value:(NSInteger)value;
+
+/** Creation of an id property */
++ (CMISPropertyData *)createPropertyIdData:(NSString *)id value:(NSString *)value;
+
+/** Creation of a datetime property */
++ (CMISPropertyData *)createPropertyDataTimeData:(NSString *)id value:(NSDate *)value;
+
+/** Creation of a boolean property */
++ (CMISPropertyData *)createPropertyBooleanData:(NSString *)id value:(BOOL)value;
 
 @end
