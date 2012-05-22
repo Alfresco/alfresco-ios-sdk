@@ -97,7 +97,7 @@
             case CMISPropertyTypeId:
             {
                 [self appendStringToReturnResult:[NSString stringWithFormat:@"<cmis:propertyId propertyDefinitionId=\"%@\"><cmis:value>%@</cmis:value></cmis:propertyId>",
-                                propertyData.identifier, propertyData.propertyStringValue]];
+                                propertyData.identifier, propertyData.propertyIdValue]];
                 break;
             }
             case CMISPropertyTypeDateTime:

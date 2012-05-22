@@ -663,10 +663,32 @@
 - (void)testUpdateFolderPropertiesThroughObjectService
 {
     [self setupCmisSession];
-//    NSError *error = nil;
+    NSError *error = nil;
 
-//    [self.rootFolder createFolder:@"temp_test_folder" error:&error];
-//    STAssertNil(error, @"Got error while updating properties: %@", [error description]);
+    // Create a temporary test folder
+    CMISProperties *properties = [[CMISProperties alloc] init];
+    [properties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:@"temp_test_folder"]];
+    [properties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyObjectTypeId withIdValue:kCMISPropertyObjectTypeIdValueFolder]];
+    NSString *folderId = [self.rootFolder createFolder:properties error:&error];
+    STAssertNil(error, @"Got error while creating folder: %@", [error description]);
+
+    // Update name of test folder through object service
+    id<CMISObjectService> objectService = self.session.binding.objectService;
+    CMISStringInOutParameter *objectIdParam = [CMISStringInOutParameter inOutParameterUsingInParameter:folderId];
+    properties = [[CMISProperties alloc] init];
+    [properties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:@"temp_test_folder_renamed"]];
+    [objectService updatePropertiesForObject:objectIdParam withProperties:properties withChangeToken:nil error:&error];
+    STAssertNil(error, @"Got error while updating folder properties: %@", [error description]);
+    STAssertNotNil(objectIdParam.outParameter, @"Returned object id should not be nil");
+
+    // Retrieve folder again and check if name has actually changed
+    CMISFolder *renamedFolder = (CMISFolder *) [self.session retrieveObject:objectIdParam.outParameter error:&error];
+    STAssertNil(error, @"Got error while retrieving renamed folder: %@", [error description]);
+    STAssertEqualObjects(renamedFolder.name, @"temp_test_folder_renamed", @"Folder was not renamed, name is %@", renamedFolder.name);
+
+    // Delete test folder
+    [renamedFolder deleteTreeAndReturnError:&error];
+    STAssertNil(error, @"Error while deleting newly created folder: %@", [error description]);
 }
 
 #pragma mark Helper Methods
