@@ -18,7 +18,11 @@
                         headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:[self stringForHttpRequestMethod:httpRequestMethod] usingSession:session];
-    [request setHTTPBody:body];
+
+    if (body)
+    {
+        [request setHTTPBody:body];
+    }
 
     if (additionalHeaders)
     {
@@ -31,7 +35,11 @@
 + (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:[self stringForHttpRequestMethod:httpRequestMethod] usingSession:session];
-    [request setHTTPBodyStream:bodyStream];
+
+    if (bodyStream)
+    {
+        [request setHTTPBodyStream:bodyStream];
+    }
 
     if (additionalHeaders)
     {
@@ -44,8 +52,7 @@
 
 + (HTTPResponse *)invokeGETSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
 {
-    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"GET" usingSession:session];
-    return [self executeRequestSynchronous:request error:outError];
+    return [self invokeSynchronous:url withHttpMethod:HTTP_GET withSession:session body:nil headers:nil error:outError];
 }
 
 + (HTTPResponse *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body error:(NSError **)outError
@@ -55,62 +62,34 @@
 
 + (HTTPResponse *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
-    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"POST" usingSession:session];
-    [request setHTTPBody:body];
-
-    if (additionalHeaders)
-    {
-        [self addHeaders:additionalHeaders toURLRequest:request];
-    }
-
-    return [self executeRequestSynchronous:request error:outError];
+    return [self invokeSynchronous:url withHttpMethod:HTTP_POST
+                       withSession:session body:body headers:additionalHeaders error:outError];
 }
 
 + (HTTPResponse *)invokePOSTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
-    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"POST" usingSession:session];
-   [request setHTTPBodyStream:bodyStream];
-
-   if (additionalHeaders)
-   {
-       [self addHeaders:additionalHeaders toURLRequest:request];
-   }
-
-   return [self executeRequestSynchronous:request error:outError];
+   return [self invokeSynchronous:url withHttpMethod:HTTP_POST withSession:session
+                       bodyStream:bodyStream headers:additionalHeaders error:outError];
 }
 
 + (HTTPResponse *)invokeDELETESynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
 {
-    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"DELETE" usingSession:session];
-    return [self executeRequestSynchronous:request error:outError];
+    return [self invokeSynchronous:url withHttpMethod:HTTP_DELETE
+                       withSession:session bodyStream:nil headers:nil error:outError];
 }
 
 + (HTTPResponse *)invokePUTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session
                     bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
-    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"PUT" usingSession:session];
-    [request setHTTPBodyStream:bodyStream];
-
-    if (additionalHeaders)
-    {
-         [self addHeaders:additionalHeaders toURLRequest:request];
-    }
-
-    return [self executeRequestSynchronous:request error:outError];
+    return [self invokeSynchronous:url withHttpMethod:HTTP_PUT
+                       withSession:session bodyStream:bodyStream headers:additionalHeaders error:outError];
 }
 
 + (HTTPResponse *)invokePUTSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body
                                                     headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
-    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"PUT" usingSession:session];
-    [request setHTTPBody:body];
-
-    if (additionalHeaders)
-    {
-        [self addHeaders:additionalHeaders toURLRequest:request];
-    }
-
-    return [self executeRequestSynchronous:request error:outError];
+    return [self invokeSynchronous:url withHttpMethod:HTTP_PUT
+                       withSession:session body:body headers:additionalHeaders error:outError];
 }
 
 #pragma mark asynchronous methods
