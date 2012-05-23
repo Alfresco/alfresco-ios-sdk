@@ -95,3 +95,12 @@ typedef enum
     @"canAddObjectToFolder", @"canRemoveObjectFromFolder", @"canGetContentStream", @"canApplyPolicy", \
     @"canGetAppliedPolicies", @"canRemovePolicy", @"canGetChildren", @"canCreateDocument", @"canCreateFolder", \
     @"canCreateRelationship", @"canDeleteTree", @"canGetRenditions", @"canGetACL", @"canApplyACL", nil
+
+// Extension Levels
+typedef enum
+{
+    CMISExtensionLevelProperties
+    // TODO expose the remaining extensions as they are implemented
+    // CMISExtensionLevelObject, CMISExtensionLevelAllowableActions, CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
+
+} CMISExtensionLevel;
