@@ -46,4 +46,9 @@
     [self.internalPropertyDefinitions setObject:propertyDefinition forKey:propertyDefinition.id];
 }
 
+- (CMISPropertyDefinition *)propertyDefinitionForId:(NSString *)propertyId
+{
+    return [self.internalPropertyDefinitions objectForKey:propertyId];
+}
+
 @end

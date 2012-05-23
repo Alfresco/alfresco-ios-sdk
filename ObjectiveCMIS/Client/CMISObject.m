@@ -9,6 +9,9 @@
 #import "CMISObject.h"
 #import "CMISConstants.h"
 #import "ISO8601DateFormatter.h"
+#import "CMISErrors.h"
+#import "CMISObjectConverter.h"
+#import "CMISStringInOutParameter.h"
 
 @interface CMISObject ()
 
@@ -59,6 +62,37 @@
     }
     
     return self;
+}
+
+- (CMISObject *)updateProperties:(NSDictionary *)properties error:(NSError **)error
+{
+    // Validate properties param
+    if (!properties || properties.count == 0)
+    {
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Properties cannot be nil or empty"];
+        return nil;
+    }
+
+    // Convert properties to an understandable format for the service
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:self.objectType error:error];
+
+    if (convertedProperties != nil)
+    {
+        CMISStringInOutParameter *objectIdInOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:self.identifier];
+        CMISStringInOutParameter *changeTokenInOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:self.changeToken];
+        [self.binding.objectService updatePropertiesForObject:objectIdInOutParam withProperties:convertedProperties withChangeToken:changeTokenInOutParam error:error];
+
+        if (objectIdInOutParam.outParameter != nil)
+        {
+            CMISObjectData *objectData = [self.binding.objectService retrieveObject:objectIdInOutParam.outParameter error:error];
+            if (objectData != nil)
+            {
+                return [converter convertObject:objectData];
+            }
+        }
+    }
+    return nil;
 }
 
 - (NSArray *)extensionsForExtensionLevel:(CMISExtensionLevel)extensionLevel

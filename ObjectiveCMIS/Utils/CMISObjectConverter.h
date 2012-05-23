@@ -18,4 +18,10 @@
 - (CMISObject *)convertObject:(CMISObjectData *)objectData;
 - (CMISCollection *)convertObjects:(NSArray *)objects;
 
+/**
+ * Converts the given dictionary of properties, where the key is the property id and the value
+ * can be a CMISPropertyData or a regular string.
+ */
+- (CMISProperties *)convertProperties:(NSDictionary *)properties forObjectTypeId:(NSString *)objectTypeId error:(NSError **)error;
+
 @end

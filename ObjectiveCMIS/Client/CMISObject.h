@@ -31,6 +31,18 @@
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 
 /**
+ * Updates the properties that are provided.
+ *
+ * @param properties The properties to update. The key should be the property id.
+ *                   The value can be an instance of CMISPropertyData, or a regular string.
+ *                   If it is a string, a conversion to the CMISPropertyData will be done for you,
+ *                   but keep in mind that this can trigger another remote call to the server to fetch the type info.
+ *
+ * @return the updated object (a repository might have created a new version of the object)
+*/
+- (CMISObject *)updateProperties:(NSDictionary *)properties error:(NSError **)error;
+
+/**
  * Returns the extensions for the given level as an array of CMISExtensionElements.  Returns nil if no extensions exist for the given level
  */
 - (NSArray *)extensionsForExtensionLevel:(CMISExtensionLevel)extensionLevel;

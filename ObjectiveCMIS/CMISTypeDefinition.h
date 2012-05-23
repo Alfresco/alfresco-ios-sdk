@@ -31,5 +31,6 @@
 @property (nonatomic, strong, readonly) NSDictionary *propertyDefinitions;
 
 - (void)addPropertyDefinition:(CMISPropertyDefinition *)propertyDefinition;
+- (CMISPropertyDefinition *)propertyDefinitionForId:(NSString *)propertyId;
 
 @end
