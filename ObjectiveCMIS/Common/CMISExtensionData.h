@@ -7,10 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CMISExtensionElement.h"
 
 @interface CMISExtensionData : NSObject
 
-/// Array of CMISExtensionElements
+/** 
+ * Returns an Array of CMISExtensionElements 
+ */
 @property (nonatomic, strong) NSArray *extensions;
 
 @end

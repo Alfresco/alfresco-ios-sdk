@@ -30,5 +30,10 @@
 
 - (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
 
+/**
+ * Returns the extensions for the given level as an array of CMISExtensionElements.  Returns nil if no extensions exist for the given level
+ */
+- (NSArray *)extensionsForExtensionLevel:(CMISExtensionLevel)extensionLevel;
+
 @end
 

@@ -20,6 +20,7 @@
 #import "CMISStringInOutParameter.h"
 #import "CMISTypeDefinition.h"
 #import "CMISPropertyDefinition.h"
+#import "CMISExtensionData.h"
 
 @interface ObjectiveCMISTests()
 
@@ -689,6 +690,31 @@
     // Delete test folder
     [renamedFolder deleteTreeAndReturnError:&error];
     STAssertNil(error, @"Error while deleting newly created folder: %@", [error description]);
+}
+
+- (void)testExtensionData
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+    
+    // Test RepositoryInfo Extensions
+    CMISRepositoryInfo *repoInfo = self.session.repositoryInfo;
+    NSArray *repoExtensions = repoInfo.extensions;
+    STAssertTrue(1 == repoExtensions.count, @"RepositoryInfo should only have one extension");
+    CMISExtensionElement *element = [repoExtensions objectAtIndex:0];
+    STAssertTrue([@"Version 1.0 OASIS Standard" isEqualToString:element.value], @"");
+    STAssertTrue([@"http://www.alfresco.org" isEqualToString:element.namespaceUri], @"");
+    STAssertTrue([@"cmisSpecificationTitle" isEqualToString:element.name], @"");
+    STAssertFalse([element.children count], @"");
+    STAssertFalse([element.attributes count], @"");
+    
+    // Test Properties Extension
+    
+//    TODO Add unit tests for the test server
+//    
+//    CMISObject *object = [self.session retrieveObject:@"workspace://SpacesStore/ad483fe8-7695-46e9-80d1-52036c114560" error:&error];
+//    NSArray *extElements = object.properties.extensions;
+//    STAssertNotNil(extElements, @"");
 }
 
 #pragma mark Helper Methods
