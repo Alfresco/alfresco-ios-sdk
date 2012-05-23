@@ -9,6 +9,7 @@
 #import "CMISFolder.h"
 #import "CMISObjectConverter.h"
 #import "CMISConstants.h"
+#import "CMISErrors.h"
 
 @interface CMISFolder ()
 
@@ -45,14 +46,32 @@
     return self.children;
 }
 
-- (NSString *)createFolder:(CMISProperties *)properties error:(NSError **)error;
+- (NSString *)createFolder:(NSDictionary *)properties error:(NSError **)error;
 {
-    return [self.binding.objectService createFolderInParentFolder:self.identifier withProperties:properties error:error];
+    NSError *internalError = nil;
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueFolder error:&internalError];
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+        return nil;
+    }
+
+    return [self.binding.objectService createFolderInParentFolder:self.identifier withProperties:convertedProperties error:error];
 }
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(CMISProperties *)properties error:(NSError **)error
+- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties error:(NSError **)error
 {
-    return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:properties inFolder:self.identifier error:error];
+    NSError *internalError = nil;
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+        return nil;
+    }
+
+    return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:convertedProperties inFolder:self.identifier error:error];
 }
 
 - (NSArray *)deleteTreeAndReturnError:(NSError **)error

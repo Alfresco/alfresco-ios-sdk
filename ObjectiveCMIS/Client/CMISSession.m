@@ -187,9 +187,18 @@
     return queryResults;
 }
 
-- (NSString *)createFolder:(CMISProperties *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+- (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
-    return [self.binding.objectService createFolderInParentFolder:folderObjectId withProperties:properties error:error];
+    NSError *internalError = nil;
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+        return nil;
+    }
+
+    return [self.binding.objectService createFolderInParentFolder:folderObjectId withProperties:convertedProperties error:error];
 }
 
 - (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath
@@ -200,9 +209,18 @@
 }
 
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
-                   withProperties:(CMISProperties *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+                   withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
-    return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:properties inFolder:folderObjectId error:error];
+    NSError *internalError = nil;
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+        return nil;
+    }
+
+    return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:convertedProperties inFolder:folderObjectId error:error];
 }
 
 

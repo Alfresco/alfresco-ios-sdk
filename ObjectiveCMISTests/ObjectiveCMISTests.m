@@ -222,9 +222,9 @@
 
     // Upload test file
     NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
-    CMISProperties *documentProperties = [[CMISProperties alloc] init];
-    [documentProperties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:documentName]];
-    [documentProperties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyObjectTypeId withStringValue:kCMISPropertyObjectTypeIdValueDocument]];
+    NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
+    [documentProperties setObject:documentName forKey:kCMISPropertyName];
+    [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
 
     NSString *objectId = [self.rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain" withProperties:documentProperties error:&error];
     STAssertNil(error, @"Got error while creating document: %@", [error description]);
@@ -253,9 +253,9 @@
 
     // Upload test file
     NSString *documentName = @"cmis-spec-v1.0.pdf";
-    CMISProperties *documentProperties = [[CMISProperties alloc] init];
-    [documentProperties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:documentName]];
-    [documentProperties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyObjectTypeId withStringValue:kCMISPropertyObjectTypeIdValueDocument]];
+    NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
+    [documentProperties setObject:documentName forKey:kCMISPropertyName];
+    [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
 
     NSString *objectId = [self.rootFolder createDocumentFromFilePath:fileToUploadPath withMimeType:@"application/pdf" withProperties:documentProperties error:&error];
     STAssertNil(error, @"Got error while creating document: %@", [error description]);
@@ -298,9 +298,9 @@
     NSError *error = nil;
 
     // Create a test folder
-    CMISProperties *properties = [[CMISProperties alloc] init];
-    [properties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:@"test-folder"]];
-    [properties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyObjectTypeId withStringValue:kCMISPropertyObjectTypeIdValueFolder]];
+    NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+    [properties setObject:@"test-folder" forKey:kCMISPropertyName];
+    [properties setObject:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
 
     NSString *newFolderObjectId = [self.rootFolder createFolder:properties error:&error];
     STAssertNil(error, @"Error while creating folder in root folder: %@", [error description]);
@@ -669,18 +669,19 @@
     NSError *error = nil;
 
     // Create a temporary test folder
-    CMISProperties *properties = [[CMISProperties alloc] init];
-    [properties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:@"temp_test_folder"]];
-    [properties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyObjectTypeId withIdValue:kCMISPropertyObjectTypeIdValueFolder]];
+    NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+    [properties setObject:@"temp_test_folder" forKey:kCMISPropertyName];
+    [properties setObject:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
+
     NSString *folderId = [self.rootFolder createFolder:properties error:&error];
     STAssertNil(error, @"Got error while creating folder: %@", [error description]);
 
     // Update name of test folder through object service
     id<CMISObjectService> objectService = self.session.binding.objectService;
     CMISStringInOutParameter *objectIdParam = [CMISStringInOutParameter inOutParameterUsingInParameter:folderId];
-    properties = [[CMISProperties alloc] init];
-    [properties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:@"temp_test_folder_renamed"]];
-    [objectService updatePropertiesForObject:objectIdParam withProperties:properties withChangeToken:nil error:&error];
+    CMISProperties *updateProperties = [[CMISProperties alloc] init];
+    [updateProperties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:@"temp_test_folder_renamed"]];
+    [objectService updatePropertiesForObject:objectIdParam withProperties:updateProperties withChangeToken:nil error:&error];
     STAssertNil(error, @"Got error while updating folder properties: %@", [error description]);
     STAssertNotNil(objectIdParam.outParameter, @"Returned object id should not be nil");
 
@@ -855,9 +856,9 @@
     // Set properties on test file
     NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
     NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
-    CMISProperties *documentProperties = [[CMISProperties alloc] init];
-    [documentProperties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:documentName]];
-    [documentProperties addProperty:[CMISPropertyData createPropertyForId:kCMISPropertyObjectTypeId withStringValue:kCMISPropertyObjectTypeIdValueDocument]];
+    NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
+    [documentProperties setObject:documentName forKey:kCMISPropertyName];
+    [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
 
     // Upload test file
     NSError *error = nil;

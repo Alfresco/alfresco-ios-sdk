@@ -169,6 +169,11 @@
                     [convertedProperties addProperty:[CMISPropertyData createPropertyForId:propertyId withDateTimeValue:propertyValue]];
                     break;
                 }
+                default:
+                {
+                    log(@"Unsupported: cannot convert property type %d", propertyDefinition.propertyType)
+                    break;
+                }
             }
 
         }
