@@ -135,6 +135,7 @@ extern NSString * const kCMISCorePropertyIdDefinition;
 extern NSString * const kCMISCorePropertyBooleanDefinition;
 extern NSString * const kCMISCorePropertyDateTimeDefinition;
 extern NSString * const kCMISCorePropertyIntegerDefinition;
+extern NSString * const kCMISCoreProperties;
 
 // URI Templates
 extern NSString * const kCMISUriTemplateObjectById;

@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISPropertyData.h"
+#import "CMISExtensionData.h"
 
-@interface CMISProperties : NSObject
+@interface CMISProperties : CMISExtensionData
 
 // Dictionary of property id -> CMISPropertyData
 @property (nonatomic, strong, readonly) NSDictionary *propertiesDictionary;

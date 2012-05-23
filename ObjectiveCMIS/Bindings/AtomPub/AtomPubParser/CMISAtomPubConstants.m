@@ -135,6 +135,7 @@ NSString * const kCMISCorePropertyIdDefinition = @"propertyIdDefinition";
 NSString * const kCMISCorePropertyBooleanDefinition = @"propertyBooleanDefinition";
 NSString * const kCMISCorePropertyDateTimeDefinition = @"propertyDateTimeDefinition";
 NSString * const kCMISCorePropertyIntegerDefinition = @"propertyIntegerDefinition";
+NSString * const kCMISCoreProperties = @"properties";
 
 // URI Templates
 NSString * const kCMISUriTemplateObjectById = @"objectbyid";

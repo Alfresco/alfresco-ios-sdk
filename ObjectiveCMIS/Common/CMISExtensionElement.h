@@ -8,8 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+/** This class represents a single node in the extension tree.
+ */
 @interface CMISExtensionElement : NSObject
 
+/** @return The name of the extension node.
+ */
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSString *namespaceUri;
 @property (nonatomic, strong, readonly) NSString *value;
@@ -23,7 +27,6 @@
 - (id)initLeafWithName:(NSString *)name namespaceUri:(NSString *)namespaceUri attributes:(NSDictionary *)attributesDict value:(NSString *)value;
 
 // TODO GHL Should children be nil or empty array?
-// TODO GHL Should attributes be bil or empty dictionary?
-// TODO GHL Document me!!!
+// TODO GHL Should attributes be nil or empty dictionary?
 
 @end
