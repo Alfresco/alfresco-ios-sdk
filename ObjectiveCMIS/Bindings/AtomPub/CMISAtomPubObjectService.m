@@ -75,7 +75,20 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    [[NSFileManager defaultManager] createFileAtPath:self.filePathForContentRetrieval contents:nil attributes:nil];
+    BOOL fileCreated = [[NSFileManager defaultManager] createFileAtPath:self.filePathForContentRetrieval contents:nil attributes:nil];
+
+    if (!fileCreated)
+    {
+        [connection cancel];
+
+        if (self.fileRetrievalFailureBlock)
+        {
+            NSError *cmisError = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeStorage
+                    withDetailedDescription:[NSString stringWithFormat:@"Could not create file at path %@", self.filePathForContentRetrieval]];
+            self.fileRetrievalFailureBlock(cmisError);
+        }
+
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
