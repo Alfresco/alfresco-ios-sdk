@@ -11,9 +11,11 @@
 #import "CMISObjectData.h"
 #import "CMISCollection.h"
 
+@class CMISSession;
+
 @interface CMISObjectConverter : NSObject
 
-- (id)initWithCMISBinding:(id<CMISBinding>)binding;
+- (id)initWithSession:(CMISSession *)session;
 
 - (CMISObject *)convertObject:(CMISObjectData *)objectData;
 - (CMISCollection *)convertObjects:(NSArray *)objects;

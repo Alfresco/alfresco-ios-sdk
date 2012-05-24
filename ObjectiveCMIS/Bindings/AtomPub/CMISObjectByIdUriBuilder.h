@@ -6,6 +6,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import "CMISEnums.h"
 
 
 typedef enum
@@ -22,7 +23,7 @@ typedef enum
 @property (nonatomic, strong) NSString *filter;
 @property BOOL includeAllowableActions;
 @property BOOL includePolicyIds;
-@property BOOL includeRelationships;
+@property CMISIncludeRelationship includeRelationships;
 @property BOOL includeACL;
 @property (nonatomic, strong) NSString *renditionFilter;
 @property CMISReturnVersion returnVersion;

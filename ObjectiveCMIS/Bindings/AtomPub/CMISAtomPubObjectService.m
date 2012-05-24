@@ -30,14 +30,27 @@
 @synthesize fileRetrievalCompletionBlock = _fileRetrievalCompletionBlock;
 @synthesize fileRetrievalFailureBlock = _fileRetrievalFailureBlock;
 
-- (CMISObjectData *)retrieveObject:(NSString *)objectId error:(NSError **)error
+- (CMISObjectData *)retrieveObject:(NSString *)objectId
+           withFilter:(NSString *)filter
+           andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
+           andIncludePolicyIds:(BOOL)includePolicyIds
+           andRenditionFilder:(NSString *)renditionFilter
+           andIncludeACL:(BOOL)includeACL
+           andIncludeAllowableActions:(BOOL)includeAllowableActions
+           error:(NSError * *)error
 {
     NSError *internalError = nil;
-    CMISObjectData *cmisObjData = [self retrieveObjectInternal:objectId error:&internalError];
+    CMISObjectData *objData = [self retrieveObjectInternal:objectId withFilter:filter
+                                   andIncludeRelationShips:includeRelationship
+                                   andIncludePolicyIds:includePolicyIds
+                                   andRenditionFilder:renditionFilter
+                                   andIncludeACL:includeACL
+                                   andIncludeAllowableActions:includeAllowableActions
+                                   error:&internalError];
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
     }
-    return cmisObjData;
+    return objData;
 }
 
 - (CMISObjectData *)retrieveObjectByPath:(NSString *)path error:(NSError **)error

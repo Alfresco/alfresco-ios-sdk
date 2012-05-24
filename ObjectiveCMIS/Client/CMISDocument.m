@@ -39,9 +39,9 @@
 @synthesize versionSeriesId = _versionSeriesId;
 @synthesize isLatestMajorVersion = _isLatestMajorVersion;
 
-- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id <CMISBinding>)binding
+- (id)initWithObjectData:(CMISObjectData *)objectData withSession:(CMISSession *)session
 {
-    self = [super initWithObjectData:objectData binding:binding];
+    self = [super initWithObjectData:objectData withSession:session];
     if (self)
     {
         self.contentStreamId = [[objectData.properties.propertiesDictionary objectForKey:kCMISProperyContentStreamId] firstValue];
@@ -64,7 +64,7 @@
 
     if (*error == nil)
     {
-        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
         return [converter convertObjects:entries];
     }
     return nil;
@@ -92,7 +92,7 @@
 
     if (*error == nil)
     {
-        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
         return (CMISDocument *) [converter convertObject:objectData];
     }
     return nil;

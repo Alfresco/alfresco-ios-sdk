@@ -12,9 +12,11 @@
 #import "CMISErrors.h"
 #import "CMISObjectConverter.h"
 #import "CMISStringInOutParameter.h"
+#import "CMISSession.h"
 
 @interface CMISObject ()
 
+@property (nonatomic, strong, readwrite) CMISSession *session;
 @property (nonatomic, strong, readwrite) id<CMISBinding> binding;
 
 @property (nonatomic, strong, readwrite) NSString *identifier;
@@ -28,10 +30,13 @@
 
 @property (nonatomic, strong, readwrite) CMISProperties *properties;
 
+@property (nonatomic, strong, readwrite) CMISAllowableActions *allowableActions;
+
 @end
 
 @implementation CMISObject
 
+@synthesize session = _session;
 @synthesize binding = _binding;
 @synthesize identifier = _identifier;
 @synthesize name = _name;
@@ -42,14 +47,16 @@
 @synthesize objectType = _objectType;
 @synthesize changeToken = _changeToken;
 @synthesize properties = _properties;
+@synthesize allowableActions = _allowableActions;
 
 
-- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
+- (id)initWithObjectData:(CMISObjectData *)objectData withSession:(CMISSession *)session
 {
     self =  [super initWithString:objectData.identifier];
     if (self)
     {
-        self.binding = binding;
+        self.session = session;
+        self.binding = session.binding;
 
         self.properties = objectData.properties;
         self.name = [[self.properties propertyForId:kCMISPropertyName] firstValue];
@@ -59,6 +66,9 @@
         self.lastModificationDate = [[self.properties propertyForId:kCMISPropertyModificationDate] firstValue];
         self.objectType = [[self.properties propertyForId:kCMISPropertyObjectTypeId] firstValue];
         self.changeToken = [[self.properties propertyForId:kCMISPropertyChangeToken] firstValue];
+
+        self.allowableActions = objectData.allowableActions;
+
     }
     
     return self;
@@ -74,7 +84,7 @@
     }
 
     // Convert properties to an understandable format for the service
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
     CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:self.objectType error:error];
 
     if (convertedProperties != nil)
@@ -85,11 +95,7 @@
 
         if (objectIdInOutParam.outParameter != nil)
         {
-            CMISObjectData *objectData = [self.binding.objectService retrieveObject:objectIdInOutParam.outParameter error:error];
-            if (objectData != nil)
-            {
-                return [converter convertObject:objectData];
-            }
+            return [self.session retrieveObject:objectIdInOutParam.outParameter error:error];
         }
     }
     return nil;

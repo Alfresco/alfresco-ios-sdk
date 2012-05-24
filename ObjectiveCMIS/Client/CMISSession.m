@@ -15,6 +15,7 @@
 #import "CMISObjectList.h"
 #import "CMISQueryResult.h"
 #import "CMISErrors.h"
+#import "CMISOperationContext.h"
 
 @interface CMISSession ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
@@ -71,7 +72,7 @@
         CMISBindingFactory *bindingFactory = [[CMISBindingFactory alloc] init];
         self.binding = [bindingFactory bindingWithParameters:sessionParameters];
 
-        self.objectConverter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+        self.objectConverter = [[CMISObjectConverter alloc] initWithSession:self];
     
         // TODO: setup locale
         // TODO: setup default session parameters
@@ -148,10 +149,36 @@
 
 - (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error
 {
+    return [self retrieveObject:objectId withOperationContext:[CMISOperationContext defaultOperationContext] error:error];
+}
+
+- (CMISObject *)retrieveObject:(NSString *)objectId withOperationContext:(CMISOperationContext *)operationContext error:(NSError **)error
+{
+    if (objectId == nil)
+    {
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Must provide object id"];
+        return nil;
+    }
+
     // TODO: cache the object
-    
-    CMISObjectData *objectData = [self.binding.objectService retrieveObject:objectId error:error];
-    if (objectData != nil && *error == nil)
+
+    NSError *internalError = nil;
+    CMISObjectData *objectData = [self.binding.objectService retrieveObject:objectId
+                                                       withFilter:operationContext.filterString
+                                                       andIncludeRelationShips:operationContext.includeRelationShips
+                                                       andIncludePolicyIds:operationContext.isIncludePolicies
+                                                       andRenditionFilder:operationContext.renditionFilterString
+                                                       andIncludeACL:operationContext.isIncluseACLs
+                                                       andIncludeAllowableActions:operationContext.isIncludeAllowableActions
+                                                       error:&internalError];
+
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
+        return nil;
+    }
+
+    if (objectData != nil)
     {
         return [self.objectConverter convertObject:objectData];
     }
@@ -190,7 +217,7 @@
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
     NSError *internalError = nil;
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self];
     CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
     if (internalError != nil)
     {
@@ -212,7 +239,7 @@
                    withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
     NSError *internalError = nil;
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self];
     CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
     if (internalError != nil)
     {

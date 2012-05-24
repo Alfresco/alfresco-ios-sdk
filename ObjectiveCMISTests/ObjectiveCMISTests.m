@@ -23,6 +23,7 @@
 #import "CMISExtensionData.h"
 #import "CMISObjectConverter.h"
 #import "ISO8601DateFormatter.h"
+#import "CMISOperationContext.h"
 
 @interface ObjectiveCMISTests()
 
@@ -158,6 +159,16 @@
     STAssertNotNil(document.contentStreamFileName, @"Document content stream file name should not be nil");
     STAssertNotNil(document.contentStreamMediaType, @"Document content stream media type should not be nil");
     STAssertTrue(document.contentStreamLength > 0, @"Document content stream length should be set");
+}
+
+
+- (void)testRetrieveAllowableActions
+{
+    [self setupCmisSession];
+    CMISDocument *document = [self uploadTestFile];
+
+    STAssertNotNil(document.allowableActions, @"Allowable actions should not be nil");
+    STAssertTrue(document.allowableActions.allowableActionsSet.count > 0, @"Expected at least one allowable action");
 }
 
 - (void)testFileDownload
@@ -751,7 +762,7 @@
     dateFormatter.includeTime = YES;
 
     // Create converter
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.session.binding];
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
 
     // Try to convert with already CMISPropertyData. This should work just fine.
     NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
@@ -810,6 +821,31 @@
     convertedProperties = [converter convertProperties:properties forObjectTypeId:@"cmis:document" error:&error];
     STAssertNotNil(error, @"Expecting an error when converting");
     STAssertNil(convertedProperties, @"When conversion goes wrong, should return nil");
+}
+
+- (void)testOperationContextForRetrievingObject
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    // Create some test document
+    CMISDocument *testDocument = [self uploadTestFile];
+
+    // Use YES for retrieving the allowable actions
+    CMISOperationContext *ctx = [[CMISOperationContext alloc] init];
+    ctx.isIncludeAllowableActions = YES;
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:testDocument.identifier withOperationContext:ctx error:&error];
+    STAssertNil(error, @"Got error while retrieving object : %@", [error description]);
+    STAssertNotNil(document.allowableActions, @"Allowable actions should not be nil");
+    STAssertTrue(document.allowableActions.allowableActionsSet.count > 0, @"Expected at least one allowable action");
+
+    //Use NO for allowable actions
+    ctx = [[CMISOperationContext alloc] init];
+    ctx.isIncludeAllowableActions = NO;
+    document = (CMISDocument *) [self.session retrieveObject:testDocument.identifier withOperationContext:ctx error:&error];
+    STAssertNil(error, @"Got error while retrieving object : %@", [error description]);
+    STAssertNil(document.allowableActions, @"Allowable actions should be nil");
+    STAssertTrue(document.allowableActions.allowableActionsSet.count == 0, @"Expected zero allowable actions");
 }
 
 #pragma mark Helper Methods

@@ -11,8 +11,11 @@
 #import "CMISBinding.h"
 #import "CMISObjectId.h"
 
+@class CMISSession;
+
 @interface CMISObject : CMISObjectId
 
+@property (nonatomic, strong, readonly) CMISSession *session;
 @property (nonatomic, strong, readonly) id<CMISBinding> binding;
 
 @property (nonatomic, strong, readonly) NSString *name;
@@ -25,10 +28,11 @@
 //@property (nonatomic, strong, readonly) CMISBaseTypeId *baseTypeId;
 //@property (nonatomic, strong, readonly) CMISObjectType *baseType;
 //@property (nonatomic, strong, readonly) CMISObjectType *type;
+@property (nonatomic, strong, readonly) CMISAllowableActions *allowableActions;
 
 @property (nonatomic, strong, readonly) CMISProperties *properties;
 
-- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id<CMISBinding>)binding;
+- (id)initWithObjectData:(CMISObjectData *)objectData withSession:(CMISSession *)session;
 
 /**
  * Updates the properties that are provided.

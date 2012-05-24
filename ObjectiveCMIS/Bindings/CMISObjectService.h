@@ -21,7 +21,14 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
  *Retrieves the object with the given object identifier.
  *
  */
-- (CMISObjectData *)retrieveObject:(NSString *)objectId error:(NSError * *)error;
+- (CMISObjectData *)retrieveObject:(NSString *)objectId
+           withFilter:(NSString *)filter
+           andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
+           andIncludePolicyIds:(BOOL)includePolicyIds
+           andRenditionFilder:(NSString *)renditionFilter
+           andIncludeACL:(BOOL)includeACL
+           andIncludeAllowableActions:(BOOL)includeAllowableActions
+           error:(NSError * *)error;
 
 /**
  *Retrieves an object using its path.

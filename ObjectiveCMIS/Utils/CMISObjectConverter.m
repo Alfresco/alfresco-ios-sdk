@@ -13,20 +13,22 @@
 #import "CMISErrors.h"
 #import "CMISPropertyDefinition.h"
 #import "ISO8601DateFormatter.h"
+#import "CMISSession.h"
 
 @interface CMISObjectConverter ()
-@property (nonatomic, strong) id<CMISBinding> binding;
+@property (nonatomic, strong) CMISSession *session;
 @end
 
 @implementation CMISObjectConverter
 
-@synthesize binding = _binding;
+@synthesize session = _session;
 
-- (id)initWithCMISBinding:(id<CMISBinding>)binding
+- (id)initWithSession:(CMISSession *)session
 {
-    if (self = [super init])
+    self = [super init];
+    if (self)
     {
-        self.binding = binding;
+        self.session = session;
     }
     
     return self;
@@ -38,11 +40,11 @@
     
     if (objectData.baseType == CMISBaseTypeDocument)
     {
-        object = [[CMISDocument alloc] initWithObjectData:objectData binding:self.binding];
+        object = [[CMISDocument alloc] initWithObjectData:objectData withSession:self.session];
     }
     else if (objectData.baseType == CMISBaseTypeFolder)
     {
-        object = [[CMISFolder alloc] initWithObjectData:objectData binding:self.binding];
+        object = [[CMISFolder alloc] initWithObjectData:objectData withSession:self.session];
     }
     
     return object;
@@ -91,7 +93,7 @@
             if (typeDefinition == nil)
             {
                 NSError *internalError = nil;
-                typeDefinition = [self.binding.repositoryService retrieveTypeDefinition:objectTypeId error:&internalError];
+                typeDefinition = [self.session.binding.repositoryService retrieveTypeDefinition:objectTypeId error:&internalError];
 
                 if (internalError != nil)
                 {

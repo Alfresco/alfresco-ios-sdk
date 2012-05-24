@@ -22,9 +22,9 @@
 @synthesize path = _path;
 @synthesize children = _children;
 
-- (id)initWithObjectData:(CMISObjectData *)objectData binding:(id <CMISBinding>)binding
+- (id)initWithObjectData:(CMISObjectData *)objectData withSession:(CMISSession *)session
 {
-    self = [super initWithObjectData:objectData binding:binding];
+    self = [super initWithObjectData:objectData withSession:session];
     if (self)
     {
         self.path = [[objectData.properties propertyForId:kCMISPropertyPath] firstValue];
@@ -39,7 +39,7 @@
     {
         NSArray *children = [self.binding.navigationService retrieveChildren:self.identifier error:error];
 
-        CMISObjectConverter *objConverter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+        CMISObjectConverter *objConverter = [[CMISObjectConverter alloc] initWithSession:self.session];
         self.children = [objConverter convertObjects:children];
     }
     
@@ -49,7 +49,7 @@
 - (NSString *)createFolder:(NSDictionary *)properties error:(NSError **)error;
 {
     NSError *internalError = nil;
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
     CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueFolder error:&internalError];
     if (internalError != nil)
     {
@@ -63,7 +63,7 @@
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties error:(NSError **)error
 {
     NSError *internalError = nil;
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
     CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
     if (internalError != nil)
     {

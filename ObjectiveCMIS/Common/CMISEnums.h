@@ -24,6 +24,14 @@ typedef enum
     CMISBaseTypePolicy
 } CMISBaseType;
 
+typedef enum
+{
+    CMISIncludeRelationshipNone,
+    CMISIncludeRelationshipSource,
+    CMISIncludeRelationshipTarget,
+    CMISIncludeRelationshipBoth
+} CMISIncludeRelationship;
+
 // Property types
 typedef enum
 {

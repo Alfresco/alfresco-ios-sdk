@@ -12,6 +12,8 @@
 #import "CMISBinding.h"
 #import "CMISFolder.h"
 
+@class CMISOperationContext;
+
 @interface CMISSession : NSObject
 
 // Flag to indicate whether the session has been authenticated.
@@ -43,6 +45,11 @@
   * Retrieves the object with the given identifier.
   */
 - (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error;
+
+/**
+  * Retrieves the object with the given identifier, using the provided operation context.
+  */
+- (CMISObject *)retrieveObject:(NSString *)objectId withOperationContext:(CMISOperationContext *)operationContext error:(NSError **)error;
 
 /**
   * Retrieves the object for the given path.

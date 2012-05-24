@@ -31,6 +31,10 @@
     if (self)
     {
         self.templateUrl = templateUrl;
+
+        // Defaults
+        self.includeAllowableActions = YES;
+        self.includeRelationships = CMISIncludeRelationshipNone;
         self.returnVersion = NOT_PROVIDED;
     }
     return self;
@@ -42,7 +46,26 @@
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{filter}" withString:(self.filter != nil ? self.filter : @"")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeAllowableActions}" withString:(self.includeAllowableActions ? @"true" : @"false")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includePolicyIds}" withString:(self.includePolicyIds ? @"true" : @"false")];
-    urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeRelationships}" withString:(self.includeRelationships ? @"true" : @"false")];
+
+    NSString *includeRelationShipParam = nil;
+    switch (self.includeRelationships)
+    {
+        case (CMISIncludeRelationshipNone):
+            includeRelationShipParam = @"none";
+            break;
+        case (CMISIncludeRelationshipSource):
+            includeRelationShipParam = @"source";
+            break;
+        case (CMISIncludeRelationshipTarget):
+            includeRelationShipParam = @"target";
+            break;
+        case (CMISIncludeRelationshipBoth):
+            includeRelationShipParam = @"both";
+            break;
+    }
+    urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeRelationships}" withString:includeRelationShipParam];
+
+
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeACL}" withString:(self.includeACL ? @"true" : @"false")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{renditionFilter}" withString:(self.renditionFilter != nil ? self.renditionFilter : @"")];
 

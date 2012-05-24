@@ -16,7 +16,7 @@
     NSArray *parentObjectDataArray = [self.binding.navigationService retrieveParentsForObject:self.identifier error:error];
 
     NSMutableArray *parentFolders = [NSMutableArray array];
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithCMISBinding:self.binding];
+    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
     for (CMISObjectData *parentObjectData in parentObjectDataArray)
     {
         [parentFolders addObject:[converter convertObject:parentObjectData]];
