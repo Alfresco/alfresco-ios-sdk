@@ -32,6 +32,16 @@
     return self;
 }
 
+- (id)initWithAllowableActionsDictionary:(NSDictionary *)allowableActionsDict extensionElementArray:(NSArray *)extensionElementArray
+{
+    self = [self initWithAllowableActionsDictionary:allowableActionsDict];
+    if (self)
+    {
+        self.extensions = extensionElementArray;
+    }
+    return self;
+}
+
 - (NSSet *)allowableActionTypesSet
 {
     NSArray *actionsArray = [[NSArray alloc] initWithObjects:CMISAllowableActionsArray];

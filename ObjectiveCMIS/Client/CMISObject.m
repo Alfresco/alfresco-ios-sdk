@@ -103,7 +103,7 @@
 
 - (NSArray *)extensionsForExtensionLevel:(CMISExtensionLevel)extensionLevel
 {
-    // TODO Need to implement the following extension levels CMISExtensionLevelObject, CMISExtensionLevelAllowableActions, CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
+    // TODO Need to implement the following extension levels CMISExtensionLevelObject, CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
     
     NSArray *extensions = nil;
     
@@ -112,6 +112,11 @@
         case CMISExtensionLevelProperties:
         {
             extensions = self.properties.extensions;
+            break;
+        }
+        case CMISExtensionLevelAllowableActions:
+        {
+            extensions = self.allowableActions.extensions;
             break;
         }
         default:

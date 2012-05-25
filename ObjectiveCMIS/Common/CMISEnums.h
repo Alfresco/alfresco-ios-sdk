@@ -107,7 +107,8 @@ typedef enum
 // Extension Levels
 typedef enum
 {
-    CMISExtensionLevelProperties
+    CMISExtensionLevelProperties,
+    CMISExtensionLevelAllowableActions
     // TODO expose the remaining extensions as they are implemented
     // CMISExtensionLevelObject, CMISExtensionLevelAllowableActions, CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
 

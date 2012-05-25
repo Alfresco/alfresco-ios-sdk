@@ -311,9 +311,9 @@
 #pragma mark -
 #pragma mark CMISAllowableActionsParserDelegate Methods
 
-- (void)allowableActionsParser:(CMISAllowableActionsParser *)parser didFinishParsingAllowableActionsDict:(NSDictionary *)allowableActionsDict
+- (void)allowableActionsParser:(CMISAllowableActionsParser *)parser didFinishParsingAllowableActions:(CMISAllowableActions *)allowableActions
 {
-    self.objectData.allowableActions = [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:allowableActionsDict];
+    self.objectData.allowableActions = allowableActions;
 
     self.childParserDelegate = nil;
 }

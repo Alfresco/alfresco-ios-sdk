@@ -7,15 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CMISExtensionData.h"
 
 
-@interface CMISAllowableActions : NSObject
+@interface CMISAllowableActions : CMISExtensionData
 
 // Allowable actions as a NSSet of NSString objects, nil if unknown
 @property (nonatomic, readonly) NSSet *allowableActionsSet;
 
-// Use this init method when initializing with a raw NSDictionary parsed from an AtomPub Response
+// Designated Initializer. Use this init method when initializing with a raw NSDictionary parsed from an AtomPub Response
 - (id)initWithAllowableActionsDictionary:(NSDictionary *)allowableActionsDict;
+- (id)initWithAllowableActionsDictionary:(NSDictionary *)allowableActionsDict extensionElementArray:(NSArray *)extensionElementArray;
 
 // Returns an NSSet of NSNumber of objects.  The NSNumber objects map to the CMISActionType enum
 - (NSSet *)allowableActionTypesSet;

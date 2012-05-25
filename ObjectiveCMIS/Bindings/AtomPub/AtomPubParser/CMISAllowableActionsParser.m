@@ -10,11 +10,14 @@
 #import "CMISAtomPubConstants.h"
 
 @interface CMISAllowableActionsParser ()
+
 @property (nonatomic, strong) NSMutableDictionary *internalAllowableActionsDict;
 @property (nonatomic, weak) id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate> parentDelegate;
 @property (nonatomic, strong) NSMutableString *string;
 @property (nonatomic, strong) NSString *elementBeingParsed;
 @property (nonatomic, strong) NSData *atomData;
+@property (nonatomic, strong) NSMutableArray *currentExtensions;
+@property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
 
 // Private init Used for child delegate parser
 - (id)initWithParentDelegate:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
@@ -28,6 +31,8 @@
 @synthesize string = _string;
 @synthesize elementBeingParsed = _elementBeingParsed;
 @synthesize atomData = _atomData;
+@synthesize currentExtensions = _currentExtensions;
+@synthesize childParserDelegate = _childParserDelegate;
 
 
 #pragma mark - 
@@ -85,9 +90,10 @@
 #pragma mark -
 #pragma mark Properties
 
-- (NSDictionary *)allowableActionsDict
+- (CMISAllowableActions *)allowableActions
 {
-    return [self.internalAllowableActionsDict copy];
+    return [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:[self.internalAllowableActionsDict copy] 
+                                                      extensionElementArray:[self.currentExtensions copy]];
 }
 
 
@@ -100,6 +106,9 @@
 {
     self.elementBeingParsed = elementName;
     
+    if ([namespaceURI isEqualToString:kCMISNamespaceCmis])
+    {
+    
     if ([elementName isEqualToString:kCMISAtomEntryAllowableActions]) 
     {
         [self setInternalAllowableActionsDict:[NSMutableDictionary dictionary]];
@@ -107,6 +116,12 @@
     else
     {
         self.string = [NSMutableString string];
+    }
+    }
+    else 
+    {
+        self.childParserDelegate = [CMISAtomPubExtensionElementParser extensionElementParserWithElementName:elementName namespaceUri:namespaceURI 
+                                                                                                 attributes:attributeDict parentDelegate:self parser:parser];
     }
 }
 
@@ -120,31 +135,50 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
 {
-    if ([elementName isEqualToString:kCMISAtomEntryAllowableActions])
+    if ([namespaceURI isEqualToString:kCMISNamespaceCmis])
     {
-        if (self.parentDelegate)
+        if ([elementName isEqualToString:kCMISAtomEntryAllowableActions])
         {
-            if ([self.parentDelegate respondsToSelector:@selector(allowableActionsParser:didFinishParsingAllowableActionsDict:)])
+            if (self.parentDelegate)
             {
-                [self.parentDelegate performSelector:@selector(allowableActionsParser:didFinishParsingAllowableActionsDict:) withObject:self withObject:[self allowableActionsDict]];
+                if ([self.parentDelegate respondsToSelector:@selector(allowableActionsParser:didFinishParsingAllowableActions:)])
+                {
+                    [self.parentDelegate performSelector:@selector(allowableActionsParser:didFinishParsingAllowableActions:) withObject:self withObject:self.allowableActions];
+                }
+                
+                // Reset Delegate to parent
+                [parser setDelegate:self.parentDelegate];
+                // Message the parent that the element ended
+                [self.parentDelegate parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
+                
+                self.parentDelegate = nil;
             }
-            
-            // Reset Delegate to parent
-            [parser setDelegate:self.parentDelegate];
-            // Message the parent that the element ended
-            [self.parentDelegate parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
-            
-            self.parentDelegate = nil;
         }
-    }
-    else
-    {
-        // TODO: Should check that the elements are valid AllowableActions?
-        [self.internalAllowableActionsDict setObject:self.string forKey:elementName];
+        else
+        {
+            [self.internalAllowableActionsDict setObject:self.string forKey:elementName];
+        }
     }
 
     self.elementBeingParsed = nil;
     self.string = nil;
+}
+
+#pragma mark -
+#pragma mark CMISAtomPubExtensionElementParserDelegate Method
+
+- (void)extensionElementParser:(CMISAtomPubExtensionElementParser *)parser didFinishParsingExtensionElement:(CMISExtensionElement *)extensionElement
+{
+    // TODO Should abstract the ExtensionData parsing as this pattern is repeated everywhere ExtensionData is getting parsed.
+    
+    if (self.currentExtensions == nil)
+    {
+        self.currentExtensions = [[NSMutableArray alloc] init];
+    }
+    
+    [self.currentExtensions addObject:extensionElement];
+    
+    self.childParserDelegate = nil;
 }
 
 
