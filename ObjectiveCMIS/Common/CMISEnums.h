@@ -113,3 +113,9 @@ typedef enum
     // CMISExtensionLevelObject, CMISExtensionLevelAllowableActions, CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
 
 } CMISExtensionLevel;
+
+@interface CMISEnums
+
++ (NSString *)stringFrom:(CMISIncludeRelationship)includeRelationship;
+
+@end

@@ -51,6 +51,11 @@
     }
 }
 
+- (CMISLinkRelations *)linkRelations
+{
+    return [[CMISLinkRelations alloc] initWithLinkRelationSet:self.feedLinkRelations];
+}
+
 - (BOOL)parseAndReturnError:(NSError **)error;
 {
     BOOL parseSuccessful = YES;

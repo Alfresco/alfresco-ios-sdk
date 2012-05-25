@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CMISEnums.h"
 
 @class CMISObjectList;
 
@@ -19,6 +20,12 @@
                               before returning any results. Defaults to 0.
 */
 // TODO: add all params which are required by spec
-- (CMISObjectList *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersions maxItems:(NSNumber *)maxItems skipCount:(NSNumber *)skipCount error:(NSError * *)error;
+- (CMISObjectList *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersions
+                                                includeRelationShips:(CMISIncludeRelationship)includeRelationships
+                                                renditionFilter:(NSString *)renditionFilter
+                                                includeAllowableActions:(BOOL)includeAllowableActions
+                                                maxItems:(NSNumber *)maxItems
+                                                skipCount:(NSNumber *)skipCount
+                                                error:(NSError * *)error;
 
 @end

@@ -15,6 +15,7 @@
 @synthesize isIncludePolicies = _isIncludePolicies;
 @synthesize renditionFilterString = _renditionFilterString;
 @synthesize maxItemsPerPage = _maxItemsPerPage;
+@synthesize skipCount = _skipCount;
 
 + (CMISOperationContext *)defaultOperationContext
 {
@@ -26,6 +27,7 @@
     defaultContext.includeRelationShips = CMISIncludeRelationshipNone;
     defaultContext.renditionFilterString = nil;
     defaultContext.maxItemsPerPage = 100;
+    defaultContext.skipCount = 0;
     return defaultContext;
 }
 

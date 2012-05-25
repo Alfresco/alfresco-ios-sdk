@@ -13,6 +13,7 @@
 #import "CMISFolder.h"
 
 @class CMISOperationContext;
+@class CMISQueryResults;
 
 @interface CMISSession : NSObject
 
@@ -61,7 +62,16 @@
  *
  * @return An array of CMISQueryResult objects.
  */
-- (NSArray *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error;
+- (CMISQueryResults *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error;
+
+/**
+ * Retrieves all objects matching the given cmis query
+ * and using the parameters provided in the opertaion context.
+ *
+ * @return An array of CMISQueryResult objects.
+ */
+- (CMISQueryResults *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
+        operationContext:(CMISOperationContext *)operationContext error:(NSError * *)error;
 
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error;
 

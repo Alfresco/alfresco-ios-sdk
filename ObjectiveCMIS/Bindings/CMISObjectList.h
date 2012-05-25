@@ -4,9 +4,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CMISEnums.h"
+
+@protocol CMISBinding;
 
 
-// Class to hold the result of executing a query
+/**
+  * Class to hold the result of executing a query
+  */
 @interface CMISObjectList : NSObject
 
 /**
@@ -18,10 +23,8 @@
 * TRUE if the Repository contains additional items after those contained in the response.
 * FALSE otherwise. If TRUE, a request with a larger skipCount or larger maxItems is expected
 * to return additional results (unless the contents of the repository has changed).
-*
-* TODO: not yet exposed --> how to represent that the property was not in the returned feed? Wrap it in an object?
 */
-//@property BOOL hasMoreItems;
+@property BOOL hasMoreItems;
 
 /**
  * If the repository knows the total number of items in a result set, the repository SHOULD include the number here.

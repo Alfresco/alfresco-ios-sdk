@@ -16,6 +16,7 @@
 #import "CMISQueryResult.h"
 #import "CMISErrors.h"
 #import "CMISOperationContext.h"
+#import "CMISQueryResults.h"
 
 @interface CMISSession ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
@@ -200,15 +201,33 @@
 }
 
 
-- (NSArray *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error
+- (CMISQueryResults *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error
 {
-    CMISObjectList *objectList = [self.binding.discoveryService query:statement searchAllVersions:searchAllVersion
-                                                                maxItems:nil skipCount:nil error:error];
+    return [self query:statement searchAllVersions:searchAllVersion
+                   operationContext:[CMISOperationContext defaultOperationContext] error:error];
+}
 
-    NSMutableArray *queryResults = [NSMutableArray array];
+- (CMISQueryResults *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
+        operationContext:(CMISOperationContext *)operationContext error:(NSError **)error
+{
+    CMISObjectList *objectList = [self.binding.discoveryService query:statement
+                                                    searchAllVersions:searchAllVersion
+                                                    includeRelationShips:operationContext.includeRelationShips
+                                                    renditionFilter:operationContext.renditionFilterString
+                                                    includeAllowableActions:operationContext.isIncludeAllowableActions
+                                                    maxItems:[NSNumber numberWithInt:operationContext.maxItemsPerPage]
+                                                    skipCount:[NSNumber numberWithInt:operationContext.skipCount]
+                                                    error:error];
+
+    CMISQueryResults *queryResults = [[CMISQueryResults alloc] initWithNrOfItems:objectList.numItems
+            andHasMoreItems:objectList.hasMoreItems
+            forQueryWithStatement:statement
+            andSearchAllVersions:searchAllVersion
+            andWithOperationContext:operationContext
+            andWithSession:self];
     for (CMISObjectData *objectData in objectList.objects)
     {
-        [queryResults addObject:[CMISQueryResult queryResultUsingCmisObjectData:objectData]];
+        [queryResults addQueryResult:[CMISQueryResult queryResultUsingCmisObjectData:objectData]];
     }
 
     return queryResults;

@@ -10,8 +10,23 @@
 
 @synthesize statement = _statement;
 @synthesize searchAllVersions = _searchAllVersions;
+@synthesize includeRelationships = _includeRelationships;
+@synthesize renditionFilter = _renditionFilter;
+@synthesize includeAllowableActions = _includeAllowableActions;
 @synthesize skipCount = _skipCount;
 @synthesize maxItems = _maxItems;
+
+
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        self.includeRelationships = CMISIncludeRelationshipNone;
+    }
+    return self;
+}
+
 
 - (NSString *)generateAtomEntryXML
 {
@@ -26,9 +41,9 @@
     [xml appendFormat:@"<cmis:statement>%@</cmis:statement>", self.statement];
     [xml appendFormat:@"<cmis:searchAllVersions>%@</cmis:searchAllVersions>", self.searchAllVersions ? @"true" : @"false"];
 
-    [xml appendString:@"<cmis:includeAllowableActions>false</cmis:includeAllowableActions>"
-            "<cmis:includeRelationships>none</cmis:includeRelationships>"
-            "<cmis:renditionFilter>*</cmis:renditionFilter>"];
+    [xml appendFormat:@"<cmis:includeAllowableActions>%@</cmis:includeAllowableActions>", self.includeAllowableActions ? @"true" : @"false"];
+    [xml appendFormat:@"<cmis:includeRelationships>%@</cmis:includeRelationships>", [CMISEnums stringFrom:self.includeRelationships]];
+    [xml appendFormat:@"<cmis:renditionFilter>%@</cmis:renditionFilter>", self.renditionFilter != nil ? self.renditionFilter : @"*"];
 
     if (self.maxItems != nil)
     {

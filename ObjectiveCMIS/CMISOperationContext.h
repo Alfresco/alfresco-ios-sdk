@@ -16,6 +16,7 @@
 @property BOOL isIncludePolicies;
 @property (nonatomic, strong) NSString *renditionFilterString;
 @property NSInteger maxItemsPerPage;
+@property NSInteger skipCount;
 
 + (CMISOperationContext *)defaultOperationContext;
 

@@ -20,10 +20,10 @@
 #import "CMISStringInOutParameter.h"
 #import "CMISTypeDefinition.h"
 #import "CMISPropertyDefinition.h"
-#import "CMISExtensionData.h"
 #import "CMISObjectConverter.h"
 #import "ISO8601DateFormatter.h"
 #import "CMISOperationContext.h"
+#import "CMISQueryResults.h"
 
 @interface ObjectiveCMISTests()
 
@@ -169,6 +169,9 @@
 
     STAssertNotNil(document.allowableActions, @"Allowable actions should not be nil");
     STAssertTrue(document.allowableActions.allowableActionsSet.count > 0, @"Expected at least one allowable action");
+
+    // Cleanup
+    [self deleteDocumentAndVerify:document];
 }
 
 - (void)testFileDownload
@@ -407,7 +410,6 @@
     STAssertEquals([linkRelations linkHrefForRel:@"service"], @"http://service", @"The Service link should have been returned");
     STAssertEquals([linkRelations linkHrefForRel:@"down" type:kCMISMediaTypeChildren], @"http://down/children", @"The down relation for the children media type should have been returned");
     STAssertEquals([linkRelations linkHrefForRel:@"down" type:kCMISMediaTypeDescendants], @"http://down/descendants", @"The down relation for the descendants media type should have been returned");
-    
 }
 
 - (void)testQueryThroughDiscoveryService
@@ -420,7 +422,12 @@
 
     // Basic check if the service returns results that are usable
     CMISObjectList *objectList = [discoveryService query:@"SELECT * FROM cmis:document" searchAllVersions:NO
-                                                maxItems:[NSNumber numberWithInt:3] skipCount:[NSNumber numberWithInt:0] error:&error];
+                                                includeRelationShips:CMISIncludeRelationshipNone
+                                                renditionFilter:nil
+                                                includeAllowableActions:YES
+                                                maxItems:[NSNumber numberWithInt:3]
+                                                skipCount:[NSNumber numberWithInt:0]
+                                                error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
     STAssertNotNil(objectList, @"Object list after query should not be nil");
     STAssertTrue(objectList.numItems > 100, @"Expecting at least 100 items when querying for all documents, but got %d", objectList.numItems);
@@ -432,7 +439,12 @@
     }
 
     // Doing a query without any maxItems or skipCount, and also only requesting one property 'column'
-    objectList = [discoveryService query:@"SELECT cmis:name FROM cmis:document WHERE cmis:name LIKE '%quote%'" searchAllVersions:NO maxItems:nil skipCount:nil error:&error];
+    objectList = [discoveryService query:@"SELECT cmis:name FROM cmis:document WHERE cmis:name LIKE '%quote%'"
+                       searchAllVersions:NO
+                       includeRelationShips:CMISIncludeRelationshipNone
+                       renditionFilter:nil
+                       includeAllowableActions:YES
+                       maxItems:nil skipCount:nil error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
     STAssertNotNil(objectList, @"Object list after query should not be nil");
     STAssertTrue(objectList.objects.count > 0, @"Returned # objects is repo specific, but should be at least 1");
@@ -448,11 +460,11 @@
     NSError *error = nil;
 
     // Query all properties
-    NSArray *results = [self.session query:@"SELECT * FROM cmis:document WHERE cmis:name LIKE '%activiti%'" searchAllVersions:YES error:&error];
+    CMISQueryResults *results = [self.session query:@"SELECT * FROM cmis:document WHERE cmis:name LIKE '%quote%'" searchAllVersions:YES error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
-    STAssertTrue(results.count > 0, @"Expected at least one result for query");
+    STAssertTrue(results.resultArray.count > 0, @"Expected at least one result for query");
 
-    CMISQueryResult *firstResult = [results objectAtIndex:0];
+    CMISQueryResult *firstResult = [results.resultArray objectAtIndex:0];
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyName], @"Name property should not be nil");
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyVersionLabel], @"Version label property should not be nil");
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyCreationDate], @"Creation date property should not be nil");
@@ -466,13 +478,64 @@
     // Query a limited set of properties
     results = [self.session query:@"SELECT cmis:name, cmis:creationDate FROM cmis:document WHERE cmis:name LIKE '%activiti%'" searchAllVersions:NO error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
-    STAssertTrue(results.count > 0, @"Expected at least one result for query");
+    STAssertTrue(results.resultArray.count > 0, @"Expected at least one result for query");
 
-    firstResult = [results objectAtIndex:0];
+    firstResult = [results.resultArray objectAtIndex:0];
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyName], @"Name property should not be nil");
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyCreationDate], @"Creation date property should not be nil");
     STAssertNil([firstResult.properties propertyForId:kCMISPropertyVersionLabel], @"Version label property should be nil");
     STAssertNil([firstResult.properties propertyForId:kCMISPropertyContentStreamLength], @"Content stream length property should be nil");
+    STAssertNotNil(firstResult.allowableActions, @"By default, allowable actions whould be included");
+    STAssertTrue(firstResult.allowableActions.allowableActionsSet.count > 0, @"Expected at least one allowable action");
+
+    // With operationContext
+    CMISOperationContext *context = [[CMISOperationContext alloc] init];
+    context.isIncludeAllowableActions = NO;
+    results = [self.session query:@"SELECT * FROM cmis:document WHERE cmis:name LIKE '%quote%'"
+                searchAllVersions:YES operationContext:context error:&error];
+    firstResult = [results.resultArray objectAtIndex:0];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertTrue(results.resultArray.count > 0, @"Expected at least one result for query");
+    STAssertTrue(firstResult.allowableActions.allowableActionsSet.count == 0,
+        @"Expected allowable actions, as the operation ctx excluded them, but found %d allowable actions", firstResult.allowableActions.allowableActionsSet.count);
+}
+
+- (void)testQueryWithPaging
+{
+    [self setupCmisSession];
+     NSError *error = nil;
+
+    // Fetch first page
+    CMISOperationContext *context = [[CMISOperationContext alloc] init];
+    context.maxItemsPerPage = 5;
+    context.skipCount = 0;
+    CMISQueryResults *firstPageResult = [self.session query:@"SELECT * FROM cmis:document" searchAllVersions:YES operationContext:context error:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertTrue(firstPageResult.resultArray.count == 5, @"Expected 5 results, but got %d back", firstPageResult.resultArray.count);
+
+    // Save all the ids to check them later
+    NSMutableArray *idsOfFirstPage = [NSMutableArray array];
+    for (CMISQueryResult *queryresult in firstPageResult.resultArray)
+    {
+        [idsOfFirstPage addObject:[queryresult propertyForId:kCMISPropertyObjectId]];
+    }
+
+    // Fetch second page
+    CMISQueryResults *secondPageResults = [firstPageResult fetchNextPageAndReturnError:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertTrue(secondPageResults.resultArray.count == 5, @"Expected 5 results, but got %d back", secondPageResults.resultArray.count);
+
+    for (CMISQueryResult *queryresult in secondPageResults.resultArray)
+    {
+        STAssertFalse([idsOfFirstPage containsObject:[queryresult propertyForId:kCMISPropertyObjectId]], @"Found same object in first and second page");
+    }
+
+    // Fetch last element by specifying a page which is just lastelement-1
+    context.skipCount = secondPageResults.numItems - 1;
+    CMISQueryResults *thirdPageResults = [self.session query:@"SELECT * FROM cmis:document"
+                                            searchAllVersions:YES operationContext:context error:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertTrue(thirdPageResults.resultArray.count == 1, @"Expected 1 result, but got %d back", thirdPageResults.resultArray.count);
 }
 
 - (void)testRetrieveParents
@@ -482,10 +545,10 @@
 
     // First, do a query for our test document
     NSString *queryStmt = @"SELECT * FROM cmis:document WHERE cmis:name = 'thumbsup-ios-test-retrieve-parents.gif'";
-    NSArray *results = [self.session query:queryStmt searchAllVersions:NO error:&error];
+    CMISQueryResults *results = [self.session query:queryStmt searchAllVersions:NO error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
-    STAssertTrue(results.count == 1, @"Expected one result for query");
-    CMISQueryResult *result = [results objectAtIndex:0];
+    STAssertTrue(results.resultArray.count == 1, @"Expected one result for query");
+    CMISQueryResult *result = [results.resultArray objectAtIndex:0];
 
     // Retrieve the document as CMISDocument
     NSString *objectId = [[result propertyForId:kCMISPropertyObjectId] firstValue];
@@ -846,6 +909,9 @@
     STAssertNil(error, @"Got error while retrieving object : %@", [error description]);
     STAssertNil(document.allowableActions, @"Allowable actions should be nil");
     STAssertTrue(document.allowableActions.allowableActionsSet.count == 0, @"Expected zero allowable actions");
+
+    // Cleanup
+    [self deleteDocumentAndVerify:testDocument];
 }
 
 #pragma mark Helper Methods

@@ -47,22 +47,7 @@
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeAllowableActions}" withString:(self.includeAllowableActions ? @"true" : @"false")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includePolicyIds}" withString:(self.includePolicyIds ? @"true" : @"false")];
 
-    NSString *includeRelationShipParam = nil;
-    switch (self.includeRelationships)
-    {
-        case (CMISIncludeRelationshipNone):
-            includeRelationShipParam = @"none";
-            break;
-        case (CMISIncludeRelationshipSource):
-            includeRelationShipParam = @"source";
-            break;
-        case (CMISIncludeRelationshipTarget):
-            includeRelationShipParam = @"target";
-            break;
-        case (CMISIncludeRelationshipBoth):
-            includeRelationShipParam = @"both";
-            break;
-    }
+    NSString *includeRelationShipParam = [CMISEnums stringFrom:self.includeRelationships];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeRelationships}" withString:includeRelationShipParam];
 
 
