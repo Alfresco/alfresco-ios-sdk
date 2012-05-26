@@ -11,12 +11,11 @@
 #import "CMISObjectConverter.h"
 #import "CMISStandardAuthenticationProvider.h"
 #import "CMISBindingFactory.h"
-#import "CMISDocument.h"
 #import "CMISObjectList.h"
 #import "CMISQueryResult.h"
 #import "CMISErrors.h"
 #import "CMISOperationContext.h"
-#import "CMISQueryResults.h"
+#import "CMISPagedResult.h"
 
 @interface CMISSession ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
@@ -55,7 +54,8 @@
 
 - (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters
 {
-    if (self = [super init])
+    self = [super init];
+    if (self)
     {
         self.sessionParameters = sessionParameters;
         self.isAuthenticated = NO;
@@ -201,43 +201,65 @@
 }
 
 
-- (CMISQueryResults *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error
+- (CMISPagedResult *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error
 {
     return [self query:statement searchAllVersions:searchAllVersion
                    operationContext:[CMISOperationContext defaultOperationContext] error:error];
 }
 
-- (CMISQueryResults *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
+- (CMISPagedResult *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
         operationContext:(CMISOperationContext *)operationContext error:(NSError **)error
 {
-    CMISObjectList *objectList = [self.binding.discoveryService query:statement
-                                                    searchAllVersions:searchAllVersion
-                                                    includeRelationShips:operationContext.includeRelationShips
-                                                    renditionFilter:operationContext.renditionFilterString
-                                                    includeAllowableActions:operationContext.isIncludeAllowableActions
-                                                    maxItems:[NSNumber numberWithInt:operationContext.maxItemsPerPage]
-                                                    skipCount:[NSNumber numberWithInt:operationContext.skipCount]
-                                                    error:error];
 
-    CMISQueryResults *queryResults = [[CMISQueryResults alloc] initWithNrOfItems:objectList.numItems
-            andHasMoreItems:objectList.hasMoreItems
-            forQueryWithStatement:statement
-            andSearchAllVersions:searchAllVersion
-            andWithOperationContext:operationContext
-            andWithSession:self];
-    for (CMISObjectData *objectData in objectList.objects)
+    CMISFetchNextPageBlock fetchNextPageBlock = ^CMISFetchNextPageBlockResult * (int skipCount, int maxItems, NSError ** fetchError)
     {
-        [queryResults addQueryResult:[CMISQueryResult queryResultUsingCmisObjectData:objectData]];
+        // Fetch results through discovery service
+        CMISObjectList *objectList = [self.binding.discoveryService query:statement
+                                                  searchAllVersions:searchAllVersion
+                                                  includeRelationShips:operationContext.includeRelationShips
+                                                  renditionFilter:operationContext.renditionFilterString
+                                                  includeAllowableActions:operationContext.isIncludeAllowableActions
+                                                  maxItems:[NSNumber numberWithInt:maxItems]
+                                                  skipCount:[NSNumber numberWithInt:skipCount]
+                                                  error:fetchError];
+
+        // Fill up return result
+        CMISFetchNextPageBlockResult *result = [[CMISFetchNextPageBlockResult alloc] init];
+        result.hasMoreItems = objectList.hasMoreItems;
+        result.numItems = objectList.numItems;
+
+        NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+        result.resultArray = resultArray;
+        for (CMISObjectData *objectData in objectList.objects)
+        {
+            [resultArray addObject:[CMISQueryResult queryResultUsingCmisObjectData:objectData]];
+        }
+
+        return result;
+    };
+
+    NSError *internalError = nil;
+    CMISPagedResult *result = [CMISPagedResult pagedResultUsingFetchBlock:fetchNextPageBlock
+                                               andLimitToMaxItems:operationContext.maxItemsPerPage
+                                               andStartFromSkipCount:operationContext.skipCount
+                                               error:&internalError];
+
+    // Return nil and populate error in case something went wrong
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+        return nil;
     }
 
-    return queryResults;
+    return result;
 }
 
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
     NSError *internalError = nil;
     CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self];
-    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
+    CMISProperties *convertedProperties = [converter convertProperties:properties
+                             forObjectTypeId:kCMISPropertyObjectTypeIdValueFolder error:&internalError];
     if (internalError != nil)
     {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];

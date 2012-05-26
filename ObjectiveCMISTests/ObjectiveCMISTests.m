@@ -23,7 +23,7 @@
 #import "CMISObjectConverter.h"
 #import "ISO8601DateFormatter.h"
 #import "CMISOperationContext.h"
-#import "CMISQueryResults.h"
+#import "CMISPagedResult.h"
 
 @interface ObjectiveCMISTests()
 
@@ -460,11 +460,11 @@
     NSError *error = nil;
 
     // Query all properties
-    CMISQueryResults *results = [self.session query:@"SELECT * FROM cmis:document WHERE cmis:name LIKE '%quote%'" searchAllVersions:YES error:&error];
+    CMISPagedResult *result = [self.session query:@"SELECT * FROM cmis:document WHERE cmis:name LIKE '%quote%'" searchAllVersions:YES error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
-    STAssertTrue(results.resultArray.count > 0, @"Expected at least one result for query");
+    STAssertTrue(result.resultArray.count > 0, @"Expected at least one result for query");
 
-    CMISQueryResult *firstResult = [results.resultArray objectAtIndex:0];
+    CMISQueryResult *firstResult = [result.resultArray objectAtIndex:0];
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyName], @"Name property should not be nil");
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyVersionLabel], @"Version label property should not be nil");
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyCreationDate], @"Creation date property should not be nil");
@@ -476,11 +476,11 @@
     STAssertNotNil([firstResult.properties propertyForQueryName:kCMISPropertyContentStreamLength], @"Content stream length property should not be nil");
 
     // Query a limited set of properties
-    results = [self.session query:@"SELECT cmis:name, cmis:creationDate FROM cmis:document WHERE cmis:name LIKE '%activiti%'" searchAllVersions:NO error:&error];
+    result = [self.session query:@"SELECT cmis:name, cmis:creationDate FROM cmis:document WHERE cmis:name LIKE '%activiti%'" searchAllVersions:NO error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
-    STAssertTrue(results.resultArray.count > 0, @"Expected at least one result for query");
+    STAssertTrue(result.resultArray.count > 0, @"Expected at least one result for query");
 
-    firstResult = [results.resultArray objectAtIndex:0];
+    firstResult = [result.resultArray objectAtIndex:0];
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyName], @"Name property should not be nil");
     STAssertNotNil([firstResult.properties propertyForId:kCMISPropertyCreationDate], @"Creation date property should not be nil");
     STAssertNil([firstResult.properties propertyForId:kCMISPropertyVersionLabel], @"Version label property should be nil");
@@ -491,11 +491,11 @@
     // With operationContext
     CMISOperationContext *context = [[CMISOperationContext alloc] init];
     context.isIncludeAllowableActions = NO;
-    results = [self.session query:@"SELECT * FROM cmis:document WHERE cmis:name LIKE '%quote%'"
+    result = [self.session query:@"SELECT * FROM cmis:document WHERE cmis:name LIKE '%quote%'"
                 searchAllVersions:YES operationContext:context error:&error];
-    firstResult = [results.resultArray objectAtIndex:0];
+    firstResult = [result.resultArray objectAtIndex:0];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
-    STAssertTrue(results.resultArray.count > 0, @"Expected at least one result for query");
+    STAssertTrue(result.resultArray.count > 0, @"Expected at least one result for query");
     STAssertTrue(firstResult.allowableActions.allowableActionsSet.count == 0,
         @"Expected allowable actions, as the operation ctx excluded them, but found %d allowable actions", firstResult.allowableActions.allowableActionsSet.count);
 }
@@ -509,7 +509,7 @@
     CMISOperationContext *context = [[CMISOperationContext alloc] init];
     context.maxItemsPerPage = 5;
     context.skipCount = 0;
-    CMISQueryResults *firstPageResult = [self.session query:@"SELECT * FROM cmis:document" searchAllVersions:YES operationContext:context error:&error];
+    CMISPagedResult *firstPageResult = [self.session query:@"SELECT * FROM cmis:document" searchAllVersions:YES operationContext:context error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
     STAssertTrue(firstPageResult.resultArray.count == 5, @"Expected 5 results, but got %d back", firstPageResult.resultArray.count);
 
@@ -521,18 +521,18 @@
     }
 
     // Fetch second page
-    CMISQueryResults *secondPageResults = [firstPageResult fetchNextPageAndReturnError:&error];
+    CMISPagedResult *secondPageResults = [firstPageResult fetchNextPageAndReturnError:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
     STAssertTrue(secondPageResults.resultArray.count == 5, @"Expected 5 results, but got %d back", secondPageResults.resultArray.count);
 
-    for (CMISQueryResult *queryresult in secondPageResults.resultArray)
+    for (CMISQueryResult *queryResult in secondPageResults.resultArray)
     {
-        STAssertFalse([idsOfFirstPage containsObject:[queryresult propertyForId:kCMISPropertyObjectId]], @"Found same object in first and second page");
+        STAssertFalse([idsOfFirstPage containsObject:[queryResult propertyForId:kCMISPropertyObjectId]], @"Found same object in first and second page");
     }
 
     // Fetch last element by specifying a page which is just lastelement-1
     context.skipCount = secondPageResults.numItems - 1;
-    CMISQueryResults *thirdPageResults = [self.session query:@"SELECT * FROM cmis:document"
+    CMISPagedResult *thirdPageResults = [self.session query:@"SELECT * FROM cmis:document"
                                             searchAllVersions:YES operationContext:context error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
     STAssertTrue(thirdPageResults.resultArray.count == 1, @"Expected 1 result, but got %d back", thirdPageResults.resultArray.count);
@@ -545,7 +545,7 @@
 
     // First, do a query for our test document
     NSString *queryStmt = @"SELECT * FROM cmis:document WHERE cmis:name = 'thumbsup-ios-test-retrieve-parents.gif'";
-    CMISQueryResults *results = [self.session query:queryStmt searchAllVersions:NO error:&error];
+    CMISPagedResult *results = [self.session query:queryStmt searchAllVersions:NO error:&error];
     STAssertNil(error, @"Got an error while executing query: %@", [error description]);
     STAssertTrue(results.resultArray.count == 1, @"Expected one result for query");
     CMISQueryResult *result = [results.resultArray objectAtIndex:0];

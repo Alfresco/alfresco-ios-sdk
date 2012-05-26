@@ -176,8 +176,9 @@
 		82C1C63F15358733009B7BAD /* CMISOperationContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7BAC /* CMISOperationContext.m */; };
 		82C1C63F15358733009B7BAF /* CMISOperationContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7BAE /* CMISOperationContext.h */; };
 		82C1C63F15358733009B7BB1 /* CMISEnums.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7BB0 /* CMISEnums.m */; };
-		82C1C63F15358733009B7BB3 /* CMISQueryResults.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7BB2 /* CMISQueryResults.m */; };
-		82C1C63F15358733009B7BB5 /* CMISQueryResults.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7BB4 /* CMISQueryResults.h */; };
+		82C1C63F15358733009B7BB3 /* CMISQueryResults.m in Sources */ = {isa = PBXBuildFile; };
+		82C1C63F15358733009B7BB7 /* CMISPagedResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7BB6 /* CMISPagedResult.m */; };
+		82C1C63F15358733009B7BB9 /* CMISPagedResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 82C1C63F15358733009B7BB8 /* CMISPagedResult.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -340,8 +341,8 @@
 		82C1C63F15358733009B7BAC /* CMISOperationContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISOperationContext.m; sourceTree = "<group>"; };
 		82C1C63F15358733009B7BAE /* CMISOperationContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISOperationContext.h; sourceTree = "<group>"; };
 		82C1C63F15358733009B7BB0 /* CMISEnums.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISEnums.m; sourceTree = "<group>"; };
-		82C1C63F15358733009B7BB2 /* CMISQueryResults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISQueryResults.m; sourceTree = "<group>"; };
-		82C1C63F15358733009B7BB4 /* CMISQueryResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISQueryResults.h; sourceTree = "<group>"; };
+		82C1C63F15358733009B7BB6 /* CMISPagedResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISPagedResult.m; sourceTree = "<group>"; };
+		82C1C63F15358733009B7BB8 /* CMISPagedResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISPagedResult.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -476,8 +477,8 @@
 		828072D115153EA500EF635C /* Client */ = {
 			isa = PBXGroup;
 			children = (
-				82C1C63F15358733009B7BB4 /* CMISQueryResults.h */,
-				82C1C63F15358733009B7BB2 /* CMISQueryResults.m */,
+				82C1C63F15358733009B7BB8 /* CMISPagedResult.h */,
+				82C1C63F15358733009B7BB6 /* CMISPagedResult.m */,
 				82C1C63F15358733009B7BAE /* CMISOperationContext.h */,
 				82C1C63F15358733009B7BAC /* CMISOperationContext.m */,
 				8276E121155E34EC00344A29 /* CMISObjectId.h */,
@@ -732,7 +733,7 @@
 				752067FA156AC0FE00231A5D /* CMISExtensionElement.h in Headers */,
 				75206802156AE29900231A5D /* CMISAtomPubExtensionElementParser.h in Headers */,
 				82C1C63F15358733009B7BAF /* CMISOperationContext.h in Headers */,
-				82C1C63F15358733009B7BB5 /* CMISQueryResults.h in Headers */,
+				82C1C63F15358733009B7BB9 /* CMISPagedResult.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -912,6 +913,7 @@
 				82C1C63F15358733009B7BAD /* CMISOperationContext.m in Sources */,
 				82C1C63F15358733009B7BB1 /* CMISEnums.m in Sources */,
 				82C1C63F15358733009B7BB3 /* CMISQueryResults.m in Sources */,
+				82C1C63F15358733009B7BB7 /* CMISPagedResult.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

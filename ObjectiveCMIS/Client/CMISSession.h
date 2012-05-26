@@ -14,6 +14,7 @@
 
 @class CMISOperationContext;
 @class CMISQueryResults;
+@class CMISPagedResult;
 
 @interface CMISSession : NSObject
 
@@ -62,15 +63,15 @@
  *
  * @return An array of CMISQueryResult objects.
  */
-- (CMISQueryResults *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error;
+- (CMISPagedResult *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error;
 
 /**
- * Retrieves all objects matching the given cmis query
- * and using the parameters provided in the opertaion context.
+ * Retrieves all objects matching the given cmis query, as CMISQueryResult objects.
+ * and using the parameters provided in the operation context.
  *
  * @return An array of CMISQueryResult objects.
  */
-- (CMISQueryResults *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
+- (CMISPagedResult *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
         operationContext:(CMISOperationContext *)operationContext error:(NSError * *)error;
 
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error;

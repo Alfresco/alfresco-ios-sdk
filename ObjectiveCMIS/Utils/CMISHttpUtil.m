@@ -139,12 +139,13 @@
     else {
         log(@"HTTP response with code = %d, code String = %@",[response statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]]);
     }
-    /*
-    else if (outError && outError != NULL && *outError != nil)
+
+    if (response.statusCode == 500)
     {
-        log(@"Error while doing HTTP %@ %@ : %@", request.HTTPMethod, [request.URL absoluteString], [*outError description]);
+        NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        log(@"HTTP status code 500: %@", dataString);
     }
-     */
+
     // Uncomment to see the actual response from the server
 //    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 //    log(@"Response for %@ : %@", [request.URL absoluteString], dataString);
