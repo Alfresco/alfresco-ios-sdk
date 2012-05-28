@@ -13,10 +13,16 @@
 #import "CMISAtomPubConstants.h"
 #import "CMISHttpUtil.h"
 #import "CMISErrors.h"
+#import "CMISURLUtil.h"
+#import "CMISObjectList.h"
 
 @implementation CMISAtomPubNavigationService
 
-- (NSArray *)retrieveChildren:(NSString *)objectId error:(NSError **)error
+- (CMISObjectList *)retrieveChildren:(NSString *)objectId orderBy:(NSString *)orderBy
+                       filter:(NSString *)filter includeRelationShips:(CMISIncludeRelationship)includeRelationship
+                       renditionFilter:(NSString *)renditionFilter includeAllowableActions:(BOOL)includeAllowableActions
+                       includePathSegment:(BOOL)includePathSegment skipCount:(NSNumber *)skipCount
+                       maxItems:(NSNumber *)maxItems error:(NSError **)error
 {
     // Get Object for objectId
     NSError *internalError = nil;
@@ -28,19 +34,34 @@
     }
     NSString *downLink = [cmisObjectData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
 
-    // Get children for object
-    NSURL *childrenUrl = [NSURL URLWithString:downLink];
-    
+    // Add optional params (CMISUrlUtil will not append if the param name or value is nil)
+    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterFilter withValue:filter toUrlString:downLink];
+    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterOrderBy withValue:orderBy toUrlString:downLink];
+    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludeAllowableActions withValue:(includeAllowableActions ? @"true" : @"false") toUrlString:downLink];
+    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludeRelationships withValue:[CMISEnums stringFrom:includeRelationship] toUrlString:downLink];
+    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterRenditionFilter withValue:renditionFilter toUrlString:downLink];
+    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludePathSegment withValue:(includePathSegment ? @"true" : @"false") toUrlString:downLink];
+    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterMaxItems withValue:[maxItems stringValue] toUrlString:downLink];
+    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterSkipCount withValue:[skipCount stringValue] toUrlString:downLink];
+
     // execute the request
-    HTTPResponse *response = [HttpUtil invokeGETSynchronous:childrenUrl withSession:self.session error:&internalError];
+    HTTPResponse *response = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:downLink] withSession:self.session error:&internalError];
     if (internalError || response.data == nil) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;        
     }
+
+    // Parse the feed (containing entries for the children) you get back
     CMISAtomFeedParser *parser = [[CMISAtomFeedParser alloc] initWithData:response.data];
     if ([parser parseAndReturnError:error])
     {
-        return parser.entries;
+        NSString *nextLink = [parser.linkRelations linkHrefForRel:kCMISLinkRelationNext];
+
+        CMISObjectList *objectList = [[CMISObjectList alloc] init];
+        objectList.hasMoreItems = (nextLink != nil);
+        objectList.numItems = parser.numItems;
+        objectList.objects = parser.entries;
+        return objectList;
     }
     else 
     {

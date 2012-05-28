@@ -161,7 +161,7 @@
     // Append optional change token parameters
     if (changeToken != nil && changeToken.inParameter != nil)
     {
-        editMediaLink = [URLUtil urlStringByAppendingParameter:kCMISParameterChangeToken
+        editMediaLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterChangeToken
                                                      withValue:changeToken.inParameter toUrlString:editMediaLink];
     }
 
@@ -207,12 +207,12 @@
     // Append optional change token parameters
     if (changeToken != nil && changeToken.inParameter != nil)
     {
-        editMediaLink = [URLUtil urlStringByAppendingParameter:kCMISParameterChangeToken
+        editMediaLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterChangeToken
                                                      withValue:changeToken.inParameter toUrlString:editMediaLink];
     }
 
     // Append overwrite flag
-    editMediaLink = [URLUtil urlStringByAppendingParameter:kCMISParameterOverwriteFlag
+    editMediaLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterOverwriteFlag
                                                  withValue:(overwrite ? @"true" : @"false") toUrlString:editMediaLink];
 
     // Execute HTTP call on edit media link, passing the a stream to the file
@@ -387,7 +387,7 @@
     // Append optional params
     if (changeToken != nil && changeToken.inParameter != nil)
     {
-        selfLink = [URLUtil urlStringByAppendingParameter:kCMISParameterChangeToken
+        selfLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterChangeToken
                                                 withValue:changeToken.inParameter toUrlString:selfLink];
     }
 

@@ -7,15 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CMISEnums.h"
 
 @class CMISFolder;
+@class CMISObjectList;
 
 @protocol CMISNavigationService <NSObject>
 
 /*
  * Retrieves the children for the given object identifier.
  */
-- (NSArray *)retrieveChildren:(NSString *)objectId error:(NSError **)error;
+- (CMISObjectList *)retrieveChildren:(NSString *)objectId
+                      orderBy:(NSString *)orderBy
+                       filter:(NSString *)filter
+         includeRelationShips:(CMISIncludeRelationship)includeRelationship
+              renditionFilter:(NSString *)renditionFilter
+      includeAllowableActions:(BOOL)includeAllowableActions
+           includePathSegment:(BOOL)includePathSegment
+                    skipCount:(NSNumber *)skipCount
+                     maxItems:(NSNumber *)maxItems
+                        error:(NSError **)error;
 
 /**
 * Retrieves the parent of a given object.

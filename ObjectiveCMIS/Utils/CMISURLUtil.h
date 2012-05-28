@@ -6,7 +6,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface URLUtil : NSObject
+@interface CMISURLUtil : NSObject
 
 + (NSString *)urlStringByAppendingParameter:(NSString *)parameterName withValue:(NSString *)parameterValue toUrlString:(NSString *)urlString;
 

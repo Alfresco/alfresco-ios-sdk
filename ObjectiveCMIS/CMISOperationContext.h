@@ -15,6 +15,8 @@
 @property CMISIncludeRelationship includeRelationShips;
 @property BOOL isIncludePolicies;
 @property (nonatomic, strong) NSString *renditionFilterString;
+@property (nonatomic, strong) NSString *orderBy;
+@property BOOL isIncludePathSegments;
 @property NSInteger maxItemsPerPage;
 @property NSInteger skipCount;
 

@@ -7,10 +7,15 @@
 #import "CMISURLUtil.h"
 
 
-@implementation URLUtil
+@implementation CMISURLUtil
 
 + (NSString *)urlStringByAppendingParameter:(NSString *)parameterName withValue:(NSString *)parameterValue toUrlString:(NSString *)urlString
 {
+    if (parameterName == nil || parameterValue == nil)
+    {
+        return urlString;
+    }
+
     NSMutableString *result = [NSMutableString stringWithString:urlString];
 
     // Append '?' if not yet in url, else append ampersand

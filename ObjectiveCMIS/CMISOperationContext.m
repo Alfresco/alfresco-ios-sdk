@@ -16,6 +16,8 @@
 @synthesize renditionFilterString = _renditionFilterString;
 @synthesize maxItemsPerPage = _maxItemsPerPage;
 @synthesize skipCount = _skipCount;
+@synthesize orderBy = _orderBy;
+@synthesize isIncludePathSegments = _isIncludePathSegments;
 
 + (CMISOperationContext *)defaultOperationContext
 {
@@ -26,6 +28,8 @@
     defaultContext.isIncludePolicies = NO;
     defaultContext.includeRelationShips = CMISIncludeRelationshipNone;
     defaultContext.renditionFilterString = nil;
+    defaultContext.orderBy = nil;
+    defaultContext.isIncludePathSegments = NO;
     defaultContext.maxItemsPerPage = 100;
     defaultContext.skipCount = 0;
     return defaultContext;

@@ -122,13 +122,66 @@
     STAssertNotNil(modifiedDate, @"modified date should not be nil");
 
     // retrieve the children of the root folder, there should be more than 10!
-    CMISCollection *childrenCollection = [rootFolder collectionOfChildrenAndReturnError:nil];
-    STAssertNotNil(childrenCollection, @"childrenCollection should not be nil");
+    NSError *error = nil;
+    CMISPagedResult *pagedResult = [rootFolder retrieveChildrenAndReturnError:&error];
+    STAssertNil(error, @"Got error while retrieving children: %@", [error description]);
+    STAssertNotNil(pagedResult, @"Return result should not be nil");
 
-    NSArray *children = childrenCollection.items;
+    NSArray *children = pagedResult.resultArray;
     STAssertNotNil(children, @"children should not be nil");
     NSLog(@"There are %d children", [children count]);
     STAssertTrue([children count] > 5, @"There should be at least 5 children");
+}
+
+- (void)testRetrieveFolderChildrenUsingPaging
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    // Fetch 10 children at a time
+    CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
+    operationContext.skipCount = 0;
+    operationContext.maxItemsPerPage = 2;
+    CMISPagedResult *pagedResult = [self.rootFolder retrieveChildrenWithOperationContext:operationContext andReturnError:&error];
+    STAssertNil(error, @"Got error while retrieving children: %@", [error description]);
+    STAssertTrue(pagedResult.hasMoreItems, @"There should still be more children");
+    STAssertTrue(pagedResult.numItems > 2, @"The test repository should have more than 2 objects");
+    STAssertTrue(pagedResult.resultArray.count == 2, @"Expected 2 children in the page, but got %d", pagedResult.resultArray.count);
+
+    // Save object ids for checking the next pages
+    NSMutableArray *objectIds = [NSMutableArray array];
+    for (CMISObject *object in pagedResult.resultArray)
+    {
+        [objectIds addObject:object.identifier];
+    }
+
+    // Fetch second page
+    CMISPagedResult *secondPageResult = [pagedResult fetchNextPageAndReturnError:&error];
+    STAssertNil(error, @"Got error while retrieving children: %@", [error description]);
+    STAssertTrue(secondPageResult.hasMoreItems, @"There should still be more children");
+    STAssertTrue(secondPageResult.numItems > 2, @"The test repository should have more than 4 objects");
+    STAssertTrue(secondPageResult.resultArray.count == 2, @"Expected 2 children in the page, but got %d", pagedResult.resultArray.count);
+
+    // Verify if no double object ids were found
+    for (CMISObject *object in secondPageResult.resultArray)
+    {
+        STAssertTrue(![objectIds containsObject:object.identifier], @"Object was already returned in a previous page. This is a serious impl bug!");
+        [objectIds addObject:object.identifier];
+    }
+
+    // Fetch third page, just to be sure
+    CMISPagedResult *thirdPageResult = [secondPageResult fetchNextPageAndReturnError:&error];
+    STAssertNil(error, @"Got error while retrieving children: %@", [error description]);
+    STAssertTrue(thirdPageResult.hasMoreItems, @"There should still be more children");
+    STAssertTrue(thirdPageResult.numItems > 2, @"The test repository should have more than 6 objects");
+    STAssertTrue(thirdPageResult.resultArray.count == 2, @"Expected 2 children in the page, but got %d", pagedResult.resultArray.count);
+
+    // Verify if no double object ids were found
+    for (CMISObject *object in thirdPageResult.resultArray)
+    {
+        STAssertTrue(![objectIds containsObject:object.identifier], @"Object was already returned in a previous page. This is a serious impl bug!");
+        [objectIds addObject:object.identifier];
+    }
 }
 
 - (void)testDocumentProperties
@@ -183,10 +236,13 @@
     CMISFolder *rootFolder = [self.session rootFolder];
     STAssertNotNil(rootFolder, @"rootFolder object should not be nil");
 
-    CMISCollection *childrenCollection = [rootFolder collectionOfChildrenAndReturnError:nil];
-    STAssertNotNil(childrenCollection, @"childrenCollection should not be nil");
+    CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
+    operationContext.maxItemsPerPage = 100;
+    CMISPagedResult *childrenResult = [rootFolder retrieveChildrenWithOperationContext:operationContext andReturnError:&error];
+    STAssertNil(error, @"Got error while retrieving children: %@", [error description]);
+    STAssertNotNil(childrenResult, @"childrenCollection should not be nil");
 
-    NSArray *children = childrenCollection.items;
+    NSArray *children = childrenResult.resultArray;
     STAssertNotNil(children, @"children should not be nil");
     STAssertTrue([children count] > 5, @"There should be at least 5 children");
 
@@ -932,23 +988,13 @@
 
 - (CMISDocument *)retrieveVersionedTestDocument
 {
+    [self setupCmisSession];
     NSError *error = nil;
-    CMISDocument *document = nil;
-
-    CMISCollection *children = [self.rootFolder collectionOfChildrenAndReturnError:&error];
-    STAssertNil(error, @"Error while retrieving children of rootfolder : %@", [error description]);
-
-    for (CMISObject *cmisObject in children.items)
-    {
-          if ([cmisObject.name isEqualToString:@"versioned-quote.txt"])
-          {
-              document = (CMISDocument *) cmisObject;
-          }
-      }
-      STAssertNotNil(document, @"Did not find test document for versioning test");
-      STAssertTrue(document.isLatestVersion, @"Should have 'true' for the property 'isLatestVersion");
-      STAssertFalse(document.isLatestMajorVersion, @"Should have 'false' for the property 'isLatestMajorVersion"); // the latest version is a minor one
-      STAssertFalse(document.isMajorVersion, @"Should have 'false' for the property 'isMajorVersion");
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:@"/versioned-quote.txt" error:&error];
+    STAssertNotNil(document, @"Did not find test document for versioning test");
+    STAssertTrue(document.isLatestVersion, @"Should have 'true' for the property 'isLatestVersion");
+    STAssertFalse(document.isLatestMajorVersion, @"Should have 'false' for the property 'isLatestMajorVersion"); // the latest version is a minor one
+    STAssertFalse(document.isMajorVersion, @"Should have 'false' for the property 'isMajorVersion");
 
     return document;
 }

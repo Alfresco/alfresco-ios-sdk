@@ -50,9 +50,19 @@ extern NSString * const kCMISLinkVersionHistory;
 extern NSString * const kCMISLinkEditMedia;
 extern NSString * const kCMISLinkRelationNext;
 
-// Parameters
+// URL parameters
 extern NSString * const kCMISParameterChangeToken;
 extern NSString * const kCMISParameterOverwriteFlag;
+extern NSString * const kCMISParameterIncludeAllowableActions;
+extern NSString * const kCMISParameterFilter;
+extern NSString * const kCMISParameterMaxItems;
+extern NSString * const kCMISParameterObjectId;
+extern NSString * const kCMISParameterOrderBy;
+extern NSString * const kCMISParameterIncludePathSegment;
+extern NSString * const kCMISParameterIncludeRelationships;
+extern NSString * const kCMISParameterRenditionFilter;
+extern NSString * const kCMISParameterSkipCount;
+
 
 // Namespaces
 extern NSString * const kCMISNamespaceCmis;

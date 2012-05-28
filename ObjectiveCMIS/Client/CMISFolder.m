@@ -10,6 +10,9 @@
 #import "CMISObjectConverter.h"
 #import "CMISConstants.h"
 #import "CMISErrors.h"
+#import "CMISPagedResult.h"
+#import "CMISOperationContext.h"
+#import "CMISObjectList.h"
 
 @interface CMISFolder ()
 
@@ -32,18 +35,54 @@
     return self;
 }
 
-
-- (CMISCollection *)collectionOfChildrenAndReturnError:(NSError * *)error
+- (CMISPagedResult *)retrieveChildrenAndReturnError:(NSError **)error
 {
-    if (self.children == nil)
-    {
-        NSArray *children = [self.binding.navigationService retrieveChildren:self.identifier error:error];
+    return [self retrieveChildrenWithOperationContext:[CMISOperationContext defaultOperationContext] andReturnError:error];
+}
 
-        CMISObjectConverter *objConverter = [[CMISObjectConverter alloc] initWithSession:self.session];
-        self.children = [objConverter convertObjects:children];
+- (CMISPagedResult *)retrieveChildrenWithOperationContext:(CMISOperationContext *)operationContext andReturnError:(NSError **)error
+{
+    CMISFetchNextPageBlock fetchNextPageBlock = ^CMISFetchNextPageBlockResult *(int skipCount, int maxItems, NSError **fetchError)
+    {
+        // Fetch results through navigationService
+        CMISObjectList *objectList = [self.binding.navigationService retrieveChildren:self.identifier
+                                                   orderBy:operationContext.orderBy
+                                                   filter:operationContext.filterString
+                                                   includeRelationShips:operationContext.includeRelationShips
+                                                   renditionFilter:operationContext.renditionFilterString
+                                                   includeAllowableActions:operationContext.isIncludeAllowableActions
+                                                   includePathSegment:operationContext.isIncludePathSegments
+                                                   skipCount:[NSNumber numberWithInt:skipCount]
+                                                   maxItems:[NSNumber numberWithInt:maxItems]
+                                                   error:fetchError];
+
+
+
+        // Fill up return result
+        CMISFetchNextPageBlockResult *result = [[CMISFetchNextPageBlockResult alloc] init];
+        result.hasMoreItems = objectList.hasMoreItems;
+        result.numItems = objectList.numItems;
+
+        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
+        result.resultArray = [converter convertObjects:objectList.objects].items;
+
+        return result;
+    };
+
+    NSError *internalError = nil;
+    CMISPagedResult *result = [CMISPagedResult pagedResultUsingFetchBlock:fetchNextPageBlock
+                                                       andLimitToMaxItems:operationContext.maxItemsPerPage
+                                                    andStartFromSkipCount:operationContext.skipCount
+                                                                    error:&internalError];
+
+    // Return nil and populate error in case something went wrong
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+        return nil;
     }
-    
-    return self.children;
+
+    return result;
 }
 
 - (NSString *)createFolder:(NSDictionary *)properties error:(NSError **)error;

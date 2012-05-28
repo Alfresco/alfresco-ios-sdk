@@ -53,6 +53,15 @@ NSString * const kCMISLinkRelationNext = @"next";
 // Parameters
 NSString * const kCMISParameterChangeToken = @"changeToken";
 NSString * const kCMISParameterOverwriteFlag = @"overwriteFlag";
+NSString * const kCMISParameterIncludeAllowableActions = @"includeAllowableActions";
+NSString * const kCMISParameterFilter = @"filter";
+NSString * const kCMISParameterMaxItems = @"maxItems";
+NSString * const kCMISParameterObjectId = @"objectId";
+NSString * const kCMISParameterOrderBy = @"orderBy";
+NSString * const kCMISParameterIncludePathSegment = @"includePathSegment";
+NSString * const kCMISParameterIncludeRelationships = @"includeRelationships";
+NSString * const kCMISParameterRenditionFilter = @"renditionFilter";
+NSString * const kCMISParameterSkipCount = @"skipCount";
 
 // Namespaces
 NSString * const kCMISNamespaceCmis = @"http://docs.oasis-open.org/ns/cmis/core/200908/";
