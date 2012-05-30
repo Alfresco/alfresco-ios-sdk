@@ -35,7 +35,8 @@
 * Downloads the content to a local file and returns the filepath.
 * This is a synchronous call and will not return until the file is written to the given path.
 */
-- (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
+- (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
+            failureBlock:(CMISContentRetrievalFailureBlock)failureBlock progressBlock:(CMISContentRetrievalProgressBlock)progressBlock;
 
 /**
  * Changes the content of this document to the content of the given file.

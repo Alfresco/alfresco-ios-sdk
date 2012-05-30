@@ -21,6 +21,10 @@
 @property (nonatomic, strong) NSString *filePathForContentRetrieval;
 @property (nonatomic, strong) CMISContentRetrievalCompletionBlock fileRetrievalCompletionBlock;
 @property (nonatomic, strong) CMISContentRetrievalFailureBlock fileRetrievalFailureBlock;
+@property (nonatomic, strong) CMISContentRetrievalProgressBlock fileRetrievalProgressBlock;
+
+@property NSInteger bytesTotal;
+@property NSInteger bytesDownloaded;
 
 @end
 
@@ -29,6 +33,9 @@
 @synthesize filePathForContentRetrieval = _filePathForContentRetrieval;
 @synthesize fileRetrievalCompletionBlock = _fileRetrievalCompletionBlock;
 @synthesize fileRetrievalFailureBlock = _fileRetrievalFailureBlock;
+@synthesize fileRetrievalProgressBlock = _fileRetrievalProgressBlock;
+@synthesize bytesTotal = _bytesTotal;
+@synthesize bytesDownloaded = _bytesDownloaded;
 
 - (CMISObjectData *)retrieveObject:(NSString *)objectId
            withFilter:(NSString *)filter
@@ -63,7 +70,10 @@
     return cmisObjData;
 }
 
-- (void)downloadContentOfObject:(NSString *)objectId toFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+- (void)downloadContentOfObject:(NSString *)objectId toFile:(NSString *)filePath
+                completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
+                   failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+                  progressBlock:(CMISContentRetrievalProgressBlock)progressBlock;
 {
     NSError *objectRetrievalError = nil;
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&objectRetrievalError];
@@ -82,12 +92,14 @@
         self.filePathForContentRetrieval = filePath;
         self.fileRetrievalCompletionBlock = completionBlock;
         self.fileRetrievalFailureBlock = failureBlock;
+        self.fileRetrievalProgressBlock = progressBlock;
         [HttpUtil invokeGETAsynchronous:objectData.contentUrl withSession:self.session withDelegate:self];
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
+    // Create file for file that is downloaded
     BOOL fileCreated = [[NSFileManager defaultManager] createFileAtPath:self.filePathForContentRetrieval contents:nil attributes:nil];
 
     if (!fileCreated)
@@ -100,16 +112,25 @@
                     withDetailedDescription:[NSString stringWithFormat:@"Could not create file at path %@", self.filePathForContentRetrieval]];
             self.fileRetrievalFailureBlock(cmisError);
         }
-
+    }
+    else
+    {
+        self.bytesDownloaded = 0;
+        self.bytesTotal = (NSInteger) response.expectedContentLength;
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-      // Log out how much data was downloaded
-//    log(@"%d bytes downloaded.", [data length]);
 
     [FileUtil appendToFileAtPath:self.filePathForContentRetrieval data:data];
+
+    // Pass progress to progressBlock
+    self.bytesDownloaded += data.length;
+    if (self.fileRetrievalProgressBlock != nil)
+    {
+        self.fileRetrievalProgressBlock(self.bytesDownloaded, self.bytesTotal);
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error

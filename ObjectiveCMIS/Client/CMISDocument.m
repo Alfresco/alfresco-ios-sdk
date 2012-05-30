@@ -98,9 +98,11 @@
     return nil;
 }
 
-- (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+- (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
+           failureBlock:(CMISContentRetrievalFailureBlock)failureBlock progressBlock:(CMISContentRetrievalProgressBlock)progressBlock
 {
-    [self.binding.objectService downloadContentOfObject:self.identifier toFile:filePath completionBlock:completionBlock failureBlock:failureBlock];
+    [self.binding.objectService downloadContentOfObject:self.identifier toFile:filePath
+                                 completionBlock:completionBlock failureBlock:failureBlock progressBlock:progressBlock];
 }
 
 - (BOOL)deleteAllVersionsAndReturnError:(NSError **)error

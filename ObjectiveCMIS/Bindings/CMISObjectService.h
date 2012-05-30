@@ -14,6 +14,7 @@
 
 typedef void (^CMISContentRetrievalCompletionBlock)(void);
 typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
+typedef void (^CMISContentRetrievalProgressBlock)(NSInteger bytesDownloaded, NSInteger bytesTotal);
 
 @protocol CMISObjectService <NSObject>
 
@@ -44,7 +45,8 @@ typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
 */
 - (void)downloadContentOfObject:(NSString *)objectId toFile:(NSString *)filePath
                                 completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
-                                failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
+                                failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+                                progressBlock:(CMISContentRetrievalProgressBlock)progressBlock;
 
 /**
  * Deletes the content stream for the specified document object.

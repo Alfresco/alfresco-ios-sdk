@@ -138,7 +138,7 @@
     [self setupCmisSession];
     NSError *error = nil;
 
-    // Fetch 10 children at a time
+    // Fetch 2 children at a time
     CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
     operationContext.skipCount = 0;
     operationContext.maxItemsPerPage = 2;
@@ -265,7 +265,7 @@
     } failureBlock:^(NSError *failureError) {
         STAssertNil(failureError, @"Error while writing content: %@", [error description]);
         self.callbackCompleted = YES;
-    }];
+    } progressBlock:nil];
     [self waitForCompletion:60];
 
     // Assert File exists and check file length
@@ -336,6 +336,7 @@
     STAssertTrue([documentName isEqualToString:document.name],
         @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
 
+   __block NSInteger previousBytesDownloaded = -1;
     NSString *downloadedFilePath = @"testfile.pdf";
     [document downloadContentToFile:downloadedFilePath completionBlock:^{
         NSLog(@"File upload completed");
@@ -343,6 +344,9 @@
     } failureBlock:^(NSError *failureError) {
         STAssertNil(failureError, @"Error while writing content: %@", [error description]);
         self.callbackCompleted = YES;
+    } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+        STAssertTrue(bytesDownloaded > previousBytesDownloaded, @"No progress in downloading file");
+        previousBytesDownloaded = bytesDownloaded;
     }];
     [self waitForCompletion:60];
 
@@ -695,7 +699,7 @@
     } failureBlock:^(NSError *failureError) {
         STAssertNil(failureError, @"Error while writing content: %@", [error description]);
         self.callbackCompleted = YES;
-    }];
+    } progressBlock:nil];
     [self waitForCompletion:60];
 
     NSString *contentOfDownloadedFile = [NSString stringWithContentsOfFile:tempDownloadFilePath encoding:NSUTF8StringEncoding error:nil];

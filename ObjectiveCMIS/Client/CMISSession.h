@@ -78,7 +78,8 @@
 
 - (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath
                                                       completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
-                                                      failureBlock:(CMISContentRetrievalFailureBlock)failureBlock;
+                                                      failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
+                                                      progressBlock:(CMISContentRetrievalProgressBlock)progressBlock;;
 
 - (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
                                                               withProperties:(NSDictionary *)properties
