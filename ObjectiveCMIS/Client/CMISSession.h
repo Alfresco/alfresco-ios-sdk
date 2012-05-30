@@ -77,13 +77,14 @@
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error;
 
 - (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath
-                                                      completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
-                                                      failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
-                                                      progressBlock:(CMISContentRetrievalProgressBlock)progressBlock;;
+                                                      completionBlock:(CMISVoidCompletionBlock)completionBlock
+                                                      failureBlock:(CMISErrorFailureBlock)failureBlock
+                                                      progressBlock:(CMISProgressBlock)progressBlock;
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+- (void)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
                                                               withProperties:(NSDictionary *)properties
                                                               inFolder:(NSString *)folderObjectId
-                                                              error:(NSError * *)error;
-
+                                                              completionBlock:(CMISStringCompletionBlock)completionBlock  // The returned id is the object id of the newly created document
+                                                              failureBlock:(CMISErrorFailureBlock)failureBlock
+                                                              progressBlock:(CMISProgressBlock)progressBlock;
 @end

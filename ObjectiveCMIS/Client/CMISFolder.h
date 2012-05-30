@@ -34,7 +34,11 @@
 
 - (NSString *)createFolder:(NSDictionary *)properties error:(NSError * *)error;
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties error:(NSError **)error;
+- (void)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+                          withProperties:(NSDictionary *)properties
+                         completionBlock:(CMISStringCompletionBlock)completionBlock // the returned string is the object id of the newly created document
+                            failureBlock:(CMISErrorFailureBlock)failureBlock
+                           progressBlock:(CMISProgressBlock)progressBlock;
 
 - (NSArray *)deleteTreeAndReturnError:(NSError * *)error;
 

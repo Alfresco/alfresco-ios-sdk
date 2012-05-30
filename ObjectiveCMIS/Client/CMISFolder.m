@@ -99,18 +99,25 @@
     return [self.binding.objectService createFolderInParentFolder:self.identifier withProperties:convertedProperties error:error];
 }
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(NSDictionary *)properties error:(NSError **)error
+- (void)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+                          withProperties:(NSDictionary *)properties completionBlock:(CMISStringCompletionBlock)completionBlock
+                          failureBlock:(CMISErrorFailureBlock)failureBlock progressBlock:(CMISProgressBlock)progressBlock
 {
     NSError *internalError = nil;
     CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
     CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
     if (internalError != nil)
     {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
-        return nil;
+        log(@"Could not convert properties: %@", [internalError description]);
+        if (failureBlock)
+        {
+            failureBlock([CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime]);
+        }
+        return;
     }
 
-    return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:convertedProperties inFolder:self.identifier error:error];
+    [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:convertedProperties inFolder:self.identifier
+                                           completionBlock:completionBlock failureBlock:failureBlock progressBlock:progressBlock];
 }
 
 - (NSArray *)deleteTreeAndReturnError:(NSError **)error

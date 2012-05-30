@@ -5,10 +5,13 @@
 
 #import "CMISLinkCache.h"
 
+@interface CMISLinkCache ()
+
+
+
+@end
 
 @implementation CMISLinkCache
-{
 
-}
 
 @end

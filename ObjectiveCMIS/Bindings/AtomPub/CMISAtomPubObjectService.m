@@ -10,32 +10,14 @@
 #import "CMISHttpUtil.h"
 #import "CMISAtomEntryWriter.h"
 #import "CMISAtomEntryParser.h"
-#import "CMISFileUtil.h"
 #import "CMISConstants.h"
 #import "CMISErrors.h"
 #import "CMISStringInOutParameter.h"
 #import "CMISURLUtil.h"
-
-@interface CMISAtomPubObjectService() <NSURLConnectionDataDelegate>
-
-@property (nonatomic, strong) NSString *filePathForContentRetrieval;
-@property (nonatomic, strong) CMISContentRetrievalCompletionBlock fileRetrievalCompletionBlock;
-@property (nonatomic, strong) CMISContentRetrievalFailureBlock fileRetrievalFailureBlock;
-@property (nonatomic, strong) CMISContentRetrievalProgressBlock fileRetrievalProgressBlock;
-
-@property NSInteger bytesTotal;
-@property NSInteger bytesDownloaded;
-
-@end
+#import "CMISFileDownloadDelegate.h"
+#import "CMISFileUploadDelegate.h"
 
 @implementation CMISAtomPubObjectService
-
-@synthesize filePathForContentRetrieval = _filePathForContentRetrieval;
-@synthesize fileRetrievalCompletionBlock = _fileRetrievalCompletionBlock;
-@synthesize fileRetrievalFailureBlock = _fileRetrievalFailureBlock;
-@synthesize fileRetrievalProgressBlock = _fileRetrievalProgressBlock;
-@synthesize bytesTotal = _bytesTotal;
-@synthesize bytesDownloaded = _bytesDownloaded;
 
 - (CMISObjectData *)retrieveObject:(NSString *)objectId
            withFilter:(NSString *)filter
@@ -71,9 +53,9 @@
 }
 
 - (void)downloadContentOfObject:(NSString *)objectId toFile:(NSString *)filePath
-                completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
-                   failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
-                  progressBlock:(CMISContentRetrievalProgressBlock)progressBlock;
+                completionBlock:(CMISVoidCompletionBlock)completionBlock
+                   failureBlock:(CMISErrorFailureBlock)failureBlock
+                  progressBlock:(CMISProgressBlock)progressBlock;
 {
     NSError *objectRetrievalError = nil;
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&objectRetrievalError];
@@ -89,72 +71,14 @@
     }
     else
     {
-        self.filePathForContentRetrieval = filePath;
-        self.fileRetrievalCompletionBlock = completionBlock;
-        self.fileRetrievalFailureBlock = failureBlock;
-        self.fileRetrievalProgressBlock = progressBlock;
-        [HttpUtil invokeGETAsynchronous:objectData.contentUrl withSession:self.session withDelegate:self];
+        // We create a specific delegate object, as potentially multiple threads can be downloading a file.
+        CMISFileDownloadDelegate *dataDelegate = [[CMISFileDownloadDelegate alloc] init];
+        dataDelegate.filePathForContentRetrieval = filePath;
+        dataDelegate.fileRetrievalCompletionBlock = completionBlock;
+        dataDelegate.fileRetrievalFailureBlock = failureBlock;
+        dataDelegate.fileRetrievalProgressBlock = progressBlock;
+        [HttpUtil invokeGETAsynchronous:objectData.contentUrl withSession:self.session withDelegate:dataDelegate];
     }
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    // Create file for file that is downloaded
-    BOOL fileCreated = [[NSFileManager defaultManager] createFileAtPath:self.filePathForContentRetrieval contents:nil attributes:nil];
-
-    if (!fileCreated)
-    {
-        [connection cancel];
-
-        if (self.fileRetrievalFailureBlock)
-        {
-            NSError *cmisError = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeStorage
-                    withDetailedDescription:[NSString stringWithFormat:@"Could not create file at path %@", self.filePathForContentRetrieval]];
-            self.fileRetrievalFailureBlock(cmisError);
-        }
-    }
-    else
-    {
-        self.bytesDownloaded = 0;
-        self.bytesTotal = (NSInteger) response.expectedContentLength;
-    }
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-
-    [FileUtil appendToFileAtPath:self.filePathForContentRetrieval data:data];
-
-    // Pass progress to progressBlock
-    self.bytesDownloaded += data.length;
-    if (self.fileRetrievalProgressBlock != nil)
-    {
-        self.fileRetrievalProgressBlock(self.bytesDownloaded, self.bytesTotal);
-    }
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSError *cmisError = [CMISErrors cmisError:&error withCMISErrorCode:kCMISErrorCodeObjectNotFound];
-
-    if (self.fileRetrievalFailureBlock)
-    {
-        self.fileRetrievalFailureBlock(cmisError);
-    }
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    // Fire completion to block
-    if (self.fileRetrievalCompletionBlock)
-    {
-        self.fileRetrievalCompletionBlock();
-    }
-
-    // Cleanup
-    self.filePathForContentRetrieval = nil;
-    self.fileRetrievalCompletionBlock = nil;
-    self.fileRetrievalFailureBlock = nil;
 }
 
 - (void)deleteContentOfObject:(CMISStringInOutParameter *)objectId withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError **)error
@@ -195,13 +119,19 @@
 }
 
 - (void)changeContentOfObject:(CMISStringInOutParameter *)objectId toContentOfFile:(NSString *)filePath
-        withOverwriteExisting:(BOOL)overwrite withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError **)error
+        withOverwriteExisting:(BOOL)overwrite withChangeToken:(CMISStringInOutParameter *)changeToken
+              completionBlock:(CMISVoidCompletionBlock)completionBlock
+                 failureBlock:(CMISErrorFailureBlock)failureBlock
+                progressBlock:(CMISProgressBlock)progressBlock
 {
     // Validate object id param
     if (objectId == nil || objectId.inParameter == nil)
     {
         log(@"Object id is nil or inParameter of objectId is nil");
-        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        if (failureBlock)
+        {
+            failureBlock([CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Must provide object id"]);
+        }
         return;
     }
 
@@ -209,16 +139,31 @@
     if (filePath == nil || ![[NSFileManager defaultManager] isReadableFileAtPath:filePath])
     {
         log(@"Invalid file path: '%@' is not valid", filePath);
-        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        if (failureBlock)
+        {
+            if (failureBlock)
+            {
+                failureBlock([CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Invalid file path"]);
+            }
+        }
         return;
     }
 
+    // Atompub DOES NOT SUPPORT returning the new object id and change token
+    // See http://docs.oasis-open.org/cmis/CMIS/v1.0/cs01/cmis-spec-v1.0.html#_Toc243905498
+    objectId.outParameter = nil;
+    changeToken.outParameter = nil;
+
     // Get object data
-    CMISObjectData *objectData = [self retrieveObjectInternal:objectId.inParameter error:error];
-    if (objectData == nil || (error != NULL && *error != nil))
+    NSError *internalError = nil;
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId.inParameter error:&internalError];
+    if (objectData == nil || internalError != nil)
     {
         log(@"Could not retrieve object with id %@", objectId.inParameter);
-        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
+        if (failureBlock)
+        {
+            failureBlock([CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound withDetailedDescription:@"Could not retrueve object "]);
+        }
         return;
     }
 
@@ -236,46 +181,67 @@
     editMediaLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterOverwriteFlag
                                                  withValue:(overwrite ? @"true" : @"false") toUrlString:editMediaLink];
 
+    // Create delegate to handle the async file upload
+    CMISFileUploadDelegate *uploadDelegate = [[CMISFileUploadDelegate alloc] init];
+    uploadDelegate.fileUploadFailureBlock = failureBlock;
+    uploadDelegate.fileUploadProgressBlock = progressBlock;
+    uploadDelegate.fileUploadCompletionBlock = ^ (HTTPResponse *httpResponse) {
+
+        // Check response status
+        if (httpResponse.statusCode != 200 && httpResponse.statusCode != 201 && httpResponse.statusCode != 204)
+        {
+            log(@"Invalid http response status code when updating content: %d", httpResponse.statusCode);
+            if (failureBlock)
+            {
+                failureBlock([CMISErrors createCMISErrorWithCode:kCMISErrorCodeRuntime
+                     withDetailedDescription:[NSString stringWithFormat:@"Could not update content: http status code %d", httpResponse.statusCode]]);
+            }
+        }
+        else {
+            if (completionBlock)
+            {
+                completionBlock();
+            }
+        }
+    };
+
     // Execute HTTP call on edit media link, passing the a stream to the file
-    NSDictionary *additionalHeader = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"attachment; filename=%@", [filePath lastPathComponent]] forKey:@"Content-Disposition"];
-    HTTPResponse *response = [HttpUtil invokePUTSynchronous:[NSURL URLWithString:editMediaLink]
-                               withSession:self.session
-                               bodyStream:[NSInputStream inputStreamWithFileAtPath:filePath]
-                               headers:additionalHeader
-                               error:error];
-
-    // Check response status
-    if (response.statusCode != 200 && response.statusCode != 201 && response.statusCode != 204)
-    {
-        log(@"Invalid http response status code when updating content: %d", response.statusCode);
-        *error = [[NSError alloc] init]; // TODO: properly init error (CmisInvalidArgumentException)
-        return;
-    }
-
-    // Atompub DOES NOT SUPPORT returning the new object id and change token
-    // See http://docs.oasis-open.org/cmis/CMIS/v1.0/cs01/cmis-spec-v1.0.html#_Toc243905498
-    objectId.outParameter = nil;
-    changeToken.outParameter = nil;
+    NSDictionary *additionalHeader = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"attachment; filename=%@",
+                                                           [filePath lastPathComponent]] forKey:@"Content-Disposition"];
+    [HttpUtil invokePUTAsynchronous:[NSURL URLWithString:editMediaLink]
+                                                withSession:self.session
+                                                 bodyStream:[NSInputStream inputStreamWithFileAtPath:filePath]
+                                                    headers:additionalHeader
+                                               withDelegate:uploadDelegate];
 }
 
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
-                  withProperties:(CMISProperties *)properties inFolder:(NSString *)folderObjectId error:(NSError * *)error
+- (void)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+                          withProperties:(CMISProperties *)properties inFolder:(NSString *)folderObjectId
+                         completionBlock:(CMISStringCompletionBlock)completionBlock
+                            failureBlock:(CMISErrorFailureBlock)failureBlock
+                           progressBlock:(CMISProgressBlock)progressBlock
 {
     // Validate properties
     if ([properties propertyValueForId:kCMISPropertyName] == nil || [properties propertyValueForId:kCMISPropertyObjectTypeId] == nil)
     {
-        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
         log(@"Must provide %@ and %@ as properties", kCMISPropertyName, kCMISPropertyObjectTypeId);
-        return nil;
+        if (failureBlock)
+        {
+            failureBlock([CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil]);
+        }
+        return;
     }
 
     // Validate mimetype
     if (!mimeType)
     {
-        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
         log(@"Must provide a mimetype when creating a cmis document");
-        return nil;
+        if (failureBlock)
+        {
+            failureBlock([CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil]);
+        }
+        return;
     }
 
     // Fetch object
@@ -283,17 +249,24 @@
     CMISObjectData *folderData = [self retrieveObjectInternal:folderObjectId error:&internalError];
     
     if (internalError) {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
-        return nil;
+        log(@"Error while retrieving folder data: %@", [internalError description]);
+        if (failureBlock)
+        {
+            failureBlock([CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound]);
+        }
+        return;
     }
-    NSString *downLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
 
-    return [self sendAtomEntryXmlToLink:downLink withHttpRequestMethod:HTTP_POST
+    NSString *downLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
+    [self asyncSendAtomEntryXmlToLink:downLink withHttpRequestMethod:HTTP_POST
                          withProperties:properties
                          withContentFilePath:filePath
                          withContentMimeType:mimeType
                          storeInMemory:NO
-                         error:error].identifier;
+                         completionBlock:completionBlock
+                         failureBlock:failureBlock
+                         progressBlock:progressBlock];
+
 }
 
 - (BOOL)deleteObject:(NSString *)objectId allVersions:(BOOL)allVersions error:(NSError * *)error
@@ -343,7 +316,7 @@
     }
 
     NSString *downLink = [parentFolderData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
-    return [self sendAtomEntryXmlToLink:downLink
+    return [self syncSendAtomEntryXmlToLink:downLink
                          withHttpRequestMethod:HTTP_POST
                          withProperties:properties
                          withContentFilePath:nil
@@ -413,7 +386,7 @@
     }
 
     // Execute request
-    [self sendAtomEntryXmlToLink:selfLink
+    [self syncSendAtomEntryXmlToLink:selfLink
                   withHttpRequestMethod:HTTP_PUT
                   withProperties:properties
                   withContentFilePath:nil
@@ -457,7 +430,7 @@
 
 #pragma mark Helper methods
 
-- (CMISObjectData *)sendAtomEntryXmlToLink:(NSString *)link
+- (CMISObjectData *)syncSendAtomEntryXmlToLink:(NSString *)link
                             withHttpRequestMethod:(HTTPRequestMethod)httpRequestMethod
                             withProperties:(CMISProperties *)properties
                             withContentFilePath:(NSString *)contentFilePath
@@ -465,25 +438,20 @@
                             storeInMemory:(BOOL)isXmlStoredInMemory
                             error:(NSError * *)error
 {
-    
+    // Validate params
     if (link == nil) {
         *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
         log(@"Could not retrieve link from object to do creation or update");
         return nil;
     }
 
-    NSError *internalError = nil;
-    NSURL *url = [NSURL URLWithString:link];
-    
-    // Atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
-    // Hence, we're storing the atom entry xml in a temporary file and stream the body of the http post
-    CMISAtomEntryWriter *atomEntryWriter = [[CMISAtomEntryWriter alloc] init];
-    atomEntryWriter.contentFilePath = contentFilePath;
-    atomEntryWriter.mimeType = contentMimeType;
-    atomEntryWriter.cmisProperties = properties;
-    atomEntryWriter.generateXmlInMemory = isXmlStoredInMemory;
-    NSString *writeResult = [atomEntryWriter generateAtomEntryXml];
+    // Generate XML
+    NSString *writeResult = [self createAtomEntryWriter:properties contentFilePath:contentFilePath
+        contentMimeType:contentMimeType isXmlStoredInMemory:isXmlStoredInMemory];
 
+    // Execute call
+    NSURL *url = [NSURL URLWithString:link];
+    NSError *internalError = nil;
     NSData *responseData = nil;
     if (isXmlStoredInMemory)
     {
@@ -517,17 +485,155 @@
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;
-    }        
+    }
 
     CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:responseData];
     [atomEntryParser parseAndReturnError:&internalError];
-    if (internalError) 
+    if (internalError)
     {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeUpdateConflict];
         return nil;
     }
-        
+
     return atomEntryParser.objectData;
+}
+
+- (void)asyncSendAtomEntryXmlToLink:(NSString *)link
+                    withHttpRequestMethod:(HTTPRequestMethod)httpRequestMethod
+                    withProperties:(CMISProperties *)properties
+                    withContentFilePath:(NSString *)contentFilePath
+                    withContentMimeType:(NSString *)contentMimeType
+                    storeInMemory:(BOOL)isXmlStoredInMemory
+                    completionBlock:(CMISStringCompletionBlock)completionBlock
+                    failureBlock:(CMISErrorFailureBlock)failureBlock
+                    progressBlock:(CMISProgressBlock)progressBlock;
+{
+    // Validate param
+    if (link == nil) {
+        log(@"Could not retrieve link from object to do creation or update");
+        if (failureBlock)
+        {
+            failureBlock([CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil]);
+        }
+        return;
+    }
+
+    // Generate XML
+    NSString *writeResult = [self createAtomEntryWriter:properties contentFilePath:contentFilePath
+            contentMimeType:contentMimeType isXmlStoredInMemory:isXmlStoredInMemory];
+
+    // Create delegate object for the asynchronous POST HTTP call
+    CMISFileUploadDelegate *uploadDelegate = [self createFileUploadDelegateWithCompletionBlock:completionBlock
+    failureBlock:failureBlock progressBlock:progressBlock];
+
+    // Start the asynchronous POST http call
+    NSURL *url = [NSURL URLWithString:link];
+    if (isXmlStoredInMemory)
+    {
+        [self asyncSendXMLInMemory:url body:writeResult uploadDelegate:uploadDelegate];
+    }
+    else
+    {
+        [self asyncSendXMLUsingTempFile:url tempFilePath:writeResult failureBlock:failureBlock uploadDelegate:uploadDelegate];
+    }
+}
+
+/**
+ * Helper method: creates a writer for the xml needed to upload a file.
+ * The atom entry XML can become huge, as the whole file is stored as base64 in the XML itself
+ * Hence, we're allowing to store the atom entry xml in a temporary file and stream the body of the http post
+ */
+- (NSString *)createAtomEntryWriter:(CMISProperties *)properties contentFilePath:(NSString *)contentFilePath contentMimeType:(NSString *)contentMimeType isXmlStoredInMemory:(BOOL)isXmlStoredInMemory
+{
+
+    CMISAtomEntryWriter *atomEntryWriter = [[CMISAtomEntryWriter alloc] init];
+    atomEntryWriter.contentFilePath = contentFilePath;
+    atomEntryWriter.mimeType = contentMimeType;
+    atomEntryWriter.cmisProperties = properties;
+    atomEntryWriter.generateXmlInMemory = isXmlStoredInMemory;
+    NSString *writeResult = [atomEntryWriter generateAtomEntryXml];
+    return writeResult;
+}
+
+/**
+ * Helper method: creates a CMISFileUploadDelegate object to handle the asynchronous upload
+ */
+- (CMISFileUploadDelegate *)createFileUploadDelegateWithCompletionBlock:(CMISStringCompletionBlock)completionBlock
+                    failureBlock:(CMISErrorFailureBlock)failureBlock
+                    progressBlock:(CMISProgressBlock)progressBlock
+{
+    CMISFileUploadDelegate *uploadDelegate = [[CMISFileUploadDelegate alloc] init];
+    uploadDelegate.fileUploadFailureBlock = failureBlock;
+    uploadDelegate.fileUploadProgressBlock = progressBlock;
+    uploadDelegate.fileUploadCompletionBlock = ^(HTTPResponse *response)
+    {
+        if (completionBlock)
+        {
+            NSError *parseError = nil;
+            CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response.data];
+            [atomEntryParser parseAndReturnError:&parseError];
+            if (parseError)
+            {
+                log(@"Error while parsing response: %@", [parseError description]);
+                if (failureBlock)
+                {
+                    failureBlock([CMISErrors cmisError:&parseError withCMISErrorCode:kCMISErrorCodeUpdateConflict]);
+                }
+            }
+
+            if (completionBlock)
+            {
+                completionBlock(atomEntryParser.objectData.identifier);
+            }
+        }
+    };
+
+    return uploadDelegate;
+}
+
+/**
+ * Helper method to send the xml (in memory) to the given url.
+ */
+- (void)asyncSendXMLInMemory:(NSURL *)url body:(NSString *)writeResult uploadDelegate:(CMISFileUploadDelegate *)uploadDelegate
+{
+    [HttpUtil invokePOSTAsynchronous:url
+                      withSession:self.session
+                      body:[writeResult dataUsingEncoding:NSUTF8StringEncoding]
+                      headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
+                      withDelegate:uploadDelegate];
+}
+
+/**
+ * Helper method to send the xml using a temporary file to the given url.
+ */
+- (void)asyncSendXMLUsingTempFile:(NSURL *)url tempFilePath:(NSString *)tempFilePath
+                failureBlock:(CMISErrorFailureBlock)failureBlock uploadDelegate:(CMISFileUploadDelegate *)uploadDelegate
+{
+    NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:tempFilePath];
+
+    // Add cleanup block to close stream to input file and delete temporary file (after upload completion)
+    uploadDelegate.fileUploadCleanupBlock = ^
+    {
+        // Close stream
+        [bodyStream close];
+
+        // Remove temp file
+        NSError *internalError = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:&internalError];
+        if (internalError)
+        {
+            if (failureBlock)
+            {
+                failureBlock([CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeStorage]);
+            }
+            return;
+        }
+    };
+
+    [HttpUtil invokePOSTAsynchronous:url withSession:self.session
+                          bodyStream:bodyStream
+                          headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
+                          withDelegate:uploadDelegate];
 }
 
 

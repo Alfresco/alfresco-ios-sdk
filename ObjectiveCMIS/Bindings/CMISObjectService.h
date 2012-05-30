@@ -8,13 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISObjectData.h"
+#import "CMISTypeDefs.h"
 
 @class CMISDocument;
 @class CMISStringInOutParameter;
-
-typedef void (^CMISContentRetrievalCompletionBlock)(void);
-typedef void (^CMISContentRetrievalFailureBlock)(NSError *error);
-typedef void (^CMISContentRetrievalProgressBlock)(NSInteger bytesDownloaded, NSInteger bytesTotal);
 
 @protocol CMISObjectService <NSObject>
 
@@ -44,9 +41,9 @@ typedef void (^CMISContentRetrievalProgressBlock)(NSInteger bytesDownloaded, NSI
 * bad performance/memory implications.
 */
 - (void)downloadContentOfObject:(NSString *)objectId toFile:(NSString *)filePath
-                                completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
-                                failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
-                                progressBlock:(CMISContentRetrievalProgressBlock)progressBlock;
+                                completionBlock:(CMISVoidCompletionBlock)completionBlock
+                                failureBlock:(CMISErrorFailureBlock)failureBlock
+                                progressBlock:(CMISProgressBlock)progressBlock;
 
 /**
  * Deletes the content stream for the specified document object.
@@ -67,17 +64,26 @@ typedef void (^CMISContentRetrievalProgressBlock)(NSInteger bytesDownloaded, NSI
  * contentStream for the object if the object currently does not have a content-stream.
  *
  * NOTE for atom pub binding: This does not return the new object id and change token as specified by the domain model.
- * This is not possible without introducing a new HTTP header.
+ * (This is not possible without introducing a new HTTP header).
  */
-- (void)changeContentOfObject:(CMISStringInOutParameter *)objectId toContentOfFile:(NSString *)filePath
-              withOverwriteExisting:(BOOL)overwrite withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError * *)error;
+- (void)changeContentOfObject:(CMISStringInOutParameter *)objectId
+                  toContentOfFile:(NSString *)filePath
+            withOverwriteExisting:(BOOL)overwrite
+                  withChangeToken:(CMISStringInOutParameter *)changeToken
+                  completionBlock:(CMISVoidCompletionBlock)completionBlock
+                     failureBlock:(CMISErrorFailureBlock)failureBlock
+                    progressBlock:(CMISProgressBlock)progressBlock;
 
 /**
 * uploads the file from the given path to the given folder.
 *
-* This is a synchronous call and will not return until the file is completely uploaded to the server.
+* This is an asynchronous call, due to performance reasons.
 */
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType withProperties:(CMISProperties *)properties inFolder:(NSString *)folderObjectId error:(NSError * *)error;
+- (void)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+                          withProperties:(CMISProperties *)properties inFolder:(NSString *)folderObjectId
+                         completionBlock:(CMISStringCompletionBlock)completionBlock // The returned string is the object id of the created document
+                            failureBlock:(CMISErrorFailureBlock)failureBlock
+                           progressBlock:(CMISProgressBlock)progressBlock;
 
 /**
 * Deletes the given object.

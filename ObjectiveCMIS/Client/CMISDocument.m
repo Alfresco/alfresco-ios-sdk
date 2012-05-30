@@ -70,13 +70,18 @@
     return nil;
 }
 
-- (void)changeContentToContentOfFile:(NSString *)filePath withOverwriteExisting:(BOOL)overwrite error:(NSError **)error
+- (void)changeContentToContentOfFile:(NSString *)filePath withOverwriteExisting:(BOOL)overwrite
+                  completionBlock:(CMISVoidCompletionBlock)completionBlock
+                     failureBlock:(CMISErrorFailureBlock)failureBlock
+                    progressBlock:(CMISProgressBlock)progressBlock
 {
     [self.binding.objectService changeContentOfObject:[CMISStringInOutParameter inOutParameterUsingInParameter:self.identifier]
-                                toContentOfFile:filePath
-                                withOverwriteExisting:overwrite
-                                withChangeToken:[CMISStringInOutParameter inOutParameterUsingInParameter:self.changeToken]
-                                error:error];
+                                  toContentOfFile:filePath
+                                  withOverwriteExisting:overwrite
+                                  withChangeToken:[CMISStringInOutParameter inOutParameterUsingInParameter:self.changeToken]
+                                  completionBlock:completionBlock
+                                  failureBlock:failureBlock
+                                  progressBlock:progressBlock];
 }
 
 - (void)deleteContentAndReturnError:(NSError **)error
@@ -98,8 +103,8 @@
     return nil;
 }
 
-- (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
-           failureBlock:(CMISContentRetrievalFailureBlock)failureBlock progressBlock:(CMISContentRetrievalProgressBlock)progressBlock
+- (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISVoidCompletionBlock)completionBlock
+           failureBlock:(CMISErrorFailureBlock)failureBlock progressBlock:(CMISProgressBlock)progressBlock
 {
     [self.binding.objectService downloadContentOfObject:self.identifier toFile:filePath
                                  completionBlock:completionBlock failureBlock:failureBlock progressBlock:progressBlock];

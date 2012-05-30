@@ -296,19 +296,38 @@
     [documentProperties setObject:documentName forKey:kCMISPropertyName];
     [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
 
-    NSString *objectId = [self.rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain" withProperties:documentProperties error:&error];
-    STAssertNil(error, @"Got error while creating document: %@", [error description]);
-    STAssertNotNil(objectId, @"Object id received should be non-nil");
+    __block NSInteger previousBytesUploaded = -1;
+    [self.rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
+         withProperties:documentProperties
+         completionBlock:^ (NSString *objectId)
+         {
+             STAssertNotNil(objectId, @"Object id received should be non-nil");
 
-    // Verify created
-    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
-    STAssertTrue([documentName isEqualToString:document.name],
-        @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
+             // Verify creation
+             NSError *retrievalError = nil;
+             CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&retrievalError];
+             STAssertTrue([documentName isEqualToString:document.name],
+                 @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
 
-    // Cleanup after ourselves
-    BOOL documentDeleted = [document deleteAllVersionsAndReturnError:&error];
-    STAssertNil(error, @"Error while deleting created document: %@", [error description]);
-    STAssertTrue(documentDeleted, @"Document was not deleted");
+             // Cleanup after ourselves
+             NSError *deleteError = nil;
+             BOOL documentDeleted = [document deleteAllVersionsAndReturnError:&deleteError];
+             STAssertNil(deleteError, @"Error while deleting created document: %@", [error description]);
+             STAssertTrue(documentDeleted, @"Document was not deleted");
+
+             self.callbackCompleted = YES;
+         }
+         failureBlock: ^ (NSError *uploadError)
+         {
+            STAssertNil(uploadError, @"Got error while creating document: %@", [uploadError description]);
+         }
+         progressBlock: ^ (NSInteger bytesUploaded, NSInteger bytesTotal)
+         {
+             STAssertTrue(bytesUploaded > previousBytesUploaded, @"No progress was made");
+             previousBytesUploaded = bytesUploaded;
+         }];
+
+    [self waitForCompletion:60];
 }
 
 - (void)testCreateBigDocument
@@ -327,15 +346,34 @@
     [documentProperties setObject:documentName forKey:kCMISPropertyName];
     [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
 
-    NSString *objectId = [self.rootFolder createDocumentFromFilePath:fileToUploadPath withMimeType:@"application/pdf" withProperties:documentProperties error:&error];
-    STAssertNil(error, @"Got error while creating document: %@", [error description]);
-    STAssertNotNil(objectId, @"Object id received should be non-nil");
+    __block NSInteger previousBytesUploaded = -1;
+    __block NSString *objectId;
+    [self.rootFolder createDocumentFromFilePath:fileToUploadPath withMimeType:@"application/pdf"
+           withProperties:documentProperties
+           completionBlock:^(NSString *newObjectId)
+           {
+               objectId = newObjectId;
+               STAssertNotNil(objectId, @"Object id received should be non-nil");
+               self.callbackCompleted = YES;
+           }
+           failureBlock:^(NSError *uploadError)
+           {
+               STAssertNil(uploadError, @"Got error while creating document: %@", [uploadError description]);
+           }
+           progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal)
+           {
+               STAssertTrue(bytesUploaded > previousBytesUploaded, @"No progress was made");
+               previousBytesUploaded = bytesUploaded;
+           }];
+
+    [self waitForCompletion:60];
 
     // Verify created file by downloading it again
     CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
     STAssertTrue([documentName isEqualToString:document.name],
         @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
 
+    self.callbackCompleted = NO;
    __block NSInteger previousBytesDownloaded = -1;
     NSString *downloadedFilePath = @"testfile.pdf";
     [document downloadContentToFile:downloadedFilePath completionBlock:^{
@@ -683,13 +721,22 @@
     CMISDocument *originalDocument = [self uploadTestFile];
 
     // Change content of test file using overwrite
+    __block NSInteger previousUploadedBytes = -1;
     NSString *newContentFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file_2.txt" ofType:nil];
     [self.session.binding.objectService changeContentOfObject:[CMISStringInOutParameter inOutParameterUsingInParameter:originalDocument.identifier]
-                                        toContentOfFile:newContentFilePath
-                                        withOverwriteExisting:YES
-                                        withChangeToken:nil
-                                        error:&error];
-    STAssertNil(error, @"Got error while changing content of document: %@", [error description]);
+        toContentOfFile:newContentFilePath
+        withOverwriteExisting:YES
+        withChangeToken:nil
+        completionBlock: ^ {
+            NSLog(@"Content has been successfully changed");
+            self.callbackCompleted = YES;
+        } failureBlock: ^ (NSError *failureError) {
+            STAssertNil(failureError, @"Got error while changing content of document: %@", [failureError description]);
+        } progressBlock: ^ (NSInteger bytesUploaded, NSInteger bytesTotal) {
+            STAssertTrue(bytesUploaded > previousUploadedBytes, @"No progress");
+            previousUploadedBytes = bytesUploaded;
+        }];
+    [self waitForCompletion:60];
 
     // Verify content of document
     NSString *tempDownloadFilePath = @"temp_download_file.txt";
@@ -1013,9 +1060,30 @@
     [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
 
     // Upload test file
+    __block NSInteger previousUploadedBytes = -1;
+    __block NSString *objectId = nil;
+    [self.rootFolder createDocumentFromFilePath:filePath
+            withMimeType:@"text/plain"
+            withProperties:documentProperties
+            completionBlock: ^ (NSString *newObjectId)
+            {
+                STAssertNotNil(newObjectId, @"Object id should not be nil");
+                objectId = newObjectId;
+                self.callbackCompleted = YES;
+            }
+            failureBlock: ^ (NSError *failureError)
+            {
+                STAssertNil(failureError, @"Got error while uploading document: %@", [failureError description]);
+            }
+            progressBlock: ^ (NSInteger uploadedBytes, NSInteger totalBytes)
+            {
+                STAssertTrue(uploadedBytes > previousUploadedBytes, @"no progress");
+                previousUploadedBytes = uploadedBytes;
+            }];
+
+    [self waitForCompletion:60];
+
     NSError *error = nil;
-    NSString *objectId = [self.rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
-                                                      withProperties:documentProperties error:&error];
     CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
     STAssertNil(error, @"Got error while creating document: %@", [error description]);
     STAssertNotNil(objectId, @"Object id received should be non-nil");
@@ -1024,7 +1092,7 @@
     return document;
 }
 
-- (BOOL)waitForCompletion:(NSTimeInterval)timeoutSecs
+- (void)waitForCompletion:(NSTimeInterval)timeoutSecs
 {
     NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:timeoutSecs];
     do
@@ -1034,7 +1102,7 @@
             break;
     } while (!self.callbackCompleted);
 
-    return self.callbackCompleted;
+    self.callbackCompleted = NO;
 }
 
 - (void)deleteDocumentAndVerify:(CMISDocument *)document

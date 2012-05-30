@@ -14,7 +14,7 @@
 @interface CMISQueryResult : NSObject
 
 /**
-* Returns a list of all properties (objects of type CMISPRopertyData) in this query result.
+* Returns a list of all properties (objects of type CMISPropertyData) in this query result.
 */
 @property(nonatomic, strong, readonly) CMISProperties *properties;
 @property(nonatomic, strong, readonly) CMISAllowableActions *allowableActions;

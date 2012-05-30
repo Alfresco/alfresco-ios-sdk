@@ -181,6 +181,11 @@
 		FE417D6615761A34009056AA /* CMISPropertyDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = FE417D6015761A34009056AA /* CMISPropertyDefinition.m */; };
 		FE417D6715761A34009056AA /* CMISTypeDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6115761A34009056AA /* CMISTypeDefinition.h */; };
 		FE417D6815761A34009056AA /* CMISTypeDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = FE417D6215761A34009056AA /* CMISTypeDefinition.m */; };
+		FE417D6815761A34009056AC /* CMISFileDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056AB /* CMISFileDownloadDelegate.m */; };
+		FE417D6815761A34009056AE /* CMISFileDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056AD /* CMISFileDownloadDelegate.h */; };
+		FE417D6815761A34009056B2 /* CMISTypeDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056B1 /* CMISTypeDefs.h */; };
+		FE417D6815761A34009056B4 /* CMISFileUploadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056B3 /* CMISFileUploadDelegate.m */; };
+		FE417D6815761A34009056B6 /* CMISFileUploadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056B5 /* CMISFileUploadDelegate.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -347,6 +352,11 @@
 		FE417D6015761A34009056AA /* CMISPropertyDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISPropertyDefinition.m; path = Bindings/CMISPropertyDefinition.m; sourceTree = "<group>"; };
 		FE417D6115761A34009056AA /* CMISTypeDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISTypeDefinition.h; path = Bindings/CMISTypeDefinition.h; sourceTree = "<group>"; };
 		FE417D6215761A34009056AA /* CMISTypeDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISTypeDefinition.m; path = Bindings/CMISTypeDefinition.m; sourceTree = "<group>"; };
+		FE417D6815761A34009056AB /* CMISFileDownloadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISFileDownloadDelegate.m; sourceTree = "<group>"; };
+		FE417D6815761A34009056AD /* CMISFileDownloadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISFileDownloadDelegate.h; sourceTree = "<group>"; };
+		FE417D6815761A34009056B1 /* CMISTypeDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISTypeDefs.h; sourceTree = "<group>"; };
+		FE417D6815761A34009056B3 /* CMISFileUploadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISFileUploadDelegate.m; sourceTree = "<group>"; };
+		FE417D6815761A34009056B5 /* CMISFileUploadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISFileUploadDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -506,6 +516,7 @@
 		828072D215153EB300EF635C /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				FE417D6815761A34009056B1 /* CMISTypeDefs.h */,
 				FE417D5B15761A1C009056AA /* CMISEnums.m */,
 				4EA61BE71564F75000C759E4 /* CMISErrors.h */,
 				4EA61BE81564F75000C759E4 /* CMISErrors.m */,
@@ -589,6 +600,10 @@
 		8280730D1515405C00EF635C /* AtomPub */ = {
 			isa = PBXGroup;
 			children = (
+				FE417D6815761A34009056B5 /* CMISFileUploadDelegate.h */,
+				FE417D6815761A34009056B3 /* CMISFileUploadDelegate.m */,
+				FE417D6815761A34009056AD /* CMISFileDownloadDelegate.h */,
+				FE417D6815761A34009056AB /* CMISFileDownloadDelegate.m */,
 				82C1C63F15358733009B7BA2 /* CMISTypeByIdUriBuilder.h */,
 				82C1C63F15358733009B7BA0 /* CMISTypeByIdUriBuilder.m */,
 				82C1C63F15358733009B7B87 /* CMISObjectByPathUriBuilder.h */,
@@ -741,6 +756,9 @@
 				FE417D6315761A34009056AA /* CMISLinkCache.h in Headers */,
 				FE417D6515761A34009056AA /* CMISPropertyDefinition.h in Headers */,
 				FE417D6715761A34009056AA /* CMISTypeDefinition.h in Headers */,
+				FE417D6815761A34009056AE /* CMISFileDownloadDelegate.h in Headers */,
+				FE417D6815761A34009056B2 /* CMISTypeDefs.h in Headers */,
+				FE417D6815761A34009056B6 /* CMISFileUploadDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -922,6 +940,8 @@
 				FE417D6415761A34009056AA /* CMISLinkCache.m in Sources */,
 				FE417D6615761A34009056AA /* CMISPropertyDefinition.m in Sources */,
 				FE417D6815761A34009056AA /* CMISTypeDefinition.m in Sources */,
+				FE417D6815761A34009056AC /* CMISFileDownloadDelegate.m in Sources */,
+				FE417D6815761A34009056B4 /* CMISFileUploadDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

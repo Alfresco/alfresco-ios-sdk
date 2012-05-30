@@ -94,12 +94,76 @@
 
 #pragma mark asynchronous methods
 
-+ (void)invokeGETAsynchronous:(NSURL *)url withSession:(CMISBindingSession *)session withDelegate:(id<NSURLConnectionDataDelegate>)delegate
++ (void)invokeAsynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod
+                withSession:(CMISBindingSession *)session
+                bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders
+                withDelegate:(id <NSURLConnectionDataDelegate>)delegate
 {
-    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:@"GET" usingSession:session];
+    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:[self stringForHttpRequestMethod:httpRequestMethod] usingSession:session];
+
+    if (bodyStream)
+    {
+        [request setHTTPBodyStream:bodyStream];
+    }
+
+    if (additionalHeaders)
+    {
+        [self addHeaders:additionalHeaders toURLRequest:request];
+    }
+
     NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:delegate];
     [connection start];
 }
+
++ (void)invokeAsynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod
+                withSession:(CMISBindingSession *)session
+                body:(NSData *)body headers:(NSDictionary *)additionalHeaders
+                withDelegate:(id <NSURLConnectionDataDelegate>)delegate
+{
+    NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:[self stringForHttpRequestMethod:httpRequestMethod] usingSession:session];
+
+    if (body)
+    {
+        [request setHTTPBody:body];
+    }
+
+    if (additionalHeaders)
+    {
+        [self addHeaders:additionalHeaders toURLRequest:request];
+    }
+
+    NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:delegate];
+    [connection start];
+}
+
++ (void)invokeGETAsynchronous:(NSURL *)url withSession:(CMISBindingSession *)session withDelegate:(id<NSURLConnectionDataDelegate>)delegate
+{
+    [self invokeAsynchronous:url withHttpMethod:HTTP_GET withSession:session body:nil headers:nil withDelegate:delegate];
+}
+
++ (void)invokePOSTAsynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body withDelegate:(id <NSURLConnectionDataDelegate>)delegate
+{
+    [self invokePOSTAsynchronous:url withSession:session body:body headers:nil withDelegate:delegate];
+}
+
++ (void)invokePOSTAsynchronous:(NSURL *)url withSession:(CMISBindingSession *)session body:(NSData *)body
+                       headers:(NSDictionary *)additionalHeaders withDelegate:(id <NSURLConnectionDataDelegate>)delegate
+{
+    [self invokeAsynchronous:url withHttpMethod:HTTP_POST withSession:session body:body headers:additionalHeaders withDelegate:delegate];
+}
+
++ (void)invokePOSTAsynchronous:(NSURL *)url withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream
+                       headers:(NSDictionary *)additionalHeaders withDelegate:(id <NSURLConnectionDataDelegate>)delegate
+{
+    [self invokeAsynchronous:url withHttpMethod:HTTP_POST withSession:session bodyStream:bodyStream headers:additionalHeaders withDelegate:delegate];
+}
+
++ (void)invokePUTAsynchronous:(NSURL *)url withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream
+                      headers:(NSDictionary *)additionalHeaders withDelegate:(id <NSURLConnectionDataDelegate>)delegate
+{
+    [self invokeAsynchronous:url withHttpMethod:HTTP_PUT withSession:session bodyStream:bodyStream headers:additionalHeaders withDelegate:delegate];
+}
+
 
 #pragma mark Helper methods
 
@@ -176,13 +240,6 @@
 
 #pragma mark HTTPRespons implementation
 
-
-@interface HTTPResponse ()
-
-@property (readwrite) NSInteger statusCode;
-@property (nonatomic, strong, readwrite) NSData *data;
-
-@end
 
 @implementation HTTPResponse
 

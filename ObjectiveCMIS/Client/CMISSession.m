@@ -270,27 +270,35 @@
 }
 
 - (void)downloadContentOfCMISObject:(NSString *)objectId toFile:(NSString *)filePath
-                    completionBlock:(CMISContentRetrievalCompletionBlock)completionBlock
-                    failureBlock:(CMISContentRetrievalFailureBlock)failureBlock
-                    progressBlock:(CMISContentRetrievalProgressBlock)progressBlock;
+                    completionBlock:(CMISVoidCompletionBlock)completionBlock
+                    failureBlock:(CMISErrorFailureBlock)failureBlock
+                    progressBlock:(CMISProgressBlock)progressBlock;
 {
     [self.binding.objectService downloadContentOfObject:objectId toFile:filePath completionBlock:completionBlock
                                            failureBlock:failureBlock progressBlock:progressBlock];
 }
 
-- (NSString *)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
-                   withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
+- (void)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+                    withProperties:(NSDictionary *)properties inFolder:(NSString *)folderObjectId
+                    completionBlock:(CMISStringCompletionBlock)completionBlock
+                    failureBlock:(CMISErrorFailureBlock)failureBlock
+                    progressBlock:(CMISProgressBlock)progressBlock
 {
     NSError *internalError = nil;
     CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self];
     CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
     if (internalError != nil)
     {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
-        return nil;
+        log(@"Could not convert properties: %@", [internalError description]);
+        if (failureBlock)
+        {
+            failureBlock([CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime]);
+        }
+        return;
     }
 
-    return [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:convertedProperties inFolder:folderObjectId error:error];
+    [self.binding.objectService createDocumentFromFilePath:filePath withMimeType:mimeType withProperties:convertedProperties
+                    inFolder:folderObjectId completionBlock:completionBlock failureBlock:failureBlock progressBlock:progressBlock];
 }
 
 
