@@ -7,7 +7,7 @@
 #import "CMISBindingSession.h"
 
 // Default link cache size is 50 entries
-#define DEFAULT_LINK_CACHE_SIZE 10
+#define DEFAULT_LINK_CACHE_SIZE 50
 
 @interface CMISLinkCache () <NSCacheDelegate>
 
@@ -57,7 +57,7 @@
     }
 
     // Uncomment for debugging
-    self.linkCache.delegate = self;
+//    self.linkCache.delegate = self;
 }
 
 - (NSString *)linkForObjectId:(NSString *)objectId andRelation:(NSString *)rel
@@ -66,9 +66,14 @@
     return [linkRelations linkHrefForRel:rel];
 }
 
+- (NSString *)linkForObjectId:(NSString *)objectId andRelation:(NSString *)rel andType:(NSString *)type
+{
+    CMISLinkRelations *linkRelations = [self.linkCache objectForKey:objectId];
+    return [linkRelations linkHrefForRel:rel type:type];
+}
+
 - (void)addLinks:(CMISLinkRelations *)links forObjectId:(NSString *)objectId
 {
-    log(@"Cached links for %@", objectId);
     [self.linkCache setObject:links forKey:objectId];
 }
 
@@ -78,10 +83,9 @@
 }
 
 // Debugging
-- (void)cache:(NSCache *)cache willEvictObject:(id)obj
-{
-    log(@"Link cache will evict cached links for object %@", obj);
-}
-
+//- (void)cache:(NSCache *)cache willEvictObject:(id)obj
+//{
+//    log(@"Link cache will evict cached links for object '%@'", obj);
+//}
 
 @end

@@ -13,10 +13,8 @@
 #import "CMISConstants.h"
 #import "CMISAtomEntryParser.h"
 #import "CMISWorkspace.h"
-#import "CMISObjectByIdUriBuilder.h"
 #import "CMISErrors.h"
 #import "CMISObjectByPathUriBuilder.h"
-#import "CMISObject.h"
 #import "CMISTypeByIdUriBuilder.h"
 #import "CMISLinkCache.h"
 
@@ -141,7 +139,7 @@
 
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error
 {
-    return [self retrieveObjectInternal:objectId withFilter:@"" andIncludeRelationShips:NO
+    return [self retrieveObjectInternal:objectId withFilter:@"" andIncludeRelationShips:CMISIncludeRelationshipNone
                     andIncludePolicyIds:NO andRenditionFilder:nil andIncludeACL:NO
                     andIncludeAllowableActions:YES error:error];
 }
@@ -175,6 +173,11 @@
         if ([parser parseAndReturnError:error])
         {
             objectData = parser.objectData;
+
+            // Add links to link cache
+            CMISLinkCache *linkCache = [self linkCache];
+            [linkCache addLinks:objectData.linkRelations forObjectId:objectData.identifier];
+
             return objectData;
         }
     }
@@ -197,6 +200,11 @@
         if ([parser parseAndReturnError:error])
         {
             objectData = parser.objectData;
+
+            // Add links to link cache
+            CMISLinkCache *linkCache = [self linkCache];
+            [linkCache addLinks:objectData.linkRelations forObjectId:objectData.identifier];
+
             return objectData;
         }
     }
@@ -204,18 +212,27 @@
     return nil;
 }
 
-- (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel error:(NSError **)error
-{
-    // Get link cache (if it doesn't exist yet, create it and store it in the binding session)
+- (CMISLinkCache *)linkCache{
     CMISLinkCache *linkCache = [self.bindingSession objectForKey:kCMISBindingSessionKeyLinkCache];
     if (linkCache == nil)
     {
         linkCache = [[CMISLinkCache alloc] initWithBindingSession:self.bindingSession];
         [self.bindingSession setObject:linkCache forKey:kCMISBindingSessionKeyLinkCache];
     }
+    return linkCache;
+}
+
+- (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel error:(NSError **)error
+{
+    return [self loadLinkForObjectId:objectId andRelation:rel andType:nil error:error];
+}
+
+- (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel andType:(NSString *)type error:(NSError **)error
+{
+    CMISLinkCache *linkCache = [self linkCache];
 
     // Fetch link from cache
-    NSString *link = [linkCache linkForObjectId:objectId andRelation:rel];
+    NSString *link = [linkCache linkForObjectId:objectId andRelation:rel andType:type];
     if (link != nil)
     {
         return link;
@@ -234,17 +251,17 @@
             }
             return nil;
         }
-        else {
-            link = [linkCache linkForObjectId:objectId andRelation:rel];
+        else
+        {
+            link = [linkCache linkForObjectId:objectId andRelation:rel andType:type];
             if (link == nil)
             {
                 *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound
-                     withDetailedDescription:[NSString stringWithFormat:@"Could not find link %@ for object with id %@", rel, objectId]];
+                                     withDetailedDescription:[NSString stringWithFormat:@"Could not find link %@ for object with id %@", rel, objectId]];
             }
         }
     }
     return link;
-
 }
 
 @end

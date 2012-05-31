@@ -35,13 +35,12 @@
     NSURL *objectIdUrl = [objectByIdUriBuilder buildUrl];
 
     NSError *internalError = nil;
-
-
     NSData *data = [HttpUtil invokeGETSynchronous:objectIdUrl withSession:self.bindingSession error:&internalError].data;
     if (internalError || data == nil) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;
     }
+
     CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:data];
     if (![parser parseAndReturnError:&internalError])
     {
@@ -63,12 +62,13 @@
 
     // Fetch version history link
     NSError *internalError = nil;
-    CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&internalError];
+    NSString *versionHistoryLink = [self loadLinkForObjectId:objectId andRelation:kCMISLinkVersionHistory error:&internalError];
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
         return nil;
     }
-    NSString *versionHistoryLink = [objectData.linkRelations linkHrefForRel:kCMISLinkVersionHistory];
+
+    // Execute call
     NSData *data = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:versionHistoryLink] 
                                       withSession:self.bindingSession error:&internalError].data;
     if (internalError) {

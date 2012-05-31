@@ -37,4 +37,6 @@
 
 - (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel error:(NSError **)error;
 
+- (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel andType:(NSString *)type error:(NSError **)error;
+
 @end

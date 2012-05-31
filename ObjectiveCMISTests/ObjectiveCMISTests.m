@@ -372,6 +372,9 @@
     STAssertNotNil(objectId, @"Object id received should be non-nil");
     STAssertNotNil(document, @"Retrieved document should not be nil");
     STAssertTrue(document.contentStreamLength > 0, @"No content found for document");
+
+    // Cleanup
+    [self deleteDocumentAndVerify:document];
 }
 
 - (void)testCreateBigDocument
