@@ -523,8 +523,8 @@
             contentMimeType:contentMimeType isXmlStoredInMemory:isXmlStoredInMemory];
 
     // Create delegate object for the asynchronous POST HTTP call
-    CMISFileUploadDelegate *uploadDelegate = [self createFileUploadDelegateWithCompletionBlock:completionBlock
-    failureBlock:failureBlock progressBlock:progressBlock];
+    CMISFileUploadDelegate *uploadDelegate = [self createFileUploadDelegateForFilePath:contentFilePath
+                     withCompletionBlock:completionBlock withFailureBlock:failureBlock withProgressBlock:progressBlock];
 
     // Start the asynchronous POST http call
     NSURL *url = [NSURL URLWithString:link];
@@ -558,9 +558,10 @@
 /**
  * Helper method: creates a CMISFileUploadDelegate object to handle the asynchronous upload
  */
-- (CMISFileUploadDelegate *)createFileUploadDelegateWithCompletionBlock:(CMISStringCompletionBlock)completionBlock
-                    failureBlock:(CMISErrorFailureBlock)failureBlock
-                    progressBlock:(CMISProgressBlock)progressBlock
+- (CMISFileUploadDelegate *)createFileUploadDelegateForFilePath:(NSString *)filePath
+                                            withCompletionBlock:(CMISStringCompletionBlock)completionBlock
+                                               withFailureBlock:(CMISErrorFailureBlock)failureBlock
+                                              withProgressBlock:(CMISProgressBlock)progressBlock
 {
     CMISFileUploadDelegate *uploadDelegate = [[CMISFileUploadDelegate alloc] init];
     uploadDelegate.fileUploadFailureBlock = failureBlock;
@@ -587,6 +588,25 @@
             }
         }
     };
+
+    // We set the expected bytes Explicitely. In case the call is done using an Inputstream, NSURLConnection
+    // would not be able to determine the file size.
+    NSError *fileSizeError = nil;
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&fileSizeError];
+
+    if (fileSizeError == nil)
+    {
+        uploadDelegate.bytesExpected = [fileAttributes objectForKey:NSFileSize];
+    }
+    else
+    {
+        log(@"Could not determine file size of %@ : %@", filePath, [fileSizeError description]);
+        if (failureBlock)
+        {
+            failureBlock(fileSizeError);
+            return nil;
+        }
+    }
 
     return uploadDelegate;
 }
