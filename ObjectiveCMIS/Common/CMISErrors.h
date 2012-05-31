@@ -101,7 +101,7 @@ extern NSString * const kCMISErrorDescriptionVersioning;
  @param code the CMIS error code
  @return the CMIS error as NSError object with error domain org.apache.chemistry.objectivecmis
  */
-+ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(NSInteger)code;
++ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(CMISErrorCodes)code;
 /** Creates a new CMIS error
  
  This is the direct way of creating CMIS errors
@@ -110,6 +110,6 @@ extern NSString * const kCMISErrorDescriptionVersioning;
  @param detailedDescription a detailed description to be added to the localizedDescription. Use nil if none is available/needed.
  @return the CMIS error as NSError object with error domain org.apache.chemistry.objectivecmis
  */
-+ (NSError *)createCMISErrorWithCode:(NSInteger)code withDetailedDescription:(NSString *)detailedDescription;
++ (NSError *)createCMISErrorWithCode:(CMISErrorCodes)code withDetailedDescription:(NSString *)detailedDescription;
 @end
 

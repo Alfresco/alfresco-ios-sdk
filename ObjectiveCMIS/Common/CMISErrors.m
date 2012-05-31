@@ -44,12 +44,12 @@ NSString * const kCMISErrorDescriptionUpdateConflict = @"Update Conflict Error";
 NSString * const kCMISErrorDescriptionVersioning = @"Versioning Error";
 
 @interface CMISErrors ()
-+ (NSString *)localizedDescriptionForCode:(NSInteger)code;
++ (NSString *)localizedDescriptionForCode:(CMISErrorCodes)code;
 @end
 
 @implementation CMISErrors
 
-+ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(NSInteger)code
++ (NSError *)cmisError:(NSError * *)error withCMISErrorCode:(CMISErrorCodes)code
 {
     if (!error && error == NULL && *error == nil) {//shouldn't really get there
         return nil;
@@ -63,7 +63,7 @@ NSString * const kCMISErrorDescriptionVersioning = @"Versioning Error";
     return [NSError errorWithDomain:kCMISErrorDomainName code:code userInfo:errorInfo];
 }
 
-+ (NSError *)createCMISErrorWithCode:(NSInteger)code withDetailedDescription:(NSString *)detailedDescription
++ (NSError *)createCMISErrorWithCode:(CMISErrorCodes)code withDetailedDescription:(NSString *)detailedDescription
 {
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
     [errorInfo setValue:[self localizedDescriptionForCode:code] forKey:NSLocalizedDescriptionKey];
@@ -74,7 +74,7 @@ NSString * const kCMISErrorDescriptionVersioning = @"Versioning Error";
     return [NSError errorWithDomain:kCMISErrorDomainName code:code userInfo:errorInfo];
 }
 
-+ (NSString *)localizedDescriptionForCode:(NSInteger)code
++ (NSString *)localizedDescriptionForCode:(CMISErrorCodes)code
 {
     switch (code) {
         case kCMISErrorCodeNoReturn:
