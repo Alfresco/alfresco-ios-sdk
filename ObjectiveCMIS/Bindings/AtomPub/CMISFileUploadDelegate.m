@@ -28,7 +28,7 @@
 @synthesize statusCode = _statusCode;
 @synthesize bytesTotal = _bytesTotal;
 @synthesize bytesUploaded = _bytesUploaded;
-
+@synthesize bytesExpected = _bytesExpected;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
@@ -47,7 +47,14 @@
 {
     if (self.fileUploadProgressBlock)
     {
-        self.fileUploadProgressBlock(totalBytesWritten, totalBytesExpectedToWrite);
+        if (self.bytesExpected == nil)
+        {
+            self.fileUploadProgressBlock(totalBytesWritten, totalBytesExpectedToWrite);
+        }
+        else
+        {
+            self.fileUploadProgressBlock(totalBytesWritten, [self.bytesExpected intValue]);
+        }
     }
 }
 
