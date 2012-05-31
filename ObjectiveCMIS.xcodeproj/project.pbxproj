@@ -21,7 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		4E1AF29C15775CD800DBB473 /* CMISTypeDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E1AF29B15775CD800DBB473 /* CMISTypeDefs.h */; };
 		4EA61BD71564F70C00C759E4 /* CMISStringInOutParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA61BD31564F70C00C759E4 /* CMISStringInOutParameter.h */; };
 		4EA61BD81564F70C00C759E4 /* CMISStringInOutParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA61BD41564F70C00C759E4 /* CMISStringInOutParameter.m */; };
 		4EA61BD91564F70C00C759E4 /* CMISStringInOutParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA61BD41564F70C00C759E4 /* CMISStringInOutParameter.m */; };
@@ -186,6 +185,7 @@
 		FE417D6815761A34009056AE /* CMISFileDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056AD /* CMISFileDownloadDelegate.h */; };
 		FE417D6815761A34009056B4 /* CMISFileUploadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056B3 /* CMISFileUploadDelegate.m */; };
 		FE417D6815761A34009056B6 /* CMISFileUploadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056B5 /* CMISFileUploadDelegate.h */; };
+		FE417D6815761A34009056BA /* CMISTypeDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056B9 /* CMISTypeDefs.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -199,7 +199,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4E1AF29B15775CD800DBB473 /* CMISTypeDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISTypeDefs.h; path = Common/CMISTypeDefs.h; sourceTree = "<group>"; };
 		4EA61BD31564F70C00C759E4 /* CMISStringInOutParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISStringInOutParameter.h; path = Utils/CMISStringInOutParameter.h; sourceTree = "<group>"; };
 		4EA61BD41564F70C00C759E4 /* CMISStringInOutParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISStringInOutParameter.m; path = Utils/CMISStringInOutParameter.m; sourceTree = "<group>"; };
 		4EA61BD51564F70C00C759E4 /* CMISURLUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISURLUtil.h; path = Utils/CMISURLUtil.h; sourceTree = "<group>"; };
@@ -357,6 +356,7 @@
 		FE417D6815761A34009056AD /* CMISFileDownloadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISFileDownloadDelegate.h; sourceTree = "<group>"; };
 		FE417D6815761A34009056B3 /* CMISFileUploadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISFileUploadDelegate.m; sourceTree = "<group>"; };
 		FE417D6815761A34009056B5 /* CMISFileUploadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISFileUploadDelegate.h; sourceTree = "<group>"; };
+		FE417D6815761A34009056B9 /* CMISTypeDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISTypeDefs.h; path = Common/CMISTypeDefs.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -516,7 +516,7 @@
 		828072D215153EB300EF635C /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				4E1AF29B15775CD800DBB473 /* CMISTypeDefs.h */,
+				FE417D6815761A34009056B9 /* CMISTypeDefs.h */,
 				FE417D5B15761A1C009056AA /* CMISEnums.m */,
 				4EA61BE71564F75000C759E4 /* CMISErrors.h */,
 				4EA61BE81564F75000C759E4 /* CMISErrors.m */,
@@ -758,7 +758,7 @@
 				FE417D6715761A34009056AA /* CMISTypeDefinition.h in Headers */,
 				FE417D6815761A34009056AE /* CMISFileDownloadDelegate.h in Headers */,
 				FE417D6815761A34009056B6 /* CMISFileUploadDelegate.h in Headers */,
-				4E1AF29C15775CD800DBB473 /* CMISTypeDefs.h in Headers */,
+				FE417D6815761A34009056BA /* CMISTypeDefs.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
