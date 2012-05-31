@@ -37,7 +37,7 @@
     NSError *internalError = nil;
 
 
-    NSData *data = [HttpUtil invokeGETSynchronous:objectIdUrl withSession:self.session error:&internalError].data;
+    NSData *data = [HttpUtil invokeGETSynchronous:objectIdUrl withSession:self.bindingSession error:&internalError].data;
     if (internalError || data == nil) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;
@@ -70,7 +70,7 @@
     }
     NSString *versionHistoryLink = [objectData.linkRelations linkHrefForRel:kCMISLinkVersionHistory];
     NSData *data = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:versionHistoryLink] 
-                                      withSession:self.session error:&internalError].data;
+                                      withSession:self.bindingSession error:&internalError].data;
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;

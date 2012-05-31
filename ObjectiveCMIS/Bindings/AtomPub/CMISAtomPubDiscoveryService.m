@@ -31,7 +31,7 @@
     }
 
     // Validate query uri
-    NSString *queryUrlString = [self.session objectForKey:kCMISBindingSessionKeyQueryCollection];
+    NSString *queryUrlString = [self.bindingSession objectForKey:kCMISBindingSessionKeyQueryCollection];
     if (queryUrlString == nil)
     {
         log(@"Unknown repository or query not supported!");
@@ -53,7 +53,7 @@
     // Execute HTTP call
     NSError *internalError = nil;
     NSData *responseData = [HttpUtil invokePOSTSynchronous:queryURL
-                                 withSession:self.session
+                                 withSession:self.bindingSession
                                  body:[[atomEntryWriter generateAtomEntryXML] dataUsingEncoding:NSUTF8StringEncoding]
                                  headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeQuery forKey:@"Content-type"]
                                  error:&internalError].data;

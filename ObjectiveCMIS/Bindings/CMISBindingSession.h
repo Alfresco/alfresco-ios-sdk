@@ -18,6 +18,8 @@ extern NSString * const kCMISBindingSessionKeyQueryUri;
 
 extern NSString * const kCMISBindingSessionKeyQueryCollection;
 
+extern NSString * const kCMISBindingSessionKeyLinkCache;
+
 @interface CMISBindingSession : NSObject
 
 @property (nonatomic, strong, readonly) NSString *username;

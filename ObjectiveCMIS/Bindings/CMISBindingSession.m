@@ -16,6 +16,8 @@ NSString * const kCMISBindingSessionKeyQueryUri = @"cmis_session_key_query_uri";
 
 NSString * const kCMISBindingSessionKeyQueryCollection = @"cmis_session_key_query_collection";
 
+NSString * const kCMISBindingSessionKeyLinkCache = @"cmis_session_key_link_cache";
+
 @interface CMISBindingSession ()
 @property (nonatomic, strong, readwrite) NSString *username;
 @property (nonatomic, strong, readwrite) NSString *repositoryId;

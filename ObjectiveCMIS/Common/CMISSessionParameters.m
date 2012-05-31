@@ -8,6 +8,8 @@
 
 #import "CMISSessionParameters.h"
 
+NSString * const kCMISSessionParameterLinkCacheSize =@"session_param_cache_size_links";
+
 @interface CMISSessionParameters ()
 @property (nonatomic, assign, readwrite) CMISBindingType bindingType;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;
@@ -25,7 +27,6 @@
 
 - (id)init
 {
-    self.sessionData = [[NSMutableDictionary alloc] init];
     return [self initWithBindingType:CMISBindingTypeAtomPub];
 }
 

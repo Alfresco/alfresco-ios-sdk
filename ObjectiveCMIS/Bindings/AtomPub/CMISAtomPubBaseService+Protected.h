@@ -18,9 +18,10 @@
 
 - (NSArray *)retrieveCMISWorkspacesAndReturnError:(NSError * *)error;
 
-/** Convenience method with all the default for the retrieval parameters */
+/** Convenience method with all the defaults for the retrieval parameters */
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error;
 
+/** Full-blown object retrieval version */
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId
            withFilter:(NSString *)filter
            andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
@@ -33,5 +34,7 @@
 - (CMISObjectData *)retrieveObjectByPathInternal:(NSString *)path error:(NSError **)error;
 
 - (id) retrieveFromCache:(NSString *)cacheKey error:(NSError * *)error;
+
+- (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel error:(NSError **)error;
 
 @end

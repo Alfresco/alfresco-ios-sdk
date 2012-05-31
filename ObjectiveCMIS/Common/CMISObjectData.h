@@ -17,7 +17,7 @@
 @property (nonatomic, strong) NSString *identifier; 
 @property (nonatomic, assign) CMISBaseType baseType;
 @property (nonatomic, strong) CMISProperties *properties;
-@property (nonatomic, strong) CMISLinkRelations *linkRelations; // Replaced links and added CMISLinkRelations object here until LinkCache is implemented
+@property (nonatomic, strong) CMISLinkRelations *linkRelations;
 @property (nonatomic, strong) NSURL *contentUrl;
 @property (nonatomic, strong) CMISAllowableActions *allowableActions;
 

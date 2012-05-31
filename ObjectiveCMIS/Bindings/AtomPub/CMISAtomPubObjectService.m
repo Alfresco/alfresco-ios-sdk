@@ -77,7 +77,7 @@
         dataDelegate.fileRetrievalCompletionBlock = completionBlock;
         dataDelegate.fileRetrievalFailureBlock = failureBlock;
         dataDelegate.fileRetrievalProgressBlock = progressBlock;
-        [HttpUtil invokeGETAsynchronous:objectData.contentUrl withSession:self.session withDelegate:dataDelegate];
+        [HttpUtil invokeGETAsynchronous:objectData.contentUrl withSession:self.bindingSession withDelegate:dataDelegate];
     }
 }
 
@@ -110,7 +110,7 @@
                                                      withValue:changeToken.inParameter toUrlString:editMediaLink];
     }
 
-    [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:editMediaLink] withSession:self.session error:error];
+    [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:editMediaLink] withSession:self.bindingSession error:error];
 
     // Atompub DOES NOT SUPPORT returning the new object id and change token
     // See http://docs.oasis-open.org/cmis/CMIS/v1.0/cs01/cmis-spec-v1.0.html#_Toc243905498
@@ -209,7 +209,7 @@
     NSDictionary *additionalHeader = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"attachment; filename=%@",
                                                            [filePath lastPathComponent]] forKey:@"Content-Disposition"];
     [HttpUtil invokePUTAsynchronous:[NSURL URLWithString:editMediaLink]
-                                                withSession:self.session
+                                                withSession:self.bindingSession
                                                  bodyStream:[NSInputStream inputStreamWithFileAtPath:filePath]
                                                     headers:additionalHeader
                                                withDelegate:uploadDelegate];
@@ -283,7 +283,7 @@
         return NO;
     }
     NSURL *selfUrl = [NSURL URLWithString:selfLink];
-    [HttpUtil invokeDELETESynchronous:selfUrl withSession:self.session error:&internalError];
+    [HttpUtil invokeDELETESynchronous:selfUrl withSession:self.bindingSession error:&internalError];
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeUpdateConflict];
         return NO;
@@ -344,7 +344,7 @@
     }
 
     NSString *folderTreeLink = [folderData.linkRelations linkHrefForRel:kCMISLinkRelationFolderTree];
-    [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:folderTreeLink] withSession:self.session error:&internalError];
+    [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:folderTreeLink] withSession:self.bindingSession error:&internalError];
     
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
@@ -402,7 +402,7 @@
 
     NSError *internalError = nil;
     HTTPResponse *response = [HttpUtil invokePUTSynchronous:[NSURL URLWithString:selfLink]
-                                withSession:self.session
+                                withSession:self.bindingSession
                                 body:[xmlWriter.generateAtomEntryXml dataUsingEncoding:NSUTF8StringEncoding]
                                 headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
                                 error:&internalError];
@@ -457,7 +457,7 @@
     {
         responseData = [HttpUtil invokeSynchronous:url
                 withHttpMethod:httpRequestMethod
-                withSession:self.session
+                withSession:self.bindingSession
                 body:[writeResult dataUsingEncoding:NSUTF8StringEncoding]
                 headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
                 error:&internalError].data;
@@ -467,7 +467,7 @@
         NSInputStream *bodyStream = [NSInputStream inputStreamWithFileAtPath:writeResult];
         responseData = [HttpUtil invokeSynchronous:url
                                            withHttpMethod:httpRequestMethod
-                                           withSession:self.session
+                                           withSession:self.bindingSession
                                            bodyStream:bodyStream
                                            headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
                                            error:&internalError].data;
@@ -617,7 +617,7 @@
 - (void)asyncSendXMLInMemory:(NSURL *)url body:(NSString *)writeResult uploadDelegate:(CMISFileUploadDelegate *)uploadDelegate
 {
     [HttpUtil invokePOSTAsynchronous:url
-                      withSession:self.session
+                      withSession:self.bindingSession
                       body:[writeResult dataUsingEncoding:NSUTF8StringEncoding]
                       headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
                       withDelegate:uploadDelegate];
@@ -650,7 +650,7 @@
         }
     };
 
-    [HttpUtil invokePOSTAsynchronous:url withSession:self.session
+    [HttpUtil invokePOSTAsynchronous:url withSession:self.bindingSession
                           bodyStream:bodyStream
                           headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeEntry forKey:@"Content-type"]
                           withDelegate:uploadDelegate];

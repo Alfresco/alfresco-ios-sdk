@@ -12,7 +12,7 @@
 
 @interface CMISAtomPubBaseService : NSObject
 
-@property (nonatomic, strong, readonly) CMISBindingSession *session;
+@property (nonatomic, strong, readonly) CMISBindingSession *bindingSession;
 @property (nonatomic, strong, readonly) NSURL *atomPubUrl;
 
 - (id)initWithBindingSession:(CMISBindingSession *)session;

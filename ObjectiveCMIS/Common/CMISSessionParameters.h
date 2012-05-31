@@ -11,16 +11,29 @@
 #import "CMISBinding.h"
 #import "CMISAuthenticationProvider.h"
 
+
+// Session param keys
+
+/**
+ * Key for setting the value of the cache of links.
+ * Value should be an NSNumber, indicating the amount of objects whose links will be cached.
+ */
+extern NSString * const kCMISSessionParameterLinkCacheSize;
+
 @interface CMISSessionParameters : NSObject
+
+// Repository connection
 
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *repositoryId;
 @property (nonatomic, strong) NSURL *atomPubUrl;
 
-@property (nonatomic, strong) id<CMISAuthenticationProvider> authenticationProvider;
-
 @property (nonatomic, assign, readonly) CMISBindingType bindingType;
+
+// Authentication
+
+@property (nonatomic, strong) id<CMISAuthenticationProvider> authenticationProvider;
 
 - (id)initWithBindingType:(CMISBindingType)bindingType;
 
