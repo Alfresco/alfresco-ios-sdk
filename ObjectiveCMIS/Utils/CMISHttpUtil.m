@@ -113,9 +113,9 @@
 
     // See also: http://www.ddeville.me/2011/12/broken-NSURLConnection-on-ios/
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        [[NSURLConnection alloc] initWithRequest:request delegate:delegate startImmediately:YES];
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:delegate];
 //        [connection setDelegateQueue:[NSOperationQueue mainQueue]];
-//        [connection start];
+        [connection start];
     }];
 }
 
