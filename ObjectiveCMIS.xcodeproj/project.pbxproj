@@ -36,7 +36,7 @@
 		4EA61BE91564F75000C759E4 /* CMISErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA61BE71564F75000C759E4 /* CMISErrors.h */; };
 		4EA61BEA1564F75000C759E4 /* CMISErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA61BE81564F75000C759E4 /* CMISErrors.m */; };
 		4EA61BEB1564F75000C759E4 /* CMISErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA61BE81564F75000C759E4 /* CMISErrors.m */; };
-		4EEF6211156270E500347193 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EEF6213156270E500347193 /* Localizable.strings */; };
+		4EEF6211156270E500347193 /* ObjectiveCMISLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EEF6213156270E500347193 /* ObjectiveCMISLocalizable.strings */; };
 		752067F5156AC06300231A5D /* CMISExtensionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 752067F3156AC06300231A5D /* CMISExtensionData.h */; };
 		752067F6156AC06300231A5D /* CMISExtensionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 752067F4156AC06300231A5D /* CMISExtensionData.m */; };
 		752067FA156AC0FE00231A5D /* CMISExtensionElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 752067F8156AC0FE00231A5D /* CMISExtensionElement.h */; };
@@ -209,7 +209,7 @@
 		4EA61BE01564F73900C759E4 /* CMISQueryResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISQueryResult.m; path = Bindings/CMISQueryResult.m; sourceTree = "<group>"; };
 		4EA61BE71564F75000C759E4 /* CMISErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISErrors.h; path = Common/CMISErrors.h; sourceTree = "<group>"; };
 		4EA61BE81564F75000C759E4 /* CMISErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISErrors.m; path = Common/CMISErrors.m; sourceTree = "<group>"; };
-		4EEF6212156270E500347193 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4EEF6212156270E500347193 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ObjectiveCMISLocalizable.strings; sourceTree = "<group>"; };
 		752067F3156AC06300231A5D /* CMISExtensionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISExtensionData.h; path = Common/CMISExtensionData.h; sourceTree = "<group>"; };
 		752067F4156AC06300231A5D /* CMISExtensionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISExtensionData.m; path = Common/CMISExtensionData.m; sourceTree = "<group>"; };
 		752067F8156AC0FE00231A5D /* CMISExtensionElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISExtensionElement.h; path = Common/CMISExtensionElement.h; sourceTree = "<group>"; };
@@ -459,7 +459,7 @@
 			isa = PBXGroup;
 			children = (
 				828072AA15153DE800EF635C /* ObjectiveCMIS-Prefix.pch */,
-				4EEF6213156270E500347193 /* Localizable.strings */,
+				4EEF6213156270E500347193 /* ObjectiveCMISLocalizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -837,7 +837,7 @@
 				828072C115153DE900EF635C /* InfoPlist.strings in Resources */,
 				82C1C63F15358733009B7B5E /* test_file.txt in Resources */,
 				82C1C63F15358733009B7B66 /* cmis-spec-v1.0.pdf in Resources */,
-				4EEF6211156270E500347193 /* Localizable.strings in Resources */,
+				4EEF6211156270E500347193 /* ObjectiveCMISLocalizable.strings in Resources */,
 				82C1C63F15358733009B7B93 /* test_file_2.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -970,12 +970,12 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		4EEF6213156270E500347193 /* Localizable.strings */ = {
+		4EEF6213156270E500347193 /* ObjectiveCMISLocalizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				4EEF6212156270E500347193 /* en */,
 			);
-			name = Localizable.strings;
+			name = ObjectiveCMISLocalizable.strings;
 			sourceTree = "<group>";
 		};
 		828072BF15153DE900EF635C /* InfoPlist.strings */ = {

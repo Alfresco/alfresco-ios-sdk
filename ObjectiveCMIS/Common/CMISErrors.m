@@ -19,29 +19,29 @@ NSString * const kCMISErrorDomainName = @"org.apache.chemistry.objectivecmis";
  */
 //Basic Errors
 
-NSString * const kCMISErrorDescriptionNoReturn = @"Unknown Error";
-NSString * const kCMISErrorDescriptionConnection = @"Connection Error";
-NSString * const kCMISErrorDescriptionProxyAuthentication = @"Proxy Authentication Error";
-NSString * const kCMISErrorDescriptionUnauthorized = @"Unauthorized access error";
-NSString * const kCMISErrorDescriptionNoRootFolderFound =  @"Root Folder Not Found Error";
-NSString * const kCMISErrorDescriptionRepositoryNotFound =  @"Repository Not Found Error";
+NSString * const kCMISErrorDescriptionNoReturn = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionNoReturn";
+NSString * const kCMISErrorDescriptionConnection = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionConnection";
+NSString * const kCMISErrorDescriptionProxyAuthentication = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionProxyAuthentication";
+NSString * const kCMISErrorDescriptionUnauthorized = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionUnauthorized";
+NSString * const kCMISErrorDescriptionNoRootFolderFound =  @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionNoRootFolderFound";
+NSString * const kCMISErrorDescriptionRepositoryNotFound =  @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionRepositoryNotFound";
 
 //General errors as defined in 2.2.1.4.1 of spec
-NSString * const kCMISErrorDescriptionInvalidArgument = @"Invalid Argument Error";
-NSString * const kCMISErrorDescriptionObjectNotFound = @"Object Not Found Error";
-NSString * const kCMISErrorDescriptionNotSupported = @"Not supported Error";
-NSString * const kCMISErrorDescriptionPermissionDenied = @"Permission Denied Error";
-NSString * const kCMISErrorDescriptionRuntime = @"Runtime Error";
+NSString * const kCMISErrorDescriptionInvalidArgument = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionInvalidArgument";
+NSString * const kCMISErrorDescriptionObjectNotFound = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionObjectNotFound";
+NSString * const kCMISErrorDescriptionNotSupported = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionNotSupported";
+NSString * const kCMISErrorDescriptionPermissionDenied = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionPermissionDenied";
+NSString * const kCMISErrorDescriptionRuntime = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionRuntime";
 
 //Specific errors as defined in 2.2.1.4.2
-NSString * const kCMISErrorDescriptionConstraint = @"Constraint Error";
-NSString * const kCMISErrorDescriptionContentAlreadyExists = @"Content Already Exists Error";
-NSString * const kCMISErrorDescriptionFilterNotValid = @"Filter Not Valid Error";
-NSString * const kCMISErrorDescriptionNameConstraintViolation = @"Name Constraint Violation Error";
-NSString * const kCMISErrorDescriptionStorage = @"Storage Error";
-NSString * const kCMISErrorDescriptionStreamNotSupported = @"Stream Not Supported Error";
-NSString * const kCMISErrorDescriptionUpdateConflict = @"Update Conflict Error";
-NSString * const kCMISErrorDescriptionVersioning = @"Versioning Error";
+NSString * const kCMISErrorDescriptionConstraint = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionConstraint";
+NSString * const kCMISErrorDescriptionContentAlreadyExists = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionContentAlreadyExists";
+NSString * const kCMISErrorDescriptionFilterNotValid = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionFilterNotValid";
+NSString * const kCMISErrorDescriptionNameConstraintViolation = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionNameConstraintViolation";
+NSString * const kCMISErrorDescriptionStorage = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionStorage";
+NSString * const kCMISErrorDescriptionStreamNotSupported = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionStreamNotSupported";
+NSString * const kCMISErrorDescriptionUpdateConflict = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionUpdateConflict";
+NSString * const kCMISErrorDescriptionVersioning = @"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionVersioning";
 
 @interface CMISErrors ()
 + (NSString *)localizedDescriptionForCode:(CMISErrorCodes)code;
@@ -58,7 +58,7 @@ NSString * const kCMISErrorDescriptionVersioning = @"Versioning Error";
         return *error;
     }
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:[self localizedDescriptionForCode:code] forKey:NSLocalizedDescriptionKey];
+    [errorInfo setValue:[CMISErrors localizedDescriptionForCode:code] forKey:NSLocalizedDescriptionKey];
     [errorInfo setObject:*error forKey:NSUnderlyingErrorKey];
     return [NSError errorWithDomain:kCMISErrorDomainName code:code userInfo:errorInfo];
 }
@@ -66,7 +66,7 @@ NSString * const kCMISErrorDescriptionVersioning = @"Versioning Error";
 + (NSError *)createCMISErrorWithCode:(CMISErrorCodes)code withDetailedDescription:(NSString *)detailedDescription
 {
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:[self localizedDescriptionForCode:code] forKey:NSLocalizedDescriptionKey];
+    [errorInfo setValue:[CMISErrors localizedDescriptionForCode:code] forKey:NSLocalizedDescriptionKey];
     if (detailedDescription != nil) {
         [errorInfo setValue:detailedDescription forKey:NSLocalizedFailureReasonErrorKey];
     }
@@ -78,45 +78,45 @@ NSString * const kCMISErrorDescriptionVersioning = @"Versioning Error";
 {
     switch (code) {
         case kCMISErrorCodeNoReturn:
-            return NSLocalizedString(kCMISErrorDescriptionNoReturn, kCMISErrorDescriptionNoReturn);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionNoReturn, @"ObjectiveCMISLocalizable", @"Unknown");
         case kCMISErrorCodeConnection:
-            return NSLocalizedString(kCMISErrorDescriptionConnection, kCMISErrorDescriptionConnection);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionConnection, @"ObjectiveCMISLocalizable", @"Connection error");
         case kCMISErrorCodeProxyAuthentication:
-            return NSLocalizedString(kCMISErrorDescriptionProxyAuthentication, kCMISErrorDescriptionProxyAuthentication);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionProxyAuthentication, @"ObjectiveCMISLocalizable", @"Proxy Auth. error");
         case kCMISErrorCodeUnauthorized:
-            return NSLocalizedString(kCMISErrorDescriptionUnauthorized, kCMISErrorDescriptionUnauthorized);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionUnauthorized, @"ObjectiveCMISLocalizable", @"Unauthorised");
         case kCMISErrorCodeNoRootFolderFound:
-            return NSLocalizedString(kCMISErrorDescriptionNoRootFolderFound, kCMISErrorDescriptionNoRootFolderFound);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionNoRootFolderFound, @"ObjectiveCMISLocalizable", @"No root folder");
         case kCMISErrorCodeNoRepositoryFound:
-            return NSLocalizedString(kCMISErrorDescriptionRepositoryNotFound, kCMISErrorDescriptionRepositoryNotFound);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionRepositoryNotFound, @"ObjectiveCMISLocalizable", @"No repository");
         case kCMISErrorCodeInvalidArgument:
-            return NSLocalizedString(kCMISErrorDescriptionInvalidArgument, kCMISErrorDescriptionInvalidArgument);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionInvalidArgument, @"ObjectiveCMISLocalizable", @"invalid argument");
         case kCMISErrorCodeObjectNotFound:
-            return NSLocalizedString(kCMISErrorDescriptionObjectNotFound, kCMISErrorDescriptionObjectNotFound);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionObjectNotFound, @"ObjectiveCMISLocalizable", @"object not found");
         case kCMISErrorCodeNotSupported:
-            return NSLocalizedString(kCMISErrorDescriptionNotSupported, kCMISErrorDescriptionNotSupported);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionNotSupported, @"ObjectiveCMISLocalizable", @"not supported");
         case kCMISErrorCodePermissionDenied:
-            return NSLocalizedString(kCMISErrorDescriptionPermissionDenied, kCMISErrorDescriptionPermissionDenied);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionPermissionDenied, @"ObjectiveCMISLocalizable", @"permission denied");
         case kCMISErrorCodeRuntime:
-            return NSLocalizedString(kCMISErrorDescriptionRuntime, kCMISErrorDescriptionRuntime);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionRuntime, @"ObjectiveCMISLocalizable", @"runtime error");
         case kCMISErrorCodeConstraint:
-            return NSLocalizedString(kCMISErrorDescriptionConstraint, kCMISErrorDescriptionConstraint);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionConstraint, @"ObjectiveCMISLocalizable", @"constraint error");
         case kCMISErrorCodeContentAlreadyExists:
-            return NSLocalizedString(kCMISErrorDescriptionContentAlreadyExists, kCMISErrorDescriptionContentAlreadyExists);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionContentAlreadyExists, @"ObjectiveCMISLocalizable", @"content already exists");
         case kCMISErrorCodeFilterNotValid:
-            return NSLocalizedString(kCMISErrorDescriptionFilterNotValid, kCMISErrorDescriptionFilterNotValid);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionFilterNotValid, @"ObjectiveCMISLocalizable", @"invalid filter");
         case kCMISErrorCodeNameConstraintViolation:
-            return NSLocalizedString(kCMISErrorDescriptionNameConstraintViolation, kCMISErrorDescriptionNameConstraintViolation);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionNameConstraintViolation, @"ObjectiveCMISLocalizable", @"constraint violation");
         case kCMISErrorCodeStorage:
-            return NSLocalizedString(kCMISErrorDescriptionStorage, kCMISErrorDescriptionStorage);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionStorage, @"ObjectiveCMISLocalizable", @"storage error");
         case kCMISErrorCodeStreamNotSupported:
-            return NSLocalizedString(kCMISErrorDescriptionStreamNotSupported, kCMISErrorDescriptionStreamNotSupported);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionStreamNotSupported, @"ObjectiveCMISLocalizable", @"stream not supported");
         case kCMISErrorCodeUpdateConflict:
-            return NSLocalizedString(kCMISErrorDescriptionUpdateConflict, kCMISErrorDescriptionUpdateConflict);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionUpdateConflict, @"ObjectiveCMISLocalizable", @"update conflict");
         case kCMISErrorCodeVersioning:
-            return NSLocalizedString(kCMISErrorDescriptionVersioning, kCMISErrorDescriptionVersioning);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionVersioning, @"ObjectiveCMISLocalizable", @"version error");
         default:
-            return NSLocalizedString(kCMISErrorDescriptionNoReturn, kCMISErrorDescriptionNoReturn);
+            return NSLocalizedStringFromTable(kCMISErrorDescriptionNoReturn, @"ObjectiveCMISLocalizable", @"Unknown");
     }
     
 }
