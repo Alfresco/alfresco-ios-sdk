@@ -1,0 +1,30 @@
+/* 
+  ObjectiveCMISLocalizable.strings
+  ObjectiveCMIS
+
+  Created by Peter Schmidt on 15/05/2012.
+  Copyright (c) 2012 Alfresco. All rights reserved.
+*/
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionNoReturn" = "Unknown Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionConnection" = "Connection Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionProxyAuthentication" = "Proxy Authentication Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionUnauthorized" = "Unauthorized access error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionNoRootFolderFound" = "Root Folder Not Found Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionRepositoryNotFound" = "Repository Not Found Error";
+
+//General errors as defined in 2.2.1.4.1 of spec
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionInvalidArgument" = "Invalid Argument Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionObjectNotFound" = "Object Not Found Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionNotSupported" = "Not supported Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionPermissionDenied" = "Permission Denied Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionRuntime" = "Runtime Error";
+
+//Specific errors as defined in 2.2.1.4.2
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionConstraint" = "Constraint Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionContentAlreadyExists" = "Content Already Exists Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionFilterNotValid" = "Filter Not Valid Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionNameConstraintViolatio" = "Name Constraint Violation Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionStorage" = "Storage Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionStreamNotSupporte" = "Stream Not Supported Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionUpdateConflict" = "Update Conflict Error";
+"ObjectiveCMIS.Common.CMISErrors.kCMISErrorDescriptionVersioning" = "Versioning Error";
