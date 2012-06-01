@@ -24,15 +24,15 @@
                        includePathSegment:(BOOL)includePathSegment skipCount:(NSNumber *)skipCount
                        maxItems:(NSNumber *)maxItems error:(NSError **)error
 {
-    // Get Object for objectId
+    // Get Down link
     NSError *internalError = nil;
-    CMISObjectData *cmisObjectData = [self retrieveObjectInternal:objectId error:&internalError];
-    if (internalError) 
+    NSString *downLink = [self loadLinkForObjectId:objectId andRelation:kCMISLinkRelationDown
+                                             andType:kCMISMediaTypeChildren error:&internalError];
+    if (internalError != nil)
     {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
+        log(@"Could not retrieve down link: %@", [internalError description]);
         return nil;
     }
-    NSString *downLink = [cmisObjectData.linkRelations linkHrefForRel:kCMISLinkRelationDown type:kCMISMediaTypeChildren];
 
     // Add optional params (CMISUrlUtil will not append if the param name or value is nil)
     downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterFilter withValue:filter toUrlString:downLink];
@@ -45,7 +45,7 @@
     downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterSkipCount withValue:[skipCount stringValue] toUrlString:downLink];
 
     // execute the request
-    HTTPResponse *response = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:downLink] withSession:self.session error:&internalError];
+    HTTPResponse *response = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:downLink] withSession:self.bindingSession error:&internalError];
     if (internalError || response.data == nil) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;        
@@ -72,22 +72,16 @@
 
 - (NSArray *)retrieveParentsForObject:(NSString *)objectId error:(NSError **)error
 {
-    // Get object data
+    // Get up link
     NSError *internalError = nil;
-    CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&internalError];
-    if (internalError) {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
-        log(@"Failing because CMISObjectData returns with error");
-        return nil;
-    }
+    NSString *upLink = [self loadLinkForObjectId:objectId andRelation:kCMISLinkRelationUp error:&internalError];
 
-    NSString *upLink = [objectData.linkRelations linkHrefForRel:kCMISLinkRelationUp];
     if (upLink == nil) {
         log(@"Failing because the NString upLink is nil");
         return [NSArray array];
     }
     
-    NSData *response = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:upLink] withSession:self.session error:&internalError].data;
+    NSData *response = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:upLink] withSession:self.bindingSession error:&internalError].data;
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         log(@"Failing because the invokeGETSynchronous returns an error");

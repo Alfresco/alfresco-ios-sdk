@@ -330,6 +330,53 @@
     [self waitForCompletion:60];
 }
 
+- (void)testUploadFileThroughSession
+{
+    [self setupCmisSession];
+
+    // Set properties on test file
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
+    NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
+    NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
+    [documentProperties setObject:documentName forKey:kCMISPropertyName];
+    [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
+
+    // Upload test file
+    __block NSInteger previousUploadedBytes = -1;
+    __block NSString *objectId = nil;
+    [self.session createDocumentFromFilePath:filePath
+            withMimeType:@"text/plain"
+            withProperties:documentProperties
+            inFolder:self.rootFolder.identifier
+            completionBlock: ^ (NSString *newObjectId)
+            {
+                STAssertNotNil(newObjectId, @"Object id should not be nil");
+                objectId = newObjectId;
+                self.callbackCompleted = YES;
+            }
+            failureBlock: ^ (NSError *failureError)
+            {
+                STAssertNil(failureError, @"Got error while uploading document: %@", [failureError description]);
+            }
+            progressBlock: ^ (NSInteger uploadedBytes, NSInteger totalBytes)
+            {
+                STAssertTrue(uploadedBytes > previousUploadedBytes, @"no progress");
+                previousUploadedBytes = uploadedBytes;
+            }];
+
+    [self waitForCompletion:60];
+
+    NSError *error = nil;
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
+    STAssertNil(error, @"Got error while creating document: %@", [error description]);
+    STAssertNotNil(objectId, @"Object id received should be non-nil");
+    STAssertNotNil(document, @"Retrieved document should not be nil");
+    STAssertTrue(document.contentStreamLength > 0, @"No content found for document");
+
+    // Cleanup
+    [self deleteDocumentAndVerify:document];
+}
+
 - (void)testCreateBigDocument
 {
     NSError *error = nil;

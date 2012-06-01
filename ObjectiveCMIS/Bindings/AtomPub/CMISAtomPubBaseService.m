@@ -13,22 +13,21 @@
 #import "CMISConstants.h"
 #import "CMISAtomEntryParser.h"
 #import "CMISWorkspace.h"
-#import "CMISObjectByIdUriBuilder.h"
 #import "CMISErrors.h"
 #import "CMISObjectByPathUriBuilder.h"
-#import "CMISObject.h"
 #import "CMISTypeByIdUriBuilder.h"
+#import "CMISLinkCache.h"
 
 @interface CMISAtomPubBaseService ()
 
-@property (nonatomic, strong, readwrite) CMISBindingSession *session;
+@property (nonatomic, strong, readwrite) CMISBindingSession *bindingSession;
 @property (nonatomic, strong, readwrite) NSURL *atomPubUrl;
 
 @end
 
 @implementation CMISAtomPubBaseService
 
-@synthesize session = _session;
+@synthesize bindingSession = _bindingSession;
 @synthesize atomPubUrl = _atomPubUrl;
 
 - (id)initWithBindingSession:(CMISBindingSession *)session
@@ -36,7 +35,7 @@
     self = [super init];
     if (self)
     {
-        self.session = session;
+        self.bindingSession = session;
         
         // pull out and cache all the useful objects for this binding
         self.atomPubUrl = [session objectForKey:kCMISBindingSessionKeyAtomPubUrl];
@@ -50,13 +49,13 @@
 
 - (id)retrieveFromCache:(NSString *)cacheKey error:(NSError * *)error
 {
-    id object = [self.session objectForKey:cacheKey];
+    id object = [self.bindingSession objectForKey:cacheKey];
 
     if (!object)
     {
          // if object is nil, first populate cache
         [self fetchRepositoryInfoAndReturnError:error];
-        object = [self.session objectForKey:cacheKey];
+        object = [self.bindingSession objectForKey:cacheKey];
     }
 
     if (!object && !*error)
@@ -80,25 +79,25 @@
         while (!repositoryFound && index < cmisWorkSpaces.count)
         {
             CMISWorkspace *workspace = [cmisWorkSpaces objectAtIndex:index];
-            if ([workspace.repositoryInfo.identifier isEqualToString:self.session.repositoryId])
+            if ([workspace.repositoryInfo.identifier isEqualToString:self.bindingSession.repositoryId])
             {
                 repositoryFound = YES;
 
                 // Cache collections
-               [self.session setObject:[workspace collectionHrefForCollectionType:kCMISAtomCollectionQuery] forKey:kCMISBindingSessionKeyQueryCollection];
+               [self.bindingSession setObject:[workspace collectionHrefForCollectionType:kCMISAtomCollectionQuery] forKey:kCMISBindingSessionKeyQueryCollection];
 
 
                 // Cache uri's and uri templates
                 CMISObjectByIdUriBuilder *objectByIdUriBuilder = [[CMISObjectByIdUriBuilder alloc] initWithTemplateUrl:workspace.objectByIdUriTemplate];
-                [self.session setObject:objectByIdUriBuilder forKey:kCMISBindingSessionKeyObjectByIdUriBuilder];
+                [self.bindingSession setObject:objectByIdUriBuilder forKey:kCMISBindingSessionKeyObjectByIdUriBuilder];
 
                 CMISObjectByPathUriBuilder *objectByPathUriBuilder = [[CMISObjectByPathUriBuilder alloc] initWithTemplateUrl:workspace.objectByPathUriTemplate];
-                [self.session setObject:objectByPathUriBuilder forKey:kCMISBindingSessionKeyObjectByPathUriBuilder];
+                [self.bindingSession setObject:objectByPathUriBuilder forKey:kCMISBindingSessionKeyObjectByPathUriBuilder];
 
                 CMISTypeByIdUriBuilder *typeByIdUriBuilder = [[CMISTypeByIdUriBuilder alloc] initWithTemplateUrl:workspace.typeByIdUriTemplate];
-                [self.session setObject:typeByIdUriBuilder forKey:kCMISBindingSessionKeyTypeByIdUriBuilder];
+                [self.bindingSession setObject:typeByIdUriBuilder forKey:kCMISBindingSessionKeyTypeByIdUriBuilder];
 
-                [self.session setObject:workspace.queryUriTemplate forKey:kCMISBindingSessionKeyQueryUri];
+                [self.bindingSession setObject:workspace.queryUriTemplate forKey:kCMISBindingSessionKeyQueryUri];
             }
             else {
                 index++;
@@ -107,9 +106,9 @@
 
         if (!repositoryFound)
         {
-            log(@"No matching repository found for repository id %@", self.session.repositoryId);
+            log(@"No matching repository found for repository id %@", self.bindingSession.repositoryId);
             // TODO: populate error properly
-            NSString *detailedDescription = [NSString stringWithFormat:@"No matching repository found for repository id %@", self.session.repositoryId];
+            NSString *detailedDescription = [NSString stringWithFormat:@"No matching repository found for repository id %@", self.bindingSession.repositoryId];
             *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeNoRepositoryFound withDetailedDescription:detailedDescription];
         }
     }
@@ -117,16 +116,16 @@
 
 - (NSArray *)retrieveCMISWorkspacesAndReturnError:(NSError * *)error
 {
-    if ([self.session objectForKey:kCMISSessionKeyWorkspaces] == nil)
+    if ([self.bindingSession objectForKey:kCMISSessionKeyWorkspaces] == nil)
     {
-        NSData *data = [HttpUtil invokeGETSynchronous:self.atomPubUrl withSession:self.session error:error].data;
+        NSData *data = [HttpUtil invokeGETSynchronous:self.atomPubUrl withSession:self.bindingSession error:error].data;
         // Parse the cmis service document
         if (data != nil && (!error || error == NULL || *error == nil))
         {
             CMISServiceDocumentParser *parser = [[CMISServiceDocumentParser alloc] initWithData:data];
             if ([parser parseAndReturnError:error])
             {
-                [self.session setObject:parser.workspaces forKey:kCMISSessionKeyWorkspaces];
+                [self.bindingSession setObject:parser.workspaces forKey:kCMISSessionKeyWorkspaces];
             } 
             else
             {
@@ -135,12 +134,12 @@
         }
     }
 
-    return (NSArray *) [self.session objectForKey:kCMISSessionKeyWorkspaces];
+    return (NSArray *) [self.bindingSession objectForKey:kCMISSessionKeyWorkspaces];
 }
 
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error
 {
-    return [self retrieveObjectInternal:objectId withFilter:@"" andIncludeRelationShips:NO
+    return [self retrieveObjectInternal:objectId withFilter:@"" andIncludeRelationShips:CMISIncludeRelationshipNone
                     andIncludePolicyIds:NO andRenditionFilder:nil andIncludeACL:NO
                     andIncludeAllowableActions:YES error:error];
 }
@@ -166,7 +165,7 @@
 
     // Execute actual call
     CMISObjectData *objectData = nil;
-    HTTPResponse *response = [HttpUtil invokeGETSynchronous:objectIdUrl withSession:self.session error:error];
+    HTTPResponse *response = [HttpUtil invokeGETSynchronous:objectIdUrl withSession:self.bindingSession error:error];
 
     if (response.statusCode == 200 && response.data != nil)
     {
@@ -174,6 +173,11 @@
         if ([parser parseAndReturnError:error])
         {
             objectData = parser.objectData;
+
+            // Add links to link cache
+            CMISLinkCache *linkCache = [self linkCache];
+            [linkCache addLinks:objectData.linkRelations forObjectId:objectData.identifier];
+
             return objectData;
         }
     }
@@ -188,7 +192,7 @@
 
     // Execute actual call
     CMISObjectData *objectData = nil;
-    HTTPResponse *response = [HttpUtil invokeGETSynchronous:[objectByPathUriBuilder buildUrl] withSession:self.session error:error];
+    HTTPResponse *response = [HttpUtil invokeGETSynchronous:[objectByPathUriBuilder buildUrl] withSession:self.bindingSession error:error];
 
     if (response.statusCode == 200 && response.data != nil)
     {
@@ -196,11 +200,68 @@
         if ([parser parseAndReturnError:error])
         {
             objectData = parser.objectData;
+
+            // Add links to link cache
+            CMISLinkCache *linkCache = [self linkCache];
+            [linkCache addLinks:objectData.linkRelations forObjectId:objectData.identifier];
+
             return objectData;
         }
     }
 
     return nil;
+}
+
+- (CMISLinkCache *)linkCache{
+    CMISLinkCache *linkCache = [self.bindingSession objectForKey:kCMISBindingSessionKeyLinkCache];
+    if (linkCache == nil)
+    {
+        linkCache = [[CMISLinkCache alloc] initWithBindingSession:self.bindingSession];
+        [self.bindingSession setObject:linkCache forKey:kCMISBindingSessionKeyLinkCache];
+    }
+    return linkCache;
+}
+
+- (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel error:(NSError **)error
+{
+    return [self loadLinkForObjectId:objectId andRelation:rel andType:nil error:error];
+}
+
+- (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel andType:(NSString *)type error:(NSError **)error
+{
+    CMISLinkCache *linkCache = [self linkCache];
+
+    // Fetch link from cache
+    NSString *link = [linkCache linkForObjectId:objectId andRelation:rel andType:type];
+    if (link != nil)
+    {
+        return link;
+    }
+    else
+    {
+        // Fetch object, which will trigger the caching of the links
+        NSError *retrievalError = nil;
+        [self retrieveObjectInternal:objectId error:&retrievalError];
+        if (retrievalError != nil)
+        {
+            log(@"Could not retrieve object with id %@", objectId);
+            if (error && error != NULL && *error == nil)
+            {
+                *error = [CMISErrors cmisError:&retrievalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
+            }
+            return nil;
+        }
+        else
+        {
+            link = [linkCache linkForObjectId:objectId andRelation:rel andType:type];
+            if (link == nil)
+            {
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound
+                                     withDetailedDescription:[NSString stringWithFormat:@"Could not find link %@ for object with id %@", rel, objectId]];
+            }
+        }
+    }
+    return link;
 }
 
 @end

@@ -13,9 +13,6 @@
 @property (nonatomic, strong) NSMutableData *data;
 @property NSInteger statusCode;
 
-@property NSInteger bytesTotal;
-@property NSInteger bytesUploaded;
-
 @end
 
 @implementation CMISFileUploadDelegate
@@ -26,15 +23,11 @@
 @synthesize fileUploadCleanupBlock = _fileUploadCleanupBlock;
 @synthesize data = _data;
 @synthesize statusCode = _statusCode;
-@synthesize bytesTotal = _bytesTotal;
-@synthesize bytesUploaded = _bytesUploaded;
 @synthesize bytesExpected = _bytesExpected;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     self.data = [[NSMutableData alloc] init];
-    self.bytesUploaded = 0;
-    self.bytesTotal = (NSInteger) response.expectedContentLength;
 
     if ([response isKindOfClass: [NSHTTPURLResponse class]])
     {
@@ -85,7 +78,7 @@
 
     if (self.fileUploadCleanupBlock)
     {
-        self.fileUploadCleanupBlock;
+        self.fileUploadCleanupBlock();
     }
 }
 

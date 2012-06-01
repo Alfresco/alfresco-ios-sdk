@@ -111,8 +111,12 @@
         [self addHeaders:additionalHeaders toURLRequest:request];
     }
 
-    NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:delegate];
-    [connection start];
+    // See also: http://www.ddeville.me/2011/12/broken-NSURLConnection-on-ios/
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [[NSURLConnection alloc] initWithRequest:request delegate:delegate startImmediately:YES];
+//        [connection setDelegateQueue:[NSOperationQueue mainQueue]];
+//        [connection start];
+    }];
 }
 
 + (void)invokeAsynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod

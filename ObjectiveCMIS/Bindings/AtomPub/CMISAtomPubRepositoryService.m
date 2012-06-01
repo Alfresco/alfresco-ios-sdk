@@ -67,10 +67,10 @@
         return nil;
     }
 
-    CMISTypeByIdUriBuilder *typeByIdUriBuilder = [self.session objectForKey:kCMISBindingSessionKeyTypeByIdUriBuilder];
+    CMISTypeByIdUriBuilder *typeByIdUriBuilder = [self.bindingSession objectForKey:kCMISBindingSessionKeyTypeByIdUriBuilder];
     typeByIdUriBuilder.id = typeId;
 
-    HTTPResponse *response = [HttpUtil invokeGETSynchronous:[typeByIdUriBuilder buildUrl] withSession:self.session error:outError];
+    HTTPResponse *response = [HttpUtil invokeGETSynchronous:[typeByIdUriBuilder buildUrl] withSession:self.bindingSession error:outError];
 
     if (response.data != nil)
     {

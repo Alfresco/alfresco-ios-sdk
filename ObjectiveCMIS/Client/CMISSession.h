@@ -13,7 +13,6 @@
 #import "CMISFolder.h"
 
 @class CMISOperationContext;
-@class CMISQueryResults;
 @class CMISPagedResult;
 
 @interface CMISSession : NSObject
