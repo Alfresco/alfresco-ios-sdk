@@ -12,6 +12,8 @@
 #import "CMISAllowableActions.h"
 #import "CMISLinkRelations.h"
 
+@class CMISRenditionData;
+
 @interface CMISObjectData : NSObject
 
 @property (nonatomic, strong) NSString *identifier; 
@@ -20,5 +22,6 @@
 @property (nonatomic, strong) CMISLinkRelations *linkRelations;
 @property (nonatomic, strong) NSURL *contentUrl;
 @property (nonatomic, strong) CMISAllowableActions *allowableActions;
+@property (nonatomic, strong) NSArray *renditions; // An array containing CMISRenditionData objects
 
 @end

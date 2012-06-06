@@ -185,10 +185,23 @@
      return nil;
 }
 
-- (CMISObjectData *)retrieveObjectByPathInternal:(NSString *)path error:(NSError **)error
+- (CMISObjectData *)retrieveObjectByPathInternal:(NSString *)path
+                                      withFilter:(NSString *)filter
+                         andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
+                             andIncludePolicyIds:(BOOL)includePolicyIds
+                              andRenditionFilder:(NSString *)renditionFilter
+                                   andIncludeACL:(BOOL)includeACL
+                      andIncludeAllowableActions:(BOOL)includeAllowableActions
+                                           error:(NSError **)error
 {
     CMISObjectByPathUriBuilder *objectByPathUriBuilder = [self retrieveFromCache:kCMISBindingSessionKeyObjectByPathUriBuilder error:error];
     objectByPathUriBuilder.path = path;
+    objectByPathUriBuilder.filter = filter;
+    objectByPathUriBuilder.includeACL = includeACL;
+    objectByPathUriBuilder.includeAllowableActions = includeAllowableActions;
+    objectByPathUriBuilder.includePolicyIds = includePolicyIds;
+    objectByPathUriBuilder.includeRelationships = includeRelationship;
+    objectByPathUriBuilder.renditionFilter = renditionFilter;
 
     // Execute actual call
     CMISObjectData *objectData = nil;

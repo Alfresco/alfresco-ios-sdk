@@ -24,6 +24,8 @@
 #import "ISO8601DateFormatter.h"
 #import "CMISOperationContext.h"
 #import "CMISPagedResult.h"
+#import "CMISRenditionData.h"
+#import "CMISRendition.h"
 
 @interface ObjectiveCMISTests()
 
@@ -1066,6 +1068,105 @@
 
     // Cleanup
     [self deleteDocumentAndVerify:testDocument];
+}
+
+- (void)testGetRenditionsThroughCmisObject
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    // Fetch test document
+    NSString *path = [NSString stringWithFormat:@"%@ios-test/test-word-doc.docx", self.rootFolder.path];
+    CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
+    operationContext.renditionFilterString = @"*";
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:path withOperationContext:operationContext error:&error];
+    STAssertNil(error, @"Error while retrieving document: %@", [error description]);
+
+    // Get and verify Renditions
+    NSArray *renditions = document.renditions;
+    STAssertTrue(renditions.count > 0, @"Expected at least one rendition");
+    CMISRendition *thumbnailRendition = nil;
+    for (CMISRendition *rendition in renditions)
+    {
+        if ([rendition.kind isEqualToString:@"cmis:thumbnail"])
+        {
+            thumbnailRendition = rendition;
+        }
+    }
+    STAssertNotNil(thumbnailRendition, @"Thumbnail rendition should be availabile");
+    STAssertTrue(thumbnailRendition.length > 0, @"Rendition length should be greater than 0");
+
+    // Get content
+    NSString *filePath = @"testfile.pdf";
+    [thumbnailRendition downloadRenditionContentToFile:filePath completionBlock:^{
+        self.callbackCompleted = YES;
+    } failureBlock:^(NSError *failureError) {
+        STAssertNil(failureError, @"Error while writing content: %@", [error description]);
+        self.callbackCompleted = YES;
+    } progressBlock:nil];
+    [self waitForCompletion:60];
+
+    // Assert File exists and check file length
+    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
+    STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
+    STAssertTrue([fileAttributes fileSize] > 10, @"Expected a file of at least 10 bytes, but found one of %d bytes", [fileAttributes fileSize]);
+
+    // Nice boys clean up after themselves
+    [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+    STAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
+}
+
+- (void)testGetRenditionsThroughObjectService
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+    // Fetch test document
+    NSString *path = [NSString stringWithFormat:@"%@ios-test/test-word-doc.docx", self.rootFolder.path];
+    CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
+    operationContext.renditionFilterString = @"*";
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:path withOperationContext:operationContext error:&error];
+    STAssertNil(error, @"Error while retrieving document: %@", [error description]);
+
+    // Get renditions through service
+    NSArray *renditions = [self.session.binding.objectService retrieveRenditions:document.identifier
+                                    withRenditionFilter:@"*" withMaxItems:nil withSkipCount:nil error:&error];
+    STAssertNil(error, @"Error while retrieving renditions: %@", [error description]);
+    STAssertTrue(renditions.count > 0, @"Expected at least one rendition");
+    CMISRenditionData *thumbnailRendition = nil;
+    for (CMISRenditionData *rendition in renditions)
+    {
+        if ([rendition.kind isEqualToString:@"cmis:thumbnail"])
+        {
+            thumbnailRendition = rendition;
+        }
+    }
+    STAssertNotNil(thumbnailRendition, @"Thumbnail rendition should be availabile");
+    STAssertTrue(thumbnailRendition.length > 0, @"Rendition length should be greater than 0");
+
+    // Download content through objectService
+    NSString *filePath = @"testfile-rendition-through-objectservice.pdf";
+    [self.session.binding.objectService downloadContentOfObject:document.identifier
+                                         withStreamId:thumbnailRendition.streamId
+                                               toFile:filePath
+                                      completionBlock: ^{
+        self.callbackCompleted = YES;
+    } failureBlock:^(NSError *failureError) {
+        STAssertNil(failureError, @"Error while writing content: %@", [error description]);
+        self.callbackCompleted = YES;
+    } progressBlock:nil];
+    [self waitForCompletion:60];
+
+    // Assert File exists and check file length
+    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
+    STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
+    STAssertTrue([fileAttributes fileSize] > 10, @"Expected a file of at least 10 bytes, but found one of %d bytes", [fileAttributes fileSize]);
+
+    // Nice boys clean up after themselves
+    [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+    STAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
 }
 
 #pragma mark Helper Methods

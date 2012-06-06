@@ -13,6 +13,8 @@
 #import "CMISObjectConverter.h"
 #import "CMISStringInOutParameter.h"
 #import "CMISSession.h"
+#import "CMISRenditionData.h"
+#import "CMISRendition.h"
 
 @interface CMISObject ()
 
@@ -31,6 +33,7 @@
 @property (nonatomic, strong, readwrite) CMISProperties *properties;
 
 @property (nonatomic, strong, readwrite) CMISAllowableActions *allowableActions;
+@property (nonatomic, strong, readwrite) NSArray *renditions;
 
 @end
 
@@ -48,7 +51,7 @@
 @synthesize changeToken = _changeToken;
 @synthesize properties = _properties;
 @synthesize allowableActions = _allowableActions;
-
+@synthesize renditions = _renditions;
 
 - (id)initWithObjectData:(CMISObjectData *)objectData withSession:(CMISSession *)session
 {
@@ -69,6 +72,16 @@
 
         self.allowableActions = objectData.allowableActions;
 
+        // Renditions must be converted here, because they need access to the session
+        if (objectData.renditions != nil)
+        {
+            NSMutableArray *renditions = [NSMutableArray array];
+            for (CMISRenditionData *renditionData in objectData.renditions)
+            {
+                [renditions addObject:[[CMISRendition alloc] initWithRenditionData:renditionData andObjectId:self.identifier andSession:session]];
+            }
+            self.renditions = renditions;
+        }
     }
     
     return self;

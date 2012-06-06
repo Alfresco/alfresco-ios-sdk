@@ -29,6 +29,7 @@
 //@property (nonatomic, strong, readonly) CMISObjectType *baseType;
 //@property (nonatomic, strong, readonly) CMISObjectType *type;
 @property (nonatomic, strong, readonly) CMISAllowableActions *allowableActions;
+@property (nonatomic, strong, readonly) NSArray *renditions; // An array containing CMISRendition objects
 
 @property (nonatomic, strong, readonly) CMISProperties *properties;
 

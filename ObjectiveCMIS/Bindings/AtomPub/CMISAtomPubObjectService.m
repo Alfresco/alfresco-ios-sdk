@@ -42,17 +42,33 @@
     return objData;
 }
 
-- (CMISObjectData *)retrieveObjectByPath:(NSString *)path error:(NSError **)error
+- (CMISObjectData *)retrieveObjectByPath:(NSString *)path
+                              withFilter:(NSString *)filter
+                 andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
+                     andIncludePolicyIds:(BOOL)includePolicyIds
+                      andRenditionFilder:(NSString *)renditionFilter
+                           andIncludeACL:(BOOL)includeACL
+              andIncludeAllowableActions:(BOOL)includeAllowableActions
+                                   error:(NSError **)error
 {
     NSError *internalError = nil;
-    CMISObjectData *cmisObjData = [self retrieveObjectByPathInternal:path error:&internalError];
+    CMISObjectData *cmisObjData = [self retrieveObjectByPathInternal:path
+                                                          withFilter:filter
+                                             andIncludeRelationShips:includeRelationship
+                                                 andIncludePolicyIds:includePolicyIds
+                                                  andRenditionFilder:renditionFilter
+                                                       andIncludeACL:includeACL
+                                          andIncludeAllowableActions:includeAllowableActions
+                                                               error:&internalError];
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
     }
     return cmisObjData;
 }
 
-- (void)downloadContentOfObject:(NSString *)objectId toFile:(NSString *)filePath
+- (void)downloadContentOfObject:(NSString *)objectId
+                   withStreamId:(NSString *)streamId
+                         toFile:(NSString *)filePath
                 completionBlock:(CMISVoidCompletionBlock)completionBlock
                    failureBlock:(CMISErrorFailureBlock)failureBlock
                   progressBlock:(CMISProgressBlock)progressBlock;
@@ -77,7 +93,15 @@
         dataDelegate.fileRetrievalCompletionBlock = completionBlock;
         dataDelegate.fileRetrievalFailureBlock = failureBlock;
         dataDelegate.fileRetrievalProgressBlock = progressBlock;
-        [HttpUtil invokeGETAsynchronous:objectData.contentUrl withSession:self.bindingSession withDelegate:dataDelegate];
+
+        NSURL *contentUrl = objectData.contentUrl;
+
+        // This is not spec-compliant!! Took me half a day to find this in opencmis ...
+        if (streamId != nil) {
+            contentUrl = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterStreamId withValue:streamId toUrl:contentUrl];
+        }
+
+        [HttpUtil invokeGETAsynchronous:contentUrl withSession:self.bindingSession withDelegate:dataDelegate];
     }
 }
 
@@ -408,6 +432,25 @@
     {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
     }
+}
+
+
+- (NSArray *)retrieveRenditions:(NSString *)objectId withRenditionFilter:(NSString *)renditionFilter
+                   withMaxItems:(NSNumber *)maxItems withSkipCount:(NSNumber *)skipCount error:(NSError * *)error;
+{
+    // Only fetching the bare minimum
+    NSError *internalError = nil;
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId withFilter:kCMISPropertyObjectId
+                andIncludeRelationShips:CMISIncludeRelationshipNone andIncludePolicyIds:NO
+                andRenditionFilder:renditionFilter andIncludeACL:NO andIncludeAllowableActions:NO error:&internalError];
+
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
+        return nil;
+    }
+
+    return objectData.renditions;
 }
 
 

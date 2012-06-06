@@ -32,18 +32,28 @@
  *Retrieves an object using its path.
  *
  */
--(CMISObjectData *)retrieveObjectByPath:(NSString *)path error:(NSError * *)error;
+-(CMISObjectData *)retrieveObjectByPath:(NSString *)path
+                             withFilter:(NSString *)filter
+                andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
+                    andIncludePolicyIds:(BOOL)includePolicyIds
+                     andRenditionFilder:(NSString *)renditionFilter
+                          andIncludeACL:(BOOL)includeACL
+             andIncludeAllowableActions:(BOOL)includeAllowableActions
+                                  error:(NSError **)error;
 
 /**
-* Downloads the content to a local file and returns the filepath.
+* Gets the content stream for the specified Document object, or gets a rendition stream for a specified
+* rendition of a document or folder object. Downloads the content to a local file and returns the filepath.
 *
 * Do note that this is an ASYNCHRONOUS call, as a synchronous call would have
 * bad performance/memory implications.
 */
-- (void)downloadContentOfObject:(NSString *)objectId toFile:(NSString *)filePath
-                                completionBlock:(CMISVoidCompletionBlock)completionBlock
-                                failureBlock:(CMISErrorFailureBlock)failureBlock
-                                progressBlock:(CMISProgressBlock)progressBlock;
+- (void)downloadContentOfObject:(NSString *)objectId
+                   withStreamId:(NSString *)streamId
+                         toFile:(NSString *)filePath
+                completionBlock:(CMISVoidCompletionBlock)completionBlock
+                   failureBlock:(CMISErrorFailureBlock)failureBlock
+                  progressBlock:(CMISProgressBlock)progressBlock;
 
 /**
  * Deletes the content stream for the specified document object.
@@ -54,7 +64,9 @@
   * NOTE for atom pub binding: deleteContentStream: This does not return the new object id and change token as specified by the domain model.
   * This is not possible without introducing a new HTTP header.
  */
-- (void)deleteContentOfObject:(CMISStringInOutParameter *)objectId withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError * *)error;
+- (void)deleteContentOfObject:(CMISStringInOutParameter *)objectId
+              withChangeToken:(CMISStringInOutParameter *)changeToken
+                        error:(NSError * *)error;
 
 /**
  * Changes the content of the given document to the content of the given file.
@@ -79,7 +91,8 @@
 *
 * This is an asynchronous call, due to performance reasons.
 */
-- (void)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
+- (void)createDocumentFromFilePath:(NSString *)filePath
+                      withMimeType:(NSString *)mimeType
                           withProperties:(CMISProperties *)properties inFolder:(NSString *)folderObjectId
                          completionBlock:(CMISStringCompletionBlock)completionBlock // The returned string is the object id of the created document
                             failureBlock:(CMISErrorFailureBlock)failureBlock
@@ -90,26 +103,45 @@
 *
 * The allVersions parameter is currently ignored.
 */
-- (BOOL)deleteObject:(NSString *)objectId allVersions:(BOOL)allVersions error:(NSError * *)error;
+- (BOOL)deleteObject:(NSString *)objectId
+         allVersions:(BOOL)allVersions
+               error:(NSError * *)error;
 
 /**
 * Creates a new folder with given properties under the provided parent folder.
 */
-- (NSString *)createFolderInParentFolder:(NSString *)folderObjectId withProperties:(CMISProperties *)properties error:(NSError * *)error;
+- (NSString *)createFolderInParentFolder:(NSString *)folderObjectId
+                          withProperties:(CMISProperties *)properties
+                                   error:(NSError * *)error;
 
 /**
-* Deletes the given folder and all of its subfolder and files
-*
-* Returns a list of objects which failed to be deleted.
-*
-* TODO: support for other parameters (see spec)
-*/
+ * Deletes the given folder and all of its subfolder and files
+ *
+ * Returns a list of objects which failed to be deleted.
+ *
+ * TODO: support for other parameters (see spec)
+ */
 - (NSArray *)deleteTree:(NSString *)folderObjectId error:(NSError * *)error;
 
 /**
  * Updates the properties of the given object.
  */
-- (void)updatePropertiesForObject:(CMISStringInOutParameter *)objectId withProperties:(CMISProperties *)properties
-                  withChangeToken:(CMISStringInOutParameter *)changeToken error:(NSError **)error;
+- (void)updatePropertiesForObject:(CMISStringInOutParameter *)objectId
+                   withProperties:(CMISProperties *)properties
+                  withChangeToken:(CMISStringInOutParameter *)changeToken
+                            error:(NSError **)error;
+
+/**
+ * Gets the list of associated Renditions for the specified object.
+ * Only rendition attributes are returned, not rendition stream
+ *
+ * Note: the paging parameters (maxItems and skipCount) are not used in the atom pub binding.
+ *       Ie. the whole set is <b>always</b> returned.
+ */
+- (NSArray *)retrieveRenditions:(NSString *)objectId
+            withRenditionFilter:(NSString *)renditionFilter
+                   withMaxItems:(NSNumber *)maxItems
+                  withSkipCount:(NSNumber *)skipCount
+                          error:(NSError * *)error;
 
 @end

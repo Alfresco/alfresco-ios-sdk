@@ -62,6 +62,7 @@ extern NSString * const kCMISParameterIncludePathSegment;
 extern NSString * const kCMISParameterIncludeRelationships;
 extern NSString * const kCMISParameterRenditionFilter;
 extern NSString * const kCMISParameterSkipCount;
+extern NSString * const kCMISParameterStreamId;
 
 
 // Namespaces
@@ -141,12 +142,23 @@ extern NSString * const kCMISCoreInherited;
 extern NSString * const kCMISCoreRequired;
 extern NSString * const kCMISCoreOrderable;
 extern NSString * const kCMISCoreOpenChoice;
+
 extern NSString * const kCMISCorePropertyStringDefinition;
 extern NSString * const kCMISCorePropertyIdDefinition;
 extern NSString * const kCMISCorePropertyBooleanDefinition;
 extern NSString * const kCMISCorePropertyDateTimeDefinition;
 extern NSString * const kCMISCorePropertyIntegerDefinition;
 extern NSString * const kCMISCoreProperties;
+
+extern NSString * const kCMISCoreRendition;
+extern NSString * const kCMISCoreStreamId;
+extern NSString * const kCMISCoreMimetype;
+extern NSString * const kCMISCoreLength;
+extern NSString * const kCMISCoreKind;
+extern NSString * const kCMISCoreHeight;
+extern NSString * const kCMISCoreWidth;
+extern NSString * const kCMISCoreTitle;
+extern NSString * const kCMISCoreRenditionDocumentId;
 
 // URI Templates
 extern NSString * const kCMISUriTemplateObjectById;

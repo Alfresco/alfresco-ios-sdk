@@ -7,6 +7,7 @@
 //
 
 #import "CMISObjectData.h"
+#import "CMISRenditionData.h"
 
 @implementation CMISObjectData
 
@@ -16,5 +17,6 @@
 @synthesize linkRelations = _linkRelations;
 @synthesize contentUrl = _contentUrl;
 @synthesize allowableActions = _allowableActions;
+@synthesize renditions = _renditions;
 
 @end

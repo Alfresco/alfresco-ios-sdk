@@ -36,4 +36,9 @@
     return result;
 }
 
++ (NSURL *)urlStringByAppendingParameter:(NSString *)parameterName withValue:(NSString *)parameterValue toUrl:(NSURL *)url
+{
+    return [NSURL URLWithString:[CMISURLUtil urlStringByAppendingParameter:parameterName withValue:parameterValue toUrlString:[url absoluteString]]];
+}
+
 @end

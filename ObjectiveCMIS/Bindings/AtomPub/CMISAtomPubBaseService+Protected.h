@@ -31,7 +31,14 @@
            andIncludeAllowableActions:(BOOL)includeAllowableActions
            error:(NSError * *)error;
 
-- (CMISObjectData *)retrieveObjectByPathInternal:(NSString *)path error:(NSError **)error;
+- (CMISObjectData *)retrieveObjectByPathInternal:(NSString *)path
+                                      withFilter:(NSString *)filter
+                         andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
+                             andIncludePolicyIds:(BOOL)includePolicyIds
+                              andRenditionFilder:(NSString *)renditionFilter
+                                   andIncludeACL:(BOOL)includeACL
+                      andIncludeAllowableActions:(BOOL)includeAllowableActions
+                                           error:(NSError **)error;
 
 - (id) retrieveFromCache:(NSString *)cacheKey error:(NSError * *)error;
 

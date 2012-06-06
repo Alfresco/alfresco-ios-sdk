@@ -62,6 +62,7 @@ NSString * const kCMISParameterIncludePathSegment = @"includePathSegment";
 NSString * const kCMISParameterIncludeRelationships = @"includeRelationships";
 NSString * const kCMISParameterRenditionFilter = @"renditionFilter";
 NSString * const kCMISParameterSkipCount = @"skipCount";
+NSString * const kCMISParameterStreamId = @"streamId";
 
 // Namespaces
 NSString * const kCMISNamespaceCmis = @"http://docs.oasis-open.org/ns/cmis/core/200908/";
@@ -140,12 +141,23 @@ NSString * const kCMISCoreInherited = @"inherited";
 NSString * const kCMISCoreRequired = @"required";
 NSString * const kCMISCoreOrderable = @"queryable";
 NSString * const kCMISCoreOpenChoice = @"openChoice";
+
 NSString * const kCMISCorePropertyStringDefinition = @"propertyStringDefinition";
 NSString * const kCMISCorePropertyIdDefinition = @"propertyIdDefinition";
 NSString * const kCMISCorePropertyBooleanDefinition = @"propertyBooleanDefinition";
 NSString * const kCMISCorePropertyDateTimeDefinition = @"propertyDateTimeDefinition";
 NSString * const kCMISCorePropertyIntegerDefinition = @"propertyIntegerDefinition";
 NSString * const kCMISCoreProperties = @"properties";
+
+NSString * const kCMISCoreRendition = @"rendition";
+NSString * const kCMISCoreStreamId = @"streamId";
+NSString * const kCMISCoreMimetype = @"mimetype";
+NSString * const kCMISCoreLength = @"length";
+NSString * const kCMISCoreKind = @"kind";
+NSString * const kCMISCoreHeight = @"height";
+NSString * const kCMISCoreWidth = @"width";
+NSString * const kCMISCoreTitle = @"title";
+NSString * const kCMISCoreRenditionDocumentId = @"renditionDocumentId";
 
 // URI Templates
 NSString * const kCMISUriTemplateObjectById = @"objectbyid";

@@ -186,6 +186,10 @@
 		FE417D6815761A34009056B4 /* CMISFileUploadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056B3 /* CMISFileUploadDelegate.m */; };
 		FE417D6815761A34009056B6 /* CMISFileUploadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056B5 /* CMISFileUploadDelegate.h */; };
 		FE417D6815761A34009056BA /* CMISTypeDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056B9 /* CMISTypeDefs.h */; };
+		FE417D6815761A34009056BC /* CMISRendition.m in Sources */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056BB /* CMISRendition.m */; };
+		FE417D6815761A34009056BE /* CMISRendition.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056BD /* CMISRendition.h */; };
+		FE417D6815761A34009056C0 /* CMISRenditionData.m in Sources */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056BF /* CMISRenditionData.m */; };
+		FE417D6815761A34009056C2 /* CMISRenditionData.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056C1 /* CMISRenditionData.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -357,6 +361,10 @@
 		FE417D6815761A34009056B3 /* CMISFileUploadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISFileUploadDelegate.m; sourceTree = "<group>"; };
 		FE417D6815761A34009056B5 /* CMISFileUploadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISFileUploadDelegate.h; sourceTree = "<group>"; };
 		FE417D6815761A34009056B9 /* CMISTypeDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISTypeDefs.h; path = Common/CMISTypeDefs.h; sourceTree = "<group>"; };
+		FE417D6815761A34009056BB /* CMISRendition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISRendition.m; sourceTree = "<group>"; };
+		FE417D6815761A34009056BD /* CMISRendition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISRendition.h; sourceTree = "<group>"; };
+		FE417D6815761A34009056BF /* CMISRenditionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISRenditionData.m; sourceTree = "<group>"; };
+		FE417D6815761A34009056C1 /* CMISRenditionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISRenditionData.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -491,6 +499,8 @@
 		828072D115153EA500EF635C /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				FE417D6815761A34009056BD /* CMISRendition.h */,
+				FE417D6815761A34009056BB /* CMISRendition.m */,
 				FE417D5315761A0C009056AA /* CMISOperationContext.h */,
 				FE417D5415761A0C009056AA /* CMISOperationContext.m */,
 				FE417D5515761A0C009056AA /* CMISPagedResult.h */,
@@ -549,6 +559,8 @@
 		828072D315153EC100EF635C /* Bindings */ = {
 			isa = PBXGroup;
 			children = (
+				FE417D6815761A34009056C1 /* CMISRenditionData.h */,
+				FE417D6815761A34009056BF /* CMISRenditionData.m */,
 				FE417D5D15761A34009056AA /* CMISLinkCache.h */,
 				FE417D5E15761A34009056AA /* CMISLinkCache.m */,
 				FE417D5F15761A34009056AA /* CMISPropertyDefinition.h */,
@@ -759,6 +771,8 @@
 				FE417D6815761A34009056AE /* CMISFileDownloadDelegate.h in Headers */,
 				FE417D6815761A34009056B6 /* CMISFileUploadDelegate.h in Headers */,
 				FE417D6815761A34009056BA /* CMISTypeDefs.h in Headers */,
+				FE417D6815761A34009056BE /* CMISRendition.h in Headers */,
+				FE417D6815761A34009056C2 /* CMISRenditionData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -942,6 +956,8 @@
 				FE417D6815761A34009056AA /* CMISTypeDefinition.m in Sources */,
 				FE417D6815761A34009056AC /* CMISFileDownloadDelegate.m in Sources */,
 				FE417D6815761A34009056B4 /* CMISFileUploadDelegate.m in Sources */,
+				FE417D6815761A34009056BC /* CMISRendition.m in Sources */,
+				FE417D6815761A34009056C0 /* CMISRenditionData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

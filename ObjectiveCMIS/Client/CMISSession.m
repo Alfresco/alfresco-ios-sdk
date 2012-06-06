@@ -189,9 +189,19 @@
 
 - (CMISObject *)retrieveObjectByPath:(NSString *)path error:(NSError **)error
 {
-    // TODO: cache object
+   return [self retrieveObjectByPath:path withOperationContext:[CMISOperationContext defaultOperationContext] error:error];
+}
 
-    CMISObjectData *objectData = [self.binding.objectService retrieveObjectByPath:path error:error];
+- (CMISObject *)retrieveObjectByPath:(NSString *)path withOperationContext:(CMISOperationContext *)operationContext error:(NSError **)error
+{
+    CMISObjectData *objectData = [self.binding.objectService retrieveObjectByPath:path
+                                                                       withFilter:operationContext.filterString
+                                                          andIncludeRelationShips:operationContext.includeRelationShips
+                                                              andIncludePolicyIds:operationContext.isIncludePolicies
+                                                               andRenditionFilder:operationContext.renditionFilterString
+                                                                    andIncludeACL:operationContext.isIncluseACLs
+                                                       andIncludeAllowableActions:operationContext.isIncludeAllowableActions
+                                                                            error:error];
     if (objectData != nil && *error == nil)
     {
         return [self.objectConverter convertObject:objectData];
@@ -199,7 +209,6 @@
 
     return nil;
 }
-
 
 - (CMISPagedResult *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error
 {
@@ -274,7 +283,7 @@
                     failureBlock:(CMISErrorFailureBlock)failureBlock
                     progressBlock:(CMISProgressBlock)progressBlock;
 {
-    [self.binding.objectService downloadContentOfObject:objectId toFile:filePath completionBlock:completionBlock
+    [self.binding.objectService downloadContentOfObject:objectId withStreamId:nil toFile:filePath completionBlock:completionBlock
                                            failureBlock:failureBlock progressBlock:progressBlock];
 }
 

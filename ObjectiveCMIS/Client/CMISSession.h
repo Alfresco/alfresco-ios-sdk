@@ -58,6 +58,11 @@
 - (CMISObject *)retrieveObjectByPath:(NSString *)path error:(NSError **)error;
 
 /**
+ * Retrieves the object for the given path, using the provided operation context.
+ */
+- (CMISObject *)retrieveObjectByPath:(NSString *)path withOperationContext:(CMISOperationContext *)operationContext error:(NSError **)error;
+
+/**
  * Retrieves all objects matching the given cmis query.
  *
  * @return An array of CMISQueryResult objects.

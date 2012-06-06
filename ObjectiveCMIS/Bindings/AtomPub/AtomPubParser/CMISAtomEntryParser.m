@@ -7,11 +7,9 @@
 //
 
 #import "CMISAtomEntryParser.h"
-#import "CMISAllowableActions.h"
 #import "ISO8601DateFormatter.h"
 #import "CMISAtomLink.h"
-#import "CMISLinkRelations.h"
-#import "CMISExtensionData.h"
+#import "CMISRenditionData.h"
 
 @interface CMISAtomEntryParser ()
 
@@ -23,6 +21,8 @@
 @property (nonatomic, strong) CMISPropertyData *currentPropertyData;
 @property (nonatomic, strong) CMISProperties *currentObjectProperties;
 @property (nonatomic, strong) NSMutableSet *currentLinkRelations;
+@property (nonatomic, strong) CMISRenditionData *currentRendition;
+@property (nonatomic, strong) NSMutableArray *currentRenditions;
 @property (nonatomic, strong) NSMutableArray *currentExtensions;
 @property (nonatomic, strong) CMISExtensionData *currentExtensionData;
 
@@ -55,7 +55,8 @@
 @synthesize childParserDelegate = _childParserDelegate;
 @synthesize parentDelegate = _parentDelegate;
 @synthesize entryAttributesDict = _entryAttributesDict;
-
+@synthesize currentRendition = _currentRendition;
+@synthesize currentRenditions = _currentRenditions;
 
 // Designated Initializer
 - (id)init
@@ -116,7 +117,9 @@
     return self;
 }
 
-+ (id)atomEntryParserWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate,CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser
++ (id)atomEntryParserWithAtomEntryAttributes:(NSDictionary *)attributes
+                              parentDelegate:(id<NSXMLParserDelegate,CMISAtomEntryParserDelegate>)parentDelegate
+                                      parser:(NSXMLParser *)parser
 {
     return [[self alloc] initWithAtomEntryAttributes:attributes parentDelegate:parentDelegate parser:parser];
 }
@@ -124,7 +127,8 @@
 #pragma mark -
 #pragma mark NSXMLParser delegate methods
 
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict 
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI
+                                            qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
 {
     self.elementBeingParsed = elementName;
     
@@ -150,6 +154,10 @@
             
             // Set currentExtensionData so that we handle extensions when we come across them
             self.currentExtensionData = self.currentObjectProperties;        
+        }
+        else if ([elementName isEqualToString:kCMISCoreRendition])
+        {
+            self.currentRendition = [[CMISRenditionData alloc] init];
         }
         else if ([elementName isEqualToString:kCMISAtomEntryAllowableActions]) 
         {
@@ -223,6 +231,41 @@
             self.currentPropertyData.values = [NSArray arrayWithObject:[self.dateFormatter dateFromString:string]];
         }
     }
+    else if (self.currentRendition != nil)
+    {
+        if ([self.elementBeingParsed isEqualToString:kCMISCoreStreamId])
+        {
+            self.currentRendition.streamId = string;
+        }
+        else if ([self.elementBeingParsed isEqualToString:kCMISCoreMimetype])
+        {
+            self.currentRendition.mimeType = string;
+        }
+        else if ([self.elementBeingParsed isEqualToString:kCMISCoreLength])
+        {
+            self.currentRendition.length = [NSNumber numberWithInteger:[string integerValue]];
+        }
+        else if ([self.elementBeingParsed isEqualToString:kCMISCoreTitle])
+        {
+            self.currentRendition.title = string;
+        }
+        else if ([self.elementBeingParsed isEqualToString:kCMISCoreKind])
+        {
+            self.currentRendition.kind = string;
+        }
+        else if ([self.elementBeingParsed isEqualToString:kCMISCoreHeight])
+        {
+            self.currentRendition.height = [NSNumber numberWithInteger:[string integerValue]];
+        }
+        else if ([self.elementBeingParsed isEqualToString:kCMISCoreWidth])
+        {
+            self.currentRendition.width = [NSNumber numberWithInteger:[string integerValue]];
+        }
+        else if ([self.elementBeingParsed isEqualToString:kCMISCoreRenditionDocumentId])
+        {
+            self.currentRendition.renditionDocumentId = string;
+        }
+    }
 }
 
 
@@ -247,6 +290,15 @@
             self.currentExtensionData.extensions = [self.currentExtensions copy];
             self.currentExtensionData = nil;
         }
+        else if ([elementName isEqualToString:kCMISCoreRendition])
+        {
+            if (self.currentRenditions == nil)
+            {
+                self.currentRenditions = [[NSMutableArray alloc] init];
+            }
+            [self.currentRenditions addObject:self.currentRendition];
+            self.currentRendition = nil;
+        }
     }
     else if ([namespaceURI isEqualToString:kCMISNamespaceCmisRestAtom])
     {
@@ -257,6 +309,9 @@
             
             // set the link relations on the objectData object
             self.objectData.linkRelations = [[CMISLinkRelations alloc] initWithLinkRelationSet:[self.currentLinkRelations copy]];
+
+            // set the renditions on the objectData object
+            self.objectData.renditions = self.currentRenditions;
             
             // set the objectData identifier
             CMISPropertyData *objectId = [self.currentObjectProperties.propertiesDictionary objectForKey:kCMISAtomEntryObjectId];
