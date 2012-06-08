@@ -23,8 +23,10 @@
 @property (nonatomic, strong) NSMutableSet *currentLinkRelations;
 @property (nonatomic, strong) CMISRenditionData *currentRendition;
 @property (nonatomic, strong) NSMutableArray *currentRenditions;
+
 @property (nonatomic, strong) NSMutableArray *currentExtensions;
 @property (nonatomic, strong) CMISExtensionData *currentExtensionData;
+@property (nonatomic, strong) NSMutableArray *previousExtensionDataArray;
 
 @property (nonatomic, strong) ISO8601DateFormatter *dateFormatter;
 
@@ -37,6 +39,11 @@
 - (id)init;
 // Initializer used if this parser is a delegated child parser
 - (id)initWithAtomEntryAttributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomEntryParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
+
+// Saves the current extensionData and extensions state and sets the messaged object as the new current extensionData object
+- (void)pushNewCurrentExtensionData:(CMISExtensionData *)extensionDataObject;
+//  Saves the current extensions on the extensionData object and makes the previous extensionData and extensions the current objects
+- (void)saveCurrentExtensionsAndPushPreviousExtensionData;
 @end
 
 
@@ -51,6 +58,7 @@
 @synthesize currentLinkRelations = _currentLinkRelations;
 @synthesize currentExtensions = _currentExtensions;
 @synthesize currentExtensionData = _currentExtensionData;
+@synthesize previousExtensionDataArray = _previousExtensionDataArray;
 @synthesize dateFormatter = _dateFormatter;
 @synthesize childParserDelegate = _childParserDelegate;
 @synthesize parentDelegate = _parentDelegate;
@@ -65,6 +73,7 @@
     if (self)
     {
         self.currentLinkRelations = [NSMutableSet set];
+        self.previousExtensionDataArray = [NSMutableArray array];
     }
     return self;
 }
@@ -152,8 +161,8 @@
             // create the CMISProperties object to hold all property data
             self.currentObjectProperties = [[CMISProperties alloc] init];
             
-            // Set currentExtensionData so that we handle extensions when we come across them
-            self.currentExtensionData = self.currentObjectProperties;        
+            // Set ObjectProperties as the current extensionData object
+            [self pushNewCurrentExtensionData:self.currentObjectProperties];
         }
         else if ([elementName isEqualToString:kCMISCoreRendition])
         {
@@ -169,7 +178,8 @@
     {
         if ([elementName isEqualToString:kCMISAtomEntryObject])
         {
-            // TODO Handle Object ExtensionData 
+            // Set object data as the current extensionData object
+            [self pushNewCurrentExtensionData:self.objectData];
         }
     }
     else if ([namespaceURI isEqualToString:kCMISNamespaceAtom])
@@ -287,8 +297,7 @@
         else if ([elementName isEqualToString:kCMISCoreProperties])
         {
             // Finished parsing Properties & its ExtensionData
-            self.currentExtensionData.extensions = [self.currentExtensions copy];
-            self.currentExtensionData = nil;
+            [self saveCurrentExtensionsAndPushPreviousExtensionData];
         }
         else if ([elementName isEqualToString:kCMISCoreRendition])
         {
@@ -329,6 +338,9 @@
                 self.objectData.baseType = CMISBaseTypeFolder;
             }
             
+            // set the extensionData
+            [self saveCurrentExtensionsAndPushPreviousExtensionData];
+            
             self.currentObjectProperties = nil;
         }
     }
@@ -364,6 +376,45 @@
 }
 
 #pragma mark -
+#pragma mark Private Methods
+
+- (void)pushNewCurrentExtensionData:(CMISExtensionData *)extensionDataObject
+{
+    // Save the current state of the extensionData objects used for parsing
+    if (self.currentExtensionData)
+    {
+        if (self.currentExtensions)
+        {
+            self.currentExtensionData.extensions = [self.currentExtensions copy];
+        }
+        
+        [self.previousExtensionDataArray addObject:self.currentExtensionData];
+    }
+    
+    // Set the new extensionData object provided to be the current
+    self.currentExtensionData = extensionDataObject;
+    // extensions are nil'ed out since we have a new extensionData object
+    self.currentExtensions = nil;
+}
+
+- (void)saveCurrentExtensionsAndPushPreviousExtensionData
+{
+    // set the current extensions 
+    self.currentExtensionData.extensions = [self.currentExtensions copy];
+    self.currentExtensionData = nil;
+    
+    // set the previous extensionData object, note - we don't mind that the return values are nil
+    self.currentExtensionData = self.previousExtensionDataArray.lastObject;
+    self.currentExtensions = [self.currentExtensionData.extensions mutableCopy];
+    
+    // if previous actually existed, remvoe last object
+    if (self.currentExtensionData)
+    {
+        [self.previousExtensionDataArray removeLastObject];
+    }
+}
+
+#pragma mark -
 #pragma mark CMISAllowableActionsParserDelegate Methods
 
 - (void)allowableActionsParser:(CMISAllowableActionsParser *)parser didFinishParsingAllowableActions:(CMISAllowableActions *)allowableActions
@@ -386,7 +437,7 @@
     }
     
     [self.currentExtensions addObject:extensionElement];
-    
+
     self.childParserDelegate = nil;
 }
 

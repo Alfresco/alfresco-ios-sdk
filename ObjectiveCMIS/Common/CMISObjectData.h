@@ -11,10 +11,11 @@
 #import "CMISProperties.h"
 #import "CMISAllowableActions.h"
 #import "CMISLinkRelations.h"
+#import "CMISExtensionData.h"
 
 @class CMISRenditionData;
 
-@interface CMISObjectData : NSObject
+@interface CMISObjectData : CMISExtensionData
 
 @property (nonatomic, strong) NSString *identifier; 
 @property (nonatomic, assign) CMISBaseType baseType;

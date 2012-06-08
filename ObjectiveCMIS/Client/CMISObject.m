@@ -31,10 +31,13 @@
 @property (nonatomic, strong, readwrite) NSString *changeToken;
 
 @property (nonatomic, strong, readwrite) CMISProperties *properties;
-
 @property (nonatomic, strong, readwrite) CMISAllowableActions *allowableActions;
 @property (nonatomic, strong, readwrite) NSArray *renditions;
 
+@property (nonatomic, strong) NSMutableDictionary *extensionsDict;
+
+// returns a non-nil NSArray
+- (NSArray *)nonNilArray:(NSArray *)aArray;
 @end
 
 @implementation CMISObject
@@ -52,6 +55,7 @@
 @synthesize properties = _properties;
 @synthesize allowableActions = _allowableActions;
 @synthesize renditions = _renditions;
+@synthesize extensionsDict = _extensionsDict;
 
 - (id)initWithObjectData:(CMISObjectData *)objectData withSession:(CMISSession *)session
 {
@@ -72,6 +76,12 @@
 
         self.allowableActions = objectData.allowableActions;
 
+        // Extract Extensions and store in the extensionsDict
+        self.extensionsDict = [[NSMutableDictionary alloc] init];
+        [self.extensionsDict setObject:[self nonNilArray:objectData.extensions] forKey:[NSNumber numberWithInt:CMISExtensionLevelObject]];
+        [self.extensionsDict setObject:[self nonNilArray:self.properties.extensions] forKey:[NSNumber numberWithInt:CMISExtensionLevelProperties]];
+        [self.extensionsDict setObject:[self nonNilArray:self.allowableActions.extensions] forKey:[NSNumber numberWithInt:CMISExtensionLevelAllowableActions]];        
+
         // Renditions must be converted here, because they need access to the session
         if (objectData.renditions != nil)
         {
@@ -85,6 +95,11 @@
     }
     
     return self;
+}
+
+- (NSArray *)nonNilArray:(NSArray *)aArray
+{   // Move to category on NSArray?
+    return ((aArray == nil) ? [NSArray array] : aArray);
 }
 
 - (CMISObject *)updateProperties:(NSDictionary *)properties error:(NSError **)error
@@ -116,27 +131,9 @@
 
 - (NSArray *)extensionsForExtensionLevel:(CMISExtensionLevel)extensionLevel
 {
-    // TODO Need to implement the following extension levels CMISExtensionLevelObject, CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
+    // TODO Need to implement the following extension levels CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
     
-    NSArray *extensions = nil;
-    
-    switch (extensionLevel) 
-    {
-        case CMISExtensionLevelProperties:
-        {
-            extensions = self.properties.extensions;
-            break;
-        }
-        case CMISExtensionLevelAllowableActions:
-        {
-            extensions = self.allowableActions.extensions;
-            break;
-        }
-        default:
-            break;
-    }
-    
-    return extensions;
+    return [self.extensionsDict objectForKey:[NSNumber numberWithInt:extensionLevel]];
 }
 
 @end

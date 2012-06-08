@@ -12,7 +12,7 @@
 @interface CMISExtensionData : NSObject
 
 /** 
- * Returns an Array of CMISExtensionElements 
+ * Returns an Array of CMISExtensionElement objects 
  */
 @property (nonatomic, strong) NSArray *extensions;
 
