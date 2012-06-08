@@ -21,7 +21,7 @@
 #import "CMISTypeDefinition.h"
 #import "CMISPropertyDefinition.h"
 #import "CMISObjectConverter.h"
-#import "ISO8601DateFormatter.h"
+#import "CMISISO8601DateFormatter.h"
 #import "CMISOperationContext.h"
 #import "CMISPagedResult.h"
 #import "CMISRenditionData.h"
@@ -977,7 +977,7 @@
     NSError *error = nil;
 
     NSDate *testDate = [NSDate date];
-    ISO8601DateFormatter *dateFormatter = [[ISO8601DateFormatter alloc] init];
+    CMISISO8601DateFormatter *dateFormatter = [[CMISISO8601DateFormatter alloc] init];
     dateFormatter.includeTime = YES;
 
     // Create converter

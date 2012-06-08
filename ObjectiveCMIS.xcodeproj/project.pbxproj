@@ -111,7 +111,7 @@
 		828073261515405C00EF635C /* CMISBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 828073191515405C00EF635C /* CMISBinding.h */; };
 		8280732B1515407000EF635C /* CMISObjectConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 828073291515407000EF635C /* CMISObjectConverter.h */; };
 		8280732C1515407000EF635C /* CMISObjectConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8280732A1515407000EF635C /* CMISObjectConverter.m */; };
-		828073751515424E00EF635C /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 82807349151541CF00EF635C /* ISO8601DateFormatter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		828073751515424E00EF635C /* CMISISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 82807349151541CF00EF635C /* CMISISO8601DateFormatter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8280737E151542D900EF635C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8280737D151542D900EF635C /* CoreGraphics.framework */; };
 		82807380151542E200EF635C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8280737F151542E200EF635C /* CFNetwork.framework */; };
 		82807382151542EC00EF635C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82807381151542EC00EF635C /* SystemConfiguration.framework */; };
@@ -292,8 +292,8 @@
 		828073191515405C00EF635C /* CMISBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = CMISBinding.h; path = Bindings/CMISBinding.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		828073291515407000EF635C /* CMISObjectConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = CMISObjectConverter.h; path = Utils/CMISObjectConverter.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8280732A1515407000EF635C /* CMISObjectConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CMISObjectConverter.m; path = Utils/CMISObjectConverter.m; sourceTree = "<group>"; };
-		82807348151541CF00EF635C /* ISO8601DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISO8601DateFormatter.h; sourceTree = "<group>"; };
-		82807349151541CF00EF635C /* ISO8601DateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISO8601DateFormatter.m; sourceTree = "<group>"; };
+		82807348151541CF00EF635C /* CMISISO8601DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISISO8601DateFormatter.h; sourceTree = "<group>"; };
+		82807349151541CF00EF635C /* CMISISO8601DateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISISO8601DateFormatter.m; sourceTree = "<group>"; };
 		8280737D151542D900EF635C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		8280737F151542E200EF635C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		82807381151542EC00EF635C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -684,8 +684,8 @@
 		82807347151541CF00EF635C /* ISO8601Parser */ = {
 			isa = PBXGroup;
 			children = (
-				82807348151541CF00EF635C /* ISO8601DateFormatter.h */,
-				82807349151541CF00EF635C /* ISO8601DateFormatter.m */,
+				82807348151541CF00EF635C /* CMISISO8601DateFormatter.h */,
+				82807349151541CF00EF635C /* CMISISO8601DateFormatter.m */,
 			);
 			name = ISO8601Parser;
 			path = 3rdParty/ISO8601Parser;
@@ -910,7 +910,7 @@
 				828073231515405C00EF635C /* CMISAtomPubObjectService.m in Sources */,
 				828073251515405C00EF635C /* CMISAtomPubRepositoryService.m in Sources */,
 				8280732C1515407000EF635C /* CMISObjectConverter.m in Sources */,
-				828073751515424E00EF635C /* ISO8601DateFormatter.m in Sources */,
+				828073751515424E00EF635C /* CMISISO8601DateFormatter.m in Sources */,
 				82C1C62F153427E4009B7B3D /* CMISStandardAuthenticationProvider.m in Sources */,
 				82C1C63315344B56009B7B3D /* CMISAtomPubBaseService.m in Sources */,
 				82C1C63715348EC4009B7B3D /* CMISAtomPubNavigationService.m in Sources */,

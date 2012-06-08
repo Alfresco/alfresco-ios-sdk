@@ -8,7 +8,7 @@
 
 #import "CMISObject.h"
 #import "CMISConstants.h"
-#import "ISO8601DateFormatter.h"
+#import "CMISISO8601DateFormatter.h"
 #import "CMISErrors.h"
 #import "CMISObjectConverter.h"
 #import "CMISStringInOutParameter.h"

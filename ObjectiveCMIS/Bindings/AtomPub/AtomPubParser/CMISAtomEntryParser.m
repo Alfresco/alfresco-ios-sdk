@@ -7,7 +7,7 @@
 //
 
 #import "CMISAtomEntryParser.h"
-#import "ISO8601DateFormatter.h"
+#import "CMISISO8601DateFormatter.h"
 #import "CMISAtomLink.h"
 #import "CMISRenditionData.h"
 
@@ -28,7 +28,7 @@
 @property (nonatomic, strong) CMISExtensionData *currentExtensionData;
 @property (nonatomic, strong) NSMutableArray *previousExtensionDataArray;
 
-@property (nonatomic, strong) ISO8601DateFormatter *dateFormatter;
+@property (nonatomic, strong) CMISISO8601DateFormatter *dateFormatter;
 
 // Properties used if child parser
 @property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
@@ -236,7 +236,7 @@
         {
             if (!self.dateFormatter)
             {
-                self.dateFormatter = [[ISO8601DateFormatter alloc] init];
+                self.dateFormatter = [[CMISISO8601DateFormatter alloc] init];
             }
             self.currentPropertyData.values = [NSArray arrayWithObject:[self.dateFormatter dateFromString:string]];
         }
