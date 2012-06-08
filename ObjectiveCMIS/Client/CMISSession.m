@@ -16,13 +16,13 @@
 #import "CMISErrors.h"
 #import "CMISOperationContext.h"
 #import "CMISPagedResult.h"
+#import "CMISTypeDefinition.h"
 
 @interface CMISSession ()
 @property (nonatomic, strong) CMISSessionParameters *sessionParameters;
 @property (nonatomic, strong) CMISObjectConverter *objectConverter;
 @property (nonatomic, assign, readwrite) BOOL isAuthenticated;
 @property (nonatomic, strong, readwrite) id<CMISBinding> binding;
-@property (nonatomic, strong, readwrite) CMISFolder *rootFolder;
 @property (nonatomic, strong, readwrite) CMISRepositoryInfo *repositoryInfo;
 @end
 
@@ -32,12 +32,11 @@
 
 @implementation CMISSession
 
-@synthesize binding = _binding;
-@synthesize rootFolder = _rootFolder;
-@synthesize repositoryInfo = _repositoryInfo;
 @synthesize isAuthenticated = _isAuthenticated;
-@synthesize objectConverter = _objectConverter;
+@synthesize binding = _binding;
+@synthesize repositoryInfo = _repositoryInfo;
 @synthesize sessionParameters = _sessionParameters;
+@synthesize objectConverter = _objectConverter;
 
 #pragma mark -
 #pragma mark Setup
@@ -120,25 +119,6 @@
             log(@"Error because repositoryInfo is nil: %@",[*error description]);
             return NO;
         }
-        
-        // get root folder info
-        CMISObject *obj = [self retrieveObject:self.repositoryInfo.rootFolderId error:error];
-        
-        if (obj == nil || (error && error != NULL && *error != nil))
-        {
-            *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeNoRootFolderFound withDetailedDescription:nil];
-            log(@"Error because CMISObject returns as nil: %@",[*error description]);
-            return NO;
-        }
-        
-        if ([obj isKindOfClass:[CMISFolder class]])
-        {
-            self.rootFolder = (CMISFolder *)obj;
-        } else {
-            *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeNoRootFolderFound withDetailedDescription:nil];
-            log(@"Error because obj is not of kind CMISFolder: %@",[*error description]);
-            return NO;
-        }
     }
     
     // no errors have occurred so set authenticated flag and return success flag
@@ -147,6 +127,24 @@
 }
 
 #pragma mark CMIS operations
+
+- (CMISFolder *)retrieveRootFolderAndReturnError:(NSError **)error
+{
+    return [self retrieveFolderWithOperationContext:[CMISOperationContext defaultOperationContext] withError:error];
+}
+
+- (CMISFolder *)retrieveFolderWithOperationContext:(CMISOperationContext *)operationContext withError:(NSError **)error
+{
+    NSString *rootFolderId = self.repositoryInfo.rootFolderId;
+    CMISObject *rootFolder = [self retrieveObject:rootFolderId withOperationContext:operationContext error:error];
+
+    if (rootFolder != nil && ![rootFolder isKindOfClass:[CMISFolder class]])
+    {
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeRuntime withDetailedDescription:@"Root folder object is not a folder!"];
+        return nil;
+    }
+    return (CMISFolder *) rootFolder;
+}
 
 - (CMISObject *)retrieveObject:(NSString *)objectId error:(NSError **)error
 {
@@ -208,6 +206,11 @@
     }
 
     return nil;
+}
+
+- (CMISTypeDefinition *)retrieveTypeDefinitions:(NSString *)typeId error:(NSError **)error
+{
+    return [self.binding.repositoryService retrieveTypeDefinition:typeId error:error];
 }
 
 - (CMISPagedResult *)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion error:(NSError * *)error
