@@ -8,11 +8,14 @@
 #import "CMISPropertyData.h"
 #import "CMISAllowableActions.h"
 #import "CMISObjectData.h"
+#import "CMISRendition.h"
+#import "CMISSession.h"
 
 @interface CMISQueryResult()
 
 @property(nonatomic, strong, readwrite) CMISProperties *properties;
 @property(nonatomic, strong, readwrite) CMISAllowableActions *allowableActions;
+@property(nonatomic, strong, readwrite) NSArray *renditions;
 
 @end
 
@@ -21,21 +24,33 @@
 
 @synthesize properties = _properties;
 @synthesize allowableActions = _allowableActions;
+@synthesize renditions = _renditions;
 
-- (id)initWithCmisObjectData:(CMISObjectData *)cmisObjectData
+
+- (id)initWithCmisObjectData:(CMISObjectData *)cmisObjectData andWithSession:(CMISSession *)session
 {
     self = [super init];
     if (self)
     {
         self.properties = cmisObjectData.properties;
         self.allowableActions = cmisObjectData.allowableActions;
+
+        if (cmisObjectData.renditions != nil)
+        {
+            NSMutableArray *renditions = [NSMutableArray array];
+            for (CMISRenditionData *renditionData in cmisObjectData.renditions)
+            {
+                [renditions addObject:[[CMISRendition alloc] initWithRenditionData:renditionData andObjectId:cmisObjectData.identifier andSession:session]];
+            }
+            self.renditions = renditions;
+        }
     }
     return self;
 }
 
-+ (CMISQueryResult *)queryResultUsingCmisObjectData:(CMISObjectData *)cmisObjectData
++ (CMISQueryResult *)queryResultUsingCmisObjectData:(CMISObjectData *)cmisObjectData andWithSession:(CMISSession *)session
 {
-    CMISQueryResult *queryResult = [[CMISQueryResult alloc] initWithCmisObjectData:cmisObjectData];
+    CMISQueryResult *queryResult = [[CMISQueryResult alloc] initWithCmisObjectData:cmisObjectData andWithSession:session];
     return queryResult;
 }
 

@@ -80,7 +80,7 @@
 /**
  * Retrieves the definition for the given type.
  */
-- (CMISTypeDefinition *)retrieveTypeDefinitions:(NSString *)typeId
+- (CMISTypeDefinition *)retrieveTypeDefinition:(NSString *)typeId
                                           error:(NSError **)error;
 
 /**
@@ -103,6 +103,15 @@
           operationContext:(CMISOperationContext *)operationContext
                      error:(NSError **)error;
 
+/**
+ * Queries for a specific type of objects.
+ * Returns a paged result set, containing CMISObject instances.
+ */
+- (CMISPagedResult *)queryObjectsWithTypeid:(NSString *)typeId
+                            withWhereClause:(NSString *)whereClause
+                          searchAllVersions:(BOOL)searchAllVersion
+                           operationContext:(CMISOperationContext *)operationContext
+                                      error:(NSError **)error;
 /**
  * Creates a folder in the provided folder.
  */

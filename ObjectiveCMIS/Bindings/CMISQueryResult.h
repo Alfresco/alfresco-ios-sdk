@@ -9,6 +9,7 @@
 @class CMISAllowableActions;
 @class CMISObjectData;
 @class CMISProperties;
+@class CMISSession;
 
 
 @interface CMISQueryResult : NSObject
@@ -18,16 +19,17 @@
 */
 @property(nonatomic, strong, readonly) CMISProperties *properties;
 @property(nonatomic, strong, readonly) CMISAllowableActions *allowableActions;
+@property(nonatomic, strong, readonly) NSArray *renditions; // Array of CMISRenditions
 
 /**
 * Initializes this query result.
 */
-- (id)initWithCmisObjectData:(CMISObjectData *)cmisObjectData;
+- (id)initWithCmisObjectData:(CMISObjectData *)cmisObjectData andWithSession:(CMISSession *)session;
 
 /**
 * Convience method for the initializer.
 */
-+ (CMISQueryResult *)queryResultUsingCmisObjectData:(CMISObjectData *)cmisObjectData;
++ (CMISQueryResult *)queryResultUsingCmisObjectData:(CMISObjectData *)cmisObjectData andWithSession:(CMISSession *)session;
 
 /**
 * Returns a property by id.
@@ -71,9 +73,6 @@
 //     */
 //    List<Relationship> getRelationships();
 //
-//    /**
-//     * Returns the renditions if they were requested.
-//     */
-//    List<Rendition> getRenditions();
+
 
 @end

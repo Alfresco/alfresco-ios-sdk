@@ -208,7 +208,7 @@
     return nil;
 }
 
-- (CMISTypeDefinition *)retrieveTypeDefinitions:(NSString *)typeId error:(NSError **)error
+- (CMISTypeDefinition *)retrieveTypeDefinition:(NSString *)typeId error:(NSError **)error
 {
     return [self.binding.repositoryService retrieveTypeDefinition:typeId error:error];
 }
@@ -244,7 +244,7 @@
         result.resultArray = resultArray;
         for (CMISObjectData *objectData in objectList.objects)
         {
-            [resultArray addObject:[CMISQueryResult queryResultUsingCmisObjectData:objectData]];
+            [resultArray addObject:[CMISQueryResult queryResultUsingCmisObjectData:objectData andWithSession:self]];
         }
 
         return result;
@@ -265,6 +265,86 @@
 
     return result;
 }
+
+- (CMISPagedResult *)queryObjectsWithTypeid:(NSString *)typeId
+                            withWhereClause:(NSString *)whereClause
+                          searchAllVersions:(BOOL)searchAllVersion
+                           operationContext:(CMISOperationContext *)operationContext
+                                      error:(NSError **)error
+{
+    // Creating the cmis query using the input params
+    NSMutableString *statement = [[NSMutableString alloc] init];
+
+    // Filter
+    [statement appendFormat:@"SELECT %@", (operationContext.filterString != nil ? operationContext.filterString : @"*")];
+
+    // Type
+    NSError *internalError = nil;
+    CMISTypeDefinition *typeDefinition = [self retrieveTypeDefinition:typeId error:&internalError];
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+        return nil;
+    }
+    [statement appendFormat:@" FROM %@", typeDefinition.queryName];
+
+    // Where
+    if (whereClause != nil)
+    {
+        [statement appendFormat:@" WHERE %@", whereClause];
+    }
+
+    // Order by
+    if (operationContext.orderBy != nil)
+    {
+        [statement appendFormat:@" ORDER BY %@", operationContext.orderBy];
+    }
+
+    // Fetch block for paged results
+    CMISFetchNextPageBlock fetchNextPageBlock = ^CMISFetchNextPageBlockResult *(int skipCount, int maxItems, NSError **fetchError)
+    {
+        // Fetch results through discovery service
+        CMISObjectList *objectList = [self.binding.discoveryService query:statement
+                                                        searchAllVersions:searchAllVersion
+                                                     includeRelationShips:operationContext.includeRelationShips
+                                                          renditionFilter:operationContext.renditionFilterString
+                                                  includeAllowableActions:operationContext.isIncludeAllowableActions
+                                                                 maxItems:[NSNumber numberWithInt:maxItems]
+                                                                skipCount:[NSNumber numberWithInt:skipCount]
+                                                                    error:fetchError];
+
+        // Fill up return result
+        CMISFetchNextPageBlockResult *result = [[CMISFetchNextPageBlockResult alloc] init];
+        result.hasMoreItems = objectList.hasMoreItems;
+        result.numItems = objectList.numItems;
+
+        NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+        result.resultArray = resultArray;
+        CMISObjectConverter *converter = [[CMISObjectConverter alloc] init];
+        for (CMISObjectData *objectData in objectList.objects)
+        {
+            [resultArray addObject:[converter convertObject:objectData]];
+        }
+
+        return result;
+    };
+
+    internalError = nil;
+    CMISPagedResult *result = [CMISPagedResult pagedResultUsingFetchBlock:fetchNextPageBlock
+                                                       andLimitToMaxItems:operationContext.maxItemsPerPage
+                                                    andStartFromSkipCount:operationContext.skipCount
+                                                                    error:&internalError];
+
+    // Return nil and populate error in case something went wrong
+    if (internalError != nil)
+    {
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+        return nil;
+    }
+
+    return result;
+}
+
 
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {

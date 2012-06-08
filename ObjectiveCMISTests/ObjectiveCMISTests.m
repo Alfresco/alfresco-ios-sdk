@@ -691,6 +691,38 @@
     STAssertTrue(thirdPageResults.resultArray.count == 1, @"Expected 1 result, but got %d back", thirdPageResults.resultArray.count);
 }
 
+- (void)testQueryObjects
+{
+    [self setupCmisSession];
+    NSError *error = nil;
+
+     // Fetch first page
+    CMISOperationContext *context = [[CMISOperationContext alloc] init];
+    context.maxItemsPerPage = 2;
+    context.skipCount = 0;
+    CMISPagedResult *firstPageResult = [self.session queryObjectsWithTypeid:@"cmis:document" withWhereClause:nil
+                                                          searchAllVersions:NO operationContext:context error:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertTrue(firstPageResult.resultArray.count == 2, @"Expected 2 results, but got %d back", firstPageResult.resultArray.count);
+
+    // Save all the ids to check them later
+    NSMutableArray *idsOfFirstPage = [NSMutableArray array];
+    for (CMISDocument *document in firstPageResult.resultArray)
+    {
+        [idsOfFirstPage addObject:document.identifier];
+    }
+
+    // Fetch second page
+    CMISPagedResult *secondPageResults = [firstPageResult fetchNextPageAndReturnError:&error];
+    STAssertNil(error, @"Got an error while executing query: %@", [error description]);
+    STAssertTrue(secondPageResults.resultArray.count == 2, @"Expected 2 results, but got %d back", secondPageResults.resultArray.count);
+
+    for (CMISDocument *document in secondPageResults.resultArray)
+    {
+        STAssertFalse([idsOfFirstPage containsObject:document.identifier], @"Found same object in first and second page");
+    }
+}
+
 - (void)testRetrieveParents
 {
     [self setupCmisSession];
