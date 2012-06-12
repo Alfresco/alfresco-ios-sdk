@@ -22,7 +22,6 @@
 @property (nonatomic, strong) NSDictionary *extensionAttributes;
 @property (nonatomic, strong) NSMutableArray *extensionChildren;
 
-/// Designated Initializer
 - (id)initWithElementName:(NSString *)elementName namespaceUri:(NSString *)namespaceUri attributes:(NSDictionary *)attributes parentDelegate:(id<NSXMLParserDelegate, CMISAtomPubExtensionElementParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
 @end
 

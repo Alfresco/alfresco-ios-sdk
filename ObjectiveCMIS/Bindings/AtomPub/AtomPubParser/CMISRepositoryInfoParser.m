@@ -23,9 +23,6 @@
 // TODO Temporary object, replace with CMISRepositoryCapabilities object or similar when available
 @property (nonatomic, strong) id currentCapabilities;
 
-// Child Delegate Properties
-@property (nonatomic, weak) id<NSXMLParserDelegate> childDelegate;
-@property (nonatomic, strong) NSMutableArray *extensionElements;
 @property (nonatomic, assign) BOOL isParsingExtensionElement;
 @end
 
@@ -36,8 +33,6 @@
 @synthesize currentString = _currentString;
 @synthesize currentCollection = _currentCollection;
 @synthesize currentCapabilities = _currentCapabilities;
-@synthesize extensionElements = _extensionElements;
-@synthesize childDelegate = _childDelegate;
 @synthesize isParsingExtensionElement = _isParsingExtensionElement;
 
 
@@ -80,7 +75,8 @@
               && ![namespaceURI isEqualToString:kCMISNamespaceAtom] && ![namespaceURI isEqualToString:kCMISNamespaceCmisRestAtom]) 
     {
         self.isParsingExtensionElement = YES;
-        self.childDelegate = [CMISAtomPubExtensionElementParser extensionElementParserWithElementName:elementName namespaceUri:namespaceURI attributes:attributeDict parentDelegate:self parser:parser];
+        [self pushNewCurrentExtensionData:self.currentRepositoryInfo];
+        self.childParserDelegate = [CMISAtomPubExtensionElementParser extensionElementParserWithElementName:elementName namespaceUri:namespaceURI attributes:attributeDict parentDelegate:self parser:parser];
     }
     
     // TODO Parse ACL Capabilities
@@ -171,10 +167,12 @@
     {
         if ([elementName isEqualToString:kCMISRestAtomRepositoryInfo] && self.parentDelegate)
         {
-            if (self.extensionElements)
-            {
-                self.currentRepositoryInfo.extensions = [self.extensionElements copy];                
-            }
+//            if (self.currentExtensions)
+//            {
+//                self.currentRepositoryInfo.extensions = [self.currentExtensions copy];                
+//            }
+            // Finished parsing Properties & its ExtensionData
+            [self saveCurrentExtensionsAndPushPreviousExtensionData];
 
             // Reset the parser's delegate to its parent since we're done with the repositoryInfo node
             [self.parentDelegate repositoryInfoParser:self didFinishParsingRepositoryInfo:self.currentRepositoryInfo];
@@ -190,7 +188,6 @@
     else if (self.isParsingExtensionElement)
     {
         self.isParsingExtensionElement = NO;
-        self.childDelegate = nil;
     }
     
     self.currentString = nil;
@@ -201,12 +198,14 @@
 
 - (void)extensionElementParser:(CMISAtomPubExtensionElementParser *)parser didFinishParsingExtensionElement:(CMISExtensionElement *)extensionElement
 {
-    if (self.extensionElements == nil)
+    if (self.currentExtensions == nil)
     {
-        self.extensionElements = [[NSMutableArray alloc] init];
+        self.currentExtensions = [[NSMutableArray alloc] init];
     }
     
-    [self.extensionElements addObject:extensionElement];
+    [self.currentExtensions addObject:extensionElement];
+    
+    self.childParserDelegate = nil;
 }
 
 @end

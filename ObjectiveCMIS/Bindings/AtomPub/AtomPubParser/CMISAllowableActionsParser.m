@@ -16,8 +16,6 @@
 @property (nonatomic, strong) NSMutableString *string;
 @property (nonatomic, strong) NSString *elementBeingParsed;
 @property (nonatomic, strong) NSData *atomData;
-@property (nonatomic, strong) NSMutableArray *currentExtensions;
-@property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
 
 // Private init Used for child delegate parser
 - (id)initWithParentDelegate:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser;
@@ -31,20 +29,21 @@
 @synthesize string = _string;
 @synthesize elementBeingParsed = _elementBeingParsed;
 @synthesize atomData = _atomData;
-@synthesize currentExtensions = _currentExtensions;
-@synthesize childParserDelegate = _childParserDelegate;
-
+@synthesize allowableActions;
 
 #pragma mark - 
 #pragma mark Init/Create methods
 
 - (id)initWithParentDelegate:(id<NSXMLParserDelegate, CMISAllowableActionsParserDelegate>)parentDelegate parser:(NSXMLParser *)parser 
 {
-    self = [self init];
+    self = [self initWithData:nil];
     if (self) 
     {
-        [self setParentDelegate:parentDelegate];
-        [self setInternalAllowableActionsDict:[NSMutableDictionary dictionary]];
+        self.parentDelegate = parentDelegate;
+        self.internalAllowableActionsDict = [[NSMutableDictionary alloc] init];
+        
+        self.allowableActions = [[CMISAllowableActions alloc] init];
+        [self pushNewCurrentExtensionData:self.allowableActions];
         
         // Setting Child Parser Delegate
         [parser setDelegate:self];
@@ -57,9 +56,10 @@
     return [[[self class] alloc] initWithParentDelegate:parentDelegate parser:parser];
 }
 
+// Designated Initializer
 - (id)initWithData:(NSData*)atomData
 {
-    self = [self init];
+    self = [super init];
     if (self)
     {
         self.atomData = atomData;
@@ -87,36 +87,29 @@
     return parseSuccessful;
 }
 
-#pragma mark -
-#pragma mark Properties
-
-- (CMISAllowableActions *)allowableActions
-{
-    return [[CMISAllowableActions alloc] initWithAllowableActionsDictionary:[self.internalAllowableActionsDict copy] 
-                                                      extensionElementArray:[self.currentExtensions copy]];
-}
-
-
 #pragma mark - 
 #pragma mark NSXMLParserDelegate Methods
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
-        namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName
-        attributes:(NSDictionary *)attributeDict 
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName
+    attributes:(NSDictionary *)attributeDict 
 {
     self.elementBeingParsed = elementName;
     
     if ([namespaceURI isEqualToString:kCMISNamespaceCmis])
     {
-    
-    if ([elementName isEqualToString:kCMISAtomEntryAllowableActions]) 
-    {
-        [self setInternalAllowableActionsDict:[NSMutableDictionary dictionary]];
-    }
-    else
-    {
-        self.string = [NSMutableString string];
-    }
+        
+        if ([elementName isEqualToString:kCMISAtomEntryAllowableActions]) 
+        {
+            [self setInternalAllowableActionsDict:[NSMutableDictionary dictionary]];
+            
+            self.allowableActions = [[CMISAllowableActions alloc] init];
+            [self pushNewCurrentExtensionData:self.allowableActions];
+        }
+        else
+        {
+            self.string = [NSMutableString string];
+        }
     }
     else 
     {
@@ -139,6 +132,11 @@
     {
         if ([elementName isEqualToString:kCMISAtomEntryAllowableActions])
         {
+            // Set the parsed dictionary of allowable actions
+            [self.allowableActions setAllowableActionsWithDictionary:[self.internalAllowableActionsDict copy]];
+            // Save the extension data
+            [self saveCurrentExtensionsAndPushPreviousExtensionData];
+            
             if (self.parentDelegate)
             {
                 if ([self.parentDelegate respondsToSelector:@selector(allowableActionsParser:didFinishParsingAllowableActions:)])
@@ -159,27 +157,9 @@
             [self.internalAllowableActionsDict setObject:self.string forKey:elementName];
         }
     }
-
+    
     self.elementBeingParsed = nil;
     self.string = nil;
 }
-
-#pragma mark -
-#pragma mark CMISAtomPubExtensionElementParserDelegate Method
-
-- (void)extensionElementParser:(CMISAtomPubExtensionElementParser *)parser didFinishParsingExtensionElement:(CMISExtensionElement *)extensionElement
-{
-    // TODO Should abstract the ExtensionData parsing as this pattern is repeated everywhere ExtensionData is getting parsed.
-    
-    if (self.currentExtensions == nil)
-    {
-        self.currentExtensions = [[NSMutableArray alloc] init];
-    }
-    
-    [self.currentExtensions addObject:extensionElement];
-    
-    self.childParserDelegate = nil;
-}
-
 
 @end

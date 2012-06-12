@@ -111,7 +111,7 @@ typedef enum
     CMISExtensionLevelProperties,
     CMISExtensionLevelAllowableActions
     // TODO expose the remaining extensions as they are implemented
-    // CMISExtensionLevelObject, CMISExtensionLevelAllowableActions, CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
+    // CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
 
 } CMISExtensionLevel;
 

@@ -13,10 +13,11 @@
 #import "CMISProperties.h"
 #import "CMISAllowableActionsParser.h"
 #import "CMISAtomPubExtensionElementParser.h"
+#import "CMISAtomPubExtensionDataParserBase.h"
 
 @protocol CMISAtomEntryParserDelegate;
 
-@interface CMISAtomEntryParser : NSObject <NSXMLParserDelegate, CMISAllowableActionsParserDelegate, CMISAtomPubExtensionElementParserDelegate>
+@interface CMISAtomEntryParser : CMISAtomPubExtensionDataParserBase <NSXMLParserDelegate, CMISAllowableActionsParserDelegate>
 
 @property (nonatomic, strong, readonly) CMISObjectData *objectData;
 

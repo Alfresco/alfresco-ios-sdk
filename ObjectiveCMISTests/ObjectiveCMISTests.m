@@ -987,27 +987,45 @@
 - (void)testExtensionData
 {
     [self setupCmisSession];
-//    NSError *error = nil;
+    NSError *error = nil;
     
     // Test RepositoryInfo Extensions
     CMISRepositoryInfo *repoInfo = self.session.repositoryInfo;
     NSArray *repoExtensions = repoInfo.extensions;
-    STAssertTrue(1 == repoExtensions.count, @"RepositoryInfo should only have one extension");
+    STAssertTrue(1 == repoExtensions.count, @"Expected 1 RepositoryInfo extension, but %d extension(s) returned", repoExtensions.count);
     CMISExtensionElement *element = [repoExtensions objectAtIndex:0];
-    STAssertTrue([@"Version 1.0 OASIS Standard" isEqualToString:element.value], @"");
-    STAssertTrue([@"http://www.alfresco.org" isEqualToString:element.namespaceUri], @"");
-    STAssertTrue([@"cmisSpecificationTitle" isEqualToString:element.name], @"");
-    STAssertFalse([element.children count], @"");
-    STAssertFalse([element.attributes count], @"");
+    STAssertTrue([@"Version 1.0 OASIS Standard" isEqualToString:element.value], @"Expected value='Version 1.0 OASIS Standard', actual='%@'", element.value);
+    STAssertTrue([@"http://www.alfresco.org" isEqualToString:element.namespaceUri], @"Expected namespaceUri='http://www.alfresco.org', actual='%@'", element.namespaceUri);
+    STAssertTrue([@"cmisSpecificationTitle" isEqualToString:element.name], @"Expected name='cmisSpecificationTitle', actual='%@'", element.name);
+    STAssertTrue([element.children count] == 0, @"Expected 0 children, but %d were found", [element.children count]);
+    STAssertTrue([element.attributes count] == 0, @"Expected 0 attributes, but %d were found", [element.attributes count]);
     
-    // Test Properties Extension
     
-//    TODO Add unit tests for the test server
-//    
-//    CMISObject *object = [self.session retrieveObject:@"workspace://SpacesStore/ad483fe8-7695-46e9-80d1-52036c114560" error:&error];
-//    NSArray *extElements = object.properties.extensions;
-//    STAssertNotNil(extElements, @"");
+    // Get an existing Document
+    CMISDocument *testDocument = [self retrieveVersionedTestDocument];
+
+    // Get testDocument but with AllowableActions
+    CMISOperationContext *ctx = [[CMISOperationContext alloc] init];
+    ctx.isIncludeAllowableActions = YES;
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:testDocument.identifier withOperationContext:ctx error:&error];
+
+    NSArray *extensions = [document extensionsForExtensionLevel:CMISExtensionLevelObject];
+    STAssertTrue([extensions count] == 0, @"Expected no extensions, but found %d", [extensions count]);
+    
+    extensions = [document extensionsForExtensionLevel:CMISExtensionLevelProperties];
+    STAssertTrue([extensions count] > 0, @"Expected extension data for properties, but none were found");
+    
+    STAssertTrue([document.allowableActions.allowableActionsSet count] > 0, @"Expected at least one allowable action but found none");
+    extensions = [document extensionsForExtensionLevel:CMISExtensionLevelAllowableActions];
+    STAssertTrue([extensions count] == 0, @"Expected no extension data for allowable actions, but found %d", [extensions count]);
 }
+
+- (void)testExtensionDataWithStaticFiles
+{
+    
+}
+
+
 
 - (void)testPropertiesConversion
 {

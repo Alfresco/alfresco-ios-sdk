@@ -7,23 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CMISAtomPubExtensionElementParser.h"
 #import "CMISAllowableActions.h"
+#import "CMISAtomPubExtensionDataParserBase.h"
 
 @class CMISAllowableActionsParser;
 
 @protocol CMISAllowableActionsParserDelegate <NSObject>
-
 @optional
 - (void)allowableActionsParser:(CMISAllowableActionsParser *)parser didFinishParsingAllowableActions:(CMISAllowableActions *)allowableActions;
 
 @end
 
 
-@interface CMISAllowableActionsParser : NSObject <NSXMLParserDelegate, CMISAtomPubExtensionElementParserDelegate>
+@interface CMISAllowableActionsParser : CMISAtomPubExtensionDataParserBase <NSXMLParserDelegate>
 
-@property (nonatomic, strong, readonly) CMISAllowableActions *allowableActions;
-
+@property (nonatomic, strong) CMISAllowableActions *allowableActions;
+// Designated Initializer
 - (id)initWithData:(NSData*)atomData;
 - (BOOL)parseAndReturnError:(NSError **)error;
 

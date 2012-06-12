@@ -48,7 +48,7 @@
 - (CMISObject *)updateProperties:(NSDictionary *)properties error:(NSError **)error;
 
 /**
- * Returns the extensions for the given level as an array of CMISExtensionElements.
+ * Returns the extensions for the given level as an array of CMISExtensionElement
  */
 - (NSArray *)extensionsForExtensionLevel:(CMISExtensionLevel)extensionLevel;
 

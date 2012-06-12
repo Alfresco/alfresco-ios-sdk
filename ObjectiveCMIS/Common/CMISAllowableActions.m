@@ -12,22 +12,28 @@
 #define INT_OBJ(x) [NSNumber numberWithInt:x]
 
 @interface CMISAllowableActions ()
-@property (nonatomic, readwrite) NSSet *allowableActionsSet;
+
+@property (nonatomic, strong, readwrite) NSSet *allowableActionsSet;
+
 @end
+
 
 @implementation CMISAllowableActions
 @synthesize allowableActionsSet = _allowableActionsSet;
 
-- (id)initWithAllowableActionsDictionary:(NSDictionary *)allowableActionsDict
+- (id)init
 {
     self = [super init];
+
+    return self;
+}
+
+- (id)initWithAllowableActionsDictionary:(NSDictionary *)allowableActionsDict
+{
+    self = [self init];
     if (self)
     {   
-        NSSet *filteredSet = [allowableActionsDict keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *aMethod) 
-                              {
-                                  return [obj isEqualToString:@"true"];
-                              }];
-        [self setAllowableActionsSet:filteredSet];
+        [self setAllowableActionsWithDictionary:allowableActionsDict];
     }
     return self;
 }
@@ -55,6 +61,15 @@
         [allowableActionTypesSet addObject:INT_OBJ(idx)];
     }
     return [allowableActionTypesSet copy];
+}
+
+- (void)setAllowableActionsWithDictionary:(NSDictionary *)allowableActionsDict
+{
+    NSSet *filteredSet = [allowableActionsDict keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *aMethod) 
+                          {
+                              return [obj isEqualToString:@"true"];
+                          }];
+    [self setAllowableActionsSet:filteredSet];
 }
 
 
