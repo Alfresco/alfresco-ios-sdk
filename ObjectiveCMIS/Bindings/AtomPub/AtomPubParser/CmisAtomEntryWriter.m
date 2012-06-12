@@ -157,13 +157,16 @@
 {
     if (self.internalFilePath == nil)
     {
+        // Store the file in the temporary folder
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH-mm-ss-Z'"];
-        self.internalFilePath = [NSString stringWithFormat:@"%@-%@",
-                [self.cmisProperties propertyValueForId:kCMISPropertyName], [formatter stringFromDate:[NSDate date]]];
+        self.internalFilePath = [NSString stringWithFormat:@"%@/%@-%@",
+                        NSTemporaryDirectory(),
+                        [self.cmisProperties propertyValueForId:kCMISPropertyName],
+                        [formatter stringFromDate:[NSDate date]]];
 
         BOOL fileCreated = [[NSFileManager defaultManager] createFileAtPath:self.internalFilePath
-                                                                   contents:[string dataUsingEncoding:NSUTF8StringEncoding]
+                                          contents:[string dataUsingEncoding:NSUTF8StringEncoding]
                 attributes:nil];
         if (!fileCreated)
         {

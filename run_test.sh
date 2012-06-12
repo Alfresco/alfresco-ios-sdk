@@ -1,1 +1,1 @@
-xcodebuild -sdk iphonesimulator -configuration Debug -scheme ObjectiveCMISTests build
+xcodebuild -sdk iphonesimulator -configuration Debug -scheme ObjectiveCMISTests clean build
