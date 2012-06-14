@@ -8,6 +8,8 @@
 
 #import "CMISFileableObject.h"
 
+@class CMISOperationContext;
+
 @interface CMISDocument : CMISFileableObject <NSURLConnectionDataDelegate>
 
 @property (nonatomic, strong, readonly) NSString *contentStreamId;
@@ -27,9 +29,22 @@
 - (CMISCollection *)retrieveAllVersionsAndReturnError:(NSError **)error;
 
 /**
+* Retrieves a collection of all versions of this document.
+*/
+- (CMISCollection *)retrieveAllVersionsWithOperationContext:(CMISOperationContext *)operationContext andReturnError:(NSError **)error;
+
+/**
 * Retrieves the lastest version of this document.
 */
-- (CMISDocument *)retrieveObjectOfLatestVersionAndReturnError:(NSError **)error;
+- (CMISDocument *)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major
+                                                 andReturnError:(NSError **)error;
+
+/**
+* Retrieves the lastest version of this document.
+*/
+- (CMISDocument *)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major
+                                           withOperationContext:(CMISOperationContext *)operationContext
+                                                 andReturnError:(NSError **)error;
 
 /**
 * Downloads the content to a local file and returns the filepath.

@@ -13,6 +13,7 @@
 #import "CMISPagedResult.h"
 #import "CMISOperationContext.h"
 #import "CMISObjectList.h"
+#import "CMISSession.h"
 
 @interface CMISFolder ()
 
@@ -38,6 +39,27 @@
 - (CMISPagedResult *)retrieveChildrenAndReturnError:(NSError **)error
 {
     return [self retrieveChildrenWithOperationContext:[CMISOperationContext defaultOperationContext] andReturnError:error];
+}
+
+- (BOOL)isRootFolder
+{
+    return [self.identifier isEqualToString:self.session.repositoryInfo.rootFolderId];
+}
+
+- (CMISFolder *)retrieveFolderParentAndReturnError:(NSError **)error;
+{
+   if ([self isRootFolder])
+   {
+       return nil;
+   }
+
+   NSArray *parents = [self retrieveParentsAndReturnError:error];
+   if (parents == nil || parents.count == 0)
+   {
+       return nil;
+   }
+
+    return [parents objectAtIndex:0];
 }
 
 - (CMISPagedResult *)retrieveChildrenWithOperationContext:(CMISOperationContext *)operationContext andReturnError:(NSError **)error
@@ -120,9 +142,13 @@
                                            completionBlock:completionBlock failureBlock:failureBlock progressBlock:progressBlock];
 }
 
-- (NSArray *)deleteTreeAndReturnError:(NSError **)error
+- (NSArray *)deleteTreeWithDeleteAllVersions:(BOOL)deleteAllversions
+                           withUnfileObjects:(CMISUnfileObject)unfileObjects
+                       withContinueOnFailure:(BOOL)continueOnFailure
+                              andReturnError:(NSError **)error;
 {
-    return [self.binding.objectService deleteTree:self.identifier error:error];
+    return [self.binding.objectService deleteTree:self.identifier allVersion:deleteAllversions
+                                    unfileObjects:unfileObjects continueOnFailure:continueOnFailure error:error];
 }
 
 

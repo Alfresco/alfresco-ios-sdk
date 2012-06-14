@@ -38,7 +38,7 @@
     downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterFilter withValue:filter toUrlString:downLink];
     downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterOrderBy withValue:orderBy toUrlString:downLink];
     downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludeAllowableActions withValue:(includeAllowableActions ? @"true" : @"false") toUrlString:downLink];
-    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludeRelationships withValue:[CMISEnums stringFrom:includeRelationship] toUrlString:downLink];
+    downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludeRelationships withValue:[CMISEnums stringForIncludeRelationShip:includeRelationship] toUrlString:downLink];
     downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterRenditionFilter withValue:renditionFilter toUrlString:downLink];
     downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludePathSegment withValue:(includePathSegment ? @"true" : @"false") toUrlString:downLink];
     downLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterMaxItems withValue:[maxItems stringValue] toUrlString:downLink];
@@ -70,7 +70,13 @@
     }
 }
 
-- (NSArray *)retrieveParentsForObject:(NSString *)objectId error:(NSError **)error
+- (NSArray *)retrieveParentsForObject:(NSString *)objectId
+                           withFilter:(NSString *)filter
+             withIncludeRelationships:(CMISIncludeRelationship)includeRelationship
+                  withRenditionFilter:(NSString *)renditionFilter
+          withIncludeAllowableActions:(BOOL)includeAllowableActions
+       withIncludeRelativePathSegment:(BOOL)includeRelativePathSegment
+                                   error:(NSError * *)error;
 {
     // Get up link
     NSError *internalError = nil;
@@ -80,6 +86,21 @@
         log(@"Failing because the NString upLink is nil");
         return [NSArray array];
     }
+
+    // Add optional parameters
+    if (filter != nil)
+    {
+        upLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterFilter withValue:filter toUrlString:upLink];
+    }
+    upLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludeAllowableActions withValue:(includeAllowableActions ? @"true" : @"false") toUrlString:upLink];
+    upLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludeRelationships withValue:[CMISEnums stringForIncludeRelationShip:includeRelationship] toUrlString:upLink];
+
+    if (renditionFilter != nil)
+    {
+        upLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterRenditionFilter withValue:renditionFilter toUrlString:upLink];
+    }
+
+    upLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterRelativePathSegment withValue:(includeRelativePathSegment ? @"true" : @"false") toUrlString:upLink];
     
     NSData *response = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:upLink] withSession:self.bindingSession error:&internalError].data;
     if (internalError) {

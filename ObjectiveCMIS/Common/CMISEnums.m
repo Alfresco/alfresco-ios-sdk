@@ -10,7 +10,7 @@
 
 @implementation CMISEnums
 
-+ (NSString *)stringFrom:(CMISIncludeRelationship)includeRelationship
++ (NSString *)stringForIncludeRelationShip:(CMISIncludeRelationship)includeRelationship
 {
     NSString *includeRelationShipString = nil;
     switch (includeRelationship)
@@ -32,6 +32,27 @@
             break;
     }
     return includeRelationShipString;
+}
+
++ (NSString *)stringForUnfileObject:(CMISUnfileObject)unfileObject;
+{
+    NSString *unfileObjectString = nil;
+    switch (unfileObject)
+    {
+        case CMISUnfile:
+            unfileObjectString = @"unfile";
+            break;
+        case  CMISDeleteSingleFiled:
+            unfileObjectString = @"deletesinglefiled";
+            break;
+        case CMISDelete:
+            unfileObjectString = @"delete";
+            break;
+        default:
+            log(@"Inavlid enum type %d", unfileObject);
+            break;
+    }
+    return unfileObjectString;
 }
 
 @end

@@ -8,12 +8,24 @@
 
 #import "CMISFileableObject.h"
 #import "CMISObjectConverter.h"
+#import "CMISOperationContext.h"
 
 @implementation CMISFileableObject
 
 - (NSArray *)retrieveParentsAndReturnError:(NSError **)error
 {
-    NSArray *parentObjectDataArray = [self.binding.navigationService retrieveParentsForObject:self.identifier error:error];
+    return [self retrieveParentsWithOperationContext:[CMISOperationContext defaultOperationContext] andReturnError:error];
+}
+
+- (NSArray *)retrieveParentsWithOperationContext:(CMISOperationContext *)operationContext andReturnError:(NSError **)error
+{
+    NSArray *parentObjectDataArray = [self.binding.navigationService retrieveParentsForObject:self.identifier
+                         withFilter:operationContext.filterString
+           withIncludeRelationships:operationContext.includeRelationShips
+                withRenditionFilter:operationContext.renditionFilterString
+        withIncludeAllowableActions:operationContext.isIncludeAllowableActions
+     withIncludeRelativePathSegment:operationContext.isIncludePathSegments
+                              error:error];
 
     NSMutableArray *parentFolders = [NSMutableArray array];
     CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];

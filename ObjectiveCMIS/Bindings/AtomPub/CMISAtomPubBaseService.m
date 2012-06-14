@@ -139,19 +139,20 @@
 
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error
 {
-    return [self retrieveObjectInternal:objectId withFilter:@"" andIncludeRelationShips:CMISIncludeRelationshipNone
+    return [self retrieveObjectInternal:objectId withReturnVersion:LATEST withFilter:@"" andIncludeRelationShips:CMISIncludeRelationshipNone
                     andIncludePolicyIds:NO andRenditionFilder:nil andIncludeACL:NO
                     andIncludeAllowableActions:YES error:error];
 }
 
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId
-           withFilter:(NSString *)filter
-           andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
-           andIncludePolicyIds:(BOOL)includePolicyIds
-           andRenditionFilder:(NSString *)renditionFilter
-           andIncludeACL:(BOOL)includeACL
-           andIncludeAllowableActions:(BOOL)includeAllowableActions
-           error:(NSError * *)error
+                         withReturnVersion:(CMISReturnVersion)returnVersion
+                                withFilter:(NSString *)filter
+                   andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
+                       andIncludePolicyIds:(BOOL)includePolicyIds
+                        andRenditionFilder:(NSString *)renditionFilter
+                             andIncludeACL:(BOOL)includeACL
+                andIncludeAllowableActions:(BOOL)includeAllowableActions
+                                     error:(NSError **)error
 {
     CMISObjectByIdUriBuilder *objectByIdUriBuilder = [self retrieveFromCache:kCMISBindingSessionKeyObjectByIdUriBuilder error:error];
     objectByIdUriBuilder.objectId = objectId;
@@ -161,6 +162,7 @@
     objectByIdUriBuilder.includePolicyIds = includePolicyIds;
     objectByIdUriBuilder.includeRelationships = includeRelationship;
     objectByIdUriBuilder.renditionFilter = renditionFilter;
+    objectByIdUriBuilder.returnVersion = returnVersion;
     NSURL *objectIdUrl = [objectByIdUriBuilder buildUrl];
 
     // Execute actual call

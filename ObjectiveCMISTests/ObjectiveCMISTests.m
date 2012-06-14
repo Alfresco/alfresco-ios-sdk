@@ -479,7 +479,7 @@
     CMISFolder *newFolder = (CMISFolder *) [self.session retrieveObject:newFolderObjectId error:&error];
     STAssertNil(error, @"Error while retrieving newly created folder: %@", [error description]);
     STAssertNotNil(newFolder, @"New folder should not be nil");
-    [newFolder deleteTreeAndReturnError:&error];
+    [newFolder deleteTreeWithDeleteAllVersions:YES withUnfileObjects:CMISDelete withContinueOnFailure:YES andReturnError:&error];
     STAssertNil(error, @"Error while deleting newly created folder: %@", [error description]);
 }
 
@@ -527,7 +527,7 @@
     CMISDocument *document = [self retrieveVersionedTestDocument];
 
     // Check if the document retrieved is the latest version
-    CMISDocument *latestVersionOfDocument = [document retrieveObjectOfLatestVersionAndReturnError:&error];
+    CMISDocument *latestVersionOfDocument = [document retrieveObjectOfLatestVersionWithMajorVersion:NO andReturnError:&error];
     STAssertNil(error, @"Error while retrieving latest version of document");
     STAssertTrue([document.versionLabel isEqualToString:latestVersionOfDocument.versionLabel], @"Version label should match");
     STAssertTrue([document.creationDate isEqual:latestVersionOfDocument.creationDate], @"Creation dates should be equal");
@@ -541,7 +541,7 @@
     STAssertTrue([document.creationDate isEqualToDate:olderVersionOfDocument.creationDate], @"Creation dates should match");
     STAssertFalse([document.lastModificationDate isEqual:olderVersionOfDocument.lastModificationDate], @"Creation dates should NOT match");
 
-    latestVersionOfDocument = [olderVersionOfDocument retrieveObjectOfLatestVersionAndReturnError:&error];
+    latestVersionOfDocument = [olderVersionOfDocument retrieveObjectOfLatestVersionWithMajorVersion:NO andReturnError:&error];
     STAssertNil(error, @"Error while retrieving latest version of document");
     STAssertNotNil(latestVersionOfDocument, @"Latest version should not be nil");
     STAssertTrue([document.name isEqualToString:latestVersionOfDocument.name], @"Name should match: expected %@ but was %@", document.name, latestVersionOfDocument.name);
@@ -827,7 +827,7 @@
 
     // Verify content of document
     NSString *tempDownloadFilePath = @"temp_download_file.txt";
-    CMISDocument *latestVersionOfDocument = [originalDocument retrieveObjectOfLatestVersionAndReturnError:&error]; // some repos will up the version when uploading new content
+    CMISDocument *latestVersionOfDocument = [originalDocument retrieveObjectOfLatestVersionWithMajorVersion:NO andReturnError:&error]; // some repos will up the version when uploading new content
     [latestVersionOfDocument downloadContentToFile:tempDownloadFilePath completionBlock:^{
         self.callbackCompleted = YES;
     } failureBlock:^(NSError *failureError) {
@@ -861,7 +861,7 @@
     STAssertNil(error, @"Got error while deleting content of document: %@", [error description]);
 
     // Get latest version and verify content length
-    CMISDocument *latestVersion = [originalDocument retrieveObjectOfLatestVersionAndReturnError:&error];
+    CMISDocument *latestVersion = [originalDocument retrieveObjectOfLatestVersionWithMajorVersion:NO andReturnError:&error];
     STAssertNil(error, @"Got error while getting latest version of documet: %@", [error description]);
     STAssertTrue(latestVersion.contentStreamLength == 0, @"Expected zero content length for document with no content, but was %d", latestVersion.contentStreamLength);
 
@@ -959,7 +959,7 @@
     STAssertEqualObjects(renamedFolder.name, @"temp_test_folder_renamed", @"Folder was not renamed, name is %@", renamedFolder.name);
 
     // Delete test folder
-    [renamedFolder deleteTreeAndReturnError:&error];
+    [renamedFolder deleteTreeWithDeleteAllVersions:YES withUnfileObjects:CMISDelete withContinueOnFailure:YES andReturnError:&error];
     STAssertNil(error, @"Error while deleting newly created folder: %@", [error description]);
 }
 

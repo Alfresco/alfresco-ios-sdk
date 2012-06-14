@@ -26,6 +26,16 @@
 - (CMISPagedResult *)retrieveChildrenAndReturnError:(NSError * *)error;
 
 /**
+ * Checks if this folder is the root folder.
+ */
+- (BOOL)isRootFolder;
+
+/**
+ * Gets the parent folder object.
+ */
+- (CMISFolder *)retrieveFolderParentAndReturnError:(NSError **)error;
+
+/**
  * Retrieves the children of this folder as a paged result using the provided operation context.
  *
  * The returned objects will be instances of CMISObject.
@@ -40,7 +50,10 @@
                             failureBlock:(CMISErrorFailureBlock)failureBlock
                            progressBlock:(CMISProgressBlock)progressBlock;
 
-- (NSArray *)deleteTreeAndReturnError:(NSError * *)error;
+- (NSArray *)deleteTreeWithDeleteAllVersions:(BOOL)deleteAllversions
+                           withUnfileObjects:(CMISUnfileObject)unfileObjects
+                       withContinueOnFailure:(BOOL)continueOnFailure
+                              andReturnError:(NSError **)error;
 
 @end
 

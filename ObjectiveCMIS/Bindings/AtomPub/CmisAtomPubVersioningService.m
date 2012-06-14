@@ -12,45 +12,28 @@
 #import "CMISAtomFeedParser.h"
 #import "CMISObjectConverter.h"
 #import "CMISErrors.h"
+#import "CMISURLUtil.h"
 
 @implementation CMISAtomPubVersioningService
 
-- (CMISObjectData *)retrieveObjectOfLatestVersion:(NSString *)objectId error:(NSError **)error
+- (CMISObjectData *)retrieveObjectOfLatestVersion:(NSString *)objectId
+                                            major:(BOOL)major
+                                           filter:(NSString *)filter
+                             includeRelationShips:(CMISIncludeRelationship)includeRelationships
+                                 includePolicyIds:(BOOL)includePolicyIds
+                                  renditionFilter:(NSString *)renditionFilter
+                                       includeACL:(BOOL)includeACL
+                          includeAllowableActions:(BOOL)includeAllowableActions
+                                            error:(NSError **)error;
 {
-    // Validate params
-    if (!objectId)
-    {
-        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound withDetailedDescription:nil];
-        log(@"Must provide an objectId when retrieving all versions");
-        return nil;
-    }
-
-    //retrieveFromCache is one of the few methods that declares CMIS errors inside
-    CMISObjectByIdUriBuilder *objectByIdUriBuilder = [self retrieveFromCache:kCMISBindingSessionKeyObjectByIdUriBuilder error:error];
-    if (error && error != NULL && *error != nil) {
-        return nil;
-    }
-    objectByIdUriBuilder.objectId = objectId;
-    objectByIdUriBuilder.returnVersion = LATEST;
-    NSURL *objectIdUrl = [objectByIdUriBuilder buildUrl];
-
-    NSError *internalError = nil;
-    NSData *data = [HttpUtil invokeGETSynchronous:objectIdUrl withSession:self.bindingSession error:&internalError].data;
-    if (internalError || data == nil) {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
-        return nil;
-    }
-
-    CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:data];
-    if (![parser parseAndReturnError:&internalError])
-    {
-        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeVersioning];
-        return nil;
-    }
-    return parser.objectData;
+    return [self retrieveObjectInternal:objectId withReturnVersion:(major ? LATEST_MAJOR : LATEST)
+                          withFilter:filter andIncludeRelationShips:includeRelationships
+                          andIncludePolicyIds:includePolicyIds andRenditionFilder:renditionFilter
+                          andIncludeACL:includeACL andIncludeAllowableActions:includeAllowableActions error:error];
 }
 
-- (NSArray *)retrieveAllVersions:(NSString *)objectId error:(NSError **)error
+- (NSArray *)retrieveAllVersions:(NSString *)objectId filter:(NSString *)filter
+         includeAllowableActions:(BOOL)includeAllowableActions error:(NSError * *)error;
 {
     // Validate params
     if (!objectId)
@@ -67,6 +50,13 @@
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
         return nil;
     }
+
+    if (filter != nil)
+    {
+        versionHistoryLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterFilter withValue:filter toUrlString:versionHistoryLink];
+    }
+    versionHistoryLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterIncludeAllowableActions
+                                withValue:(includeAllowableActions ? @"true" : @"false") toUrlString:versionHistoryLink];
 
     // Execute call
     NSData *data = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:versionHistoryLink] 

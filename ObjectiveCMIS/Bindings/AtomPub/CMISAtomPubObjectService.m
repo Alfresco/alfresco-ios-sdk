@@ -29,14 +29,17 @@
            error:(NSError * *)error
 {
     NSError *internalError = nil;
-    CMISObjectData *objData = [self retrieveObjectInternal:objectId withFilter:filter
+    CMISObjectData *objData = [self retrieveObjectInternal:objectId
+                                         withReturnVersion:LATEST
+                                                withFilter:filter
                                    andIncludeRelationShips:includeRelationship
-                                   andIncludePolicyIds:includePolicyIds
-                                   andRenditionFilder:renditionFilter
-                                   andIncludeACL:includeACL
-                                   andIncludeAllowableActions:includeAllowableActions
-                                   error:&internalError];
-    if (internalError) {
+                                       andIncludePolicyIds:includePolicyIds
+                                        andRenditionFilder:renditionFilter
+                                             andIncludeACL:includeACL
+                                andIncludeAllowableActions:includeAllowableActions
+                                                     error:&internalError];
+    if (internalError)
+    {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
     }
     return objData;
@@ -339,7 +342,11 @@
 }
 
 
-- (NSArray *)deleteTree:(NSString *)folderObjectId error:(NSError * *)error
+- (NSArray *)deleteTree:(NSString *)folderObjectId
+             allVersion:(BOOL)allVersions
+          unfileObjects:(CMISUnfileObject)unfileObjects
+      continueOnFailure:(BOOL)continueOnFailure
+                  error:(NSError * *)error;
 {
     // Validate params
     if (!folderObjectId)
@@ -354,6 +361,10 @@
         log(@"Could not retrieve %@ link", kCMISLinkRelationFolderTree);
         return nil;
     }
+
+    folderTreeLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterAllVersions withValue:(allVersions ? @"true" : @"false") toUrlString:folderTreeLink];
+    folderTreeLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterUnfileObjects withValue:[CMISEnums stringForUnfileObject:unfileObjects] toUrlString:folderTreeLink];
+    folderTreeLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterContinueOnFailure withValue:(continueOnFailure ? @"true" : @"false") toUrlString:folderTreeLink];
 
     NSError *internalError = nil;
     [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:folderTreeLink] withSession:self.bindingSession error:&internalError];
@@ -440,7 +451,7 @@
 {
     // Only fetching the bare minimum
     NSError *internalError = nil;
-    CMISObjectData *objectData = [self retrieveObjectInternal:objectId withFilter:kCMISPropertyObjectId
+    CMISObjectData *objectData = [self retrieveObjectInternal:objectId withReturnVersion:LATEST withFilter:kCMISPropertyObjectId
                 andIncludeRelationShips:CMISIncludeRelationshipNone andIncludePolicyIds:NO
                 andRenditionFilder:renditionFilter andIncludeACL:NO andIncludeAllowableActions:NO error:&internalError];
 

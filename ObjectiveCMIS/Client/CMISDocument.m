@@ -11,6 +11,8 @@
 #import "CMISHttpUtil.h"
 #import "CMISObjectConverter.h"
 #import "CMISStringInOutParameter.h"
+#import "CMISOperationContext.h"
+#import "CMISErrors.h"
 
 @interface CMISDocument()
 
@@ -60,13 +62,26 @@
 
 - (CMISCollection *)retrieveAllVersionsAndReturnError:(NSError **)error
 {
-    NSArray *entries = [self.binding.versioningService retrieveAllVersions:self.identifier error:error];
+    return [self retrieveAllVersionsWithOperationContext:[CMISOperationContext defaultOperationContext] andReturnError:error];
+}
 
-    if (*error == nil)
+- (CMISCollection *)retrieveAllVersionsWithOperationContext:(CMISOperationContext *)operationContext andReturnError:(NSError **)error
+{
+    NSError *internalError = nil;
+    NSArray *entries = [self.binding.versioningService retrieveAllVersions:self.identifier
+           filter:operationContext.filterString includeAllowableActions:operationContext.isIncludeAllowableActions error:&internalError];
+
+    if (internalError == nil)
     {
         CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
         return [converter convertObjects:entries];
     }
+    else
+    {
+        log(@"Error while retrieving all versions: %@", internalError.description);
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+    }
+
     return nil;
 }
 
@@ -91,9 +106,18 @@
                                       error:error];
 }
 
-- (CMISDocument *)retrieveObjectOfLatestVersionAndReturnError:(NSError **)error
+- (CMISDocument *)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major andReturnError:(NSError **)error;
 {
-    CMISObjectData *objectData = [self.binding.versioningService retrieveObjectOfLatestVersion:self.identifier error:error];
+    return [self retrieveObjectOfLatestVersionWithMajorVersion:major withOperationContext:[CMISOperationContext defaultOperationContext] andReturnError:error];
+}
+
+- (CMISDocument *)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major
+                          withOperationContext:(CMISOperationContext *)operationContext andReturnError:(NSError **)error
+{
+    CMISObjectData *objectData = [self.binding.versioningService retrieveObjectOfLatestVersion:self.identifier
+        major:major filter:operationContext.filterString includeRelationShips:operationContext.includeRelationShips
+        includePolicyIds:operationContext.isIncludePolicies renditionFilter:operationContext.renditionFilterString
+        includeACL:operationContext.isIncluseACLs includeAllowableActions:operationContext.isIncludeAllowableActions error:error];
 
     if (*error == nil)
     {
@@ -102,6 +126,7 @@
     }
     return nil;
 }
+
 
 - (void)downloadContentToFile:(NSString *)filePath completionBlock:(CMISVoidCompletionBlock)completionBlock
            failureBlock:(CMISErrorFailureBlock)failureBlock progressBlock:(CMISProgressBlock)progressBlock

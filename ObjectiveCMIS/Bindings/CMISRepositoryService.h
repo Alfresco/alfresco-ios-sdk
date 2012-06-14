@@ -16,12 +16,12 @@
 /**
 * Returns an array of CMISRepositoryInfo objects representing the repositories available at the endpoint.
 */
-- (NSArray *)arrayOfRepositoriesAndReturnError:(NSError **)outError;
+- (NSArray *)retrieveRepositoriesAndReturnError:(NSError **)outError;
 
 /**
 * Returns the repository info for the repository with the given id
 */
-- (CMISRepositoryInfo *)repositoryInfoForId:(NSString *)repositoryId error:(NSError **)outError;
+- (CMISRepositoryInfo *)retrieveRepositoryInfoForId:(NSString *)repositoryId error:(NSError **)outError;
 
 - (CMISTypeDefinition *)retrieveTypeDefinition:(NSString *)typeId error:(NSError **)outError;
 

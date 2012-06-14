@@ -48,7 +48,7 @@
     // TODO: validate session parameters?
     
     // return list of repositories
-    return [session.binding.repositoryService arrayOfRepositoriesAndReturnError:error];
+    return [session.binding.repositoryService retrieveRepositoriesAndReturnError:error];
 }
 
 - (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters
@@ -111,7 +111,7 @@
     if (self.sessionParameters.repositoryId != nil)
     {
         // get repository info
-        self.repositoryInfo = [self.binding.repositoryService repositoryInfoForId:self.sessionParameters.repositoryId error:error];
+        self.repositoryInfo = [self.binding.repositoryService retrieveRepositoryInfoForId:self.sessionParameters.repositoryId error:error];
         
         
         if (self.repositoryInfo == nil || (*error != nil))

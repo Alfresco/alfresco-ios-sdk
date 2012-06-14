@@ -63,6 +63,10 @@ extern NSString * const kCMISParameterIncludeRelationships;
 extern NSString * const kCMISParameterRenditionFilter;
 extern NSString * const kCMISParameterSkipCount;
 extern NSString * const kCMISParameterStreamId;
+extern NSString * const kCMISParameterAllVersions;
+extern NSString * const kCMISParameterContinueOnFailure;
+extern NSString * const kCMISParameterUnfileObjects;
+extern NSString * const kCMISParameterRelativePathSegment;
 
 
 // Namespaces

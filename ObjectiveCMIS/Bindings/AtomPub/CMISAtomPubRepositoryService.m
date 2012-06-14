@@ -20,7 +20,7 @@
 @end
 
 @interface CMISAtomPubRepositoryService (PrivateMethods)
-- (void)retrieveRepositoriesAndReturnError:(NSError **)error;
+- (void)internalRetrieveRepositoriesAndReturnError:(NSError **)error;
 @end
 
 
@@ -28,27 +28,27 @@
 
 @synthesize repositories = _repositories;
 
-- (NSArray *)arrayOfRepositoriesAndReturnError:(NSError **)outError
+- (NSArray *)retrieveRepositoriesAndReturnError:(NSError **)outError
 {
     NSError *internalError = nil;
-    [self retrieveRepositoriesAndReturnError:&internalError];
+    [self internalRetrieveRepositoriesAndReturnError:&internalError];
     if (internalError) {
         *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
     }
     return [self.repositories allValues];
 }
 
-- (CMISRepositoryInfo *)repositoryInfoForId:(NSString *)repositoryId error:(NSError **)outError
+- (CMISRepositoryInfo *)retrieveRepositoryInfoForId:(NSString *)repositoryId error:(NSError **)outError
 {
     NSError *internalError = nil;
-    [self retrieveRepositoriesAndReturnError:&internalError];
+    [self internalRetrieveRepositoriesAndReturnError:&internalError];
     if (internalError) {
         *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeUnauthorized];
     }
     return [self.repositories objectForKey:repositoryId];
 }
 
-- (void)retrieveRepositoriesAndReturnError:(NSError **)error
+- (void)internalRetrieveRepositoriesAndReturnError:(NSError **)error
 {
     self.repositories = [NSMutableDictionary dictionary];
     NSArray *cmisWorkSpaces = [self retrieveCMISWorkspacesAndReturnError:error];

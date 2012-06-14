@@ -23,13 +23,14 @@
 
 /** Full-blown object retrieval version */
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId
-           withFilter:(NSString *)filter
-           andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
-           andIncludePolicyIds:(BOOL)includePolicyIds
-           andRenditionFilder:(NSString *)renditionFilter
-           andIncludeACL:(BOOL)includeACL
-           andIncludeAllowableActions:(BOOL)includeAllowableActions
-           error:(NSError * *)error;
+                         withReturnVersion:(CMISReturnVersion)cmisReturnVersion
+                                withFilter:(NSString *)filter
+                   andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
+                       andIncludePolicyIds:(BOOL)includePolicyIds
+                        andRenditionFilder:(NSString *)renditionFilter
+                             andIncludeACL:(BOOL)includeACL
+                andIncludeAllowableActions:(BOOL)includeAllowableActions
+                                     error:(NSError **)error;
 
 - (CMISObjectData *)retrieveObjectByPathInternal:(NSString *)path
                                       withFilter:(NSString *)filter

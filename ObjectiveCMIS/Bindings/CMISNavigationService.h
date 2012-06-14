@@ -33,9 +33,13 @@
 * Returns a list of CMISObjectData objects
 *
 * TODO: OpenCMIS returns an ObjectParentData object .... is this necessary?
-*
-* TODO: add all params required by cmis spec
 */
-- (NSArray *)retrieveParentsForObject:(NSString *)objectId error:(NSError * *)error;
+- (NSArray *)retrieveParentsForObject:(NSString *)objectId
+                           withFilter:(NSString *)filter
+             withIncludeRelationships:(CMISIncludeRelationship)includeRelationship
+                  withRenditionFilter:(NSString *)renditionFilter
+          withIncludeAllowableActions:(BOOL)includeAllowableActions
+       withIncludeRelativePathSegment:(BOOL)includeRelativePathSegment
+                                   error:(NSError * *)error;
 
 @end

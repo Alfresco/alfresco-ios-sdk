@@ -115,8 +115,17 @@ typedef enum
 
 } CMISExtensionLevel;
 
+// UnfileObject
+typedef enum
+{
+    CMISUnfile,
+    CMISDeleteSingleFiled,
+    CMISDelete,  // default
+} CMISUnfileObject;
+
 @interface CMISEnums
 
-+ (NSString *)stringFrom:(CMISIncludeRelationship)includeRelationship;
++ (NSString *)stringForIncludeRelationShip:(CMISIncludeRelationship)includeRelationship;
++ (NSString *)stringForUnfileObject:(CMISUnfileObject)unfileObject;
 
 @end

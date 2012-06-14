@@ -63,6 +63,10 @@ NSString * const kCMISParameterIncludeRelationships = @"includeRelationships";
 NSString * const kCMISParameterRenditionFilter = @"renditionFilter";
 NSString * const kCMISParameterSkipCount = @"skipCount";
 NSString * const kCMISParameterStreamId = @"streamId";
+NSString * const kCMISParameterAllVersions = @"allVersions";
+NSString * const kCMISParameterContinueOnFailure= @"continueOnFailure";
+NSString * const kCMISParameterUnfileObjects = @"unfileObjects";
+NSString * const kCMISParameterRelativePathSegment = @"includeRelativePathSegment";
 
 // Namespaces
 NSString * const kCMISNamespaceCmis = @"http://docs.oasis-open.org/ns/cmis/core/200908/";

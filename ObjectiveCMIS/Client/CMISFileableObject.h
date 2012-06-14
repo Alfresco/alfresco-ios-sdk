@@ -8,6 +8,8 @@
 
 #import "CMISObject.h"
 
+@class CMISOperationContext;
+
 @interface CMISFileableObject : CMISObject
 
 /**
@@ -16,5 +18,13 @@
 * Will be nil for root folder and non-fileable objects.
 */
 - (NSArray *)retrieveParentsAndReturnError:(NSError * *)error;
+
+
+/**
+* Returns all the parents of this object as an array of CMISFolder objects.
+*
+* Will be nil for root folder and non-fileable objects.
+*/
+- (NSArray *)retrieveParentsWithOperationContext:(CMISOperationContext *)operationContext andReturnError:(NSError * *)error;
 
 @end

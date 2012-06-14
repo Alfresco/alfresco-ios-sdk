@@ -93,10 +93,11 @@
 */
 - (void)createDocumentFromFilePath:(NSString *)filePath
                       withMimeType:(NSString *)mimeType
-                          withProperties:(CMISProperties *)properties inFolder:(NSString *)folderObjectId
-                         completionBlock:(CMISStringCompletionBlock)completionBlock // The returned string is the object id of the created document
-                            failureBlock:(CMISErrorFailureBlock)failureBlock
-                           progressBlock:(CMISProgressBlock)progressBlock;
+                    withProperties:(CMISProperties *)properties
+                          inFolder:(NSString *)folderObjectId
+                   completionBlock:(CMISStringCompletionBlock)completionBlock // The returned string is the object id of the created document
+                      failureBlock:(CMISErrorFailureBlock)failureBlock
+                     progressBlock:(CMISProgressBlock)progressBlock;
 
 /**
 * Deletes the given object.
@@ -119,9 +120,12 @@
  *
  * Returns a list of objects which failed to be deleted.
  *
- * TODO: support for other parameters (see spec)
  */
-- (NSArray *)deleteTree:(NSString *)folderObjectId error:(NSError * *)error;
+- (NSArray *)deleteTree:(NSString *)folderObjectId
+             allVersion:(BOOL)allVersions
+          unfileObjects:(CMISUnfileObject)unfileObjects // default 'delete'
+      continueOnFailure:(BOOL)continueOnFailure // default 'NO'
+                  error:(NSError * *)error;
 
 /**
  * Updates the properties of the given object.
