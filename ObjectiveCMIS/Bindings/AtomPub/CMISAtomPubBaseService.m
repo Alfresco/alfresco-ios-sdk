@@ -119,6 +119,11 @@
     if ([self.bindingSession objectForKey:kCMISSessionKeyWorkspaces] == nil)
     {
         NSData *data = [HttpUtil invokeGETSynchronous:self.atomPubUrl withSession:self.bindingSession error:error].data;
+
+        // Uncomment to see the service document
+//        NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//        log(@"Service document: %@", dataString);
+
         // Parse the cmis service document
         if (data != nil && (!error || error == NULL || *error == nil))
         {
@@ -272,7 +277,7 @@
             if (link == nil)
             {
                 *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound
-                                     withDetailedDescription:[NSString stringWithFormat:@"Could not find link %@ for object with id %@", rel, objectId]];
+                                     withDetailedDescription:[NSString stringWithFormat:@"Could not find link '%@' for object with id %@", rel, objectId]];
             }
         }
     }

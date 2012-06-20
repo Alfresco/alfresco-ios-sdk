@@ -355,19 +355,36 @@
         log(@"Must provide a folder object id when deleting a folder tree");
     }
 
-    NSString *folderTreeLink = [self loadLinkForObjectId:folderObjectId andRelation:kCMISLinkRelationFolderTree error:error];
-    if (folderTreeLink == nil)
+    NSError *internalError = nil;
+    NSString *link = [self loadLinkForObjectId:folderObjectId andRelation:kCMISLinkRelationDown andType:kCMISMediaTypeDescendants error:&internalError];
+
+    if (internalError != nil)
     {
-        log(@"Could not retrieve %@ link", kCMISLinkRelationFolderTree);
+        log(@"Error while fetching %@ link : %@", kCMISLinkRelationDown, [internalError description]);
+        *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+    }
+
+    if (link == nil)
+    {
+        link = [self loadLinkForObjectId:folderObjectId andRelation:kCMISLinkRelationFolderTree error:&internalError];
+    }
+    if (internalError != nil)
+      {
+          log(@"Error while fetching %@ link : %@", kCMISLinkRelationFolderTree, [internalError description]);
+          *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
+      }
+
+    if (link == nil)
+    {
+        log(@"Could not retrieve %@ nor %@ link", kCMISLinkRelationDown, kCMISLinkRelationFolderTree);
         return nil;
     }
 
-    folderTreeLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterAllVersions withValue:(allVersions ? @"true" : @"false") toUrlString:folderTreeLink];
-    folderTreeLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterUnfileObjects withValue:[CMISEnums stringForUnfileObject:unfileObjects] toUrlString:folderTreeLink];
-    folderTreeLink = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterContinueOnFailure withValue:(continueOnFailure ? @"true" : @"false") toUrlString:folderTreeLink];
+    link = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterAllVersions withValue:(allVersions ? @"true" : @"false") toUrlString:link];
+    link = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterUnfileObjects withValue:[CMISEnums stringForUnfileObject:unfileObjects] toUrlString:link];
+    link = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterContinueOnFailure withValue:(continueOnFailure ? @"true" : @"false") toUrlString:link];
 
-    NSError *internalError = nil;
-    [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:folderTreeLink] withSession:self.bindingSession error:&internalError];
+    [HttpUtil invokeDELETESynchronous:[NSURL URLWithString:link] withSession:self.bindingSession error:&internalError];
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;//should we return nil or an empty array here?
@@ -468,7 +485,7 @@
 #pragma mark Helper methods
 
 - (CMISObjectData *)syncSendAtomEntryXmlToLink:(NSString *)link
-                            withHttpRequestMethod:(HTTPRequestMethod)httpRequestMethod
+                            withHttpRequestMethod:(CMISHttpRequestMethod)httpRequestMethod
                             withProperties:(CMISProperties *)properties
                             withContentFilePath:(NSString *)contentFilePath
                             withContentMimeType:(NSString *)contentMimeType
@@ -536,7 +553,7 @@
 }
 
 - (void)asyncSendAtomEntryXmlToLink:(NSString *)link
-                    withHttpRequestMethod:(HTTPRequestMethod)httpRequestMethod
+                    withHttpRequestMethod:(CMISHttpRequestMethod)httpRequestMethod
                     withProperties:(CMISProperties *)properties
                     withContentFilePath:(NSString *)contentFilePath
                     withContentMimeType:(NSString *)contentMimeType

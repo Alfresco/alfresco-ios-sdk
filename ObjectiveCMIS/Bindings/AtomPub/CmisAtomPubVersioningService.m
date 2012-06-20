@@ -61,6 +61,7 @@
     // Execute call
     NSData *data = [HttpUtil invokeGETSynchronous:[NSURL URLWithString:versionHistoryLink] 
                                       withSession:self.bindingSession error:&internalError].data;
+
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         return nil;

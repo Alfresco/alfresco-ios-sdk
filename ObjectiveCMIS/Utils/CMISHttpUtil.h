@@ -13,11 +13,12 @@ typedef enum {
     HTTP_POST,
     HTTP_PUT,
     HTTP_DELETE
-} HTTPRequestMethod;
+} CMISHttpRequestMethod;
 
 @interface HTTPResponse : NSObject
 
 @property NSInteger statusCode;
+@property (nonatomic, strong) NSString *statusCodeMessage;
 @property (nonatomic, strong) NSData *data;
 
 + (HTTPResponse *)responseUsingURLHTTPResponse:(NSHTTPURLResponse *)HTTPURLResponse andData:(NSData *)data;
@@ -28,13 +29,13 @@ typedef enum {
 
 // Synchronous calls
 
-+ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod
++ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
                         withSession:(CMISBindingSession *)session
                                body:(NSData *)body
                             headers:(NSDictionary *)additionalHeaders
                               error:(NSError **)outError;
 
-+ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod
++ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
                         withSession:(CMISBindingSession *)session
                          bodyStream:(NSInputStream *)bodyStream
                             headers:(NSDictionary *)additionalHeaders

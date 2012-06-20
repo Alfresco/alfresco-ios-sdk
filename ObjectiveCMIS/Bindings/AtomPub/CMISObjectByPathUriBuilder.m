@@ -4,6 +4,7 @@
 //
 
 #import "CMISObjectByPathUriBuilder.h"
+#import "CMISEnums.h"
 
 @interface CMISObjectByPathUriBuilder ()
 
@@ -39,7 +40,7 @@
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{filter}" withString:(self.filter != nil ? self.filter : @"")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeAllowableActions}" withString:(self.includeAllowableActions ? @"true" : @"false")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includePolicyIds}" withString:(self.includePolicyIds ? @"true" : @"false")];
-    urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeRelationships}" withString:(self.includeRelationships ? @"true" : @"false")];
+    urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeRelationships}" withString:[CMISEnums stringForIncludeRelationShip:self.includeRelationships]];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{includeACL}" withString:(self.includeACL ? @"true" : @"false")];
     urlString = [urlString stringByReplacingOccurrencesOfString:@"{renditionFilter}" withString:(self.renditionFilter != nil ? self.renditionFilter : @"")];
 

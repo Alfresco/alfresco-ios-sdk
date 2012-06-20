@@ -294,23 +294,23 @@
             self.currentRendition = nil;
         }
     }
-    else if ([namespaceURI isEqualToString:kCMISNamespaceCmisRestAtom])
+    else if ([namespaceURI isEqualToString:kCMISNamespaceAtom])
     {
-        if ([elementName isEqualToString:kCMISAtomEntryObject])
+        if ( [elementName isEqualToString:kCMISAtomEntry])
         {
             // set the properties on the objectData object
             self.objectData.properties = self.currentObjectProperties;
-            
+
             // set the link relations on the objectData object
             self.objectData.linkRelations = [[CMISLinkRelations alloc] initWithLinkRelationSet:[self.currentLinkRelations copy]];
 
             // set the renditions on the objectData object
             self.objectData.renditions = self.currentRenditions;
-            
+
             // set the objectData identifier
             CMISPropertyData *objectId = [self.currentObjectProperties.propertiesDictionary objectForKey:kCMISAtomEntryObjectId];
             self.objectData.identifier = [objectId firstValue];
-            
+
             // set the objectData baseType
             CMISPropertyData *baseTypeProperty = [self.currentObjectProperties.propertiesDictionary objectForKey:kCMISAtomEntryBaseTypeId];
             NSString *baseType = [baseTypeProperty firstValue];
@@ -322,30 +322,28 @@
             {
                 self.objectData.baseType = CMISBaseTypeFolder;
             }
-            
+
             // set the extensionData
             [self saveCurrentExtensionsAndPushPreviousExtensionData];
-            
+
             self.currentObjectProperties = nil;
-        }
-    }
-    else if ([namespaceURI isEqualToString:kCMISNamespaceAtom])
-    {
-        if (self.parentDelegate && [elementName isEqualToString:kCMISAtomEntry])
-        {
-            if ([self.parentDelegate respondsToSelector:@selector(cmisAtomEntryParser:didFinishParsingCMISObjectData:)])
+
+            if (self.parentDelegate)
             {
-                // Message the parent delegate the parsed ObjectData
-                [self.parentDelegate performSelector:@selector(cmisAtomEntryParser:didFinishParsingCMISObjectData:) 
-                                          withObject:self withObject:self.objectData];
+                if ([self.parentDelegate respondsToSelector:@selector(cmisAtomEntryParser:didFinishParsingCMISObjectData:)])
+                {
+                    // Message the parent delegate the parsed ObjectData
+                    [self.parentDelegate performSelector:@selector(cmisAtomEntryParser:didFinishParsingCMISObjectData:)
+                                              withObject:self withObject:self.objectData];
+                }
+
+                // Reseting our parent as the delegate since we're done
+                [parser setDelegate:self.parentDelegate];
+
+                // Message the parent that the element ended
+                [self.parentDelegate parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
+                self.parentDelegate = nil;
             }
-            
-            // Reseting our parent as the delegate since we're done
-            [parser setDelegate:self.parentDelegate];
-            
-            // Message the parent that the element ended
-            [self.parentDelegate parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
-            self.parentDelegate = nil;
         }
     }
     else if ([namespaceURI isEqualToString:kCMISNamespaceApp])

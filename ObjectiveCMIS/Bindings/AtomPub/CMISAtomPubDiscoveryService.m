@@ -57,6 +57,7 @@
                                  body:[[atomEntryWriter generateAtomEntryXML] dataUsingEncoding:NSUTF8StringEncoding]
                                  headers:[NSDictionary dictionaryWithObject:kCMISMediaTypeQuery forKey:@"Content-type"]
                                  error:&internalError].data;
+
     if (internalError == nil)
     {
         CMISAtomFeedParser *feedParser = [[CMISAtomFeedParser alloc] initWithData:responseData];

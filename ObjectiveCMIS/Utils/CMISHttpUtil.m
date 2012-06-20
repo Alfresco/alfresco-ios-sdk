@@ -13,7 +13,7 @@
 
 #pragma mark synchronous methods
 
-+ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod
++ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
                         withSession:(CMISBindingSession *)session body:(NSData *)body
                         headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
@@ -29,10 +29,13 @@
         [self addHeaders:additionalHeaders toURLRequest:request];
     }
 
-    return [self executeRequestSynchronous:request error:outError];
+    HTTPResponse *response = [self executeRequestSynchronous:request error:outError];
+    [self checkStatusCodeForResponse:response withHttpRequestMethod:httpRequestMethod error:outError];
+    return response;
 }
 
-+ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
+
++ (HTTPResponse *)invokeSynchronous:(NSURL *)url withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod withSession:(CMISBindingSession *)session bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders error:(NSError **)outError
 {
     NSMutableURLRequest *request = [self createRequestForUrl:url withHttpMethod:[self stringForHttpRequestMethod:httpRequestMethod] usingSession:session];
 
@@ -46,9 +49,51 @@
         [self addHeaders:additionalHeaders toURLRequest:request];
     }
 
-    return [self executeRequestSynchronous:request error:outError];
+    HTTPResponse *response = [self executeRequestSynchronous:request error:outError];
+    [self checkStatusCodeForResponse:response withHttpRequestMethod:httpRequestMethod error:outError];
+    return response;
 }
 
++ (void)checkStatusCodeForResponse:(HTTPResponse *)response withHttpRequestMethod:(CMISHttpRequestMethod)httpRequestMethod error:(NSError **)error
+{
+    if ( (httpRequestMethod == HTTP_GET && response.statusCode != 200)
+      || (httpRequestMethod == HTTP_POST && response.statusCode != 201)
+      || (httpRequestMethod == HTTP_DELETE && response.statusCode != 204)
+      || (httpRequestMethod == HTTP_PUT && ((response.statusCode < 200 || response.statusCode > 299))))
+    {
+        NSString *errorContent = [[NSString alloc] initWithData:response.data encoding:NSUTF8StringEncoding];
+        log(@"Error content: %@", errorContent);
+
+        switch (response.statusCode)
+        {
+            case 400:
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:response.statusCodeMessage];
+                break;
+            case 401:
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeUnauthorized withDetailedDescription:response.statusCodeMessage];
+                break;
+            case 403:
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodePermissionDenied withDetailedDescription:response.statusCodeMessage];
+                break;
+            case 404:
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeObjectNotFound withDetailedDescription:response.statusCodeMessage];
+                break;
+            case 405:
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeNotSupported withDetailedDescription:response.statusCodeMessage];
+                break;
+            case 407:
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeProxyAuthentication withDetailedDescription:response.statusCodeMessage];
+                break;
+            case 409:
+                // TODO: need more if-else here, see opencmis impl
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeConstraint withDetailedDescription:response.statusCodeMessage];
+                break;
+            default:
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeRuntime withDetailedDescription:response.statusCodeMessage];
+        }
+
+    }
+}
 
 + (HTTPResponse *)invokeGETSynchronous:(NSURL *)url withSession:(CMISBindingSession *)session error:(NSError **)outError
 {
@@ -94,7 +139,7 @@
 
 #pragma mark asynchronous methods
 
-+ (void)invokeAsynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod
++ (void)invokeAsynchronous:(NSURL *)url withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
                 withSession:(CMISBindingSession *)session
                 bodyStream:(NSInputStream *)bodyStream headers:(NSDictionary *)additionalHeaders
                 withDelegate:(id <NSURLConnectionDataDelegate>)delegate
@@ -119,7 +164,7 @@
     }];
 }
 
-+ (void)invokeAsynchronous:(NSURL *)url withHttpMethod:(HTTPRequestMethod)httpRequestMethod
++ (void)invokeAsynchronous:(NSURL *)url withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
                 withSession:(CMISBindingSession *)session
                 body:(NSData *)body headers:(NSDictionary *)additionalHeaders
                 withDelegate:(id <NSURLConnectionDataDelegate>)delegate
@@ -201,17 +246,12 @@
 {
     NSHTTPURLResponse *response = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:outError];
+
     if (data == nil || (outError && outError != NULL && *outError != nil) ) {
         log(@"Error while doing HTTP %@ %@ : %@", request.HTTPMethod, [request.URL absoluteString], [*outError description]);
     }
     else {
         log(@"HTTP response with code = %d, code String = %@",[response statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]]);
-    }
-
-    if (response.statusCode == 500)
-    {
-        NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        log(@"HTTP status code 500: %@", dataString);
     }
 
     // Uncomment to see the actual response from the server
@@ -221,7 +261,7 @@
     return [HTTPResponse responseUsingURLHTTPResponse:response andData:data];
 }
 
-+ (NSString *)stringForHttpRequestMethod:(HTTPRequestMethod)httpRequestMethod
++ (NSString *)stringForHttpRequestMethod:(CMISHttpRequestMethod)httpRequestMethod
 {
     switch (httpRequestMethod)
     {
@@ -249,12 +289,14 @@
 
 @synthesize statusCode = _statusCode;
 @synthesize data = _data;
+@synthesize statusCodeMessage = _statusCodeMessage;
 
-+ (HTTPResponse *)responseUsingURLHTTPResponse:(NSHTTPURLResponse *)HTTPURLResponse andData:(NSData *)data
++ (HTTPResponse *)responseUsingURLHTTPResponse:(NSHTTPURLResponse *)httpUrlResponse andData:(NSData *)data
 {
     HTTPResponse *httpResponse = [[HTTPResponse alloc] init];
-    httpResponse.statusCode = HTTPURLResponse.statusCode;
+    httpResponse.statusCode = httpUrlResponse.statusCode;
     httpResponse.data = data;
+    httpResponse.statusCodeMessage = [NSHTTPURLResponse localizedStringForStatusCode:[httpUrlResponse statusCode]];
     return httpResponse;
 }
 

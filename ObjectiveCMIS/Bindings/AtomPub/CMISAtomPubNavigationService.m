@@ -106,14 +106,14 @@
     if (internalError) {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeConnection];
         log(@"Failing because the invokeGETSynchronous returns an error");
-        return nil;
+        return [NSArray array];
     }
     CMISAtomFeedParser *parser = [[CMISAtomFeedParser alloc] initWithData:response];
     if (![parser parseAndReturnError:error])
     {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];  
         log(@"Failing because parsing the Atom Feed XML returns an error");
-        return nil;
+        return [NSArray array];
     }
     return parser.entries;    
 }
