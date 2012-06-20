@@ -8,11 +8,9 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "CMISSessionParameters.h"
+#import "CMISBaseTest.h"
 
-@interface ObjectiveCMISTests : SenTestCase
+@interface ObjectiveCMISTests : CMISBaseTest
 
-@property (nonatomic, strong) CMISSessionParameters *parameters;
-@property (nonatomic, strong) NSString *repositoryId;
-@property (nonatomic, strong) NSString *rootFolderId;
 
 @end
