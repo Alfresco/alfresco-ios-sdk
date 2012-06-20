@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/" xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/" xmlns:app="http://www.w3.org/2007/app">
+	<atom:author>
+		<atom:name>mjackson</atom:name>
+	</atom:author>
+	<atom:id>http://chemistry.apache.org/d29ya3NwYWNlOi8vU3BhY2VzU3RvcmUvMzg3NDU1ODUtODE2YS00MDNmLTgwMDUtMGE1NWMwYWVjODEz</atom:id>
+	<atom:title>Presentations</atom:title>
+	<app:edited>2011-02-15T21:18:38Z</app:edited>
+	<atom:updated>2011-02-15T21:18:38Z</atom:updated>
+	<cmisra:numItems>2</cmisra:numItems>
+	<atom:link rel="service" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2?repositoryId=949e03b5-86e6-449b-b706-86fc7d29fef2" type="application/atomsvc+xml"/>
+	<atom:link rel="self" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/children?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813" type="application/atom+xml;type=entry"/>
+	<atom:link rel="describedby" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/type?id=cmis%3Afolder" type="application/atom+xml;type=entry"/>
+	<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/allowableactions?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813" type="application/cmisallowableactions+xml"/>
+	<atom:link rel="down" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/children?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813" type="application/atom+xml;type=feed"/>
+	<atom:link rel="down" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/descendants?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813" type="application/cmistree+xml"/>
+	<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/foldertree?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813" type="application/cmistree+xml"/>
+	<atom:link rel="up" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/parents?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813" type="application/atom+xml;type=feed"/>
+	<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/acl?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813" type="application/cmisacl+xml"/>
+	<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/policies?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813" type="application/cmisacl+xml"/>
+	<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/relationships?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813" type="application/atom+xml;type=feed"/>
+	<app:collection href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/children?id=workspace%3A%2F%2FSpacesStore%2F38745585-816a-403f-8005-0a55c0aec813">
+		<atom:title type="text">Folder collection</atom:title>
+		<app:accept>application/cmisatom+xml</app:accept>
+	</app:collection>
+	<atom:entry>
+		<atom:author>
+			<atom:name>mjackson</atom:name>
+		</atom:author>
+		<atom:id>http://chemistry.apache.org/d29ya3NwYWNlOi8vU3BhY2VzU3RvcmUvNTUxNWQzZTEtYmIyYS00MmVkLTgzM2MtNTI4MDJhMzY3MDMzOzEuMA==</atom:id>
+		<atom:published>2011-03-03T10:31:30Z</atom:published>
+		<atom:title>Project Objectives.ppt</atom:title>
+		<app:edited>2011-03-03T10:31:31Z</app:edited>
+		<atom:updated>2011-03-03T10:31:31Z</atom:updated>
+		<atom:content src="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/content/Project%20Objectives.ppt?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/vnd.ms-powerpoint"/>
+		<cmisra:object xmlns:ns3="http://docs.oasis-open.org/ns/cmis/messaging/200908/">
+			<cmis:properties>
+				<cmis:propertyInteger queryName="cmis:contentStreamLength" displayName="Content Stream Length" localName="contentStreamLength" propertyDefinitionId="cmis:contentStreamLength">
+					<cmis:value>2117632</cmis:value>
+				</cmis:propertyInteger>
+				<cmis:propertyId queryName="cmis:objectTypeId" displayName="Object Type Id" localName="objectTypeId" propertyDefinitionId="cmis:objectTypeId">
+					<cmis:value>cmis:document</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString queryName="cmis:name" displayName="Name" localName="name" propertyDefinitionId="cmis:name">
+					<cmis:value>Project Objectives.ppt</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString queryName="cmis:contentStreamMimeType" displayName="Content Stream MIME Type" localName="contentStreamMimeType" propertyDefinitionId="cmis:contentStreamMimeType">
+					<cmis:value>application/vnd.ms-powerpoint</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDateTime queryName="cmis:creationDate" displayName="Creation Date" localName="creationDate" propertyDefinitionId="cmis:creationDate">
+					<cmis:value>2011-03-03T03:31:30.596-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString queryName="cmis:versionLabel" displayName="Version Label" localName="versionLabel" propertyDefinitionId="cmis:versionLabel">
+					<cmis:value>1.0</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyBoolean queryName="cmis:isLatestVersion" displayName="Is Latest Version" localName="isLatestVersion" propertyDefinitionId="cmis:isLatestVersion">
+					<cmis:value>true</cmis:value>
+				</cmis:propertyBoolean>
+				<cmis:propertyString queryName="cmis:lastModifiedBy" displayName="Last Modified By" localName="lastModifiedBy" propertyDefinitionId="cmis:lastModifiedBy">
+					<cmis:value>mjackson</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString queryName="cmis:createdBy" displayName="Created by" localName="createdBy" propertyDefinitionId="cmis:createdBy">
+					<cmis:value>mjackson</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId queryName="cmis:objectId" displayName="Object Id" localName="objectId" propertyDefinitionId="cmis:objectId">
+					<cmis:value>workspace://SpacesStore/5515d3e1-bb2a-42ed-833c-52802a367033;1.0</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyBoolean queryName="cmis:isMajorVersion" displayName="Is Major Version" localName="isMajorVersion" propertyDefinitionId="cmis:isMajorVersion">
+					<cmis:value>true</cmis:value>
+				</cmis:propertyBoolean>
+				<cmis:propertyId queryName="cmis:baseTypeId" displayName="Base Type Id" localName="baseTypeId" propertyDefinitionId="cmis:baseTypeId">
+					<cmis:value>cmis:document</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime queryName="cmis:lastModificationDate" displayName="Last Modified Date" localName="lastModificationDate" propertyDefinitionId="cmis:lastModificationDate">
+					<cmis:value>2011-03-03T03:31:31.651-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<aspects:aspects xmlns="http://www.alfresco.org" xmlns:aspects="http://www.alfresco.org">
+					<appliedAspects>P:cm:ownable</appliedAspects>
+					<appliedAspects>P:cm:titled</appliedAspects>
+					<appliedAspects>P:rn:renditioned</appliedAspects>
+					<appliedAspects>P:sys:localized</appliedAspects>
+				</aspects:aspects>
+			</cmis:properties>
+			<cmis:allowableActions>
+				<cmis:canDeleteObject>false</cmis:canDeleteObject>
+				<cmis:canUpdateProperties>false</cmis:canUpdateProperties>
+				<cmis:canGetFolderTree>false</cmis:canGetFolderTree>
+				<cmis:canGetProperties>true</cmis:canGetProperties>
+				<cmis:canGetObjectRelationships>true</cmis:canGetObjectRelationships>
+				<cmis:canGetObjectParents>true</cmis:canGetObjectParents>
+				<cmis:canGetFolderParent>false</cmis:canGetFolderParent>
+				<cmis:canGetDescendants>false</cmis:canGetDescendants>
+				<cmis:canMoveObject>false</cmis:canMoveObject>
+				<cmis:canDeleteContentStream>false</cmis:canDeleteContentStream>
+				<cmis:canCheckOut>false</cmis:canCheckOut>
+				<cmis:canCancelCheckOut>false</cmis:canCancelCheckOut>
+				<cmis:canCheckIn>false</cmis:canCheckIn>
+				<cmis:canSetContentStream>false</cmis:canSetContentStream>
+				<cmis:canGetAllVersions>true</cmis:canGetAllVersions>
+				<cmis:canAddObjectToFolder>true</cmis:canAddObjectToFolder>
+				<cmis:canRemoveObjectFromFolder>false</cmis:canRemoveObjectFromFolder>
+				<cmis:canGetContentStream>true</cmis:canGetContentStream>
+				<cmis:canApplyPolicy>false</cmis:canApplyPolicy>
+				<cmis:canGetAppliedPolicies>true</cmis:canGetAppliedPolicies>
+				<cmis:canRemovePolicy>false</cmis:canRemovePolicy>
+				<cmis:canGetChildren>false</cmis:canGetChildren>
+				<cmis:canCreateDocument>false</cmis:canCreateDocument>
+				<cmis:canCreateFolder>false</cmis:canCreateFolder>
+				<cmis:canCreateRelationship>true</cmis:canCreateRelationship>
+				<cmis:canDeleteTree>false</cmis:canDeleteTree>
+				<cmis:canGetRenditions>true</cmis:canGetRenditions>
+				<cmis:canGetACL>true</cmis:canGetACL>
+				<cmis:canApplyACL>false</cmis:canApplyACL>
+			</cmis:allowableActions>
+		</cmisra:object>
+		<atom:link rel="service" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2?repositoryId=949e03b5-86e6-449b-b706-86fc7d29fef2" type="application/atomsvc+xml"/>
+		<atom:link rel="self" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/entry?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/atom+xml;type=entry" cmisra:id="workspace://SpacesStore/5515d3e1-bb2a-42ed-833c-52802a367033;1.0"/>
+		<atom:link rel="enclosure" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/entry?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/atom+xml;type=entry"/>
+		<atom:link rel="edit" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/entry?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/atom+xml;type=entry"/>
+		<atom:link rel="describedby" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/type?id=cmis%3Adocument" type="application/atom+xml;type=entry"/>
+		<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/allowableactions?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/cmisallowableactions+xml"/>
+		<atom:link rel="up" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/parents?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/atom+xml;type=feed"/>
+		<atom:link rel="version-history" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/versions?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0&amp;versionSeries=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033" type="application/atom+xml;type=feed"/>
+		<atom:link rel="edit-media" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/content?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/vnd.ms-powerpoint"/>
+		<atom:link rel="alternate" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/content?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0&amp;streamId=workspace%3A%2F%2FSpacesStore%2Fe725ee47-62c6-4ae9-a761-9b69ba2835c5" type="image/png" cmisra:renditionKind="cmis:thumbnail" title="doclib" length="6540"/>
+		<atom:link rel="alternate" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/content?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0&amp;streamId=workspace%3A%2F%2FSpacesStore%2F41c25437-ce2e-47e1-8e3d-a2f3008e7456" type="application/x-shockwave-flash" cmisra:renditionKind="alf:webpreview" title="webpreview" length="672905"/>
+		<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/acl?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/cmisacl+xml"/>
+		<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/policies?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/atom+xml;type=feed"/>
+		<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/relationships?id=workspace%3A%2F%2FSpacesStore%2F5515d3e1-bb2a-42ed-833c-52802a367033%3B1.0" type="application/atom+xml;type=feed"/>
+	</atom:entry>
+	<atom:entry>
+		<atom:author>
+			<atom:name>mjackson</atom:name>
+		</atom:author>
+		<atom:id>http://chemistry.apache.org/d29ya3NwYWNlOi8vU3BhY2VzU3RvcmUvOTljYjI3ODktZjY3ZS00MWZmLWJlYTktNTA1YzEzOGE2YjIzOzEuMA==</atom:id>
+		<atom:published>2011-03-03T10:31:30Z</atom:published>
+		<atom:title>Project Overview.ppt</atom:title>
+		<app:edited>2011-03-03T10:31:31Z</app:edited>
+		<atom:updated>2011-03-03T10:31:31Z</atom:updated>
+		<atom:content src="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/content/Project%20Overview.ppt?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/vnd.ms-powerpoint"/>
+		<cmisra:object xmlns:ns3="http://docs.oasis-open.org/ns/cmis/messaging/200908/">
+			<cmis:properties>
+				<cmis:propertyInteger queryName="cmis:contentStreamLength" displayName="Content Stream Length" localName="contentStreamLength" propertyDefinitionId="cmis:contentStreamLength">
+					<cmis:value>2898432</cmis:value>
+				</cmis:propertyInteger>
+				<cmis:propertyId queryName="cmis:objectTypeId" displayName="Object Type Id" localName="objectTypeId" propertyDefinitionId="cmis:objectTypeId">
+					<cmis:value>cmis:document</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString queryName="cmis:name" displayName="Name" localName="name" propertyDefinitionId="cmis:name">
+					<cmis:value>Project Overview.ppt</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString queryName="cmis:contentStreamMimeType" displayName="Content Stream MIME Type" localName="contentStreamMimeType" propertyDefinitionId="cmis:contentStreamMimeType">
+					<cmis:value>application/vnd.ms-powerpoint</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDateTime queryName="cmis:creationDate" displayName="Creation Date" localName="creationDate" propertyDefinitionId="cmis:creationDate">
+					<cmis:value>2011-03-03T03:31:30.596-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString queryName="cmis:versionLabel" displayName="Version Label" localName="versionLabel" propertyDefinitionId="cmis:versionLabel">
+					<cmis:value>1.0</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyBoolean queryName="cmis:isLatestVersion" displayName="Is Latest Version" localName="isLatestVersion" propertyDefinitionId="cmis:isLatestVersion">
+					<cmis:value>true</cmis:value>
+				</cmis:propertyBoolean>
+				<cmis:propertyString queryName="cmis:lastModifiedBy" displayName="Last Modified By" localName="lastModifiedBy" propertyDefinitionId="cmis:lastModifiedBy">
+					<cmis:value>mjackson</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString queryName="cmis:createdBy" displayName="Created by" localName="createdBy" propertyDefinitionId="cmis:createdBy">
+					<cmis:value>mjackson</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId queryName="cmis:objectId" displayName="Object Id" localName="objectId" propertyDefinitionId="cmis:objectId">
+					<cmis:value>workspace://SpacesStore/99cb2789-f67e-41ff-bea9-505c138a6b23;1.0</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyBoolean queryName="cmis:isMajorVersion" displayName="Is Major Version" localName="isMajorVersion" propertyDefinitionId="cmis:isMajorVersion">
+					<cmis:value>true</cmis:value>
+				</cmis:propertyBoolean>
+				<cmis:propertyId queryName="cmis:baseTypeId" displayName="Base Type Id" localName="baseTypeId" propertyDefinitionId="cmis:baseTypeId">
+					<cmis:value>cmis:document</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime queryName="cmis:lastModificationDate" displayName="Last Modified Date" localName="lastModificationDate" propertyDefinitionId="cmis:lastModificationDate">
+					<cmis:value>2011-03-03T03:31:31.651-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<aspects:aspects xmlns="http://www.alfresco.org" xmlns:aspects="http://www.alfresco.org">
+					<appliedAspects>P:cm:ownable</appliedAspects>
+					<appliedAspects>P:cm:titled</appliedAspects>
+					<appliedAspects>P:rn:renditioned</appliedAspects>
+					<appliedAspects>P:sys:localized</appliedAspects>
+				</aspects:aspects>
+			</cmis:properties>
+			<cmis:allowableActions>
+				<cmis:canDeleteObject>false</cmis:canDeleteObject>
+				<cmis:canUpdateProperties>false</cmis:canUpdateProperties>
+				<cmis:canGetFolderTree>false</cmis:canGetFolderTree>
+				<cmis:canGetProperties>true</cmis:canGetProperties>
+				<cmis:canGetObjectRelationships>true</cmis:canGetObjectRelationships>
+				<cmis:canGetObjectParents>true</cmis:canGetObjectParents>
+				<cmis:canGetFolderParent>false</cmis:canGetFolderParent>
+				<cmis:canGetDescendants>false</cmis:canGetDescendants>
+				<cmis:canMoveObject>false</cmis:canMoveObject>
+				<cmis:canDeleteContentStream>false</cmis:canDeleteContentStream>
+				<cmis:canCheckOut>false</cmis:canCheckOut>
+				<cmis:canCancelCheckOut>false</cmis:canCancelCheckOut>
+				<cmis:canCheckIn>false</cmis:canCheckIn>
+				<cmis:canSetContentStream>false</cmis:canSetContentStream>
+				<cmis:canGetAllVersions>true</cmis:canGetAllVersions>
+				<cmis:canAddObjectToFolder>true</cmis:canAddObjectToFolder>
+				<cmis:canRemoveObjectFromFolder>false</cmis:canRemoveObjectFromFolder>
+				<cmis:canGetContentStream>true</cmis:canGetContentStream>
+				<cmis:canApplyPolicy>false</cmis:canApplyPolicy>
+				<cmis:canGetAppliedPolicies>true</cmis:canGetAppliedPolicies>
+				<cmis:canRemovePolicy>false</cmis:canRemovePolicy>
+				<cmis:canGetChildren>false</cmis:canGetChildren>
+				<cmis:canCreateDocument>false</cmis:canCreateDocument>
+				<cmis:canCreateFolder>false</cmis:canCreateFolder>
+				<cmis:canCreateRelationship>true</cmis:canCreateRelationship>
+				<cmis:canDeleteTree>false</cmis:canDeleteTree>
+				<cmis:canGetRenditions>true</cmis:canGetRenditions>
+				<cmis:canGetACL>true</cmis:canGetACL>
+				<cmis:canApplyACL>false</cmis:canApplyACL>
+			</cmis:allowableActions>
+		</cmisra:object>
+		<atom:link rel="service" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2?repositoryId=949e03b5-86e6-449b-b706-86fc7d29fef2" type="application/atomsvc+xml"/>
+		<atom:link rel="self" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/entry?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/atom+xml;type=entry" cmisra:id="workspace://SpacesStore/99cb2789-f67e-41ff-bea9-505c138a6b23;1.0"/>
+		<atom:link rel="enclosure" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/entry?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/atom+xml;type=entry"/>
+		<atom:link rel="edit" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/entry?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/atom+xml;type=entry"/>
+		<atom:link rel="describedby" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/type?id=cmis%3Adocument" type="application/atom+xml;type=entry"/>
+		<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/allowableactions?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/cmisallowableactions+xml"/>
+		<atom:link rel="up" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/parents?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/atom+xml;type=feed"/>
+		<atom:link rel="version-history" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/versions?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0&amp;versionSeries=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23" type="application/atom+xml;type=feed"/>
+		<atom:link rel="edit-media" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/content?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/vnd.ms-powerpoint"/>
+		<atom:link rel="alternate" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/content?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0&amp;streamId=workspace%3A%2F%2FSpacesStore%2F8024c190-0aa9-4d69-b5a3-cd1cfe9c7ecc" type="image/png" cmisra:renditionKind="cmis:thumbnail" title="doclib" length="6414"/>
+		<atom:link rel="alternate" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/content?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0&amp;streamId=workspace%3A%2F%2FSpacesStore%2F1cffebce-c758-4071-a6ae-1e5730015e81" type="application/x-shockwave-flash" cmisra:renditionKind="alf:webpreview" title="webpreview" length="976492"/>
+		<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/acl?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/cmisacl+xml"/>
+		<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/policies?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/atom+xml;type=feed"/>
+		<atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships" href="http://objectivecmis.example.com/alfresco/cmisatom/949e03b5-86e6-449b-b706-86fc7d29fef2/relationships?id=workspace%3A%2F%2FSpacesStore%2F99cb2789-f67e-41ff-bea9-505c138a6b23%3B1.0" type="application/atom+xml;type=feed"/>
+	</atom:entry>
+</atom:feed>

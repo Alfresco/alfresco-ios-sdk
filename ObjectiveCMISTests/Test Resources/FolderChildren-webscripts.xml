@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/" xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/" xmlns:alf="http://www.alfresco.org" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+    <author>
+        <name>mjackson</name>
+    </author>
+    <generator version="4.0.0 (800)">Alfresco (Enterprise)</generator>
+    <icon>http://objectivecmis.example.com/alfresco/images/logo/AlfrescoLogo16.ico</icon>
+    <id>urn:uuid:38745585-816a-403f-8005-0a55c0aec813-children</id>
+    <link rel="service" href="http://objectivecmis.example.com/alfresco/service/cmis" />
+    <link rel="self" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/38745585-816a-403f-8005-0a55c0aec813/children?includeAllowableActions=true" />
+    <link rel="via" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/38745585-816a-403f-8005-0a55c0aec813" />
+    <link rel="up" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/8f2105b4-daaf-4874-9e8a-2152569d109b/children" type="application/atom+xml;type=feed" />
+    <link rel="down" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/38745585-816a-403f-8005-0a55c0aec813/descendants" type="application/cmistree+xml" />
+    <link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/38745585-816a-403f-8005-0a55c0aec813/tree" type="application/atom+xml;type=feed" />
+    <link rel="firs" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/38745585-816a-403f-8005-0a55c0aec813/children?includeAllowableActions=true&amp;pageNo=1&amp;pageSize=-1&amp;guest=&amp;format=atomfeed" type="application/atom+xml;type=feed" />
+    <link rel="last" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/38745585-816a-403f-8005-0a55c0aec813/children?includeAllowableActions=true&amp;pageNo=1&amp;pageSize=-1&amp;guest=&amp;format=atomfeed" type="application/atom+xml;type=feed" />
+    <title>Presentations Children</title>
+    <updated>2011-02-15T14:18:38.144-07:00</updated>
+    <opensearch:totalResults>2</opensearch:totalResults>
+    <opensearch:startIndex>0</opensearch:startIndex>
+    <opensearch:itemsPerPage>-1</opensearch:itemsPerPage>
+    <cmisra:numItems>2</cmisra:numItems>
+    <entry>
+        <author>
+            <name>mjackson</name>
+        </author>
+        <content type="application/vnd.ms-powerpoint" src="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033/content.ppt" />
+        <id>urn:uuid:5515d3e1-bb2a-42ed-833c-52802a367033</id>
+        <link rel="self" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033" />
+        <link rel="enclosure" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033/content.ppt" type="application/vnd.ms-powerpoint" />
+        <link rel="edit" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033" />
+        <link rel="edit-media" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033/content.ppt" type="application/vnd.ms-powerpoint" />
+        <link rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033/allowableactions" />
+        <link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033/rels" />
+        <link rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033/pols" />
+        <link rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033/acl" />
+        <link rel="up" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033/parents" type="application/atom+xml;type=feed" />
+        <link rel="version-history" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033/versions" />
+        <link rel="current-version" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/5515d3e1-bb2a-42ed-833c-52802a367033?returnVersion=latest" />
+        <link rel="describedby" href="http://objectivecmis.example.com/alfresco/service/cmis/type/cmis:document" />
+        <link rel="service" href="http://objectivecmis.example.com/alfresco/service/cmis" />
+        <published>2011-03-03T03:31:30.596-07:00</published>
+        <summary>Project Objectives.ppt</summary>
+        <title>Project Objectives.ppt</title>
+        <updated>2011-03-03T03:31:31.651-07:00</updated>
+        <app:edited>2011-03-03T03:31:31.651-07:00</app:edited>
+        <alf:icon>http://objectivecmis.example.com/alfresco/images/filetypes/ppt.gif</alf:icon>
+        <cmisra:object>
+            <cmis:properties>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isLatestMajorVersion" displayName="Is Latest Major Version" queryName="cmis:isLatestMajorVersion">
+                    <cmis:value>false</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyInteger propertyDefinitionId="cmis:contentStreamLength" displayName="Content Stream Length" queryName="cmis:contentStreamLength">
+                    <cmis:value>2117632</cmis:value>
+                </cmis:propertyInteger>
+                <cmis:propertyId propertyDefinitionId="cmis:contentStreamId" displayName="Content Stream Id" queryName="cmis:contentStreamId">
+                    <cmis:value>store://2012/2/20/20/5/6af9f570-4119-44b4-af53-7151d378558d.bin</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyString propertyDefinitionId="cmis:versionSeriesCheckedOutBy" displayName="Version Series Checked Out By" queryName="cmis:versionSeriesCheckedOutBy" />
+                <cmis:propertyId propertyDefinitionId="cmis:objectTypeId" displayName="Object Type Id" queryName="cmis:objectTypeId">
+                    <cmis:value>cmis:document</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyId propertyDefinitionId="cmis:versionSeriesCheckedOutId" displayName="Version Series Checked Out Id" queryName="cmis:versionSeriesCheckedOutId" />
+                <cmis:propertyString propertyDefinitionId="cmis:name" displayName="Name" queryName="cmis:name">
+                    <cmis:value>Project Objectives.ppt</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyString propertyDefinitionId="cmis:contentStreamMimeType" displayName="Content Stream MIME Type" queryName="cmis:contentStreamMimeType">
+                    <cmis:value>application/vnd.ms-powerpoint</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyId propertyDefinitionId="cmis:versionSeriesId" displayName="Version series id" queryName="cmis:versionSeriesId">
+                    <cmis:value>workspace://SpacesStore/5515d3e1-bb2a-42ed-833c-52802a367033</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyDateTime propertyDefinitionId="cmis:creationDate" displayName="Creation Date" queryName="cmis:creationDate">
+                    <cmis:value>2011-03-03T03:31:30.596-07:00</cmis:value>
+                </cmis:propertyDateTime>
+                <cmis:propertyString propertyDefinitionId="cmis:changeToken" displayName="Change token" queryName="cmis:changeToken" />
+                <cmis:propertyString propertyDefinitionId="cmis:versionLabel" displayName="Version Label" queryName="cmis:versionLabel">
+                    <cmis:value>0.0</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isLatestVersion" displayName="Is Latest Version" queryName="cmis:isLatestVersion">
+                    <cmis:value>true</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isVersionSeriesCheckedOut" displayName="Is Version Series Checked Out" queryName="cmis:isVersionSeriesCheckedOut">
+                    <cmis:value>false</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy" displayName="Last Modified By" queryName="cmis:lastModifiedBy">
+                    <cmis:value>mjackson</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyString propertyDefinitionId="cmis:createdBy" displayName="Created by" queryName="cmis:createdBy">
+                    <cmis:value>mjackson</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyString propertyDefinitionId="cmis:checkinComment" displayName="Checkin Comment" queryName="cmis:checkinComment" />
+                <cmis:propertyId propertyDefinitionId="cmis:objectId" displayName="Object Id" queryName="cmis:objectId">
+                    <cmis:value>workspace://SpacesStore/5515d3e1-bb2a-42ed-833c-52802a367033</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isImmutable" displayName="Is Immutable" queryName="cmis:isImmutable">
+                    <cmis:value>false</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isMajorVersion" displayName="Is Major Version" queryName="cmis:isMajorVersion">
+                    <cmis:value>false</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyId propertyDefinitionId="cmis:baseTypeId" displayName="Base Type Id" queryName="cmis:baseTypeId">
+                    <cmis:value>cmis:document</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyId propertyDefinitionId="alfcmis:nodeRef" displayName="Alfresco Node Ref" queryName="alfcmis:nodeRef" />
+                <cmis:propertyString propertyDefinitionId="cmis:contentStreamFileName" displayName="Content Stream Filename" queryName="cmis:contentStreamFileName">
+                    <cmis:value>Project Objectives.ppt</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate" displayName="Last Modified Date" queryName="cmis:lastModificationDate">
+                    <cmis:value>2011-03-03T03:31:31.651-07:00</cmis:value>
+                </cmis:propertyDateTime>
+                <alf:aspects>
+                    <alf:appliedAspects>P:sys:localized</alf:appliedAspects>
+                    <alf:appliedAspects>P:cm:titled</alf:appliedAspects>
+                    <alf:appliedAspects>P:rn:renditioned</alf:appliedAspects>
+                    <alf:appliedAspects>P:cm:ownable</alf:appliedAspects>
+                    <alf:properties>
+                        <cmis:propertyString propertyDefinitionId="cm:description" displayName="Description" queryName="cm:description" />
+                        <cmis:propertyString propertyDefinitionId="cm:title" displayName="Title" queryName="cm:title">
+                            <cmis:value>Project Objectives.ppt</cmis:value>
+                        </cmis:propertyString>
+                        <cmis:propertyString propertyDefinitionId="cm:owner" displayName="Owner" queryName="cm:owner">
+                            <cmis:value>admin</cmis:value>
+                        </cmis:propertyString>
+                    </alf:properties>
+                </alf:aspects>
+            </cmis:properties>
+            <cmis:allowableActions>
+                <cmis:canDeleteObject>true</cmis:canDeleteObject>
+                <cmis:canUpdateProperties>true</cmis:canUpdateProperties>
+                <cmis:canGetProperties>true</cmis:canGetProperties>
+                <cmis:canGetObjectRelationships>true</cmis:canGetObjectRelationships>
+                <cmis:canGetObjectParents>true</cmis:canGetObjectParents>
+                <cmis:canMoveObject>true</cmis:canMoveObject>
+                <cmis:canDeleteContentStream>true</cmis:canDeleteContentStream>
+                <cmis:canCheckOut>true</cmis:canCheckOut>
+                <cmis:canCancelCheckOut>false</cmis:canCancelCheckOut>
+                <cmis:canCheckIn>false</cmis:canCheckIn>
+                <cmis:canSetContentStream>true</cmis:canSetContentStream>
+                <cmis:canGetAllVersions>true</cmis:canGetAllVersions>
+                <cmis:canAddObjectToFolder>true</cmis:canAddObjectToFolder>
+                <cmis:canRemoveObjectFromFolder>true</cmis:canRemoveObjectFromFolder>
+                <cmis:canGetContentStream>true</cmis:canGetContentStream>
+                <cmis:canApplyPolicy>false</cmis:canApplyPolicy>
+                <cmis:canGetAppliedPolicies>true</cmis:canGetAppliedPolicies>
+                <cmis:canRemovePolicy>false</cmis:canRemovePolicy>
+                <cmis:canCreateRelationship>true</cmis:canCreateRelationship>
+                <cmis:canGetRenditions>true</cmis:canGetRenditions>
+                <cmis:canGetACL>true</cmis:canGetACL>
+                <cmis:canApplyACL>true</cmis:canApplyACL>
+            </cmis:allowableActions>
+        </cmisra:object>
+        <cmisra:pathSegment>Project Objectives.ppt</cmisra:pathSegment>
+    </entry>
+    <entry>
+        <author>
+            <name>mjackson</name>
+        </author>
+        <content type="application/vnd.ms-powerpoint" src="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23/content.ppt" />
+        <id>urn:uuid:99cb2789-f67e-41ff-bea9-505c138a6b23</id>
+        <link rel="self" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23" />
+        <link rel="enclosure" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23/content.ppt" type="application/vnd.ms-powerpoint" />
+        <link rel="edit" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23" />
+        <link rel="edit-media" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23/content.ppt" type="application/vnd.ms-powerpoint" />
+        <link rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23/allowableactions" />
+        <link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23/rels" />
+        <link rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23/pols" />
+        <link rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23/acl" />
+        <link rel="up" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23/parents" type="application/atom+xml;type=feed" />
+        <link rel="version-history" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23/versions" />
+        <link rel="current-version" href="http://objectivecmis.example.com/alfresco/service/cmis/s/workspace:SpacesStore/i/99cb2789-f67e-41ff-bea9-505c138a6b23?returnVersion=latest" />
+        <link rel="describedby" href="http://objectivecmis.example.com/alfresco/service/cmis/type/cmis:document" />
+        <link rel="service" href="http://objectivecmis.example.com/alfresco/service/cmis" />
+        <published>2011-03-03T03:31:30.596-07:00</published>
+        <summary>Project Overview.ppt</summary>
+        <title>Project Overview.ppt</title>
+        <updated>2011-03-03T03:31:31.651-07:00</updated>
+        <app:edited>2011-03-03T03:31:31.651-07:00</app:edited>
+        <alf:icon>http://objectivecmis.example.com/alfresco/images/filetypes/ppt.gif</alf:icon>
+        <cmisra:object>
+            <cmis:properties>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isLatestMajorVersion" displayName="Is Latest Major Version" queryName="cmis:isLatestMajorVersion">
+                    <cmis:value>false</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyInteger propertyDefinitionId="cmis:contentStreamLength" displayName="Content Stream Length" queryName="cmis:contentStreamLength">
+                    <cmis:value>2898432</cmis:value>
+                </cmis:propertyInteger>
+                <cmis:propertyId propertyDefinitionId="cmis:contentStreamId" displayName="Content Stream Id" queryName="cmis:contentStreamId">
+                    <cmis:value>store://2012/2/20/20/5/26f25837-4902-4bb5-a6cb-cdca2b9ed44c.bin</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyString propertyDefinitionId="cmis:versionSeriesCheckedOutBy" displayName="Version Series Checked Out By" queryName="cmis:versionSeriesCheckedOutBy" />
+                <cmis:propertyId propertyDefinitionId="cmis:objectTypeId" displayName="Object Type Id" queryName="cmis:objectTypeId">
+                    <cmis:value>cmis:document</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyId propertyDefinitionId="cmis:versionSeriesCheckedOutId" displayName="Version Series Checked Out Id" queryName="cmis:versionSeriesCheckedOutId" />
+                <cmis:propertyString propertyDefinitionId="cmis:name" displayName="Name" queryName="cmis:name">
+                    <cmis:value>Project Overview.ppt</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyString propertyDefinitionId="cmis:contentStreamMimeType" displayName="Content Stream MIME Type" queryName="cmis:contentStreamMimeType">
+                    <cmis:value>application/vnd.ms-powerpoint</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyId propertyDefinitionId="cmis:versionSeriesId" displayName="Version series id" queryName="cmis:versionSeriesId">
+                    <cmis:value>workspace://SpacesStore/99cb2789-f67e-41ff-bea9-505c138a6b23</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyDateTime propertyDefinitionId="cmis:creationDate" displayName="Creation Date" queryName="cmis:creationDate">
+                    <cmis:value>2011-03-03T03:31:30.596-07:00</cmis:value>
+                </cmis:propertyDateTime>
+                <cmis:propertyString propertyDefinitionId="cmis:changeToken" displayName="Change token" queryName="cmis:changeToken" />
+                <cmis:propertyString propertyDefinitionId="cmis:versionLabel" displayName="Version Label" queryName="cmis:versionLabel">
+                    <cmis:value>0.0</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isLatestVersion" displayName="Is Latest Version" queryName="cmis:isLatestVersion">
+                    <cmis:value>true</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isVersionSeriesCheckedOut" displayName="Is Version Series Checked Out" queryName="cmis:isVersionSeriesCheckedOut">
+                    <cmis:value>false</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy" displayName="Last Modified By" queryName="cmis:lastModifiedBy">
+                    <cmis:value>mjackson</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyString propertyDefinitionId="cmis:createdBy" displayName="Created by" queryName="cmis:createdBy">
+                    <cmis:value>mjackson</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyString propertyDefinitionId="cmis:checkinComment" displayName="Checkin Comment" queryName="cmis:checkinComment" />
+                <cmis:propertyId propertyDefinitionId="cmis:objectId" displayName="Object Id" queryName="cmis:objectId">
+                    <cmis:value>workspace://SpacesStore/99cb2789-f67e-41ff-bea9-505c138a6b23</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isImmutable" displayName="Is Immutable" queryName="cmis:isImmutable">
+                    <cmis:value>false</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyBoolean propertyDefinitionId="cmis:isMajorVersion" displayName="Is Major Version" queryName="cmis:isMajorVersion">
+                    <cmis:value>false</cmis:value>
+                </cmis:propertyBoolean>
+                <cmis:propertyId propertyDefinitionId="cmis:baseTypeId" displayName="Base Type Id" queryName="cmis:baseTypeId">
+                    <cmis:value>cmis:document</cmis:value>
+                </cmis:propertyId>
+                <cmis:propertyId propertyDefinitionId="alfcmis:nodeRef" displayName="Alfresco Node Ref" queryName="alfcmis:nodeRef" />
+                <cmis:propertyString propertyDefinitionId="cmis:contentStreamFileName" displayName="Content Stream Filename" queryName="cmis:contentStreamFileName">
+                    <cmis:value>Project Overview.ppt</cmis:value>
+                </cmis:propertyString>
+                <cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate" displayName="Last Modified Date" queryName="cmis:lastModificationDate">
+                    <cmis:value>2011-03-03T03:31:31.651-07:00</cmis:value>
+                </cmis:propertyDateTime>
+                <alf:aspects>
+                    <alf:appliedAspects>P:sys:localized</alf:appliedAspects>
+                    <alf:appliedAspects>P:cm:titled</alf:appliedAspects>
+                    <alf:appliedAspects>P:rn:renditioned</alf:appliedAspects>
+                    <alf:appliedAspects>P:cm:ownable</alf:appliedAspects>
+                    <alf:properties>
+                        <cmis:propertyString propertyDefinitionId="cm:description" displayName="Description" queryName="cm:description" />
+                        <cmis:propertyString propertyDefinitionId="cm:title" displayName="Title" queryName="cm:title">
+                            <cmis:value>Project Overview.ppt</cmis:value>
+                        </cmis:propertyString>
+                        <cmis:propertyString propertyDefinitionId="cm:owner" displayName="Owner" queryName="cm:owner">
+                            <cmis:value>admin</cmis:value>
+                        </cmis:propertyString>
+                    </alf:properties>
+                </alf:aspects>
+            </cmis:properties>
+            <cmis:allowableActions>
+                <cmis:canDeleteObject>true</cmis:canDeleteObject>
+                <cmis:canUpdateProperties>true</cmis:canUpdateProperties>
+                <cmis:canGetProperties>true</cmis:canGetProperties>
+                <cmis:canGetObjectRelationships>true</cmis:canGetObjectRelationships>
+                <cmis:canGetObjectParents>true</cmis:canGetObjectParents>
+                <cmis:canMoveObject>true</cmis:canMoveObject>
+                <cmis:canDeleteContentStream>true</cmis:canDeleteContentStream>
+                <cmis:canCheckOut>true</cmis:canCheckOut>
+                <cmis:canCancelCheckOut>false</cmis:canCancelCheckOut>
+                <cmis:canCheckIn>false</cmis:canCheckIn>
+                <cmis:canSetContentStream>true</cmis:canSetContentStream>
+                <cmis:canGetAllVersions>true</cmis:canGetAllVersions>
+                <cmis:canAddObjectToFolder>true</cmis:canAddObjectToFolder>
+                <cmis:canRemoveObjectFromFolder>true</cmis:canRemoveObjectFromFolder>
+                <cmis:canGetContentStream>true</cmis:canGetContentStream>
+                <cmis:canApplyPolicy>false</cmis:canApplyPolicy>
+                <cmis:canGetAppliedPolicies>true</cmis:canGetAppliedPolicies>
+                <cmis:canRemovePolicy>false</cmis:canRemovePolicy>
+                <cmis:canCreateRelationship>true</cmis:canCreateRelationship>
+                <cmis:canGetRenditions>true</cmis:canGetRenditions>
+                <cmis:canGetACL>true</cmis:canGetACL>
+                <cmis:canApplyACL>true</cmis:canApplyACL>
+            </cmis:allowableActions>
+        </cmisra:object>
+        <cmisra:pathSegment>Project Overview.ppt</cmisra:pathSegment>
+    </entry>
+</feed>

@@ -51,6 +51,8 @@
         
         self.isParsingExtensionElement = NO;
         
+        [self pushNewCurrentExtensionData:self.currentRepositoryInfo];
+        
         [parser setDelegate:self];
     }
     return self;
@@ -79,14 +81,10 @@
               && ![namespaceURI isEqualToString:kCMISNamespaceAtom] && ![namespaceURI isEqualToString:kCMISNamespaceCmisRestAtom]) 
     {
         self.isParsingExtensionElement = YES;
-        [self pushNewCurrentExtensionData:self.currentRepositoryInfo];
         self.childParserDelegate = [CMISAtomPubExtensionElementParser extensionElementParserWithElementName:elementName namespaceUri:namespaceURI attributes:attributeDict parentDelegate:self parser:parser];
     }
     
     // TODO Parse ACL Capabilities
-    
-    // TODO Handle ExtensionData
-    
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 
@@ -171,10 +169,6 @@
     {
         if ([elementName isEqualToString:kCMISRestAtomRepositoryInfo] && self.parentDelegate)
         {
-//            if (self.currentExtensions)
-//            {
-//                self.currentRepositoryInfo.extensions = [self.currentExtensions copy];                
-//            }
             // Finished parsing Properties & its ExtensionData
             [self saveCurrentExtensionsAndPushPreviousExtensionData];
 

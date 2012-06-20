@@ -23,12 +23,20 @@ NSString * const kCMISTestRepoIdKey = @"ObjectiveCMISTestRepoId";
 
 - (NSString *)environmentStringForKey:(NSString *)envKey defaultValue:(NSString *)defaultValue
 {
+//    if (YES) return defaultValue;
+    
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSString *envValue = [bundle objectForInfoDictionaryKey:envKey];
     if ((nil == envValue) || ([envValue length] == 0))
     {
         return defaultValue;
     }
+    
+    if ([defaultValue hasSuffix:@"/service/api/cmis"]) 
+    {
+        //        envValue = @"http://127.0.0.1:8080/alfresco/cmisatom";
+    }
+    
     return envValue;
 }
 

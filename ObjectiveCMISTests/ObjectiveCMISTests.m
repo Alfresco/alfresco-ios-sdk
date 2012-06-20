@@ -31,6 +31,10 @@
 #import "CMISPagedResult.h"
 #import "CMISRenditionData.h"
 #import "CMISRendition.h"
+#import "CMISAllowableActionsParser.h"
+#import "CMISAtomFeedParser.h"
+#import "CMISServiceDocumentParser.h"
+#import "CMISWorkspace.h"
 
 
 @implementation ObjectiveCMISTests
@@ -1018,7 +1022,232 @@
     }];
 }
 
-//
+
+// Helper method used by the extension element parse tests
+- (void)checkExtensionElement:(CMISExtensionElement *)extElement withName:(NSString *)expectedName namespaceUri:(NSString *)expectedNamespaceUri 
+               attributeCount:(NSUInteger)expectedAttrCount childrenCount:(NSUInteger)expectedChildCount hasValue:(BOOL)hasValue
+{
+    NSLog(@"Checking Extension Element: %@", extElement);
+    STAssertTrue([extElement.name isEqualToString:expectedName], @"Expected extension element name '%@', but name is '%@'", expectedName, extElement.name);
+    STAssertTrue([extElement.namespaceUri isEqualToString:expectedNamespaceUri], @"Expected namespaceUri=%@, but actual namespaceUri=%@", expectedNamespaceUri, extElement.namespaceUri);
+    STAssertTrue(extElement.attributes.count == expectedAttrCount, @"Expected %d attributes, but found %d", expectedAttrCount, extElement.attributes.count);
+    STAssertTrue(extElement.children.count == expectedChildCount, @"Expected %d children elements but found %d", expectedChildCount, extElement.children.count);
+    
+    if (extElement.children.count > 0)
+    {
+        STAssertNil(extElement.value, @"Extension Element value must by nil but value contained '%@'", extElement.value);
+    }
+    else if (hasValue)
+    {
+        STAssertTrue(extElement.value.length > 0, @"Expected extension element value to be non-empty");
+    }
+}
+
+// Test Extension Elements using generated FolderChildren XML
+- (void)testParsedExtensionElementsFromFolderChildrenXml
+{
+    // Testing FolderChildren, executed at end
+    
+    void (^testFolderChildrenXml)(NSString *, BOOL) = ^(NSString * filename, BOOL isOpenCmisImpl) 
+    {
+        NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:filename ofType:@"xml"];
+        NSData *atomData = [[NSData alloc] initWithContentsOfFile:filePath];
+        STAssertNotNil(atomData, @"FolderChildren.xml is missing from the test target!");
+        
+        NSError *error = nil;
+        CMISAtomFeedParser *feedParser = [[CMISAtomFeedParser alloc] initWithData:atomData];
+        STAssertTrue([feedParser parseAndReturnError:&error], @"Failed to parse FolderChildren.xml");
+        
+        NSArray *entries = feedParser.entries;
+        STAssertTrue(entries.count == 2, @"Expected 2 parsed entry objects, but found %d", entries.count);
+        
+        for (CMISObjectData *objectData  in entries) 
+        {
+            // Check that there are no extension elements on the Object and allowable actions objects
+            STAssertTrue(objectData.extensions.count == 0, @"Expected 0 extension elements, but found %d", objectData.extensions.count);
+            STAssertTrue(objectData.allowableActions.extensions.count == 0, @"Expected 0 extension elements, but found %d", objectData.allowableActions.extensions.count);
+            
+            // Check that we have the expected Alfresco Aspect Extension elements on the Properties object
+            NSArray *extensions = objectData.properties.extensions;
+            STAssertTrue(extensions.count == 1, @"Expected only one extension element but encountered %d", extensions.count);
+            
+            // Traverse the extension element tree
+            int expectedAspectsExtChildrenCt = (isOpenCmisImpl ? 4 : 5);
+            CMISExtensionElement *extElement = [extensions lastObject];
+            [self checkExtensionElement:extElement withName:@"aspects" namespaceUri:@"http://www.alfresco.org" attributeCount:0 
+                          childrenCount:expectedAspectsExtChildrenCt hasValue:NO];
+            
+            int aspectChildCt = 0;
+            for (CMISExtensionElement *aspectChild in extElement.children) 
+            {
+                switch (aspectChildCt ++) 
+                {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    {
+                        // appliedAspects
+                        [self checkExtensionElement:aspectChild withName:@"appliedAspects" namespaceUri:@"http://www.alfresco.org" attributeCount:0 childrenCount:0 hasValue:YES];
+                        break;
+                    }
+                    case 4:
+                    {
+                        STAssertFalse(isOpenCmisImpl, @"Unexpected extension element encountered!");
+                        // alf:properties
+                        [self checkExtensionElement:aspectChild withName:@"properties" namespaceUri:@"http://www.alfresco.org" attributeCount:0 childrenCount:3 hasValue:NO];
+                        
+                        for (CMISExtensionElement *aspectPropExt in aspectChild.children) 
+                        {
+                            if (aspectPropExt.children)
+                            {
+                                [self checkExtensionElement:aspectPropExt withName:@"propertyString" namespaceUri:kCMISNamespaceCmis attributeCount:3 childrenCount:1 hasValue:NO];
+                                
+                                CMISExtensionElement *valueExt = aspectPropExt.children.lastObject;
+                                [self checkExtensionElement:valueExt withName:@"value" namespaceUri:kCMISNamespaceCmis attributeCount:0 childrenCount:0 hasValue:YES];
+                            }
+                            else 
+                            {
+                                [self checkExtensionElement:aspectPropExt withName:@"propertyString" namespaceUri:kCMISNamespaceCmis attributeCount:3 childrenCount:0 hasValue:NO];
+                            }
+                            
+                            
+                            // Test the attributes on each of the cmis property objects
+                            NSArray *expectedAttributeNames = [NSArray arrayWithObjects:kCMISCoreQueryName, kCMISCoreDisplayName, kCMISAtomEntryPropertyDefId, nil];
+                            NSMutableArray *attrNames = [[aspectPropExt.attributes allKeys] mutableCopy];
+                            [attrNames removeObjectsInArray:expectedAttributeNames];
+                            STAssertTrue(0 == attrNames.count, @"Unexpected Attribute(s) found %@", attrNames);
+                                                
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    };
+    
+    // Test the FolderChildren XML generated from Alfresco's Web Script Impl
+    testFolderChildrenXml(@"FolderChildren-webscripts", NO);
+    
+    // Test the FolderChildren XML generated from OpenCmis Impl    
+    testFolderChildrenXml(@"FolderChildren-opencmis", YES);
+}
+
+// This test test the extension levels Allowable Actions, Object, and Properties, with simplicity
+// the same extension elements are used at each of the different levels
+- (void)testParsedExtensionElementsFromAtomFeedXml
+{
+    static NSString *exampleUri = @"http://www.example.com";
+    
+    // Local Blocks
+    void (^testSimpleRootExtensionElement)(CMISExtensionElement *) = ^(CMISExtensionElement *rootExtElement)
+    {
+        [self checkExtensionElement:rootExtElement withName:@"testExtSimpleRoot" namespaceUri:exampleUri attributeCount:0 childrenCount:1 hasValue:NO];
+        
+        CMISExtensionElement *simpleChildExtElement = rootExtElement.children.lastObject;
+        [self checkExtensionElement:simpleChildExtElement withName:@"simpleChild" namespaceUri:@"http://www.example.com" attributeCount:0 childrenCount:0 hasValue:YES];
+        STAssertTrue([simpleChildExtElement.value isEqualToString:@"simpleChildValue"], @"Expected value 'simpleChildValue' but was '%@'", simpleChildExtElement.value);
+    };
+    
+    void (^testComplexRootExtensionElement)(CMISExtensionElement *) = ^(CMISExtensionElement *rootExtElement)
+    {
+        [self checkExtensionElement:rootExtElement withName:@"testExtRoot" namespaceUri:exampleUri attributeCount:0 childrenCount:5 hasValue:NO];
+        // Children Depth=1
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:0] withName:@"testExtChildLevel1A" namespaceUri:exampleUri attributeCount:0 childrenCount:0 hasValue:YES];
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:1] withName:@"testExtChildLevel1A" namespaceUri:exampleUri attributeCount:0 childrenCount:0 hasValue:YES];
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:2] withName:@"testExtChildLevel1B" namespaceUri:exampleUri attributeCount:1 childrenCount:1 hasValue:NO];
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:3] withName:@"testExtChildLevel1B" namespaceUri:exampleUri attributeCount:1 childrenCount:0 hasValue:NO];
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:4] withName:@"testExtChildLevel1B" namespaceUri:exampleUri attributeCount:1 childrenCount:0 hasValue:YES];
+        
+        CMISExtensionElement *level1ExtElement = [rootExtElement.children objectAtIndex:2];
+        
+        CMISExtensionElement *level2ExtElement = level1ExtElement.children.lastObject;
+        [self checkExtensionElement:level2ExtElement withName:@"testExtChildLevel2" namespaceUri:exampleUri attributeCount:1 childrenCount:1 hasValue:NO];
+        
+        CMISExtensionElement *level3ExtElement = level2ExtElement.children.lastObject;
+        [self checkExtensionElement:level3ExtElement withName:@"testExtChildLevel3" namespaceUri:exampleUri attributeCount:1 childrenCount:0 hasValue:YES];
+    };
+    
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"AtomFeedWithExtensions" ofType:@"xml"];
+    NSData *atomData = [[NSData alloc] initWithContentsOfFile:filePath];
+    STAssertNotNil(atomData, @"AtomFeedWithExtensions.xml is missing from the test target!");
+    
+    NSError *error = nil;
+    CMISAtomFeedParser *feedParser = [[CMISAtomFeedParser alloc] initWithData:atomData];
+    STAssertTrue([feedParser parseAndReturnError:&error], @"Failed to parse AtomFeedWithExtensions.xml");
+    
+    NSArray *entries = feedParser.entries;
+    STAssertTrue(entries.count == 2, @"Expected 2 parsed entry objects, but found %d", entries.count);
+    
+    for (CMISObjectData *objectData  in entries) 
+    {
+        STAssertTrue(objectData.extensions.count == 2, @"Expected 2 extension elements, but found %d", objectData.extensions.count);
+        testSimpleRootExtensionElement([objectData.extensions objectAtIndex:0]);
+        testComplexRootExtensionElement([objectData.extensions objectAtIndex:1]);
+        
+        STAssertTrue(objectData.allowableActions.extensions.count == 2, @"Expected 2 extension elements, but found %d", objectData.allowableActions.extensions.count);
+        testSimpleRootExtensionElement([objectData.allowableActions.extensions objectAtIndex:0]);
+        testComplexRootExtensionElement([objectData.allowableActions.extensions objectAtIndex:1]);
+        
+        NSArray *extensions = objectData.properties.extensions;
+        STAssertTrue(extensions.count == 2, @"Expected only one extension element but encountered %d", extensions.count);
+        testSimpleRootExtensionElement([objectData.properties.extensions objectAtIndex:0]);
+        testComplexRootExtensionElement([objectData.properties.extensions objectAtIndex:1]);
+    }
+}
+
+
+- (void)testParsedExtensionElementsFromAtomPubService
+{
+    static NSString *exampleUri = @"http://www.example.com";
+    
+    // Local Blocks
+    void (^testSimpleRootExtensionElement)(CMISExtensionElement *) = ^(CMISExtensionElement *rootExtElement)
+    {
+        [self checkExtensionElement:rootExtElement withName:@"testExtSimpleRoot" namespaceUri:exampleUri attributeCount:0 childrenCount:1 hasValue:NO];
+        
+        CMISExtensionElement *simpleChildExtElement = rootExtElement.children.lastObject;
+        [self checkExtensionElement:simpleChildExtElement withName:@"simpleChild" namespaceUri:@"http://www.example.com" attributeCount:0 childrenCount:0 hasValue:YES];
+        STAssertTrue([simpleChildExtElement.value isEqualToString:@"simpleChildValue"], @"Expected value 'simpleChildValue' but was '%@'", simpleChildExtElement.value);
+    };
+    
+    void (^testComplexRootExtensionElement)(CMISExtensionElement *) = ^(CMISExtensionElement *rootExtElement)
+    {
+        [self checkExtensionElement:rootExtElement withName:@"testExtRoot" namespaceUri:exampleUri attributeCount:0 childrenCount:5 hasValue:NO];
+        // Children Depth=1
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:0] withName:@"testExtChildLevel1A" namespaceUri:exampleUri attributeCount:0 childrenCount:0 hasValue:YES];
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:1] withName:@"testExtChildLevel1A" namespaceUri:exampleUri attributeCount:0 childrenCount:0 hasValue:YES];
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:2] withName:@"testExtChildLevel1B" namespaceUri:exampleUri attributeCount:1 childrenCount:1 hasValue:NO];
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:3] withName:@"testExtChildLevel1B" namespaceUri:exampleUri attributeCount:1 childrenCount:0 hasValue:NO];
+        [self checkExtensionElement:[rootExtElement.children objectAtIndex:4] withName:@"testExtChildLevel1B" namespaceUri:exampleUri attributeCount:1 childrenCount:0 hasValue:YES];
+        
+        CMISExtensionElement *level1ExtElement = [rootExtElement.children objectAtIndex:2];
+        
+        CMISExtensionElement *level2ExtElement = level1ExtElement.children.lastObject;
+        [self checkExtensionElement:level2ExtElement withName:@"testExtChildLevel2" namespaceUri:exampleUri attributeCount:1 childrenCount:1 hasValue:NO];
+        
+        CMISExtensionElement *level3ExtElement = level2ExtElement.children.lastObject;
+        [self checkExtensionElement:level3ExtElement withName:@"testExtChildLevel3" namespaceUri:exampleUri attributeCount:1 childrenCount:0 hasValue:YES];
+    };
+    
+    // Testing AllowableActions Extensions using the - initWithData: entry point
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"AtomPubServiceDocument" ofType:@"xml"];
+    NSData *atomData = [[NSData alloc] initWithContentsOfFile:filePath];
+    STAssertNotNil(atomData, @"AtomPubServiceDocument.xml is missing from the test target!");
+    
+    NSError *error = nil;
+    CMISServiceDocumentParser *serviceDocParser = [[CMISServiceDocumentParser alloc] initWithData:atomData];
+    STAssertTrue([serviceDocParser parseAndReturnError:&error], @"Failed to parse AtomPubServiceDocument.xml");
+    
+    NSArray *workspaces = [serviceDocParser workspaces];
+    CMISWorkspace *workspace = [workspaces objectAtIndex:0];
+    CMISRepositoryInfo *repoInfo = workspace.repositoryInfo;
+    
+    STAssertTrue(repoInfo.extensions.count == 2, @"Expected 2 extension elements, but found %d", repoInfo.extensions.count);
+    testSimpleRootExtensionElement([repoInfo.extensions objectAtIndex:0]);
+    testComplexRootExtensionElement([repoInfo.extensions objectAtIndex:1]);
+}
+
 // Commented out due to the fact of no extension data returned by the 'cmisatom' url (the old url did)
 //
 //- (void)testExtensionData
