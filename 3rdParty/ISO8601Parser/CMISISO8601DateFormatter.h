@@ -3,7 +3,7 @@
  *Created by Peter Hosey on 2009-04-11.
  *Copyright 2009 Peter Hosey. All rights reserved.
  *
- * BSD Lincence, source can be found at https://bitbucket.org/boredzo/iso-8601-parser-unparser
+ * BSD License, source code can be found at https://bitbucket.org/boredzo/iso-8601-parser-unparser
  */
 
 #import <Foundation/Foundation.h>
