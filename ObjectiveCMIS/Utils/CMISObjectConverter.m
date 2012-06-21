@@ -110,6 +110,13 @@
 
             // Convert to CMISPropertyData based on the string
             CMISPropertyDefinition *propertyDefinition = [typeDefinition propertyDefinitionForId:propertyId];
+
+            if (propertyDefinition == nil)
+            {
+                 *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Invalid property '%@' for this object type"];
+                return nil;
+            }
+
             switch (propertyDefinition.propertyType)
             {
                 case(CMISPropertyTypeString):
