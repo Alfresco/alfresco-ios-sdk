@@ -14,7 +14,6 @@
 
 #import "CMISBindingFactory.h"
 #import "CMISAtomPubBinding.h"
-#import "CMISConstants.h"
 
 @implementation CMISBindingFactory
 

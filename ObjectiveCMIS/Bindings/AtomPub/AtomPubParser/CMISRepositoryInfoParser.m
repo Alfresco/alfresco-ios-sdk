@@ -14,9 +14,7 @@
 
 #import "CMISRepositoryInfoParser.h"
 #import "CMISAtomPubConstants.h"
-#import "CMISConstants.h"
 #import "CMISAtomCollection.h"
-#import "CMISRepositoryInfo.h"
 
 @interface CMISRepositoryInfoParser ()
 

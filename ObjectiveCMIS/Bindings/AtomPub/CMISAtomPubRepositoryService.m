@@ -14,7 +14,6 @@
 
 #import "CMISAtomPubRepositoryService.h"
 #import "CMISAtomPubBaseService+Protected.h"
-#import "CMISConstants.h"
 #import "CMISWorkspace.h"
 #import "CMISErrors.h"
 #import "CMISTypeByIdUriBuilder.h"

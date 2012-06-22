@@ -17,7 +17,6 @@
 #import "CMISAtomCollection.h"
 #import "CMISAtomLink.h"
 #import "CMISAtomPubConstants.h"
-#import "CMISRepositoryInfo.h"
 #import "CMISLinkRelations.h"
 
 @interface CMISServiceDocumentParser ()

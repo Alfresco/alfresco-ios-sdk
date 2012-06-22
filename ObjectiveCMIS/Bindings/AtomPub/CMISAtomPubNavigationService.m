@@ -15,8 +15,6 @@
 #import "CMISAtomPubNavigationService.h"
 #import "CMISAtomPubBaseService+Protected.h"
 #import "CMISAtomFeedParser.h"
-#import "CMISConstants.h"
-#import "CMISAtomPubConstants.h"
 #import "CMISHttpUtil.h"
 #import "CMISErrors.h"
 #import "CMISURLUtil.h"

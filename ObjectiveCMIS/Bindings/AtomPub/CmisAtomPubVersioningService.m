@@ -17,7 +17,6 @@
 #import "CMISAtomPubConstants.h"
 #import "CMISHttpUtil.h"
 #import "CMISAtomFeedParser.h"
-#import "CMISObjectConverter.h"
 #import "CMISErrors.h"
 #import "CMISURLUtil.h"
 

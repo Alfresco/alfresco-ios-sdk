@@ -22,7 +22,6 @@
 #import "CMISRepositoryService.h"
 #import "CMISNavigationService.h"
 #import "CMISVersioningService.h"
-#import "CMISAuthenticationProvider.h"
 
 @protocol CMISBinding <NSObject>
 

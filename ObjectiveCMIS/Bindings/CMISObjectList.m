@@ -13,7 +13,6 @@
  */
 
 #import "CMISObjectList.h"
-#import "CMISBinding.h"
 
 
 @implementation CMISObjectList

@@ -15,7 +15,6 @@
 #import "CMISTypeDefinitionAtomEntryParser.h"
 #import "CMISTypeDefinition.h"
 #import "CMISAtomPubConstants.h"
-#import "CMISPropertyDefinitionParser.h"
 
 @interface CMISTypeDefinitionAtomEntryParser ()
 

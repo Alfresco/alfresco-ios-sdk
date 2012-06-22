@@ -13,7 +13,6 @@
  */
 
 #import "CMISObjectByPathUriBuilder.h"
-#import "CMISEnums.h"
 
 @interface CMISObjectByPathUriBuilder ()
 
