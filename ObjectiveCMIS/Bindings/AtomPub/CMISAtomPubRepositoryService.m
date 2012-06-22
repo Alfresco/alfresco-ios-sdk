@@ -48,7 +48,7 @@
     NSError *internalError = nil;
     [self internalRetrieveRepositoriesAndReturnError:&internalError];
     if (internalError) {
-        *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeUnauthorized];
+        *outError = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeInvalidArgument];
     }
     return [self.repositories objectForKey:repositoryId];
 }
@@ -57,9 +57,12 @@
 {
     self.repositories = [NSMutableDictionary dictionary];
     NSArray *cmisWorkSpaces = [self retrieveCMISWorkspacesAndReturnError:error];
-    for (CMISWorkspace *workspace in cmisWorkSpaces)
+    if (cmisWorkSpaces != nil)
     {
-        [self.repositories setObject:workspace.repositoryInfo forKey:workspace.repositoryInfo.identifier];
+        for (CMISWorkspace *workspace in cmisWorkSpaces)
+        {
+            [self.repositories setObject:workspace.repositoryInfo forKey:workspace.repositoryInfo.identifier];
+        }
     }
 }
 

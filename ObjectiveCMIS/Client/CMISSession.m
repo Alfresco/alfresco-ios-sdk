@@ -95,7 +95,7 @@
     // check repository id is present
     if (self.sessionParameters.repositoryId == nil)
     {
-        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:nil];
+        *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Must provide repository id"];
         log(@"Error: %@",[*error description]);
         return NO;
     }
@@ -110,19 +110,27 @@
         return NO;
     }
     
-    // TODO: use authentication provider to make sure we have enough credentials, it may need to make
-    //       another call to get a ticket or do handshake i.e. NTLM.
+    // TODO: use authentication provider to make sure we have enough credentials, it may need to make another call to get a ticket or do handshake i.e. NTLM.
     
     // retrieve the repository info, if the repository id is provided
     if (self.sessionParameters.repositoryId != nil)
     {
         // get repository info
-        self.repositoryInfo = [self.binding.repositoryService retrieveRepositoryInfoForId:self.sessionParameters.repositoryId error:error];
-        
-        
-        if (self.repositoryInfo == nil || (*error != nil))
+        NSError *internalError = nil;
+        self.repositoryInfo = [self.binding.repositoryService retrieveRepositoryInfoForId:self.sessionParameters.repositoryId error:&internalError];
+
+        if (self.repositoryInfo == nil)
         {
-            log(@"Error because repositoryInfo is nil: %@",[*error description]);
+            if (internalError != nil)
+            {
+                log(@"Error because repositoryInfo is nil: %@",[*error description]);
+                *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeInvalidArgument];
+            }
+            else
+            {
+                *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Could not fetch repository information"];
+            }
+
             return NO;
         }
     }
