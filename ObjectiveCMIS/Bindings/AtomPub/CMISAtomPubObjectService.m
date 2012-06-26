@@ -629,23 +629,34 @@
     uploadDelegate.fileUploadProgressBlock = progressBlock;
     uploadDelegate.fileUploadCompletionBlock = ^(HTTPResponse *response)
     {
-        if (completionBlock)
+        if (response.statusCode != 200 && response.statusCode != 201 && response.statusCode != 204)
         {
-            NSError *parseError = nil;
-            CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response.data];
-            [atomEntryParser parseAndReturnError:&parseError];
-            if (parseError)
+            log(@"Invalid http response status code when creating/uploading content: %d", response.statusCode);
+            if (failureBlock)
             {
-                log(@"Error while parsing response: %@", [parseError description]);
-                if (failureBlock)
-                {
-                    failureBlock([CMISErrors cmisError:&parseError withCMISErrorCode:kCMISErrorCodeUpdateConflict]);
-                }
+                failureBlock([CMISErrors createCMISErrorWithCode:kCMISErrorCodeRuntime
+                                         withDetailedDescription:[NSString stringWithFormat:@"Could not create content: http status code %d", response.statusCode]]);
             }
-
+        }
+        else {
             if (completionBlock)
             {
-                completionBlock(atomEntryParser.objectData.identifier);
+                NSError *parseError = nil;
+                CMISAtomEntryParser *atomEntryParser = [[CMISAtomEntryParser alloc] initWithData:response.data];
+                [atomEntryParser parseAndReturnError:&parseError];
+                if (parseError)
+                {
+                    log(@"Error while parsing response: %@", [parseError description]);
+                    if (failureBlock)
+                    {
+                        failureBlock([CMISErrors cmisError:&parseError withCMISErrorCode:kCMISErrorCodeUpdateConflict]);
+                    }
+                }
+                
+                if (completionBlock)
+                {
+                    completionBlock(atomEntryParser.objectData.identifier);
+                }
             }
         }
     };
