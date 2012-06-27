@@ -37,7 +37,7 @@
 {
     NSError *internalError = nil;
     CMISObjectData *objData = [self retrieveObjectInternal:objectId
-                                         withReturnVersion:LATEST
+                                         withReturnVersion:NOT_PROVIDED
                                                 withFilter:filter
                                    andIncludeRelationShips:includeRelationship
                                        andIncludePolicyIds:includePolicyIds

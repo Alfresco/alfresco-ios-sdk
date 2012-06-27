@@ -150,7 +150,7 @@
 
 - (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error
 {
-    return [self retrieveObjectInternal:objectId withReturnVersion:LATEST withFilter:@"" andIncludeRelationShips:CMISIncludeRelationshipNone
+    return [self retrieveObjectInternal:objectId withReturnVersion:NOT_PROVIDED withFilter:@"" andIncludeRelationShips:CMISIncludeRelationshipNone
                     andIncludePolicyIds:NO andRenditionFilder:nil andIncludeACL:NO
                     andIncludeAllowableActions:YES error:error];
 }
