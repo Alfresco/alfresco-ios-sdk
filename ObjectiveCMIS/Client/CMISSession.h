@@ -30,6 +30,9 @@
 // The binding object being used for the session.
 @property (nonatomic, strong, readonly) id<CMISBinding> binding;
 
+// The parameters used to create this session.
+@property (nonatomic, strong) CMISSessionParameters *sessionParameters;
+
 // Information about the repository the session is connected to, will be nil until the session is authenticated.
 @property (nonatomic, strong, readonly) CMISRepositoryInfo *repositoryInfo;
 

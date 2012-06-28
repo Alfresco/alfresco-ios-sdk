@@ -16,6 +16,8 @@
 
 NSString * const kCMISSessionParameterLinkCacheSize =@"session_param_cache_size_links";
 
+NSString * const kCMISSessionParameterMode = @"session_param_mode";
+
 @interface CMISSessionParameters ()
 @property (nonatomic, assign, readwrite) CMISBindingType bindingType;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;

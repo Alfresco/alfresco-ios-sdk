@@ -25,7 +25,6 @@
 #import "CMISTypeDefinition.h"
 
 @interface CMISSession ()
-@property (nonatomic, strong) CMISSessionParameters *sessionParameters;
 @property (nonatomic, strong) CMISObjectConverter *objectConverter;
 @property (nonatomic, assign, readwrite) BOOL isAuthenticated;
 @property (nonatomic, strong, readwrite) id<CMISBinding> binding;
