@@ -201,6 +201,7 @@
 		FE417D6815761A34009056D2 /* CMISBaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056D0 /* CMISBaseTest.m */; };
 		FE417D6815761A34009056D4 /* CMISBaseTest.h in Headers */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056D3 /* CMISBaseTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FE417D6815761A34009056D8 /* env-cfg.plist in Resources */ = {isa = PBXBuildFile; fileRef = FE417D6815761A34009056D7 /* env-cfg.plist */; };
+		FE66BCA415936F8C00FC6FC9 /* AlfrescoSpecificCMISTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FE66BCA415936F8C00FC6FC5 /* AlfrescoSpecificCMISTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -386,6 +387,8 @@
 		FE417D6815761A34009056D0 /* CMISBaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISBaseTest.m; sourceTree = "<group>"; };
 		FE417D6815761A34009056D3 /* CMISBaseTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISBaseTest.h; sourceTree = "<group>"; };
 		FE417D6815761A34009056D7 /* env-cfg.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "env-cfg.plist"; sourceTree = "<group>"; };
+		FE66BCA415936F8C00FC6FC5 /* AlfrescoSpecificCMISTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSpecificCMISTests.m; sourceTree = "<group>"; };
+		FE66BCA415936F8C00FC6FC7 /* AlfrescoSpecificCMISTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSpecificCMISTests.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -508,6 +511,8 @@
 		828072BC15153DE900EF635C /* ObjectiveCMISTests */ = {
 			isa = PBXGroup;
 			children = (
+				FE66BCA415936F8C00FC6FC7 /* AlfrescoSpecificCMISTests.h */,
+				FE66BCA415936F8C00FC6FC5 /* AlfrescoSpecificCMISTests.m */,
 				FE417D6815761A34009056D3 /* CMISBaseTest.h */,
 				FE417D6815761A34009056D0 /* CMISBaseTest.m */,
 				82C1C63F15358733009B7B92 /* test_file_2.txt */,
@@ -1037,6 +1042,7 @@
 				4EA61BE61564F73900C759E4 /* CMISQueryResult.m in Sources */,
 				4EA61BEB1564F75000C759E4 /* CMISErrors.m in Sources */,
 				FE417D6815761A34009056D2 /* CMISBaseTest.m in Sources */,
+				FE66BCA415936F8C00FC6FC9 /* AlfrescoSpecificCMISTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

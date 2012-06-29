@@ -13,6 +13,7 @@
  */
 #import <Foundation/Foundation.h>
 #import <SenTestingKit/SenTestingKit.h>
+#import "CMISDocument.h"
 
 @class CMISFolder;
 @class CMISSession;
@@ -28,5 +29,19 @@ typedef void (^CMISTestBlock)(void);
 @property BOOL callbackCompleted;
 
 - (void) runTest:(CMISTestBlock)testBlock;
+- (void) runTest:(CMISTestBlock)testBlock withExtraSessionParameters:(NSDictionary *)extraSessionParameters;
 
+#pragma mark Helper Methods
+
+- (CMISDocument *)retrieveVersionedTestDocument;
+
+- (CMISDocument *)uploadTestFile;
+
+- (void)waitForCompletion:(NSTimeInterval)timeoutSecs;
+
+- (void)deleteDocumentAndVerify:(CMISDocument *)document;
+
+- (NSDateFormatter *)testDateFormatter;
+
+- (NSString *)stringFromCurrentDate;
 @end

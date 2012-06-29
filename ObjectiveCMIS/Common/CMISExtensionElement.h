@@ -14,7 +14,8 @@
 
 #import <Foundation/Foundation.h>
 
-/** This class represents a single node in the extension tree.
+/**
+ * This class represents a single node in the extension tree.
  */
 @interface CMISExtensionElement : NSObject
 

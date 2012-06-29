@@ -176,9 +176,16 @@
     {
         id propertyValue = [properties objectForKey:propertyId];
 
-        if ([propertyId isEqualToString:kCMISPropertyObjectTypeId] && objectTypeId == nil)
+        if ([propertyId isEqualToString:kCMISPropertyObjectTypeId])
         {
-            [typeProperties setObject:typeDefinition.id forKey:propertyId];
+            if (objectTypeId == nil) // do not merge this if with the parent if. In case it's not nil, we don't do anything!
+            {
+                [typeProperties setObject:typeDefinition.id forKey:propertyId];
+            }
+            else
+            {
+                [typeProperties setObject:objectTypeId forKey:propertyId];
+            }
         }
         else if ([typeDefinition propertyDefinitionForId:propertyId])
         {
@@ -358,7 +365,8 @@
 
             if (propertyDefinition == nil)
             {
-                 *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Invalid property '%@' for this object type"];
+                 *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument
+                          withDetailedDescription:[NSString stringWithFormat:@"Invalid property '%@' for this object type", propertyId]];
                 return nil;
             }
 

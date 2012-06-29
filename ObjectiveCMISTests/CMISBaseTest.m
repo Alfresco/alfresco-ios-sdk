@@ -14,7 +14,7 @@
 #import "CMISBaseTest.h"
 #import "CMISFolder.h"
 #import "CMISSession.h"
-
+#import "CMISConstants.h"
 
 
 @implementation CMISBaseTest
@@ -26,6 +26,11 @@
 
 
 - (void) runTest:(CMISTestBlock)testBlock
+{
+    [self runTest:testBlock withExtraSessionParameters:nil];
+}
+
+- (void) runTest:(CMISTestBlock)testBlock withExtraSessionParameters:(NSDictionary *)extraSessionParameters
 {
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     STAssertNotNil(bundle, @"Bundle is nil!");
@@ -47,21 +52,31 @@
         NSString *password = [envDict valueForKey:@"password"];
 
         self.callbackCompleted = NO;
-        [self setupCmisSession:url repositoryId:repositoryId username:username password:password];
+        [self setupCmisSession:url repositoryId:repositoryId username:username password:password extraSessionParameters:extraSessionParameters];
         self.callbackCompleted = NO;
 
-        log(@"Running test against %@", url);
+        log(@">------------------- Running test against %@ -------------------<", url);
+
         testBlock();
     }
 }
 
-- (void)setupCmisSession:(NSString *)url repositoryId:(NSString *)repositoryId username:(NSString *)username password:(NSString *)password
+- (void)setupCmisSession:(NSString *)url repositoryId:(NSString *)repositoryId username:(NSString *)username
+                  password:(NSString *)password extraSessionParameters:(NSDictionary *)extraSessionParameters
 {
     self.parameters = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     self.parameters.username = username;
     self.parameters.password = password;
     self.parameters.atomPubUrl = [NSURL URLWithString:url];
     self.parameters.repositoryId = repositoryId;
+
+    if (extraSessionParameters != nil)
+    {
+        for (id extraSessionParamKey in extraSessionParameters)
+        {
+            [self.parameters setObject:[extraSessionParameters objectForKey:extraSessionParamKey] forKey:extraSessionParamKey];
+        }
+    }
 
     self.session = [[CMISSession alloc] initWithSessionParameters:self.parameters];
     STAssertNotNil(self.session, @"Session should not be nil");
@@ -75,5 +90,95 @@
     STAssertNil(error, @"Error while retrieving root folder: %@", [error description]);
     STAssertNotNil(self.rootFolder, @"rootFolder object should not be nil");
 }
+
+#pragma mark Helper Methods
+
+- (CMISDocument *)retrieveVersionedTestDocument
+{
+    NSError *error = nil;
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:@"/ios-test/versioned-quote.txt" error:&error];
+    STAssertNotNil(document, @"Did not find test document for versioning test");
+    STAssertTrue(document.isLatestVersion, @"Should have 'true' for the property 'isLatestVersion");
+    STAssertFalse(document.isLatestMajorVersion, @"Should have 'false' for the property 'isLatestMajorVersion"); // the latest version is a minor one
+    STAssertFalse(document.isMajorVersion, @"Should have 'false' for the property 'isMajorVersion");
+
+    return document;
+}
+
+- (CMISDocument *)uploadTestFile
+{
+    // Set properties on test file
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
+    NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
+    NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
+    [documentProperties setObject:documentName forKey:kCMISPropertyName];
+    [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
+
+    // Upload test file
+    __block NSInteger previousUploadedBytes = -1;
+    __block NSString *objectId = nil;
+    [self.rootFolder createDocumentFromFilePath:filePath
+            withMimeType:@"text/plain"
+            withProperties:documentProperties
+            completionBlock: ^ (NSString *newObjectId)
+            {
+                STAssertNotNil(newObjectId, @"Object id should not be nil");
+                objectId = newObjectId;
+                self.callbackCompleted = YES;
+            }
+            failureBlock: ^ (NSError *failureError)
+            {
+                STAssertNil(failureError, @"Got error while uploading document: %@", [failureError description]);
+            }
+            progressBlock: ^ (NSInteger uploadedBytes, NSInteger totalBytes)
+            {
+                STAssertTrue(uploadedBytes > previousUploadedBytes, @"no progress");
+                previousUploadedBytes = uploadedBytes;
+            }];
+
+    [self waitForCompletion:60];
+
+    NSError *error = nil;
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
+    STAssertNil(error, @"Got error while creating document: %@", [error description]);
+    STAssertNotNil(objectId, @"Object id received should be non-nil");
+    STAssertNotNil(document, @"Retrieved document should not be nil");
+
+    return document;
+}
+
+- (void)waitForCompletion:(NSTimeInterval)timeoutSecs
+{
+    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:timeoutSecs];
+    do
+    {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
+        if ([timeoutDate timeIntervalSinceNow] < 0.0)
+            break;
+    } while (!self.callbackCompleted);
+
+    self.callbackCompleted = NO;
+}
+
+- (void)deleteDocumentAndVerify:(CMISDocument *)document
+{
+    NSError *error = nil;
+    BOOL documentDeleted = [document deleteAllVersionsAndReturnError:&error];
+    STAssertNil(error, @"Error while deleting created document: %@", [error description]);
+    STAssertTrue(documentDeleted, @"Document was not deleted");
+}
+
+- (NSDateFormatter *)testDateFormatter
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat: @"yyyy-MM-dd'T'HH-mm-ss-Z'"];
+    return formatter;
+}
+
+- (NSString *)stringFromCurrentDate
+{
+    return [[self testDateFormatter] stringFromDate:[NSDate date]];
+}
+
 
 @end

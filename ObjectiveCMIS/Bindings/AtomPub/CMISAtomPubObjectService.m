@@ -632,6 +632,8 @@
         if (response.statusCode != 200 && response.statusCode != 201 && response.statusCode != 204)
         {
             log(@"Invalid http response status code when creating/uploading content: %d", response.statusCode);
+            NSString *errorContent = [[NSString alloc] initWithData:response.data encoding:NSUTF8StringEncoding];
+            log(@"Error content: %@", errorContent);
             if (failureBlock)
             {
                 failureBlock([CMISErrors createCMISErrorWithCode:kCMISErrorCodeRuntime

@@ -42,7 +42,28 @@
 
 - (NSString *)generateAtomEntryXml
 {
-    // First part of XML
+    [self addEntryStartElement];
+
+    if (self.contentFilePath)
+    {
+        [self addContent];
+    }
+
+    [self addProperties];
+
+    // Return result
+    if (self.generateXmlInMemory)
+    {
+        return self.internalXml;
+    }
+    else
+    {
+        return self.internalFilePath;
+    }
+}
+
+- (void)addEntryStartElement
+{
     NSString *atomEntryXmlStart = [NSString stringWithFormat:
            @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\"  >"
@@ -51,30 +72,30 @@
             [self.cmisProperties propertyValueForId:kCMISPropertyName]];
 
     [self appendStringToReturnResult:atomEntryXmlStart];
+}
 
-    if (self.contentFilePath)
+- (void)addContent
+{
+    NSString *contentXMLStart = [NSString stringWithFormat:@"<cmisra:content>""<cmisra:mediatype>%@</cmisra:mediatype>""<cmisra:base64>", self.mimeType];
+    [self appendStringToReturnResult:contentXMLStart];
+
+    // Generate the base64 representation of the content
+    if (self.generateXmlInMemory)
     {
-
-        NSString *contentXMLStart = [NSString stringWithFormat:@"<cmisra:content>""<cmisra:mediatype>%@</cmisra:mediatype>""<cmisra:base64>", self.mimeType];
-        [self appendStringToReturnResult:contentXMLStart];
-
-        // Generate the base64 representation of the content
-        if (self.generateXmlInMemory)
-        {
-            NSString *encodedContent = [CMISBase64Encoder encodeContentOfFile:self.contentFilePath];
-            [self appendToInMemoryXml:encodedContent];
-        }
-        else
-        {
-            [CMISBase64Encoder encodeContentOfFile:self.contentFilePath andAppendToFile:self.internalFilePath];
-        }
-
-        NSString *contentXMLEnd = @"</cmisra:base64></cmisra:content>";
-        [self appendStringToReturnResult:contentXMLEnd];
+        NSString *encodedContent = [CMISBase64Encoder encodeContentOfFile:self.contentFilePath];
+        [self appendToInMemoryXml:encodedContent];
+    }
+    else
+    {
+        [CMISBase64Encoder encodeContentOfFile:self.contentFilePath andAppendToFile:self.internalFilePath];
     }
 
-    // Add properties
+    NSString *contentXMLEnd = @"</cmisra:base64></cmisra:content>";
+    [self appendStringToReturnResult:contentXMLEnd];
+}
 
+- (void)addProperties
+{
     [self appendStringToReturnResult:@"<cmisra:object><cmis:properties>"];
 
     // TODO: support for multi valued properties
@@ -123,18 +144,50 @@
         }
     }
 
-    [self appendStringToReturnResult:@"</cmis:properties></cmisra:object></entry>"];
-
-    // Return result
-    if (self.generateXmlInMemory)
+    // Add extensions to properties
+    if (self.cmisProperties.extensions != nil)
     {
-        return self.internalXml;
+        [self addExtensionElements:self.cmisProperties.extensions];
     }
-    else
+
+    [self appendStringToReturnResult:@"</cmis:properties></cmisra:object></entry>"];
+}
+
+- (void) addExtensionElements:(NSArray *)extensionElements
+{
+    for (CMISExtensionElement *extensionElement in extensionElements)
     {
-        return self.internalFilePath;
+        // Opening XML tag
+        [self appendStringToReturnResult:[NSString stringWithFormat:@"<%@ xmlns=\"%@\"", extensionElement.name, extensionElement.namespaceUri]];
+
+        // Attributes
+        if (extensionElement.attributes != nil)
+        {
+            for (NSString *attributeName in extensionElement.attributes)
+            {
+                [self appendStringToReturnResult:[NSString stringWithFormat:@" %@=\"%@\"", attributeName, [extensionElement.attributes objectForKey:attributeName]]];
+            }
+        }
+        [self appendStringToReturnResult:@">"];
+
+        // Value
+        if (extensionElement.value != nil)
+        {
+            [self appendStringToReturnResult:extensionElement.value];
+        }
+
+        // Children
+        if (extensionElement.children != nil && extensionElement.children.count > 0)
+        {
+            [self addExtensionElements:extensionElement.children];
+        }
+
+        // Closing XML tag
+        [self appendStringToReturnResult:[NSString stringWithFormat:@"</%@>", extensionElement.name]];
     }
 }
+
+#pragma mark Helper methods
 
 - (void)appendStringToReturnResult:(NSString *)string
 {
