@@ -989,7 +989,7 @@
         STAssertNotNil(objectIdParam.outParameter, @"Returned object id should not be nil");
 
         // Retrieve folder again and check if name has actually changed
-        CMISFolder *renamedFolder = (CMISFolder *) [self.session retrieveObject:objectIdParam.outParameter error:&error];
+        CMISFolder *renamedFolder = (CMISFolder *) [self.session retrieveObject:folderId error:&error];
         STAssertNil(error, @"Got error while retrieving renamed folder: %@", [error description]);
         STAssertEqualObjects(renamedFolder.name, @"temp_test_folder_renamed", @"Folder was not renamed, name is %@", renamedFolder.name);
 

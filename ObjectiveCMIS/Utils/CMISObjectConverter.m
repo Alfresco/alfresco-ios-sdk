@@ -77,6 +77,9 @@
 {
 
     // TODO: Temporary. Must be extracted into separate project.
+    // I decided to keep all logic in one method: so keep in mind when ripping it out that you will need to do
+    // some SERIOUS refactoring, by splitting into several methods and util classes (eg to create the extension elements)
+
     NSString *mode = [self.session.sessionParameters objectForKey:kCMISSessionParameterMode];
     if (mode != nil && [mode isEqualToString:@"alfresco"])
     {
