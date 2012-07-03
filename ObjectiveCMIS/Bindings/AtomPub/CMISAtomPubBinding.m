@@ -66,7 +66,11 @@
 
 - (void)clearAllCaches
 {
-    // do nothing for now
+    [(CMISAtomPubRepositoryService *)self.repositoryService clearCacheFromService];
+    [(CMISAtomPubObjectService *)self.objectService clearCacheFromService];
+    [(CMISAtomPubNavigationService *)self.navigationService clearCacheFromService];
+    [(CMISAtomPubVersioningService *)self.versioningService clearCacheFromService];
+    [(CMISAtomPubDiscoveryService *)self.discoveryService clearCacheFromService];
 }
 
 - (void)clearCacheForRepositoryId:(NSString*)repositoryId
@@ -76,7 +80,7 @@
 
 - (void)close
 {
-    // do nothing for now
+    [self clearAllCaches];
 }
 
 @end

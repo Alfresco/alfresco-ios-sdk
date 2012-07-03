@@ -22,5 +22,5 @@
 @property (nonatomic, strong, readonly) NSURL *atomPubUrl;
 
 - (id)initWithBindingSession:(CMISBindingSession *)session;
-
+- (void)clearCacheFromService;
 @end

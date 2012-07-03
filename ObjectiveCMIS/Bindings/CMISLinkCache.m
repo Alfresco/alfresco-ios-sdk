@@ -90,6 +90,12 @@
     [self.linkCache removeObjectForKey:objectId];
 }
 
+- (void)removeAllLinks
+{
+    [self.linkCache removeAllObjects];
+}
+
+
 // Debugging
 //- (void)cache:(NSCache *)cache willEvictObject:(id)obj
 //{

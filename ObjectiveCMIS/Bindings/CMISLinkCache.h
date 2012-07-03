@@ -30,4 +30,6 @@
 
 - (void)removeLinksForObjectId:(NSString *)objectId;
 
+- (void)removeAllLinks;
+
 @end

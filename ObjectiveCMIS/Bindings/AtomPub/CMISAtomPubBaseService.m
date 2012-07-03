@@ -248,6 +248,16 @@
     return linkCache;
 }
 
+- (void)clearCacheFromService
+{
+    CMISLinkCache *linkCache = [self.bindingSession objectForKey:kCMISBindingSessionKeyLinkCache];
+    if (linkCache != nil)
+    {
+        [linkCache removeAllLinks];
+    }    
+}
+
+
 - (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel error:(NSError **)error
 {
     return [self loadLinkForObjectId:objectId andRelation:rel andType:nil error:error];
