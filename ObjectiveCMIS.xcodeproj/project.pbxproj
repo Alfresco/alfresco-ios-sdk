@@ -37,7 +37,6 @@
 		4EA61BEA1564F75000C759E4 /* CMISErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA61BE81564F75000C759E4 /* CMISErrors.m */; };
 		4EA61BEB1564F75000C759E4 /* CMISErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA61BE81564F75000C759E4 /* CMISErrors.m */; };
 		4EBFBF2B15A71CC6006599B1 /* CMISISO8601DateFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 82807348151541CF00EF635C /* CMISISO8601DateFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4EEF6211156270E500347193 /* ObjectiveCMISLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EEF6213156270E500347193 /* ObjectiveCMISLocalizable.strings */; };
 		750CB2BE159C56A5004576F7 /* AllowableActions.xml in Resources */ = {isa = PBXBuildFile; fileRef = 750CB2BB159C56A5004576F7 /* AllowableActions.xml */; };
 		750CB2BF159C56A5004576F7 /* FolderChildren-webscripts.xml in Resources */ = {isa = PBXBuildFile; fileRef = 750CB2BC159C56A5004576F7 /* FolderChildren-webscripts.xml */; };
 		750CB2C0159C56A5004576F7 /* FolderChildren-opencmis.xml in Resources */ = {isa = PBXBuildFile; fileRef = 750CB2BD159C56A5004576F7 /* FolderChildren-opencmis.xml */; };
@@ -215,7 +214,6 @@
 		4EA61BE01564F73900C759E4 /* CMISQueryResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISQueryResult.m; path = Bindings/CMISQueryResult.m; sourceTree = "<group>"; };
 		4EA61BE71564F75000C759E4 /* CMISErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISErrors.h; path = Common/CMISErrors.h; sourceTree = "<group>"; };
 		4EA61BE81564F75000C759E4 /* CMISErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISErrors.m; path = Common/CMISErrors.m; sourceTree = "<group>"; };
-		4EEF6212156270E500347193 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ObjectiveCMISLocalizable.strings; sourceTree = "<group>"; };
 		750CB2BB159C56A5004576F7 /* AllowableActions.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AllowableActions.xml; sourceTree = "<group>"; };
 		750CB2BC159C56A5004576F7 /* FolderChildren-webscripts.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "FolderChildren-webscripts.xml"; sourceTree = "<group>"; };
 		750CB2BD159C56A5004576F7 /* FolderChildren-opencmis.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "FolderChildren-opencmis.xml"; sourceTree = "<group>"; };
@@ -472,7 +470,6 @@
 			isa = PBXGroup;
 			children = (
 				828072AA15153DE800EF635C /* ObjectiveCMIS-Prefix.pch */,
-				4EEF6213156270E500347193 /* ObjectiveCMISLocalizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -869,7 +866,6 @@
 				828072C115153DE900EF635C /* InfoPlist.strings in Resources */,
 				82C1C63F15358733009B7B5E /* test_file.txt in Resources */,
 				82C1C63F15358733009B7B66 /* cmis-spec-v1.0.pdf in Resources */,
-				4EEF6211156270E500347193 /* ObjectiveCMISLocalizable.strings in Resources */,
 				82C1C63F15358733009B7B93 /* test_file_2.txt in Resources */,
 				FE417D6815761A34009056D8 /* env-cfg.plist in Resources */,
 				750CB2BE159C56A5004576F7 /* AllowableActions.xml in Resources */,
@@ -1027,14 +1023,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		4EEF6213156270E500347193 /* ObjectiveCMISLocalizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4EEF6212156270E500347193 /* en */,
-			);
-			name = ObjectiveCMISLocalizable.strings;
-			sourceTree = "<group>";
-		};
 		828072BF15153DE900EF635C /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
