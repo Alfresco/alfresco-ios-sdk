@@ -87,7 +87,10 @@
     
     if (!parseSuccessful)
     {
-        *error = [parser parserError];
+        if (error)
+        {
+            *error = [parser parserError];
+        }
     }
     
     return parseSuccessful;

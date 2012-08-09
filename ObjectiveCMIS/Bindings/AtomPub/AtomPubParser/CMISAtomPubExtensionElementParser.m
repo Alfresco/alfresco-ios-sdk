@@ -18,7 +18,7 @@
 @interface CMISAtomPubExtensionElementParser ()
 
 // Properties used for Parsing
-@property (nonatomic, weak) id<NSXMLParserDelegate, CMISAtomPubExtensionElementParserDelegate> childDelegate;
+@property (nonatomic, strong) id<NSXMLParserDelegate, CMISAtomPubExtensionElementParserDelegate> childDelegate;
 @property (nonatomic, weak) id<NSXMLParserDelegate, CMISAtomPubExtensionElementParserDelegate> parentDelegate;
 
 // ExtensionElement properties
@@ -105,7 +105,7 @@
     }
     else 
     {
-        self.childDelegate = nil;
+//        self.childDelegate = nil;
     }
 }
 

@@ -138,7 +138,7 @@
             }
             default:
             {
-                log(@"Property type did not match: %@", propertyData.type);
+                log(@"Property type did not match: %u", propertyData.type);
                 break;
             }
         }

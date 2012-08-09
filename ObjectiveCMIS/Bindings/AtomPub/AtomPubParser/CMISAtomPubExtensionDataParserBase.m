@@ -88,7 +88,7 @@
     
     [self.currentExtensions addObject:extensionElement];
     
-    self.childParserDelegate = nil;
+//    self.childParserDelegate = nil;
 }
 
 @end

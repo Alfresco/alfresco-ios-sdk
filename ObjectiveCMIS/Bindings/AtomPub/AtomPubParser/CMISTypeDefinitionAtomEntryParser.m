@@ -23,7 +23,7 @@
 @property(nonatomic, strong, readwrite) NSData *atomData;
 @property(nonatomic, strong, readwrite) NSString *currentString;
 
-@property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
+@property (nonatomic, strong) id<NSXMLParserDelegate> childParserDelegate;
 
 @end
 
@@ -60,7 +60,10 @@
 
     if (!parseSuccessful)
     {
-        *error = [parser parserError];
+        if (error)
+        {
+            *error = [parser parserError];
+        }
     }
 
     return parseSuccessful;

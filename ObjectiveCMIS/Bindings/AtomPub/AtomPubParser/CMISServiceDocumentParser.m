@@ -31,7 +31,7 @@
 @property (nonatomic, strong) NSString *currentTemplate;
 @property (nonatomic, strong) NSString *currentType;
 @property (nonatomic, strong) NSString *currentMediaType;
-@property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
+@property (nonatomic, strong) id<NSXMLParserDelegate> childParserDelegate;
 
 @end
 
@@ -78,7 +78,9 @@
     if (!parseSuccessful)
     {
         NSLog(@"Parsing error : %@", [parser parserError]);
-        *error = [parser parserError];
+        if (*error) {
+            *error = [parser parserError];
+        }
     }
     return parseSuccessful;
 }
@@ -144,7 +146,7 @@
     }
     else if ([elementName isEqualToString:kCMISRestAtomRepositoryInfo])
     {
-        self.childParserDelegate = nil;
+//        self.childParserDelegate = nil;
     }
     else if ([elementName isEqualToString:kCMISRestAtomUritemplate])
     {

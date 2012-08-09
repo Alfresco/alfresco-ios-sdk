@@ -96,7 +96,10 @@
     
     if (!parseSuccessful)
     {
-        *error = [parser parserError];
+        if (error)
+        {
+            *error = [parser parserError];
+        }
     }
     
     return parseSuccessful;
@@ -371,7 +374,7 @@
 {
     self.objectData.allowableActions = allowableActions;
 
-    self.childParserDelegate = nil;
+//    self.childParserDelegate = nil;
 }
 
 @end

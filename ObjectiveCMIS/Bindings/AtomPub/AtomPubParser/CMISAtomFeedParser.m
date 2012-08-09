@@ -21,7 +21,7 @@
 @property (readwrite) NSInteger numItems;
 @property (nonatomic, strong, readwrite) NSString *elementBeingParsed;
 @property (nonatomic, strong, readwrite) NSMutableSet *feedLinkRelations;
-@property (nonatomic, weak, readwrite) id childParserDelegate;
+@property (nonatomic, strong, readwrite) id childParserDelegate;
 @end
 
 @implementation CMISAtomFeedParser
@@ -77,7 +77,10 @@
     
     if (!parseSuccessful)
     {
-        *error = [parser parserError];
+        if (error)
+        {
+            *error = [parser parserError];
+        }
     }
 
     return parseSuccessful;
@@ -116,7 +119,7 @@
 {
    if ([elementName isEqualToString:kCMISAtomEntry])
     {
-        self.childParserDelegate = nil;
+//        self.childParserDelegate = nil;
     }
     
     self.elementBeingParsed = nil;
