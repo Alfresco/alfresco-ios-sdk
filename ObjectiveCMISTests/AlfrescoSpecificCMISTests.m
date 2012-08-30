@@ -11,10 +11,13 @@
 
 @implementation AlfrescoSpecificCMISTests
 
+- (NSDictionary *)customCmisParameters
+{
+    return [NSDictionary dictionaryWithObject:@"alfresco" forKey:kCMISSessionParameterMode];
+}
+
 - (void)testCreateDocumentWithDescription
 {
-    // Adding extra param to enable alfresco mode
-    NSDictionary *extraParams = [NSDictionary dictionaryWithObject:@"alfresco" forKey:kCMISSessionParameterMode];
 
     [self runTest:^
     {
@@ -40,42 +43,7 @@
                     STAssertTrue([documentName isEqualToString:document.name],
                         @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
 
-                    // Let's do some extension juggling
-                    STAssertNotNil(document.properties.extensions, @"description should be returned as an extension, but none was found");
-                    STAssertTrue(document.properties.extensions.count > 0, @"Expected at least one property extension");
-
-                    // Verify root extension element
-                    CMISExtensionElement *rootExtensionElement = (CMISExtensionElement *)[document.properties.extensions objectAtIndex:0];
-                    STAssertTrue([rootExtensionElement.name isEqualToString:@"aspects"], @"root element of extensions should be 'aspects'");
-
-                    // Find properties extension element
-                    CMISExtensionElement *propertiesExtensionElement = nil;
-                    for (CMISExtensionElement *childExtensionElement in rootExtensionElement.children)
-                    {
-                        if ([childExtensionElement.name isEqualToString:@"properties"])
-                        {
-                            propertiesExtensionElement = childExtensionElement;
-                        }
-                    }
-                    STAssertNotNil(propertiesExtensionElement, @"No properties extension element found");
-
-                    // Find description property
-                    CMISExtensionElement *descriptionElement = nil;
-                    for (CMISExtensionElement *childExtensionElement in propertiesExtensionElement.children)
-                    {
-                        if (childExtensionElement.attributes != nil &&
-                             ([[childExtensionElement.attributes objectForKey:@"propertyDefinitionId"] isEqualToString:@"cm:description"]) )
-                        {
-                            descriptionElement = childExtensionElement;
-                        }
-                    }
-                    STAssertNotNil(descriptionElement, @"No description element was found");
-
-                    // Finally, verify the description
-                    CMISExtensionElement *valueElement = [descriptionElement.children objectAtIndex:0];
-                    STAssertNotNil(valueElement, @"There is no value element for the description property");
-                    STAssertTrue([valueElement.value isEqualToString:documentDescription],
-                        @"Document description does not match: was %@ but expected %@", valueElement.value, documentDescription);
+                   [self verifyDocumentDescription:document expectedDescription:documentDescription];
 
                     // Cleanup after ourselves
                     NSError *deleteError = nil;
@@ -97,12 +65,72 @@
         ];
         [self waitForCompletion:20];
 
-        } withExtraSessionParameters:extraParams];
+        }];
+}
+
+- (void)testUpdateDocumentDescription
+{
+    [self runTest:^
+    {
+
+        NSError *error = nil;
+        CMISDocument *document = [self uploadTestFile];
+
+        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+        NSString *description = @"This is a jolly good description!";
+        [properties setObject:description forKey:@"cm:description"];
+
+        document = (CMISDocument *) [document updateProperties:properties error:&error];
+        STAssertNil(error, @"Got error while retrieving document with updated description: %@", [error description]);
+
+        [self verifyDocumentDescription:document expectedDescription:description];
 
 
+        // Cleanup
+        [self deleteDocumentAndVerify:document];
+    }];
+}
 
+- (void)verifyDocumentDescription:(CMISDocument *)document expectedDescription:(NSString *)expectedDescription
+{
+    // Let's do some extension juggling .... (sigh)
+    STAssertNotNil(document.properties.extensions, @"description should be returned as an extension, but none was found");
+    STAssertTrue(document.properties.extensions.count > 0, @"Expected at least one property extension");
 
-   }
+    // Verify root extension element
+    CMISExtensionElement *rootExtensionElement = (CMISExtensionElement *) [document.properties.extensions objectAtIndex:0];
+    STAssertTrue([rootExtensionElement.name isEqualToString:@"aspects"], @"root element of extensions should be 'aspects'");
+
+    // Find properties extension element
+    CMISExtensionElement *propertiesExtensionElement = nil;
+    for (CMISExtensionElement *childExtensionElement in rootExtensionElement.children)
+    {
+        if ([childExtensionElement.name isEqualToString:@"properties"])
+        {
+            propertiesExtensionElement = childExtensionElement;
+        }
+    }
+    STAssertNotNil(propertiesExtensionElement, @"No properties extension element found");
+
+    // Find description property
+    CMISExtensionElement *descriptionElement = nil;
+    for (CMISExtensionElement *childExtensionElement in propertiesExtensionElement.children)
+    {
+        if (childExtensionElement.attributes != nil &&
+                ([[childExtensionElement.attributes objectForKey:@"propertyDefinitionId"] isEqualToString:@"cm:description"]))
+        {
+            descriptionElement = childExtensionElement;
+        }
+    }
+    STAssertNotNil(descriptionElement, @"No description element was found");
+
+    // Finally, verify the description
+    CMISExtensionElement *valueElement = [descriptionElement.children objectAtIndex:0];
+    STAssertNotNil(valueElement, @"There is no value element for the description property");
+    STAssertTrue([valueElement.value isEqualToString:expectedDescription],
+        @"Document description does not match: was %@ but expected %@", valueElement.value, expectedDescription);
+}
+
 
 
 @end

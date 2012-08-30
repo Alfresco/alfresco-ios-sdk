@@ -14,8 +14,9 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISBaseTest.h"
+#import "ObjectiveCMISTests.h"
 
 // TODO: Temporary. Must be extracted into separate project
-@interface AlfrescoSpecificCMISTests : CMISBaseTest
+@interface AlfrescoSpecificCMISTests : ObjectiveCMISTests
 
 @end

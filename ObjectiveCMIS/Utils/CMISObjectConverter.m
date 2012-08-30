@@ -112,6 +112,19 @@
     {
         objectTypeIdString = [(CMISPropertyData *)objectTypeIdValue firstValue];
     }
+    else if (objectTypeId)
+    {
+        // Todo: this is rather a quick-fix ... but it is pretty hard otherwise to build in this behavior everywhere
+        if ([objectTypeId rangeOfString:@"P:cm:titled"].location == NSNotFound)
+        {
+            objectTypeIdString = [NSString stringWithFormat:@"%@,%@", objectTypeId, @"P:cm:titled"];
+        }
+        else
+        {
+            objectTypeIdString = objectTypeId;
+        }
+    }
+
 
     if (objectTypeIdString == nil)
     {

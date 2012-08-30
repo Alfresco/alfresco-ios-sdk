@@ -111,7 +111,7 @@
 - (CMISObject *)updateProperties:(NSDictionary *)properties error:(NSError **)error
 {
     // Validate properties param
-    if (!properties || properties.count == 0)
+        if (!properties || properties.count == 0)
     {
         *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Properties cannot be nil or empty"];
         return nil;

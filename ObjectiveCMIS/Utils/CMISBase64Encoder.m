@@ -118,7 +118,7 @@ static char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
             @autoreleasepool
             {
                 [fileHandle seekToFileOffset:currentOffset];
-                NSData *chunkOfData = [fileHandle readDataOfLength:32768]; // 32 kb, note that the base64 encoding will alloc this twice at a given point, so don't make it too high
+                NSData *chunkOfData = [fileHandle readDataOfLength:524288]; // 512 kb, note that the base64 encoding will alloc this twice at a given point, so don't make it too high
                 [FileUtil appendToFileAtPath:destinationFilePath data:[self dataByEncodingText:chunkOfData]];
                 currentOffset += chunkOfData.length;
             }

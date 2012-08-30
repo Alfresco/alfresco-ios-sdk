@@ -28,8 +28,16 @@ typedef void (^CMISTestBlock)(void);
 @property (nonatomic, strong) CMISFolder *rootFolder;
 @property BOOL callbackCompleted;
 
+#pragma mark Running the test
+
 - (void) runTest:(CMISTestBlock)testBlock;
 - (void) runTest:(CMISTestBlock)testBlock withExtraSessionParameters:(NSDictionary *)extraSessionParameters;
+
+#pragma mark Configuration of cmis parameters
+
+// Subclasses can override this. The parameter key-value pairs will be added to the
+// session parameters before construction of the cmis session.
+- (NSDictionary *)customCmisParameters;
 
 #pragma mark Helper Methods
 

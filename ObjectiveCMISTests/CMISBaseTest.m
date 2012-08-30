@@ -70,11 +70,22 @@
     self.parameters.atomPubUrl = [NSURL URLWithString:url];
     self.parameters.repositoryId = repositoryId;
 
+    // Extra cmis params could be provided as method parameter
     if (extraSessionParameters != nil)
     {
         for (id extraSessionParamKey in extraSessionParameters)
         {
             [self.parameters setObject:[extraSessionParameters objectForKey:extraSessionParamKey] forKey:extraSessionParamKey];
+        }
+    }
+
+    // Or, extra cmis parameters could be provided by overriding a base method
+    NSDictionary *customParameters = [self customCmisParameters];
+    if (customParameters)
+    {
+        for (id customParamKey in customParameters)
+        {
+            [self.parameters setObject:[customParameters objectForKey:customParamKey] forKey:customParamKey];
         }
     }
 
@@ -89,6 +100,12 @@
     self.rootFolder = [self.session retrieveRootFolderAndReturnError:&error];
     STAssertNil(error, @"Error while retrieving root folder: %@", [error description]);
     STAssertNotNil(self.rootFolder, @"rootFolder object should not be nil");
+}
+
+- (NSDictionary *)customCmisParameters
+{
+    // Ment to be overridden.
+    return nil;
 }
 
 #pragma mark Helper Methods

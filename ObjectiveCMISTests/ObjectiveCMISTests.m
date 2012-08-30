@@ -469,7 +469,8 @@
 
         // Create a test folder
         NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-        [properties setObject:@"test-folder" forKey:kCMISPropertyName];
+        NSString *folderName = [NSString stringWithFormat:@"test-folder-%@", [self stringFromCurrentDate]];
+        [properties setObject:folderName forKey:kCMISPropertyName];
         [properties setObject:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
 
         NSString *newFolderObjectId = [self.rootFolder createFolder:properties error:&error];
@@ -496,7 +497,7 @@
         // Get all the versions of the document
         CMISCollection *allVersionsOfDocument = [document retrieveAllVersionsAndReturnError:&error];
         STAssertNil(error, @"Error while retrieving all versions of document : %@", [error description]);
-        STAssertTrue(allVersionsOfDocument.items.count == 5, @"Expected 5 versions of document, but was %d", allVersionsOfDocument.items.count);
+        STAssertTrue(allVersionsOfDocument.items.count == 6, @"Expected 5 versions of document, but was %d", allVersionsOfDocument.items.count);
 
         // Print out the version labels and verify them, while also verifying that they are ordered by creation date, descending
         NSDate *previousModifiedDate = document.lastModificationDate;

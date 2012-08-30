@@ -227,8 +227,8 @@
                         [formatter stringFromDate:[NSDate date]]];
 
         BOOL fileCreated = [[NSFileManager defaultManager] createFileAtPath:self.internalFilePath
-                                          contents:[string dataUsingEncoding:NSUTF8StringEncoding]
-                attributes:nil];
+                                                                   contents:[string dataUsingEncoding:NSUTF8StringEncoding]
+                                                                 attributes:nil];
         if (!fileCreated)
         {
             log(@"Error: could not create file %@", self.internalFilePath);
