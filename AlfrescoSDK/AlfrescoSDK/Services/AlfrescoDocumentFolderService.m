@@ -1,0 +1,893 @@
+/*******************************************************************************
+ * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * 
+ * This file is part of the Alfresco Mobile SDK.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ******************************************************************************/
+
+#import "AlfrescoDocumentFolderService.h"
+#import <MobileCoreServices/MobileCoreServices.h>
+#import "CMISDocument.h"
+#import "CMISSession.h"
+#import "CMISQueryResult.h"
+#import "CMISObjectConverter.h"
+#import "CMISObjectId.h"
+#import "CMISFolder.h"
+#import "CMISPagedResult.h"
+#import "CMISOperationContext.h"
+#import "CMISConstants.h"
+#import "CMISStringInOutParameter.h"
+#import "AlfrescoObjectConverter.h"
+#import "AlfrescoProperty.h"
+#import "AlfrescoErrors.h"
+#import "AlfrescoListingContext.h"
+#import "AlfrescoInternalConstants.h"
+#import <objc/runtime.h>
+#import "AlfrescoInternalConstants.h"
+#import "AlfrescoPagingUtils.h"
+#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoAuthenticationProvider.h"
+#import "AlfrescoBasicAuthenticationProvider.h"
+#import "AlfrescoSortingUtils.h"
+
+
+@interface AlfrescoDocumentFolderService ()
+@property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
+@property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
+@property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
+@property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
+@property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
+@property (nonatomic, strong, readwrite) NSString *defaultSortKey;
+
+// retrieve children of the folder that is retrieved using the provided objectId
+- (NSArray *)cmisRetrieveChildren:(NSString *) objectId withSession:(__weak AlfrescoDocumentFolderService *) weakSelf error:(NSError **)error;
+
+// filter the provided array with items that match the provided class type
+- (NSArray *)retrieveItemsWithClassFilter:(Class) typeClass withArray:(NSArray *)itemArray;
+
+- (void)extractMetadataForNode:(AlfrescoNode *)node;
+- (void)generateThumbnailForNode:(AlfrescoNode *)node;
+
+@end
+
+@implementation AlfrescoDocumentFolderService
+@synthesize session = _session;
+@synthesize operationQueue = _operationQueue;
+@synthesize objectConverter = _objectConverter;
+@synthesize authenticationProvider = _authenticationProvider;
+@synthesize supportedSortKeys = _supportedSortKeys;
+@synthesize defaultSortKey = _defaultSortKey;
+
+
+- (id)initWithSession:(id<AlfrescoSession>)session
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.session = session;
+        self.operationQueue = [[NSOperationQueue alloc] init];
+        self.operationQueue.maxConcurrentOperationCount = 2;
+        self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
+        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
+        self.authenticationProvider = nil;
+        if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
+        {
+            self.authenticationProvider = (AlfrescoBasicAuthenticationProvider *)authenticationObject;
+        }
+        self.defaultSortKey = kAlfrescoSortByName;
+        self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt, nil];
+    }
+    return self;
+}
+
+#pragma mark - Create methods
+
+- (void)createFolderWithName:(NSString *)folderName inParentFolder:(AlfrescoFolder *)folder properties:(NSDictionary *)properties 
+             completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+{
+    NSAssert(nil != folderName, @"folderName must not be nil");
+    NSAssert(nil != folder, @"folder must not be nil");
+    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+
+    if(properties == nil)
+    {
+        properties = [NSMutableDictionary dictionaryWithCapacity:2];
+    }
+    [properties setValue:folderName forKey:kCMISPropertyName];
+    [properties setValue:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        
+        NSString *folderRef = [cmisSession createFolder:properties inFolder:folder.identifier error:&operationQueueError];
+        if (nil != folderRef)
+        {
+            [weakSelf retrieveNodeWithIdentifier:folderRef completionBlock:^(AlfrescoNode *node, NSError *error) {
+                
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    completionBlock((AlfrescoFolder *)node, error);
+                }];
+                
+            }];
+        }
+        else
+        {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(nil, operationQueueError);
+            }];
+        }
+    }];
+}
+
+
+- (void)createDocumentWithName:(NSString *)documentName inParentFolder:(AlfrescoFolder *)folder contentFile:(AlfrescoContentFile *)file 
+                    properties:(NSDictionary *)properties 
+                    completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                    progressBlock:(AlfrescoProgressBlock)progressBlock
+{
+    NSAssert(nil != file, @"file must not be nil");
+    NSAssert(nil != documentName, @"documentName must not be nil");
+    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+
+    if(properties == nil)
+    {
+        properties = [NSMutableDictionary dictionaryWithCapacity:2];
+    }
+    [properties setValue:documentName forKey:kCMISPropertyName];
+    // Add the titled aspect by default when creating a document.
+    NSString *objectTypeId = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled"];
+    [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        
+        [cmisSession createDocumentFromFilePath:[file.fileUrl path] withMimeType:file.mimeType withProperties:properties 
+                                       inFolder:folder.identifier 
+            completionBlock:^(NSString *result) {
+                [weakSelf retrieveNodeWithIdentifier:result completionBlock:^(AlfrescoNode *node, NSError *error) {
+                    
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        completionBlock((AlfrescoDocument *)node, error);}];
+                    if (nil != node)
+                    {
+                        BOOL isExtractMetadata = [[weakSelf.session objectForParameter:kAlfrescoMetadataExtraction] boolValue];
+                        if (isExtractMetadata)
+                        {
+                            [weakSelf extractMetadataForNode:node];
+                        }
+                        BOOL isGenerateThumbnails = [[weakSelf.session objectForParameter:kAlfrescoThumbnailCreation] boolValue];
+                        if (isGenerateThumbnails)
+                        {
+                            [weakSelf generateThumbnailForNode:node];
+                        }
+                    }
+                }];
+                
+            }
+            failureBlock:^(NSError *error){
+             NSError *alfrescoError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                 completionBlock(nil, alfrescoError);
+             }];
+            }
+            progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+             if (progressBlock) 
+             {
+                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                     progressBlock(bytesDownloaded, bytesTotal);
+                 }];
+             }
+         }];
+        
+    }];
+}
+
+
+#pragma mark - Retrieval methods
+- (void)retrieveRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        NSError *operationQueueError = nil;
+        AlfrescoFolder *rootFolder = nil;
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        CMISObject *retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&operationQueueError];
+        if (nil != retrievedObject) {
+            if ([retrievedObject isKindOfClass:[CMISFolder class]]) 
+            {
+                rootFolder = (AlfrescoFolder *)[self.objectConverter nodeFromCMISObject:retrievedObject];
+            }
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(rootFolder, operationQueueError);
+        }];        
+    }];
+}
+
+- (void)retrievePermissionsOfNode:(AlfrescoNode *)node 
+                  completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock
+{
+    NSError *error = nil;
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != node, @"node must not be nil");
+    
+    id associatedObject = objc_getAssociatedObject(node, &kAlfrescoPermissionsObjectKey);
+    if ([associatedObject isKindOfClass:[AlfrescoPermissions class]]) 
+    {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock((AlfrescoPermissions *)associatedObject, error);
+        }];
+    }
+    else 
+    {
+        error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"Error retrieving permissions for node"];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(nil, error);
+        }];
+    }
+}
+
+
+- (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder 
+                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != folder, @"folder must not be nil");
+    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
+        NSArray *sortedChildren = nil;
+        if (nil != childrenData) 
+        {
+            NSMutableArray *children = [NSMutableArray arrayWithCapacity:[childrenData count]];
+            for (CMISObject *object in childrenData) 
+            {
+                [children addObject:[self.objectConverter nodeFromCMISObject:object]];
+            }
+            if (0 < children.count) 
+            {
+                sortedChildren = [AlfrescoSortingUtils sortedArrayForArray:children sortKey:self.defaultSortKey ascending:YES];
+            }
+            else 
+            {
+                sortedChildren = [NSArray array];
+            }
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(sortedChildren, operationQueueError);
+        }];
+    }];
+}
+
+- (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder
+                  listingContext:(AlfrescoListingContext *)listingContext
+                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != folder, @"folder must not be nil");
+    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    NSAssert(nil != listingContext, @"listingContext must not be nil");
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        // TODO this is a temporary fix for the failing paging
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
+        AlfrescoPagingResult *pagingResult = nil;
+        if (nil != childrenData) 
+        {
+            NSMutableArray *children = [NSMutableArray arrayWithCapacity:[childrenData count]];
+            for (CMISObject *object in childrenData) 
+            {
+                [children addObject:[self.objectConverter nodeFromCMISObject:object]];
+            }
+            NSArray *sortedChildren = nil;
+            if (0 < children.count) 
+            {
+                sortedChildren = [AlfrescoSortingUtils sortedArrayForArray:children
+                                                                   sortKey:listingContext.sortProperty
+                                                             supportedKeys:self.supportedSortKeys
+                                                                defaultKey:self.defaultSortKey
+                                                                 ascending:listingContext.sortAscending];
+            }
+            else 
+            {
+                sortedChildren = [NSArray array];
+            }
+            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedChildren listingContext:listingContext];
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(pagingResult, operationQueueError);
+        }];            
+        
+    }];
+}
+
+- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder 
+                  completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != folder, @"folder must not be nil");
+    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+
+        NSError *operationQueueError = nil;
+        NSArray *sortedDocuments = nil;
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
+        if (nil != childrenData) 
+        {
+            NSArray *documents = [weakSelf retrieveItemsWithClassFilter:[AlfrescoDocument class] withArray:childrenData];
+            if (0 < documents.count) 
+            {
+                sortedDocuments = [AlfrescoSortingUtils sortedArrayForArray:documents sortKey:self.defaultSortKey ascending:YES];
+            }
+            else 
+            {
+                sortedDocuments = [NSArray array];
+            }
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(sortedDocuments, operationQueueError);
+        }];
+    }];
+}
+
+- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder
+                   listingContext:(AlfrescoListingContext *)listingContext
+                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != folder, @"folder must not be nil");
+    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    NSAssert(nil != listingContext, @"listingContext must not be nil");
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        AlfrescoPagingResult *pagingResult = nil;
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
+        if (nil != childrenData) 
+        {
+            NSArray *sortedDocuments = nil;
+            NSArray *documents = [weakSelf retrieveItemsWithClassFilter:[AlfrescoDocument class] withArray:childrenData];
+            if (0 < documents.count) 
+            {
+                sortedDocuments = [AlfrescoSortingUtils sortedArrayForArray:documents
+                                                                   sortKey:listingContext.sortProperty
+                                                             supportedKeys:self.supportedSortKeys
+                                                                defaultKey:self.defaultSortKey
+                                                                 ascending:listingContext.sortAscending];
+            }
+            else 
+            {
+                sortedDocuments = [NSArray array];
+            }
+            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedDocuments listingContext:listingContext];
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(pagingResult, operationQueueError);
+        }];
+    }];
+}
+
+- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder 
+                completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != folder, @"folder must not be nil");
+    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+
+        NSError *operationQueueError = nil;
+        NSArray *sortedFolders = nil;
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
+        if (nil != childrenData) 
+        {
+            NSArray *folders = [weakSelf retrieveItemsWithClassFilter:[AlfrescoFolder class] withArray:childrenData];
+            if (0 < folders.count) 
+            {
+                sortedFolders = [AlfrescoSortingUtils sortedArrayForArray:folders sortKey:self.defaultSortKey ascending:YES];
+            }
+            else 
+            {
+                sortedFolders = [NSArray array];
+            }
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(sortedFolders, operationQueueError);
+        }];
+    }];
+}
+
+- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingContext
+                completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != folder, @"folder must not be nil");
+    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    NSAssert(nil != listingContext, @"listingContext must not be nil");
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        NSArray *sortedFolders = nil;
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
+        AlfrescoPagingResult *pagingResult = nil;
+        if (nil != childrenData) 
+        {
+            NSArray *folders = [weakSelf retrieveItemsWithClassFilter:[AlfrescoFolder class] withArray:childrenData];
+            if (0 < folders.count) 
+            {
+                sortedFolders = [AlfrescoSortingUtils sortedArrayForArray:folders
+                                                                  sortKey:listingContext.sortProperty
+                                                            supportedKeys:self.supportedSortKeys
+                                                               defaultKey:self.defaultSortKey
+                                                                ascending:listingContext.sortAscending];
+            }
+            else 
+            {
+                sortedFolders = [NSArray array];
+            }
+            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedFolders listingContext:listingContext];
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(pagingResult, operationQueueError);
+        }];
+    }];
+}
+
+- (void)retrieveNodeWithIdentifier:(NSString *)identifier
+                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
+{
+    NSAssert(nil != identifier, @"identifier must not be nil");
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        CMISObject *cmisObject = [cmisSession retrieveObject:identifier error:&operationQueueError];
+        AlfrescoNode *alfrescoNode = nil;
+        if (nil != cmisObject) 
+        {
+            alfrescoNode = [weakSelf.objectConverter nodeFromCMISObject:cmisObject];
+            if (nil == alfrescoNode) 
+            {
+                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"node should not be nil"];
+            }
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(alfrescoNode, operationQueueError);
+        }];
+    }];
+}
+
+- (void)retrieveNodeWithFolderPath:(NSString *)path 
+                   completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
+{
+    NSAssert(nil != path, @"path must not be nil");
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        CMISObject *cmisObject = [cmisSession retrieveObjectByPath:path error:&operationQueueError];
+        AlfrescoNode *alfrescoNode = nil;
+        if (nil != cmisObject) 
+        {
+            alfrescoNode = [weakSelf.objectConverter nodeFromCMISObject:cmisObject];
+            if (nil == alfrescoNode) 
+            {
+                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"node should not be nil"];
+            }
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(alfrescoNode, operationQueueError);
+        }];
+    }];
+}
+
+- (void)retrieveNodeWithFolderPath:(NSString *)path relativeToFolder:(AlfrescoFolder *)folder 
+                   completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
+{
+    NSAssert(nil != path, @"path must not be nil");
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != folder, @"folder must not be nil");
+    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        CMISObject *object = [cmisSession retrieveObject:folder.identifier error:&operationQueueError];
+        if (nil != object) 
+        {
+            CMISFolder *folder = (CMISFolder *)object;
+            NSString *searchPath = [NSString stringWithFormat:@"%@%@", folder.path, path];
+            [weakSelf retrieveNodeWithFolderPath:searchPath completionBlock:completionBlock];
+        }
+        else 
+        {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(nil, operationQueueError);
+            }];
+        }        
+    }];
+}
+
+- (void)retrieveParentFolderOfNode:(AlfrescoNode *)node
+             completionBlock:(AlfrescoFolderCompletionBlock)completionBlock 
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != node, @"node must not be nil");
+    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        NSArray *parentArray = [cmisSession.binding.navigationService retrieveParentsForObject:node.identifier withFilter:nil withIncludeRelationships:CMISIncludeRelationshipBoth withRenditionFilter:nil withIncludeAllowableActions:YES withIncludeRelativePathSegment:YES error:&operationQueueError];
+
+        AlfrescoFolder *folder = nil;
+        if (nil != parentArray)
+        {
+            for (CMISObjectData *cmisData in parentArray) {
+                AlfrescoNode *alfNode = [weakSelf.objectConverter nodeFromCMISObjectData:cmisData];
+                if([alfNode isKindOfClass:AlfrescoFolder.class])
+                {
+                    folder = (AlfrescoFolder *)alfNode;
+                    break;
+                }
+            }
+            if (nil == folder) 
+            {
+                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"No parent folder found"];
+            }
+        }
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(folder, operationQueueError);
+        }];
+    }];
+}
+
+#pragma mark - Content methods
+
+
+- (void)retrieveRenditionOfNode:(AlfrescoNode *)node renditionName:(NSString *)renditionName
+                completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+{
+    BOOL isRenditionEnabled = [[self.session objectForParameter:kAlfrescoThumbnailRenditionFromAPI] boolValue];
+    if (!isRenditionEnabled)
+    {
+        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"thumbnail rendition method not enabled for this service"];
+        completionBlock(nil, error);
+        return;
+    }
+    
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != node, @"node must not be nil");
+    NSAssert(nil != renditionName, @"renditionName must not be nil");
+
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        NSString *renditionString = [kAlfrescoOnPremiseThumbnailRenditionAPI stringByReplacingOccurrencesOfString:kAlfrescoRenditionId withString:renditionName];
+        NSString *requestString = [renditionString stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+                                                                             withString:[node.identifier stringByReplacingOccurrencesOfString:@"://"
+                                                                                                                                   withString:@"/"]];
+        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
+                                         baseUrlAsString:kAlfrescoOnPremiseAPIPath
+                                  authenticationProvider:weakSelf.authenticationProvider
+                                                   error:&operationQueueError];
+        AlfrescoContentFile *thumbnailFile = nil;
+        if (nil != data)
+        {
+            thumbnailFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:kAlfrescoDefaultMimeType];
+        }
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(thumbnailFile, operationQueueError);
+        }];
+    }]; 
+    
+}
+
+
+- (void)retrieveContentOfDocument:(AlfrescoDocument *)document
+                  completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+                    progressBlock:(AlfrescoProgressBlock)progressBlock
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != document, @"document must not be nil");
+    NSAssert(nil != document.identifier, @"document.identifier must not be nil");
+
+    NSString *tmpFile = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",document.name];
+    CMISSession *cmisSession = [self.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+    [cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^{
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            NSLog(@"AlfrescoDocumentFolderService::downloadContentOfDocument. Document name is '%@' and we'll download to %@",document.name, tmpFile);
+            AlfrescoContentFile *downloadedFile = [[AlfrescoContentFile alloc]initWithUrl:[NSURL fileURLWithPath:tmpFile]];
+            completionBlock(downloadedFile, nil);
+        }];
+        
+    } failureBlock:^(NSError *operationQueueError) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(nil, operationQueueError);
+        }];
+        
+    } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+        if (progressBlock)
+        {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                progressBlock(bytesDownloaded, bytesTotal);
+            }];
+        }
+    }];
+    
+    
+    
+}
+
+- (void)updateContentOfDocument:(AlfrescoDocument *)document
+                    contentFile:(AlfrescoContentFile *)file
+                completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                  progressBlock:(AlfrescoProgressBlock)progressBlock
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != document, @"document must not be nil");
+    NSAssert(nil != file, @"contentFile must not be nil");
+    NSAssert(nil != document.identifier, @"document.identifier must not be nil");
+
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        CMISDocument *cmisDocument = (CMISDocument *) [cmisSession retrieveObject:document.identifier error:&operationQueueError];
+        if(cmisDocument != nil && cmisDocument.identifier != nil)
+        {
+            [cmisDocument changeContentToContentOfFile:[file.fileUrl path] withOverwriteExisting:YES completionBlock:^{
+                
+                NSError *anotherError = nil;
+                AlfrescoDocument *resultDocument = nil;
+                CMISDocument *resultCmisDocument = (CMISDocument *) [cmisSession retrieveObject:cmisDocument.identifier error:&anotherError];
+                if(!anotherError)
+                {
+                    resultDocument = (AlfrescoDocument *)[weakSelf.objectConverter nodeFromCMISObject:resultCmisDocument];
+                    if (nil == resultDocument)
+                    {
+                        anotherError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"Document should not be nil"];
+                    }
+                }
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    completionBlock(resultDocument, anotherError);
+                }];
+                
+            }
+                                          failureBlock:^(NSError *error) {
+                                              [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                                  completionBlock(nil, error);
+                                              }];
+                                          } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                                              if(progressBlock)
+                                              {
+                                                  [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                                      progressBlock(bytesDownloaded, bytesTotal);
+                                                  }];
+                                              }
+                                          }];
+        }
+        else
+        {
+            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"no document found"];
+        }
+        
+        if(nil != operationQueueError)
+        {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(nil, operationQueueError);
+            }];
+        }
+    }];
+    
+}
+
+
+- (void)updatePropertiesOfNode:(AlfrescoNode *)node 
+                properties:(NSDictionary *)properties
+               completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != node, @"node must not be nil");
+    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
+    
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        CMISObject *cmisObject = [cmisSession retrieveObject:node.identifier error:&operationQueueError];
+        
+        if(nil != cmisObject && nil != cmisObject.identifier)
+        {
+            [cmisObject updateProperties:properties error:&operationQueueError];
+            AlfrescoNode *resultNode = nil;
+            CMISObject *resultCmisObject = [cmisSession retrieveObject:cmisObject.identifier error:&operationQueueError];
+            if (nil != resultCmisObject)
+            {
+                resultNode = [weakSelf.objectConverter nodeFromCMISObject:resultCmisObject];
+                if (nil == resultNode)
+                {
+                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"Node should not be nil"];
+                }
+            }
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(resultNode, operationQueueError);
+            }];
+        }
+        else
+        {
+            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"no node found"];
+        }
+        
+        if(operationQueueError)
+        {
+            if(completionBlock)
+            {
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    completionBlock(nil, operationQueueError);
+                }];
+            }
+        }
+    }];
+}
+
+- (void)deleteNode:(AlfrescoNode *)node completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock 
+{
+    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    NSAssert(nil != node, @"node must not be nil");
+    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
+       
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        
+        NSError *operationQueueError = nil;
+        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+        
+        BOOL deletedSuccessfully = [cmisSession.binding.objectService deleteObject:node.identifier allVersions:YES error:&operationQueueError];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionBlock(deletedSuccessfully, operationQueueError);
+        }];
+    }];
+}
+
+#pragma mark - Internal methods
+
+- (NSArray *)cmisRetrieveChildren:(NSString *)objectId withSession:(__weak AlfrescoDocumentFolderService *)weakSelf error:(NSError **)error
+{
+    CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
+    CMISObject *object = [cmisSession retrieveObject:objectId error:error];
+    if (nil == object) 
+    {
+        return nil;
+    }
+    if (![object isKindOfClass:[CMISFolder class]]) 
+    {
+        *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"Node should be a Folder"];
+        return nil;
+    }
+    CMISFolder *folder = (CMISFolder *)object;
+    CMISPagedResult *result = [folder retrieveChildrenAndReturnError:error];
+    if (nil == result) 
+    {
+        return nil;
+    }
+    return (NSArray *)result.resultArray;
+}
+
+- (NSArray *)retrieveItemsWithClassFilter:(Class) typeClass withArray:(NSArray *)itemArray
+{
+    NSMutableArray *filteredArray = [NSMutableArray array];
+    for (CMISObject *object in itemArray)
+    {
+        AlfrescoNode *childNode = [self.objectConverter nodeFromCMISObject:object];
+        if ([childNode isKindOfClass:typeClass])
+        {
+            [filteredArray addObject:childNode];
+        }
+    }
+    return filteredArray;
+}
+
+- (void)extractMetadataForNode:(AlfrescoNode *)node
+{
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
+        [jsonDictionary setValue:node.identifier forKey:kAlfrescoJSONActionedUponNode];
+        [jsonDictionary setValue:kAlfrescoJSONExtractMetadata forKey:kAlfrescoJSONActionDefinitionName];
+        NSError *postError = nil;
+        NSURL *apiUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
+                                              self.session.baseUrl,kAlfrescoOnPremiseMetadataExtractionAPI]];
+        NSData *jsonData = [NSJSONSerialization 
+                            dataWithJSONObject:jsonDictionary 
+                            options:kNilOptions 
+                            error:&postError];
+        if (nil != jsonData)
+        {
+            [AlfrescoHTTPUtils executeRequestWithURL:apiUrl
+                              authenticationProvider:weakSelf.authenticationProvider
+                                                data:jsonData
+                                          httpMethod:@"POST"
+                                               error:&postError];
+        }
+    }];    
+}
+
+- (void)generateThumbnailForNode:(AlfrescoNode *)node
+{
+    __weak AlfrescoDocumentFolderService *weakSelf = self;
+    [self.operationQueue addOperationWithBlock:^{
+        NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
+        [jsonDictionary setValue:kAlfrescoJSONThumbnailName forKey:kAlfrescoThumbnailRendition];
+        NSError *postError = nil;
+        NSString *requestString = [kAlfrescoOnPremiseThumbnailCreationAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+                                                                                                    withString:[node.identifier stringByReplacingOccurrencesOfString:@"://"
+                                                                                                                                                          withString:@"/"]];
+        NSURL *apiUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.session.baseUrl, requestString]];
+        
+        NSData *jsonData = [NSJSONSerialization 
+                            dataWithJSONObject:jsonDictionary 
+                            options:kNilOptions 
+                            error:&postError];
+        if (nil != jsonData)
+        {
+            [AlfrescoHTTPUtils executeRequestWithURL:apiUrl
+                              authenticationProvider:weakSelf.authenticationProvider
+                                                data:jsonData
+                                          httpMethod:@"POST"
+                                               error:&postError];
+        }
+    }];    
+}
+
+
+
+@end

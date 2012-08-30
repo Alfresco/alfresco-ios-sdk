@@ -1,0 +1,367 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8266A59015E820370070B3D3 /* libAlfrescoSDKv0.0.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8266A58F15E820370070B3D3 /* libAlfrescoSDKv0.0.1.a */; };
+		82FC411415E7AC7D0081888D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82FC411315E7AC7D0081888D /* UIKit.framework */; };
+		82FC411615E7AC7D0081888D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82FC411515E7AC7D0081888D /* Foundation.framework */; };
+		82FC411815E7AC7D0081888D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82FC411715E7AC7D0081888D /* CoreGraphics.framework */; };
+		82FC411E15E7AC7D0081888D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 82FC411C15E7AC7D0081888D /* InfoPlist.strings */; };
+		82FC412015E7AC7D0081888D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 82FC411F15E7AC7D0081888D /* main.m */; };
+		82FC412415E7AC7D0081888D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 82FC412315E7AC7D0081888D /* AppDelegate.m */; };
+		82FC413515E7AD5A0081888D /* HelloRepoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82FC413415E7AD5A0081888D /* HelloRepoViewController.m */; };
+		82FC416415E7C4570081888D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82FC416315E7C4570081888D /* MobileCoreServices.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		8266A58F15E820370070B3D3 /* libAlfrescoSDKv0.0.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAlfrescoSDKv0.0.1.a; sourceTree = "<group>"; };
+		82FC410F15E7AC7D0081888D /* HelloRepo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloRepo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		82FC411315E7AC7D0081888D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		82FC411515E7AC7D0081888D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		82FC411715E7AC7D0081888D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		82FC411B15E7AC7D0081888D /* HelloRepo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HelloRepo-Info.plist"; sourceTree = "<group>"; };
+		82FC411D15E7AC7D0081888D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		82FC411F15E7AC7D0081888D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		82FC412115E7AC7D0081888D /* HelloRepo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HelloRepo-Prefix.pch"; sourceTree = "<group>"; };
+		82FC412215E7AC7D0081888D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		82FC412315E7AC7D0081888D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		82FC413315E7AD5A0081888D /* HelloRepoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelloRepoViewController.h; sourceTree = "<group>"; };
+		82FC413415E7AD5A0081888D /* HelloRepoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelloRepoViewController.m; sourceTree = "<group>"; };
+		82FC413B15E7B3E30081888D /* AlfrescoActivityEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoActivityEntry.h; sourceTree = "<group>"; };
+		82FC413C15E7B3E30081888D /* AlfrescoActivityStreamService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoActivityStreamService.h; sourceTree = "<group>"; };
+		82FC413D15E7B3E30081888D /* AlfrescoCloudNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoCloudNetwork.h; sourceTree = "<group>"; };
+		82FC413E15E7B3E30081888D /* AlfrescoCloudSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoCloudSession.h; sourceTree = "<group>"; };
+		82FC413F15E7B3E30081888D /* AlfrescoCloudSignupRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoCloudSignupRequest.h; sourceTree = "<group>"; };
+		82FC414015E7B3E30081888D /* AlfrescoComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoComment.h; sourceTree = "<group>"; };
+		82FC414115E7B3E30081888D /* AlfrescoCommentService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoCommentService.h; sourceTree = "<group>"; };
+		82FC414215E7B3E30081888D /* AlfrescoConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoConstants.h; sourceTree = "<group>"; };
+		82FC414315E7B3E30081888D /* AlfrescoContentFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoContentFile.h; sourceTree = "<group>"; };
+		82FC414415E7B3E30081888D /* AlfrescoDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoDocument.h; sourceTree = "<group>"; };
+		82FC414515E7B3E30081888D /* AlfrescoDocumentFolderService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoDocumentFolderService.h; sourceTree = "<group>"; };
+		82FC414615E7B3E30081888D /* AlfrescoErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoErrors.h; sourceTree = "<group>"; };
+		82FC414715E7B3E30081888D /* AlfrescoFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoFolder.h; sourceTree = "<group>"; };
+		82FC414915E7B3E30081888D /* AlfrescoKeywordSearchOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoKeywordSearchOptions.h; sourceTree = "<group>"; };
+		82FC414A15E7B3E30081888D /* AlfrescoListingContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoListingContext.h; sourceTree = "<group>"; };
+		82FC414B15E7B3E30081888D /* AlfrescoNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoNode.h; sourceTree = "<group>"; };
+		82FC414C15E7B3E30081888D /* AlfrescoPagingResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoPagingResult.h; sourceTree = "<group>"; };
+		82FC414D15E7B3E30081888D /* AlfrescoPermissions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoPermissions.h; sourceTree = "<group>"; };
+		82FC414E15E7B3E30081888D /* AlfrescoPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoPerson.h; sourceTree = "<group>"; };
+		82FC414F15E7B3E30081888D /* AlfrescoPersonService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoPersonService.h; sourceTree = "<group>"; };
+		82FC415015E7B3E30081888D /* AlfrescoProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoProperty.h; sourceTree = "<group>"; };
+		82FC415115E7B3E30081888D /* AlfrescoRatingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRatingService.h; sourceTree = "<group>"; };
+		82FC415215E7B3E30081888D /* AlfrescoRepositoryCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRepositoryCapabilities.h; sourceTree = "<group>"; };
+		82FC415315E7B3E30081888D /* AlfrescoRepositoryInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRepositoryInfo.h; sourceTree = "<group>"; };
+		82FC415415E7B3E30081888D /* AlfrescoRepositorySession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRepositorySession.h; sourceTree = "<group>"; };
+		82FC415515E7B3E30081888D /* AlfrescoSearchLanguage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSearchLanguage.h; sourceTree = "<group>"; };
+		82FC415615E7B3E30081888D /* AlfrescoSearchService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSearchService.h; sourceTree = "<group>"; };
+		82FC415715E7B3E30081888D /* AlfrescoSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSession.h; sourceTree = "<group>"; };
+		82FC415915E7B3E30081888D /* AlfrescoSite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSite.h; sourceTree = "<group>"; };
+		82FC415A15E7B3E30081888D /* AlfrescoSiteService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSiteService.h; sourceTree = "<group>"; };
+		82FC415B15E7B3E30081888D /* AlfrescoTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoTag.h; sourceTree = "<group>"; };
+		82FC415C15E7B3E30081888D /* AlfrescoTaggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoTaggingService.h; sourceTree = "<group>"; };
+		82FC415D15E7B3E30081888D /* AlfrescoVersionService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoVersionService.h; sourceTree = "<group>"; };
+		82FC416315E7C4570081888D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		82FC410C15E7AC7D0081888D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82FC416415E7C4570081888D /* MobileCoreServices.framework in Frameworks */,
+				82FC411415E7AC7D0081888D /* UIKit.framework in Frameworks */,
+				82FC411615E7AC7D0081888D /* Foundation.framework in Frameworks */,
+				82FC411815E7AC7D0081888D /* CoreGraphics.framework in Frameworks */,
+				8266A59015E820370070B3D3 /* libAlfrescoSDKv0.0.1.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		82FC410415E7AC7D0081888D = {
+			isa = PBXGroup;
+			children = (
+				82FC411915E7AC7D0081888D /* HelloRepo */,
+				82FC413A15E7B3E30081888D /* AlfrescoSDK */,
+				82FC411215E7AC7D0081888D /* Frameworks */,
+				82FC411015E7AC7D0081888D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		82FC411015E7AC7D0081888D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				82FC410F15E7AC7D0081888D /* HelloRepo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		82FC411215E7AC7D0081888D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				82FC416315E7C4570081888D /* MobileCoreServices.framework */,
+				82FC411315E7AC7D0081888D /* UIKit.framework */,
+				82FC411515E7AC7D0081888D /* Foundation.framework */,
+				82FC411715E7AC7D0081888D /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		82FC411915E7AC7D0081888D /* HelloRepo */ = {
+			isa = PBXGroup;
+			children = (
+				82FC412215E7AC7D0081888D /* AppDelegate.h */,
+				82FC412315E7AC7D0081888D /* AppDelegate.m */,
+				82FC413315E7AD5A0081888D /* HelloRepoViewController.h */,
+				82FC413415E7AD5A0081888D /* HelloRepoViewController.m */,
+				82FC411A15E7AC7D0081888D /* Supporting Files */,
+			);
+			path = HelloRepo;
+			sourceTree = "<group>";
+		};
+		82FC411A15E7AC7D0081888D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				82FC411B15E7AC7D0081888D /* HelloRepo-Info.plist */,
+				82FC411C15E7AC7D0081888D /* InfoPlist.strings */,
+				82FC411F15E7AC7D0081888D /* main.m */,
+				82FC412115E7AC7D0081888D /* HelloRepo-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		82FC413A15E7B3E30081888D /* AlfrescoSDK */ = {
+			isa = PBXGroup;
+			children = (
+				82FC413B15E7B3E30081888D /* AlfrescoActivityEntry.h */,
+				82FC413C15E7B3E30081888D /* AlfrescoActivityStreamService.h */,
+				82FC413D15E7B3E30081888D /* AlfrescoCloudNetwork.h */,
+				82FC413E15E7B3E30081888D /* AlfrescoCloudSession.h */,
+				82FC413F15E7B3E30081888D /* AlfrescoCloudSignupRequest.h */,
+				82FC414015E7B3E30081888D /* AlfrescoComment.h */,
+				82FC414115E7B3E30081888D /* AlfrescoCommentService.h */,
+				82FC414215E7B3E30081888D /* AlfrescoConstants.h */,
+				82FC414315E7B3E30081888D /* AlfrescoContentFile.h */,
+				82FC414415E7B3E30081888D /* AlfrescoDocument.h */,
+				82FC414515E7B3E30081888D /* AlfrescoDocumentFolderService.h */,
+				82FC414615E7B3E30081888D /* AlfrescoErrors.h */,
+				82FC414715E7B3E30081888D /* AlfrescoFolder.h */,
+				82FC414915E7B3E30081888D /* AlfrescoKeywordSearchOptions.h */,
+				82FC414A15E7B3E30081888D /* AlfrescoListingContext.h */,
+				82FC414B15E7B3E30081888D /* AlfrescoNode.h */,
+				82FC414C15E7B3E30081888D /* AlfrescoPagingResult.h */,
+				82FC414D15E7B3E30081888D /* AlfrescoPermissions.h */,
+				82FC414E15E7B3E30081888D /* AlfrescoPerson.h */,
+				82FC414F15E7B3E30081888D /* AlfrescoPersonService.h */,
+				82FC415015E7B3E30081888D /* AlfrescoProperty.h */,
+				82FC415115E7B3E30081888D /* AlfrescoRatingService.h */,
+				82FC415215E7B3E30081888D /* AlfrescoRepositoryCapabilities.h */,
+				82FC415315E7B3E30081888D /* AlfrescoRepositoryInfo.h */,
+				82FC415415E7B3E30081888D /* AlfrescoRepositorySession.h */,
+				82FC415515E7B3E30081888D /* AlfrescoSearchLanguage.h */,
+				82FC415615E7B3E30081888D /* AlfrescoSearchService.h */,
+				82FC415715E7B3E30081888D /* AlfrescoSession.h */,
+				82FC415915E7B3E30081888D /* AlfrescoSite.h */,
+				82FC415A15E7B3E30081888D /* AlfrescoSiteService.h */,
+				82FC415B15E7B3E30081888D /* AlfrescoTag.h */,
+				82FC415C15E7B3E30081888D /* AlfrescoTaggingService.h */,
+				82FC415D15E7B3E30081888D /* AlfrescoVersionService.h */,
+				8266A58F15E820370070B3D3 /* libAlfrescoSDKv0.0.1.a */,
+			);
+			path = AlfrescoSDK;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		82FC410E15E7AC7D0081888D /* HelloRepo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82FC413015E7AC7D0081888D /* Build configuration list for PBXNativeTarget "HelloRepo" */;
+			buildPhases = (
+				82FC410B15E7AC7D0081888D /* Sources */,
+				82FC410C15E7AC7D0081888D /* Frameworks */,
+				82FC410D15E7AC7D0081888D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HelloRepo;
+			productName = HelloRepo;
+			productReference = 82FC410F15E7AC7D0081888D /* HelloRepo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		82FC410615E7AC7D0081888D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Gavin Cornwell";
+			};
+			buildConfigurationList = 82FC410915E7AC7D0081888D /* Build configuration list for PBXProject "HelloRepo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 82FC410415E7AC7D0081888D;
+			productRefGroup = 82FC411015E7AC7D0081888D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				82FC410E15E7AC7D0081888D /* HelloRepo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		82FC410D15E7AC7D0081888D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82FC411E15E7AC7D0081888D /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		82FC410B15E7AC7D0081888D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82FC412015E7AC7D0081888D /* main.m in Sources */,
+				82FC412415E7AC7D0081888D /* AppDelegate.m in Sources */,
+				82FC413515E7AD5A0081888D /* HelloRepoViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		82FC411C15E7AC7D0081888D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				82FC411D15E7AC7D0081888D /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		82FC412E15E7AC7D0081888D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		82FC412F15E7AC7D0081888D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		82FC413115E7AC7D0081888D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HelloRepo/HelloRepo-Prefix.pch";
+				INFOPLIST_FILE = "HelloRepo/HelloRepo-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/AlfrescoSDK\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		82FC413215E7AC7D0081888D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HelloRepo/HelloRepo-Prefix.pch";
+				INFOPLIST_FILE = "HelloRepo/HelloRepo-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/AlfrescoSDK\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		82FC410915E7AC7D0081888D /* Build configuration list for PBXProject "HelloRepo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82FC412E15E7AC7D0081888D /* Debug */,
+				82FC412F15E7AC7D0081888D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		82FC413015E7AC7D0081888D /* Build configuration list for PBXNativeTarget "HelloRepo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82FC413115E7AC7D0081888D /* Debug */,
+				82FC413215E7AC7D0081888D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 82FC410615E7AC7D0081888D /* Project object */;
+}

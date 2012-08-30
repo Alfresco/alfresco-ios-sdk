@@ -1,0 +1,191 @@
+/*******************************************************************************
+ * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * 
+ * This file is part of the Alfresco Mobile SDK.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ******************************************************************************/
+/** The string definitions for the samples.
+ 
+ Author: Peter Schmidt (Alfresco)
+ */
+
+"sample_app_name"="Mobile SDK";
+"samples_option"="Samples";
+"api_reference_option"="API Reference";
+"learn_more_option"="Learn More...";
+"api_reference_title"="API Reference";
+"api_reference_url"="http://docs.alfresco.com/mobile_sdk_ios_preview/index.jsp";
+"learn_more_url"="http://www.alfresco.com/products/mobile";
+"sample_title"="Select Sample";
+"sample_browse_company_home_option"="Browse Company Home";
+"sample_browse_all_sites_option"="Browse All Sites";
+"sample_browse_favourite_sites_option"="Browse Favourite Sites";
+"sample_browse_my_sites_option"="Browse My Sites";
+"sample_search_option"="Search";
+"sample_activities_option"="Activities";
+"select_company_home_title"="Company Home";
+"select_favourite_sites_title"="Favourite Sites";
+"select_activities_title"="Activities";
+"select_my_sites_title"="My Sites";
+"select_all_sites_title"="All Sites";
+"add_new_title"="Add New";
+"add_folder_option"="Add Folder";
+"add_photo_option"="Add Photo";
+"folder_dialog_message"="Folder Name";
+"no_description"="No description";
+"dialog_ok"="OK";
+"dialog_cancel"="Cancel";
+"search_title"="Search";
+"search_keyword_option"="Search";
+"search_fulltext_option"="Full text";
+"search_exact_option"="Exact";
+"document_general_metadata_header"="General";
+"document_comments_header"="Comments";
+"document_tags_header"="Tags";
+"document_details_header"="Details";
+"document_version_header"="Version";
+"document_general_metadata"="Properties";
+"document_general_metadata_title"="Title";
+"document_general_metadata_description"="Description";
+"document_general_metadata_createdby"="Created By";
+"document_general_metadata_createdon"="Created On";
+"document_general_metadata_modifiedby"="Modified By";
+"document_general_metadata_modifiedon"="Modified On";
+"document_tags_notags"="No Tags";
+"document_comments_nocomments"="No Comments";
+"document_versions_noversions"="No Versions";
+"add_photo_name"="Name";
+"add_photo_description"="Description";
+"add_photo_tags"="Tags";
+"error_connection_failed"="Could not connect to server, please go to the Settings app and confirm the server details are correct.";
+"error_no_photo_library"="The Photo Library is unavailable.";
+"error_retrieve_children"="Failed to retrieve children for this folder.";
+"error_retrieve_comments"="Failed to retrieve comments for this document.";
+"error_retrieve_versions"="Failed to retrieve versions for this document.";
+"error_retrieve_likes"="Could not retrieve Like/Unlike tag for this document.";
+"error_retrieve_tags"="Failed to retrieve tags for this document.";
+"error_retrieve_thumbnails"="Failed to retrieve thumbnail(s).";
+"error_retrieve_sites"="Failed to retrieve sites.";
+"error_retrieve_doc_library"="Failed to retrieve document library.";
+"error_search"="Failure during search.";
+"error_retrieve_activities"="Failed to retrieve activities.";
+"error_downloading_document"="Failed to download the document.";
+"error_uploading_document"="Failed to upload the document";
+"error_adding_tags"="Failed to add tags to document on server";
+"error_add_comment"="Failed to add comment to document on server";
+"error_retrieve_avatars"="Failed to retrieve avatars for listed users.";
+"error_add_folder"="Failed to add folder.";
+"error_add_photo"="Failed to add photo.";
+"error_title"="Error";
+"load_more"="Load more...";
+"document_general_nodata"="None";
+"account_username"="Username";
+"account_password"="Password";
+"account_url"="Hostname";
+"error_login"="Failed to log in. Please check your settings.";
+"required"="Required";
+"dialog_wait"="Please wait";
+"contact_server_progress"="Contacting your server...";
+"document_actions"="Actions";
+"org_alfresco_blog_post_created"="{0} blog post created by {1}";
+"org_alfresco_blog_post_updated"="{0} blog post updated by {1}";
+"org_alfresco_blog_post_deleted"="{0} blog post deleted by {1}";
+"org_alfresco_comments_comment_created"="{1} commented on {0}";
+"org_alfresco_comments_comment_updated"="{1} updated comment on {0}";
+"org_alfresco_comments_comment_deleted"="{1} deleted a comment from {0}";
+"org_alfresco_discussions_post_created"="{0} discussion started by {1}";
+"org_alfresco_discussions_post_updated"="{0} discussion updated by {1}";
+"org_alfresco_discussions_post_deleted"="{0} discussion deleted by {1}";
+"org_alfresco_discussions_reply_created"="{1} replied to the discussion {0}";
+"org_alfresco_discussions_reply_updated"="{1} updated a reply to {0}";
+"org_alfresco_calendar_event_created"="{0} calendar event created by {1}";
+"org_alfresco_calendar_event_updated"="{0} calendar event updated by {1}";
+"org_alfresco_calendar_event_deleted"="{0} calendar event deleted by {1}";
+"org_alfresco_documentlibrary_file_added"="{0} document added by {1}";
+"org_alfresco_documentlibrary_files_added"="{0} documents added by {1}";
+"org_alfresco_documentlibrary_file_created"="{0} document created by {1}";
+"org_alfresco_documentlibrary_file_deleted"="{0} was deleted by {1}";
+"org_alfresco_documentlibrary_files_deleted"="{0} documents deleted by {1}";
+"org_alfresco_documentlibrary_file_updated"="{0} document updated by {1}";
+"org_alfresco_documentlibrary_files_updated"="{0} documents updated by {1}";
+"org_alfresco_documentlibrary_google_docs_checkout"="{0} document checked out to Google Docs by {1}";
+"org_alfresco_documentlibrary_google_docs_checkin"="{0} document checked in from Google Docs by {1}";
+"org_alfresco_documentlibrary_inline_edit"="{0} document edited by {1}";
+"org_alfresco_documentlibrary_file_liked"="{1} liked document {0}";
+"org_alfresco_documentlibrary_folder_liked"="{1} liked folder {0}";
+"org_alfresco_wiki_page_created"="{0} wiki page created by {1}";
+"org_alfresco_wiki_page_edited"="{0} wiki page updated by {1}";
+"org_alfresco_wiki_page_renamed"="{2} wiki page renamed to {0} by {1}";
+"org_alfresco_wiki_page_deleted"="{0} wiki page deleted by {1}";
+"org_alfresco_site_group_added"="{1} group added to site {4} with role {2}";
+"org_alfresco_site_group_removed"="{1} group removed from site {4}";
+"org_alfresco_site_group_role_changed"="{1} group role changed to {2}";
+"org_alfresco_site_user_joined"="{1} joined site {4} with role {2}";
+"org_alfresco_site_user_left"="{1} left site {4}";
+"org_alfresco_site_user_role_changed"="{1} role changed to {2}";
+"org_alfresco_links_link_created"="{0} link created by {1}";
+"org_alfresco_links_link_updated"="{0} link updated by {1}";
+"org_alfresco_links_link_deleted"="{0} link deleted by {1}";
+"org_alfresco_datalists_list_created"="{0} data list created by {1}";
+"org_alfresco_datalists_list_updated"="{0} data list details updated by {1}";
+"org_alfresco_datalists_list_deleted"="{0} data list deleted by {1}";
+"org_alfresco_subscriptions_followed"="{1} is now following {5}";
+"org_alfresco_subscriptions_subscribed"="{1} has subscribed to {2}";
+"org_alfresco_profile_status_changed"="{1}: {6}";
+"metadata_prop_name"="Name";
+"metadata_prop_type"="Type";
+"metadata_prop_content_mimetype"="Mimetype";
+"metadata_prop_content_size"="Size";
+"metadata_aspect_titled"="Titled";
+"metadata_prop_title"="Title";
+"metadata_prop_description"="Description";
+"metadata_aspect_auditable"="Auditable";
+"metadata_prop_creator"="Creator";
+"metadata_prop_creationdate"="Created Date";
+"metadata_prop_modifier"="Modifier";
+"metadata_prop_modificationdate"="Modified Date";
+"metadata_aspect_author"="Author";
+"metadata_prop_author"="Author";
+"metadata_aspect_exif"="EXIF";
+"metadata_prop_datetime_original"="Date and Time";
+"metadata_prop_pixelx_dimension"="Image Width";
+"metadata_prop_pixely_dimension"="Image Height";
+"metadata_prop_exposure_time"="Exposure Time";
+"metadata_prop_fnumber"="F Number";
+"metadata_prop_flash_activated"="Flash Activated";
+"metadata_prop_focal_length"="Focal Length";
+"metadata_prop_iso_speed"="ISO Speed";
+"metadata_prop_manufacturer"="Camera Manufacturer";
+"metadata_prop_model"="Camera Model";
+"metadata_prop_software"="Camera Software";
+"metadata_prop_orientation"="Orientation";
+"metadata_prop_xresolution"="Horizontal Resolution";
+"metadata_prop_yresolution"="Vertical Resolution";
+"metadata_prop_resolution_unit"="Resolution Unit";
+"metadata_aspect_geographic"="Geographic";
+"metadata_prop_latitude"="Latitude";
+"metadata_prop_longitude"="Longitude";
+"metadata_aspect_audio"="Audio";
+"metadata_prop_album"="Album";
+"metadata_prop_artist"="Artist";
+"metadata_prop_composer"="Composer";
+"metadata_prop_engineer"="Engineer";
+"metadata_prop_genre"="Genre";
+"metadata_prop_track_number"="Track Number";
+"metadata_prop_release_date"="Release Date";
+"metadata_prop_sample_rate"="Sample Rate";
+"metadata_prop_sample_type"="Sample Type";
+"metadata_prop_channel_type"="Channel Type";
+"metadata_prop_compressor"="Compressor";
+"revision_label"="Revision";
