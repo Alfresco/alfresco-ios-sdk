@@ -351,7 +351,7 @@ This authentication method authorises the user to access the home network assign
         else
         {
             // we only use the first repository
-            AlfrescoCloudSession *session = nil;
+//            AlfrescoCloudSession *session = nil;
             CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
             
             params.repositoryId = repoInfo.identifier;
@@ -373,7 +373,7 @@ This authentication method authorises the user to access the home network assign
                 self.personIdentifier = emailAddress;
                 AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                 self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
-                session = self;
+//                session = self;
                 
                 CMISObject *retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&error];
                 if (nil != retrievedObject) {
@@ -422,6 +422,7 @@ This authentication method authorises the user to access the home network assign
 /**
  Obtains an AlfrescoCloudNetwork object from a set of JSON data
  */
+#warning Will change. JIRA Cloud 598
 - (AlfrescoCloudNetwork *)networkFromJSON:(NSDictionary *)networkDictionary
 {
     AlfrescoCloudNetwork *network = [[AlfrescoCloudNetwork alloc] init];
@@ -439,6 +440,17 @@ This authentication method authorises the user to access the home network assign
         network.isPaidNetwork = [paidNumber boolValue];
     }
     
+    /* enable once Cloud feature Cloud-598 is uploaded
+    id creationTimeObject = [networkDictionary valueForKey:kAlfrescoJSONCreationTime];
+    if ([creationTimeObject isKindOfClass:[NSString class]])
+    {
+        NSString *dateString = (NSString *)creationTimeObject;
+        if (nil != dateString)
+        {
+            network.createdAt = [self.dateFormatter dateFromString:dateString];
+        }
+    }
+     */
     id networkObj = [networkDictionary valueForKey:kAlfrescoJSONNetwork];
     if ([networkObj isKindOfClass:[NSDictionary class]])
     {

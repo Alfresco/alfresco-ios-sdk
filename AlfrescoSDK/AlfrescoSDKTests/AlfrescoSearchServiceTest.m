@@ -36,10 +36,12 @@
     [super runAllSitesTest:^{
         
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
+
         AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
         searchOptions.exactMatch = NO;
         searchOptions.includeContent = NO;
         searchOptions.includeDescendants = YES;
+
         NSString *abbreviatedSearchTerm = @"test_file";
         if([super.testSearchFileName hasSuffix:@".pptx"])
         {
@@ -49,8 +51,10 @@
         // search
         [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions completionBlock:^(NSArray *array, NSError *error)
         {
-            if (nil == array) 
+            log(@"ENTERING searchWithKeywords completionBlock");
+            if (nil == array)
             {
+                log(@"search result array comes back as nil");
                 super.lastTestSuccessful = NO;
                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
@@ -72,11 +76,13 @@
                 }
             }
             super.callbackCompleted = YES;
+            log(@"LEAVING searchWithKeywords completionBlock");
         }];
         
-        [super waitForCompletion:10];
+        [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -104,6 +110,7 @@
         [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions
                             listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) 
         {
+            log(@"ENTERING searchWithKeywords completionBlock");
                                 
             if (nil == pagingResult) 
             {
@@ -119,12 +126,14 @@
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;
+            log(@"LEAVING searchWithKeywords completionBlock");
             
         }];
         
-        [super waitForCompletion:10];
+        [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -169,9 +178,10 @@
             
         }];
         
-        [super waitForCompletion:10];
+        [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -204,9 +214,10 @@
              super.callbackCompleted = YES;
              
          }];
-        [super waitForCompletion:10];
+        [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -253,9 +264,10 @@
              super.callbackCompleted = YES;
              
          }];
-        [super waitForCompletion:10];
+        [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -302,9 +314,10 @@
             
         }];
         
-        [super waitForCompletion:10];
+        [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -343,7 +356,14 @@
                 if (pagingResult.objects.count > 0)
                 {
                     BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:super.testSearchFileName array:pagingResult.objects];
-                    STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
+                    if (arrayContainsTestFile)
+                    {
+                        log(@"the file was found in the current page");
+                    }
+                    else
+                    {
+                        log(@"the file could not be found in the current page");
+                    }
                     super.lastTestSuccessful = arrayContainsTestFile;
                 }
                 else
@@ -356,9 +376,10 @@
             
         }];
         
-        [super waitForCompletion:10];
+        [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
