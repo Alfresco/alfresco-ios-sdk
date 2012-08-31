@@ -103,7 +103,8 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                              }
                                progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
     [self waitForCompletion:15];
-    STAssertTrue(self.lastTestSuccessful, @"uploadTestDocument failed");    
+    STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+    STAssertTrue(self.lastTestSuccessful, @"uploadTestDocument failed");
 }
 
 - (void) removeTestDocument
@@ -129,6 +130,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     }];
     
     [self waitForCompletion:15];
+    STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
     STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
     self.testAlfrescoDocument = nil;
 }
@@ -159,6 +161,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     
     
     [self waitForCompletion:15];
+    STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
     STAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication failed");
 }
 
@@ -189,6 +192,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     }];
 
     [self waitForCompletion:15];
+    STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
     STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
 }
 
@@ -219,6 +223,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
             self.callbackCompleted = YES;
         }];
         [self waitForCompletion:15];
+        STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
     }
     else
@@ -251,6 +256,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
             self.callbackCompleted = YES;
         }];
         [self waitForCompletion:15];
+        STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(self.lastTestSuccessful, @"setUpTestChildFolder failed");
     }
     else

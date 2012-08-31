@@ -107,7 +107,12 @@
     {
         CFRelease(CFGUID);
     }
-    return (__bridge NSString *)guidString;
+    NSString *returnString = (__bridge NSString *)guidString;
+    if (NULL != guidString)
+    {
+        CFRelease(guidString);
+    }
+    return returnString;
 }
 
 

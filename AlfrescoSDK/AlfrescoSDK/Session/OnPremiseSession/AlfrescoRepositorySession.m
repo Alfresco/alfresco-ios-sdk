@@ -137,7 +137,6 @@ static NSString * const kAlfrescoCMISPath = @"/service/cmis";
         else 
         {
             // we only use the first repository
-            AlfrescoRepositorySession *session = nil;
             CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
             
             params.repositoryId = repoInfo.identifier;
@@ -159,7 +158,6 @@ static NSString * const kAlfrescoCMISPath = @"/service/cmis";
                 self.personIdentifier = username;
                 AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                 self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
-                session = self; 
                 
                 CMISObject *retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&error];
                 if (nil != retrievedObject) {

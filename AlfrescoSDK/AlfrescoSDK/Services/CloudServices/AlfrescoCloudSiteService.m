@@ -49,6 +49,7 @@
 @synthesize operationQueue = _operationQueue;
 @synthesize authenticationProvider = _authenticationProvider;
 @synthesize supportedSortKeys = _supportedSortKeys;
+@synthesize defaultSortKey = _defaultSortKey;
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
     if (self = [super init])

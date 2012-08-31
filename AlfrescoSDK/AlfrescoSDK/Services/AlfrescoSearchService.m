@@ -88,10 +88,11 @@
                                                                                  maxItems:[NSNumber numberWithInt:50]
                                                                                 skipCount:0
                                                                                     error:&operationQueueError];
+            NSMutableArray *resultArray = nil;
             NSArray *sortedResultArray = nil;
             if (nil != queryResultList)
             {
-                NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.objects count]];
+                resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.objects count]];
                 for (CMISObjectData *queryData in queryResultList.objects) 
                 {
                     [resultArray addObject:[self.objectConverter nodeFromCMISObjectData:queryData]];
@@ -167,12 +168,13 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
+        NSMutableArray *resultArray = nil;
         NSArray *sortedResultArray = nil;
         CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
         CMISPagedResult *queryResultList = [cmisSession query:query searchAllVersions:NO error:&operationQueueError];
         if (nil != queryResultList)
         {
-            NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.resultArray count]];
+            resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.resultArray count]];
             for (CMISQueryResult *queryResult in queryResultList.resultArray) 
             {
                 [resultArray addObject:[self.objectConverter documentFromCMISQueryResult:queryResult]];
@@ -204,12 +206,21 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
+        NSMutableArray *resultArray = nil;
+        NSArray *sortedResultArray = nil;
         AlfrescoPagingResult *pagingResult = nil;
         CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
         CMISPagedResult *queryResultList = [cmisSession query:query searchAllVersions:NO operationContext:operationContext error:&operationQueueError];
         if (nil != queryResultList)
         {
-            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:queryResultList objectConverter:weakSelf.objectConverter];
+            resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.resultArray count]];
+            for (CMISQueryResult *queryResult in queryResultList.resultArray)
+            {
+                [resultArray addObject:[self.objectConverter documentFromCMISQueryResult:queryResult]];
+            }
+            sortedResultArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
+            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedResultArray listingContext:listingContext];
+//            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:queryResultList objectConverter:weakSelf.objectConverter];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(pagingResult, operationQueueError);
