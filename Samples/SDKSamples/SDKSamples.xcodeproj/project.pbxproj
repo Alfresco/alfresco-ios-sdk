@@ -620,9 +620,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/SDKSamples\"",
-					"\"$(SRCROOT)/SDKSamples/AlfrescoSDK\"",
 					"\"$(SRCROOT)/AlfrescoSDK\"",
 				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -637,9 +637,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/SDKSamples\"",
-					"\"$(SRCROOT)/SDKSamples/AlfrescoSDK\"",
 					"\"$(SRCROOT)/AlfrescoSDK\"",
 				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

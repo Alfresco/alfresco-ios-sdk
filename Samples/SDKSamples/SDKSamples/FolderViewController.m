@@ -66,7 +66,7 @@
          else 
          {
              [weakSelf.items addObjectsFromArray:pagingResult.objects];
-             weakSelf.displayItemsCount = self.displayItemsCount + pagingResult.objects.count;
+             weakSelf.displayItemsCount = weakSelf.displayItemsCount + pagingResult.objects.count;
              weakSelf.hasMoreItems = pagingResult.hasMoreItems;
              [weakSelf.tableView reloadData];
          }

@@ -133,7 +133,7 @@
                                        completionBlock:^(AlfrescoDocument *document, NSError *error){
           if (nil == document) 
           {                                               
-              self.progressView.hidden = YES;
+              weakSelf.progressView.hidden = YES;
               UIAlertView *alert = [[UIAlertView alloc] 
                                     initWithTitle:localized(@"error_title")
                                     message:[NSString stringWithFormat:@"%@, %@", localized(@"error_uploading_document"), [error localizedDescription]]
@@ -142,7 +142,7 @@
                                     otherButtonTitles: nil];
               alert.alertViewStyle = UIAlertViewStyleDefault;
               [alert show];    
-              self.photoLabel.text = localized(@"add_photo_option");
+              weakSelf.photoLabel.text = localized(@"add_photo_option");
           }
           else 
           {
@@ -155,11 +155,11 @@
                       [tagStrings addObject:tag.value];
                   }
                   
-                  self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.session];
+                  self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:weakSelf.session];
                   [self.taggingService addTags:tagStrings toNode:document completionBlock:^(BOOL success, NSError *error){
                       if (!success) 
                       {
-                          self.progressView.hidden = YES;
+                          weakSelf.progressView.hidden = YES;
                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:localized(@"error_title")
                                                                           message:[NSString stringWithFormat:@"%@, %@",localized(@"error_adding_tags"), [error localizedDescription]] 
                                                                          delegate:nil 
@@ -170,12 +170,12 @@
                       }
                       else 
                       {
-                          self.progressView.progress = 1.0;
-                          if ([self.addNewItemDelegate respondsToSelector:@selector(updateFolderContent)])
+                          weakSelf.progressView.progress = 1.0;
+                          if ([weakSelf.addNewItemDelegate respondsToSelector:@selector(updateFolderContent)])
                           {
-                              [self.addNewItemDelegate updateFolderContent];
+                              [weakSelf.addNewItemDelegate updateFolderContent];
                           }
-                          self.progressView.hidden = YES;                                                            
+                          weakSelf.progressView.hidden = YES;
                           [weakSelf.navigationController popViewControllerAnimated:YES];
                       }
                        
@@ -183,18 +183,18 @@
               }
               else 
               {
-                  self.progressView.progress = 1.0;
-                  if ([self.addNewItemDelegate respondsToSelector:@selector(updateFolderContent)])
+                  weakSelf.progressView.progress = 1.0;
+                  if ([weakSelf.addNewItemDelegate respondsToSelector:@selector(updateFolderContent)])
                   {
-                      [self.addNewItemDelegate updateFolderContent];
+                      [weakSelf.addNewItemDelegate updateFolderContent];
                   }
-                  self.progressView.hidden = YES;                                                            
+                  weakSelf.progressView.hidden = YES;
                   [weakSelf.navigationController popViewControllerAnimated:YES];                                                   
               }
           }
       } 
       progressBlock:^(NSInteger bytesUploaded, NSInteger totalBytes){
-          self.progressView.progress = ((float)bytesUploaded/(float)totalBytes) - 0.3;
+          weakSelf.progressView.progress = ((float)bytesUploaded/(float)totalBytes) - 0.3;
       }];
 }
 

@@ -81,6 +81,11 @@
         avatarImageView.image = [UIImage imageWithData:[self.avatarDictionary objectForKey:userId]];
         return;
     }
+    else
+    {
+        // set a default placeholder to display until the real avatar (if there is one) is retrieved
+        [avatarImageView setImage:[UIImage imageNamed:@"avatar.png"]];
+    }
     
     AlfrescoPerson *person = [[AlfrescoPerson alloc]init];
     person.identifier = userId;
@@ -127,8 +132,12 @@
         }
         else
         {
-            *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
+            if (error)
+            {
+                *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
                                          withDetailedDescription:@"returned data are of unknown type and cannot be parsed"];
+            }
+            
             return nil;
         }
         originalString = [originalString
