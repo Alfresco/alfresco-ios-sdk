@@ -79,8 +79,8 @@
 
 - (void)helloFromCloud
 {
-    NSString *emailAddress = @"gavin.cornwell@alfresco.com";
-    NSString *password = @"password";
+    NSString *emailAddress = @"your-email-address";
+    NSString *password = @"your-password";
     
     __weak HelloRepoViewController *weakSelf = self;
     [AlfrescoCloudSession connectWithEmailAddress:emailAddress
