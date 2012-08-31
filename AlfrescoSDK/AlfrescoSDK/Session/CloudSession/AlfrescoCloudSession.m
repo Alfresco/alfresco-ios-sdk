@@ -472,9 +472,19 @@ This authentication method authorises the user to access the home network assign
  */
 - (NSArray *) parseNetworkArrayWithData:(NSData *)data error:(NSError **)outError
 {
-    if (nil == data)
+    if (data == nil)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        }
         return nil;
     }
     NSError *error = nil;
@@ -487,26 +497,66 @@ This authentication method authorises the user to access the home network assign
     
     if (![jsonDictionary isKindOfClass:[NSDictionary class]])
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                            withDetailedDescription:@"Parse JSON error: expected NSDictionary"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                                           withDetailedDescription:@"Parse JSON error: expected NSDictionary"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        }
         return nil;
     }
     
     id listObject = [jsonDictionary valueForKey:kAlfrescoCloudJSONList];
     if (![listObject isKindOfClass:[NSDictionary class]])
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                            withDetailedDescription:@"Parse JSON error: expected NSDictionary"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                                           withDetailedDescription:@"Parse JSON error: expected NSDictionary"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        }
         return nil;
     }
     id entries = [listObject valueForKey:kAlfrescoCloudJSONEntries];
     if (![entries isKindOfClass:[NSArray class]])
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                            withDetailedDescription:@"Parse JSON error: expected NSArray"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                                 withDetailedDescription:@"Parse JSON error: expected NSArray"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError   withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        }
         return nil;
     }
     NSArray *entriesArray = [NSArray arrayWithArray:entries];
     if (0 == entriesArray.count)
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                            withDetailedDescription:@"Parse JSON error: no networks found"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
+                                                           withDetailedDescription:@"Parse JSON error: no networks found"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        }
         return nil;
     }
         

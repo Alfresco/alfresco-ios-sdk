@@ -450,7 +450,17 @@
 {
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
+                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
+                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+        }
         return nil;
     }
     NSError *error = nil;
@@ -469,7 +479,17 @@
         }
         else
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites withDetailedDescription:@"Parse result returns no site"];
+            if (nil == *outError)
+            {
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                withDetailedDescription:@"Parse should map to NSArray"];
+            }
+            else
+            {
+                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                               withDetailedDescription:@"Parse should map to NSArray"];
+                *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            }
             return nil;
         }
     }
@@ -485,7 +505,17 @@
 {
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
+                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
+                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+        }
         return nil;
     }
     NSError *error = nil;
@@ -497,7 +527,17 @@
     }
     if ([jsonSite isKindOfClass:[NSDictionary class]] == NO)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites withDetailedDescription:@"Parse result is no sites"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"Parse should map to NSDictionary"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                           withDetailedDescription:@"Parse should map to NSDictionary"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     if([[jsonSite valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
@@ -513,7 +553,17 @@
 {
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
+                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
+                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+        }
         return nil;
     }
     NSError *error = nil;
@@ -525,7 +575,17 @@
     }
     if ([favoriteSitesObject isKindOfClass:[NSDictionary class]] == NO)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites withDetailedDescription:@"Parse result is no favourite sites"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"Parse should map to NSDictionary"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                           withDetailedDescription:@"Parse should map to NSDictionary"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     

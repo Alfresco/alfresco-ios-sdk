@@ -204,7 +204,17 @@
 //    NSLog(@"parseActivityStreamArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream withDetailedDescription:@"JSON data shouldn't be NIL"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
+                                            withDetailedDescription:@"JSON data shouldn't be NIL"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
+                                                 withDetailedDescription:@"JSON data shouldn't be NIL"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
+        }
         return nil;
     }
     NSError *error = nil;
@@ -224,7 +234,17 @@
         }
         else
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream withDetailedDescription:@"Parse result is no activity entry"];
+            if (nil == *outError)
+            {
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
+                                                withDetailedDescription:@"Parse result has no activity entry"];
+            }
+            else
+            {
+                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
+                                                               withDetailedDescription:@"Parse result has no activity entry"];
+                *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
+            }
             return nil;
         }
     }

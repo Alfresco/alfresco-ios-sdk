@@ -280,7 +280,17 @@
     {
         return YES;
     }
-    *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSearch withDetailedDescription:@"Unsupported search language. Needs to be either CMIS-SQL or space delimited keywords"];
+    if (nil == *error)
+    {
+        *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSearch
+                                     withDetailedDescription:@"Unsupported search language. Needs to be either CMIS-SQL or space delimited keywords"];
+    }
+    else
+    {
+        NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSearch
+                                                       withDetailedDescription:@"Unsupported search language. Needs to be either CMIS-SQL or space delimited keywords"];
+        *error = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeSearch];
+    }
     return NO;
 }
 

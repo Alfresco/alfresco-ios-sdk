@@ -266,7 +266,18 @@
         NSDictionary *individualEntry = [entryDict valueForKey:kAlfrescoCloudJSONEntry];
         if (nil == individualEntry)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings withDetailedDescription:@"Ratings JSON data return NIL"];
+            if (nil == *outError)
+            {
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings
+                                                withDetailedDescription:@"Ratings JSON data return NIL"];
+            }
+            else
+            {
+                NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings
+                                                     withDetailedDescription:@"Ratings JSON data return NIL"];
+                *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeRatings];
+                
+            }
             return nil;
         }
         NSString *ratingsType = [individualEntry valueForKey:kAlfrescoJSONIdentifier];
@@ -275,8 +286,16 @@
             return individualEntry;
         }
     }
-    
-    *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings withDetailedDescription:@"No valid rating scheme was found. Must be likes"];
+    if (nil == *outError)
+    {
+        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings withDetailedDescription:@"No valid rating scheme was found. Must be likes"];
+    }
+    else
+    {
+        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings
+                                             withDetailedDescription:@"No valid rating scheme was found. Must be likes"];
+        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeRatings];        
+    }
     return nil;
     
 }
