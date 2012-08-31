@@ -126,7 +126,17 @@
 {
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
+                                            withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
+                                            withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
+        }
         return nil;
     }
     
@@ -140,12 +150,32 @@
     if ([[jsonPersonDict valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
     {
         // no person found
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson withDetailedDescription:@"Failure to create Alfresco Person"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson
+                                            withDetailedDescription:@"Failure to create Alfresco Person"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson
+                                                           withDetailedDescription:@"Failure to create Alfresco Person"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodePerson];
+        }
         return nil;
     }
     if (NO == [jsonPersonDict isKindOfClass:[NSDictionary class]])
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson withDetailedDescription:@"JSON entry should map to NSDictionary"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"JSON entry should map to NSDictionary"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                           withDetailedDescription:@"JSON entry should map to NSDictionary"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     return (AlfrescoPerson *)[self personFromJSON:(NSDictionary *)jsonPersonDict];

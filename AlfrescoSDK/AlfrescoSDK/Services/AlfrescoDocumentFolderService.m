@@ -808,9 +808,20 @@
     {
         return nil;
     }
-    if (![object isKindOfClass:[CMISFolder class]]) 
+    if (![object isKindOfClass:[CMISFolder class]])
     {
-        *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"Node should be a Folder"];
+        if (nil == *error)
+        {
+            *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder
+                                         withDetailedDescription:@"Node should be a Folder"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder
+                                                           withDetailedDescription:@"Node should be a Folder"];
+            *error = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            
+        }
         return nil;
     }
     CMISFolder *folder = (CMISFolder *)object;

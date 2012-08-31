@@ -272,7 +272,17 @@
 {
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     NSError *error = nil;
@@ -285,20 +295,50 @@
     
     if (![jsonDictionary isKindOfClass:[NSDictionary class]])
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"JSON data set should map to NSDictionary"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"JSON data set should map to NSDictionary"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                           withDetailedDescription:@"JSON data set should map to NSDictionary"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     
     id listObject = [jsonDictionary valueForKey:kAlfrescoCloudJSONList];
     if (![listObject isKindOfClass:[NSDictionary class]])
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"JSON data set should map to NSDictionary"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"JSON data set should map to NSDictionary"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                           withDetailedDescription:@"JSON data set should map to NSDictionary"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     id entries = [listObject valueForKey:kAlfrescoCloudJSONEntries];
     if (![entries isKindOfClass:[NSArray class]])
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"JSON data set should map to NSArray"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"JSON data set should map to NSArray"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                           withDetailedDescription:@"JSON data set should map to NSArray"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     NSArray *entriesArray = [NSArray arrayWithArray:entries];
@@ -310,7 +350,17 @@
 {
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     NSError *error = nil;
@@ -322,7 +372,17 @@
     }
     if ([jsonSite isKindOfClass:[NSDictionary class]] == NO)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"Parse result is no sites"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"JSON data set should map to NSDictionary"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                           withDetailedDescription:@"JSON data set should map to NSDictionary"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     if([[jsonSite valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
@@ -333,14 +393,34 @@
     id jsonDictObj = (NSDictionary *)jsonSite;
     if (![jsonDictObj isKindOfClass:[NSDictionary class]])
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"JSON data set should map to NSDictionary"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"JSON data set should map to NSDictionary"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                           withDetailedDescription:@"JSON data set should map to NSDictionary"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
         return nil;
     }
     NSDictionary *jsonDict = (NSDictionary *)jsonDictObj;
     NSDictionary *entryDict = [jsonDict valueForKey:kAlfrescoCloudJSONEntry];
     if (nil == entryDict)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"no Entry element found in JSON"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                            withDetailedDescription:@"no Entry element found in JSON"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                           withDetailedDescription:@"no Entry element found in JSON"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
     }
     return entryDict;
 }

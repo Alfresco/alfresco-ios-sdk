@@ -269,7 +269,18 @@
         NSDictionary *individualEntry = [entryDict valueForKey:kAlfrescoCloudJSONEntry];
         if (nil == individualEntry)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeComment withDetailedDescription:@"The JSON object containing the comment data is nil"];
+            if (nil == *outError)
+            {
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeComment
+                                                withDetailedDescription:@"The JSON object containing the comment data is nil"];
+            }
+            else
+            {
+                NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeComment
+                                                    withDetailedDescription:@"The JSON object containing the comment data is nil"];
+                *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeComment];
+                
+            }
             return nil;
         }
         else
@@ -285,7 +296,18 @@
     NSLog(@"parseCommentDictWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
+                                            withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
+                                                 withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
+            
+        }
         return nil;
     }
     
@@ -299,7 +321,17 @@
     NSDictionary *jsonComment = [jsonCommentDict valueForKey:kAlfrescoCloudJSONEntry];
     if (nil == jsonComment)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeComment withDetailedDescription:@"The JSON object containing the comment data is nil"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeComment
+                                            withDetailedDescription:@"The JSON object containing the comment data is nil"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeComment
+                                                 withDetailedDescription:@"The JSON object containing the comment data is nil"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeComment];
+        }
         return nil;
     }
     return (AlfrescoComment *)[self commentFromJSON:jsonComment];

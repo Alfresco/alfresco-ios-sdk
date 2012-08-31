@@ -226,12 +226,23 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTagging withDetailedDescription:@"JSON data shouldn't be nil"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTagging
+                                            withDetailedDescription:@"JSON data shouldn't be nil"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTagging
+                                                 withDetailedDescription:@"JSON data shouldn't be nil"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
+            
+        }
         return nil;
     }
-    NSError *error;
+    NSError *error = nil;
     id jsonTagArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-    if (error)
+    if (nil != error)
     {
         *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
         return nil;
@@ -246,7 +257,18 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
         }
         else
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTagging withDetailedDescription:@"Parse result is no Tag"];
+            if (nil == *outError)
+            {
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                withDetailedDescription:@"Parse result should map to NSArray"];
+            }
+            else
+            {
+                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                               withDetailedDescription:@"Parse result should map to NSArray"];
+                *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+                
+            }
             return nil;
         }
     }
