@@ -137,7 +137,18 @@
     NSDictionary *entryDict = [AlfrescoObjectConverter parseCloudJSONEntryFromListData:data error:outError];
     if (nil == entryDict)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson withDetailedDescription:@"person JSON data return with NIL"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson
+                                            withDetailedDescription:@"person JSON data return with NIL"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson
+                                                 withDetailedDescription:@"person JSON data return with NIL"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodePerson];
+            
+        }
         return nil;
     }
     

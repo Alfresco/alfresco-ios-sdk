@@ -257,7 +257,17 @@
 {
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
+                                            withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
+                                                 withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
+        }
         return nil;
     }
     
@@ -285,7 +295,17 @@
 {
     if (nil == data)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
+                                            withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
+                                                 withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
+        }
         return nil;
     }
     

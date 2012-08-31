@@ -258,7 +258,18 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
         NSDictionary *individualEntry = [entryDict valueForKey:kAlfrescoCloudJSONEntry];
         if (nil == individualEntry)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTagging withDetailedDescription:@"tagging JSON entry returns with NIL"];
+            if (nil == *outError)
+            {
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTagging
+                                                withDetailedDescription:@"tagging JSON entry returns with NIL"];
+            }
+            else
+            {
+                NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTagging
+                                                     withDetailedDescription:@"tagging JSON entry returns with NIL"];
+                *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
+                
+            }
             return nil;
         }
         AlfrescoTag *tag = [self tagFromJSON:individualEntry];

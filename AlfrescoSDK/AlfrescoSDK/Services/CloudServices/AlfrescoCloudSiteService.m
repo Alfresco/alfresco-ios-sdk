@@ -426,14 +426,36 @@
             id siteObj = [individualEntry valueForKey:kAlfrescoJSONSite];
             if (nil == siteObj)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"JSON entry doesn't contain a valid site object"];
+                if (nil == *outError)
+                {
+                    *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                    withDetailedDescription:@"JSON entry doesn't contain a valid site object"];
+                }
+                else
+                {
+                    NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                         withDetailedDescription:@"JSON entry doesn't contain a valid site object"];
+                    *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+                    
+                }
                 return nil;
             }
             else
             {
                 if (![siteObj isKindOfClass:[NSDictionary class]])
                 {
-                    *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing withDetailedDescription:@"JSON site entry doesn't map to NSDictionary as it should"];
+                    if (nil == *outError)
+                    {
+                        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                        withDetailedDescription:@"JSON site entry doesn't map to NSDictionary as it should"];
+                    }
+                    else
+                    {
+                        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
+                                                             withDetailedDescription:@"JSON site entry doesn't map to NSDictionary as it should"];
+                        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+                        
+                    }
                     return nil;
                 }
                 else
@@ -485,7 +507,17 @@
         }
         
     }
-    *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites withDetailedDescription:@"JSON data set should map to NSArray"];
+    if (nil == *outError)
+    {
+        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
+                                        withDetailedDescription:@"JSON data set should map to NSArray"];
+    }
+    else
+    {
+        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
+                                             withDetailedDescription:@"JSON data set should map to NSArray"];
+        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+    }
     return nil;
 }
 

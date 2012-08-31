@@ -244,7 +244,17 @@
     NSArray *entriesArray = [AlfrescoObjectConverter parseCloudJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream withDetailedDescription:@"could not parse JSON array"];
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
+                                            withDetailedDescription:@"could not parse JSON array"];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
+                                                           withDetailedDescription:@"could not parse JSON array"];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
+        }
         return nil;
     }
     NSMutableArray *resultsArray = [NSMutableArray array];
@@ -254,7 +264,17 @@
         NSDictionary *individualEntry = [entryDict valueForKey:kAlfrescoCloudJSONEntry];
         if (nil == individualEntry)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream withDetailedDescription:@"activity JSON data are NIL"];
+            if (nil == *outError)
+            {
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
+                                                withDetailedDescription:@"activity JSON data are NIL"];
+            }
+            else
+            {
+                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
+                                                               withDetailedDescription:@"activity JSON data are NIL"];
+                *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
+            }
             return nil;
         }
         [resultsArray addObject:[self activityEntryFromJSON:individualEntry]];
