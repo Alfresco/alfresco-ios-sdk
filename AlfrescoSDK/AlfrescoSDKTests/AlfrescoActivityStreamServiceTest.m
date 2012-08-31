@@ -59,6 +59,7 @@
         [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -99,6 +100,7 @@
         [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -141,6 +143,7 @@
         [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -177,6 +180,7 @@
         [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -233,6 +237,7 @@
         [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -284,6 +289,7 @@
         [super waitForCompletion:20];
         
         // check the test outcome
+        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
