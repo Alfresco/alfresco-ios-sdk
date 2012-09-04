@@ -66,7 +66,7 @@
 
 - (void)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         
@@ -90,8 +90,8 @@
 - (void)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext
                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -121,9 +121,9 @@
 - (void)retrieveTagsForNode:(AlfrescoNode *)node
             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"siteShortName must not be nil" isOptional:NO];
     
     __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -152,10 +152,10 @@
 - (void)retrieveTagsForNode:(AlfrescoNode *)node listingContext:(AlfrescoListingContext *)listingContext
             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -190,10 +190,10 @@
 - (void)addTags:(NSArray *)tags toNode:(AlfrescoNode *)node
 completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
-    NSAssert(nil != tags, @"tags must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:tags assertMessage:@"tags must not be nil" isOptional:NO];
     
     __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -228,13 +228,11 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTagging
-                                            withDetailedDescription:@"JSON data shouldn't be nil"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTagging
-                                                 withDetailedDescription:@"JSON data shouldn't be nil"];
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
             *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
             
         }
@@ -259,13 +257,11 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
         {
             if (nil == *outError)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                                withDetailedDescription:@"Parse result should map to NSArray"];
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
             }
             else
             {
-                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                                               withDetailedDescription:@"Parse result should map to NSArray"];
+                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
                 *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
                 
             }

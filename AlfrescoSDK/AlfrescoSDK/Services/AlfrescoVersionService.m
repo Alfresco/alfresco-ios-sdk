@@ -24,6 +24,7 @@
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
+#import "AlfrescoErrors.h"
 
 @interface AlfrescoVersionService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -60,8 +61,8 @@
 - (void)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
                       completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
-    NSAssert(nil != document, @"document must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:document assertMessage:@"document must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoVersionService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -93,10 +94,10 @@
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != document, @"document must not be nil");
-    NSAssert(nil != document.identifier, @"document.identifier must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:document assertMessage:@"document must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier assertMessage:@"document.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoVersionService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{

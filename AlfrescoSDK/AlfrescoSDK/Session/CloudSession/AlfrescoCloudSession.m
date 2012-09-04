@@ -134,12 +134,12 @@
                         }
                         else
                         {
-                            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown withDetailedDescription:@"Incorrect JSON data returned from server. Expected registration Object to be of type NSDictionary"];
+                            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSignUpRequestError];
                         }
                     }
                     else
                     {
-                        operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown withDetailedDescription:@"Incorrect JSON data returned from server. Expected top level Object to be of type NSDictionary"];                        
+                        operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSignUpRequestError];
                     }
                 }
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
@@ -340,7 +340,7 @@ This authentication method authorises the user to access the home network assign
         }
         else if(repositories.count == 0)
         {
-            error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNoRepositoryFound withDetailedDescription:nil];
+            error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNoRepositoryFound];
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 if(completionBlock)
                 {
@@ -476,14 +476,12 @@ This authentication method authorises the user to access the home network assign
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
-            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         return nil;
     }
@@ -491,7 +489,7 @@ This authentication method authorises the user to access the home network assign
     id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if (nil == jsonDictionary)
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         return nil;
     }
     
@@ -499,14 +497,12 @@ This authentication method authorises the user to access the home network assign
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                            withDetailedDescription:@"Parse JSON error: expected NSDictionary"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                                           withDetailedDescription:@"Parse JSON error: expected NSDictionary"];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
     }
@@ -516,14 +512,12 @@ This authentication method authorises the user to access the home network assign
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                            withDetailedDescription:@"Parse JSON error: expected NSDictionary"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                                           withDetailedDescription:@"Parse JSON error: expected NSDictionary"];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
     }
@@ -532,14 +526,12 @@ This authentication method authorises the user to access the home network assign
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                            withDetailedDescription:@"Parse JSON error: expected NSArray"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                                 withDetailedDescription:@"Parse JSON error: expected NSArray"];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError   withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError   withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
     }
@@ -548,14 +540,12 @@ This authentication method authorises the user to access the home network assign
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                            withDetailedDescription:@"Parse JSON error: no networks found"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNoNetworkFound];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNetwork
-                                                           withDetailedDescription:@"Parse JSON error: no networks found"];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeNetwork];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNoNetworkFound];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeNoNetworkFound];
         }
         return nil;
     }

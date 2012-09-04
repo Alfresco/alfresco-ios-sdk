@@ -96,10 +96,10 @@
 - (void)createFolderWithName:(NSString *)folderName inParentFolder:(AlfrescoFolder *)folder properties:(NSDictionary *)properties 
              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 {
-    NSAssert(nil != folderName, @"folderName must not be nil");
-    NSAssert(nil != folder, @"folder must not be nil");
-    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:folderName assertMessage:@"folderName must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier assertMessage:@"folder.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
 
     if(properties == nil)
     {
@@ -140,10 +140,10 @@
                     completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                     progressBlock:(AlfrescoProgressBlock)progressBlock
 {
-    NSAssert(nil != file, @"file must not be nil");
-    NSAssert(nil != documentName, @"documentName must not be nil");
-    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:file assertMessage:@"file must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:documentName assertMessage:@"documentName must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier assertMessage:@"folder.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
 
     if(properties == nil)
     {
@@ -204,7 +204,7 @@
 #pragma mark - Retrieval methods
 - (void)retrieveRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -228,8 +228,8 @@
                   completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock
 {
     NSError *error = nil;
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != node, @"node must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     id associatedObject = objc_getAssociatedObject(node, &kAlfrescoPermissionsObjectKey);
     if ([associatedObject isKindOfClass:[AlfrescoPermissions class]]) 
@@ -240,7 +240,7 @@
     }
     else 
     {
-        error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"Error retrieving permissions for node"];
+        error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderPermissions];
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(nil, error);
         }];
@@ -251,9 +251,9 @@
 - (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder 
                  completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != folder, @"folder must not be nil");
-    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:folder assertMessage:@"folder must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier assertMessage:@"folder.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -287,10 +287,10 @@
                   listingContext:(AlfrescoListingContext *)listingContext
                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != folder, @"folder must not be nil");
-    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:folder assertMessage:@"folder must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier assertMessage:@"folder.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -331,9 +331,9 @@
 - (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder 
                   completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != folder, @"folder must not be nil");
-    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:folder assertMessage:@"folder must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier assertMessage:@"folder.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -363,10 +363,10 @@
                    listingContext:(AlfrescoListingContext *)listingContext
                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != folder, @"folder must not be nil");
-    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:folder assertMessage:@"folder must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier assertMessage:@"folder.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -401,9 +401,9 @@
 - (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder 
                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != folder, @"folder must not be nil");
-    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:folder assertMessage:@"folder must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier assertMessage:@"folder.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -432,10 +432,10 @@
 - (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != folder, @"folder must not be nil");
-    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:folder assertMessage:@"folder must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier assertMessage:@"folder.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -470,8 +470,8 @@
 - (void)retrieveNodeWithIdentifier:(NSString *)identifier
                 completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
 {
-    NSAssert(nil != identifier, @"identifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:identifier assertMessage:@"identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -485,7 +485,7 @@
             alfrescoNode = [weakSelf.objectConverter nodeFromCMISObject:cmisObject];
             if (nil == alfrescoNode) 
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"node should not be nil"];
+                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNilFolder];
             }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -497,8 +497,8 @@
 - (void)retrieveNodeWithFolderPath:(NSString *)path 
                    completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
 {
-    NSAssert(nil != path, @"path must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:path assertMessage:@"path must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -512,7 +512,7 @@
             alfrescoNode = [weakSelf.objectConverter nodeFromCMISObject:cmisObject];
             if (nil == alfrescoNode) 
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"node should not be nil"];
+                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNilFolder];
             }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -524,10 +524,10 @@
 - (void)retrieveNodeWithFolderPath:(NSString *)path relativeToFolder:(AlfrescoFolder *)folder 
                    completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
 {
-    NSAssert(nil != path, @"path must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != folder, @"folder must not be nil");
-    NSAssert(nil != folder.identifier, @"folder.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:folder assertMessage:@"folder must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier assertMessage:@"folder.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:path assertMessage:@"path must not be nil" isOptional:NO];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -553,9 +553,9 @@
 - (void)retrieveParentFolderOfNode:(AlfrescoNode *)node
              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock 
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -577,7 +577,7 @@
             }
             if (nil == folder) 
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"No parent folder found"];
+                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoParent];
             }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -595,14 +595,14 @@
     BOOL isRenditionEnabled = [[self.session objectForParameter:kAlfrescoThumbnailRenditionFromAPI] boolValue];
     if (!isRenditionEnabled)
     {
-        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"thumbnail rendition method not enabled for this service"];
+        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoRenditionService];
         completionBlock(nil, error);
         return;
     }
     
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != renditionName, @"renditionName must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:renditionName assertMessage:@"renditionName must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -634,15 +634,15 @@
                   completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
                     progressBlock:(AlfrescoProgressBlock)progressBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != document, @"document must not be nil");
-    NSAssert(nil != document.identifier, @"document.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:document assertMessage:@"document must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier assertMessage:@"document.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
 
     NSString *tmpFile = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",document.name];
     CMISSession *cmisSession = [self.session objectForParameter:kAlfrescoSessionKeyCmisSession];
     [cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^{
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            NSLog(@"AlfrescoDocumentFolderService::downloadContentOfDocument. Document name is '%@' and we'll download to %@",document.name, tmpFile);
+            NSLog(@"AlfrescoDocumentFolderService::retrieveContentOfDocument. Document name is '%@' and we'll download to %@",document.name, tmpFile);
             AlfrescoContentFile *downloadedFile = [[AlfrescoContentFile alloc]initWithUrl:[NSURL fileURLWithPath:tmpFile]];
             completionBlock(downloadedFile, nil);
         }];
@@ -670,10 +670,10 @@
                 completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                   progressBlock:(AlfrescoProgressBlock)progressBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != document, @"document must not be nil");
-    NSAssert(nil != file, @"contentFile must not be nil");
-    NSAssert(nil != document.identifier, @"document.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:document assertMessage:@"document must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier assertMessage:@"document.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:file assertMessage:@"file must not be nil" isOptional:NO];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -693,7 +693,7 @@
                     resultDocument = (AlfrescoDocument *)[weakSelf.objectConverter nodeFromCMISObject:resultCmisDocument];
                     if (nil == resultDocument)
                     {
-                        anotherError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"Document should not be nil"];
+                        anotherError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNilDocument];
                     }
                 }
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -716,7 +716,7 @@
         }
         else
         {
-            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"no document found"];
+            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
         }
         
         if(nil != operationQueueError)
@@ -734,9 +734,10 @@
                 properties:(NSDictionary *)properties
                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:properties assertMessage:@"properties should not be nil" isOptional:YES];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -755,7 +756,7 @@
                 resultNode = [weakSelf.objectConverter nodeFromCMISObject:resultCmisObject];
                 if (nil == resultNode)
                 {
-                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"Node should not be nil"];
+                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
                 }
             }
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -764,7 +765,7 @@
         }
         else
         {
-            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder withDetailedDescription:@"no node found"];
+            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
         }
         
         if(operationQueueError)
@@ -781,9 +782,9 @@
 
 - (void)deleteNode:(AlfrescoNode *)node completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock 
 {
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
        
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -812,13 +813,11 @@
     {
         if (nil == *error)
         {
-            *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder
-                                         withDetailedDescription:@"Node should be a Folder"];
+            *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderWrongNodeType];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder
-                                                           withDetailedDescription:@"Node should be a Folder"];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderWrongNodeType];
             *error = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
             
         }

@@ -69,8 +69,8 @@
                    language:(AlfrescoSearchLanguage)language
             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != statement, @"statement must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:statement assertMessage:@"statement must not be nil" isOptional:NO];
     
     
     if (AlfrescoSearchLanguageCMIS == language)
@@ -113,9 +113,9 @@
              listingContext:(AlfrescoListingContext *)listingContext
             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != statement, @"statement must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:statement assertMessage:@"statement must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
 
     if (AlfrescoSearchLanguageCMIS == language)
     {
@@ -159,9 +159,9 @@
                    options:(AlfrescoKeywordSearchOptions *)options
            completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != keywords, @"keywords must not be nil");
-    NSAssert(nil != options, @"options must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:keywords assertMessage:@"keywords must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:options assertMessage:@"options must not be nil" isOptional:NO];
 
     NSString *query = [self createSearchQuery:keywords options:options];
     __weak AlfrescoSearchService *weakSelf = self;
@@ -194,10 +194,10 @@
             listingContext:(AlfrescoListingContext *)listingContext
            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != keywords, @"keywords must not be nil");
-    NSAssert(nil != options, @"options must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:keywords assertMessage:@"keywords must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:options assertMessage:@"options must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
 
     NSString *query = [self createSearchQuery:keywords options:options];
     CMISOperationContext *operationContext = [AlfrescoPagingUtils operationContextFromListingContext:listingContext];
@@ -282,13 +282,11 @@
     }
     if (nil == *error)
     {
-        *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSearch
-                                     withDetailedDescription:@"Unsupported search language. Needs to be either CMIS-SQL or space delimited keywords"];
+        *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSearchUnsupportedSearchLanguage];
     }
     else
     {
-        NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSearch
-                                                       withDetailedDescription:@"Unsupported search language. Needs to be either CMIS-SQL or space delimited keywords"];
+        NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSearchUnsupportedSearchLanguage];
         *error = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeSearch];
     }
     return NO;

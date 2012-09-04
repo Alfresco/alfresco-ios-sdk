@@ -101,8 +101,8 @@
 
 - (void)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"RetrieveAllSitesWithCompletionBlock: the completion block must not be nil");
-    NSAssert(nil != self.authenticationProvider, @"RetrieveAllSitesWithCompletionBlock: the service must have a valid authentication provider");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -132,9 +132,9 @@
 - (void)retrieveAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
                            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"RetrieveAllSitesWithCompletionBlock: the completion block must not be nil");
-    NSAssert(nil != listingContext, @"RetrieveAllSitesWithCompletionBlock: the listingContext must not be nil");
-    NSAssert(nil != self.authenticationProvider, @"RetrieveAllSitesWithCompletionBlock: the service must have a valid authentication provider");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
@@ -169,8 +169,8 @@
 
 - (void)retrieveSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"RetrieveAllSitesWithCompletionBlock: the completion block must not be nil");
-    NSAssert(nil != self.authenticationProvider, @"RetrieveAllSitesWithCompletionBlock: the service must have a valid authentication provider");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -197,9 +197,9 @@
 - (void)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"RetrieveAllSitesWithCompletionBlock: the completion block must not be nil");
-    NSAssert(nil != listingContext, @"RetrieveAllSitesWithCompletionBlock: the listingContext must not be nil");
-    NSAssert(nil != self.authenticationProvider, @"RetrieveAllSitesWithCompletionBlock: the service must have a valid authentication provider");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -237,8 +237,8 @@
 
 - (void)retrieveFavoriteSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"RetrieveAllSitesWithCompletionBlock: the completion block must not be nil");
-    NSAssert(nil != self.authenticationProvider, @"RetrieveAllSitesWithCompletionBlock: the service must have a valid authentication provider");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -288,9 +288,9 @@
 - (void)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
                                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"RetrieveAllSitesWithCompletionBlock: the completion block must not be nil");
-    NSAssert(nil != listingContext, @"RetrieveAllSitesWithCompletionBlock: the listingContext must not be nil");
-    NSAssert(nil != self.authenticationProvider, @"RetrieveAllSitesWithCompletionBlock: the service must have a valid authentication provider");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -360,9 +360,9 @@
 - (void)retrieveSiteWithShortName:(NSString *)siteShortName
                   completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"RetrieveAllSitesWithCompletionBlock: the completion block must not be nil");
-    NSAssert(nil != siteShortName, @"RetrieveAllSitesWithCompletionBlock: the site short name must not be nil");
-    NSAssert(nil != self.authenticationProvider, @"RetrieveAllSitesWithCompletionBlock: the service must have a valid authentication provider");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:siteShortName assertMessage:@"siteShortName must not be nil" isOptional:NO];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -388,9 +388,9 @@
 - (void)retrieveDocumentLibraryFolderForSite:(NSString *)siteShortName
                              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
-    NSAssert(nil != completionBlock, @"RetrieveAllSitesWithCompletionBlock: the completion block must not be nil");
-    NSAssert(nil != siteShortName, @"RetrieveAllSitesWithCompletionBlock: the site short name must not be nil");
-    NSAssert(nil != self.authenticationProvider, @"RetrieveAllSitesWithCompletionBlock: the service must have a valid authentication provider");
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:siteShortName assertMessage:@"siteShortName must not be nil" isOptional:NO];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -433,8 +433,7 @@
         {
             if(nil == operationQueueError)
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolder
-                                                          withDetailedDescription:@"The document library was not found"];
+                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSitesNoDocLib];
             }
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -452,13 +451,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
-                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
-                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
             *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         }
         return nil;
@@ -481,13 +478,11 @@
         {
             if (nil == *outError)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                                withDetailedDescription:@"Parse should map to NSArray"];
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSitesNoSites];
             }
             else
             {
-                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                                               withDetailedDescription:@"Parse should map to NSArray"];
+                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSitesNoSites];
                 *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
             }
             return nil;
@@ -507,13 +502,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
-                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
-                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
             *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         }
         return nil;
@@ -529,13 +522,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                            withDetailedDescription:@"Parse should map to NSDictionary"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                                           withDetailedDescription:@"Parse should map to NSDictionary"];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
             *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
@@ -555,14 +546,12 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
-                                            withDetailedDescription:@"Parse JSON shouldn't be nil"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites
-                                                 withDetailedDescription:@"Parse JSON shouldn't be nil"];
-            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         return nil;
     }
@@ -577,13 +566,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                            withDetailedDescription:@"Parse should map to NSDictionary"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                                           withDetailedDescription:@"Parse should map to NSDictionary"];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
             *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;

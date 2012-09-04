@@ -106,8 +106,8 @@
 
 - (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != personIdentifier, @"personIdentifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:personIdentifier assertMessage:@"personIdentifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -133,9 +133,9 @@
 - (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != personIdentifier, @"personIdentifier must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:personIdentifier assertMessage:@"personIdentifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -169,8 +169,8 @@
 
 - (void)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != site, @"site must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:site assertMessage:@"site must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -198,9 +198,9 @@
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != site, @"site must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
-    NSAssert(nil != listingContext, @"listingContext must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:site assertMessage:@"site must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -246,13 +246,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
-                                            withDetailedDescription:@"could not parse JSON array"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
-                                                           withDetailedDescription:@"could not parse JSON array"];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
             *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
         }
         return nil;
@@ -266,13 +264,11 @@
         {
             if (nil == *outError)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
-                                                withDetailedDescription:@"activity JSON data are NIL"];
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
             }
             else
             {
-                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeActivityStream
-                                                               withDetailedDescription:@"activity JSON data are NIL"];
+                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
                 *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
             }
             return nil;

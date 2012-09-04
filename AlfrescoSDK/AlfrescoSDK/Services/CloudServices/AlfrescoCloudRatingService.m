@@ -61,9 +61,9 @@
 - (void)retrieveLikeCountForNode:(AlfrescoNode *)node
                  completionBlock:(AlfrescoNumberCompletionBlock)completionBlock
 {
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoCloudRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -96,7 +96,7 @@
                 }
                 else
                 {
-                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings withDetailedDescription:@"No ratings count was found"];
+                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings];
                 }
             }
         }
@@ -109,9 +109,9 @@
 
 - (void)isNodeLiked:(AlfrescoNode *)node completionBlock:(AlfrescoLikedCompletionBlock)completionBlock
 {
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoCloudRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -155,7 +155,7 @@
                 }
                 else
                 {
-                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings withDetailedDescription:@"No ratings count was found"];
+                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings];
                     success = NO;
                 }
                 
@@ -176,9 +176,9 @@
 - (void)likeNode:(AlfrescoNode *)node
  completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoCloudRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -224,9 +224,9 @@
 - (void)unlikeNode:(AlfrescoNode *)node
    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    NSAssert(nil != node, @"node must not be nil");
-    NSAssert(nil != node.identifier, @"node.identifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
     
     __weak AlfrescoCloudRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -268,14 +268,12 @@
         {
             if (nil == *outError)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings
-                                                withDetailedDescription:@"Ratings JSON data return NIL"];
+                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
             }
             else
             {
-                NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings
-                                                     withDetailedDescription:@"Ratings JSON data return NIL"];
-                *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeRatings];
+                NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+                *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
                 
             }
             return nil;
@@ -288,12 +286,11 @@
     }
     if (nil == *outError)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings withDetailedDescription:@"No valid rating scheme was found. Must be likes"];
+        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings];
     }
     else
     {
-        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings
-                                             withDetailedDescription:@"No valid rating scheme was found. Must be likes"];
+        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings];
         *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeRatings];        
     }
     return nil;

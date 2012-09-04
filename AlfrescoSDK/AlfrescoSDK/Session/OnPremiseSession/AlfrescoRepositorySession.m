@@ -126,7 +126,7 @@ static NSString * const kAlfrescoCMISPath = @"/service/cmis";
         }
         else if(repositories.count == 0)
         {
-            error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNoRepositoryFound withDetailedDescription:nil];
+            error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeNoRepositoryFound];
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 if(completionBlock)
                 {
