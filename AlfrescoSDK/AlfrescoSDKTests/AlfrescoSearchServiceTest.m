@@ -38,9 +38,6 @@
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
 
         AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
-//        searchOptions.exactMatch = NO;
-//        searchOptions.includeContent = NO;
-//        searchOptions.includeDescendants = YES;
 
         NSString *abbreviatedSearchTerm = @"test_file";
         if([super.testSearchFileName hasSuffix:@".pptx"])
@@ -94,9 +91,6 @@
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
         
         AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithFolder:nil includeDescendants:YES];
-//        searchOptions.exactMatch = NO;
-//        searchOptions.includeContent = NO;
-//        searchOptions.includeDescendants = YES;
         
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
         NSString *abbreviatedSearchTerm = @"test_file";
@@ -143,9 +137,6 @@
         
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
         AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:YES includeContent:NO];
-//        searchOptions.exactMatch = YES;
-//        searchOptions.includeContent = NO;
-//        searchOptions.includeDescendants = YES;
         
         // search
         [self.searchService searchWithKeywords:super.testSearchFileName options:searchOptions completionBlock:^(NSArray *array, NSError *error)
@@ -194,11 +185,6 @@
                                                                                                         folder:super.currentSession.rootFolder
                                                                                             includeDescendants:NO];
         
-//        searchOptions.exactMatch = YES;
-//        searchOptions.includeContent = NO;
-//        searchOptions.includeDescendants = NO;
-//        searchOptions.folder = super.currentSession.rootFolder;
-        
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
         
         
@@ -232,9 +218,6 @@
     [super runAllSitesTest:^{
         
         AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:NO includeContent:YES];
-//        searchOptions.exactMatch = NO;
-//        searchOptions.includeContent = YES;
-//        searchOptions.includeDescendants = YES;
         
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
         
