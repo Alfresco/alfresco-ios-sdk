@@ -62,8 +62,9 @@
 }
 - (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
 {
-    NSAssert(nil != identifier, @"identifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:identifier argumentAsString:@"identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+
     __weak AlfrescoOnPremisePersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         NSError *operationQueueError = nil;
@@ -94,8 +95,8 @@
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    NSAssert(nil != person, @"person must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:person argumentAsString:@"person"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremisePersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -128,13 +129,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
-                                            withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
-                                            withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
             *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
         }
         return nil;
@@ -152,14 +151,12 @@
         // no person found
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson
-                                            withDetailedDescription:@"Failure to create Alfresco Person"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePersonNotFound];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson
-                                                           withDetailedDescription:@"Failure to create Alfresco Person"];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodePerson];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePersonNotFound];
+            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodePersonNotFound];
         }
         return nil;
     }
@@ -167,13 +164,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                            withDetailedDescription:@"JSON entry should map to NSDictionary"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing
-                                                           withDetailedDescription:@"JSON entry should map to NSDictionary"];
+            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
             *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;

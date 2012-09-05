@@ -63,8 +63,8 @@
 }
 - (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
 {
-    NSAssert(nil != identifier, @"identifier must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:identifier argumentAsString:@"identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoCloudPersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -94,14 +94,14 @@
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    NSAssert(nil != person, @"person must not be nil");
-    NSAssert(nil != completionBlock, @"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:person argumentAsString:@"person"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoCloudPersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         if (nil == person.avatarIdentifier)
         {
-            NSError * error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson withDetailedDescription:@"no avatar specified"];
+            NSError * error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson];
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 completionBlock(nil, error);
             }];
@@ -139,13 +139,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson
-                                            withDetailedDescription:@"person JSON data return with NIL"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson
-                                                 withDetailedDescription:@"person JSON data return with NIL"];
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
             *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodePerson];
             
         }

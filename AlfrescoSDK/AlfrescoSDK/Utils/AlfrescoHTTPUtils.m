@@ -77,8 +77,7 @@
     
     if (response.statusCode < 200 || response.statusCode > 299)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorHttpResponseNotOk
-                                        withDetailedDescription:[[NSMutableString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]];
+        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeHTTPResponse];
     }
     
     return responseData;    
@@ -113,8 +112,7 @@
     
     if (response.statusCode < 200 || response.statusCode > 299)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorHttpResponseNotOk
-                                        withDetailedDescription:[[NSMutableString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]];
+        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeHTTPResponse];
     }
     
     return responseData;

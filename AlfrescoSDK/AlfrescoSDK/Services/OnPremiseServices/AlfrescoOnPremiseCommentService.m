@@ -70,9 +70,9 @@
 
 - (void)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSAssert(nil != node,@"node must not be nil");
-    NSAssert(nil != node.identifier,@"node.identifier must not be nil");
-    NSAssert(nil != completionBlock,@"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
 
     __weak AlfrescoOnPremiseCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -103,10 +103,13 @@
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSAssert(nil != node,@"node must not be nil");
-    NSAssert(nil != node.identifier,@"node.identifier must not be nil");
-    NSAssert(nil != listingContext,@"listingContext must not be nil");
-    NSAssert(nil != completionBlock,@"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
     
     __weak AlfrescoOnPremiseCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -140,9 +143,9 @@
 - (void)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content
                    title:(NSString *)title completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
-    NSAssert(nil != node,@"node must not be nil");
-    NSAssert(nil != node.identifier,@"node.identifier must not be nil");
-    NSAssert(nil != completionBlock,@"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -180,9 +183,11 @@
                     content:(NSString *)content
             completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
-    NSAssert(nil != comment,@"comment must not be nil");
-    NSAssert(nil != comment.identifier,@"comment.identifier must not be nil");
-    NSAssert(nil != completionBlock,@"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:comment argumentAsString:@"comment"];
+    [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentAsString:@"comment.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -221,9 +226,9 @@
                       comment:(AlfrescoComment *)comment
               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    NSAssert(nil != comment,@"comment must not be nil");
-    NSAssert(nil != comment.identifier,@"comment.identifier must not be nil");
-    NSAssert(nil != completionBlock,@"completionBlock must not be nil");
+    [AlfrescoErrors assertArgumentNotNil:comment argumentAsString:@"comment"];
+    [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentAsString:@"comment.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -259,13 +264,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
-                                            withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
-                                                 withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
             *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
         }
         return nil;
@@ -297,13 +300,11 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
-                                            withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
-                                                 withDetailedDescription:@"JSON comment data to be parsed should not be NIL"];
+            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
             *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
         }
         return nil;
