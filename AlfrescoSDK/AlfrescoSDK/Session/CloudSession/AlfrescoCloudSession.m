@@ -422,7 +422,6 @@ This authentication method authorises the user to access the home network assign
 /**
  Obtains an AlfrescoCloudNetwork object from a set of JSON data
  */
-#warning Will change. JIRA Cloud 598
 - (AlfrescoCloudNetwork *)networkFromJSON:(NSDictionary *)networkDictionary
 {
     AlfrescoCloudNetwork *network = [[AlfrescoCloudNetwork alloc] init];
@@ -440,24 +439,12 @@ This authentication method authorises the user to access the home network assign
         network.isPaidNetwork = [paidNumber boolValue];
     }
     
-    /* enable once Cloud feature Cloud-598 is uploaded
-    id creationTimeObject = [networkDictionary valueForKey:kAlfrescoJSONCreationTime];
-    if ([creationTimeObject isKindOfClass:[NSString class]])
+    id createdAtObject = [networkDictionary valueForKey:kAlfrescoJSONCreatedAt];
+    if ([createdAtObject isKindOfClass:[NSString class]])
     {
-        NSString *dateString = (NSString *)creationTimeObject;
+        NSString *dateString = (NSString *)createdAtObject;
         if (nil != dateString)
         {
-            network.createdAt = [self.dateFormatter dateFromString:dateString];
-        }
-    }
-     */
-    id networkObj = [networkDictionary valueForKey:kAlfrescoJSONNetwork];
-    if ([networkObj isKindOfClass:[NSDictionary class]])
-    {
-        id creationTimeObject = [networkObj valueForKey:kAlfrescoJSONCreationTime];
-        if ([creationTimeObject isKindOfClass:[NSString class]])
-        {
-            NSString *dateString = (NSString *)creationTimeObject;
             network.createdAt = [self.dateFormatter dateFromString:dateString];
         }
     }
