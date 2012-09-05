@@ -134,8 +134,7 @@
         {
             if (error)
             {
-                *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeUnknown
-                                         withDetailedDescription:@"returned data are of unknown type and cannot be parsed"];
+                *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
             }
             
             return nil;
