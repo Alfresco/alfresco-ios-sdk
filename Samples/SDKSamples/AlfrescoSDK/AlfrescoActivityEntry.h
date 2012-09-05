@@ -28,26 +28,32 @@
 /// @name Properties.
 
 /// The unique identifier of the activity.
-@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong, readonly) NSString *identifier;
 
 
 /// The date the activity was posted.
-@property (nonatomic, strong) NSDate *createdAt;
+@property (nonatomic, strong, readonly) NSDate *createdAt;
 
 
 /// The id of the user that posted the activity.
-@property (nonatomic, strong) NSString *createdBy;
+@property (nonatomic, strong, readonly) NSString *createdBy;
 
 
 /// The short name of the site the activity occurred in, maybe nil.
-@property (nonatomic, strong) NSString *siteShortName;
+@property (nonatomic, strong, readonly) NSString *siteShortName;
 
 
 /// The type of the activity.
-@property (nonatomic, strong) NSString *type;
+@property (nonatomic, strong, readonly) NSString *type;
 
 
 /// A dictionary holding the data for the activity, this will vary depending on the activity type.
-@property (nonatomic, strong) NSDictionary *data;
+@property (nonatomic, strong, readonly) NSDictionary *data;
+
+/**
+ @param properties - the list of values to assign to the AlfrescoActivityEntry object
+ @return the AlfrescoActivityEntry object
+ */
+- (id)initWithProperties:(NSDictionary *)properties;
 
 @end
