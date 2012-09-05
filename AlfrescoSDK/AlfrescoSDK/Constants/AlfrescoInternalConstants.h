@@ -177,12 +177,17 @@ extern NSString * const kAlfrescoJSONItem;
 extern NSString * const kAlfrescoJSONCreatedOn;
 extern NSString * const kAlfrescoJSONCreatedOnISO;
 extern NSString * const kAlfrescoJSONAuthorUserName;
+extern NSString * const kAlfrescoJSONAuthor;
+extern NSString * const kAlfrescoJSONUsername;
 extern NSString * const kAlfrescoJSONModifiedOn;
 extern NSString * const kAlfrescoJSONModifiedOnISO;
 extern NSString * const kAlfrescoJSONContent;
 extern NSString * const kAlfrescoJSONIsUpdated;
 extern NSString * const kAlfrescoJSONPermissionsEdit;
 extern NSString * const kAlfrescoJSONPermissionsDelete;
+extern NSString * const kAlfrescoJSONPermissions;
+extern NSString * const kAlfrescoJSONEdit;
+extern NSString * const kAlfrescoJSONDelete;
 extern NSString * const kAlfrescoJSONCreatedAt;
 extern NSString * const kAlfrescoJSONCreatedBy;
 extern NSString * const kAlfrescoJSONCreator;
@@ -213,4 +218,6 @@ extern NSString * const kAlfrescoJSONIOSSource;
 extern NSString * const kAlfrescoJSONIsRegistered;
 extern NSString * const kAlfrescoJSONPostedAt;
 extern NSString * const kAlfrescoJSONAvatarId;
+
+
 @end

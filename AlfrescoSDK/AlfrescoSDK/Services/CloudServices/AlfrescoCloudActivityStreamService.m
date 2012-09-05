@@ -35,7 +35,6 @@
 @property (nonatomic, strong)AlfrescoISO8601DateFormatter *dateFormatter;
 
 - (NSArray *) parseActivityStreamArrayWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoActivityEntry *)activityEntryFromJSON:(NSDictionary *)activityDict;
 
 @end
 
@@ -65,30 +64,6 @@
         self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
     }
     return self;
-}
-
-
-- (AlfrescoActivityEntry *)activityEntryFromJSON:(NSDictionary *)activityDict
-{
-    AlfrescoActivityEntry *alfEntry = [[AlfrescoActivityEntry alloc] init];
-    
-    alfEntry.identifier = [activityDict valueForKey:kAlfrescoJSONIdentifier];
-    NSString *dateString = [activityDict valueForKey:kAlfrescoJSONPostedAt];
-    if (nil != dateString)
-    {
-        alfEntry.createdAt = [self.dateFormatter dateFromString:dateString];
-    }
-    alfEntry.createdBy = [activityDict valueForKey:kAlfrescoJSONActivityPostPersonID];
-    alfEntry.siteShortName = [activityDict valueForKey:kAlfrescoJSONSiteID];
-    alfEntry.type = [activityDict valueForKey:kAlfrescoJSONActivityType];
-    
-    id summary = [activityDict valueForKey:kAlfrescoJSONActivitySummary];
-    if ([summary isKindOfClass:[NSDictionary class]])
-    {
-        alfEntry.data = (NSDictionary *)summary;
-    }
-        
-    return alfEntry;
 }
 
 
@@ -281,7 +256,7 @@
             }
             return nil;
         }
-        [resultsArray addObject:[self activityEntryFromJSON:individualEntry]];
+        [resultsArray addObject:[[AlfrescoActivityEntry alloc] initWithProperties:individualEntry]];
     }
     return resultsArray;
 }
