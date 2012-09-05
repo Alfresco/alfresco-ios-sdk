@@ -27,42 +27,48 @@
 /// @name Properties.
 
 /// Returns the unique identifier of the comment.
-@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong, readonly) NSString *identifier;
 
 
 /// Returns the name of this comment.
-@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong, readonly) NSString *name;
 
 
 /// Returns the title of this comment.
-@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong, readonly) NSString *title;
 
 
 /// Returns the timestamp in the session’s locale when this comment was created.
-@property (nonatomic, strong) NSDate *createdAt;
+@property (nonatomic, strong, readonly) NSDate *createdAt;
 
 
 /// Returns the timestamp in the session’s locale when this comment has been modified.
-@property (nonatomic, strong) NSDate *modifiedAt;
+@property (nonatomic, strong, readonly) NSDate *modifiedAt;
 
 
 /// Returns the content of the comment.
-@property (nonatomic, strong) NSString *content;
+@property (nonatomic, strong, readonly) NSString *content;
 
 
 /// Returns the author of the comment as Person Object.
-@property (nonatomic, strong) NSString *createdBy;
+@property (nonatomic, strong, readonly) NSString *createdBy;
 
 
 /// Indicates whether the comment has been edited since it was initially created.
-@property (nonatomic) BOOL isEdited;
+@property (nonatomic, readonly) BOOL isEdited;
 
 
 /// Returns true if the current user can edit this comment.
-@property (nonatomic) BOOL canEdit;
+@property (nonatomic, readonly) BOOL canEdit;
 
 
 /// Returns true if the current user can delete this comment.
-@property (nonatomic) BOOL canDelete;
+@property (nonatomic, readonly) BOOL canDelete;
+
+/**
+ @param properties - the list of values to assign to the AlfrescoActivityEntry object
+ @return the AlfrescoActivityEntry object
+ */
+- (id)initWithProperties:(NSDictionary *)properties;
 
 @end

@@ -22,7 +22,6 @@
 #import "AlfrescoConstants.h"
 
 @interface AlfrescoRatingService : NSObject
-typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSError *error);
 
 /**---------------------------------------------------------------------------------------
  * @name Initialialisation methods

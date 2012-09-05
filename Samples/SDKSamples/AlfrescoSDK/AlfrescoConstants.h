@@ -54,28 +54,13 @@ typedef void (^AlfrescoSiteCompletionBlock)(AlfrescoSite *site, NSError *error);
 typedef void (^AlfrescoCloudSignupRequestCompletionBlock)(AlfrescoCloudSignupRequest *signupRequest, NSError *error);
 typedef void (^AlfrescoSessionCompletionBlock)(id<AlfrescoSession> session, NSError *error);
 typedef void (^AlfrescoCommentCompletionBlock)(AlfrescoComment *comment, NSError *error);
-
+typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSError *error);
 
 /**
  Session parameter constants
  */
 extern NSString * const kAlfrescoMetadataExtraction;
 extern NSString * const kAlfrescoThumbnailCreation;
-extern NSString * const kAlfrescoThumbnailRenditionFromAPI;
-
-extern NSString * const kAlfrescoOnPremiseActivityStreamServiceExtension;
-extern NSString * const kAlfrescoOnPremiseRatingServiceExtension;
-extern NSString * const kAlfrescoOnPremiseSiteServiceExtension;
-extern NSString * const kAlfrescoOnPremiseCommentServiceExtension;
-extern NSString * const kAlfrescoOnPremiseTaggingServiceExtension;
-extern NSString * const kAlfrescoOnPremisePersonServiceExtension;
-
-extern NSString * const kAlfrescoCloudActivityStreamServiceExtension;
-extern NSString * const kAlfrescoCloudRatingServiceExtension;
-extern NSString * const kAlfrescoCloudSiteServiceExtension;
-extern NSString * const kAlfrescoCloudCommentServiceExtension;
-extern NSString * const kAlfrescoCloudTaggingServiceExtension;
-extern NSString * const kAlfrescoCloudPersonServiceExtension;
 
 /**
  Thumbnail constants
