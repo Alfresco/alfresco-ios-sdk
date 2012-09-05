@@ -65,9 +65,9 @@
 - (void)retrieveLikeCountForNode:(AlfrescoNode *)node
                  completionBlock:(AlfrescoNumberCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -97,9 +97,9 @@
 - (void)likeNode:(AlfrescoNode *)node
  completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -142,9 +142,9 @@
 - (void)unlikeNode:(AlfrescoNode *)node
    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -168,9 +168,9 @@
  
 - (void)isNodeLiked:(AlfrescoNode *)node completionBlock:(AlfrescoLikedCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{

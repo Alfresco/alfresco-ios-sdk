@@ -64,7 +64,7 @@
 
 - (void)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     NSAssert(nil != completionBlock, @"completionBlock must not be nil");
     __weak AlfrescoCloudTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -89,8 +89,11 @@
 - (void)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext
                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
     
     __weak AlfrescoCloudTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -120,9 +123,9 @@
 - (void)retrieveTagsForNode:(AlfrescoNode *)node
             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoCloudTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -150,10 +153,13 @@
 - (void)retrieveTagsForNode:(AlfrescoNode *)node listingContext:(AlfrescoListingContext *)listingContext
             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
     
     __weak AlfrescoCloudTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -189,10 +195,10 @@
 - (void)addTags:(NSArray *)tags toNode:(AlfrescoNode *)node
 completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:tags assertMessage:@"tags must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:tags argumentAsString:@"tags"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
 
     if (0 == tags.count)
     {

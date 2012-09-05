@@ -106,8 +106,8 @@
 
 - (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:personIdentifier assertMessage:@"personIdentifier must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentAsString:@"personIdentifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -133,9 +133,13 @@
 - (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:personIdentifier assertMessage:@"personIdentifier must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentAsString:@"personIdentifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -169,8 +173,8 @@
 
 - (void)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:site assertMessage:@"site must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:site argumentAsString:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -198,10 +202,14 @@
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:site assertMessage:@"site must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:site argumentAsString:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
+
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         

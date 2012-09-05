@@ -61,8 +61,9 @@
 - (void)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
                       completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:document assertMessage:@"document must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:document argumentAsString:@"document"];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentAsString:@"document.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoVersionService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -94,10 +95,13 @@
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:document assertMessage:@"document must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:document.identifier assertMessage:@"document.identifier must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:document argumentAsString:@"document"];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentAsString:@"document.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
     
     __weak AlfrescoVersionService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{

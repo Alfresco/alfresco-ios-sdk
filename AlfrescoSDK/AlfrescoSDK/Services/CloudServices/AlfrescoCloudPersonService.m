@@ -63,11 +63,8 @@
 }
 - (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
 {
-#ifdef DEBUG
-    NSLog(@"IF YOU CAN READ THIS WE ARE IN DEBUG MODE");
-#endif
-    [AlfrescoErrors assertArgumentNotNil:identifier assertMessage:@"identifier must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:identifier argumentAsString:@"identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoCloudPersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -97,8 +94,8 @@
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:person assertMessage:@"person must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:person argumentAsString:@"person"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoCloudPersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{

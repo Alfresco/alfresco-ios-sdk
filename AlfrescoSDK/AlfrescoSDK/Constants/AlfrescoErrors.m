@@ -22,6 +22,7 @@ NSString * const kAlfrescoErrorDomainName = @"AlfrescoErrorDomain";
 NSString * const kAlfrescoErrorDescriptionUnknown = @"Unknown Alfresco Error";
 NSString * const kAlfrescoErrorDescriptionInvalidArgument = @"Invalid input parameter";
 
+NSString * const kAlfrescoErrorDescriptionSession = @"Session Error";
 NSString * const kAlfrescoErrorDescriptionNoRepositoryFound = @"Session Error: No Alfresco repository found";
 NSString * const kAlfrescoErrorDescriptionUnauthorisedAccess = @"Session Error: Unauthorised Access";
 NSString * const kAlfrescoErrorDescriptionHTTPResponse= @"Session Error: the HTTP Response code suggests an error";
@@ -95,10 +96,11 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];    
 }
 
-+ (void)assertArgumentNotNil:(id)argument assertMessage:(NSString *)message isOptional:(BOOL)isOptional
++ (void)assertArgumentNotNil:(id)argument argumentAsString:(NSString *)argumentString
 {
-    if (!isOptional && nil == argument)
+    if (nil == argument)
     {
+        NSString * message = [NSString stringWithFormat:@"%@ must not be nil",argumentString];
         NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:message userInfo:nil];
         @throw exception;
     }
@@ -114,15 +116,18 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
         case kAlfrescoErrorInvalidArgument:
             return kAlfrescoErrorDescriptionInvalidArgument;
             break;
+        case kAlfrescoErrorCodeHTTPResponse:
+            return kAlfrescoErrorDescriptionHTTPResponse;
+            break;
+        case kAlfrescoErrorCodeSession:
+            return kAlfrescoErrorDescriptionSession;
+            break;
         case kAlfrescoErrorCodeNoRepositoryFound:
             return kAlfrescoErrorDescriptionNoRepositoryFound;
             break;
         case kAlfrescoErrorCodeUnauthorisedAccess:
             return kAlfrescoErrorDescriptionUnauthorisedAccess;
             break;            
-        case kAlfrescoErrorCodeHTTPResponse:
-            return kAlfrescoErrorDescriptionHTTPResponse;
-            break;
         case kAlfrescoErrorCodeNoNetworkFound:
             return kAlfrescoErrorDescriptionNoNetworkFound;
             break;

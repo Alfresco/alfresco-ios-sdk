@@ -101,8 +101,7 @@
 
 - (void)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -132,9 +131,11 @@
 - (void)retrieveAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
                            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
     
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
@@ -169,8 +170,7 @@
 
 - (void)retrieveSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -197,9 +197,11 @@
 - (void)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -237,8 +239,7 @@
 
 - (void)retrieveFavoriteSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -288,9 +289,11 @@
 - (void)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
                                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -360,9 +363,8 @@
 - (void)retrieveSiteWithShortName:(NSString *)siteShortName
                   completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:siteShortName assertMessage:@"siteShortName must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:siteShortName argumentAsString:@"siteShortName"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -388,9 +390,8 @@
 - (void)retrieveDocumentLibraryFolderForSite:(NSString *)siteShortName
                              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:self.authenticationProvider assertMessage:@"authenticationProvider must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:siteShortName assertMessage:@"siteShortName must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:siteShortName argumentAsString:@"siteShortName"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{

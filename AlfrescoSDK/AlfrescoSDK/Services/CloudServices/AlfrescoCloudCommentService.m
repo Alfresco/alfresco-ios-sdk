@@ -70,9 +70,9 @@
 
 - (void)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -103,10 +103,14 @@
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
     
     __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -140,9 +144,9 @@
 - (void)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content
                    title:(NSString *)title completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
     __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -178,11 +182,11 @@
                     content:(NSString *)content
             completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:comment assertMessage:@"comment must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:comment.identifier assertMessage:@"comment.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:comment argumentAsString:@"comment"];
+    [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentAsString:@"comment.identifier"];
 
     __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -221,11 +225,11 @@
                       comment:(AlfrescoComment *)comment
               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node assertMessage:@"node must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier assertMessage:@"node.identifier must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:comment assertMessage:@"comment must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:comment.identifier assertMessage:@"comment.identifier must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:comment argumentAsString:@"comment"];
+    [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentAsString:@"comment.identifier"];
     
     __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{

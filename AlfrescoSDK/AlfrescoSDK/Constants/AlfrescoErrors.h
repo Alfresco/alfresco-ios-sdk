@@ -26,13 +26,13 @@ typedef enum
 {
     kAlfrescoErrorCodeUnknown = 0,
     kAlfrescoErrorInvalidArgument = 1,
+    kAlfrescoErrorCodeHTTPResponse = 2,
 
     kAlfrescoErrorCodeSession = 100,
-    kAlfrescoErrorCodeNoRepositoryFound = 102,
-    kAlfrescoErrorCodeUnauthorisedAccess = 104,
-    kAlfrescoErrorCodeHTTPResponse = 105,
-    kAlfrescoErrorCodeNoNetworkFound = 106,
-    kAlfrescoErrorCodeSignUpRequestError = 107,
+    kAlfrescoErrorCodeNoRepositoryFound = 101,
+    kAlfrescoErrorCodeUnauthorisedAccess = 102,
+    kAlfrescoErrorCodeNoNetworkFound = 103,
+    kAlfrescoErrorCodeSignUpRequestError = 104,
 
     kAlfrescoErrorCodeJSONParsing = 200,
     kAlfrescoErrorCodeJSONParsingNilData = 201,
@@ -76,6 +76,7 @@ extern NSString * const kAlfrescoErrorDomainName;
 extern NSString * const kAlfrescoErrorDescriptionUnknown;
 extern NSString * const kAlfrescoErrorDescriptionInvalidArgument;
 
+extern NSString * const kAlfrescoErrorDescriptionSession;
 extern NSString * const kAlfrescoErrorDescriptionNoRepositoryFound;
 extern NSString * const kAlfrescoErrorDescriptionUnauthorisedAccess;
 extern NSString * const kAlfrescoErrorDescriptionHTTPResponse;
@@ -148,5 +149,5 @@ extern NSString * const kAlfrescoErrorDescriptionRatings;
  */
 + (NSError *)createAlfrescoErrorWithCode:(AlfrescoErrorCodes)code;
 
-+ (void)assertArgumentNotNil:(id)argument assertMessage:(NSString *)message isOptional:(BOOL)isOptional;
++ (void)assertArgumentNotNil:(id)argument argumentAsString:(NSString *)argumentString;
 @end

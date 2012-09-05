@@ -69,9 +69,8 @@
                    language:(AlfrescoSearchLanguage)language
             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:statement assertMessage:@"statement must not be nil" isOptional:NO];
-    
+    [AlfrescoErrors assertArgumentNotNil:statement argumentAsString:@"statement"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];    
     
     if (AlfrescoSearchLanguageCMIS == language)
     {
@@ -113,9 +112,12 @@
              listingContext:(AlfrescoListingContext *)listingContext
             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:statement assertMessage:@"statement must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:statement argumentAsString:@"statement"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
 
     if (AlfrescoSearchLanguageCMIS == language)
     {
@@ -159,9 +161,9 @@
                    options:(AlfrescoKeywordSearchOptions *)options
            completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:keywords assertMessage:@"keywords must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:options assertMessage:@"options must not be nil" isOptional:NO];
+    [AlfrescoErrors assertArgumentNotNil:keywords argumentAsString:@"keywords"];
+    [AlfrescoErrors assertArgumentNotNil:options argumentAsString:@"options"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
 
     NSString *query = [self createSearchQuery:keywords options:options];
     __weak AlfrescoSearchService *weakSelf = self;
@@ -194,10 +196,13 @@
             listingContext:(AlfrescoListingContext *)listingContext
            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock assertMessage:@"completionBlock must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:keywords assertMessage:@"keywords must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:options assertMessage:@"options must not be nil" isOptional:NO];
-    [AlfrescoErrors assertArgumentNotNil:listingContext assertMessage:@"listingContext should not be nil" isOptional:YES];
+    [AlfrescoErrors assertArgumentNotNil:keywords argumentAsString:@"keywords"];
+    [AlfrescoErrors assertArgumentNotNil:options argumentAsString:@"options"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = [[AlfrescoListingContext alloc]init];
+    }
 
     NSString *query = [self createSearchQuery:keywords options:options];
     CMISOperationContext *operationContext = [AlfrescoPagingUtils operationContextFromListingContext:listingContext];
