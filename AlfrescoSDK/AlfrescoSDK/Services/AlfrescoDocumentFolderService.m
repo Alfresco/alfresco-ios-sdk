@@ -40,6 +40,7 @@
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoSortingUtils.h"
+#import "AlfrescoCloudSession.h"
 
 
 @interface AlfrescoDocumentFolderService ()
@@ -598,14 +599,12 @@
     }];
 }
 
-#pragma mark - Content methods
-
-
 - (void)retrieveRenditionOfNode:(AlfrescoNode *)node renditionName:(NSString *)renditionName
                 completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    BOOL isRenditionEnabled = [[self.session objectForParameter:kAlfrescoThumbnailRenditionFromAPI] boolValue];
-    if (!isRenditionEnabled)
+    // TODO: Remove this, on the Cloud we have to jump through some hoops but it is possible to
+    //       get renditions so we shouldn't be returning an error
+    if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
     {
         NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoRenditionService];
         completionBlock(nil, error);
@@ -653,9 +652,9 @@
     NSString *tmpFile = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",document.name];
     CMISSession *cmisSession = [self.session objectForParameter:kAlfrescoSessionKeyCmisSession];
     [cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^{
+        NSLog(@"AlfrescoDocumentFolderService::retrieveContentOfDocument. Document name is '%@' and we'll download to %@",document.name, tmpFile);
+        AlfrescoContentFile *downloadedFile = [[AlfrescoContentFile alloc]initWithUrl:[NSURL fileURLWithPath:tmpFile]];
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            NSLog(@"AlfrescoDocumentFolderService::retrieveContentOfDocument. Document name is '%@' and we'll download to %@",document.name, tmpFile);
-            AlfrescoContentFile *downloadedFile = [[AlfrescoContentFile alloc]initWithUrl:[NSURL fileURLWithPath:tmpFile]];
             completionBlock(downloadedFile, nil);
         }];
         
@@ -676,6 +675,8 @@
     
     
 }
+
+#pragma mark - Modification methods
 
 - (void)updateContentOfDocument:(AlfrescoDocument *)document
                     contentFile:(AlfrescoContentFile *)file

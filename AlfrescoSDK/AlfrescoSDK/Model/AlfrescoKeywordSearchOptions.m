@@ -26,13 +26,31 @@
 
 - (id)init
 {
+    return [self initWithExactMatch:NO includeContent:NO folder:nil includeDescendants:YES];
+}
+
+- (id)initWithExactMatch:(BOOL)exactMatch includeContent:(BOOL)includeContent
+{
+    return [self initWithExactMatch:exactMatch includeContent:includeContent folder:nil includeDescendants:YES];
+}
+
+- (id)initWithFolder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants
+{
+    return [self initWithExactMatch:NO includeContent:NO folder:folder includeDescendants:includeDescendants];
+}
+
+- (id)initWithExactMatch:(BOOL)exactMatch
+          includeContent:(BOOL)includeContent
+                  folder:(AlfrescoFolder *)folder
+      includeDescendants:(BOOL)includeDescendants
+{
     self = [super init];
-    if (self) 
+    if (self)
     {
-        self.exactMatch = NO;
-        self.includeContent = YES;
-        self.includeDescendants = YES;
-        self.folder = nil;
+        self.exactMatch = exactMatch;
+        self.folder = folder;
+        self.includeContent = includeContent;
+        self.includeDescendants = includeDescendants;
     }
     return self;
 }

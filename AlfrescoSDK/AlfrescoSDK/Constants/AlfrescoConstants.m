@@ -28,21 +28,6 @@
  */
 NSString * const kAlfrescoMetadataExtraction = @"org.alfresco.mobile.features.extractmetadata";
 NSString * const kAlfrescoThumbnailCreation = @"org.alfresco.mobile.features.generatethumbnails";
-NSString * const kAlfrescoThumbnailRenditionFromAPI = @"org.alfresco.mobile.features.thumbnailRenditionFromAPI";
-
-NSString * const kAlfrescoOnPremiseActivityStreamServiceExtension = @"org.alfresco.mobile.api.services.onpremise.activitystream";
-NSString * const kAlfrescoOnPremiseRatingServiceExtension = @"org.alfresco.mobile.api.services.onpremise.rating";
-NSString * const kAlfrescoOnPremiseSiteServiceExtension = @"org.alfresco.mobile.api.services.onpremise.site";
-NSString * const kAlfrescoOnPremiseCommentServiceExtension = @"org.alfresco.mobile.api.services.onpremise.comment";
-NSString * const kAlfrescoOnPremiseTaggingServiceExtension = @"org.alfresco.mobile.api.services.onpremise.tagging";
-NSString * const kAlfrescoOnPremisePersonServiceExtension = @"org.alfresco.mobile.api.services.onpremise.person";
-
-NSString * const kAlfrescoCloudActivityStreamServiceExtension = @"org.alfresco.mobile.api.services.cloud.activitystream";
-NSString * const kAlfrescoCloudRatingServiceExtension = @"org.alfresco.mobile.api.services.cloud.rating";
-NSString * const kAlfrescoCloudSiteServiceExtension = @"org.alfresco.mobile.api.services.cloud.site";
-NSString * const kAlfrescoCloudCommentServiceExtension = @"org.alfresco.mobile.api.services.cloud.comment";
-NSString * const kAlfrescoCloudTaggingServiceExtension = @"org.alfresco.mobile.api.services.cloud.tagging";
-NSString * const kAlfrescoCloudPersonServiceExtension = @"org.alfresco.mobile.api.services.cloud.person";
 
 /**
  Thumbnail constants

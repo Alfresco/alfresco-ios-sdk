@@ -38,9 +38,6 @@
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
 
         AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
-        searchOptions.exactMatch = NO;
-        searchOptions.includeContent = NO;
-        searchOptions.includeDescendants = YES;
 
         NSString *abbreviatedSearchTerm = @"test_file";
         if([super.testSearchFileName hasSuffix:@".pptx"])
@@ -93,13 +90,9 @@
         
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
         
-        AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
-        searchOptions.exactMatch = NO;
-        searchOptions.includeContent = NO;
-        searchOptions.includeDescendants = YES;
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 5;
-        paging.skipCount = 0;
+        AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithFolder:nil includeDescendants:YES];
+        
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
         NSString *abbreviatedSearchTerm = @"test_file";
         if([super.testSearchFileName hasSuffix:@".pptx"])
         {
@@ -143,10 +136,7 @@
     [super runAllSitesTest:^{
         
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
-        AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
-        searchOptions.exactMatch = YES;
-        searchOptions.includeContent = NO;
-        searchOptions.includeDescendants = YES;
+        AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:YES includeContent:NO];
         
         // search
         [self.searchService searchWithKeywords:super.testSearchFileName options:searchOptions completionBlock:^(NSArray *array, NSError *error)
@@ -190,12 +180,13 @@
 {
     [super runAllSitesTest:^{
         
-        AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
-        searchOptions.exactMatch = YES;
-        searchOptions.includeContent = NO;
-        searchOptions.includeDescendants = NO;
+        AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:YES
+                                                                                                includeContent:NO
+                                                                                                        folder:super.currentSession.rootFolder
+                                                                                            includeDescendants:NO];
+        
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
-        searchOptions.folder = super.currentSession.rootFolder;
+        
         
         [self.searchService searchWithKeywords:super.testSearchFileName options:searchOptions completionBlock:^(NSArray *array, NSError *error)
          {
@@ -226,12 +217,9 @@
 {
     [super runAllSitesTest:^{
         
-        AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
-        searchOptions.exactMatch = NO;
-        searchOptions.includeContent = YES;
-        searchOptions.includeDescendants = YES;
+        AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:NO includeContent:YES];
+        
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
-//        searchOptions.folder = super.currentSession.rootFolder;
         
         // search
         
@@ -330,9 +318,7 @@
         
         AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
 
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 5;
-        paging.skipCount = 0;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
         NSString *abbreviatedSearchTerm = @"test_file";
         if([super.testSearchFileName hasSuffix:@".pptx"])
         {
