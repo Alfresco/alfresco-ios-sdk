@@ -313,13 +313,13 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 
                 if (self.isCloud)
                 {
-                    log(@"Should be Cloud Server with server: %@, username: %@, password: %@",self.server, self.userName, self.testPassword);
+                    log(@"Should be Cloud Server with server: %@ and username: %@",self.server, self.userName);
                     [self authenticateCloudServer];
                     [self resetTestRunVariables];
                 }
                 else
                 {
-                    log(@"Should be OnPremise Server with server: %@, username: %@, password: %@",self.server, self.userName, self.testPassword);
+                    log(@"Should be OnPremise Server with server: %@ and username: %@",self.server, self.userName);
                     self.isCloud = NO;
                     [self authenticateOnPremiseServer];
                     [self resetTestRunVariables];
