@@ -37,7 +37,6 @@
 
 - (NSArray *) parseCommentArrayWithData:(NSData *)data error:(NSError **)outError;
 - (AlfrescoComment *) parseCommentDictWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoComment *)commentFromJSON:(NSDictionary *)commentDict;
 @end
 
 @implementation AlfrescoCloudCommentService
@@ -288,7 +287,7 @@
         }
         else
         {
-            [resultsArray addObject:[self commentFromJSON:individualEntry]];
+            [resultsArray addObject:[[AlfrescoComment alloc] initWithProperties:individualEntry]];
         }
     }
     return resultsArray;
@@ -333,40 +332,7 @@
         }
         return nil;
     }
-    return (AlfrescoComment *)[self commentFromJSON:jsonComment];
-}
-
-
-- (AlfrescoComment *)commentFromJSON:(NSDictionary *)commentDict
-{
-    if (nil == commentDict)
-    {
-        NSLog(@"AlfrescoCloudCommentService::commentFromJSON: commentDict is NIL");
-        return nil;
-    }
-    NSLog(@"AlfrescoCloudCommentService::commentFromJSON: %@", commentDict);
-    
-    AlfrescoComment *alfComment = [[AlfrescoComment alloc] init];
-    alfComment.identifier = [commentDict valueForKey:kAlfrescoJSONIdentifier];
-    alfComment.content = [commentDict valueForKey:kAlfrescoJSONContent];
-    alfComment.title = [commentDict valueForKey:kAlfrescoJSONTitle];
-    NSString *createdDateString = [commentDict valueForKey:kAlfrescoJSONCreatedAt];
-    if (nil != createdDateString)
-    {
-        alfComment.createdAt = [self.dateFormatter dateFromString:createdDateString];
-    }
-    NSDictionary *createdByDict = [commentDict valueForKey:kAlfrescoJSONCreatedBy];
-    alfComment.createdBy = [createdByDict valueForKey:kAlfrescoJSONIdentifier];
-    
-    NSString *modifiedDateString = [commentDict valueForKey:kAlfrescoJSONModifedAt];
-    if (nil != modifiedDateString)
-    {
-        alfComment.modifiedAt = [self.dateFormatter dateFromString:modifiedDateString];
-    }
-    alfComment.isEdited = [[commentDict valueForKey:kAlfrescoJSONEdited] boolValue];
-    alfComment.canEdit = [[commentDict valueForKey:kAlfrescoJSONCanEdit] boolValue];
-    alfComment.canDelete = [[commentDict valueForKey:kAlfrescoJSONCanDelete] boolValue];
-    return alfComment;
+    return [[AlfrescoComment alloc] initWithProperties:jsonComment];
 }
 
 @end

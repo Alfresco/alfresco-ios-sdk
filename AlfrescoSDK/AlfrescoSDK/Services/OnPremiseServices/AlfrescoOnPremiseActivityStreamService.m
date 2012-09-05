@@ -35,7 +35,6 @@
 @property (nonatomic, strong)AlfrescoISO8601DateFormatter *dateFormatter;
 
 - (NSArray *) parseActivityStreamArrayWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoActivityEntry *)activityEntryFromJSON:(NSDictionary *)activityDict;
 @end
 
 
@@ -252,29 +251,9 @@
     }
     NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[jsonActivityStreamArray count]];
     for (NSDictionary *activityDict in jsonActivityStreamArray) {
-        [resultArray addObject:[self activityEntryFromJSON:activityDict]];
+        [resultArray addObject:[[AlfrescoActivityEntry alloc] initWithProperties:activityDict]];
     }
     return resultArray;
-}
-
-- (AlfrescoActivityEntry *)activityEntryFromJSON:(NSDictionary *)activityDict
-{
-    AlfrescoActivityEntry *alfEntry = [[AlfrescoActivityEntry alloc] init];
-    
-    alfEntry.identifier = [activityDict valueForKey:kAlfrescoJSONIdentifier];
-    NSString *dateString = [activityDict valueForKey:kAlfrescoJSONActivityPostDate];
-    if (nil != dateString)
-    {
-        alfEntry.createdAt = [self.dateFormatter dateFromString:dateString];
-    }
-    alfEntry.createdBy = [activityDict valueForKey:kAlfrescoJSONActivityPostUserID];
-    alfEntry.siteShortName = [activityDict valueForKey:kAlfrescoJSONActivitySiteNetwork];
-    alfEntry.type = [activityDict valueForKey:kAlfrescoJSONActivityType];
-    NSError *error;
-    alfEntry.data = [NSJSONSerialization JSONObjectWithData:[[activityDict valueForKey:kAlfrescoJSONActivitySummary] dataUsingEncoding:NSUTF8StringEncoding]
-                                                    options:kNilOptions error:&error];
-    
-    return alfEntry;
 }
 
 @end
