@@ -84,14 +84,16 @@ static NSString * const kAlfrescoCMISPath = @"/service/cmis";
     if (self = [super init])
     {
         self.baseUrl = url;
-        self.sessionData = [NSMutableDictionary dictionaryWithCapacity:1];
         if (nil != parameters)
         {
-            [self addParametersFromDictionary:parameters];
+            self.sessionData = [NSMutableDictionary dictionaryWithDictionary:parameters];
+        }
+        else
+        {
+            self.sessionData = [NSMutableDictionary dictionaryWithCapacity:8];
         }
         
         // setup defaults
-        [self setObject:[NSNumber numberWithBool:YES] forParameter:kAlfrescoThumbnailRenditionFromAPI];
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
         
         // generate the CMIS URL

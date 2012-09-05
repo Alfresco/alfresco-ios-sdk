@@ -28,4 +28,14 @@
 @property (nonatomic, assign) BOOL includeContent;
 @property (nonatomic, assign) BOOL includeDescendants;
 @property (nonatomic, strong) AlfrescoFolder *folder;
+
+- (id)initWithExactMatch:(BOOL)exactMatch includeContent:(BOOL)includeContent;
+
+- (id)initWithFolder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants;
+
+- (id)initWithExactMatch:(BOOL)exactMatch
+          includeContent:(BOOL)includeContent
+                  folder:(AlfrescoFolder *)folder
+      includeDescendants:(BOOL)includeDescendants;
+
 @end

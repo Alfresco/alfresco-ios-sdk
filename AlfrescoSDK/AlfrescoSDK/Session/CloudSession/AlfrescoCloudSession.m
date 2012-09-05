@@ -404,16 +404,18 @@ This authentication method authorises the user to access the home network assign
     self = [super init];
     if (nil != self)
     {
-        self.sessionData = [NSMutableDictionary dictionaryWithCapacity:1];
         if (nil != parameters)
         {
-            [self addParametersFromDictionary:parameters];
+            self.sessionData = [NSMutableDictionary dictionaryWithDictionary:parameters];
+        }
+        else
+        {
+            self.sessionData = [NSMutableDictionary dictionaryWithCapacity:8];
         }
         
         // setup defaults
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
-        [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailRenditionFromAPI];
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
     }
     return self;
