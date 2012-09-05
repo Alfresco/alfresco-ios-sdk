@@ -37,7 +37,6 @@
 
 - (NSArray *) parseCommentArrayWithData:(NSData *)data error:(NSError **)outError;
 - (AlfrescoComment *) parseCommentDictWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoComment *)commentFromJSON:(NSDictionary *)commentDict;
 @end
 
 @implementation AlfrescoOnPremiseCommentService
@@ -260,6 +259,7 @@
 #pragma private methods
 - (NSArray *) parseCommentArrayWithData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
+    NSLog(@"parseCommentArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     if (nil == data)
     {
         if (nil == *outError)
@@ -288,14 +288,16 @@
     }
     NSArray *jsonCommentArray = [jsonCommentDict valueForKey:kAlfrescoJSONItems];
     NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[jsonCommentArray count]];
-    for (NSDictionary *commentDict in jsonCommentArray) {
-        [resultArray addObject:[self commentFromJSON:commentDict]];
+    for (NSDictionary *commentDict in jsonCommentArray)
+    {
+        [resultArray addObject:[[AlfrescoComment alloc] initWithProperties:commentDict]];
     }
     return resultArray;
 }
 
 - (AlfrescoComment *) parseCommentDictWithData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
+    NSLog(@"parseCommentDictWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     if (nil == data)
     {
         if (nil == *outError)
@@ -318,40 +320,7 @@
         return nil;
     }
     NSDictionary *jsonComment = [jsonCommentDict valueForKey:kAlfrescoJSONItem];
-    return (AlfrescoComment *)[self commentFromJSON:jsonComment];
-}
-
-
-- (AlfrescoComment *)commentFromJSON:(NSDictionary *)commentDict
-{
-    AlfrescoComment *alfComment = [[AlfrescoComment alloc] init];
-    alfComment.identifier = [commentDict valueForKey:kAlfrescoJSONNodeRef];
-    alfComment.name = [commentDict valueForKey:kAlfrescoJSONName];
-    alfComment.title = [commentDict valueForKey:kAlfrescoJSONTitle];
-    alfComment.createdBy = [commentDict valueForKeyPath:kAlfrescoJSONAuthorUserName];
-    alfComment.content = [commentDict valueForKey:kAlfrescoJSONContent];
-    alfComment.isEdited = [[commentDict valueForKey:kAlfrescoJSONIsUpdated] boolValue];
-    alfComment.canEdit = [[commentDict valueForKeyPath:kAlfrescoJSONPermissionsEdit] boolValue];
-    alfComment.canDelete = [[commentDict valueForKey:kAlfrescoJSONPermissionsDelete] boolValue];
-    
-    // extract dates, are different on 3.4.x and 4.x servers
-    NSString *created = [commentDict valueForKey:kAlfrescoJSONCreatedOnISO];
-    if (created == nil)
-    {
-        created = [commentDict valueForKey:kAlfrescoJSONCreatedOn];
-    }
-    
-    NSString *modified = [commentDict valueForKey:kAlfrescoJSONModifiedOnISO];
-    if (modified == nil)
-    {
-        modified = [commentDict valueForKey:kAlfrescoJSONModifiedOn];
-    }
-    
-    // set dates
-    alfComment.createdAt = [self.dateFormatter dateFromString:created];
-    alfComment.modifiedAt = [self.dateFormatter dateFromString:modified];
-    
-    return alfComment;
+    return [[AlfrescoComment alloc] initWithProperties:jsonComment];
 }
 
 @end
