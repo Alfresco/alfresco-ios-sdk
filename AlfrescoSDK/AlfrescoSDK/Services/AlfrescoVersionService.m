@@ -28,6 +28,7 @@
 
 @interface AlfrescoVersionService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
+@property (nonatomic, strong, readwrite) CMISSession *cmisSession;
 @property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
@@ -37,6 +38,7 @@
 
 @implementation AlfrescoVersionService
 @synthesize session = _session;
+@synthesize cmisSession = _cmisSession;
 @synthesize operationQueue = _operationQueue;
 @synthesize objectConverter = _objectConverter;
 @synthesize supportedSortKeys = _supportedSortKeys;
@@ -48,6 +50,7 @@
     if (nil != self)
     {
         self.session = session;
+        self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 2;
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
@@ -69,17 +72,17 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        NSArray *versionArray = [cmisSession.binding.versioningService retrieveAllVersions:document.identifier
-                                                                                    filter:nil
-                                                                   includeAllowableActions:YES
-                                                                                     error:&operationQueueError];
+        NSArray *versionArray = [weakSelf.cmisSession.binding.versioningService retrieveAllVersions:document.identifier
+                                                                                             filter:nil
+                                                                            includeAllowableActions:YES
+                                                                                              error:&operationQueueError];
         
         NSArray *sortedAlfrescoVersionArray = nil;
         if (nil != versionArray)
         {
             NSMutableArray *alfrescoVersionArray = [NSMutableArray arrayWithCapacity:versionArray.count];
-            for (CMISObjectData *cmisData in versionArray) {
+            for (CMISObjectData *cmisData in versionArray)
+            {
                 AlfrescoNode *alfrescoNode = [weakSelf.objectConverter nodeFromCMISObjectData:cmisData];
                 [alfrescoVersionArray addObject:alfrescoNode];
             }
@@ -107,14 +110,16 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        NSArray *versionArray = [cmisSession.binding.versioningService retrieveAllVersions:document.identifier filter:nil includeAllowableActions:YES error:&operationQueueError];
-        
+        NSArray *versionArray = [weakSelf.cmisSession.binding.versioningService retrieveAllVersions:document.identifier
+                                                                                             filter:nil
+                                                                            includeAllowableActions:YES
+                                                                                              error:&operationQueueError];
         AlfrescoPagingResult *pagingResult = nil;
         if (nil != versionArray)
         {
             NSMutableArray *alfrescoVersionArray = [NSMutableArray arrayWithCapacity:versionArray.count];
-            for (CMISObjectData *cmisData in versionArray) {
+            for (CMISObjectData *cmisData in versionArray)
+            {
                 AlfrescoNode *alfrescoNode = [weakSelf.objectConverter nodeFromCMISObjectData:cmisData];
                 [alfrescoVersionArray addObject:alfrescoNode];
             }
