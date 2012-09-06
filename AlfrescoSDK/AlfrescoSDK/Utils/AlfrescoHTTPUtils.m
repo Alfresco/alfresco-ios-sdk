@@ -50,7 +50,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
                                                            cachePolicy: NSURLRequestReloadIgnoringCacheData
                                                        timeoutInterval: 10];
-    NSDictionary *httpHeaders = [authenticationProvider httpHeadersToApply];
+    NSDictionary *httpHeaders = [authenticationProvider willApplyHTTPHeadersForSession:nil];
     NSEnumerator *headerEnumerator = [httpHeaders keyEnumerator];
     for (NSString *key in headerEnumerator)
     {
@@ -97,7 +97,7 @@
     NSHTTPURLResponse *response;
     
     [request setHTTPMethod:httpMethod];
-    if(nil != data)
+    if (nil != data)
     {
         [request setHTTPBody:data];
         [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
