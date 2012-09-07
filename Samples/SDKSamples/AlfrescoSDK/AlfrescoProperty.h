@@ -47,5 +47,10 @@ typedef enum
 /// The value of the property.
 @property (nonatomic, strong) id value;
 
+/**
+ @param properties - the list of values to assign to the AlfrescoActivityEntry object
+ @return the AlfrescoActivityEntry object
+ */
+- (id)initWithProperties:(NSDictionary *)properties;
 
 @end

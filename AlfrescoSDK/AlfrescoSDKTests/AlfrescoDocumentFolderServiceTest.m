@@ -752,12 +752,12 @@
              {
                  __block NSString *propertyObjectTestValue = @"version-download-test-updated.txt";
                  NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:8];
-                 [propDict setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-                              forKey:kCMISPropertyObjectTypeId];
+//                 [propDict setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+//                              forKey:kCMISPropertyObjectTypeId];
                  [propDict setObject:propertyObjectTestValue forKey:kCMISPropertyName];
                  [propDict setObject:@"updated description" forKey:@"cm:description"];
                  [propDict setObject:@"updated title" forKey:@"cm:title"];
-                 [propDict setObject:@"updated author" forKey:@"cm:author"];
+//                 [propDict setObject:@"updated author" forKey:@"cm:author"];
                  
                  [weakDfService updatePropertiesOfNode:super.testAlfrescoDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error)
                   {
@@ -781,7 +781,7 @@
                           AlfrescoProperty *updatedAuthor = [updatedProps objectForKey:@"cm:author"];
                           STAssertTrue([updatedDescription.value isEqualToString:@"updated description"], @"Updated description is incorrect");
                           STAssertTrue([updatedTitle.value isEqualToString:@"updated title"], @"Updated title is incorrect");
-                          STAssertTrue([updatedAuthor.value isEqualToString:@"updated author"], @"Updated author is incorrect");
+//                          STAssertTrue([updatedAuthor.value isEqualToString:@"updated author"], @"Updated author is incorrect");
                           
                           id propertyValue = [updatedDocument propertyValueWithName:kCMISPropertyName];
                           if ([propertyValue isKindOfClass:[NSString class]])
