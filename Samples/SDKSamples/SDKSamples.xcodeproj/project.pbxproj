@@ -614,6 +614,7 @@
 		829C5656155DB8F6004EE3C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SDKSamples/SDKSamples-Prefix.pch";
 				INFOPLIST_FILE = "SDKSamples/SDKSamples-Info.plist";
@@ -631,6 +632,7 @@
 		829C5657155DB8F6004EE3C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SDKSamples/SDKSamples-Prefix.pch";
 				INFOPLIST_FILE = "SDKSamples/SDKSamples-Info.plist";
