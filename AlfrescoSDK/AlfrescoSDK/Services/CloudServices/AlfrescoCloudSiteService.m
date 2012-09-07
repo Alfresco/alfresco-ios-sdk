@@ -39,7 +39,6 @@
 - (NSArray *) parseSpecifiedSiteArrayWithData:(NSData *)data error:(NSError **)outError;
 - (AlfrescoSite *) parseSiteWithData:(NSData *)data error:(NSError **)outError;
 - (NSDictionary *)parseFolderIdWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoSite *)siteFromJSON:(NSDictionary *)siteDict;
 
 @end
 
@@ -68,30 +67,6 @@
         self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByTitle, kAlfrescoSortByShortname, nil];
     }
     return self;
-}
-
-- (AlfrescoSite *)siteFromJSON:(NSDictionary *)siteDict
-{
-    AlfrescoSite *alfSite = [[AlfrescoSite alloc] init];
-    
-    alfSite.shortName = [siteDict valueForKey:kAlfrescoJSONIdentifier];
-    alfSite.summary = [siteDict valueForKey:kAlfrescoJSONDescription];
-    alfSite.title = [siteDict valueForKey:kAlfrescoJSONTitle];
-    NSString *visibility = [siteDict valueForKey:kAlfrescoJSONVisibility];
-    if ([visibility isEqualToString:kAlfrescoJSONVisibilityPUBLIC])
-    {
-        alfSite.visibility = AlfrescoSiteVisibilityPublic;
-    }
-    else if ([visibility isEqualToString:kAlfrescoJSONVisibilityPRIVATE])
-    {
-        alfSite.visibility = AlfrescoSiteVisibilityPrivate;
-    }
-    else if ([visibility isEqualToString:kAlfrescoJSONVisibilityMODERATED])
-    {
-        alfSite.visibility = AlfrescoSiteVisibilityModerated;
-    }
-    
-    return alfSite;
 }
 
 - (void)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
@@ -402,7 +377,7 @@
         for (NSDictionary *entryDict in entriesArray)
         {
             NSDictionary *individualEntry = [entryDict valueForKey:kAlfrescoCloudJSONEntry];
-            [resultsArray addObject:[self siteFromJSON:individualEntry]];
+            [resultsArray addObject:[[AlfrescoSite alloc] initWithProperties:individualEntry]];
         }
         return resultsArray;
     }
@@ -456,7 +431,7 @@
                 else
                 {
                     NSDictionary *siteDict = (NSDictionary *)siteObj;
-                    [resultsArray addObject:[self siteFromJSON:siteDict]];
+                    [resultsArray addObject:[[AlfrescoSite alloc] initWithProperties:siteDict]];
                 }
                 
             }
@@ -473,7 +448,7 @@
 {
     NSLog(@"parseSiteWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSDictionary *entryDictionary = [AlfrescoObjectConverter parseCloudJSONEntryFromListData:data error:outError];
-    return (AlfrescoSite *)[self siteFromJSON:entryDictionary];
+    return [[AlfrescoSite alloc] initWithProperties:entryDictionary];
 }
 
 - (NSDictionary *)parseFolderIdWithData:(NSData *)data error:(NSError **)outError

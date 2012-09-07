@@ -39,7 +39,7 @@
                 STAssertNil(array,@"if failure, the array should be nil");
                 log(@"The array of all sites returns nil. ERROR");
                 super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = @"Failed to retrieve sites.";
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -48,22 +48,11 @@
                 STAssertTrue(array.count > 1, [NSString stringWithFormat:@"Site count should be greater than 1 not %i", array.count]);
                 super.lastTestSuccessful = YES;
             }
-            if (super.lastTestSuccessful)
-            {
-                log(@"Passed the test");
-            }
-            else
-            {
-                log(@"failed the test");
-            }
             super.callbackCompleted = YES;
             
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -87,7 +76,7 @@
             {
                 STAssertNil(pagingResult,@"if failure, the paging result should be nil");
                 super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = @"Failed to retrieve sites.";
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else
             {
@@ -101,10 +90,7 @@
             
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -123,7 +109,7 @@
             {
                 STAssertNil(array,@"if failure, the array should be nil");
                 super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"Failed to retrieve sites for user %@.", super.userName];
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -135,10 +121,7 @@
             
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -159,7 +142,7 @@
             {
                 STAssertNil(pagingResult,@"if failure, the paging result should be nil");
                 super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"Failed to retrieve sites for user. %@", super.userName];
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -170,10 +153,7 @@
             super.callbackCompleted = YES;
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -191,22 +171,19 @@
             {
                 STAssertNil(array,@"if failure, the array should be nil");
                 super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"Failed to retrieve favorite sites for user. %@", super.userName];
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
                 STAssertNotNil(array,@"the array should not be nil");
-                STAssertTrue(array.count >= 1, @"Expected multiple favorite sites");
+                STAssertTrue(array.count >= 1, @"Expected multiple favorite sites but got %d",array.count);
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;
         
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -229,7 +206,7 @@
             {
                 STAssertNil(pagingResult,@"if failure, the paging result should be nil");
                 super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"Failed to retrieve favorite sites for user.%@", super.userName];
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -243,10 +220,7 @@
             
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -263,12 +237,12 @@
             if (nil == site || nil != error) 
             {
                 super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = @"Failed to get site with shortname.";
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
                 log(@"testRetrieveSiteWithShortName returns the following site=%@ ",super.testSiteName);
-                STAssertTrue([site.shortName isEqualToString:super.testSiteName], [NSString stringWithFormat:@"Expected %@ site",super.testSiteName]);
+                STAssertTrue([site.shortName isEqualToString:super.testSiteName], [NSString stringWithFormat:@"Expected %@ site but got back %@",super.testSiteName, site.shortName]);
                 super.lastTestSuccessful = YES;
             }
             
@@ -276,10 +250,7 @@
             
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -297,6 +268,7 @@
             if (nil == site || nil != error) 
             {
                 super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -307,10 +279,7 @@
             
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertFalse(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -329,7 +298,7 @@
             if (nil == folder) 
             {
                 super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = @"Failed to retrieve document library";
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -343,10 +312,7 @@
         
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -365,7 +331,7 @@
             if (nil == folder) 
             {
                 super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = @"Failed to retrieve document library";
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -375,10 +341,7 @@
             
         }];
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertFalse(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }

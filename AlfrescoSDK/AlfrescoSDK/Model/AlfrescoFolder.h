@@ -24,6 +24,12 @@
  */
 
 @interface AlfrescoFolder : AlfrescoNode
+/** Returns the AlfrescoNode object preset with the CMIS properties.
+ 
+ @param properties a list of CMIS properties stored in NSDictionary.
+ @return the property object - or NIL if not found
+ */
+- (id)initWithProperties:(NSDictionary *)properties;
 
 @end
 

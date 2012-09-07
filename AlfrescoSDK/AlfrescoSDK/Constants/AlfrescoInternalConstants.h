@@ -219,5 +219,10 @@ extern NSString * const kAlfrescoJSONIsRegistered;
 extern NSString * const kAlfrescoJSONPostedAt;
 extern NSString * const kAlfrescoJSONAvatarId;
 
+extern NSString * const kAlfrescoNodeAspects;
+extern NSString * const kAlfrescoNodeProperties;
+extern NSString * const kAlfrescoPropertyType;
+extern NSString * const kAlfrescoPropertyValue;
+extern NSString * const kAlfrescoPropertyIsMultiValued;
 
 @end
