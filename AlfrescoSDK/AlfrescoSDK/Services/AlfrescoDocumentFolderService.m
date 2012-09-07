@@ -45,6 +45,7 @@
 
 @interface AlfrescoDocumentFolderService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
+@property (nonatomic, strong, readwrite) CMISSession *cmisSession;
 @property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
@@ -64,6 +65,7 @@
 
 @implementation AlfrescoDocumentFolderService
 @synthesize session = _session;
+@synthesize cmisSession = _cmisSession;
 @synthesize operationQueue = _operationQueue;
 @synthesize objectConverter = _objectConverter;
 @synthesize authenticationProvider = _authenticationProvider;
@@ -77,6 +79,7 @@
     if (nil != self)
     {
         self.session = session;
+        self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 2;
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
@@ -121,9 +124,7 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        
-        NSString *folderRef = [cmisSession createFolder:properties inFolder:folder.identifier error:&operationQueueError];
+        NSString *folderRef = [weakSelf.cmisSession createFolder:properties inFolder:folder.identifier error:&operationQueueError];
         if (nil != folderRef)
         {
             [weakSelf retrieveNodeWithIdentifier:folderRef completionBlock:^(AlfrescoNode *node, NSError *error) {
@@ -174,11 +175,11 @@
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        
-        [cmisSession createDocumentFromFilePath:[file.fileUrl path] withMimeType:file.mimeType withProperties:properties 
-                                       inFolder:folder.identifier 
-            completionBlock:^(NSString *result) {
+        [weakSelf.cmisSession createDocumentFromFilePath:[file.fileUrl path]
+                                            withMimeType:file.mimeType
+                                          withProperties:properties
+                                                inFolder:folder.identifier
+                                         completionBlock:^(NSString *result) {
                 [weakSelf retrieveNodeWithIdentifier:result completionBlock:^(AlfrescoNode *node, NSError *error) {
                     
                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -227,8 +228,7 @@
     [self.operationQueue addOperationWithBlock:^{
         NSError *operationQueueError = nil;
         AlfrescoFolder *rootFolder = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        CMISObject *retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&operationQueueError];
+        CMISObject *retrievedObject = [weakSelf.cmisSession retrieveRootFolderAndReturnError:&operationQueueError];
         if (nil != retrievedObject) {
             if ([retrievedObject isKindOfClass:[CMISFolder class]]) 
             {
@@ -504,8 +504,7 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        CMISObject *cmisObject = [cmisSession retrieveObject:identifier error:&operationQueueError];
+        CMISObject *cmisObject = [weakSelf.cmisSession retrieveObject:identifier error:&operationQueueError];
         AlfrescoNode *alfrescoNode = nil;
         if (nil != cmisObject) 
         {
@@ -531,8 +530,7 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        CMISObject *cmisObject = [cmisSession retrieveObjectByPath:path error:&operationQueueError];
+        CMISObject *cmisObject = [weakSelf.cmisSession retrieveObjectByPath:path error:&operationQueueError];
         AlfrescoNode *alfrescoNode = nil;
         if (nil != cmisObject) 
         {
@@ -560,8 +558,7 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        CMISObject *object = [cmisSession retrieveObject:folder.identifier error:&operationQueueError];
+        CMISObject *object = [weakSelf.cmisSession retrieveObject:folder.identifier error:&operationQueueError];
         if (nil != object) 
         {
             CMISFolder *folder = (CMISFolder *)object;
@@ -588,8 +585,7 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        NSArray *parentArray = [cmisSession.binding.navigationService retrieveParentsForObject:node.identifier withFilter:nil withIncludeRelationships:CMISIncludeRelationshipBoth withRenditionFilter:nil withIncludeAllowableActions:YES withIncludeRelativePathSegment:YES error:&operationQueueError];
+        NSArray *parentArray = [weakSelf.cmisSession.binding.navigationService retrieveParentsForObject:node.identifier withFilter:nil withIncludeRelationships:CMISIncludeRelationshipBoth withRenditionFilter:nil withIncludeAllowableActions:YES withIncludeRelativePathSegment:YES error:&operationQueueError];
 
         AlfrescoFolder *folder = nil;
         if (nil != parentArray)
@@ -664,8 +660,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
 
     NSString *tmpFile = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",document.name];
-    CMISSession *cmisSession = [self.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-    [cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^{
+    [self.cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^{
         NSLog(@"AlfrescoDocumentFolderService::retrieveContentOfDocument. Document name is '%@' and we'll download to %@",document.name, tmpFile);
         AlfrescoContentFile *downloadedFile = [[AlfrescoContentFile alloc]initWithUrl:[NSURL fileURLWithPath:tmpFile]];
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -706,15 +701,14 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        CMISDocument *cmisDocument = (CMISDocument *) [cmisSession retrieveObject:document.identifier error:&operationQueueError];
+        CMISDocument *cmisDocument = (CMISDocument *) [weakSelf.cmisSession retrieveObject:document.identifier error:&operationQueueError];
         if(cmisDocument != nil && cmisDocument.identifier != nil)
         {
             [cmisDocument changeContentToContentOfFile:[file.fileUrl path] withOverwriteExisting:YES completionBlock:^{
                 
                 NSError *anotherError = nil;
                 AlfrescoDocument *resultDocument = nil;
-                CMISDocument *resultCmisDocument = (CMISDocument *) [cmisSession retrieveObject:cmisDocument.identifier error:&anotherError];
+                CMISDocument *resultCmisDocument = (CMISDocument *) [weakSelf.cmisSession retrieveObject:cmisDocument.identifier error:&anotherError];
                 if(!anotherError)
                 {
                     resultDocument = (AlfrescoDocument *)[weakSelf.objectConverter nodeFromCMISObject:resultCmisDocument];
@@ -770,14 +764,13 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        CMISObject *cmisObject = [cmisSession retrieveObject:node.identifier error:&operationQueueError];
+        CMISObject *cmisObject = [weakSelf.cmisSession retrieveObject:node.identifier error:&operationQueueError];
         
         if(nil != cmisObject && nil != cmisObject.identifier)
         {
             [cmisObject updateProperties:properties error:&operationQueueError];
             AlfrescoNode *resultNode = nil;
-            CMISObject *resultCmisObject = [cmisSession retrieveObject:cmisObject.identifier error:&operationQueueError];
+            CMISObject *resultCmisObject = [weakSelf.cmisSession retrieveObject:cmisObject.identifier error:&operationQueueError];
             if (nil != resultCmisObject)
             {
                 resultNode = [weakSelf.objectConverter nodeFromCMISObject:resultCmisObject];
@@ -817,9 +810,7 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        
-        BOOL deletedSuccessfully = [cmisSession.binding.objectService deleteObject:node.identifier allVersions:YES error:&operationQueueError];
+        BOOL deletedSuccessfully = [weakSelf.cmisSession.binding.objectService deleteObject:node.identifier allVersions:YES error:&operationQueueError];
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(deletedSuccessfully, operationQueueError);
         }];
@@ -830,8 +821,7 @@
 
 - (NSArray *)cmisRetrieveChildren:(NSString *)objectId withSession:(__weak AlfrescoDocumentFolderService *)weakSelf error:(NSError **)error
 {
-    CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-    CMISObject *object = [cmisSession retrieveObject:objectId error:error];
+    CMISObject *object = [self.cmisSession retrieveObject:objectId error:error];
     if (nil == object) 
     {
         return nil;

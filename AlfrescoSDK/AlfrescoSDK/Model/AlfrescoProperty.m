@@ -17,11 +17,25 @@
  ******************************************************************************/
 
 #import "AlfrescoProperty.h"
+#import "AlfrescoInternalConstants.h"
+
+@interface AlfrescoProperty ()
+
+@end
 
 @implementation AlfrescoProperty
 
 @synthesize type = _type;
 @synthesize isMultiValued = _isMultiValued;
 @synthesize value = _value;
+
+- (id)initWithProperties:(NSDictionary *)properties
+{
+    self = [super init];
+    if (nil != self)
+    {
+    }
+    return self;
+}
 
 @end

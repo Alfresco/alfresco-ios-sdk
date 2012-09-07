@@ -27,22 +27,29 @@
 
 
 /// Username of the person.
-@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong, readonly) NSString *identifier;
 
 
 /// First name of the person.
-@property (nonatomic, strong) NSString *firstName;
+@property (nonatomic, strong, readonly) NSString *firstName;
 
 
 /// Last name of the person.
-@property (nonatomic, strong) NSString *lastName;
+@property (nonatomic, strong, readonly) NSString *lastName;
 
 
 /// Full name of the person.
-@property (nonatomic, strong) NSString *fullName;
+@property (nonatomic, strong, readonly) NSString *fullName;
 
 
 /// Returns the unique identifier to the content of the avatar rendition.
-@property (nonatomic, strong) NSString *avatarIdentifier;
+@property (nonatomic, strong, readonly) NSString *avatarIdentifier;
+
+/**
+ @param properties - the list of values to assign to the AlfrescoActivityEntry object
+ @return the AlfrescoActivityEntry object
+ */
+- (id)initWithProperties:(NSDictionary *)properties;
+
 
 @end

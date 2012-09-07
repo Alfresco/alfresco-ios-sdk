@@ -32,7 +32,7 @@
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (AlfrescoPerson *)parsePersonArrayWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict;
+//- (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict;
 @end
 
 
@@ -149,11 +149,11 @@
         }
         return nil;
     }
-    
-    return (AlfrescoPerson *)[self personFromJSON:entryDict];
+    return [[AlfrescoPerson alloc] initWithProperties:entryDict];
+//    return (AlfrescoPerson *)[self personFromJSON:entryDict];
     
 }
-
+/*
 - (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict
 {
     AlfrescoPerson *alfPerson = [[AlfrescoPerson alloc] init];
@@ -182,6 +182,6 @@
     alfPerson.avatarIdentifier = [personDict valueForKey:kAlfrescoJSONAvatarId];
     return alfPerson;
 }
-
+*/
 
 @end

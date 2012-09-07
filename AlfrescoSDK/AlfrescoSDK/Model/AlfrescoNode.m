@@ -18,9 +18,36 @@
 
 #import "AlfrescoNode.h"
 #import "AlfrescoProperty.h"
+#import "AlfrescoInternalConstants.h"
 #import "CMISObject.h"
+#import "CMISDocument.h"
+#import "CMISSession.h"
+#import "CMISQueryResult.h"
+#import "CMISObjectConverter.h"
+#import "CMISEnums.h"
+#import "CMISConstants.h"
+#import "CMISQueryResult.h"
 
 NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey";
+
+@interface AlfrescoNode ()
+@property (nonatomic, strong, readwrite) NSString *identifier;
+@property (nonatomic, strong, readwrite) NSString *name;
+@property (nonatomic, strong, readwrite) NSString *title;
+@property (nonatomic, strong, readwrite) NSString *summary;
+@property (nonatomic, strong, readwrite) NSString *type;
+@property (nonatomic, strong, readwrite) NSString *createdBy;
+@property (nonatomic, strong, readwrite) NSDate *createdAt;
+@property (nonatomic, strong, readwrite) NSString *modifiedBy;
+@property (nonatomic, strong, readwrite) NSDate *modifiedAt;
+@property (nonatomic, strong, readwrite) NSDictionary *properties;
+@property (nonatomic, strong, readwrite) NSArray *aspects;
+@property (nonatomic, assign, readwrite) BOOL isFolder;
+@property (nonatomic, assign, readwrite) BOOL isDocument;
+
+- (void)setUpProperties:(NSDictionary *)properties;
+@end
+
 
 @implementation AlfrescoNode
 
@@ -38,18 +65,70 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 @synthesize isFolder = _isFolder;
 @synthesize isDocument = _isDocument;
 
-- (id)initWithCMISObject:(CMISObject *)objectData
+- (id)initWithProperties:(NSDictionary *)properties
 {
-    if (self = [super init]) 
+    self = [super init];
+    if (nil != self)
     {
-        self.identifier = objectData.identifier;
-        self.name = objectData.name;
-        self.createdBy = objectData.createdBy;
-        self.createdAt = objectData.creationDate;
+        [self setUpProperties:properties];
     }
-    
     return self;
 }
+
+- (void)setUpProperties:(NSDictionary *)properties
+{
+    if ([[properties allKeys] containsObject:kCMISPropertyObjectId])
+    {
+        self.identifier = [properties valueForKey:kCMISPropertyObjectId];
+    }
+    if ([[properties allKeys] containsObject:kCMISPropertyName])
+    {
+        self.name = [properties valueForKey:kCMISPropertyName];
+    }
+    if ([[properties allKeys] containsObject:kCMISPropertyObjectTypeId])
+    {
+        self.type = [properties valueForKey:kCMISPropertyObjectTypeId];
+    }
+    if ([[properties allKeys] containsObject:kCMISPropertyCreatedBy])
+    {
+        self.createdBy = [properties valueForKey:kCMISPropertyCreatedBy];
+    }
+    if ([[properties allKeys] containsObject:kCMISPropertyCreationDate])
+    {
+        self.createdAt = [properties valueForKey:kCMISPropertyCreationDate];
+    }
+
+    if ([[properties allKeys] containsObject:kCMISPropertyModifiedBy])
+    {
+        self.modifiedBy = [properties valueForKey:kCMISPropertyModifiedBy];
+    }
+    if ([[properties allKeys] containsObject:kCMISPropertyModificationDate])
+    {
+        self.modifiedAt = [properties valueForKey:kCMISPropertyModificationDate];
+    }
+    
+    if ([[properties allKeys] containsObject:kCMISTitle])
+    {
+        self.title = [properties valueForKey:kCMISTitle];
+    }
+    if ([[properties allKeys] containsObject:kCMISDescription])
+    {
+        self.summary = [properties valueForKey:kCMISDescription];
+    }
+    if ([[properties allKeys] containsObject:kAlfrescoNodeAspects])
+    {
+        self.aspects = [properties valueForKey:kAlfrescoNodeAspects];
+    }
+    if ([[properties allKeys] containsObject:kAlfrescoNodeProperties])
+    {
+        self.properties = [properties valueForKey:kAlfrescoNodeProperties];
+    }
+    if ([[properties allKeys] containsObject:kCMISPropertyObjectId])
+    {
+        self.identifier = [properties valueForKey:kCMISPropertyObjectId];
+    }
+}
+
 
 - (id)propertyValueWithName:(NSString *)propertyName
 {

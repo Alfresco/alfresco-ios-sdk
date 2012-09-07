@@ -31,6 +31,7 @@
 
 @interface AlfrescoSearchService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
+@property (nonatomic, strong, readwrite) CMISSession *cmisSession;
 @property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
@@ -42,6 +43,7 @@
 
 @implementation AlfrescoSearchService
 @synthesize session = _session;
+@synthesize cmisSession = _cmisSession;
 @synthesize operationQueue = _operationQueue;
 @synthesize objectConverter = _objectConverter;
 @synthesize supportedSortKeys = _supportedSortKeys;
@@ -54,6 +56,7 @@
     if (nil != self)
     {
         self.session = session;
+        self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 2;
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
@@ -78,15 +81,14 @@
         [self.operationQueue addOperationWithBlock:^{
             
             NSError *operationQueueError = nil;
-            CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-            CMISObjectList *queryResultList = [cmisSession.binding.discoveryService query:statement
-                                                                        searchAllVersions:NO
-                                                                     includeRelationShips:CMISIncludeRelationshipBoth
-                                                                          renditionFilter:nil
-                                                                  includeAllowableActions:YES
-                                                                                 maxItems:[NSNumber numberWithInt:50]
-                                                                                skipCount:0
-                                                                                    error:&operationQueueError];
+            CMISObjectList *queryResultList = [weakSelf.cmisSession.binding.discoveryService query:statement
+                                                                                 searchAllVersions:NO
+                                                                              includeRelationShips:CMISIncludeRelationshipBoth
+                                                                                   renditionFilter:nil
+                                                                           includeAllowableActions:YES
+                                                                                          maxItems:[NSNumber numberWithInt:50]
+                                                                                         skipCount:0
+                                                                                             error:&operationQueueError];
             NSMutableArray *resultArray = nil;
             NSArray *sortedResultArray = nil;
             if (nil != queryResultList)
@@ -125,15 +127,14 @@
         [self.operationQueue addOperationWithBlock:^{
             
             NSError *operationQueueError = nil;
-             CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-             CMISObjectList *queryResultList = [cmisSession.binding.discoveryService query:statement
-                                                                         searchAllVersions:NO
-                                                                      includeRelationShips:CMISIncludeRelationshipBoth
-                                                                           renditionFilter:nil
-                                                                   includeAllowableActions:YES
-                                                                                  maxItems:[NSNumber numberWithInt:50]
-                                                                                 skipCount:0
-                                                                                     error:&operationQueueError];
+             CMISObjectList *queryResultList = [weakSelf.cmisSession.binding.discoveryService query:statement
+                                                                                  searchAllVersions:NO
+                                                                               includeRelationShips:CMISIncludeRelationshipBoth
+                                                                                    renditionFilter:nil
+                                                                            includeAllowableActions:YES
+                                                                                           maxItems:[NSNumber numberWithInt:50]
+                                                                                          skipCount:0
+                                                                                              error:&operationQueueError];
             AlfrescoPagingResult *pagingResult = nil;
             if (nil != queryResultList)
             {
@@ -172,8 +173,7 @@
         NSError *operationQueueError = nil;
         NSMutableArray *resultArray = nil;
         NSArray *sortedResultArray = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        CMISPagedResult *queryResultList = [cmisSession query:query searchAllVersions:NO error:&operationQueueError];
+        CMISPagedResult *queryResultList = [weakSelf.cmisSession query:query searchAllVersions:NO error:&operationQueueError];
         if (nil != queryResultList)
         {
             resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.resultArray count]];
@@ -214,8 +214,10 @@
         NSMutableArray *resultArray = nil;
         NSArray *sortedResultArray = nil;
         AlfrescoPagingResult *pagingResult = nil;
-        CMISSession *cmisSession = [weakSelf.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        CMISPagedResult *queryResultList = [cmisSession query:query searchAllVersions:NO operationContext:operationContext error:&operationQueueError];
+        CMISPagedResult *queryResultList = [weakSelf.cmisSession query:query
+                                                     searchAllVersions:NO
+                                                      operationContext:operationContext
+                                                                 error:&operationQueueError];
         if (nil != queryResultList)
         {
             resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.resultArray count]];
@@ -242,7 +244,8 @@
     NSMutableString *searchQuery = [NSMutableString stringWithString:@"SELECT * FROM cmis:document WHERE ("];
     BOOL firstKeyword = YES;
     NSArray *keywordArray = [keywords componentsSeparatedByString:@" "];
-    for (NSString *keyword in keywordArray) {
+    for (NSString *keyword in keywordArray)
+    {
         if (firstKeyword == NO)
         {
             [searchQuery appendString:@" OR "];

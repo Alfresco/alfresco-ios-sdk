@@ -17,21 +17,15 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import "AlfrescoSession.h"
 
-/** The AlfrescoAuthenticationProvider category defines properties to retrieve authentication parameters.
+/** The AlfrescoAuthenticationProvider protocol defines the methods used to supply authentication headers.
  
  Author: Tijs Rademakers (Alfresco)
  */
 
 @protocol AlfrescoAuthenticationProvider <NSObject>
 
-/// @name The HTTP query parameters.
-
-/// A dictionary of query string parameters that should be added to all requests.
-@property (nonatomic, strong, readonly) NSDictionary *queryStringParametersToApply;
-
-- (void)willApplyHttpHeaders:(NSDictionary *)httpHeaders;
-
-- (NSDictionary *)httpHeadersToApply;
+- (NSDictionary *)willApplyHTTPHeadersForSession:(id<AlfrescoSession>)session;
 
 @end

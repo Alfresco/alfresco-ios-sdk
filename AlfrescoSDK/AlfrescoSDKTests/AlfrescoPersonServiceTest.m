@@ -45,14 +45,11 @@
                  STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, super.userName]);
                  STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, super.firstName]);
                  super.lastTestSuccessful = YES;
-                 super.lastTestFailureMessage = @"We should not get a person back or error == nil";
              }
              super.callbackCompleted = YES;
          }];
-        [super waitForCompletion:10];
+        [super waitUntilCompleteWithFixedTimeInterval];
         
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -80,8 +77,6 @@
                  STAssertNotNil(person,@"Person should not be nil");
                  STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, super.userName]);
                  STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, super.firstName]);
-                 super.lastTestSuccessful = YES;
-                 super.lastTestFailureMessage = @"We should not get a person back or error == nil";
 
                  [weakPersonService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
                   {
@@ -104,10 +99,7 @@
          }];
         
         
-        [super waitForCompletion:10];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }

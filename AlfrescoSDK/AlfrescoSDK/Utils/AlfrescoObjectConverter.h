@@ -33,12 +33,6 @@
 // Returns an Alfresco repository info object from the given CMIS session object.
 - (AlfrescoRepositoryInfo *)repositoryInfoFromCMISSession:(CMISSession *)cmisSession;
 
-// Converts the given CMIS folder object into an Alfresco folder object.
-- (AlfrescoFolder *)folderFromCMISFolder:(CMISFolder *)cmisFolder;
-
-// Converts the given CMIS document object into an Alfresco document object.
-- (AlfrescoDocument *)documentFromCMISDocument:(CMISDocument *)cmisDocument;
-
 // Converts the given CMIS object into an Alfresco node object.
 - (AlfrescoNode *)nodeFromCMISObject:(CMISObject *)cmisObject;
 

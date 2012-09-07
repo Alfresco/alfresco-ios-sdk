@@ -23,8 +23,7 @@
 
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
-@property (nonatomic, strong, readwrite) NSDictionary *httpHeaders;
-@property (nonatomic, strong, readwrite) NSDictionary *queryStringParametersToApply;
+@property (nonatomic, strong, readwrite) NSMutableDictionary *httpHeaders;
 
 @end
 
@@ -33,7 +32,6 @@
 @synthesize username = _username;
 @synthesize password = _password;
 @synthesize httpHeaders = _httpHeaders;
-@synthesize queryStringParametersToApply = _queryStringParametersToApply;
 
 - (id)initWithUsername:(NSString *)username andPassword:(NSString *)password
 {
@@ -42,18 +40,6 @@
     {
         self.username = username;
         self.password = password;
-        
-        // create a plaintext string in the format username:password
-        NSMutableString *loginString = [NSMutableString stringWithFormat:@"%@:%@", self.username, self.password];
-        
-        // employ the Base64 encoding above to encode the authentication tokens
-        NSString *encodedLoginData = [CMISBase64Encoder stringByEncodingText:[loginString dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        // create the contents of the header 
-        NSString *authHeader = [NSString stringWithFormat:@"Basic %@", encodedLoginData];
-        NSMutableDictionary *httpHeader = [NSMutableDictionary dictionaryWithCapacity:1];
-        [httpHeader setValue:authHeader forKey:@"Authorization"];
-        [self willApplyHttpHeaders:httpHeader];
     }
     
     return self;
@@ -61,15 +47,24 @@
 
 #pragma mark AlfrescoAuthenticationProvider Delegate methods
 
-- (void)willApplyHttpHeaders:(NSDictionary *)httpHeaders
+- (NSDictionary *)willApplyHTTPHeadersForSession:(id<AlfrescoSession>)session;
 {
-    self.httpHeaders = [NSDictionary dictionaryWithDictionary:httpHeaders];
-}
-
-- (NSDictionary *)httpHeadersToApply
-{
+    if (self.httpHeaders == nil)
+    {
+        self.httpHeaders = [NSMutableDictionary dictionaryWithCapacity:1];
+        
+        // create a plaintext string in the format username:password
+        NSMutableString *loginString = [NSMutableString stringWithFormat:@"%@:%@", self.username, self.password];
+        
+        // employ the Base64 encoding above to encode the authentication tokens
+        NSString *encodedLoginData = [CMISBase64Encoder stringByEncodingText:[loginString dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        // create the contents of the header
+        NSString *authHeader = [NSString stringWithFormat:@"Basic %@", encodedLoginData];
+        [self.httpHeaders setValue:authHeader forKey:@"Authorization"];
+    }
+    
     return self.httpHeaders;
 }
-
 
 @end
