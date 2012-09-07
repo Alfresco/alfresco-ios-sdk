@@ -33,7 +33,7 @@
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (NSArray *) parseTagArrayWithData:(NSData *)data error:(NSError **)outError;
 - (NSArray *) customParseTagArrayWithData:(NSData *) data;
-- (AlfrescoTag *)tagFromJSON:(NSString *)jsonString;
+//- (AlfrescoTag *)tagFromJSON:(NSString *)jsonString;
 
 @end
 
@@ -277,7 +277,9 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     NSMutableArray *resultsArray = [NSMutableArray array];
     for (NSString * tagValue in jsonTagArray)
     {
-        AlfrescoTag *tag = [self tagFromJSON:tagValue];
+        NSMutableDictionary *tagDict = [NSMutableDictionary dictionary];
+        [tagDict setValue:tagValue forKey:kAlfrescoJSONTag];
+        AlfrescoTag *tag = [[AlfrescoTag alloc] initWithProperties:tagDict];
         [resultsArray addObject:tag];
     }
     return resultsArray;
@@ -290,14 +292,15 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     tagString = [tagString stringByReplacingOccurrencesOfString:@"]" withString:@""];
     NSArray *separatedTagArray = [tagString componentsSeparatedByString:@","];
     NSMutableArray *tagArray = [NSMutableArray arrayWithCapacity:separatedTagArray.count];
-    for (NSString *tag in separatedTagArray) {
+    for (NSString *tag in separatedTagArray)
+    {
         NSString *trimmedString = [tag stringByTrimmingCharactersInSet:
                                    [NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if ([trimmedString length] > 0)
         {
-            AlfrescoTag *tag = [[AlfrescoTag alloc] init];
-            tag.value = trimmedString;
-            tag.identifier = trimmedString;
+            NSMutableDictionary *tagDict = [NSMutableDictionary dictionary];
+            [tagDict setValue:trimmedString forKey:kAlfrescoJSONTag];
+            AlfrescoTag *tag = [[AlfrescoTag alloc] initWithProperties:tagDict];
             [tagArray addObject:tag];
         }
     }
@@ -305,7 +308,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     return tagArray;
 }
 
-
+/*
 - (AlfrescoTag *)tagFromJSON:(NSString *)jsonString
 {
     AlfrescoTag *tag = [[AlfrescoTag alloc] init];
@@ -313,5 +316,5 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     tag.value = jsonString;
     return tag;
 }
-
+*/
 @end

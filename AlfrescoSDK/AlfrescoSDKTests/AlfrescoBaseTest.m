@@ -87,6 +87,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                                      log(@"We failed uploading the document with name %@",newName);
                                      self.lastTestSuccessful = NO;
                                      self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not upload test document. Error %@",[error localizedDescription]];
+                                     self.callbackCompleted = YES;
                                  }
                                  else
                                  {
@@ -98,8 +99,8 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                                      {
                                          self.testSearchFileName = self.testAlfrescoDocument.name;
                                      }
+                                     self.callbackCompleted = YES;
                                  }
-                                 self.callbackCompleted = YES;
                              }
                                progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
     [self waitUntilCompleteWithFixedTimeInterval];
@@ -119,13 +120,14 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
             log(@"We failed to delete the document on the server");
             self.lastTestSuccessful = NO;
             self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete test document. Error %@",[error localizedDescription]];
+            self.callbackCompleted = YES;
         }
         else
         {
             log(@"We succeeded to delete the document on the server");
             self.lastTestSuccessful = YES;
+            self.callbackCompleted = YES;
         }
-        self.callbackCompleted = YES;
     }];
     
     [self waitUntilCompleteWithFixedTimeInterval];
@@ -146,6 +148,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                                   {
                                       self.lastTestSuccessful = NO;
                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"Session could not be authenticated. Error %@",[error localizedDescription]];
+                                      self.callbackCompleted = YES;
                                   }
                                   else
                                   {
@@ -153,8 +156,8 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                                       STAssertNotNil(session,@"Session should not be nil");
                                       self.lastTestSuccessful = YES;
                                       self.currentSession = session;
+                                      self.callbackCompleted = YES;
                                   }
-                                  self.callbackCompleted = YES;
     }];
     
     
@@ -176,6 +179,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
             log(@"AlfrescoBaseTest::authenticateCloudServer - cloudSession returns NIL");
             self.lastTestSuccessful = NO;
             self.lastTestFailureMessage = [NSString stringWithFormat:@"Cloud session could not be authenticated. Error %@",[error localizedDescription]];
+            self.callbackCompleted = YES;
         }
         else
         {
@@ -184,8 +188,8 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
             log(@"AlfrescoBaseTest::authenticateCloudServer - cloudSession returns **NOT** NIL");
             self.lastTestSuccessful = YES;
             self.currentSession = cloudSession;
+            self.callbackCompleted = YES;
         }
-        self.callbackCompleted = YES;
     }];
 
     [self waitUntilCompleteWithFixedTimeInterval];
@@ -209,14 +213,15 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                 log(@"AlfrescoBaseTest::retrieveAlfrescoTestFolder - documentLibrary folder for cloud returns nil");
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not get the root folder in the DocLib for site %@. Error %@",self.testSiteName, [error localizedDescription]];
+                self.callbackCompleted = YES;
             }
             else
             {
                 STAssertNotNil(folder, @"DocLib root folder should not be nil");
                 self.lastTestSuccessful = YES;
                 self.testDocFolder = folder;
+                self.callbackCompleted = YES;
             }
-            self.callbackCompleted = YES;
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
@@ -225,6 +230,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     {
         STAssertTrue([self.currentSession isKindOfClass:[AlfrescoRepositorySession class]], @"expected OnPremise session");
         self.testDocFolder = self.currentSession.rootFolder;
+        self.callbackCompleted = YES;
     }
 }
 
@@ -240,15 +246,16 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                 log(@"AlfrescoBaseTest::retrieveAlfrescoTestFolder - couldn't find node in path %@",folderPath);
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
             }
             else
             {
                 STAssertNotNil(node, @"node should not be nil");
                 self.lastTestSuccessful = YES;
                 self.testChildFolder = (AlfrescoFolder *)node;
+                self.callbackCompleted = YES;
                 
             }
-            self.callbackCompleted = YES;
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"setUpTestChildFolder failed");
@@ -256,6 +263,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     else
     {
         self.testChildFolder = self.currentSession.rootFolder;
+        self.callbackCompleted = YES;
     }
 }
 
@@ -375,12 +383,11 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 {
     NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:TIMEINTERVAL];
     
-    while (NO == self.callbackCompleted)
-    {
+    do {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
         if([timeoutDate timeIntervalSinceNow] < 0.0)
             break;
-    }    
+    } while (!self.callbackCompleted);
     STAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEINTERVAL);
 }
 

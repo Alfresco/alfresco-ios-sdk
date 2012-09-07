@@ -17,6 +17,16 @@
  ******************************************************************************/
 
 #import "AlfrescoSite.h"
+#import "AlfrescoInternalConstants.h"
+
+@interface AlfrescoSite ()
+@property (nonatomic, strong, readwrite) NSString *shortName;
+@property (nonatomic, strong, readwrite) NSString *title;
+@property (nonatomic, strong, readwrite) NSString *summary;
+@property (nonatomic, assign, readwrite) AlfrescoSiteVisibility visibility;
+- (void)setUpOnPremiseProperties:(NSDictionary *)properties;
+- (void)setUpCloudProperties:(NSDictionary *)properties;
+@end
 
 @implementation AlfrescoSite
 
@@ -24,5 +34,58 @@
 @synthesize title = _title;
 @synthesize summary = _summary;
 @synthesize visibility = _visibility;
+
+
+- (id)initWithProperties:(NSDictionary *)properties
+{
+    self = [super init];
+    if (nil != self)
+    {
+        [self setUpOnPremiseProperties:properties];
+        [self setUpCloudProperties:properties];
+        if ([[properties allKeys] containsObject:kAlfrescoJSONDescription])
+        {
+            self.summary = [properties valueForKey:kAlfrescoJSONDescription];
+        }
+        if ([[properties allKeys] containsObject:kAlfrescoJSONTitle])
+        {
+            self.title = [properties valueForKey:kAlfrescoJSONTitle];            
+        }
+        if ([[properties allKeys] containsObject:kAlfrescoJSONVisibility])
+        {
+            NSString *visibility = [properties valueForKey:kAlfrescoJSONVisibility];
+            if ([visibility isEqualToString:kAlfrescoJSONVisibilityPUBLIC])
+            {
+                self.visibility = AlfrescoSiteVisibilityPublic;
+            }
+            else if ([visibility isEqualToString:kAlfrescoJSONVisibilityPRIVATE])
+            {
+                self.visibility = AlfrescoSiteVisibilityPrivate;
+            }
+            else if ([visibility isEqualToString:kAlfrescoJSONVisibilityMODERATED])
+            {
+                self.visibility = AlfrescoSiteVisibilityModerated;
+            }
+            
+        }
+    }
+    return self;
+}
+
+- (void)setUpOnPremiseProperties:(NSDictionary *)properties
+{
+    if ([[properties allKeys] containsObject:kAlfrescoJSONShortname])
+    {
+        self.shortName = [properties valueForKey:kAlfrescoJSONShortname];
+    }    
+}
+
+- (void)setUpCloudProperties:(NSDictionary *)properties
+{
+    if ([[properties allKeys] containsObject:kAlfrescoJSONIdentifier])
+    {
+        self.shortName = [properties valueForKey:kAlfrescoJSONIdentifier];
+    }
+}
 
 @end

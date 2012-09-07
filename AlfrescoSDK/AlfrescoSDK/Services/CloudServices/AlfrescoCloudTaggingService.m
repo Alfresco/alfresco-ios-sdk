@@ -32,7 +32,7 @@
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (NSArray *) parseTagArrayWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoTag *)tagFromJSON:(NSDictionary *)jsonDict;
+//- (AlfrescoTag *)tagFromJSON:(NSDictionary *)jsonDict;
 @end
 
 @implementation AlfrescoCloudTaggingService
@@ -278,12 +278,14 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
             }
             return nil;
         }
-        AlfrescoTag *tag = [self tagFromJSON:individualEntry];
+        AlfrescoTag *tag = [[AlfrescoTag alloc] initWithProperties:individualEntry];
+//        AlfrescoTag *tag = [self tagFromJSON:individualEntry];
         [resultsArray addObject:tag];
     }
     return resultsArray;
 }
 
+/*
 - (AlfrescoTag *)tagFromJSON:(NSDictionary *)jsonDict
 {
     AlfrescoTag *tag = [[AlfrescoTag alloc]init];
@@ -291,7 +293,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     tag.identifier = [jsonDict valueForKey:kAlfrescoJSONIdentifier];
     return tag;
 }
-
+*/
 
 
 @end
