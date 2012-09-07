@@ -19,6 +19,11 @@
 #import <Foundation/Foundation.h>
 
 @interface AlfrescoTag : NSObject
-@property (nonatomic, strong) NSString * identifier;
-@property (nonatomic, strong) NSString * value;
+@property (nonatomic, strong, readonly) NSString * identifier;
+@property (nonatomic, strong, readonly) NSString * value;
+/**
+ @param properties - the list of values to assign to the AlfrescoActivityEntry object
+ @return the AlfrescoActivityEntry object
+ */
+- (id)initWithProperties:(NSDictionary *)properties;
 @end

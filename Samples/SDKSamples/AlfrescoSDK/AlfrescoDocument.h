@@ -28,22 +28,30 @@
 /// @name Properties.
 
 /// The mime type of the content stored in the document.
-@property (nonatomic, strong) NSString *contentMimeType;
+@property (nonatomic, strong, readonly) NSString *contentMimeType;
 
 
 /// The length of the content stored in the document, in bytes.
-@property (nonatomic, assign) long contentLength;
+@property (nonatomic, assign, readonly) long contentLength;
 
 
 /// The version of the document.
-@property (nonatomic, strong) NSString *versionLabel;
+@property (nonatomic, strong, readonly) NSString *versionLabel;
 
 
 /// The version of the document.
-@property (nonatomic, strong) NSString *versionComment;
+@property (nonatomic, strong, readonly) NSString *versionComment;
 
 
 /// Specifies whether this is the latest version.
-@property (nonatomic, assign) BOOL isLatestVersion;
+@property (nonatomic, assign, readonly) BOOL isLatestVersion;
+
+/** Returns the AlfrescoNode object preset with the CMIS properties.
+ 
+ @param properties a list of CMIS properties stored in NSDictionary.
+ @return the property object - or NIL if not found
+ */
+- (id)initWithProperties:(NSDictionary *)properties;
+
 
 @end

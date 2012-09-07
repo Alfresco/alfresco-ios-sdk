@@ -33,8 +33,13 @@
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
         // create a new folder in the repository's root folder
-        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:nil
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
                              completionBlock:^(AlfrescoFolder *folder, NSError *error) 
          {
              if (nil == folder) 
@@ -47,7 +52,15 @@
              {
                  STAssertNotNil(folder, @"folder should not be nil");
                  STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) 
+                 
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
                   {
                       if (!success) 
                       {
@@ -566,8 +579,12 @@
     [super runAllSitesTest:^{
         
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
+        // provide the objectTypeId so we can specify the cm:author aspect
+        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                  forKey:kCMISPropertyObjectTypeId];
         [props setObject:@"test description" forKey:@"cm:description"];
         [props setObject:@"test title" forKey:@"cm:title"];
+        [props setObject:@"test author" forKey:@"cm:author"];
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         [self.dfService createDocumentWithName:@"millenium-dome.jpg" inParentFolder:super.testDocFolder
@@ -589,8 +606,10 @@
                                        NSDictionary *newDocProps = document.properties;
                                        AlfrescoProperty *newDescriptionProp = [newDocProps objectForKey:@"cm:description"];
                                        AlfrescoProperty *newTitleProp = [newDocProps objectForKey:@"cm:title"];
+                                       AlfrescoProperty *newAuthorProp = [newDocProps objectForKey:@"cm:author"];
                                        STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                                        STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                                       STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
                                        
                                        // delete the test document
                                        [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
@@ -732,10 +751,13 @@
              else 
              {
                  __block NSString *propertyObjectTestValue = @"version-download-test-updated.txt";
-                 NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:4];
+                 NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:8];
+//                 [propDict setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+//                              forKey:kCMISPropertyObjectTypeId];
                  [propDict setObject:propertyObjectTestValue forKey:kCMISPropertyName];
                  [propDict setObject:@"updated description" forKey:@"cm:description"];
                  [propDict setObject:@"updated title" forKey:@"cm:title"];
+//                 [propDict setObject:@"updated author" forKey:@"cm:author"];
                  
                  [weakDfService updatePropertiesOfNode:super.testAlfrescoDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error)
                   {
@@ -752,15 +774,14 @@
                           STAssertTrue([updatedDocument.name isEqualToString:@"version-download-test-updated.txt"], @"name should be updated");
                           STAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
                           
+                          // check the updated properties
                           NSDictionary *updatedProps = updatedDocument.properties;
                           AlfrescoProperty *updatedDescription = [updatedProps objectForKey:@"cm:description"];
                           AlfrescoProperty *updatedTitle = [updatedProps objectForKey:@"cm:title"];
-                          
-                          NSLog(@"updatedDesc: %@", updatedDescription.value);
-                          NSLog(@"updatedTitle: %@", updatedTitle.value);
-                          
+                          AlfrescoProperty *updatedAuthor = [updatedProps objectForKey:@"cm:author"];
                           STAssertTrue([updatedDescription.value isEqualToString:@"updated description"], @"Updated description is incorrect");
                           STAssertTrue([updatedTitle.value isEqualToString:@"updated title"], @"Updated title is incorrect");
+//                          STAssertTrue([updatedAuthor.value isEqualToString:@"updated author"], @"Updated author is incorrect");
                           
                           id propertyValue = [updatedDocument propertyValueWithName:kCMISPropertyName];
                           if ([propertyValue isKindOfClass:[NSString class]])

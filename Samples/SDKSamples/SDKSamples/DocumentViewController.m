@@ -172,17 +172,20 @@
         return;
     }
     
-    AlfrescoPerson *person = [[AlfrescoPerson alloc]init];
-    person.identifier = userId;
     __weak DocumentViewController *weakSelf = self;
-    [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
-         if (nil != contentFile) 
-         {
-             NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
-             [weakSelf.avatarDictionary setObject:data forKey:userId];
-             avatarImageView.image = [UIImage imageWithData:data];
-         }
-     }];
+    [self.personService retrievePersonWithIdentifier:userId completionBlock:^(AlfrescoPerson *person, NSError *error) {
+        if (nil != person)
+        {
+            [weakSelf.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+                if (nil != contentFile)
+                {
+                    NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
+                    [weakSelf.avatarDictionary setObject:data forKey:userId];
+                    avatarImageView.image = [UIImage imageWithData:data];
+                }
+            }];
+        }
+    }];
 }
 
 /**
