@@ -102,8 +102,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                                  self.callbackCompleted = YES;
                              }
                                progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
-    [self waitForCompletion:15];
-    STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+    [self waitUntilCompleteWithFixedTimeInterval];
     STAssertTrue(self.lastTestSuccessful, @"uploadTestDocument failed");
 }
 
@@ -129,8 +128,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
         self.callbackCompleted = YES;
     }];
     
-    [self waitForCompletion:15];
-    STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+    [self waitUntilCompleteWithFixedTimeInterval];
     STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
     self.testAlfrescoDocument = nil;
 }
@@ -160,8 +158,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     }];
     
     
-    [self waitForCompletion:15];
-    STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+    [self waitUntilCompleteWithFixedTimeInterval];
     STAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication failed");
 }
 
@@ -191,8 +188,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
         self.callbackCompleted = YES;
     }];
 
-    [self waitForCompletion:15];
-    STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+    [self waitUntilCompleteWithFixedTimeInterval];
     STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
 }
 
@@ -222,8 +218,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
             }
             self.callbackCompleted = YES;
         }];
-        [self waitForCompletion:15];
-        STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
     }
     else
@@ -255,8 +250,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
             }
             self.callbackCompleted = YES;
         }];
-        [self waitForCompletion:15];
-        STAssertTrue(self.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"setUpTestChildFolder failed");
     }
     else
@@ -296,6 +290,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock
 {
+    [self resetTestRunVariables];
     for (NSBundle *bundle in [NSBundle allBundles]) {
         if([NSBundle mainBundle] != bundle)
         {
@@ -376,6 +371,18 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     return self.callbackCompleted;
 }
 
+- (void)waitUntilCompleteWithFixedTimeInterval
+{
+    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:TIMEINTERVAL];
+    
+    while (NO == self.callbackCompleted)
+    {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
+        if([timeoutDate timeIntervalSinceNow] < 0.0)
+            break;
+    }    
+    STAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEINTERVAL);
+}
 
 
 

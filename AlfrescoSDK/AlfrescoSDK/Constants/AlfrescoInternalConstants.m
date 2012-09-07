@@ -217,4 +217,10 @@ NSString * const kAlfrescoJSONIsRegistered = @"";
 NSString * const kAlfrescoJSONPostedAt = @"postedAt";
 NSString * const kAlfrescoJSONAvatarId = @"avatarId";
 
+NSString * const kAlfrescoNodeAspects = @"cmis.aspects";
+NSString * const kAlfrescoNodeProperties = @"cmis.properties";
+NSString * const kAlfrescoPropertyType = @"type";
+NSString * const kAlfrescoPropertyValue = @"value";
+NSString * const kAlfrescoPropertyIsMultiValued = @"isMultiValued";
+
 @end

@@ -44,20 +44,16 @@
         {
             abbreviatedSearchTerm = [super.testSearchFileName stringByReplacingOccurrencesOfString:@".pptx" withString:@""];            
         }
-        log(@"Searching for name %@",abbreviatedSearchTerm);
         // search
         [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions completionBlock:^(NSArray *array, NSError *error)
         {
-            log(@"ENTERING searchWithKeywords completionBlock");
             if (nil == array)
             {
-                log(@"search result array comes back as nil");
                 super.lastTestSuccessful = NO;
                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
-                log(@"search result array contains %d entries", array.count);
                 STAssertNotNil(array, @"array should not be nil");
                 STAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d",array.count);
                 if(array.count == 0)
@@ -73,13 +69,9 @@
                 }
             }
             super.callbackCompleted = YES;
-            log(@"LEAVING searchWithKeywords completionBlock");
         }];
         
-        [super waitForCompletion:20];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -103,7 +95,6 @@
         [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions
                             listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) 
         {
-            log(@"ENTERING searchWithKeywords completionBlock");
                                 
             if (nil == pagingResult) 
             {
@@ -112,21 +103,16 @@
             }
             else 
             {
-                log(@"search result array contains %d entries", pagingResult.objects.count);
                 STAssertNotNil(pagingResult, @"pagingResult should not be nil");
                 STAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result");
                 STAssertTrue(pagingResult.objects.count > 0, @"number of objects found in current page should be more than 0, but we got %d",pagingResult.objects.count);
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;
-            log(@"LEAVING searchWithKeywords completionBlock");
             
         }];
         
-        [super waitForCompletion:20];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -168,10 +154,7 @@
             
         }];
         
-        [super waitForCompletion:20];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -205,10 +188,7 @@
              super.callbackCompleted = YES;
              
          }];
-        [super waitForCompletion:20];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -252,10 +232,7 @@
              super.callbackCompleted = YES;
              
          }];
-        [super waitForCompletion:20];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -302,10 +279,7 @@
             
         }];
         
-        [super waitForCompletion:20];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
@@ -363,10 +337,7 @@
             
         }];
         
-        [super waitForCompletion:20];
-        
-        // check the test outcome
-        STAssertTrue(super.callbackCompleted, @"TIMED OUT: test returned before callback was complete");
+        [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }

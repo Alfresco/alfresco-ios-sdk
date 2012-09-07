@@ -40,6 +40,10 @@
 @property (nonatomic, assign) BOOL isCloud;
 @property (nonatomic, strong)id<AlfrescoSession>session;
 @property (nonatomic, strong)AlfrescoISO8601DateFormatter *dateFormatter;
+- (AlfrescoFolder *)folderFromCMISFolder:(CMISFolder *)cmisFolder
+                              properties:(NSDictionary *)properties;
+- (AlfrescoDocument *)documentFromCMISDocument:(CMISDocument *)cmisDocument
+                                    properties:(NSDictionary *)properties;
 
 + (AlfrescoPropertyType)typeForCMISProperty:(NSString *)propertyIdentifier;
 @end
@@ -129,65 +133,70 @@
 }
 
 - (AlfrescoFolder *)folderFromCMISFolder:(CMISFolder *)cmisFolder
+                              properties:(NSDictionary *)properties
 {
-    AlfrescoFolder *alfFolder = [[AlfrescoFolder alloc] init];
-    alfFolder.identifier = cmisFolder.identifier;
-    alfFolder.name = cmisFolder.name;
-    alfFolder.type = cmisFolder.objectType;
-    alfFolder.createdBy = cmisFolder.createdBy;
-    alfFolder.createdAt = cmisFolder.creationDate;
-    alfFolder.modifiedBy = cmisFolder.lastModifiedBy;
-    alfFolder.modifiedAt = cmisFolder.lastModificationDate;
-    alfFolder.isFolder = YES;
-    alfFolder.isDocument = NO;
+    if (nil == properties)
+    {
+        properties = [NSMutableDictionary dictionary];
+    }
+    [properties setValue:cmisFolder.identifier forKey:kCMISPropertyObjectId];
+    [properties setValue:cmisFolder.name forKey:kCMISPropertyName];
+    [properties setValue:cmisFolder.objectType forKey:kCMISPropertyObjectTypeId];
+    [properties setValue:cmisFolder.createdBy forKey:kCMISPropertyCreatedBy];
+    [properties setValue:cmisFolder.creationDate forKey:kCMISPropertyCreationDate];
+    [properties setValue:cmisFolder.lastModifiedBy forKey:kCMISPropertyModifiedBy];
+    [properties setValue:cmisFolder.lastModificationDate forKey:kCMISPropertyModificationDate];
+    return [[AlfrescoFolder alloc] initWithProperties:properties];
     
-    return alfFolder;
 }
 
 - (AlfrescoDocument *)documentFromCMISDocument:(CMISDocument *)cmisDocument
+                                    properties:(NSDictionary *)properties
 {
-    AlfrescoDocument *alfDocument = [[AlfrescoDocument alloc] init];
+    if (nil == properties)
+    {
+        properties = [NSMutableDictionary dictionary];
+    }
+    [properties setValue:cmisDocument.identifier forKey:kCMISPropertyObjectId];
+    [properties setValue:cmisDocument.name forKey:kCMISPropertyName];
+    [properties setValue:cmisDocument.objectType forKey:kCMISPropertyObjectTypeId];
+    [properties setValue:cmisDocument.createdBy forKey:kCMISPropertyCreatedBy];
+    [properties setValue:cmisDocument.creationDate forKey:kCMISPropertyCreationDate];
+    [properties setValue:cmisDocument.lastModifiedBy forKey:kCMISPropertyModifiedBy];
+    [properties setValue:cmisDocument.lastModificationDate forKey:kCMISPropertyModificationDate];
+    [properties setValue:cmisDocument.versionLabel forKey:kCMISPropertyVersionLabel];
+    [properties setValue:cmisDocument.contentStreamMediaType forKey:kCMISPropertyContentStreamMediaType];
+    NSNumber *length = [NSNumber numberWithInt:cmisDocument.contentStreamLength];
+    [properties setValue:length forKey:kCMISPropertyContentStreamLength];
+    NSNumber *isLatest = [NSNumber numberWithBool:cmisDocument.isLatestVersion];
+    [properties setValue:isLatest forKey:kCMISPropertyIsLatestVersion];
     
-    alfDocument.identifier = cmisDocument.identifier;
-    alfDocument.name = cmisDocument.name;
-    alfDocument.type = cmisDocument.objectType;
-    alfDocument.createdBy = cmisDocument.createdBy;
-    alfDocument.createdAt = cmisDocument.creationDate;
-    alfDocument.modifiedBy = cmisDocument.lastModifiedBy;
-    alfDocument.modifiedAt = cmisDocument.lastModificationDate;
-    alfDocument.isDocument = YES;
-    alfDocument.isFolder = NO;
-    alfDocument.isLatestVersion = cmisDocument.isLatestVersion;
-    alfDocument.versionLabel = cmisDocument.versionLabel;
-    alfDocument.contentLength = cmisDocument.contentStreamLength;
-    alfDocument.contentMimeType = cmisDocument.contentStreamMediaType;
+    return [[AlfrescoDocument alloc] initWithProperties:properties];
     
-    return alfDocument;
 }
+
 
 
 - (AlfrescoNode *)nodeFromCMISObject:(CMISObject *)cmisObject
 {
-    AlfrescoNode *alfNode = nil;
-    
-    if ([cmisObject isKindOfClass:[CMISFolder class]])
-    {
-        alfNode = [self folderFromCMISFolder:(CMISFolder *)cmisObject];
-    }
-    else if ([cmisObject isKindOfClass:[CMISDocument class]])
-    {
-        alfNode = [self documentFromCMISDocument:(CMISDocument *)cmisObject];
-    }
-    
+
+    NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
+
     CMISProperties *properties = cmisObject.properties;
     NSArray *propertyArray = [properties propertyList];
-    NSMutableDictionary *alfPropertiesDict = [NSMutableDictionary dictionaryWithCapacity:propertyArray.count];
+    
+    NSMutableDictionary *alfPropertiesDict = [NSMutableDictionary dictionary];
     for (CMISPropertyData *propData in propertyArray) {
+        NSMutableDictionary *alfDictionary = [NSMutableDictionary dictionary];
         AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] init];
         NSString *propertyStringType = propData.identifier;
+        NSNumber *propTypeIndex = [NSNumber numberWithInt:[AlfrescoObjectConverter typeForCMISProperty:propertyStringType]];
+        [alfDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
         alfProperty.type = [AlfrescoObjectConverter typeForCMISProperty:propertyStringType];
         if(propData.values != nil && propData.values.count > 1)
         {
+            [alfDictionary setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoPropertyIsMultiValued];
+            [alfDictionary setValue:propData.values forKey:kAlfrescoPropertyValue];
             alfProperty.isMultiValued = YES;
             alfProperty.value = propData.values;
         }
@@ -198,13 +207,7 @@
         }
         [alfPropertiesDict setObject:alfProperty forKey:propData.identifier];
     }
-    alfNode.properties = alfPropertiesDict;
-    
-    CMISAllowableActions *allowableActions = cmisObject.allowableActions;
-    NSSet *actionSet = [allowableActions allowableActionTypesSet];
-    
-    AlfrescoPermissions *permissions = [[AlfrescoPermissions alloc] initWithPermissions:actionSet];
-    objc_setAssociatedObject(alfNode, &kAlfrescoPermissionsObjectKey, permissions, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
     
     
     NSMutableArray *alfrescoAspectArray = [NSMutableArray array];
@@ -228,20 +231,46 @@
                         alfProperty.type = [AlfrescoObjectConverter typeForCMISProperty:extensionPropertyString];
                         CMISExtensionElement *propertyValueElement = (CMISExtensionElement *)[property.children objectAtIndex:0];
                         alfProperty.value = propertyValueElement.value;
-                        [alfNode.properties setValue:alfProperty forKey:extensionPropertyString];
+                        [alfPropertiesDict setValue:alfProperty forKey:extensionPropertyString];
+//                        [alfNode.properties setValue:alfProperty forKey:extensionPropertyString];
                     }
                 }
             }
         }
     }
-    alfNode.aspects = alfrescoAspectArray;
-    alfNode.title = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kCMISTitle]).value];
+    
+    [propertyDictionary setValue:alfPropertiesDict forKey:kAlfrescoNodeProperties];
+    [propertyDictionary setValue:alfrescoAspectArray forKey:kAlfrescoNodeAspects];
+
+
+    NSString *title = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kCMISTitle]).value];
+
+    [propertyDictionary setValue:title forKey:kCMISTitle];
     if(((AlfrescoProperty *)[alfPropertiesDict valueForKey:kCMISDescription]).value != nil)
     {
-        alfNode.summary = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kCMISDescription]).value];
+        NSString *description = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kCMISDescription]).value];
+        [propertyDictionary setValue:description forKey:kCMISDescription];
     }
     
-    return alfNode;
+    AlfrescoNode *node = nil;
+    if ([cmisObject isKindOfClass:[CMISFolder class]])
+    {
+        node = [self folderFromCMISFolder:(CMISFolder *)cmisObject properties:propertyDictionary];
+    }
+    else if ([cmisObject isKindOfClass:[CMISDocument class]])
+    {
+        node = [self documentFromCMISDocument:(CMISDocument *)cmisObject properties:propertyDictionary];
+    }
+    if (nil != node)
+    {
+        CMISAllowableActions *allowableActions = cmisObject.allowableActions;
+        NSSet *actionSet = [allowableActions allowableActionTypesSet];
+        
+        AlfrescoPermissions *permissions = [[AlfrescoPermissions alloc] initWithPermissions:actionSet];
+        objc_setAssociatedObject(node, &kAlfrescoPermissionsObjectKey, permissions, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+
+    return node;
 }
 
 - (AlfrescoNode *)nodeFromCMISObjectData:(CMISObjectData *)cmisObjectData
