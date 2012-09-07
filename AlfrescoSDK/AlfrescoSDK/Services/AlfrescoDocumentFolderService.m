@@ -107,7 +107,15 @@
         properties = [NSMutableDictionary dictionaryWithCapacity:2];
     }
     [properties setValue:folderName forKey:kCMISPropertyName];
-    [properties setValue:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
+    
+    // check for a user supplied objectTypeId and use if present.
+    NSString *objectTypeId = [properties objectForKey:kCMISPropertyObjectTypeId];
+    if (objectTypeId == nil)
+    {
+        // Add the titled aspect by default when creating a folder.
+        objectTypeId = [kCMISPropertyObjectTypeIdValueFolder stringByAppendingString:@",P:cm:titled"];
+        [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
+    }
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -153,9 +161,15 @@
         properties = [NSMutableDictionary dictionaryWithCapacity:2];
     }
     [properties setValue:documentName forKey:kCMISPropertyName];
-    // Add the titled aspect by default when creating a document.
-    NSString *objectTypeId = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled"];
-    [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
+    
+    // check for a user supplied objectTypeId and use if present.
+    NSString *objectTypeId = [properties objectForKey:kCMISPropertyObjectTypeId];
+    if (objectTypeId == nil)
+    {
+        // Add the titled aspect by default when creating a document.
+        objectTypeId = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled"];
+        [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
+    }
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
