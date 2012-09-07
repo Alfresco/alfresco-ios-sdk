@@ -18,6 +18,9 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoPermissions.h"
+
+@class CMISFolder, CMISObject, CMISDocument, CMISObjectData, CMISQueryResult;
+
 extern NSString * const kAlfrescoPermissionsObjectKey;
 /** The AlfrescoNode represents a node that's stored in the Alfresco repository.
  
@@ -28,55 +31,55 @@ extern NSString * const kAlfrescoPermissionsObjectKey;
 
 
 /// The unique identifier of the node.
-@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong, readonly) NSString *identifier;
 
 
 /// The name of the node.
-@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong, readonly) NSString *name;
 
 
 /// The title of the node.
-@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong, readonly) NSString *title;
 
 
 /// The description of the node.
-@property (nonatomic, strong) NSString *summary;
+@property (nonatomic, strong, readonly) NSString *summary;
 
 
 /// The object type of the node i.e. cm:content.
-@property (nonatomic, strong) NSString *type;
+@property (nonatomic, strong, readonly) NSString *type;
 
 
 /// The id of the user that created the node.
-@property (nonatomic, strong) NSString *createdBy;
+@property (nonatomic, strong, readonly) NSString *createdBy;
 
 
 /// The date the node was created.
-@property (nonatomic, strong) NSDate *createdAt;
+@property (nonatomic, strong, readonly) NSDate *createdAt;
 
 
 /// The id of the user that last modified the node.
-@property (nonatomic, strong) NSString *modifiedBy;
+@property (nonatomic, strong, readonly) NSString *modifiedBy;
 
 
 /// The date the node was last modified.
-@property (nonatomic, strong) NSDate *modifiedAt;
+@property (nonatomic, strong, readonly) NSDate *modifiedAt;
 
 
 /// A dictionary of AlfrescoProperty objects representing the properties stored on the node.
-@property (nonatomic, strong) NSDictionary *properties;
+@property (nonatomic, strong, readonly) NSDictionary *properties;
 
 
 /// The list of aspects the node has applied.
-@property (nonatomic, strong) NSArray *aspects;
+@property (nonatomic, strong, readonly) NSArray *aspects;
 
 
 /// Specifies whether this node represents a folder.
-@property (nonatomic, assign) BOOL isFolder;
+@property (nonatomic, assign, readonly) BOOL isFolder;
 
 
 /// Specifies whether this node represents a document.
-@property (nonatomic, assign) BOOL isDocument;
+@property (nonatomic, assign, readonly) BOOL isDocument;
 
 
 /**---------------------------------------------------------------------------------------
@@ -87,6 +90,7 @@ extern NSString * const kAlfrescoPermissionsObjectKey;
 /** Returns the value of a property with the given name, nil will be returned if a property with the given name does not exist.
  
  @param propertyName The name of the property for which the value will be retrieved.
+ @return the property object - or NIL if not found
  */
 - (id)propertyValueWithName:(NSString *)propertyName;
 
@@ -94,8 +98,15 @@ extern NSString * const kAlfrescoPermissionsObjectKey;
 /** Determines whether the node has an aspect with the given name applied.
  
  @param aspectName The name of the aspect that will be searched for.
+ @return YES if node has aspect, NO otherwise
  */
 - (BOOL)hasAspectWithName:(NSString *)aspectName;
 
+/** Returns the AlfrescoNode object preset with the CMIS properties.
+ 
+ @param properties a list of CMIS properties stored in NSDictionary.
+ @return the property object - or NIL if not found
+ */
+- (id)initWithProperties:(NSDictionary *)properties;
 
 @end

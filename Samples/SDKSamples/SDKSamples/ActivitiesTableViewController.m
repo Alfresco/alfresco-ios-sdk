@@ -87,15 +87,18 @@
         [avatarImageView setImage:[UIImage imageNamed:@"avatar.png"]];
     }
     
-    AlfrescoPerson *person = [[AlfrescoPerson alloc]init];
-    person.identifier = userId;
     __weak ActivitiesTableViewController *weakSelf = self;
-    [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
-        if (nil != contentFile) 
+    [self.personService retrievePersonWithIdentifier:userId completionBlock:^(AlfrescoPerson *person, NSError *error) {
+        if (nil != person)
         {
-            NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
-            [weakSelf.avatarDictionary setObject:data forKey:userId];
-            avatarImageView.image = [UIImage imageWithData:data];
+            [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+                if (nil != contentFile)
+                {
+                    NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
+                    [weakSelf.avatarDictionary setObject:data forKey:userId];
+                    avatarImageView.image = [UIImage imageWithData:data];
+                }
+            }];
         }
     }];
 }
