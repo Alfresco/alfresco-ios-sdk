@@ -313,6 +313,7 @@
 		82FC413115E7AC7D0081888D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HelloRepo/HelloRepo-Prefix.pch";
 				INFOPLIST_FILE = "HelloRepo/HelloRepo-Info.plist";
@@ -329,6 +330,7 @@
 		82FC413215E7AC7D0081888D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HelloRepo/HelloRepo-Prefix.pch";
 				INFOPLIST_FILE = "HelloRepo/HelloRepo-Info.plist";
