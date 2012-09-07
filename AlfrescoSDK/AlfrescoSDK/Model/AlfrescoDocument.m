@@ -17,6 +17,19 @@
  ******************************************************************************/
 
 #import "AlfrescoDocument.h"
+#import "CMISEnums.h"
+#import "CMISConstants.h"
+
+@interface AlfrescoDocument ()
+@property (nonatomic, strong, readwrite) NSString *contentMimeType;
+@property (nonatomic, assign, readwrite) long contentLength;
+@property (nonatomic, strong, readwrite) NSString *versionLabel;
+@property (nonatomic, strong, readwrite) NSString *versionComment;
+@property (nonatomic, assign, readwrite) BOOL isLatestVersion;
+@property (nonatomic, assign, readwrite) BOOL isFolder;
+@property (nonatomic, assign, readwrite) BOOL isDocument;
+- (void)setUpDocumentProperties:(NSDictionary *)properties;
+@end
 
 @implementation AlfrescoDocument
 
@@ -25,5 +38,37 @@
 @synthesize versionLabel = _versionLabel;
 @synthesize versionComment = _versionComment;
 @synthesize isLatestVersion = _isLatestVersion;
+
+- (id)initWithProperties:(NSDictionary *)properties
+{
+    self = [super initWithProperties:properties];
+    if (nil != self)
+    {
+        self.isDocument = YES;
+        self.isFolder = NO;
+        [self setUpDocumentProperties:properties];
+    }
+    return self;
+}
+
+- (void)setUpDocumentProperties:(NSDictionary *)properties
+{
+    if ([[properties allKeys] containsObject:kCMISPropertyIsLatestVersion])
+    {
+        self.isLatestVersion = [[properties valueForKey:kCMISPropertyIsLatestVersion] boolValue];
+    }    
+    if ([[properties allKeys] containsObject:kCMISPropertyContentStreamLength])
+    {
+        self.contentLength = [[properties valueForKey:kCMISPropertyContentStreamLength] intValue];
+    }
+    if ([[properties allKeys] containsObject:kCMISPropertyContentStreamMediaType])
+    {
+        self.contentMimeType = [properties valueForKey:kCMISPropertyContentStreamMediaType];
+    }
+    if ([[properties allKeys] containsObject:kCMISPropertyVersionLabel])
+    {
+        self.versionLabel = [properties valueForKey:kCMISPropertyVersionLabel];
+    }    
+}
 
 @end

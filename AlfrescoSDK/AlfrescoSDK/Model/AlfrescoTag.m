@@ -17,8 +17,72 @@
  ******************************************************************************/
 
 #import "AlfrescoTag.h"
+#import "AlfrescoInternalConstants.h"
+
+@interface AlfrescoTag ()
+@property (nonatomic, strong, readwrite) NSString * identifier;
+@property (nonatomic, strong, readwrite) NSString * value;
+- (void)setUpOnPremiseProperties:(NSDictionary *)properties;
+- (void)setUpCloudProperties:(NSDictionary *)properties;
+@end
 
 @implementation AlfrescoTag
 @synthesize identifier = _identifier;
 @synthesize value = _value;
+
+/* OnPremise
+ - (AlfrescoTag *)tagFromJSON:(NSString *)jsonString
+ {
+ AlfrescoTag *tag = [[AlfrescoTag alloc] init];
+ tag.identifier = jsonString;
+ tag.value = jsonString;
+ return tag;
+ }
+*/
+
+/*
+ - (AlfrescoTag *)tagFromJSON:(NSDictionary *)jsonDict
+ {
+ AlfrescoTag *tag = [[AlfrescoTag alloc]init];
+ tag.value = [jsonDict valueForKey:kAlfrescoJSONTag];
+ tag.identifier = [jsonDict valueForKey:kAlfrescoJSONIdentifier];
+ return tag;
+ }
+ */
+
+- (id)initWithProperties:(NSDictionary *)properties
+{
+    self = [super init];
+    if (nil != self)
+    {
+        [self setUpCloudProperties:properties];
+        [self setUpOnPremiseProperties:properties];
+    }
+    return self;
+}
+
+- (void)setUpOnPremiseProperties:(NSDictionary *)properties
+{
+    if ([[properties allKeys] containsObject:kAlfrescoJSONTag])
+    {
+        self.identifier = [properties valueForKey:kAlfrescoJSONTag];
+        self.value = [properties valueForKey:kAlfrescoJSONTag];
+    }
+    
+    
+}
+
+- (void)setUpCloudProperties:(NSDictionary *)properties
+{
+    if ([[properties allKeys] containsObject:kAlfrescoJSONIdentifier])
+    {
+        self.identifier = [properties valueForKey:kAlfrescoJSONIdentifier];
+    }
+    if ([[properties allKeys] containsObject:kAlfrescoJSONTag])
+    {
+        self.value = [properties valueForKey:kAlfrescoJSONTag];
+    }
+    
+}
+
 @end

@@ -23,6 +23,8 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoSiteService.h"
 
+#define TIMEINTERVAL 60
+
 typedef void (^AlfrescoTestBlock)(void);
 typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
 
@@ -59,5 +61,5 @@ extern NSString * const kAlfrescoTestDataFolder;
 
 - (void)retrieveAlfrescoTestFolder;
 - (BOOL)waitForCompletion:(NSTimeInterval)timeoutSecs;
-
+- (void)waitUntilCompleteWithFixedTimeInterval;
 @end

@@ -37,19 +37,26 @@ typedef enum
 
 
 /// Returns the short name of the site.
-@property (nonatomic, strong) NSString *shortName;
+@property (nonatomic, strong, readonly) NSString *shortName;
 
 
 /// Returns the title of the site.
-@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong, readonly) NSString *title;
 
 
 /// Returns the description of the site.
-@property (nonatomic, strong) NSString *summary;
+@property (nonatomic, strong, readonly) NSString *summary;
 
 
 /// The visibility of the site.
-@property (nonatomic, assign) AlfrescoSiteVisibility visibility;
+@property (nonatomic, assign, readonly) AlfrescoSiteVisibility visibility;
+
+
+/**
+ @param properties - the list of values to assign to the AlfrescoActivityEntry object
+ @return the AlfrescoActivityEntry object
+ */
+- (id)initWithProperties:(NSDictionary *)properties;
 
 @end
 

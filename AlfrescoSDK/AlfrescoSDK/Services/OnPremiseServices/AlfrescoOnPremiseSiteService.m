@@ -38,7 +38,6 @@
 - (NSArray *) parseSiteArrayWithData:(NSData *)data error:(NSError **)outError;
 - (AlfrescoSite *) parseSiteWithData:(NSData *)data error:(NSError **)outError;
 - (NSArray *) parseFavoriteSitesObjectWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoSite *)siteFromJSON:(NSDictionary *)siteDict;
 @end
 
 @implementation AlfrescoOnPremiseSiteService
@@ -70,33 +69,6 @@
     }
     return self;
 }
-
-- (AlfrescoSite *)siteFromJSON:(NSDictionary *)siteDict
-{
-    AlfrescoSite *alfSite = [[AlfrescoSite alloc] init];
-    
-    // convert nodeRef to standard structure
-    
-    alfSite.summary = [siteDict valueForKey:kAlfrescoJSONDescription];
-    alfSite.title = [siteDict valueForKey:kAlfrescoJSONTitle];
-    alfSite.shortName = [siteDict valueForKey:kAlfrescoJSONShortname];
-    NSString *visibility = [siteDict valueForKey:kAlfrescoJSONVisibility];
-    if ([visibility isEqualToString:kAlfrescoJSONVisibilityPUBLIC])
-    {
-        alfSite.visibility = AlfrescoSiteVisibilityPublic;
-    }
-    else if ([visibility isEqualToString:kAlfrescoJSONVisibilityPRIVATE])
-    {
-        alfSite.visibility = AlfrescoSiteVisibilityPrivate;
-    }
-    else if ([visibility isEqualToString:kAlfrescoJSONVisibilityMODERATED])
-    {
-        alfSite.visibility = AlfrescoSiteVisibilityModerated;
-    }
-    
-    return alfSite;
-}
-
 
 
 - (void)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
@@ -491,8 +463,9 @@
     }
     
     NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[jsonSiteArray count]];
-    for (NSDictionary *siteDict in jsonSiteArray) {
-        [resultArray addObject:[self siteFromJSON:siteDict]];
+    for (NSDictionary *siteDict in jsonSiteArray)
+    {
+        [resultArray addObject:[[AlfrescoSite alloc] initWithProperties:siteDict]];
     }
     return resultArray;
 }
@@ -537,8 +510,7 @@
         //empty/non existent site - should this happen? error message?
         return nil;
     }
-    
-    return (AlfrescoSite *)[self siteFromJSON:jsonSite];
+    return [[AlfrescoSite alloc] initWithProperties:jsonSite];
 }
 
 - (NSArray *) parseFavoriteSitesObjectWithData:(NSData *)data error:(NSError **)outError

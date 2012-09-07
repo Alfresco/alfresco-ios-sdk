@@ -17,7 +17,20 @@
  ******************************************************************************/
 
 #import "AlfrescoFolder.h"
-
+@interface AlfrescoFolder ()
+@property (nonatomic, assign, readwrite) BOOL isFolder;
+@property (nonatomic, assign, readwrite) BOOL isDocument;
+@end
 @implementation AlfrescoFolder
+- (id)initWithProperties:(NSDictionary *)properties
+{
+    self = [super initWithProperties:properties];
+    if (nil != self)
+    {
+        self.isFolder = YES;
+        self.isDocument = NO;
+    }
+    return self;
+}
 
 @end
