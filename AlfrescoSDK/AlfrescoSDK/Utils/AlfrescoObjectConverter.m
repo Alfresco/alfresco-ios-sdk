@@ -73,6 +73,27 @@
     return self;
 }
 
++ (NSString *)nodeRefWithoutVersionID:(NSString *)originalIdentifier
+{
+    if (nil == originalIdentifier)
+    {
+        return originalIdentifier;
+    }
+//    NSString *stringId = [originalIdentifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    
+    NSArray *strings = [originalIdentifier componentsSeparatedByString:@";"];
+    if (strings.count > 1)
+    {
+        return (NSString *)[strings objectAtIndex:0];
+    }
+    else
+    {
+        return originalIdentifier;
+    }
+}
+
+
+
 - (AlfrescoRepositoryInfo *)repositoryInfoFromCMISSession:(CMISSession *)cmisSession
 {
     NSMutableDictionary *repoDictionary = [NSMutableDictionary dictionary];
@@ -187,24 +208,27 @@
     
     NSMutableDictionary *alfPropertiesDict = [NSMutableDictionary dictionary];
     for (CMISPropertyData *propData in propertyArray) {
-        NSMutableDictionary *alfDictionary = [NSMutableDictionary dictionary];
-        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] init];
+        NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
+//        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] init];
         NSString *propertyStringType = propData.identifier;
         NSNumber *propTypeIndex = [NSNumber numberWithInt:[AlfrescoObjectConverter typeForCMISProperty:propertyStringType]];
-        [alfDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
-        alfProperty.type = [AlfrescoObjectConverter typeForCMISProperty:propertyStringType];
+        [propertyDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
+//        alfProperty.type = [AlfrescoObjectConverter typeForCMISProperty:propertyStringType];
         if(propData.values != nil && propData.values.count > 1)
         {
-            [alfDictionary setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoPropertyIsMultiValued];
-            [alfDictionary setValue:propData.values forKey:kAlfrescoPropertyValue];
-            alfProperty.isMultiValued = YES;
-            alfProperty.value = propData.values;
+            [propertyDictionary setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoPropertyIsMultiValued];
+            [propertyDictionary setValue:propData.values forKey:kAlfrescoPropertyValue];
+//            alfProperty.isMultiValued = YES;
+//            alfProperty.value = propData.values;
         }
         else 
         {
-            alfProperty.isMultiValued = NO;
-            alfProperty.value = propData.firstValue;
+            [propertyDictionary setValue:[NSNumber numberWithBool:NO] forKey:kAlfrescoPropertyIsMultiValued];
+            [propertyDictionary setValue:propData.firstValue forKey:kAlfrescoPropertyValue];
+//            alfProperty.isMultiValued = NO;
+//            alfProperty.value = propData.firstValue;
         }
+        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
         [alfPropertiesDict setObject:alfProperty forKey:propData.identifier];
     }
         
@@ -226,11 +250,22 @@
                     NSArray *propertyArray = [aspect children];
                     for (CMISExtensionElement *property in propertyArray) 
                     {
-                        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] init];
+                        NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
+//                        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] init];
                         NSString *extensionPropertyString = [property.attributes valueForKey:kAlfrescoAspectPropertyDefinitionId];
-                        alfProperty.type = [AlfrescoObjectConverter typeForCMISProperty:extensionPropertyString];
+
+                        NSNumber *propTypeIndex = [NSNumber numberWithInt:[AlfrescoObjectConverter typeForCMISProperty:extensionPropertyString]];
+                        [propertyDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
+
+                        //                        alfProperty.type = [AlfrescoObjectConverter typeForCMISProperty:extensionPropertyString];
+                        
                         CMISExtensionElement *propertyValueElement = (CMISExtensionElement *)[property.children objectAtIndex:0];
-                        alfProperty.value = propertyValueElement.value;
+                        
+                        [propertyDictionary setValue:propertyValueElement.value forKey:kAlfrescoPropertyValue];
+
+                        //                        alfProperty.value = propertyValueElement.value;
+                        
+                        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
                         [alfPropertiesDict setValue:alfProperty forKey:extensionPropertyString];
 //                        [alfNode.properties setValue:alfProperty forKey:extensionPropertyString];
                     }

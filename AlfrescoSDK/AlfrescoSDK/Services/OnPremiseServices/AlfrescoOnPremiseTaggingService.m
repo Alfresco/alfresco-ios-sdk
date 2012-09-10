@@ -24,6 +24,7 @@
 #import "AlfrescoHTTPUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoTag.h"
+#import "AlfrescoObjectConverter.h"
 
 @interface AlfrescoOnPremiseTaggingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -33,7 +34,6 @@
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (NSArray *) parseTagArrayWithData:(NSData *)data error:(NSError **)outError;
 - (NSArray *) customParseTagArrayWithData:(NSData *) data;
-//- (AlfrescoTag *)tagFromJSON:(NSString *)jsonString;
 
 @end
 
@@ -132,8 +132,10 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError;
+        NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+        NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
         NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                              withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+                                                                                              withString:cleanId];
 
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
@@ -168,8 +170,10 @@
         
         NSError *operationQueueError = nil;
         
+        NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+        NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
         NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                              withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+                                                                                              withString:cleanId];
         
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
@@ -205,8 +209,10 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
+        NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+        NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
         NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                              withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+                                                                                              withString:cleanId];
         
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tags options:kNilOptions error:&operationQueueError];
         if (nil != jsonData)
@@ -308,13 +314,4 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     return tagArray;
 }
 
-/*
-- (AlfrescoTag *)tagFromJSON:(NSString *)jsonString
-{
-    AlfrescoTag *tag = [[AlfrescoTag alloc] init];
-    tag.identifier = jsonString;
-    tag.value = jsonString;
-    return tag;
-}
-*/
 @end

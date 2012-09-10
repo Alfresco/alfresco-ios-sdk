@@ -25,6 +25,7 @@
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoISO8601DateFormatter.h"
 #import "AlfrescoSortingUtils.h"
+#import "AlfrescoObjectConverter.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoOnPremiseCommentService ()
@@ -77,8 +78,11 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
+//        NSString *nodeString = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+        NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+        NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
         NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                           withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+                                                                                           withString:cleanNodeId];
         
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
@@ -114,9 +118,12 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
+//        NSString *nodeString = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+        NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+        NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
         
         NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                           withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+                                                                                           withString:cleanNodeId];
         
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
@@ -150,15 +157,17 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
+        NSString *nodeString = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+//        NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
         
         NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
         [commentDict setValue:content forKey:kAlfrescoJSONContent];
-        [commentDict setValue:node.identifier forKey:kAlfrescoJSONNodeRef];
+        [commentDict setValue:nodeString forKey:kAlfrescoJSONNodeRef];
         [commentDict setValue:title forKey:kAlfrescoJSONTitle];
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&operationQueueError];
         
         NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                           withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+                                                                                           withString:[nodeString stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
                                   authenticationProvider:weakSelf.authenticationProvider
@@ -192,14 +201,14 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        
+        NSString *commentId = [AlfrescoObjectConverter nodeRefWithoutVersionID:comment.identifier];
         NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
         [commentDict setValue:content forKey:kAlfrescoJSONContent];
-        [commentDict setValue:comment.identifier forKey:kAlfrescoJSONNodeRef];
+        [commentDict setValue:commentId forKey:kAlfrescoJSONNodeRef];
 
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&operationQueueError];
         NSString *requestString = [kAlfrescoOnPremiseCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
-                                                                                           withString:[comment.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+                                                                                           withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
         
         
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
@@ -234,11 +243,12 @@
         
         NSError *operationQueueError = nil;
         
+        NSString *commentId = [AlfrescoObjectConverter nodeRefWithoutVersionID:comment.identifier];
         NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
-        [commentDict setValue:comment.identifier forKey:kAlfrescoJSONNodeRef];
+        [commentDict setValue:commentId forKey:kAlfrescoJSONNodeRef];
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&operationQueueError];
         NSString *requestString = [kAlfrescoOnPremiseCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
-                                                                                                 withString:[comment.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+                                                                                                 withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
         
         [AlfrescoHTTPUtils executeRequest:requestString
                           baseUrlAsString:weakSelf.baseApiUrl

@@ -45,4 +45,7 @@
 + (NSArray *)parseCloudJSONEntriesFromListData:(NSData *)data error:(NSError **)outError;
 + (NSDictionary *)parseCloudJSONEntryFromListData:(NSData *)data error:(NSError **)outError;
 
+
++ (NSString *)nodeRefWithoutVersionID:(NSString *)originalIdentifier;
+
 @end
