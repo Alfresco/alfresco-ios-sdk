@@ -37,15 +37,15 @@ typedef enum
 
 
 /// The data type of the property
-@property (nonatomic, assign) AlfrescoPropertyType type;
+@property (nonatomic, assign, readonly) AlfrescoPropertyType type;
 
 
 /// Specifies whether the property value is multi-valued.
-@property (nonatomic, assign) BOOL isMultiValued;
+@property (nonatomic, assign, readonly) BOOL isMultiValued;
 
 
 /// The value of the property.
-@property (nonatomic, strong) id value;
+@property (nonatomic, strong, readonly) id value;
 
 /**
  @param properties - the list of values to assign to the AlfrescoActivityEntry object

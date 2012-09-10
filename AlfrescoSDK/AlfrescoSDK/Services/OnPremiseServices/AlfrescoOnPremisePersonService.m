@@ -31,7 +31,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (AlfrescoPerson *) parsePersonArrayWithData:(NSData *)data error:(NSError **)outError;
-//- (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict;
 @end
 
 
@@ -174,38 +173,7 @@
         return nil;
     }
     return [[AlfrescoPerson alloc] initWithProperties:jsonPersonDict];
-//    return (AlfrescoPerson *)[self personFromJSON:(NSDictionary *)jsonPersonDict];
     
 }
-/*
-- (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict
-{
-    AlfrescoPerson *alfPerson = [[AlfrescoPerson alloc] init];
-    alfPerson.identifier = [personDict valueForKey:kAlfrescoJSONUserName];
-    alfPerson.firstName = [personDict valueForKey:kAlfrescoJSONFirstName];
-    alfPerson.lastName = [personDict valueForKey:kAlfrescoJSONLastName];
-    if (alfPerson.lastName != nil && alfPerson.lastName.length > 0)
-    {
-        if (alfPerson.firstName != nil && alfPerson.firstName.length > 0)
-        {
-            alfPerson.fullName = [NSString stringWithFormat:@"%@ %@", alfPerson.firstName, alfPerson.lastName];
-        }
-        else
-        {
-            alfPerson.fullName = alfPerson.lastName;
-        }
-    }
-    else if (alfPerson.firstName != nil && alfPerson.firstName.length > 0)
-    {
-        alfPerson.fullName = alfPerson.firstName;
-    }
-    else
-    {
-        alfPerson.fullName = alfPerson.identifier;
-    }
-    alfPerson.avatarIdentifier = [personDict valueForKey:kAlfrescoJSONAvatar];
-    return alfPerson;
-}
-*/
 
 @end
