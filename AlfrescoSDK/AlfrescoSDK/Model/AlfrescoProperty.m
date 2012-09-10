@@ -20,7 +20,9 @@
 #import "AlfrescoInternalConstants.h"
 
 @interface AlfrescoProperty ()
-
+@property (nonatomic, assign, readwrite) AlfrescoPropertyType type;
+@property (nonatomic, assign, readwrite) BOOL isMultiValued;
+@property (nonatomic, strong, readwrite) id value;
 @end
 
 @implementation AlfrescoProperty
@@ -34,6 +36,18 @@
     self = [super init];
     if (nil != self)
     {
+        if ([[properties allKeys] containsObject:kAlfrescoPropertyType])
+        {
+            self.type = [[properties valueForKey:kAlfrescoPropertyType] intValue];
+        }
+        if ([[properties allKeys] containsObject:kAlfrescoPropertyValue])
+        {
+            self.value = [properties valueForKey:kAlfrescoPropertyValue];
+        }
+        if ([[properties allKeys] containsObject:kAlfrescoPropertyIsMultiValued])
+        {
+            self.isMultiValued = [[properties valueForKey:kAlfrescoPropertyIsMultiValued] boolValue];
+        }
     }
     return self;
 }

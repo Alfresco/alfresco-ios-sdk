@@ -83,6 +83,7 @@ NSString * const kAlfrescoAuthenticationProviderObjectKey = @"AuthenticationProv
  */
 NSString * const kAlfrescoOnPremiseAPIPath = @"/service/api/";
 NSString * const kAlfrescoOnPremiseCMISPath = @"/service/cmis";
+NSString * const kAlfrescoOnPremise4_xCMISPath = @"/cmisatom";
 NSString * const kAlfrescoOnPremiseActivityAPI = @"activities/feed/user?format=json";
 NSString * const kAlfrescoOnPremiseActivityForSiteAPI = @"activities/feed/site/{siteID}?format=json";
 NSString * const kAlfrescoOnPremiseRatingsAPI = @"node/{nodeRef}/ratings";

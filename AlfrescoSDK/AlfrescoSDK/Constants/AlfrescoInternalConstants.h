@@ -83,6 +83,7 @@ extern NSString * const kAlfrescoAuthenticationProviderObjectKey;
  */
 extern NSString * const kAlfrescoOnPremiseAPIPath;
 extern NSString * const kAlfrescoOnPremiseCMISPath;
+extern NSString * const kAlfrescoOnPremise4_xCMISPath;
 extern NSString * const kAlfrescoOnPremiseActivityAPI;
 extern NSString * const kAlfrescoOnPremiseActivityForSiteAPI;
 extern NSString * const kAlfrescoOnPremiseRatingsAPI;
