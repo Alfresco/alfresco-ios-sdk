@@ -28,6 +28,7 @@
 #import "CMISOperationContext.h"
 #import "CMISConstants.h"
 #import "CMISStringInOutParameter.h"
+#import "CMISRendition.h"
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoErrors.h"
@@ -612,14 +613,6 @@
 - (void)retrieveRenditionOfNode:(AlfrescoNode *)node renditionName:(NSString *)renditionName
                 completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    // TODO: Remove this, on the Cloud we have to jump through some hoops but it is possible to
-    //       get renditions so we shouldn't be returning an error
-    if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
-    {
-        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoRenditionService];
-        completionBlock(nil, error);
-        return;
-    }
     
     [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"folder"];
     [AlfrescoErrors assertArgumentNotNil:renditionName argumentAsString:@"renditionName"];
@@ -629,6 +622,66 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
+        CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
+        operationContext.renditionFilterString = @"cmis:thumbnail";
+        __block CMISDocument *document = (CMISDocument *)[weakSelf.cmisSession  retrieveObject:node.identifier
+                                                                  withOperationContext:operationContext
+                                                                                 error:&operationQueueError];
+
+        if (nil != document)
+        {
+            NSArray *renditions = document.renditions;
+            if (nil == renditions)
+            {
+                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    completionBlock(nil, operationQueueError);
+                }];
+            }
+            else if( 0 == renditions.count)
+            {
+                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    completionBlock(nil, operationQueueError);
+                }];
+            }
+            else
+            {
+                CMISRendition *thumbnailRendition = (CMISRendition *)[renditions objectAtIndex:0];
+                NSLog(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@",renditions.count, thumbnailRendition.renditionDocumentId);
+                NSString *tmpFileName = [NSTemporaryDirectory() stringByAppendingFormat:@"%@.png",node.name];
+                NSLog(@"************* DOWNLOADING TO FILE %@",tmpFileName);
+                
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^{
+                        NSLog(@"************* DOWNLOADED FILE TO TEMPORARY FOLDER/FILE %@",tmpFileName);
+                        AlfrescoContentFile *contentFile = [[AlfrescoContentFile alloc] initWithFilePath:tmpFileName mimeType:@"image/png"];
+                        //                    NSError *operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            completionBlock(contentFile, nil);
+                        }];
+                        
+                    } failureBlock:^(NSError *error){
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            completionBlock(nil, error);
+                        }];
+                        
+                    } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal){
+                        NSLog(@"************* PROGRESS DOWNLOADING FILE with %d bytes downloaded from %d total ",bytesDownloaded, bytesTotal);
+                    }];
+                }];
+                
+                
+             }
+        }
+        else
+        {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(nil, operationQueueError);
+            }];            
+        }
+    }];
+/*
         NSString *renditionString = [kAlfrescoOnPremiseThumbnailRenditionAPI stringByReplacingOccurrencesOfString:kAlfrescoRenditionId withString:renditionName];
         NSString *requestString = [renditionString stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                              withString:[node.identifier stringByReplacingOccurrencesOfString:@"://"
@@ -637,7 +690,7 @@
                                          baseUrlAsString:kAlfrescoOnPremiseAPIPath
                                   authenticationProvider:weakSelf.authenticationProvider
                                                    error:&operationQueueError];
-        AlfrescoContentFile *thumbnailFile = nil;
+//        AlfrescoContentFile *thumbnailFile = nil;
         if (nil != data)
         {
             thumbnailFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:kAlfrescoDefaultMimeType];
@@ -646,8 +699,8 @@
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(thumbnailFile, operationQueueError);
         }];
-    }]; 
-    
+ */
+
 }
 
 

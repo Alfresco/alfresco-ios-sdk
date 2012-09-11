@@ -52,6 +52,7 @@ NSString * const kAlfrescoErrorDescriptionDocumentFolderNoRenditionService = @"D
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNilDocument = @"Document Folder Service Error: Document is NIL";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeNotFound = @"Document Folder Service Error: the node wasn't found";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderWrongNodeType = @"Document Folder Service Error: wrong node type. Expected either folder or document.";
+NSString * const kAlfrescoErrorDescriptionDocumentFolderNoThumbnail = @"Document Folder Service Error: No Thumbnail found for document/folder.";
 
 NSString * const kAlfrescoErrorDescriptionTagging = @"Tagging Service Error";
 NSString * const kAlfrescoErrorDescriptionTaggingNoTags = @"Tagging Service Error: No tags were found.";
@@ -190,6 +191,9 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
             break;
         case kAlfrescoErrorCodeDocumentFolderWrongNodeType:
             return kAlfrescoErrorDescriptionDocumentFolderWrongNodeType;
+            break;
+        case kAlfrescoErrorCodeDocumentFolderNoThumbnail:
+            return kAlfrescoErrorDescriptionDocumentFolderNoThumbnail;
             break;
         case kAlfrescoErrorCodeTagging:
             return kAlfrescoErrorDescriptionTagging;

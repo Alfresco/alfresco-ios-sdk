@@ -778,7 +778,7 @@
                           NSDictionary *updatedProps = updatedDocument.properties;
                           AlfrescoProperty *updatedDescription = [updatedProps objectForKey:@"cm:description"];
                           AlfrescoProperty *updatedTitle = [updatedProps objectForKey:@"cm:title"];
-                          AlfrescoProperty *updatedAuthor = [updatedProps objectForKey:@"cm:author"];
+//                          AlfrescoProperty *updatedAuthor = [updatedProps objectForKey:@"cm:author"];
                           STAssertTrue([updatedDescription.value isEqualToString:@"updated description"], @"Updated description is incorrect");
                           STAssertTrue([updatedTitle.value isEqualToString:@"updated title"], @"Updated title is incorrect");
 //                          STAssertTrue([updatedAuthor.value isEqualToString:@"updated author"], @"Updated author is incorrect");
@@ -853,14 +853,83 @@
     }];
 }
 
-/*
+
 
 - (void)testThumbnailRenditionImage
 {
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
         
+        // get the children of the repository's root folder
+        [self.dfService retrieveChildrenInFolder:super.testDocFolder completionBlock:^(NSArray *array, NSError *error)
+         {
+             if (nil == array)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+             }
+             else
+             {
+                 STAssertTrue(array.count > 0, [NSString stringWithFormat:@"Expected folder children but got %i", array.count]);
+                 if (super.isCloud)
+                 {
+                     NSLog(@"*************** testThumbnailRenditionImage ISCLOUD");
+                     STAssertTrue([self nodeArray:array containsName:@"Sample Filesrr"], @"Folder children should contain Sample Filesrr");
+                 }
+                 else
+                 {
+                     STAssertTrue([self nodeArray:array containsName:@"Sites"], @"Folder children should contain Sites");
+                 }
+                 AlfrescoDocument *testVersionedDoc = nil;
+                 for (AlfrescoNode *node in array)
+                 {
+                     if ([node isKindOfClass:[AlfrescoDocument class]])
+                     {
+                         NSString *name = node.name;
+                         if ([name isEqualToString:@"versioned-quote.txt"])
+                         {
+                             NSLog(@"*************** WE FOUND versioned-quote.txt");
+                             testVersionedDoc = (AlfrescoDocument *)node;
+                         }
+
+                     }
+                 }
+                 if (nil != testVersionedDoc)
+                 {
+                     NSLog(@"*************** BEFORE CALLING retrieveRenditionOfNode");
+                     [weakSelf retrieveRenditionOfNode:testVersionedDoc renditionName:kAlfrescoThumbnailRendition completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+                         NSLog(@"*************** IN COMPLETIONBLOCK OF retrieveRenditionOfNode");
+                         if (nil == contentFile)
+                         {
+                             super.lastTestSuccessful = NO;
+                             super.lastTestFailureMessage = [NSString stringWithFormat:@"Failed to retrieve thumbnail image. %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         }
+                         else
+                         {
+                             NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
+                             STAssertNotNil(data, @"data should not be nil");
+                             STAssertTrue(contentFile.length > 100, @"data should be filled");
+                             super.lastTestSuccessful = YES;                             
+                         }
+                         super.callbackCompleted = YES;
+                     }];
+                 }
+                 else
+                 {
+                     super.lastTestSuccessful = NO;
+                     super.lastTestFailureMessage = @"Failed to retrieve versioned-quote.txt file.";
+                     super.lastTestSuccessful = YES;                     
+                 }
+             }
+//             super.callbackCompleted = YES;
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        
+/*
         AlfrescoDocument *document = [[AlfrescoDocument alloc] init];
         document.identifier = testNodeRef;
         document.name = @"thumbnail.jpg";
@@ -885,9 +954,10 @@
         
         [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+ */
     }];
 }
- */
+ 
 
 - (void)testRetrievePermissionsOfNode
 {
