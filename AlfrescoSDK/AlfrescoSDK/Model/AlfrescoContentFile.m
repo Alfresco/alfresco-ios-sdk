@@ -74,6 +74,23 @@
 }
 
 
+- (id)initWithFilePath:(NSString *)path mimeType:(NSString *)mimeType
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.mimeType = mimeType;
+        if (nil != path)
+        {
+            self.fileUrl = [NSURL fileURLWithPath:path];
+            NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
+            self.length = [data length];
+        }
+    }
+    return self;
+}
+
+
 
 #pragma mark - private methods
 + (NSString *)detectMimeTypeFromFilename:(NSString *)filename

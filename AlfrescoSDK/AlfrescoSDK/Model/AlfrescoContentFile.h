@@ -50,4 +50,7 @@
 // 
 
 - (id)initWithData:(NSData *)data mimeType:(NSString *)mimeType;
+
+
+- (id)initWithFilePath:(NSString *)path mimeType:(NSString *)mimeType;
 @end
