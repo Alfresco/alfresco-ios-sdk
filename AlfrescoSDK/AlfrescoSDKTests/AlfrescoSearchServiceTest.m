@@ -291,7 +291,6 @@
         self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
         
         AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
-        searchOptions.includeContent = YES;
 
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
         NSString *abbreviatedSearchTerm = @"test_file";

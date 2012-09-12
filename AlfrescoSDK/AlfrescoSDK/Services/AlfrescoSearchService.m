@@ -118,7 +118,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     if (nil == listingContext)
     {
-        listingContext = [[AlfrescoListingContext alloc]init];
+        listingContext = self.session.defaultListingContext;
     }
 
     if (AlfrescoSearchLanguageCMIS == language)
@@ -201,7 +201,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     if (nil == listingContext)
     {
-        listingContext = [[AlfrescoListingContext alloc]init];
+        listingContext = self.session.defaultListingContext;
     }
 
     NSString *query = [self createSearchQuery:keywords options:options];

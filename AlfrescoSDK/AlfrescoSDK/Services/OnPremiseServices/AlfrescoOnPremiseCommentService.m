@@ -111,7 +111,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     if (nil == listingContext)
     {
-        listingContext = [[AlfrescoListingContext alloc]init];
+        listingContext = self.session.defaultListingContext;
     }
     
     __weak AlfrescoOnPremiseCommentService *weakSelf = self;

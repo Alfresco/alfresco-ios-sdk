@@ -27,7 +27,9 @@
  */
 
 @synthesize dfService = _dfService;
-#pragma mark OnPremise tests
+/**
+ @Unique_TCRef 24S0, 32S0 - 32S2
+ */
 - (void)testCreateFolder
 {
     [super runAllSitesTest:^{
@@ -83,6 +85,238 @@
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
+
+
+/**
+ @Unique_TCRef 24S0, 32S0 - 32S5
+ */
+- (void)testCreateFolderWithSpecialEUCharacters
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __block NSString *description = @"Übersicht Ändern Östrogen und das mit ß";
+        __block NSString *title = @"Änderungswünsche";
+        __block NSString *name = @"ÜÄÖTestsOrdner";
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:description forKey:@"cm:description"];
+        [props setObject:title forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:name inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:name], @"folder name should be %@, but instead we got %@",name, folder.name);
+                 
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:description], @"cm:description property value does not match expected value %@",description);
+                 STAssertTrue([newTitleProp.value isEqualToString:title], @"cm:title property value does not match expected value %@",title);
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      }
+                      else
+                      {
+                          super.lastTestSuccessful = YES;
+                      }
+                      
+                      super.callbackCompleted = YES;
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 24S0, 32S0 - 32S5
+ */
+- (void)testCreateFolderWithSpecialJPCharacters
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __block NSString *description = @"ありがと　にほんご";
+        __block NSString *title = @"わさび";
+        __block NSString *name = @"ラヂオコmプタ";
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:description forKey:@"cm:description"];
+        [props setObject:title forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:name inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:name], @"folder name should be %@, but instead we got %@",name, folder.name);
+                 
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:description], @"cm:description property value does not match expected value %@",description);
+                 STAssertTrue([newTitleProp.value isEqualToString:title], @"cm:title property value does not match expected value %@",title);
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      }
+                      else
+                      {
+                          super.lastTestSuccessful = YES;
+                      }
+                      
+                      super.callbackCompleted = YES;
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 24S0, 32S0, 32F3
+ */
+- (void)testCreateFolderWithEmptyName
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __block NSString *description = @"";
+        __block NSString *title = @"";
+        __block NSString *name = @"";
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:description forKey:@"cm:description"];
+        [props setObject:title forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:name inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = YES;
+                 log(@"%@",[NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]]);
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 super.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = @"We should not succeed creating a folder with an empty name";
+                 STAssertTrue([folder.name isEqualToString:name], @"folder name should be %@, but instead we got %@",name, folder.name);
+                 
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      }
+                      else
+                      {
+                      }
+                      
+                      super.callbackCompleted = YES;
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 24S0, 32S0, 32F5 - 32F13
+ */
+- (void)testCreateFolderWithSpecialCharactersInName
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __block NSString *description = @"";
+        __block NSString *title = @"";
+        __block NSString *name = @"NameWIth.and\and/and?and\"and*<and>and|and!";
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:description forKey:@"cm:description"];
+        [props setObject:title forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:name inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = YES;
+                 log(@"%@",[NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]]);
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 super.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = @"We should not succeed creating a folder with an empty name";
+                 STAssertTrue([folder.name isEqualToString:name], @"folder name should be %@, but instead we got %@",name, folder.name);
+                 
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      }
+                      else
+                      {
+                      }
+                      
+                      super.callbackCompleted = YES;
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
 
 - (void)testRetrieveRootFolder
 {
@@ -147,14 +381,222 @@
     }];
 }
 
+- (void)testRetrieveFolderWithNoChildren
+{
+    [super runAllSitesTest:^{
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 __block AlfrescoFolder *blockFolder = folder;
+                 [weakService retrieveChildrenInFolder:blockFolder completionBlock:^(NSArray *children, NSError *error){
+                     if(nil == children)
+                     {
+                         super.lastTestSuccessful = NO;
+                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         super.callbackCompleted = YES;
+                     }
+                     else
+                     {
+                         STAssertTrue(children.count == 0, @"folder should be empty, instead we get %d entries",children.count);
+                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
+                          {
+                              if (!success)
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = YES;
+                              }
+                              
+                              super.callbackCompleted = YES;
+                          }];
+                         
+                     }
+                 }];
+                 
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
+- (void)testRetrieveFolderWithNoDocuments
+{
+    [super runAllSitesTest:^{
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 __block AlfrescoFolder *blockFolder = folder;
+                 [weakService retrieveDocumentsInFolder:blockFolder completionBlock:^(NSArray *children, NSError *error){
+                     if(nil == children)
+                     {
+                         super.lastTestSuccessful = NO;
+                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         super.callbackCompleted = YES;
+                     }
+                     else
+                     {
+                         STAssertTrue(children.count == 0, @"folder should contain no documents, instead we get %d entries",children.count);
+                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
+                          {
+                              if (!success)
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = YES;
+                              }
+                              
+                              super.callbackCompleted = YES;
+                          }];
+                         
+                     }
+                 }];
+                 
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+- (void)testRetrieveFolderWithNoFolders
+{
+    [super runAllSitesTest:^{
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 __block AlfrescoFolder *blockFolder = folder;
+                 [weakService retrieveFoldersInFolder:blockFolder completionBlock:^(NSArray *children, NSError *error){
+                     if(nil == children)
+                     {
+                         super.lastTestSuccessful = NO;
+                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         super.callbackCompleted = YES;
+                     }
+                     else
+                     {
+                         STAssertTrue(children.count == 0, @"folder should contain no folders, instead we get %d entries",children.count);
+                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
+                          {
+                              if (!success)
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = YES;
+                              }
+                              
+                              super.callbackCompleted = YES;
+                          }];
+                         
+                     }
+                 }];
+                 
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
+
 - (void)testRetrieveChildrenInFolderWithPaging
 {
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 1;
-        paging.skipCount = 0;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
         // get the children of the repository's root folder
         [self.dfService retrieveChildrenInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
@@ -180,6 +622,47 @@
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
+
+- (void)testRetrieveChildrenInFolderWithBogusPaging
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:-1 skipCount:-99];
+        
+        // get the children of the repository's root folder
+        [self.dfService retrieveChildrenInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+         {
+             if (nil == pagingResult)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+             }
+             else
+             {
+                 STAssertTrue(pagingResult.totalItems > 0, @"Expected folder children");
+                 STAssertTrue(pagingResult.objects.count > 0, @"Expected at least 1 folder children returned, but we got %d instead", pagingResult.objects.count);
+                 if (pagingResult.totalItems > 50)
+                 {
+                     STAssertTrue(pagingResult.hasMoreItems, @"Expected that there are more items left");
+                 }
+                 else
+                 {
+                     STAssertFalse(pagingResult.hasMoreItems, @"We should not have more than 50 items in total, but instead we have %d",pagingResult.totalItems);
+                 }
+                 NSLog(@"total items %i", pagingResult.objects.count);
+                 
+                 super.lastTestSuccessful = YES;
+             }
+             super.callbackCompleted = YES;
+         }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
 
 - (void)testRetrieveNodeWithFolderPathRelative
 {
@@ -273,6 +756,8 @@
                              STAssertTrue([document.contentMimeType isEqualToString:@"text/plain"], @"Expected text mimetype");
                              log(@"document title is %@ and the description is %@",document.title, document.summary);
                              STAssertNotNil(document.title, @"At least the document title should NOT be nil");
+                             STAssertFalse([document.title isEqualToString:@""], @"title should NOT be an empty string");
+                             STAssertFalse([document.title isEqualToString:@"(null)"], @"title should return string (null)");
                             
                          }
                      }
@@ -299,9 +784,7 @@
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 2;
-        paging.skipCount = 1;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:1];
         
         // get the documents of the repository's root folder
         [self.dfService retrieveDocumentsInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
@@ -314,6 +797,37 @@
              else 
              {
                  STAssertTrue(pagingResult.objects.count == 2, @"Expected 2 documents");
+                 STAssertTrue(pagingResult.totalItems > 2, @"Expected more than 2 documents in total");
+                 
+                 super.lastTestSuccessful = YES;
+             }
+             super.callbackCompleted = YES;
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+- (void)testRetrieveDocumentsInFolderWithBogusPaging
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:-2 skipCount:-1];
+        
+        // get the documents of the repository's root folder
+        [self.dfService retrieveDocumentsInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+         {
+             if (nil == pagingResult)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+             }
+             else
+             {
+                 STAssertTrue(pagingResult.objects.count > 0, @"Expected more than 0 documents, but instead we got %d",pagingResult.objects.count);
                  STAssertTrue(pagingResult.totalItems > 2, @"Expected more than 2 documents in total");
                  
                  super.lastTestSuccessful = YES;
@@ -383,9 +897,7 @@
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 1;
-        paging.skipCount = 0;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
         // get the documents of the repository's root folder
         [self.dfService retrieveFoldersInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)

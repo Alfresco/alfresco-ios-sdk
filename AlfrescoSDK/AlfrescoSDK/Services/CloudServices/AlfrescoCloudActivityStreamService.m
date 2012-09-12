@@ -113,7 +113,7 @@
     
     if (nil == listingContext)
     {
-        listingContext = [[AlfrescoListingContext alloc]init];
+        listingContext = self.session.defaultListingContext;
     }
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
@@ -182,7 +182,7 @@
     
     if (nil == listingContext)
     {
-        listingContext = [[AlfrescoListingContext alloc]init];
+        listingContext = self.session.defaultListingContext;
     }
 
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;

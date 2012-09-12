@@ -33,9 +33,7 @@
     [super runAllSitesTest:^{
         
         self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 10;
-        paging.skipCount = 0;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:10 skipCount:0];
         
         // create a new folder in the repository's root folder
         [self.activityStreamService retrieveActivityStreamWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
@@ -145,9 +143,7 @@
         
         self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
         
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 5;
-        paging.skipCount = 0;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
         
         [self.activityStreamService retrieveActivityStreamForPerson:super.userName listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
         {
@@ -234,9 +230,7 @@
         self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
         __block AlfrescoSiteService *siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
         
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 5;
-        paging.skipCount = 0;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
         
         [siteService retrieveSiteWithShortName:super.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error) 
         {
