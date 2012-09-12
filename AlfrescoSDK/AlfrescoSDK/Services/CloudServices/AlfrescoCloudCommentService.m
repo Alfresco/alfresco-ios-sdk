@@ -108,7 +108,7 @@
 
     if (nil == listingContext)
     {
-        listingContext = [[AlfrescoListingContext alloc]init];
+        listingContext = self.session.defaultListingContext;
     }
     
     __weak AlfrescoCloudCommentService *weakSelf = self;

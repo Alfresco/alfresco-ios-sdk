@@ -72,9 +72,7 @@
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
         
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 1;
-        paging.skipCount = 0;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
         // get all comments
         [self.commentService retrieveCommentsForNode:super.testAlfrescoDocument listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)

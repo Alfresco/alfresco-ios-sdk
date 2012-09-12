@@ -58,9 +58,7 @@
         
         self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:super.currentSession];
         
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 2;
-        paging.skipCount = 1;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:1];
         
         // get tags
         [self.taggingService retrieveAllTagsWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) 
@@ -120,9 +118,7 @@
         
         self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:super.currentSession];
         
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 1;
-        paging.skipCount = 1;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:1];
         
         
         // get tags

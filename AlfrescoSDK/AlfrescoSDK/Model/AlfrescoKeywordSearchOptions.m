@@ -18,6 +18,13 @@
 
 #import "AlfrescoKeywordSearchOptions.h"
 
+@interface AlfrescoKeywordSearchOptions ()
+@property (nonatomic, assign, readwrite) BOOL exactMatch;
+@property (nonatomic, assign, readwrite) BOOL includeContent;
+@property (nonatomic, assign, readwrite) BOOL includeDescendants;
+@property (nonatomic, strong, readwrite) AlfrescoFolder *folder;
+@end
+
 @implementation AlfrescoKeywordSearchOptions
 @synthesize exactMatch = _exactMatch;
 @synthesize includeContent = _includeContent;

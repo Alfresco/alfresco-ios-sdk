@@ -75,12 +75,15 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     __block NSString *newName = [AlfrescoBaseTest testFileNameFromEnviroment:[fileUrl lastPathComponent]];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     __block AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"text/plain"];
+    NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+    [props setObject:@"test file description" forKey:@"cm:description"];
+    [props setObject:@"test file title" forKey:@"cm:title"];
 
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
     [docFolderService createDocumentWithName:newName
                               inParentFolder:self.testDocFolder
                                  contentFile:textContentFile
-                                  properties:nil
+                                  properties:props
                              completionBlock:^(AlfrescoDocument *document, NSError *error){
                                  if (nil == document)
                                  {

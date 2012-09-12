@@ -106,7 +106,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     if (nil == listingContext)
     {
-        listingContext = [[AlfrescoListingContext alloc]init];
+        listingContext = self.session.defaultListingContext;
     }
     
     
@@ -172,7 +172,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     if (nil == listingContext)
     {
-        listingContext = [[AlfrescoListingContext alloc]init];
+        listingContext = self.session.defaultListingContext;
     }
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
@@ -264,7 +264,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     if (nil == listingContext)
     {
-        listingContext = [[AlfrescoListingContext alloc]init];
+        listingContext = self.session.defaultListingContext;
     }
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
