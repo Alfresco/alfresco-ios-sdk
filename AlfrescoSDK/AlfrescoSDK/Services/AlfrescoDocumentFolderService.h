@@ -48,7 +48,6 @@
  * @name Creating folders and documents methods.
  *  ---------------------------------------------------------------------------------------
  */
-
 /** Creates a new folder using the given properties in the given folder.
  
  @param folderName The name of the folder to be created.
@@ -215,7 +214,7 @@
  *  ---------------------------------------------------------------------------------------
  */
 
-/** Downloads the content of the given document and stores it in the given file. The delegate object 
+/** Downloads the content of the given document and stores it in the given file. The delegate object
  will be informed when the content is downloaded.
  
  @param document The document that needs to be downloaded.

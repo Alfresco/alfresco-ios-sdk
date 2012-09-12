@@ -80,9 +80,7 @@
         self.versionService = [[AlfrescoVersionService alloc] initWithSession:super.currentSession];
         __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 1;
-        paging.skipCount = 0;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
         [documentService retrieveNodeWithIdentifier:super.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error) 
         {

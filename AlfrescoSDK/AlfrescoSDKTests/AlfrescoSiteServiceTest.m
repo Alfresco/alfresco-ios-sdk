@@ -63,9 +63,7 @@
 - (void)testRetrieveAllSitesWithPaging
 {
     [super runAllSitesTest:^{
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 2;
-        paging.skipCount = 1;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:1];
         
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
         
@@ -130,9 +128,7 @@
 - (void)testRetrieveSitesForUserWithPaging
 {
     [super runAllSitesTest:^{
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 2;
-        paging.skipCount = 1;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:1];
                 
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
         
@@ -193,9 +189,7 @@
 - (void)testRetrieveFavoriteSitesForUserWithPaging
 {
     [super runAllSitesTest:^{
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] init];
-        paging.maxItems = 1;
-        paging.skipCount = 1;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:1];
         
         
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];

@@ -18,6 +18,16 @@
 
 #import "AlfrescoListingContext.h"
 
+#define DEFAULTMAXITEMS 50
+#define DEFAULTSKIPCOUNT 0
+
+@interface AlfrescoListingContext ()
+@property (nonatomic, strong, readwrite) NSString *sortProperty;
+@property (nonatomic, assign, readwrite) BOOL sortAscending;
+@property (nonatomic, assign, readwrite) int maxItems;
+@property (nonatomic, assign, readwrite) int skipCount;
+@end
+
 @implementation AlfrescoListingContext
 
 @synthesize sortProperty = _sortProperty;
@@ -27,7 +37,7 @@
 
 - (id)init
 {
-    return [self initWithMaxItems:50 skipCount:0 sortProperty:nil sortAscending:YES];
+    return [self initWithMaxItems:DEFAULTMAXITEMS skipCount:DEFAULTSKIPCOUNT sortProperty:nil sortAscending:YES];
 }
 
 - (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount
@@ -37,7 +47,7 @@
 
 - (id)initWithSortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending
 {
-    return [self initWithMaxItems:50 skipCount:0 sortProperty:sortProperty sortAscending:sortAscending];
+    return [self initWithMaxItems:DEFAULTMAXITEMS skipCount:DEFAULTSKIPCOUNT sortProperty:sortProperty sortAscending:sortAscending];
 }
 
 - (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount sortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending
@@ -46,8 +56,16 @@
     if (self)
     {
         self.sortProperty = sortProperty;
-        self.maxItems = maxItems;
-        self.skipCount = skipCount;
+        self.maxItems = DEFAULTMAXITEMS;
+        self.skipCount = DEFAULTSKIPCOUNT;
+        if (maxItems > 0)
+        {
+            self.maxItems = maxItems;
+        }
+        if (skipCount >= 0)
+        {
+            self.skipCount = skipCount;
+        }
         self.sortAscending = sortAscending;
     }
     return self;
