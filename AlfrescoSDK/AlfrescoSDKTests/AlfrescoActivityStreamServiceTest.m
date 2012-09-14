@@ -26,6 +26,7 @@
 
 #pragma On Premise tests
 /*
+ @Unique_TCRef 2S0
  */
 
 - (void)testRetrieveActivityStreamForLoggedinUserWithPaging
@@ -58,6 +59,9 @@
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
+/*
+ @Unique_TCRef 1S0
+ */
 - (void)testRetrieveActivityStreamForLoggedinUser
 {
     [super runAllSitesTest:^{
@@ -98,6 +102,9 @@
 }
 
 
+/*
+ @Unique_TCRef 3S0
+ */
 - (void)testRetrieveActivityStreamForUser
 {
     [super runAllSitesTest:^{
