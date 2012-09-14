@@ -54,6 +54,41 @@
     }];
 }
 
+/*
+ */
+- (void)testRetrievePersonForUserNonExisting
+{
+    [super runAllSitesTest:^{
+        self.personService = [[AlfrescoPersonService alloc] initWithSession:super.currentSession];
+        NSString *identifier = @"admin2";
+        if (self.isCloud)
+        {
+            identifier = @"peter.schmidt2@alfresco.com";
+        }
+        log(@"we are testing the Repo service for user %@",identifier);
+        [self.personService retrievePersonWithIdentifier:identifier completionBlock:^(AlfrescoPerson *person, NSError *error)
+         {
+             if (nil == person)
+             {
+                 log(@"person returned nil");
+                 super.lastTestSuccessful = YES;
+                 NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 log(@"Expected error %@",errorMsg);
+             }
+             else
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = @"Should not get back a Person for a non existing user.";
+             }
+             super.callbackCompleted = YES;
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
 - (void)testRetrieveAvatarForPerson
 {
     [super runAllSitesTest:^{
