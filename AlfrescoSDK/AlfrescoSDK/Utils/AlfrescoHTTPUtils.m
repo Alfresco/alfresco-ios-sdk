@@ -69,15 +69,14 @@
     }
     
     NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    
-    *outError = error;
-    
+        
     NSLog(@"response status %i", [response statusCode]);
     //NSLog(@"response %@", [[NSMutableString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
     
     if (response.statusCode < 200 || response.statusCode > 299)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeHTTPResponse];
+        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+        return nil;
     }
     
     return responseData;    

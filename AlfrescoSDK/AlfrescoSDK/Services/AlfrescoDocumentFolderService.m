@@ -249,21 +249,31 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
     
-    id associatedObject = objc_getAssociatedObject(node, &kAlfrescoPermissionsObjectKey);
-    NSError *error = nil;
-    if ([associatedObject isKindOfClass:[AlfrescoPermissions class]])
-    {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock((AlfrescoPermissions *)associatedObject, error);
-        }];
-    }
-    else 
-    {
-        error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderPermissions];
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(nil, error);
-        }];
-    }
+    [self retrieveNodeWithIdentifier:node.identifier completionBlock:^(AlfrescoNode *retrievedNode, NSError *error){
+        if (nil == retrievedNode)
+        {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(nil, error);
+            }];
+        }
+        else
+        {
+            id associatedObject = objc_getAssociatedObject(retrievedNode, &kAlfrescoPermissionsObjectKey);
+            if ([associatedObject isKindOfClass:[AlfrescoPermissions class]])
+            {
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    completionBlock((AlfrescoPermissions *)associatedObject, error);
+                }];
+            }
+            else
+            {
+                error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderPermissions];
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    completionBlock(nil, error);
+                }];
+            }
+        }
+    }];
 }
 
 

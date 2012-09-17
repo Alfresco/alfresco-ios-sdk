@@ -28,7 +28,8 @@
 
 @synthesize dfService = _dfService;
 /**
- @Unique_TCRef 24S0, 32S0 - 32S2
+ @Unique_TCRef 32S0 - 32S2
+ @Unique_TCRef 24S0
  */
 - (void)testCreateFolder
 {
@@ -85,6 +86,299 @@
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
+
+/**
+ @Unique_TCRef 32S0
+ @Unique_TCRef 32F0
+ @Unique_TCRef 24S0
+ */
+- (void)testCreateFolderInNonExistingFolder
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 __block AlfrescoFolder *strongFolder = folder;
+                 
+                 [weakService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          super.callbackCompleted = YES;
+                      }
+                      else
+                      {
+                          [weakService createFolderWithName:@"SomeTestFolder" inParentFolder:strongFolder properties:props completionBlock:^(AlfrescoFolder *nonFolder, NSError *error){
+                              if (nil == nonFolder)
+                              {
+                                  self.lastTestSuccessful = YES;
+                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  log(@"Expected failure. Message = %@",errorMessage);
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  super.lastTestFailureMessage = @"We should not be able to create a folder in a nonexisting folder";
+                              }
+                              super.callbackCompleted = YES;
+                          }];
+                      }
+                  }];
+             }
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
+
+/**
+ @Unique_TCRef 32S0
+ @Unique_TCRef 13F1
+ @Unique_TCRef 24S0
+ */
+- (void)testRetrieveChildrenInFolderNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 __block AlfrescoFolder *strongFolder = folder;
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          super.callbackCompleted = YES;
+                      }
+                      else
+                      {
+                          [weakService retrieveChildrenInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error){
+                              if (nil == array)
+                              {
+                                  self.lastTestSuccessful = YES;
+                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  log(@"We expected this to fail with %@",errorMessage);
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";                                  
+                              }
+                              super.callbackCompleted = YES;
+                          }];
+                          
+                      }
+                      
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 32S0
+ @Unique_TCRef 19F1
+ @Unique_TCRef 24S0
+ */
+- (void)testRetrieveDocumentsInFolderNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 __block AlfrescoFolder *strongFolder = folder;
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          super.callbackCompleted = YES;
+                      }
+                      else
+                      {
+                          [weakService retrieveDocumentsInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error){
+                              if (nil == array)
+                              {
+                                  self.lastTestSuccessful = YES;
+                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  log(@"We expected this to fail with %@",errorMessage);
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";
+                              }
+                              super.callbackCompleted = YES;
+                          }];
+                          
+                      }
+                      
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 32S0
+ @Unique_TCRef 20F1
+ @Unique_TCRef 24S0
+ */
+- (void)testRetrieveFoldersInFolderNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 __block AlfrescoFolder *strongFolder = folder;
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          super.callbackCompleted = YES;
+                      }
+                      else
+                      {
+                          [weakService retrieveFoldersInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error){
+                              if (nil == array)
+                              {
+                                  self.lastTestSuccessful = YES;
+                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  log(@"We expected this to fail with %@",errorMessage);
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";
+                              }
+                              super.callbackCompleted = YES;
+                          }];
+                          
+                      }
+                      
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
 
 
 /**
@@ -317,7 +611,9 @@
     }];
 }
 
-
+/**
+ @Unique_TCRef 22S0, 22S1
+ */
 - (void)testRetrieveRootFolder
 {
     [super runAllSitesTest:^{
@@ -345,6 +641,11 @@
     }];    
 }
 
+/**
+ @Unique_TCRef 13F6. As I marked in the test spec - I don't know why this (and the test cases below) are marked as Failure??????
+ @Unique_TCRef 13F7
+ @Unique_TCRef 13F3. 
+ */
 - (void)testRetrieveChildrenInFolder
 {
     [super runAllSitesTest:^{
@@ -381,6 +682,10 @@
     }];
 }
 
+/**
+ @Unique_TCRef 24S0
+ @Unique_TCRef 13F4.
+ */
 - (void)testRetrieveFolderWithNoChildren
 {
     [super runAllSitesTest:^{
@@ -451,6 +756,10 @@
 }
 
 
+/**
+ @Unique_TCRef 24S0
+ @Unique_TCRef 18F0. I can only assume this test case means that the folder contains no documents. Why then is this a case for failure?
+ */
 - (void)testRetrieveFolderWithNoDocuments
 {
     [super runAllSitesTest:^{
@@ -520,6 +829,10 @@
     }];
 }
 
+/**
+ @Unique_TCRef 24S0
+ @Unique_TCRef 20S2
+ */
 - (void)testRetrieveFolderWithNoFolders
 {
     [super runAllSitesTest:^{
@@ -591,6 +904,9 @@
 
 
 
+/**
+ @Unique_TCRef 14S0
+ */
 - (void)testRetrieveChildrenInFolderWithPaging
 {
     [super runAllSitesTest:^{
@@ -623,6 +939,9 @@
     }];
 }
 
+/**
+ @Unique_TCRef 14F0
+ */
 - (void)testRetrieveChildrenInFolderWithBogusPaging
 {
     [super runAllSitesTest:^{
@@ -664,6 +983,9 @@
 
 
 
+/**
+ @Unique_TCRef 15S0
+ */
 - (void)testRetrieveNodeWithFolderPathRelative
 {
     [super runAllSitesTest:^{
@@ -695,6 +1017,9 @@
     }];
 }
 
+/**
+ @Unique_TCRef 15F0, 15F1
+ */
 - (void)testRetrieveNodeWithNonExistingFolderPathRelative
 {
     [super runAllSitesTest:^{
@@ -726,6 +1051,9 @@
     }];
 }
 
+/**
+ @Unique_TCRef 18S0
+ */
 - (void)testRetrieveDocumentsInFolder
 {
     [super runAllSitesTest:^{
@@ -778,6 +1106,9 @@
     }];
 }
 
+/**
+ @Unique_TCRef 19S0
+ */
 - (void)testRetrieveDocumentsInFolderWithPaging
 {
     [super runAllSitesTest:^{
@@ -809,6 +1140,9 @@
     }];
 }
 
+/**
+ @Unique_TCRef 19F0
+ */
 - (void)testRetrieveDocumentsInFolderWithBogusPaging
 {
     [super runAllSitesTest:^{
@@ -839,6 +1173,10 @@
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
+
+/**
+ @Unique_TCRef 20S0
+ */
 
 - (void)testRetrieveFoldersInFolder
 {
@@ -891,6 +1229,9 @@
     }];
 }
 
+/**
+ @Unique_TCRef 21S0
+ */
 - (void)testRetrieveFoldersInFolderWithPaging
 {
     [super runAllSitesTest:^{
@@ -932,6 +1273,9 @@
     }];
 }
 
+/**
+ @Unique_TCRef 17S0
+ */
 - (void)testRetrieveNodeWithIdentifier
 {
     [super runAllSitesTest:^{
@@ -961,6 +1305,86 @@
     }];
 }
 
+/**
+ @Unique_TCRef 32S0
+ @Unique_TCRef 17F0
+ @Unique_TCRef 24S0
+ */
+- (void)testRetrieveNodeWithIdentifierNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 __block AlfrescoFolder *strongFolder = folder;
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          super.callbackCompleted = YES;
+                      }
+                      else
+                      {
+                          [weakService retrieveNodeWithIdentifier:strongFolder.identifier completionBlock:^(AlfrescoNode *node, NSError *error){
+                              if (nil == node)
+                              {
+                                  self.lastTestSuccessful = YES;
+                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  log(@"We expected this to fail with %@",errorMessage);
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";
+                              }
+                              super.callbackCompleted = YES;
+                              
+                          }];
+                          
+                      }
+                      
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
+/**
+ @Unique_TCRef 16S0
+ */
 - (void)testRetrieveNodeWithFolderPath
 {
     [super runAllSitesTest:^{
@@ -991,6 +1415,80 @@
     }];
 }
 
+/**
+ @Unique_TCRef 32S0
+ @Unique_TCRef 17F0
+ @Unique_TCRef 24S0
+ */
+- (void)testRetrieveNodeWithFolderPathNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 __block NSString *folderPath = [NSString stringWithFormat:@"%@%@",super.testFolderPathName, super.unitTestFolder];
+                 // check the properties were added at creation time
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          super.callbackCompleted = YES;
+                      }
+                      else
+                      {
+                          [weakService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error){
+                              if (nil == node)
+                              {
+                                  self.lastTestSuccessful = YES;
+                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  log(@"We expected this to fail with %@",errorMessage);
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";
+                              }
+                              super.callbackCompleted = YES;
+                              
+                          }];
+                          
+                      }
+                      
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
+/**
+ @Unique_TCRef 23S0
+ */
 - (void)testRetrieveParentNode
 {
     [super runAllSitesTest:^{
@@ -1020,6 +1518,10 @@
 }
 
 
+/**
+ @Unique_TCRef 19S0
+ @Unique_TCRef 27S0
+ */
 - (void)testDownloadDocument
 {
     [super runAllSitesTest:^{
@@ -1085,7 +1587,96 @@
     }];
 }
 
+/**
+ @Unique_TCRef 33S0
+ @Unique_TCRef 30F0
+ @Unique_TCRef 24S0
+ */
+- (void)testDownloadDocumentNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
+        // provide the objectTypeId so we can specify the cm:author aspect
+        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                  forKey:kCMISPropertyObjectTypeId];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        [props setObject:@"test author" forKey:@"cm:author"];
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        [self.dfService createDocumentWithName:@"millenium-dome.jpg" inParentFolder:super.testDocFolder
+                                   contentFile:super.testImageFile
+                                    properties:props
+                               completionBlock:^(AlfrescoDocument *document, NSError *blockError){
+                                   if (nil == document)
+                                   {
+                                       super.lastTestSuccessful = NO;
+                                       super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                                       super.callbackCompleted = YES;
+                                   }
+                                   else
+                                   {
+                                       STAssertNotNil(document.identifier, @"document identifier should be filled");
+                                       STAssertTrue(document.contentLength > 100, @"expected content to be filled");
+                                       
+                                       // check the properties were added at creation time
+                                       NSDictionary *newDocProps = document.properties;
+                                       AlfrescoProperty *newDescriptionProp = [newDocProps objectForKey:@"cm:description"];
+                                       AlfrescoProperty *newTitleProp = [newDocProps objectForKey:@"cm:title"];
+                                       AlfrescoProperty *newAuthorProp = [newDocProps objectForKey:@"cm:author"];
+                                       STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                                       STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                                       STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
+                                       
+                                       
+                                       __block AlfrescoDocument *strongDocument = document;
+                                       
+                                       // delete the test document
+                                       [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                        {
+                                            if (!success)
+                                            {
+                                                super.lastTestSuccessful = NO;
+                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                super.callbackCompleted = YES;
+                                            }
+                                            else
+                                            {
+                                                [weakService retrieveContentOfDocument:strongDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+                                                    if (nil == contentFile)
+                                                    {
+                                                        super.lastTestSuccessful = YES;
+                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                        log(@"Expected failure %@",errorMsg);
+                                                    }
+                                                    else
+                                                    {
+                                                        super.lastTestSuccessful = NO;
+                                                        super.lastTestFailureMessage = @"We should not be able to get content for a deleted/nonexisting document";
+                                                        
+                                                    }
+                                                    super.callbackCompleted = YES;
+                                                } progressBlock:^(NSInteger down, NSInteger total){}];
+                                            }
+                                        }];
+                                   }
+                               } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                               }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+    
+}
 
+
+
+/**
+ @Unique_TCRef 33S0
+ @Unique_TCRef 24S0
+ */
 - (void)testUploadImage
 {
     [super runAllSitesTest:^{
@@ -1147,7 +1738,8 @@
     
 }
 /*
-
+ @Unique_TCRef 27S0
+ @Unique_TCRef 30S0
 */
 - (void)testUpdateContentForDocument
 {
@@ -1242,6 +1834,99 @@
     
 }
 
+/**
+ @Unique_TCRef 33S0
+ @Unique_TCRef 30F0
+ @Unique_TCRef 24S0
+ */
+- (void)testUpdateContentForDocumentNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
+        // provide the objectTypeId so we can specify the cm:author aspect
+        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                  forKey:kCMISPropertyObjectTypeId];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        [props setObject:@"test author" forKey:@"cm:author"];
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        [self.dfService createDocumentWithName:@"millenium-dome.jpg" inParentFolder:super.testDocFolder
+                                   contentFile:super.testImageFile
+                                    properties:props
+                               completionBlock:^(AlfrescoDocument *document, NSError *blockError){
+                                   if (nil == document)
+                                   {
+                                       super.lastTestSuccessful = NO;
+                                       super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                                       super.callbackCompleted = YES;
+                                   }
+                                   else
+                                   {
+                                       STAssertNotNil(document.identifier, @"document identifier should be filled");
+                                       STAssertTrue(document.contentLength > 100, @"expected content to be filled");
+                                       
+                                       // check the properties were added at creation time
+                                       NSDictionary *newDocProps = document.properties;
+                                       AlfrescoProperty *newDescriptionProp = [newDocProps objectForKey:@"cm:description"];
+                                       AlfrescoProperty *newTitleProp = [newDocProps objectForKey:@"cm:title"];
+                                       AlfrescoProperty *newAuthorProp = [newDocProps objectForKey:@"cm:author"];
+                                       STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                                       STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                                       STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
+                                       
+                                       
+                                       __block AlfrescoDocument *strongDocument = document;
+                                       
+                                       // delete the test document
+                                       [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                        {
+                                            if (!success)
+                                            {
+                                                super.lastTestSuccessful = NO;
+                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                super.callbackCompleted = YES;
+                                            }
+                                            else
+                                            {
+                                                __block NSString *updatedContent = [NSString stringWithFormat:@"and we added some text."];
+                                                NSData *data = [updatedContent dataUsingEncoding:NSASCIIStringEncoding];
+                                                __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"text/plain"];
+                                                [weakService updateContentOfDocument:strongDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDoc, NSError *error){
+                                                    if (nil == updatedDoc)
+                                                    {
+                                                        super.lastTestSuccessful = YES;
+                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                        log(@"Expected failure %@",errorMsg);
+                                                    }
+                                                    else
+                                                    {
+                                                        super.lastTestSuccessful = NO;
+                                                        super.lastTestFailureMessage = @"We should not be able to update a deleted/nonexisting document";
+                                                        
+                                                    }
+                                                    super.callbackCompleted = YES;
+                                                } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+//                                                super.lastTestSuccessful = YES;
+                                            }
+                                        }];
+                                   }
+                               } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                               }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+    
+}
+
+
+/*
+ @Unique_TCRef 27S0
+ @Unique_TCRef 31S0
+ */
 - (void)testUpdatePropertiesForDocument
 {
     [super runAllSitesTest:^{
@@ -1321,6 +2006,95 @@
     }];
 }
 
+/**
+ @Unique_TCRef 33S0
+ @Unique_TCRef 31F0
+ @Unique_TCRef 24S0
+ */
+- (void)testUpdatePropertiesForDocumentNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
+        // provide the objectTypeId so we can specify the cm:author aspect
+        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                  forKey:kCMISPropertyObjectTypeId];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        [props setObject:@"test author" forKey:@"cm:author"];
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        [self.dfService createDocumentWithName:@"millenium-dome.jpg" inParentFolder:super.testDocFolder
+                                   contentFile:super.testImageFile
+                                    properties:props
+                               completionBlock:^(AlfrescoDocument *document, NSError *blockError){
+                                   if (nil == document)
+                                   {
+                                       super.lastTestSuccessful = NO;
+                                       super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                                       super.callbackCompleted = YES;
+                                   }
+                                   else
+                                   {
+                                       STAssertNotNil(document.identifier, @"document identifier should be filled");
+                                       STAssertTrue(document.contentLength > 100, @"expected content to be filled");
+                                       
+                                       // check the properties were added at creation time
+                                       __block NSString *propertyObjectTestValue = @"millenium-dome.jpg";
+                                       __block NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:8];
+                                       //                 [propDict setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                                       //                              forKey:kCMISPropertyObjectTypeId];
+                                       [propDict setObject:propertyObjectTestValue forKey:kCMISPropertyName];
+                                       [propDict setObject:@"updated description" forKey:@"cm:description"];
+                                       [propDict setObject:@"updated title" forKey:@"cm:title"];
+                                       
+                                       
+                                       __block AlfrescoDocument *strongDocument = document;
+                                       
+                                       // delete the test document
+                                       [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                        {
+                                            if (!success)
+                                            {
+                                                super.lastTestSuccessful = NO;
+                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                super.callbackCompleted = YES;
+                                            }
+                                            else
+                                            {
+                                                __block NSString *updatedContent = [NSString stringWithFormat:@"and we added some text."];
+                                                [weakService updatePropertiesOfNode:strongDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error){
+                                                    if (nil == updatedNode)
+                                                    {
+                                                        super.lastTestSuccessful = YES;
+                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                        log(@"Expected failure %@",errorMsg);
+                                                    }
+                                                    else
+                                                    {
+                                                        super.lastTestSuccessful = NO;
+                                                        super.lastTestFailureMessage = @"We should not be able to update properties for a deleted node";
+                                                        
+                                                    }
+                                                    super.callbackCompleted = YES;
+                                                }];
+                                            }
+                                        }];
+                                   }
+                               } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                               }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+    
+}
+
+
+/*
+ @Unique_TCRef 24S0
+ */
 - (void)testDeleteNode
 {
     [super runAllSitesTest:^{
@@ -1365,8 +2139,169 @@
     }];
 }
 
+/**
+ @Unique_TCRef 32S0 - 32S2
+ @Unique_TCRef 24S0
+ */
+- (void)testDeleteFolderWithContent
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 __block AlfrescoFolder *strongFolder = folder;
+                 
+                 [weakService createFolderWithName:@"SomeTestFolder" inParentFolder:strongFolder properties:props completionBlock:^(AlfrescoFolder *internalFolder, NSError *internalError){
+                     if (nil == internalFolder)
+                     {
+                         super.lastTestSuccessful = NO;
+                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [internalError localizedDescription], [internalError localizedFailureReason]];
+                         super.callbackCompleted = YES;
+                     }
+                     else
+                     {
+                         __block AlfrescoFolder *strongInternalFolder = internalFolder;
+                         [weakService deleteNode:strongFolder completionBlock:^(BOOL success, NSError *innerError)
+                          {
+                              if (!success)
+                              {
+                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [innerError localizedDescription], [innerError localizedFailureReason]];
+                                  log(@"Expected error %@",errorMessage);
+ 
+                                  [weakService deleteNode:strongInternalFolder completionBlock:^(BOOL internalSuccess, NSError *anotherError){
+                                      if (!internalSuccess)
+                                      {
+                                          super.lastTestSuccessful = NO;
+                                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [anotherError localizedDescription], [anotherError localizedFailureReason]];
+                                          super.callbackCompleted = YES;
+                                      }
+                                      else
+                                      {
+                                          [weakService deleteNode:strongFolder completionBlock:^(BOOL innermostSuccess, NSError *innermostError){
+                                              if (!innermostSuccess)
+                                              {
+                                                  super.lastTestSuccessful = NO;
+                                                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [innermostError localizedDescription], [innermostError localizedFailureReason]];
+                                              }
+                                              else
+                                              {
+                                                  self.lastTestSuccessful = YES;
+                                                  
+                                              }
+                                              super.callbackCompleted = YES;
+                                          }];
+                                      }
+                                  }];
+                              }
+                              else
+                              {
+                                  super.lastTestSuccessful = NO;
+                                  super.lastTestFailureMessage = @"You should not be able to delete a folder with content";
+                                  super.callbackCompleted = YES;
+                              }
+                              
+                          }];
+                     }
+                 }];
+                 
+             }
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
 
 
+/*
+ @Unique_TCRef 24S0
+ @Unique_TCRef 24F0
+ */
+- (void)testDeleteNodeNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        // create a new folder in the repository's root folder so we can delete it
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        
+        [self.dfService createFolderWithName:@"RemoteAPIDeleteTest" inParentFolder:super.testDocFolder properties:nil
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:@"RemoteAPIDeleteTest"], @"folder name should be RemoteAPIDeleteTest");
+                 __block AlfrescoFolder *strongFolder = folder;
+                 [weakService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          super.callbackCompleted = YES;
+                      }
+                      else
+                      {
+                          [weakService deleteNode:strongFolder completionBlock:^(BOOL success, NSError *error)
+                           {
+                               if (!success)
+                               {
+                                   super.lastTestSuccessful = YES;
+                                   NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                   log(@"expected error: %@",errorMessage);
+                               }
+                               else
+                               {
+                                   
+                                   super.lastTestSuccessful = NO;
+                                   super.lastTestFailureMessage = @"We should not be able to delete a node that is already deleted";
+                               }
+                               super.callbackCompleted = YES;
+                           }];                          
+                      }
+                  }];
+             }
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
+
+/*
+ @Unique_TCRef 29S0
+ @Unique_TCRef 13S0. I only found a 13Fx list of test cases in the document....
+ */
 - (void)testThumbnailRenditionImage
 {
     [super runAllSitesTest:^{
@@ -1471,6 +2406,11 @@
 }
  
 
+/*
+ @Unique_TCRef 29S0
+ @Unique_TCRef 22S0
+ @Unique_TCRef 25S0
+ */
 - (void)testRetrievePermissionsOfNode
 {
     [super runAllSitesTest:^{
@@ -1534,6 +2474,76 @@
         [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
+}
+
+
+- (void)testRetrievePermissionsOfNodeNonExisting
+{
+    [super runAllSitesTest:^{
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
+        // provide the objectTypeId so we can specify the cm:author aspect
+        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                  forKey:kCMISPropertyObjectTypeId];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        [props setObject:@"test author" forKey:@"cm:author"];
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        [self.dfService createDocumentWithName:@"millenium-dome.jpg" inParentFolder:super.testDocFolder
+                                   contentFile:super.testImageFile
+                                    properties:props
+                               completionBlock:^(AlfrescoDocument *document, NSError *blockError){
+                                   if (nil == document)
+                                   {
+                                       super.lastTestSuccessful = NO;
+                                       super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                                       super.callbackCompleted = YES;
+                                   }
+                                   else
+                                   {
+                                       STAssertNotNil(document.identifier, @"document identifier should be filled");
+                                       STAssertTrue(document.contentLength > 100, @"expected content to be filled");
+                                       
+                                                                              
+                                       // delete the test document
+                                       [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                        {
+                                            if (!success)
+                                            {
+                                                super.lastTestSuccessful = NO;
+                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                super.callbackCompleted = YES;
+                                            }
+                                            else
+                                            {
+                                                [weakService retrievePermissionsOfNode:document
+                                                                       completionBlock:^(AlfrescoPermissions *perms, NSError *error){
+                                                                           if (nil == perms)
+                                                                           {
+                                                                               super.lastTestSuccessful = YES;
+                                                                               NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                                               log(@"Expected failure %@",errorMsg);
+                                                                           }
+                                                                           else
+                                                                           {
+                                                                               super.lastTestSuccessful = NO;
+                                                                               super.lastTestFailureMessage = @"We should not be able to get permissions for a deleted/nonexisting document";
+                                                                               
+                                                                           }
+                                                                           super.callbackCompleted = YES;
+                                                                       }];
+                                            }
+                                        }];
+                                   }
+                               } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                               }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+    
 }
 
 
