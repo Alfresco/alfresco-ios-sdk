@@ -64,9 +64,9 @@
 - (void)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
                       completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:document argumentAsString:@"document"];
-    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentAsString:@"document.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoVersionService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -98,9 +98,9 @@
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:document argumentAsString:@"document"];
-    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentAsString:@"document.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;

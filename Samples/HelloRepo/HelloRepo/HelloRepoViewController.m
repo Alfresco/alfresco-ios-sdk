@@ -21,6 +21,7 @@
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoNode.h"
+#import "OAuthLoginWebViewController.h"
 
 @interface HelloRepoViewController ()
 
@@ -29,6 +30,7 @@
 
 - (void)helloFromRepository;
 - (void)helloFromCloud;
+- (void)helloFromCloudWithOAuth;
 - (void)loadRootFolder;
 
 @end
@@ -41,17 +43,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.navigationItem.title = @"Hello Repo";
 
     self.nodes = [NSMutableArray array];
     
-    [self helloFromRepository];
-    //[self helloFromCloud];
+//    [self helloFromRepository];
+//    [self helloFromCloud];
+    [self helloFromCloudWithOAuth];
 }
 
 #pragma mark - Repository methods
 
 - (void)helloFromRepository
 {
+    NSLog(@"*********** helloFromRepository");
     NSURL *url = [NSURL URLWithString:@"http://localhost:8080/alfresco"];
     NSString *username = @"admin";
     NSString *password = @"admin";
@@ -79,8 +84,9 @@
 
 - (void)helloFromCloud
 {
-    NSString *emailAddress = @"your-email-address";
-    NSString *password = @"your-password";
+    NSLog(@"*********** helloFromCloud");
+    NSString *emailAddress = @"peter.schmidt@alfresco.com";
+    NSString *password = @"alzheimer\"\"";
     
     __weak HelloRepoViewController *weakSelf = self;
     [AlfrescoCloudSession connectWithEmailAddress:emailAddress
@@ -102,8 +108,19 @@
     }];
 }
 
+
+- (void)helloFromCloudWithOAuth
+{
+    NSLog(@"*********** helloFromCloudWithOAuth");
+    OAuthLoginWebViewController *oauthController = [[OAuthLoginWebViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY redirectURI:@"http://localhost:8080/alfoauthsample/mycallback.html"];
+    [self.navigationController pushViewController:oauthController animated:YES];
+}
+
+
+
 - (void)loadRootFolder
 {
+    NSLog(@"*********** loadRootFolder");
     // create service
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
     __weak HelloRepoViewController *weakSelf = self;

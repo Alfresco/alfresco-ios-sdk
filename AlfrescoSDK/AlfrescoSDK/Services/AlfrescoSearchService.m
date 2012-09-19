@@ -72,8 +72,8 @@
                    language:(AlfrescoSearchLanguage)language
             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:statement argumentAsString:@"statement"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];    
+    [AlfrescoErrors assertArgumentNotNil:statement argumentName:@"statement"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];    
     
     if (AlfrescoSearchLanguageCMIS == language)
     {
@@ -114,8 +114,8 @@
              listingContext:(AlfrescoListingContext *)listingContext
             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:statement argumentAsString:@"statement"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:statement argumentName:@"statement"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -162,9 +162,9 @@
                    options:(AlfrescoKeywordSearchOptions *)options
            completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:keywords argumentAsString:@"keywords"];
-    [AlfrescoErrors assertArgumentNotNil:options argumentAsString:@"options"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:keywords argumentName:@"keywords"];
+    [AlfrescoErrors assertArgumentNotNil:options argumentName:@"options"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     NSString *query = [self createSearchQuery:keywords options:options];
     __weak AlfrescoSearchService *weakSelf = self;
@@ -196,9 +196,9 @@
             listingContext:(AlfrescoListingContext *)listingContext
            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:keywords argumentAsString:@"keywords"];
-    [AlfrescoErrors assertArgumentNotNil:options argumentAsString:@"options"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:keywords argumentName:@"keywords"];
+    [AlfrescoErrors assertArgumentNotNil:options argumentName:@"options"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -290,12 +290,12 @@
     }
     if (nil == *error)
     {
-        *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSearchUnsupportedSearchLanguage];
+        *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSearchUnsupportedSearchLanguage];
     }
     else
     {
-        NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSearchUnsupportedSearchLanguage];
-        *error = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeSearch];
+        NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSearchUnsupportedSearchLanguage];
+        *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeSearch];
     }
     return NO;
 }

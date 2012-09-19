@@ -75,7 +75,7 @@
     
     if (response.statusCode < 200 || response.statusCode > 299)
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
         return nil;
     }
     
@@ -111,7 +111,7 @@
     
     if (response.statusCode < 200 || response.statusCode > 299)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeHTTPResponse];
+        *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
     }
     
     return responseData;

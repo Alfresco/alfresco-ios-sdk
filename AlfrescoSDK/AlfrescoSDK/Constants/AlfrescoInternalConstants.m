@@ -67,6 +67,10 @@ NSString * const kAlfrescoAppliedAspects = @"appliedAspects";
 NSString * const kAlfrescoAspectProperties = @"properties";
 NSString * const kAlfrescoAspectPropertyDefinitionId = @"propertyDefinitionId";
 NSString * const kAlfrescoPagingRequest = @"?skipCount={skipCount}&maxItems={maxItems}";
+NSString * const kAlfrescoClientID = @"{clientID}";
+NSString * const kAlfrescoClientSecret = @"{clientSecret}";
+NSString * const kAlfrescoCode = @"{code}";
+NSString * const kAlfrescoRedirectURI = @"{redirectURI}";
 
 /**
  Session data key constants
@@ -77,6 +81,27 @@ NSString * const kAlfrescoSessionKeyCmisSession = @"alfresco_session_key_cmis_se
  Associated object key constants
  */
 NSString * const kAlfrescoAuthenticationProviderObjectKey = @"AuthenticationProviderObjectKey";
+
+/**
+ OAuth Constants
+ */
+NSString *const kAlfrescoJSONAccessToken = @"access_token";
+NSString *const kAlfrescoJSONRefreshToken = @"refresh_token";
+NSString *const kAlfrescoJSONTokenType = @"token_type";
+NSString *const kAlfrescoJSONExpiresIn = @"expires_in";
+NSString *const kAlfrescoJSONScope = @"scope";
+NSString *const kAlfrescoJSONError = @"error";
+NSString *const kAlfrescoJSONErrorDescription = @"error_description";
+NSString *const kAlfrescoOAuthClientID = @"client_id={clientID}";
+NSString *const kAlfrescoOAuthClientSecret = @"client_secret={clientSecret}";
+NSString *const kAlfrescoOAuthGrantType = @"grant_type=authorization_code";
+NSString *const kAlfrescoOAuthRedirectURI = @"redirect_uri={redirectURI}";
+NSString *const kAlfrescoOAuthCode = @"code={code}";
+NSString *const kAlfrescoOAuthAuthorizeURL = @"https://api.alfresco.com/auth/oauth/versions/2/authorize";
+NSString *const kAlfrescoOAuthTokenURL = @"https://api.alfresco.com/auth/oauth/versions/2/token";
+NSString *const kAlfrescoOAuthScope = @"scope=pub_api";
+NSString *const kAlfrescoOAuthResponseType = @"response_type=code";
+
 
 /**
  On Premise constants

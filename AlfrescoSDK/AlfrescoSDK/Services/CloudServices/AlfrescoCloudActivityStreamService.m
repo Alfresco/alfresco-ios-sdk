@@ -34,7 +34,7 @@
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @property (nonatomic, strong)AlfrescoISO8601DateFormatter *dateFormatter;
 
-- (NSArray *) parseActivityStreamArrayWithData:(NSData *)data error:(NSError **)outError;
+- (NSArray *) activityStreamArrayFromJSONData:(NSData *)data error:(NSError **)outError;
 
 @end
 
@@ -81,8 +81,8 @@
 
 - (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentAsString:@"personIdentifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -97,7 +97,7 @@
         NSArray *activityStreamArray = nil;
         if(nil != data)
         {
-            activityStreamArray = [weakSelf parseActivityStreamArrayWithData:data error:&operationQueueError];
+            activityStreamArray = [weakSelf activityStreamArrayFromJSONData:data error:&operationQueueError];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(activityStreamArray, operationQueueError);
@@ -108,8 +108,8 @@
 - (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentAsString:@"personIdentifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     if (nil == listingContext)
     {
@@ -134,7 +134,7 @@
         AlfrescoPagingResult *pagingResult = nil;
         if(nil != data)
         {
-            NSArray *activityStreamArray = [weakSelf parseActivityStreamArrayWithData:data error:&operationQueueError];
+            NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:data error:&operationQueueError];
             if (nil != activityStreamArray)
             {
                 pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
@@ -148,8 +148,8 @@
 
 - (void)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:site argumentAsString:@"site"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -165,7 +165,7 @@
         NSArray *activityStreamArray = nil;
         if(nil != data)
         {
-            activityStreamArray = [weakSelf parseActivityStreamArrayWithData:data error:&operationQueueError];
+            activityStreamArray = [weakSelf activityStreamArrayFromJSONData:data error:&operationQueueError];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(activityStreamArray, operationQueueError);
@@ -177,8 +177,8 @@
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:site argumentAsString:@"site"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     if (nil == listingContext)
     {
@@ -207,7 +207,7 @@
         AlfrescoPagingResult *pagingResult = nil;
         if(nil != data)
         {
-            NSArray *activityStreamArray = [weakSelf parseActivityStreamArrayWithData:data error:&operationQueueError];
+            NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:data error:&operationQueueError];
             if (nil != activityStreamArray)
             {
                 pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
@@ -221,20 +221,20 @@
 
 #pragma mark Activity stream service internal methods
 
-- (NSArray *) parseActivityStreamArrayWithData:(NSData *)data error:(NSError **)outError
+- (NSArray *) activityStreamArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
-//    NSLog(@"parseActivityStreamArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-    NSArray *entriesArray = [AlfrescoObjectConverter parseCloudJSONEntriesFromListData:data error:outError];
+//    NSLog(@"activityStreamArrayFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
     }
@@ -247,12 +247,12 @@
         {
             if (nil == *outError)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+                *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
             }
             else
             {
-                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
-                *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
+                NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+                *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
             }
             return nil;
         }

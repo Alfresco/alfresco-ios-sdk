@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E0457C21608C124005A6C76 /* AlfrescoOAuthData.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E0457C01608C124005A6C76 /* AlfrescoOAuthData.h */; };
+		4E0457C31608C124005A6C76 /* AlfrescoOAuthData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */; };
 		4E2271C715E62675006644DA /* versioned-quote.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E2271C615E62675006644DA /* versioned-quote.txt */; };
 		4E24640F15ED1BC000168C5F /* millenium-dome.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4E24640E15ED1BC000168C5F /* millenium-dome.jpg */; };
 		4E4E379715DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E4E379515DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h */; };
@@ -141,6 +143,8 @@
 		4EF1B72715D944BB0038AB3F /* AlfrescoCloudRatingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EF1B72515D944BB0038AB3F /* AlfrescoCloudRatingService.m */; };
 		4EF1B72A15D944D20038AB3F /* AlfrescoOnPremiseRatingService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF1B72815D944D20038AB3F /* AlfrescoOnPremiseRatingService.h */; };
 		4EF1B72B15D944D20038AB3F /* AlfrescoOnPremiseRatingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EF1B72915D944D20038AB3F /* AlfrescoOnPremiseRatingService.m */; };
+		4EF6F2C31607047800002490 /* AlfrescoOAuthAuthenticationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF6F2C11607047800002490 /* AlfrescoOAuthAuthenticationProvider.h */; settings = {ATTRIBUTES = (); }; };
+		4EF6F2C41607047800002490 /* AlfrescoOAuthAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6F2C21607047800002490 /* AlfrescoOAuthAuthenticationProvider.m */; };
 		82D7617215F023BE007712DE /* CMISAclService.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7612315F023BE007712DE /* CMISAclService.h */; };
 		82D7617315F023BE007712DE /* CMISAllowableActions.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7612415F023BE007712DE /* CMISAllowableActions.h */; };
 		82D7617415F023BE007712DE /* CMISAllowableActionsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7612515F023BE007712DE /* CMISAllowableActionsParser.h */; };
@@ -234,6 +238,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E0457C01608C124005A6C76 /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthData.h; path = OAuth/AlfrescoOAuthData.h; sourceTree = "<group>"; };
+		4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoOAuthData.m; path = OAuth/AlfrescoOAuthData.m; sourceTree = "<group>"; };
 		4E2271C615E62675006644DA /* versioned-quote.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "versioned-quote.txt"; sourceTree = "<group>"; };
 		4E24640E15ED1BC000168C5F /* millenium-dome.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "millenium-dome.jpg"; sourceTree = "<group>"; };
 		4E4E379515DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoPlaceholderTaggingService.h; path = PlaceholderServices/AlfrescoPlaceholderTaggingService.h; sourceTree = "<group>"; };
@@ -384,6 +390,8 @@
 		4EF1B72515D944BB0038AB3F /* AlfrescoCloudRatingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCloudRatingService.m; path = CloudServices/AlfrescoCloudRatingService.m; sourceTree = "<group>"; };
 		4EF1B72815D944D20038AB3F /* AlfrescoOnPremiseRatingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOnPremiseRatingService.h; path = OnPremiseServices/AlfrescoOnPremiseRatingService.h; sourceTree = "<group>"; };
 		4EF1B72915D944D20038AB3F /* AlfrescoOnPremiseRatingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoOnPremiseRatingService.m; path = OnPremiseServices/AlfrescoOnPremiseRatingService.m; sourceTree = "<group>"; };
+		4EF6F2C11607047800002490 /* AlfrescoOAuthAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthAuthenticationProvider.h; sourceTree = "<group>"; };
+		4EF6F2C21607047800002490 /* AlfrescoOAuthAuthenticationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoOAuthAuthenticationProvider.m; sourceTree = "<group>"; };
 		82D7612315F023BE007712DE /* CMISAclService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAclService.h; path = CMIS/CMISAclService.h; sourceTree = SOURCE_ROOT; };
 		82D7612415F023BE007712DE /* CMISAllowableActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActions.h; path = CMIS/CMISAllowableActions.h; sourceTree = SOURCE_ROOT; };
 		82D7612515F023BE007712DE /* CMISAllowableActionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActionsParser.h; path = CMIS/CMISAllowableActionsParser.h; sourceTree = SOURCE_ROOT; };
@@ -489,6 +497,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E0457BE1608C0EE005A6C76 /* OAuth */ = {
+			isa = PBXGroup;
+			children = (
+				4E0457C01608C124005A6C76 /* AlfrescoOAuthData.h */,
+				4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */,
+			);
+			name = OAuth;
+			sourceTree = "<group>";
+		};
 		4E90EE7E15D2729900302F5D /* PlaceholderServices */ = {
 			isa = PBXGroup;
 			children = (
@@ -834,12 +851,15 @@
 		4EB0774C15B00EE700DF7DED /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				4E0457BE1608C0EE005A6C76 /* OAuth */,
 				4E944AF715E3D67F00E89D69 /* OnPremiseSession */,
 				4E944AF615E3D67200E89D69 /* CloudSession */,
 				4EB0774D15B00EE700DF7DED /* AlfrescoAuthenticationProvider.h */,
 				4EB0774E15B00EE700DF7DED /* AlfrescoBasicAuthenticationProvider.h */,
 				4EB0774F15B00EE700DF7DED /* AlfrescoBasicAuthenticationProvider.m */,
 				4EB0775215B00EE700DF7DED /* AlfrescoSession.h */,
+				4EF6F2C11607047800002490 /* AlfrescoOAuthAuthenticationProvider.h */,
+				4EF6F2C21607047800002490 /* AlfrescoOAuthAuthenticationProvider.m */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -902,6 +922,7 @@
 				4EB077D815B00EE800DF7DED /* AlfrescoVersionService.h in Headers */,
 				4E90EE7C15D25F9200302F5D /* AlfrescoConstants.h in Headers */,
 				4E6380CD15B976200010E05F /* AlfrescoISO8601DateFormatter.h in Headers */,
+				4EF6F2C31607047800002490 /* AlfrescoOAuthAuthenticationProvider.h in Headers */,
 				4EB077E015B00EE800DF7DED /* AlfrescoObjectConverter.h in Headers */,
 				4EA6D4E915D2B444004059AF /* AlfrescoSortingUtils.h in Headers */,
 				4E90EE7515D25C3600302F5D /* AlfrescoPagingUtils.h in Headers */,
@@ -1005,6 +1026,7 @@
 				82D761BD15F023BE007712DE /* CMISURLUtil.h in Headers */,
 				82D761BE15F023BE007712DE /* CMISVersioningService.h in Headers */,
 				82D761BF15F023BE007712DE /* CMISWorkspace.h in Headers */,
+				4E0457C21608C124005A6C76 /* AlfrescoOAuthData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1179,6 +1201,8 @@
 				4E944B0615E3D6BA00E89D69 /* AlfrescoCloudSession.m in Sources */,
 				4E944B0815E3D6BA00E89D69 /* AlfrescoCloudSignupRequest.m in Sources */,
 				4EA177EC15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.m in Sources */,
+				4EF6F2C41607047800002490 /* AlfrescoOAuthAuthenticationProvider.m in Sources */,
+				4E0457C31608C124005A6C76 /* AlfrescoOAuthData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1283,7 +1307,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = /AlfrescoSDK;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Debug;
 		};
@@ -1305,7 +1329,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = /AlfrescoSDK;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Release;
 		};
@@ -1320,7 +1344,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = YES;
+				TEST_AFTER_BUILD = NO;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -1336,7 +1360,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = YES;
+				TEST_AFTER_BUILD = NO;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;

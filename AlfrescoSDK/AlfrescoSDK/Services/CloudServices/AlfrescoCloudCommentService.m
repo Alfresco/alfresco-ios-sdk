@@ -35,8 +35,8 @@
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @property (nonatomic, strong)AlfrescoISO8601DateFormatter *dateFormatter;
 
-- (NSArray *) parseCommentArrayWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoComment *) parseCommentDictWithData:(NSData *)data error:(NSError **)outError;
+- (NSArray *) commentArrayFromJSONData:(NSData *)data error:(NSError **)outError;
+- (AlfrescoComment *) alfrescoCommentFromJSONData:(NSData *)data error:(NSError **)outError;
 @end
 
 @implementation AlfrescoCloudCommentService
@@ -69,9 +69,9 @@
 
 - (void)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -89,7 +89,7 @@
         NSArray *sortedCommentArray = nil;
         if(nil != data)
         {
-            NSArray *commentArray = [weakSelf parseCommentArrayWithData:data error:&operationQueueError];
+            NSArray *commentArray = [weakSelf commentArrayFromJSONData:data error:&operationQueueError];
             sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:commentArray sortKey:kAlfrescoSortByCreatedAt ascending:YES];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -102,9 +102,9 @@
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     if (nil == listingContext)
     {
@@ -127,7 +127,7 @@
         AlfrescoPagingResult *pagingResult = nil;
         if(nil != data)
         {
-            NSArray *commentArray = [weakSelf parseCommentArrayWithData:data error:&operationQueueError];
+            NSArray *commentArray = [weakSelf commentArrayFromJSONData:data error:&operationQueueError];
             if (nil != commentArray)
             {
                 NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:commentArray sortKey:kAlfrescoSortByCreatedAt ascending:listingContext.sortAscending];
@@ -143,9 +143,9 @@
 - (void)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content
                    title:(NSString *)title completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -168,7 +168,7 @@
         AlfrescoComment *comment = nil;
         if(nil != data)
         {
-            comment = [weakSelf parseCommentDictWithData:data error:&operationQueueError];
+            comment = [weakSelf alfrescoCommentFromJSONData:data error:&operationQueueError];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(comment, operationQueueError);
@@ -181,11 +181,11 @@
                     content:(NSString *)content
             completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:comment argumentAsString:@"comment"];
-    [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentAsString:@"comment.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:comment argumentName:@"comment"];
+    [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentName:@"comment.identifier"];
 
     __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -212,7 +212,7 @@
         AlfrescoComment *comment = nil;
         if(nil != data)
         {
-            comment = [weakSelf parseCommentDictWithData:data error:&operationQueueError];
+            comment = [weakSelf alfrescoCommentFromJSONData:data error:&operationQueueError];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(comment, operationQueueError);
@@ -224,11 +224,11 @@
                       comment:(AlfrescoComment *)comment
               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:comment argumentAsString:@"comment"];
-    [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentAsString:@"comment.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:comment argumentName:@"comment"];
+    [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentName:@"comment.identifier"];
     
     __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -257,11 +257,11 @@
 
 
 #pragma private methods
-- (NSArray *) parseCommentArrayWithData:(NSData *)data error:(NSError *__autoreleasing *)outError
+- (NSArray *) commentArrayFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
     NSLog(@"parseCommentArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     
-    NSArray *entriesArray = [AlfrescoObjectConverter parseCloudJSONEntriesFromListData:data error:outError];
+    NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {
         return nil;
@@ -275,12 +275,12 @@
         {
             if (nil == *outError)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeComment];
+                *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeComment];
             }
             else
             {
-                NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeComment];
-                *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeComment];
+                NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeComment];
+                *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeComment];
                 
             }
             return nil;
@@ -293,19 +293,19 @@
     return resultsArray;
 }
 
-- (AlfrescoComment *) parseCommentDictWithData:(NSData *)data error:(NSError *__autoreleasing *)outError
+- (AlfrescoComment *) alfrescoCommentFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
-    NSLog(@"parseCommentDictWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    NSLog(@"alfrescoCommentFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     if (nil == data)
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
-            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
             
         }
         return nil;
@@ -315,7 +315,7 @@
     id jsonCommentDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if(nil == jsonCommentDict)
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeComment];
+        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeComment];
         return nil;
     }
     NSDictionary *jsonComment = [jsonCommentDict valueForKey:kAlfrescoCloudJSONEntry];
@@ -323,12 +323,12 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
-            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeComment];
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
     }
