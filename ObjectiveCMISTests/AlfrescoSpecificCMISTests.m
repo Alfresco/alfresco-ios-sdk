@@ -9,6 +9,8 @@
 #import "CMISFolder.h"
 #import "CMISSession.h"
 
+// TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
+
 @implementation AlfrescoSpecificCMISTests
 
 - (NSDictionary *)customCmisParameters
