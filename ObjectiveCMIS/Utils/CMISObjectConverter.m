@@ -24,7 +24,7 @@
 #import "CMISConstants.h"
 
 @interface CMISObjectConverter ()
-@property (nonatomic, strong) CMISSession *session;
+@property (nonatomic, weak) CMISSession *session;
 @end
 
 @implementation CMISObjectConverter
