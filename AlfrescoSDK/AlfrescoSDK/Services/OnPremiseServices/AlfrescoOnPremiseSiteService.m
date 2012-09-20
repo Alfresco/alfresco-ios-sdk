@@ -35,9 +35,9 @@
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
-- (NSArray *) parseSiteArrayWithData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoSite *) parseSiteWithData:(NSData *)data error:(NSError **)outError;
-- (NSArray *) parseFavoriteSitesObjectWithData:(NSData *)data error:(NSError **)outError;
+- (NSArray *) siteArrayFromJSONData:(NSData *)data error:(NSError **)outError;
+- (AlfrescoSite *) alfrescoSiteFromJSONData:(NSData *)data error:(NSError **)outError;
+- (NSArray *) favoriteSitesArrayFromJSONData:(NSData *)data error:(NSError **)outError;
 @end
 
 @implementation AlfrescoOnPremiseSiteService
@@ -73,7 +73,7 @@
 
 - (void)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -89,7 +89,7 @@
         NSArray *sortedSiteArray = nil;
         if(nil != data)
         {
-            NSArray *siteArray = [weakSelf parseSiteArrayWithData:data error:&error];
+            NSArray *siteArray = [weakSelf siteArrayFromJSONData:data error:&error];
             sortedSiteArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray sortKey:self.defaultSortKey ascending:YES];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -103,7 +103,7 @@
 - (void)retrieveAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
                            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -123,7 +123,7 @@
         AlfrescoPagingResult *pagingResult = nil;
         if(nil != data)
         {
-            siteArray = [weakSelf parseSiteArrayWithData:data error:&error];
+            siteArray = [weakSelf siteArrayFromJSONData:data error:&error];
             if (nil != siteArray)
             {
                 NSArray *sortedSiteArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray
@@ -142,7 +142,7 @@
 
 - (void)retrieveSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -157,7 +157,7 @@
         NSArray *sortedSiteArray = nil;
         if(nil != data)
         {
-            NSArray *siteArray = [weakSelf parseSiteArrayWithData:data error:&operationQueueError];
+            NSArray *siteArray = [weakSelf siteArrayFromJSONData:data error:&operationQueueError];
             sortedSiteArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray sortKey:self.defaultSortKey ascending:YES];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -169,7 +169,7 @@
 - (void)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -191,7 +191,7 @@
         AlfrescoPagingResult *pagingResult = nil;
         if(nil != data)
         {
-            siteArray = [weakSelf parseSiteArrayWithData:data error:&operationQueueError];
+            siteArray = [weakSelf siteArrayFromJSONData:data error:&operationQueueError];
             if (nil != siteArray)
             {
                 NSArray *sortedSiteArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray
@@ -211,7 +211,7 @@
 
 - (void)retrieveFavoriteSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -234,11 +234,11 @@
         NSArray *favoriteSitesArray = nil;
         if(nil != allSitesData)
         {
-            allSitesArray = [weakSelf parseSiteArrayWithData:allSitesData error:&operationQueueError];
+            allSitesArray = [weakSelf siteArrayFromJSONData:allSitesData error:&operationQueueError];
         }
         if (nil != favoriteSitesdata)
         {
-            favoriteSitesArray = [weakSelf parseFavoriteSitesObjectWithData:favoriteSitesdata error:&operationQueueError];
+            favoriteSitesArray = [weakSelf favoriteSitesArrayFromJSONData:favoriteSitesdata error:&operationQueueError];
         }
         if (nil != favoriteSitesArray && nil != allSitesArray)
         {
@@ -261,7 +261,7 @@
 - (void)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
                                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -288,11 +288,11 @@
         NSArray *favoriteSitesArray = nil;
         if(nil != allSitesData)
         {
-            allSitesArray = [weakSelf parseSiteArrayWithData:allSitesData error:&operationQueueError];
+            allSitesArray = [weakSelf siteArrayFromJSONData:allSitesData error:&operationQueueError];
         }
         if (nil != favoriteSitesdata)
         {
-            favoriteSitesArray = [weakSelf parseFavoriteSitesObjectWithData:favoriteSitesdata error:&operationQueueError];
+            favoriteSitesArray = [weakSelf favoriteSitesArrayFromJSONData:favoriteSitesdata error:&operationQueueError];
         }
         if (nil != favoriteSitesArray && nil != allSitesArray)
         {
@@ -335,8 +335,8 @@
 - (void)retrieveSiteWithShortName:(NSString *)siteShortName
                   completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:siteShortName argumentAsString:@"siteShortName"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:siteShortName argumentName:@"siteShortName"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -350,7 +350,7 @@
         AlfrescoSite *site = nil;
         if(nil != data)
         {
-            site = [weakSelf parseSiteWithData:data error:&operationQueueError];
+            site = [weakSelf alfrescoSiteFromJSONData:data error:&operationQueueError];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(site, operationQueueError);
@@ -362,8 +362,8 @@
 - (void)retrieveDocumentLibraryFolderForSite:(NSString *)siteShortName
                              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:siteShortName argumentAsString:@"siteShortName"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:siteShortName argumentName:@"siteShortName"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -406,7 +406,7 @@
         {
             if(nil == operationQueueError)
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSitesNoDocLib];
+                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSitesNoDocLib];
             }
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -418,18 +418,18 @@
 
 
 #pragma mark Site service internal methods
-- (NSArray *) parseSiteArrayWithData:(NSData *)data error:(NSError **)outError
+- (NSArray *) siteArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
     if (nil == data)
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
-            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         return nil;
     }
@@ -437,7 +437,7 @@
     id jsonSiteArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if(error)
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
     if ([jsonSiteArray isKindOfClass:[NSArray class]] == NO)
@@ -451,12 +451,12 @@
         {
             if (nil == *outError)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSitesNoSites];
+                *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSitesNoSites];
             }
             else
             {
-                NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSitesNoSites];
-                *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+                NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSitesNoSites];
+                *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeSitesNoSites];
             }
             return nil;
         }
@@ -470,18 +470,18 @@
     return resultArray;
 }
 
-- (AlfrescoSite *) parseSiteWithData:(NSData *)data error:(NSError **)outError
+- (AlfrescoSite *) alfrescoSiteFromJSONData:(NSData *)data error:(NSError **)outError
 {
     if (nil == data)
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
-            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         return nil;
     }
@@ -489,19 +489,19 @@
     id jsonSite = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if(error)
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
     if ([jsonSite isKindOfClass:[NSDictionary class]] == NO)
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
     }
@@ -513,18 +513,18 @@
     return [[AlfrescoSite alloc] initWithProperties:jsonSite];
 }
 
-- (NSArray *) parseFavoriteSitesObjectWithData:(NSData *)data error:(NSError **)outError
+- (NSArray *) favoriteSitesArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
     if (nil == data)
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
-            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         return nil;
     }
@@ -532,19 +532,19 @@
     id favoriteSitesObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if(error)
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeSites];
+        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
     if ([favoriteSitesObject isKindOfClass:[NSDictionary class]] == NO)
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
     }

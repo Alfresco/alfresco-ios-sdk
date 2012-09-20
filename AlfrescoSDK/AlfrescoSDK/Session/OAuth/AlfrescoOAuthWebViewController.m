@@ -1,0 +1,322 @@
+/*******************************************************************************
+ * Copyright (C) 2005-2012 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Mobile SDK.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ******************************************************************************/
+
+#import "AlfrescoOAuthWebViewController.h"
+#import "AlfrescoInternalConstants.h"
+#import "AlfrescoErrors.h"
+
+@interface AlfrescoOAuthWebViewController ()
+@property (nonatomic, strong, readwrite) NSString *apiKey;
+@property (nonatomic, strong, readwrite) NSString *secretKey;
+@property (nonatomic, strong, readwrite) NSString *redirectURI;
+@property (nonatomic, strong, readwrite) NSURLConnection    * connection;
+@property (nonatomic, strong, readwrite) NSMutableData      * receivedData;
+@property (nonatomic, copy, readwrite) AlfrescoOAuthCompletionBlock completionBlock;
+@property BOOL isLoginScreenLoad;
+- (void)loadWebView;
+- (AlfrescoOAuthData *)oauthDataFromJSONResponseWithError:(NSError **)outError;
+- (NSString *)authorizationCodeFromURL:(NSURL *)url;
+- (void)authenticateWithAuthorisationCode:(NSString *)code;
+@end
+
+@implementation AlfrescoOAuthWebViewController
+@synthesize webView = _webView;
+@synthesize apiKey = _apiKey;
+@synthesize secretKey = _secretKey;
+@synthesize redirectURI = _redirectURI;
+@synthesize isLoginScreenLoad = _isLoginScreenLoad;
+@synthesize connection = _connection;
+@synthesize receivedData = _receivedData;
+@synthesize completionBlock = _completionBlock;
+
+
+- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.apiKey = apiKey;
+        self.secretKey = secretKey;
+        self.redirectURI = redirectURI;
+        self.completionBlock = completionBlock;
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.isLoginScreenLoad = YES;
+    [self loadWebView];
+}
+
+
+
+- (void)viewDidUnload
+{
+    self.apiKey = nil;
+    self.secretKey = nil;
+    self.redirectURI = nil;
+    [super viewDidUnload];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma private methods
+- (void)loadWebView
+{
+    self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+    self.webView.delegate = self;
+    [self.view addSubview:self.webView];
+    
+    NSMutableString *stagingURLString = [NSMutableString string];
+    [stagingURLString appendString:kAlfrescoOAuthAuthorizeURL];
+    [stagingURLString appendString:@"?"];
+    [stagingURLString appendString:[kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.apiKey]];
+    [stagingURLString appendString:@"&"];
+    [stagingURLString appendString:[kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.redirectURI]];
+    [stagingURLString appendString:@"&"];
+    [stagingURLString appendString:kAlfrescoOAuthScope];
+    [stagingURLString appendString:@"&"];
+    [stagingURLString appendString:kAlfrescoOAuthResponseType];
+    
+    NSURL *stagingURL = [NSURL URLWithString:stagingURLString];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:stagingURL]];
+}
+
+- (void)authenticateWithAuthorisationCode:(NSString *)code
+{
+    NSLog(@"IN authenticateWithAuthorisationCode:%@",code);
+    NSURL *url = [NSURL URLWithString:kAlfrescoOAuthTokenURL];
+    [self.connection cancel];
+    self.connection = nil;
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
+                                                           cachePolicy: NSURLRequestReloadIgnoringCacheData
+                                                       timeoutInterval: 60];
+    
+    [request setHTTPMethod:@"POST"];
+    
+    NSMutableString *contentString = [NSMutableString string];
+    NSString *codeID   = [kAlfrescoOAuthCode stringByReplacingOccurrencesOfString:kAlfrescoCode withString:code];
+    NSString *clientID = [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.apiKey];
+    NSString *secretID = [kAlfrescoOAuthClientSecret stringByReplacingOccurrencesOfString:kAlfrescoClientSecret withString:self.secretKey];
+    NSString *redirect = [kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.redirectURI];
+    
+    [contentString appendString:codeID];
+    [contentString appendString:@"&"];
+    [contentString appendString:clientID];
+    [contentString appendString:@"&"];
+    [contentString appendString:secretID];
+    [contentString appendString:@"&"];
+    [contentString appendString:kAlfrescoOAuthGrantType];
+    [contentString appendString:@"&"];
+    [contentString appendString:redirect];
+    
+    NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:data];
+    
+    self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
+    
+}
+
+
+
+- (AlfrescoOAuthData *)oauthDataFromJSONResponseWithError:(NSError **)outError
+{
+    if (nil == self.receivedData)
+    {
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+        }
+        return nil;
+    }
+    if (0 == self.receivedData.length)
+    {
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+        }
+        return nil;
+    }
+    NSError *error = nil;
+    id jsonDictionary = [NSJSONSerialization JSONObjectWithData:self.receivedData options:kNilOptions error:&error];
+    if (nil == jsonDictionary)
+    {
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+        }
+        else
+        {
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+        }
+        return nil;
+    }
+    
+    if (![jsonDictionary isKindOfClass:[NSDictionary class]])
+    {
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        return nil;
+    }
+    
+    if ([[jsonDictionary allKeys] containsObject:kAlfrescoJSONError])
+    {
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        return nil;
+    }
+    
+    AlfrescoOAuthData *oauthData = [[AlfrescoOAuthData alloc] initWithOAuthData:jsonDictionary];
+    return oauthData;
+}
+
+- (NSString *)authorizationCodeFromURL:(NSURL *)url
+{
+    if (nil == url)
+    {
+        return nil;
+    }
+    NSArray *components = [[url absoluteString] componentsSeparatedByString:@"code="];
+    if (2 == components.count)
+    {
+        self.receivedData = [NSMutableData data];
+        NSString *codeString = [components objectAtIndex:1];
+        NSArray *codeComponents = [codeString componentsSeparatedByString:@"&"];
+        if (codeComponents.count > 0)
+        {
+            return [codeComponents objectAtIndex:0];
+        }
+        
+    }
+    return nil;
+}
+
+
+#pragma WebViewDelegate methods
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    NSLog(@"UIWebviewDelegate webViewDidFinishLoad");
+    if (self.isLoginScreenLoad)
+    {
+        self.isLoginScreenLoad = NO;
+    }
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    NSLog(@"UIWebviewDelegate shouldStartLoadWithRequest");
+    if (!self.isLoginScreenLoad)
+    {
+        self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
+        return NO;
+    }
+    return YES;
+}
+
+
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+    NSLog(@"UIWebviewDelegate webViewDidStartLoad");
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    NSLog(@"UIWebviewDelegate didFailLoadWithError");
+    NSLog(@"Error occurred while loading page: %@ with code %d and reason %@", [error localizedDescription], [error code], [error localizedFailureReason]);
+}
+
+#pragma NSURLConnection Delegate methods
+/**
+ this method is used to receive the JSON data back from the server as a response to the 2nd call. The expected
+ JSON data should contain access/refresh token
+ */
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    if (nil != data && data.length > 0)
+    {
+        NSError *error = nil;
+        id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (nil != jsonObj)
+        {
+            if ([jsonObj isKindOfClass:[NSDictionary class]])
+            {
+                [self.receivedData appendBytes:[data bytes] length:data.length];
+            }
+            
+        }
+    }
+    
+}
+
+/**
+ this method is used for extracting the authentication code we receive back from the server when we
+ first submit username/password
+ */
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    NSString *code = [self authorizationCodeFromURL:response.URL];
+    if (nil != code)
+    {
+        [self authenticateWithAuthorisationCode:code];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    self.completionBlock(nil, error);
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    NSError *error = nil;
+    AlfrescoOAuthData *oauthData = [self oauthDataFromJSONResponseWithError:&error];
+    self.completionBlock(oauthData, error);
+}
+
+@end

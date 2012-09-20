@@ -17,7 +17,10 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-
+#define APIKEY @"l7xx6f56d3e7e94343afb788f4d6a148e8da"
+#define SECRETKEY @"275263c89d9044dd8c5aebb99188e1bb"
+#define BASEURL @"https://api.alfresco.com/auth/oauth/versions/2/authorize"
+#define REDIRECT @"http://localhost:8080/alfoauthsample/mycallback.html"
 @interface HelloRepoViewController : UITableViewController
 
 @end

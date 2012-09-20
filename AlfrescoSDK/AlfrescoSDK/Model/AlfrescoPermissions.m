@@ -49,7 +49,7 @@
 
 - (id)initWithPermissions:(NSSet *)permissionsSet
 {
-    self = [super init];
+    self = [self init];
     if (self) 
     {
         self.canEdit = [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanUpdateProperties]];

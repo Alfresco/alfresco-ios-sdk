@@ -67,6 +67,10 @@ extern NSString * const kAlfrescoAspectPropertyDefinitionId;
 extern NSString * const kAlfrescoPagingRequest;
 extern NSString * const kAlfrescoSkipCountRequest;
 extern NSString * const kAlfrescoMaxItemsRequest;
+extern NSString * const kAlfrescoClientID;
+extern NSString * const kAlfrescoClientSecret;
+extern NSString * const kAlfrescoCode;
+extern NSString * const kAlfrescoRedirectURI;
 
 /**
  Session data key constants
@@ -77,6 +81,27 @@ extern NSString * const kAlfrescoSessionKeyCmisSession;
  Associated object key constants
  */
 extern NSString * const kAlfrescoAuthenticationProviderObjectKey;
+
+/**
+ OAuth Constants
+ */
+extern NSString *const kAlfrescoJSONAccessToken;
+extern NSString *const kAlfrescoJSONRefreshToken;
+extern NSString *const kAlfrescoJSONTokenType;
+extern NSString *const kAlfrescoJSONExpiresIn;
+extern NSString *const kAlfrescoJSONScope;
+extern NSString *const kAlfrescoJSONError;
+extern NSString *const kAlfrescoJSONErrorDescription;
+extern NSString *const kAlfrescoOAuthClientID;
+extern NSString *const kAlfrescoOAuthClientSecret;
+extern NSString *const kAlfrescoOAuthGrantType;
+extern NSString *const kAlfrescoOAuthRedirectURI;
+extern NSString *const kAlfrescoOAuthCode;
+extern NSString *const kAlfrescoOAuthAuthorizeURL;
+extern NSString *const kAlfrescoOAuthTokenURL;
+extern NSString *const kAlfrescoOAuthScope;
+extern NSString *const kAlfrescoOAuthResponseType;
+
 
 /**
  On Premise constants
@@ -111,6 +136,8 @@ extern NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI;
 /**
  Cloud constants
  */
+extern NSString * const kAlfrescoOAuthCloudURL;
+extern NSString * const kAlfrescoOAuthTestCloudURL;
 extern NSString * const kAlfrescoCloudURL;
 extern NSString * const kAlfrescoTestCloudURL;
 extern NSString * const kAlfrescoCloudBindingService;

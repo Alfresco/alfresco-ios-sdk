@@ -19,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4EDBAD3C160B251C00D6305F /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthData.h; sourceTree = "<group>"; };
+		4EDBAD3D160B251C00D6305F /* AlfrescoOAuthWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthWebViewController.h; sourceTree = "<group>"; };
 		8266A58F15E820370070B3D3 /* libAlfrescoSDKv0.0.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAlfrescoSDKv0.0.1.a; sourceTree = "<group>"; };
 		82FC410F15E7AC7D0081888D /* HelloRepo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloRepo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82FC411315E7AC7D0081888D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -139,6 +141,8 @@
 		82FC413A15E7B3E30081888D /* AlfrescoSDK */ = {
 			isa = PBXGroup;
 			children = (
+				4EDBAD3C160B251C00D6305F /* AlfrescoOAuthData.h */,
+				4EDBAD3D160B251C00D6305F /* AlfrescoOAuthWebViewController.h */,
 				82FC413B15E7B3E30081888D /* AlfrescoActivityEntry.h */,
 				82FC413C15E7B3E30081888D /* AlfrescoActivityStreamService.h */,
 				82FC413D15E7B3E30081888D /* AlfrescoCloudNetwork.h */,

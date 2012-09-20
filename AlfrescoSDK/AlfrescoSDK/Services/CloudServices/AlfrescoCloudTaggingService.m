@@ -31,7 +31,7 @@
 @property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
-- (NSArray *) parseTagArrayWithData:(NSData *)data error:(NSError **)outError;
+- (NSArray *) tagArrayFromJSONData:(NSData *)data error:(NSError **)outError;
 //- (AlfrescoTag *)tagFromJSON:(NSDictionary *)jsonDict;
 @end
 
@@ -64,7 +64,7 @@
 
 - (void)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     NSAssert(nil != completionBlock, @"completionBlock must not be nil");
     __weak AlfrescoCloudTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -78,7 +78,7 @@
         NSArray *tagArray = nil;
         if(nil != data)
         {
-            tagArray = [weakSelf parseTagArrayWithData:data error:&operationQueueError];
+            tagArray = [weakSelf tagArrayFromJSONData:data error:&operationQueueError];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(tagArray, operationQueueError);
@@ -89,7 +89,7 @@
 - (void)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext
                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -108,7 +108,7 @@
         AlfrescoPagingResult *pagingResult = nil;
         if(nil != data)
         {
-            NSArray *tagArray = [weakSelf parseTagArrayWithData:data error:&operationQueueError];
+            NSArray *tagArray = [weakSelf tagArrayFromJSONData:data error:&operationQueueError];
             if (nil != tagArray)
             {
                 pagingResult = [AlfrescoPagingUtils pagedResultFromArray:tagArray listingContext:listingContext];
@@ -123,9 +123,9 @@
 - (void)retrieveTagsForNode:(AlfrescoNode *)node
             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudTaggingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -142,7 +142,7 @@
         NSArray *tagArray = nil;
         if(nil != data)
         {
-            tagArray = [weakSelf parseTagArrayWithData:data error:&operationQueueError];
+            tagArray = [weakSelf tagArrayFromJSONData:data error:&operationQueueError];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(tagArray, operationQueueError);
@@ -153,9 +153,9 @@
 - (void)retrieveTagsForNode:(AlfrescoNode *)node listingContext:(AlfrescoListingContext *)listingContext
             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -178,7 +178,7 @@
         if(nil != data)
         {
             // the node tags service returns an invalid JSON array, therefore parsing it ourselves
-            NSArray *tagArray = [weakSelf parseTagArrayWithData:data error:&operationQueueError];
+            NSArray *tagArray = [weakSelf tagArrayFromJSONData:data error:&operationQueueError];
             if (nil != tagArray)
             {
                 pagingResult = [AlfrescoPagingUtils pagedResultFromArray:tagArray listingContext:listingContext];
@@ -195,10 +195,10 @@
 - (void)addTags:(NSArray *)tags toNode:(AlfrescoNode *)node
 completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:tags argumentAsString:@"tags"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:tags argumentName:@"tags"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     if (0 == tags.count)
     {
@@ -251,10 +251,10 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 
 #pragma mark Site service internal methods
 
-- (NSArray *) parseTagArrayWithData:(NSData *)data error:(NSError **)outError
+- (NSArray *) tagArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {    
-    NSLog(@"parseTagArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-    NSArray *entriesArray = [AlfrescoObjectConverter parseCloudJSONEntriesFromListData:data error:outError];
+    NSLog(@"tagArrayFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {
         return nil;
@@ -268,12 +268,12 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
         {
             if (nil == *outError)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTaggingNoTags];
+                *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeTaggingNoTags];
             }
             else
             {
-                NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeTaggingNoTags];
-                *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
+                NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeTaggingNoTags];
+                *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeTaggingNoTags];
                 
             }
             return nil;

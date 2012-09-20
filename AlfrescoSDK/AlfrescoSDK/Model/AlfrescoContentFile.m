@@ -22,7 +22,7 @@
 #import <math.h>
 
 @interface AlfrescoContentFile ()
-+ (NSString *) detectMimeTypeFromFilename:(NSString *)filename;
++ (NSString *) mimeTypeFromFilename:(NSString *)filename;
 + (NSString *) GUIDString;
 @property (nonatomic, strong, readwrite) NSString *mimeType;
 @property (nonatomic, assign, readwrite) NSUInteger length;
@@ -34,6 +34,12 @@
 @synthesize mimeType = _mimeType;
 @synthesize length = _length;
 
+- (id)init
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (id)initWithUrl:(NSURL *)url
 {
     self = [super init];
@@ -41,7 +47,7 @@
     {
         NSString *filename = [url lastPathComponent];
 
-        self.mimeType = [AlfrescoContentFile detectMimeTypeFromFilename:filename];
+        self.mimeType = [AlfrescoContentFile mimeTypeFromFilename:filename];
         NSString *pathname = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",filename];
         NSData *fileContent = [NSData dataWithContentsOfURL:url]; 
 
@@ -93,7 +99,7 @@
 
 
 #pragma mark - private methods
-+ (NSString *)detectMimeTypeFromFilename:(NSString *)filename
++ (NSString *)mimeTypeFromFilename:(NSString *)filename
 {
     NSRange extensionRange = [filename rangeOfString:@"." options:NSBackwardsSearch];
     if (NSNotFound == extensionRange.location) 

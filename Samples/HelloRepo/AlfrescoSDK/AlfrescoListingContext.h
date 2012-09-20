@@ -27,19 +27,19 @@
 
 
 /// Returns the sorting field for the list.
-@property (nonatomic, strong) NSString *sortProperty;
+@property (nonatomic, strong, readonly) NSString *sortProperty;
 
 
 /// Returns the sorting direction.
-@property (nonatomic, assign) BOOL sortAscending;
+@property (nonatomic, assign, readonly) BOOL sortAscending;
 
 
 /// Returns the maximum items within the list.
-@property (nonatomic, assign) int maxItems;
+@property (nonatomic, assign, readonly) int maxItems;
 
 
 /// Returns current skip count.
-@property (nonatomic, assign) int skipCount;
+@property (nonatomic, assign, readonly) int skipCount;
 
 - (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount;
 
