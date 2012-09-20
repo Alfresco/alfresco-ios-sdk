@@ -31,7 +31,7 @@
 @property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
-- (AlfrescoPerson *)parsePersonArrayWithData:(NSData *)data error:(NSError **)outError;
+- (AlfrescoPerson *)alfrescoPersonFromJSONData:(NSData *)data error:(NSError **)outError;
 //- (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict;
 @end
 
@@ -63,8 +63,8 @@
 }
 - (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:identifier argumentAsString:@"identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudPersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -82,7 +82,7 @@
         AlfrescoPerson *person = nil;
         if (nil != data)
         {
-            person = [weakSelf parsePersonArrayWithData:data error:&operationQueueError];
+            person = [weakSelf alfrescoPersonFromJSONData:data error:&operationQueueError];
         }
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -94,14 +94,14 @@
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:person argumentAsString:@"person"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:person argumentName:@"person"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudPersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         if (nil == person.avatarIdentifier)
         {
-            NSError * error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePerson];
+            NSError * error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePerson];
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 completionBlock(nil, error);
             }];
@@ -131,20 +131,20 @@
 }
 
 #pragma mark - private methods
-- (AlfrescoPerson *) parsePersonArrayWithData:(NSData *)data error:(NSError *__autoreleasing *)outError
+- (AlfrescoPerson *) alfrescoPersonFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
-    NSLog(@"parsePersonArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-    NSDictionary *entryDict = [AlfrescoObjectConverter parseCloudJSONEntryFromListData:data error:outError];
+    NSLog(@"alfrescoPersonFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    NSDictionary *entryDict = [AlfrescoObjectConverter dictionaryJSONEntryFromListData:data error:outError];
     if (nil == entryDict)
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
-            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodePerson];
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
             
         }
         return nil;

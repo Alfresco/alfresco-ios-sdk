@@ -30,7 +30,7 @@
 @property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
-- (AlfrescoPerson *) parsePersonArrayWithData:(NSData *)data error:(NSError **)outError;
+- (AlfrescoPerson *) alfrescoPersonFromJSONData:(NSData *)data error:(NSError **)outError;
 @end
 
 
@@ -61,8 +61,8 @@
 }
 - (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:identifier argumentAsString:@"identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     __weak AlfrescoOnPremisePersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -81,7 +81,7 @@
         AlfrescoPerson *person = nil;
         if (nil != data)
         {
-            person = [weakSelf parsePersonArrayWithData:data error:&operationQueueError];
+            person = [weakSelf alfrescoPersonFromJSONData:data error:&operationQueueError];
         }
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -94,8 +94,8 @@
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:person argumentAsString:@"person"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:person argumentName:@"person"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoOnPremisePersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -122,18 +122,18 @@
 }
 
 #pragma mark - private methods
-- (AlfrescoPerson *) parsePersonArrayWithData:(NSData *)data error:(NSError *__autoreleasing *)outError
+- (AlfrescoPerson *) alfrescoPersonFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
     if (nil == data)
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         else
         {
-            NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsingNilData];
-            *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
         return nil;
     }
@@ -142,7 +142,7 @@
     id jsonPersonDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if(nil == jsonPersonDict)
     {
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodePerson];
+        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodePerson];
         return nil;
     }
     if ([[jsonPersonDict valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
@@ -150,12 +150,12 @@
         // no person found
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePersonNotFound];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePersonNotFound];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodePersonNotFound];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodePersonNotFound];
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePersonNotFound];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodePersonNotFound];
         }
         return nil;
     }
@@ -163,12 +163,12 @@
     {
         if (nil == *outError)
         {
-            *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
-            *outError = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
     }

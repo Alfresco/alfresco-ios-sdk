@@ -101,10 +101,10 @@
 - (void)createFolderWithName:(NSString *)folderName inParentFolder:(AlfrescoFolder *)folder properties:(NSDictionary *)properties 
              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 {
-    [AlfrescoErrors assertArgumentNotNil:folder argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentAsString:@"folder.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:folderName argumentAsString:@"folderName"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:folderName argumentName:@"folderName"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     if(properties == nil)
     {
@@ -151,12 +151,12 @@
                     completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                     progressBlock:(AlfrescoProgressBlock)progressBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:file argumentAsString:@"file"];
-    [AlfrescoErrors assertArgumentNotNil:folder argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentAsString:@"folder.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:documentName argumentAsString:@"folderName"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:progressBlock argumentAsString:@"progressBlock"];
+    [AlfrescoErrors assertArgumentNotNil:file argumentName:@"file"];
+    [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:documentName argumentName:@"folderName"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:progressBlock argumentName:@"progressBlock"];
 
     if(properties == nil)
     {
@@ -202,7 +202,7 @@
                 
             }
             failureBlock:^(NSError *error){
-             NSError *alfrescoError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+             NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
              [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                  completionBlock(nil, alfrescoError);
              }];
@@ -223,7 +223,7 @@
 #pragma mark - Retrieval methods
 - (void)retrieveRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -245,9 +245,9 @@
 - (void)retrievePermissionsOfNode:(AlfrescoNode *)node 
                   completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     [self retrieveNodeWithIdentifier:node.identifier completionBlock:^(AlfrescoNode *retrievedNode, NSError *error){
         if (nil == retrievedNode)
@@ -267,7 +267,7 @@
             }
             else
             {
-                error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderPermissions];
+                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderPermissions];
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     completionBlock(nil, error);
                 }];
@@ -280,9 +280,9 @@
 - (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder 
                  completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:folder argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentAsString:@"folder.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -316,9 +316,9 @@
                   listingContext:(AlfrescoListingContext *)listingContext
                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:folder argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentAsString:@"folder.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -363,9 +363,9 @@
 - (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder 
                   completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:folder argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentAsString:@"folder.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -395,9 +395,9 @@
                    listingContext:(AlfrescoListingContext *)listingContext
                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:folder argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentAsString:@"folder.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -436,9 +436,9 @@
 - (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder 
                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:folder argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentAsString:@"folder.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -467,9 +467,9 @@
 - (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:folder argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentAsString:@"folder.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
@@ -508,8 +508,8 @@
 - (void)retrieveNodeWithIdentifier:(NSString *)identifier
                 completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:identifier argumentAsString:@"identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -522,7 +522,7 @@
             alfrescoNode = [weakSelf.objectConverter nodeFromCMISObject:cmisObject];
             if (nil == alfrescoNode) 
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNilFolder];
+                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNilFolder];
             }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -534,8 +534,8 @@
 - (void)retrieveNodeWithFolderPath:(NSString *)path 
                    completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:path argumentAsString:@"path"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:path argumentName:@"path"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -548,7 +548,7 @@
             alfrescoNode = [weakSelf.objectConverter nodeFromCMISObject:cmisObject];
             if (nil == alfrescoNode) 
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNilFolder];
+                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNilFolder];
             }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -560,10 +560,10 @@
 - (void)retrieveNodeWithFolderPath:(NSString *)path relativeToFolder:(AlfrescoFolder *)folder 
                    completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:path argumentAsString:@"path"];
-    [AlfrescoErrors assertArgumentNotNil:folder argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentAsString:@"folder.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:path argumentName:@"path"];
+    [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -588,9 +588,9 @@
 - (void)retrieveParentFolderOfNode:(AlfrescoNode *)node
              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -611,7 +611,7 @@
             }
             if (nil == folder) 
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoParent];
+                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNoParent];
             }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -624,9 +624,9 @@
                 completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:renditionName argumentAsString:@"renditionName"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"folder"];
+    [AlfrescoErrors assertArgumentNotNil:renditionName argumentName:@"renditionName"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -643,14 +643,14 @@
             NSArray *renditions = document.renditions;
             if (nil == renditions)
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
+                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     completionBlock(nil, operationQueueError);
                 }];
             }
             else if( 0 == renditions.count)
             {
-                operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
+                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     completionBlock(nil, operationQueueError);
                 }];
@@ -718,9 +718,9 @@
                   completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
                     progressBlock:(AlfrescoProgressBlock)progressBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:document argumentAsString:@"document"];
-    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentAsString:@"document.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     NSString *tmpFile = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",document.name];
     [self.cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^{
@@ -755,10 +755,10 @@
                 completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                   progressBlock:(AlfrescoProgressBlock)progressBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:file argumentAsString:@"file"];
-    [AlfrescoErrors assertArgumentNotNil:document argumentAsString:@"document"];
-    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentAsString:@"document.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:file argumentName:@"file"];
+    [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -777,7 +777,7 @@
                     resultDocument = (AlfrescoDocument *)[weakSelf.objectConverter nodeFromCMISObject:resultCmisDocument];
                     if (nil == resultDocument)
                     {
-                        anotherError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNilDocument];
+                        anotherError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNilDocument];
                     }
                 }
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -800,7 +800,7 @@
         }
         else
         {
-            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
+            operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
         }
         
         if(nil != operationQueueError)
@@ -818,10 +818,10 @@
                 properties:(NSDictionary *)properties
                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:properties argumentAsString:@"properties"];
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:properties argumentName:@"properties"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -839,7 +839,7 @@
                 resultNode = [weakSelf.objectConverter nodeFromCMISObject:resultCmisObject];
                 if (nil == resultNode)
                 {
-                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
+                    operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
                 }
             }
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -848,7 +848,7 @@
         }
         else
         {
-            operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
+            operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
         }
         
         if(operationQueueError)
@@ -865,9 +865,9 @@
 
 - (void)deleteNode:(AlfrescoNode *)node completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock 
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifer"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
        
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -893,12 +893,12 @@
     {
         if (nil == *error)
         {
-            *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderWrongNodeType];
+            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderWrongNodeType];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderWrongNodeType];
-            *error = [AlfrescoErrors alfrescoError:underlyingError withAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderWrongNodeType];
+            *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
             
         }
         return nil;

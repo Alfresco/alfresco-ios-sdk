@@ -70,11 +70,11 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
 
 
 @interface AlfrescoErrors ()
-+ (NSString *)localizedDescriptionForCode:(NSInteger)code;
++ (NSString *)descriptionForAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 @end
 
 @implementation AlfrescoErrors
-+ (NSError *)alfrescoError:(NSError *)error withAlfrescoErrorCode:(AlfrescoErrorCodes)code
++ (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code
 {
     if (error == nil) {//shouldn't really get there
         return nil;
@@ -83,32 +83,32 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
         return error;
     }
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:[AlfrescoErrors localizedDescriptionForCode:code] forKey:NSLocalizedDescriptionKey];
+    [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
     [errorInfo setObject:error forKey:NSUnderlyingErrorKey];
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];    
 }
 
-+ (NSError *)createAlfrescoErrorWithCode:(AlfrescoErrorCodes)code
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code
 {
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:[AlfrescoErrors localizedDescriptionForCode:code] forKey:NSLocalizedDescriptionKey];
-    NSString *standardDescription = [AlfrescoErrors localizedDescriptionForCode:code];
+    [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
+    NSString *standardDescription = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
     [errorInfo setValue:standardDescription forKey:NSLocalizedFailureReasonErrorKey];    
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];    
 }
 
-+ (void)assertArgumentNotNil:(id)argument argumentAsString:(NSString *)argumentString
++ (void)assertArgumentNotNil:(id)argument argumentName:(NSString *)argumentName
 {
     if (nil == argument)
     {
-        NSString * message = [NSString stringWithFormat:@"%@ must not be nil",argumentString];
+        NSString * message = [NSString stringWithFormat:@"%@ must not be nil",argumentName];
         NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:message userInfo:nil];
         @throw exception;
     }
 }
 
 
-+ (NSString *)localizedDescriptionForCode:(NSInteger)code
++ (NSString *)descriptionForAlfrescoErrorCode:(AlfrescoErrorCodes)code
 {
     switch (code) {
         case kAlfrescoErrorCodeUnknown:

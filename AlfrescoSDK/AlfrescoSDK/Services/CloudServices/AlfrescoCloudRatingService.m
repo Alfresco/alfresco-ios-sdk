@@ -30,7 +30,7 @@
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
-- (NSDictionary *) parseRatingsDictionaryWithData:(NSData *)data error:(NSError **)outError;
+- (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError;
 
 @end
 
@@ -61,9 +61,9 @@
 - (void)retrieveLikeCountForNode:(AlfrescoNode *)node
                  completionBlock:(AlfrescoNumberCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -79,7 +79,7 @@
         NSNumber *count = nil;
         if(nil != data)
         {
-            NSDictionary *ratingsDict = [weakSelf parseRatingsDictionaryWithData:data error:&operationQueueError];
+            NSDictionary *ratingsDict = [weakSelf dictionaryFromJSONData:data error:&operationQueueError];
             if (nil == ratingsDict)
             {
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -96,7 +96,7 @@
                 }
                 else
                 {
-                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings];
+                    operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeRatings];
                 }
             }
         }
@@ -109,9 +109,9 @@
 
 - (void)isNodeLiked:(AlfrescoNode *)node completionBlock:(AlfrescoLikedCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -132,7 +132,7 @@
         BOOL liked = NO;
         if(nil != data)
         {
-            NSDictionary *ratingsDict = [weakSelf parseRatingsDictionaryWithData:data error:&operationQueueError];
+            NSDictionary *ratingsDict = [weakSelf dictionaryFromJSONData:data error:&operationQueueError];
             if (nil == ratingsDict)
             {
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -155,7 +155,7 @@
                 }
                 else
                 {
-                    operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings];
+                    operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeRatings];
                     success = NO;
                 }
                 
@@ -176,9 +176,9 @@
 - (void)likeNode:(AlfrescoNode *)node
  completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -224,9 +224,9 @@
 - (void)unlikeNode:(AlfrescoNode *)node
    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentAsString:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentAsString:@"node.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentAsString:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudRatingService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
@@ -250,11 +250,11 @@
 }
 
 
-- (NSDictionary *) parseRatingsDictionaryWithData:(NSData *)data error:(NSError **)outError
+- (NSDictionary *) dictionaryFromJSONData:(NSData *)data error:(NSError **)outError
 {
     
-    NSLog(@"parseRatingsDictionaryWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-    NSArray *entriesArray = [AlfrescoObjectConverter parseCloudJSONEntriesFromListData:data error:outError];
+    NSLog(@"dictionaryFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {
         return nil;
@@ -268,12 +268,12 @@
         {
             if (nil == *outError)
             {
-                *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
+                *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
             }
             else
             {
-                NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeJSONParsing];
-                *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+                NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+                *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
                 
             }
             return nil;
@@ -286,12 +286,12 @@
     }
     if (nil == *outError)
     {
-        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings];
+        *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeRatings];
     }
     else
     {
-        NSError *error = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeRatings];
-        *outError = [AlfrescoErrors alfrescoError:error withAlfrescoErrorCode:kAlfrescoErrorCodeRatings];        
+        NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeRatings];
+        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeRatings];
     }
     return nil;
     

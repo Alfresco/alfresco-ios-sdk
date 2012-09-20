@@ -42,8 +42,8 @@
 // Converts the given CMIS query result into an Alfresco document object.
 - (AlfrescoDocument *)documentFromCMISQueryResult:(CMISQueryResult *)cmisQueryResult;
 
-+ (NSArray *)parseCloudJSONEntriesFromListData:(NSData *)data error:(NSError **)outError;
-+ (NSDictionary *)parseCloudJSONEntryFromListData:(NSData *)data error:(NSError **)outError;
++ (NSArray *)arrayJSONEntriesFromListData:(NSData *)data error:(NSError **)outError;
++ (NSDictionary *)dictionaryJSONEntryFromListData:(NSData *)data error:(NSError **)outError;
 
 
 + (NSString *)nodeRefWithoutVersionID:(NSString *)originalIdentifier;
