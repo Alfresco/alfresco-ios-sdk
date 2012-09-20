@@ -134,6 +134,8 @@ NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI = @"node/{nodeRef}/cont
 /**
  Cloud constants
  */
+NSString * const kAlfrescoOAuthCloudURL = @"https://api.alfresco.com";
+NSString * const kAlfrescoOAuthTestCloudURL = @"https://stagapi.alfresco.com";
 NSString * const kAlfrescoCloudURL = @"http://my.alfresco.com";
 NSString * const kAlfrescoTestCloudURL = @"http://devapis.alfresco.com";
 NSString * const kAlfrescoCloudBindingService = @"/alfresco/service";

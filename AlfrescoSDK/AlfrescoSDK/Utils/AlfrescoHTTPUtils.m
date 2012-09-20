@@ -54,6 +54,7 @@
     NSEnumerator *headerEnumerator = [httpHeaders keyEnumerator];
     for (NSString *key in headerEnumerator)
     {
+        NSLog(@"executeRequestWithURL we are applying the header %@ to key %@", [httpHeaders valueForKey:key], key);
         [request addValue:[httpHeaders valueForKey:key] forHTTPHeaderField:key];
     }
     
@@ -71,7 +72,7 @@
     NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
         
     NSLog(@"response status %i", [response statusCode]);
-    //NSLog(@"response %@", [[NSMutableString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+    NSLog(@"response %@", [[NSMutableString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
     
     if (response.statusCode < 200 || response.statusCode > 299)
     {
@@ -107,7 +108,7 @@
     *outError = error;
     
     NSLog(@"response status %i", [response statusCode]);
-    //NSLog(@"response %@", [[NSMutableString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+    NSLog(@"response %@", [[NSMutableString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
     
     if (response.statusCode < 200 || response.statusCode > 299)
     {

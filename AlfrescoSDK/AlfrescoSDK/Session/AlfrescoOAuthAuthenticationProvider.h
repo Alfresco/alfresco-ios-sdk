@@ -18,13 +18,11 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoAuthenticationProvider.h"
-@class AlfrescoOAuthData;
-typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
-
-@interface AlfrescoOAuthAuthenticationProvider : NSObject <AlfrescoAuthenticationProvider, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+#import "AlfrescoOAuthData.h"
+@interface AlfrescoOAuthAuthenticationProvider : NSObject <AlfrescoAuthenticationProvider>
 
 /**---------------------------------------------------------------------------------------
- * @name Creates an authentication provider with a plain username and password.
+ * @name Creates an authentication provider based on cloud OAuth data.
  *  ---------------------------------------------------------------------------------------
  */
 
@@ -33,9 +31,8 @@ typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSEr
  @param apiKey the api key to be used for authentication.
  @param secretKey The secret key - associated with the api key.
  @param redirectURLString the URL callback - if provided.
+ @param oAuthData
  @return Authentication provider instance.
  */
-- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURLString:(NSString *)redirectURLString;
-- (void)authenticateWithRequest:(NSURLRequest *)request completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
-+ (NSURL *)authenticateURLFromAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURIString:(NSString *)redirectURLString;
+- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURLString:(NSString *)redirectURLString oAuthData:(AlfrescoOAuthData *)oauthData;
 @end

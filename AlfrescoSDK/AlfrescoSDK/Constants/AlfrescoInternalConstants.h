@@ -136,6 +136,8 @@ extern NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI;
 /**
  Cloud constants
  */
+extern NSString * const kAlfrescoOAuthCloudURL;
+extern NSString * const kAlfrescoOAuthTestCloudURL;
 extern NSString * const kAlfrescoCloudURL;
 extern NSString * const kAlfrescoTestCloudURL;
 extern NSString * const kAlfrescoCloudBindingService;

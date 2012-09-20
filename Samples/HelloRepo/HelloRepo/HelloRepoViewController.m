@@ -21,7 +21,10 @@
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoNode.h"
-#import "OAuthLoginWebViewController.h"
+#import "AlfrescoOAuthData.h"
+#import "AlfrescoOAuthWebViewController.h"
+
+//#import "OAuthLoginWebViewController.h"
 
 @interface HelloRepoViewController ()
 
@@ -112,8 +115,25 @@
 - (void)helloFromCloudWithOAuth
 {
     NSLog(@"*********** helloFromCloudWithOAuth");
+    AlfrescoOAuthCompletionBlock completionBlock = ^void(AlfrescoOAuthData *oauthdata, NSError *error){
+        if (nil == oauthdata)
+        {
+            NSLog(@"something went wrong with the authentication. Error message is %@ and code is %d", [error localizedDescription], [error code]);
+        }
+        else
+        {
+            NSLog(@"We got something back: access token is %@", oauthdata.accessToken);
+            NSLog(@"The refresh token is %@ the grant_type is %@", oauthdata.refreshToken, oauthdata.tokenType);
+            [AlfrescoCloudSession connectWithOAuthData:oauthdata apiKey:APIKEY secretKey:SECRETKEY redirectURI:REDIRECT parameters:nil completionBlock:^(id<AlfrescoSession> session, NSError *error){
+            }];
+        }
+    };
+    AlfrescoOAuthWebViewController *webLoginController = [[AlfrescoOAuthWebViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY redirectURI:REDIRECT completionBlock:completionBlock];
+    [self.navigationController pushViewController:webLoginController animated:YES];
+    /*
     OAuthLoginWebViewController *oauthController = [[OAuthLoginWebViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY redirectURI:@"http://localhost:8080/alfoauthsample/mycallback.html"];
     [self.navigationController pushViewController:oauthController animated:YES];
+     */
 }
 
 
