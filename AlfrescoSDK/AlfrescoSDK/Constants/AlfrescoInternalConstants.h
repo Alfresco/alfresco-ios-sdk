@@ -76,6 +76,7 @@ extern NSString * const kAlfrescoRedirectURI;
  Session data key constants
  */
 extern NSString * const kAlfrescoSessionKeyCmisSession;
+extern NSString * const kAlfrescoCloudTestParameter;
 
 /**
  Associated object key constants
@@ -99,6 +100,8 @@ extern NSString *const kAlfrescoOAuthRedirectURI;
 extern NSString *const kAlfrescoOAuthCode;
 extern NSString *const kAlfrescoOAuthAuthorizeURL;
 extern NSString *const kAlfrescoOAuthTokenURL;
+extern NSString *const kAlfrescoOAuthTestAuthorizeURL;
+extern NSString *const kAlfrescoOAuthTestTokenURL;
 extern NSString *const kAlfrescoOAuthScope;
 extern NSString *const kAlfrescoOAuthResponseType;
 

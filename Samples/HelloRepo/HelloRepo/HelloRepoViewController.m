@@ -30,6 +30,7 @@
 
 @property (nonatomic, strong) NSMutableArray *nodes;
 @property (nonatomic, strong) id<AlfrescoSession> session;
+@property BOOL isCloudTest;
 
 - (void)helloFromRepository;
 - (void)helloFromCloud;
@@ -42,10 +43,11 @@
 
 @synthesize nodes = _nodes;
 @synthesize session = _session;
-
+@synthesize isCloudTest = _isCloudTest;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.isCloudTest = YES;
     self.navigationItem.title = @"Hello Repo";
 
     self.nodes = [NSMutableArray array];
@@ -115,6 +117,13 @@
 - (void)helloFromCloudWithOAuth
 {
     NSLog(@"*********** helloFromCloudWithOAuth");
+    __block NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:[NSNumber numberWithBool:self.isCloudTest] forKey:@"org.alfresco.mobile.cloud.isStaging"];
+    __block NSString *apiKey = (self.isCloudTest) ? TESTAPIKEY : APIKEY;
+    __block NSString *secretKey = (self.isCloudTest) ? TESTSECRETKEY : SECRETKEY;
+    
+    
+    __weak HelloRepoViewController *weakSelf = self;
     AlfrescoOAuthCompletionBlock completionBlock = ^void(AlfrescoOAuthData *oauthdata, NSError *error){
         if (nil == oauthdata)
         {
@@ -124,16 +133,21 @@
         {
             NSLog(@"We got something back: access token is %@", oauthdata.accessToken);
             NSLog(@"The refresh token is %@ the grant_type is %@", oauthdata.refreshToken, oauthdata.tokenType);
-            [AlfrescoCloudSession connectWithOAuthData:oauthdata apiKey:APIKEY secretKey:SECRETKEY redirectURI:REDIRECT parameters:nil completionBlock:^(id<AlfrescoSession> session, NSError *error){
+            [AlfrescoCloudSession connectWithOAuthData:oauthdata parameters:parameters completionBlock:^(id<AlfrescoSession> session, NSError *error){
+                if (nil == session)
+                {
+                }
+                else
+                {
+                    weakSelf.session = session;
+                    [weakSelf loadRootFolder];
+                }
+                [weakSelf.navigationController popToRootViewControllerAnimated:YES];
             }];
         }
     };
-    AlfrescoOAuthWebViewController *webLoginController = [[AlfrescoOAuthWebViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY redirectURI:REDIRECT completionBlock:completionBlock];
+    AlfrescoOAuthWebViewController *webLoginController = [[AlfrescoOAuthWebViewController alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:REDIRECT completionBlock:completionBlock parameters:parameters];
     [self.navigationController pushViewController:webLoginController animated:YES];
-    /*
-    OAuthLoginWebViewController *oauthController = [[OAuthLoginWebViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY redirectURI:@"http://localhost:8080/alfoauthsample/mycallback.html"];
-    [self.navigationController pushViewController:oauthController animated:YES];
-     */
 }
 
 
@@ -153,6 +167,7 @@
         }
         else
         {
+            NSLog(@"Retrieved root folder with %d children", array.count);
             weakSelf.nodes = [NSArray arrayWithArray:array];
             [weakSelf.tableView reloadData];
         }

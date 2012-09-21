@@ -92,11 +92,14 @@
 
 
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-                      apiKey:(NSString *)apiKey
-                   secretKey:(NSString *)secretKey
-                 redirectURI:(NSString *)redirectURI
                   parameters:(NSDictionary *)parameters
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
++ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+            networkIdentifer:(NSString *)networkIdentifer
+                  parameters:(NSDictionary *)parameters
+             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
 
 /**
  This method obtains a list of available Cloud networks (or domains/tenants) for the registered user.
@@ -104,8 +107,6 @@
  */
 - (void)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
-
-- (void)retrieveOAuthNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
 @end

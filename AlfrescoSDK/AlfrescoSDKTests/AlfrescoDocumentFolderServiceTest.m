@@ -642,9 +642,7 @@
 }
 
 /**
- @Unique_TCRef 13F6. As I marked in the test spec - I don't know why this (and the test cases below) are marked as Failure??????
- @Unique_TCRef 13F7
- @Unique_TCRef 13F3. 
+ @Unique_TCRef 13S5.
  */
 - (void)testRetrieveChildrenInFolder
 {
@@ -684,7 +682,7 @@
 
 /**
  @Unique_TCRef 24S0
- @Unique_TCRef 13F4.
+ @Unique_TCRef 13S1.
  */
 - (void)testRetrieveFolderWithNoChildren
 {
@@ -758,7 +756,7 @@
 
 /**
  @Unique_TCRef 24S0
- @Unique_TCRef 18F0. I can only assume this test case means that the folder contains no documents. Why then is this a case for failure?
+ @Unique_TCRef 18S2. 
  */
 - (void)testRetrieveFolderWithNoDocuments
 {
@@ -940,7 +938,7 @@
 }
 
 /**
- @Unique_TCRef 14F0
+ @Unique_TCRef 14F5,14F6
  */
 - (void)testRetrieveChildrenInFolderWithBogusPaging
 {
@@ -1141,7 +1139,7 @@
 }
 
 /**
- @Unique_TCRef 19F0
+ @Unique_TCRef 19F4, 19F5
  */
 - (void)testRetrieveDocumentsInFolderWithBogusPaging
 {
@@ -1230,7 +1228,7 @@
 }
 
 /**
- @Unique_TCRef 21S0
+ @Unique_TCRef 21S1
  */
 - (void)testRetrieveFoldersInFolderWithPaging
 {
@@ -1274,7 +1272,7 @@
 }
 
 /**
- @Unique_TCRef 17S0
+ @Unique_TCRef 17S1
  */
 - (void)testRetrieveNodeWithIdentifier
 {
@@ -1307,7 +1305,7 @@
 
 /**
  @Unique_TCRef 32S0
- @Unique_TCRef 17F0
+ @Unique_TCRef 17F1
  @Unique_TCRef 24S0
  */
 - (void)testRetrieveNodeWithIdentifierNonExisting
@@ -1383,7 +1381,7 @@
 
 
 /**
- @Unique_TCRef 16S0
+ @Unique_TCRef 16S1
  */
 - (void)testRetrieveNodeWithFolderPath
 {
@@ -1417,7 +1415,7 @@
 
 /**
  @Unique_TCRef 32S0
- @Unique_TCRef 17F0
+ @Unique_TCRef 16F1
  @Unique_TCRef 24S0
  */
 - (void)testRetrieveNodeWithFolderPathNonExisting
@@ -1487,7 +1485,7 @@
 
 
 /**
- @Unique_TCRef 23S0
+ @Unique_TCRef 23S2
  */
 - (void)testRetrieveParentNode
 {
@@ -1519,8 +1517,8 @@
 
 
 /**
- @Unique_TCRef 19S0
- @Unique_TCRef 27S0
+ @Unique_TCRef 18S0
+ @Unique_TCRef 27S3
  */
 - (void)testDownloadDocument
 {
@@ -1589,7 +1587,7 @@
 
 /**
  @Unique_TCRef 33S0
- @Unique_TCRef 30F0
+ @Unique_TCRef 27F1
  @Unique_TCRef 24S0
  */
 - (void)testDownloadDocumentNonExisting
@@ -1738,8 +1736,8 @@
     
 }
 /*
- @Unique_TCRef 27S0
- @Unique_TCRef 30S0
+ @Unique_TCRef 27S1
+ @Unique_TCRef 30S1
 */
 - (void)testUpdateContentForDocument
 {
@@ -1836,7 +1834,7 @@
 
 /**
  @Unique_TCRef 33S0
- @Unique_TCRef 30F0
+ @Unique_TCRef 30F1
  @Unique_TCRef 24S0
  */
 - (void)testUpdateContentForDocumentNonExisting
@@ -1924,8 +1922,8 @@
 
 
 /*
- @Unique_TCRef 27S0
- @Unique_TCRef 31S0
+ @Unique_TCRef 27S1
+ @Unique_TCRef 31S1
  */
 - (void)testUpdatePropertiesForDocument
 {
@@ -2007,8 +2005,8 @@
 }
 
 /**
- @Unique_TCRef 33S0
- @Unique_TCRef 31F0
+ @Unique_TCRef 33S1
+ @Unique_TCRef 31F1
  @Unique_TCRef 24S0
  */
 - (void)testUpdatePropertiesForDocumentNonExisting
@@ -2063,7 +2061,6 @@
                                             }
                                             else
                                             {
-                                                __block NSString *updatedContent = [NSString stringWithFormat:@"and we added some text."];
                                                 [weakService updatePropertiesOfNode:strongDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error){
                                                     if (nil == updatedNode)
                                                     {
@@ -2093,7 +2090,7 @@
 
 
 /*
- @Unique_TCRef 24S0
+ @Unique_TCRef 24S1
  */
 - (void)testDeleteNode
 {
@@ -2299,8 +2296,8 @@
 
 
 /*
- @Unique_TCRef 29S0
- @Unique_TCRef 13S0. I only found a 13Fx list of test cases in the document....
+ @Unique_TCRef 29S2
+ @Unique_TCRef 13S0. 
  */
 - (void)testThumbnailRenditionImage
 {
@@ -2407,7 +2404,6 @@
  
 
 /*
- @Unique_TCRef 29S0
  @Unique_TCRef 22S0
  @Unique_TCRef 25S0
  */
@@ -2477,6 +2473,11 @@
 }
 
 
+/*
+ @Unique_TCRef 25F1
+ @Unique_TCRef 33S1
+ @Unique_TCRef 24S1
+ */
 - (void)testRetrievePermissionsOfNodeNonExisting
 {
     [super runAllSitesTest:^{

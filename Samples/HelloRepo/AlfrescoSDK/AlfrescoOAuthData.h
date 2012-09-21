@@ -24,5 +24,10 @@
 @property (nonatomic, strong, readonly) NSNumber * expiresIn;
 @property (nonatomic, strong, readonly) NSString * tokenType;
 @property (nonatomic, strong, readonly) NSString * scope;
-- (id)initWithOAuthData:(NSDictionary *)oauthDict;
+@property (nonatomic, strong, readonly) NSString * apiKey;
+@property (nonatomic, strong, readonly) NSString * secretKey;
+@property (nonatomic, strong, readonly) NSString * redirectURI;
+
+- (void)setOAuthDataWithJSONDictionary:(NSDictionary *)jsonDictionary;
+- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI;
 @end

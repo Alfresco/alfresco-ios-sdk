@@ -25,6 +25,9 @@
 @property (nonatomic, strong, readwrite) NSNumber           * expiresIn;
 @property (nonatomic, strong, readwrite) NSString           * tokenType;
 @property (nonatomic, strong, readwrite) NSString           * scope;
+@property (nonatomic, strong, readwrite) NSString           * apiKey;
+@property (nonatomic, strong, readwrite) NSString           * secretKey;
+@property (nonatomic, strong, readwrite) NSString           * redirectURI;
 
 @end
 
@@ -34,22 +37,39 @@
 @synthesize expiresIn = _expiresIn;
 @synthesize tokenType = _tokenType;
 @synthesize scope = _scope;
+@synthesize apiKey = _apiKey;
+@synthesize secretKey = _secretKey;
+@synthesize redirectURI = _redirectURI;
 
-- (id)initWithOAuthData:(NSDictionary *)oauthDict
+- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI
 {
     self = [super init];
     if (nil != self)
     {
-        if (nil != oauthDict)
-        {
-            self.accessToken = [oauthDict valueForKey:kAlfrescoJSONAccessToken];
-            self.refreshToken = [oauthDict valueForKey:kAlfrescoJSONRefreshToken];
-            self.expiresIn = [oauthDict valueForKey:kAlfrescoJSONExpiresIn];
-            self.scope = [oauthDict valueForKey:kAlfrescoJSONScope];
-            self.tokenType = [oauthDict valueForKey:kAlfrescoJSONTokenType];
-        }
+        self.apiKey = apiKey;
+        self.secretKey = secretKey;
+        self.redirectURI = redirectURI;
+        self.accessToken = nil;
+        self.refreshToken = nil;
+        self.expiresIn = nil;
+        self.tokenType = nil;
+        self.scope = nil;
     }
     return self;
 }
+
+- (void)setOAuthDataWithJSONDictionary:(NSDictionary *)jsonDictionary
+{
+    if (nil != jsonDictionary)
+    {
+        self.accessToken    = [jsonDictionary valueForKey:kAlfrescoJSONAccessToken];
+        self.refreshToken   = [jsonDictionary valueForKey:kAlfrescoJSONRefreshToken];
+        self.expiresIn      = [jsonDictionary valueForKey:kAlfrescoJSONExpiresIn];
+        self.scope          = [jsonDictionary valueForKey:kAlfrescoJSONScope];
+        self.tokenType      = [jsonDictionary valueForKey:kAlfrescoJSONTokenType];
+    }
+    
+}
+
 
 @end

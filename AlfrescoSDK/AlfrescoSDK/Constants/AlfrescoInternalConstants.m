@@ -76,6 +76,7 @@ NSString * const kAlfrescoRedirectURI = @"{redirectURI}";
  Session data key constants
  */
 NSString * const kAlfrescoSessionKeyCmisSession = @"alfresco_session_key_cmis_session";
+NSString * const kAlfrescoCloudTestParameter = @"org.alfresco.mobile.cloud.isStaging";
 
 /**
  Associated object key constants
@@ -99,6 +100,8 @@ NSString *const kAlfrescoOAuthRedirectURI = @"redirect_uri={redirectURI}";
 NSString *const kAlfrescoOAuthCode = @"code={code}";
 NSString *const kAlfrescoOAuthAuthorizeURL = @"https://api.alfresco.com/auth/oauth/versions/2/authorize";
 NSString *const kAlfrescoOAuthTokenURL = @"https://api.alfresco.com/auth/oauth/versions/2/token";
+NSString *const kAlfrescoOAuthTestAuthorizeURL = @"https://stagapi.alfresco.com/auth/oauth/versions/2/authorize";
+NSString *const kAlfrescoOAuthTestTokenURL = @"https://stagapi.alfresco.com/auth/oauth/versions/2/token";
 NSString *const kAlfrescoOAuthScope = @"scope=pub_api";
 NSString *const kAlfrescoOAuthResponseType = @"response_type=code";
 
