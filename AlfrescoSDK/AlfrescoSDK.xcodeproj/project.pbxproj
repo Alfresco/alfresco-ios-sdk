@@ -133,6 +133,8 @@
 		4EB0781115B0129B00DF7DED /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0781015B0129B00DF7DED /* MobileCoreServices.framework */; };
 		4EDBAD35160AF6FA00D6305F /* AlfrescoOAuthWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EDBAD33160AF6FA00D6305F /* AlfrescoOAuthWebViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4EDBAD36160AF6FA00D6305F /* AlfrescoOAuthWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDBAD34160AF6FA00D6305F /* AlfrescoOAuthWebViewController.m */; };
+		4EE60460160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EE6045E160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.h */; settings = {ATTRIBUTES = (); }; };
+		4EE60461160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE6045F160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.m */; };
 		4EF1B71515D8F5E90038AB3F /* AlfrescoPlaceholderActivityStreamService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF1B71315D8F5E90038AB3F /* AlfrescoPlaceholderActivityStreamService.h */; };
 		4EF1B71615D8F5E90038AB3F /* AlfrescoPlaceholderActivityStreamService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EF1B71415D8F5E90038AB3F /* AlfrescoPlaceholderActivityStreamService.m */; };
 		4EF1B71A15D8F6080038AB3F /* AlfrescoCloudActivityStreamService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF1B71815D8F6080038AB3F /* AlfrescoCloudActivityStreamService.h */; };
@@ -166,7 +168,7 @@
 		82D7618215F023BE007712DE /* CMISAtomPubObjectService.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7613315F023BE007712DE /* CMISAtomPubObjectService.h */; };
 		82D7618315F023BE007712DE /* CMISAtomPubRepositoryService.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7613415F023BE007712DE /* CMISAtomPubRepositoryService.h */; };
 		82D7618415F023BE007712DE /* CMISAtomPubVersioningService.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7613515F023BE007712DE /* CMISAtomPubVersioningService.h */; };
-		82D7618515F023BE007712DE /* CMISAuthenticationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7613615F023BE007712DE /* CMISAuthenticationProvider.h */; };
+		82D7618515F023BE007712DE /* CMISAuthenticationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7613615F023BE007712DE /* CMISAuthenticationProvider.h */; settings = {ATTRIBUTES = (); }; };
 		82D7618615F023BE007712DE /* CMISBase64Encoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7613715F023BE007712DE /* CMISBase64Encoder.h */; };
 		82D7618715F023BE007712DE /* CMISBaseTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7613815F023BE007712DE /* CMISBaseTest.h */; };
 		82D7618815F023BE007712DE /* CMISBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7613915F023BE007712DE /* CMISBinding.h */; };
@@ -382,6 +384,8 @@
 		4EB0781015B0129B00DF7DED /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		4EDBAD33160AF6FA00D6305F /* AlfrescoOAuthWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthWebViewController.h; path = OAuth/AlfrescoOAuthWebViewController.h; sourceTree = "<group>"; };
 		4EDBAD34160AF6FA00D6305F /* AlfrescoOAuthWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoOAuthWebViewController.m; path = OAuth/AlfrescoOAuthWebViewController.m; sourceTree = "<group>"; };
+		4EE6045E160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISPassThroughAuthenticationProvider.h; path = OAuth/CMISPassThroughAuthenticationProvider.h; sourceTree = "<group>"; };
+		4EE6045F160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMISPassThroughAuthenticationProvider.m; path = OAuth/CMISPassThroughAuthenticationProvider.m; sourceTree = "<group>"; };
 		4EF1B71315D8F5E90038AB3F /* AlfrescoPlaceholderActivityStreamService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoPlaceholderActivityStreamService.h; path = PlaceholderServices/AlfrescoPlaceholderActivityStreamService.h; sourceTree = "<group>"; };
 		4EF1B71415D8F5E90038AB3F /* AlfrescoPlaceholderActivityStreamService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoPlaceholderActivityStreamService.m; path = PlaceholderServices/AlfrescoPlaceholderActivityStreamService.m; sourceTree = "<group>"; };
 		4EF1B71815D8F6080038AB3F /* AlfrescoCloudActivityStreamService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudActivityStreamService.h; path = CloudServices/AlfrescoCloudActivityStreamService.h; sourceTree = "<group>"; };
@@ -508,6 +512,8 @@
 				4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */,
 				4EDBAD33160AF6FA00D6305F /* AlfrescoOAuthWebViewController.h */,
 				4EDBAD34160AF6FA00D6305F /* AlfrescoOAuthWebViewController.m */,
+				4EE6045E160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.h */,
+				4EE6045F160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.m */,
 			);
 			name = OAuth;
 			sourceTree = "<group>";
@@ -930,12 +936,14 @@
 				4EDBAD35160AF6FA00D6305F /* AlfrescoOAuthWebViewController.h in Headers */,
 				4E90EE7C15D25F9200302F5D /* AlfrescoConstants.h in Headers */,
 				4E6380CD15B976200010E05F /* AlfrescoISO8601DateFormatter.h in Headers */,
+				4EB077DA15B00EE800DF7DED /* AlfrescoAuthenticationProvider.h in Headers */,
+				82D7618515F023BE007712DE /* CMISAuthenticationProvider.h in Headers */,
+				4EE60460160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.h in Headers */,
 				4EF6F2C31607047800002490 /* AlfrescoOAuthAuthenticationProvider.h in Headers */,
 				4EB077E015B00EE800DF7DED /* AlfrescoObjectConverter.h in Headers */,
 				4EA6D4E915D2B444004059AF /* AlfrescoSortingUtils.h in Headers */,
 				4E90EE7515D25C3600302F5D /* AlfrescoPagingUtils.h in Headers */,
 				4E90EE7115D255B000302F5D /* AlfrescoHTTPUtils.h in Headers */,
-				4EB077DA15B00EE800DF7DED /* AlfrescoAuthenticationProvider.h in Headers */,
 				4EB077DB15B00EE800DF7DED /* AlfrescoBasicAuthenticationProvider.h in Headers */,
 				4E90EE8715D2735000302F5D /* AlfrescoCloudSiteService.h in Headers */,
 				4E90EE8B15D2736700302F5D /* AlfrescoPlaceholderSiteService.h in Headers */,
@@ -975,7 +983,6 @@
 				82D7618215F023BE007712DE /* CMISAtomPubObjectService.h in Headers */,
 				82D7618315F023BE007712DE /* CMISAtomPubRepositoryService.h in Headers */,
 				82D7618415F023BE007712DE /* CMISAtomPubVersioningService.h in Headers */,
-				82D7618515F023BE007712DE /* CMISAuthenticationProvider.h in Headers */,
 				82D7618615F023BE007712DE /* CMISBase64Encoder.h in Headers */,
 				82D7618715F023BE007712DE /* CMISBaseTest.h in Headers */,
 				82D7618815F023BE007712DE /* CMISBinding.h in Headers */,
@@ -1211,6 +1218,7 @@
 				4EF6F2C41607047800002490 /* AlfrescoOAuthAuthenticationProvider.m in Sources */,
 				4E0457C31608C124005A6C76 /* AlfrescoOAuthData.m in Sources */,
 				4EDBAD36160AF6FA00D6305F /* AlfrescoOAuthWebViewController.m in Sources */,
+				4EE60461160C4B1F008EF352 /* CMISPassThroughAuthenticationProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1275,6 +1283,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Debug;
 		};
@@ -1293,6 +1302,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_AFTER_BUILD = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
