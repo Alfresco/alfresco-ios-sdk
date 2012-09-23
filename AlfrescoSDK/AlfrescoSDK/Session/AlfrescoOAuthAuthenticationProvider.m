@@ -37,14 +37,11 @@
 
 
 
-- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURLString:(NSString *)redirectURLString oAuthData:(AlfrescoOAuthData *)oauthData
+- (id)initWithOAuthData:(AlfrescoOAuthData *)oauthData
 {
     self = [super init];
     if (nil != self)
     {
-        self.apiKey = apiKey;
-        self.secretKey = secretKey;
-        self.redirectURIString = redirectURLString;
         self.oauthData = oauthData;
     }
     return self;

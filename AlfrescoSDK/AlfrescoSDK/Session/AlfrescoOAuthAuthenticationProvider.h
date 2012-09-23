@@ -28,11 +28,8 @@
 
 /** Creates an instance of an AlfrescoBasicAuthenticationProvider with a username and password.
  
- @param apiKey the api key to be used for authentication.
- @param secretKey The secret key - associated with the api key.
- @param redirectURLString the URL callback - if provided.
  @param oAuthData
  @return Authentication provider instance.
  */
-- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURLString:(NSString *)redirectURLString oAuthData:(AlfrescoOAuthData *)oauthData;
+- (id)initWithOAuthData:(AlfrescoOAuthData *)oauthData;
 @end

@@ -24,7 +24,7 @@
 @synthesize commentService = _commentService;
 
 /*
- @Unique_TCRef 7S0
+ @Unique_TCRef 7S1
  */
 - (void)testRetrieveAllComments
 {
@@ -249,7 +249,7 @@
 /*
  @Unique_TCRef 7S0
  @Unique_TCRef 9S0
- @Unique_TCRef 11S0
+ @Unique_TCRef 10S0
  */
 - (void)testAddAndUpdateCommentNonExisting
 {

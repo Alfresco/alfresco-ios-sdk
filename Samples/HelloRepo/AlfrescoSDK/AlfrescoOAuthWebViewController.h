@@ -23,4 +23,5 @@ typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSEr
 @property (nonatomic, strong) UIWebView * webView;
 
 - (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
+- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock parameters:(NSDictionary *)parameters;
 @end

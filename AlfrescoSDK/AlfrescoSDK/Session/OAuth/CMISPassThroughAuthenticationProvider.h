@@ -15,19 +15,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ******************************************************************************/
-
 #import <Foundation/Foundation.h>
+#import "AlfrescoAuthenticationProvider.h"
+#import "CMISAuthenticationProvider.h"
 
-@interface AlfrescoOAuthData : NSObject
-@property (nonatomic, strong, readonly) NSString * accessToken;
-@property (nonatomic, strong, readonly) NSString * refreshToken;
-@property (nonatomic, strong, readonly) NSNumber * expiresIn;
-@property (nonatomic, strong, readonly) NSString * tokenType;
-@property (nonatomic, strong, readonly) NSString * scope;
-@property (nonatomic, strong, readonly) NSString * apiKey;
-@property (nonatomic, strong, readonly) NSString * secretKey;
-@property (nonatomic, strong, readonly) NSString * redirectURI;
-
-- (void)setOAuthDataWithJSONDictionary:(NSDictionary *)jsonDictionary;
-- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI;
+@interface CMISPassThroughAuthenticationProvider : NSObject <CMISAuthenticationProvider>
+@property (nonatomic, strong, readonly) id<AlfrescoAuthenticationProvider> authProvider;
+- (id)initWithAlfrescoAuthenticationProvider:(id<AlfrescoAuthenticationProvider>)authProvider;
 @end

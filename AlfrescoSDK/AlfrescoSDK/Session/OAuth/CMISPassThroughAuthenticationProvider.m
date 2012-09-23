@@ -15,19 +15,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ******************************************************************************/
+#import "CMISPassThroughAuthenticationProvider.h"
 
-#import <Foundation/Foundation.h>
+@interface CMISPassThroughAuthenticationProvider ()
+@property (nonatomic, strong, readwrite) id<AlfrescoAuthenticationProvider> authProvider;
+@property (nonatomic, strong, readwrite) NSDictionary *httpHeadersToApply;
+@end
 
-@interface AlfrescoOAuthData : NSObject
-@property (nonatomic, strong, readonly) NSString * accessToken;
-@property (nonatomic, strong, readonly) NSString * refreshToken;
-@property (nonatomic, strong, readonly) NSNumber * expiresIn;
-@property (nonatomic, strong, readonly) NSString * tokenType;
-@property (nonatomic, strong, readonly) NSString * scope;
-@property (nonatomic, strong, readonly) NSString * apiKey;
-@property (nonatomic, strong, readonly) NSString * secretKey;
-@property (nonatomic, strong, readonly) NSString * redirectURI;
+@implementation CMISPassThroughAuthenticationProvider
+@synthesize authProvider = _authProvider;
+@synthesize httpHeadersToApply = _httpHeadersToApply;
 
-- (void)setOAuthDataWithJSONDictionary:(NSDictionary *)jsonDictionary;
-- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI;
+- (id)initWithAlfrescoAuthenticationProvider:(id<AlfrescoAuthenticationProvider>)authProvider
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.authProvider = authProvider;
+        self.httpHeadersToApply = [authProvider willApplyHTTPHeadersForSession:nil];
+    }
+    return self;
+}
+
 @end
