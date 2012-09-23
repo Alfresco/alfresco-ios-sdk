@@ -19,9 +19,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4E598F97160C58AE00033687 /* AlfrescoAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoAuthenticationProvider.h; sourceTree = "<group>"; };
-		4E598F98160C58AE00033687 /* CMISAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAuthenticationProvider.h; sourceTree = "<group>"; };
-		4E598F99160C58AE00033687 /* CMISPassThroughAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISPassThroughAuthenticationProvider.h; sourceTree = "<group>"; };
 		4EDBAD3C160B251C00D6305F /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthData.h; sourceTree = "<group>"; };
 		4EDBAD3D160B251C00D6305F /* AlfrescoOAuthWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthWebViewController.h; sourceTree = "<group>"; };
 		8266A58F15E820370070B3D3 /* libAlfrescoSDKv0.0.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAlfrescoSDKv0.0.1.a; sourceTree = "<group>"; };
@@ -144,9 +141,6 @@
 		82FC413A15E7B3E30081888D /* AlfrescoSDK */ = {
 			isa = PBXGroup;
 			children = (
-				4E598F97160C58AE00033687 /* AlfrescoAuthenticationProvider.h */,
-				4E598F98160C58AE00033687 /* CMISAuthenticationProvider.h */,
-				4E598F99160C58AE00033687 /* CMISPassThroughAuthenticationProvider.h */,
 				4EDBAD3C160B251C00D6305F /* AlfrescoOAuthData.h */,
 				4EDBAD3D160B251C00D6305F /* AlfrescoOAuthWebViewController.h */,
 				82FC413B15E7B3E30081888D /* AlfrescoActivityEntry.h */,
