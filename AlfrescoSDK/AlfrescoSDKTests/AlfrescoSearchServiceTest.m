@@ -30,7 +30,10 @@
 @synthesize searchService = _searchService;
 /*
  */
- 
+/*
+ @Unique_TCRef 42S0
+ */
+
 - (void)testQueryWithKeywords
 {
     [super runAllSitesTest:^{
@@ -76,6 +79,9 @@
     }];
 }
 
+/*
+ @Unique_TCRef 43S0
+ */
 - (void)testQueryWithKeywordsWithPaging
 {
     [super runAllSitesTest:^{
@@ -117,6 +123,9 @@
     }];
 }
 
+/*
+ @Unique_TCRef 42S0
+ */
 - (void)testQueryWithKeywordsExact
 {
     [super runAllSitesTest:^{
@@ -159,6 +168,9 @@
     }];
 }
 
+/*
+ @Unique_TCRef 42S0
+ */
 - (void)testQueryWithKeywordsExactWithinFolder
 {
     [super runAllSitesTest:^{
@@ -193,6 +205,9 @@
     }];
 }
 
+/*
+ @Unique_TCRef 42S0
+ */
 - (void)testQueryWithKeywordsFullText
 {
     [super runAllSitesTest:^{
@@ -237,6 +252,9 @@
     }];
 }
 
+/*
+ @Unique_TCRef 42S0
+ */
 - (void)testQueryWithPlainKeywords
 {
     [super runAllSitesTest:^{
@@ -284,6 +302,9 @@
     }];
 }
 
+/*
+ @Unique_TCRef 42S0
+ */
 - (void)testQueryWithPlainKeywordsWithPaging
 {
     [super runAllSitesTest:^{

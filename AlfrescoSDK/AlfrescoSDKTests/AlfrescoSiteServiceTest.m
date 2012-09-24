@@ -23,6 +23,7 @@
 
 @synthesize siteService = _siteService;
 /*
+ @Unique_TCRef 45S1
  */
 - (void)testRetrieveAllSites
 {
@@ -60,6 +61,9 @@
 
 
 
+/*
+ @Unique_TCRef 46S1
+ */
 - (void)testRetrieveAllSitesWithPaging
 {
     [super runAllSitesTest:^{
@@ -94,6 +98,9 @@
 }
 
 
+/*
+ @Unique_TCRef 47S0
+ */
 - (void)testRetrieveSitesForUser
 {
     [super runAllSitesTest:^{
@@ -125,6 +132,9 @@
 }
 
 
+/*
+ @Unique_TCRef 48S0
+ */
 - (void)testRetrieveSitesForUserWithPaging
 {
     [super runAllSitesTest:^{
@@ -155,6 +165,9 @@
 }
 
 
+/*
+ @Unique_TCRef 49S0
+ */
 - (void)testRetrieveFavoriteSitesForUser
 {
     [super runAllSitesTest:^{
@@ -186,6 +199,9 @@
 
 
 
+/*
+ @Unique_TCRef 50S0
+ */
 - (void)testRetrieveFavoriteSitesForUserWithPaging
 {
     [super runAllSitesTest:^{
@@ -220,6 +236,9 @@
 }
 
 
+/*
+ @Unique_TCRef 44S1
+ */
 - (void)testRetrieveSiteWithShortName
 {
     [super runAllSitesTest:^{
@@ -250,6 +269,9 @@
 }
 
 
+/*
+ @Unique_TCRef 44F2/F3
+ */
 - (void)testRetrieveSiteWithNonExistingShortName
 {
     [super runAllSitesTest:^{
@@ -280,6 +302,9 @@
 
 
 
+/*
+ @Unique_TCRef 51S0
+ */
 - (void)testRetrieveDocumentLibraryForSite
 {
     [super runAllSitesTest:^{
@@ -313,6 +338,9 @@
 
 
 
+/*
+ @Unique_TCRef 51F1
+ */
 - (void)testRetrieveDocumentLibraryForNonExistingSite
 {
     [super runAllSitesTest:^{
