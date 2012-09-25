@@ -150,8 +150,10 @@
             CMISSession *v4CMISSession = [[CMISSession alloc] initWithSessionParameters:v4params];
 //            [self setObject:cmisSession forParameter:kAlfrescoSessionKeyCmisSession];
             
-            id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username andPassword:password];
-            objc_setAssociatedObject(self, &kAlfrescoAuthenticationProviderObjectKey, authProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
+                                                                                                                andPassword:password];
+            [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+//            objc_setAssociatedObject(self, &kAlfrescoAuthenticationProviderObjectKey, authProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             
             
             BOOL authenticated = [cmisSession authenticateAndReturnError:&error];
@@ -172,8 +174,9 @@
                 {
 
                     [self setObject:v4CMISSession forParameter:kAlfrescoSessionKeyCmisSession];
+                    [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
 
-                    objc_setAssociatedObject(self, &kAlfrescoAuthenticationProviderObjectKey, authProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+//                    objc_setAssociatedObject(self, &kAlfrescoAuthenticationProviderObjectKey, authProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
                     
                     BOOL authenticatedAgain = [v4CMISSession authenticateAndReturnError:&error];
                     if (authenticatedAgain)

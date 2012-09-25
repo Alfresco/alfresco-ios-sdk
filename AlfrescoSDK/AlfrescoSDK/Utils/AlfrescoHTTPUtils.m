@@ -17,31 +17,33 @@
  ******************************************************************************/
 
 #import "AlfrescoHTTPUtils.h"
+#import "AlfrescoInternalConstants.h"
+#import "AlfrescoSessionDelegate.h"
 
 @implementation AlfrescoHTTPUtils
 
 + (NSData *)executeRequest:(NSString *)api
            baseUrlAsString:(NSString *)baseUrl
-    authenticationProvider:(id<AlfrescoAuthenticationProvider>)authenticationProvider
+                   session:(id<AlfrescoSession>)session
                      error:(NSError **)outError
 {
-    return [AlfrescoHTTPUtils executeRequest:api baseUrlAsString:baseUrl authenticationProvider:authenticationProvider data:nil httpMethod:@"GET" error:outError];
+    return [AlfrescoHTTPUtils executeRequest:api baseUrlAsString:baseUrl session:session data:nil httpMethod:@"GET" error:outError];
 }
 
 + (NSData *)executeRequest:(NSString *)api
            baseUrlAsString:(NSString *)baseUrl
-    authenticationProvider:(id<AlfrescoAuthenticationProvider>)authenticationProvider
+                   session:(id<AlfrescoSession>)session
                       data:(NSData *)data
                 httpMethod:(NSString *)httpMethod
                      error:(NSError **)outError
 {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseUrl, api]];
-    return [AlfrescoHTTPUtils executeRequestWithURL:url authenticationProvider:authenticationProvider data:data httpMethod:httpMethod error:outError];
+    return [AlfrescoHTTPUtils executeRequestWithURL:url session:session  data:data httpMethod:httpMethod error:outError];
     
 }
 
 + (NSData *)executeRequestWithURL:(NSURL *)url
-           authenticationProvider:(id<AlfrescoAuthenticationProvider>)authenticationProvider
+                          session:(id<AlfrescoSession>)session
                              data:(NSData *)data
                        httpMethod:(NSString *)httpMethod
                             error:(NSError **)outError
@@ -50,6 +52,8 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
                                                            cachePolicy: NSURLRequestReloadIgnoringCacheData
                                                        timeoutInterval: 10];
+    __block id<AlfrescoSession> alfrescoSession = session;
+    __block id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
     NSDictionary *httpHeaders = [authenticationProvider willApplyHTTPHeadersForSession:nil];
     NSEnumerator *headerEnumerator = [httpHeaders keyEnumerator];
     for (NSString *key in headerEnumerator)
@@ -73,6 +77,19 @@
         
     NSLog(@"response status %i", [response statusCode]);
     NSLog(@"response %@", [[NSMutableString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+    if (nil != error)
+    {
+        NSLog(@"executeRequestWithURL: error msg=%@, code = %d, data = %@",[error localizedDescription], [error code], [NSString stringWithCharacters:[responseData bytes] length:responseData.length]);
+        
+        int errorCode = [error code];
+        if (kCFURLErrorUserCancelledAuthentication == errorCode || kCFURLErrorUserAuthenticationRequired == errorCode)
+        {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [authenticationProvider sessionDidExpire:alfrescoSession];
+            }];            
+        }
+        
+    }
     
     if (response.statusCode < 200 || response.statusCode > 299)
     {

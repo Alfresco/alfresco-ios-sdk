@@ -57,7 +57,8 @@
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudAPIPath];
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 2;
-        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
+        id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -79,7 +80,7 @@
         NSError *error = nil;
         NSData *data = [AlfrescoHTTPUtils executeRequest:kAlfrescoCloudSiteAPI
                                          baseUrlAsString:weakSelf.baseApiUrl
-                                  authenticationProvider:weakSelf.authenticationProvider
+                                                 session:weakSelf.session
                                                    error:&error];
 
         __block NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
@@ -118,7 +119,7 @@
         // pos parameter is not working, so paging is done in-memory
         NSData *data = [AlfrescoHTTPUtils executeRequest:kAlfrescoCloudSiteAPI
                                          baseUrlAsString:weakSelf.baseApiUrl
-                                  authenticationProvider:weakSelf.authenticationProvider
+                                                 session:weakSelf.session
                                                    error:&error];
         NSArray *siteArray = nil;
         AlfrescoPagingResult *pagingResult = nil;
@@ -148,7 +149,7 @@
         NSString *requestString = [kAlfrescoCloudSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:weakSelf.session.personIdentifier];
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
-                                  authenticationProvider:weakSelf.authenticationProvider
+                                                 session:weakSelf.session
                                                    error:&operationQueueError];
         
         NSArray *sortedSiteArray = nil;
@@ -184,7 +185,7 @@
         NSString *requestString = [kAlfrescoCloudSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:weakSelf.session.personIdentifier];
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
-                                  authenticationProvider:weakSelf.authenticationProvider
+                                                 session:weakSelf.session
                                                    error:&operationQueueError];
         
         NSArray *siteArray = nil;
@@ -219,7 +220,7 @@
         NSString *requestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:weakSelf.session.personIdentifier];        
         NSData *favoriteSitesdata = [AlfrescoHTTPUtils executeRequest:requestString
                                                       baseUrlAsString:weakSelf.baseApiUrl
-                                               authenticationProvider:weakSelf.authenticationProvider
+                                                              session:weakSelf.session
                                                                 error:&operationQueueError];
                 
         NSArray *sortedSiteArray = nil;
@@ -256,7 +257,7 @@
         NSString *requestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:weakSelf.session.personIdentifier];
         NSData *favoriteSitesdata = [AlfrescoHTTPUtils executeRequest:requestString
                                                       baseUrlAsString:weakSelf.baseApiUrl
-                                               authenticationProvider:weakSelf.authenticationProvider
+                                                              session:weakSelf.session
                                                                 error:&operationQueueError];
         
         AlfrescoPagingResult *pagingResult = nil;
@@ -300,7 +301,7 @@
         NSString *requestString = [kAlfrescoCloudSiteForShortnameAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:siteShortName];
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
-                                  authenticationProvider:weakSelf.authenticationProvider
+                                                 session:weakSelf.session
                                                    error:&operationQueueError];
         AlfrescoSite *site = nil;
         if(nil != data)
@@ -326,7 +327,7 @@
         NSString *requestString = [kAlfrescoCloudSiteContainersAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:siteShortName];
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.baseApiUrl, requestString]];
         NSData *data = [AlfrescoHTTPUtils executeRequestWithURL:url
-                                         authenticationProvider:weakSelf.authenticationProvider
+                                                        session:weakSelf.session
                                                            data:nil
                                                      httpMethod:@"GET"
                                                           error:&operationQueueError];

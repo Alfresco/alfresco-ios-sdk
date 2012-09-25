@@ -53,7 +53,8 @@
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 2;
-        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
+        id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -73,7 +74,7 @@
         NSError *operationQueueError;
         NSData *data = [AlfrescoHTTPUtils executeRequest:kAlfrescoOnPremiseTagsAPI
                                          baseUrlAsString:weakSelf.baseApiUrl
-                                  authenticationProvider:weakSelf.authenticationProvider
+                                                 session:weakSelf.session
                                                    error:&operationQueueError];
         
         NSArray *tagArray = nil;
@@ -103,7 +104,7 @@
         
         NSData *data = [AlfrescoHTTPUtils executeRequest:kAlfrescoOnPremiseTagsAPI
                                          baseUrlAsString:weakSelf.baseApiUrl
-                                  authenticationProvider:weakSelf.authenticationProvider
+                                                 session:weakSelf.session
                                                    error:&operationQueueError];
         
         AlfrescoPagingResult *pagingResult = nil;
@@ -139,7 +140,7 @@
 
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
-                                  authenticationProvider:weakSelf.authenticationProvider
+                                                 session:weakSelf.session
                                                    error:&operationQueueError];
         
         NSArray *tagArray = nil;
@@ -177,7 +178,7 @@
         
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
-                                  authenticationProvider:weakSelf.authenticationProvider
+                                                 session:weakSelf.session
                                                    error:&operationQueueError];
         
         AlfrescoPagingResult *pagingResult = nil;
@@ -219,7 +220,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
         {
             [AlfrescoHTTPUtils executeRequest:requestString
                               baseUrlAsString:weakSelf.baseApiUrl
-                       authenticationProvider:weakSelf.authenticationProvider
+                                      session:weakSelf.session
                                          data:jsonData httpMethod:@"POST"
                                         error:&operationQueueError];
         }
