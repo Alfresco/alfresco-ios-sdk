@@ -21,17 +21,11 @@
 #import "AlfrescoErrors.h"
 
 @interface AlfrescoOAuthAuthenticationProvider ()
-@property (nonatomic, strong, readwrite) NSString * apiKey;
-@property (nonatomic, strong, readwrite) NSString * secretKey;
-@property (nonatomic, strong, readwrite) NSString * redirectURIString;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *httpHeaders;
 @property (nonatomic, strong, readwrite) AlfrescoOAuthData *oauthData;
 @end
 
 @implementation AlfrescoOAuthAuthenticationProvider
-@synthesize apiKey = _apiKey;
-@synthesize secretKey = _secretKey;
-@synthesize redirectURIString = _redirectURIString;
 @synthesize httpHeaders = _httpHeaders;
 @synthesize oauthData = _oauthData;
 
@@ -63,5 +57,12 @@
     }
     return self.httpHeaders;
 }
+
+
+- (void)sessionDidExpire:(id<AlfrescoSession>)session
+{
+    
+}
+
 
 @end

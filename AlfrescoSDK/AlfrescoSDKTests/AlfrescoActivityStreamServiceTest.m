@@ -144,6 +144,9 @@
     }];
 }
 
+/*
+ @Unique_TCRef 4S0
+ */
 - (void)testRetrieveActivityStreamForUserWithPaging
 {
     [super runAllSitesTest:^{
@@ -176,6 +179,10 @@
     }];
 }
 
+/*
+ @Unique_TCRef 44S1
+ @Unique_TCRef 5S0
+ */
 - (void)testRetrieveActivityStreamForSite
 {
     [super runAllSitesTest:^{
@@ -230,6 +237,10 @@
     }];
 }
 
+/*
+ @Unique_TCRef 44S1
+ @Unique_TCRef 6S0
+ */
 - (void)testRetrieveActivityStreamForSiteWithPaging
 {
     [super runAllSitesTest:^{

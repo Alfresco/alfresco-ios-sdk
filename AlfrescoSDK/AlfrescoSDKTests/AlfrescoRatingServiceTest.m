@@ -22,7 +22,10 @@
 @synthesize ratingService = _ratingService;
 /*
  */
- 
+/*
+ @Unique_TCRef 12S1
+ */
+
 - (void)testRetrieveLikeCount
 {
     
@@ -50,6 +53,11 @@
     }];
 }
 
+/*
+ @Unique_TCRef 37S1
+ @Unique_TCRef 38S1,38S2
+ @Unique_TCRef 12S1
+ */
 - (void)testLikeAndUnlike
 {
     [super runAllSitesTest:^{
@@ -122,6 +130,11 @@
     }];
 }
 
+/*
+ @Unique_TCRef 37S1
+ @Unique_TCRef 38S2/S1
+ @Unique_TCRef 39S1, 39S3
+ */
 - (void)testIsNodeLiked
 {
     [super runAllSitesTest:^{

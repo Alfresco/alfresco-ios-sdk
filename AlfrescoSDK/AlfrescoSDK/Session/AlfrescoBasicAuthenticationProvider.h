@@ -24,7 +24,6 @@
  */
 
 @interface AlfrescoBasicAuthenticationProvider : NSObject <AlfrescoAuthenticationProvider>
-
 /**---------------------------------------------------------------------------------------
  * @name Creates an authentication provider with a plain username and password.
  *  ---------------------------------------------------------------------------------------

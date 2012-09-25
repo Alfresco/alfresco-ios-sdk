@@ -25,6 +25,10 @@
 /*
  */
 
+/*
+ @Unique_TCRef 57S1
+ @Unique_TCRef 17S6
+ */
 - (void)testRetrieveAllVersions
 {
     [super runAllSitesTest:^{
@@ -73,6 +77,10 @@
     }];
 }
 
+/*
+ @Unique_TCRef 58S1
+ @Unique_TCRef 17S6
+ */
 - (void)testRetrieveAllVersionsWithPaging
 {
     [super runAllSitesTest:^{
