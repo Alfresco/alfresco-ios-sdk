@@ -22,4 +22,5 @@
 - (void)sessionDidExpire;
 - (void)sessionWillRefresh;
 - (void)sessionDidRefresh;
+- (void)sessionDidFailWithError:(NSError *)error;
 @end

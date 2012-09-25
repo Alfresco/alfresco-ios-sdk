@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoErrors.h"
+#import "AlfrescoSession.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import <objc/runtime.h>
 
@@ -27,13 +28,13 @@
  
  @param api The URL string for the HTTP request excluding the Alfresco repository base URL.
  @param baseUrl The URL string for the base API
- @param authenticationProvider the AuthenticationProvider
+ @param session the AuthenticationProvider
  @param outError The error reference that's filled when the request fails.
  @return The HTTP response data.
  */
 + (NSData *)executeRequest:(NSString *)api
            baseUrlAsString:(NSString *)baseUrl
-    authenticationProvider:(id<AlfrescoAuthenticationProvider>)authenticationProvider
+                   session:(id<AlfrescoSession>)session
                      error:(NSError **)outError;
 
 
@@ -43,7 +44,7 @@
  
  @param api The URL for the HTTP request excluding the Alfresco repository base URL.
  @param baseUrl the URL string
- @param authenticationProvider
+ @param session
  @param data The NSData instance that's used for the HTTP body of the request.
  @param httpMethod The http method (GET, POST, PUT or DELETE), that's used when executing the request.
  @param outError The error reference that's filled when the request fails.
@@ -51,7 +52,7 @@
  */
 + (NSData *)executeRequest:(NSString *)api
            baseUrlAsString:(NSString *)baseUrl
-    authenticationProvider:(id<AlfrescoAuthenticationProvider>)authenticationProvider
+                   session:(id<AlfrescoSession>)session
                       data:(NSData *)data
                 httpMethod:(NSString *)httpMethod
                      error:(NSError **)outError;
@@ -61,14 +62,14 @@
  When data is provided, the request body is filled with the data parameter.
  
  @param url The full URL for the HTTP request.
- @param authenticationProvider
+ @param session
  @param data The NSData instance that's used for the HTTP body of the request.
  @param httpMethod The http method (GET, POST, PUT or DELETE), that's used when executing the request.
  @param outError The error reference that's filled when the request fails.
  @return The HTTP response data.
  */
 + (NSData *)executeRequestWithURL:(NSURL *)url
-           authenticationProvider:(id<AlfrescoAuthenticationProvider>)authenticationProvider
+                          session:(id<AlfrescoSession>)session
                              data:(NSData *)data
                        httpMethod:(NSString *)httpMethod
                             error:(NSError **)outError;

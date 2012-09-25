@@ -93,11 +93,13 @@
 
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
                   parameters:(NSDictionary *)parameters
+             sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
             networkIdentifer:(NSString *)networkIdentifer
                   parameters:(NSDictionary *)parameters
+             sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 
