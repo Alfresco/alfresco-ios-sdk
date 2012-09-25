@@ -84,7 +84,8 @@
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 2;
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
-        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
+        id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -943,7 +944,7 @@
         if (nil != jsonData)
         {
             [AlfrescoHTTPUtils executeRequestWithURL:apiUrl
-                              authenticationProvider:weakSelf.authenticationProvider
+                                             session:weakSelf.session
                                                 data:jsonData
                                           httpMethod:@"POST"
                                                error:&postError];
@@ -970,7 +971,7 @@
         if (nil != jsonData)
         {
             [AlfrescoHTTPUtils executeRequestWithURL:apiUrl
-                              authenticationProvider:weakSelf.authenticationProvider
+                                             session:weakSelf.session
                                                 data:jsonData
                                           httpMethod:@"POST"
                                                error:&postError];

@@ -50,7 +50,8 @@
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 2;
-        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
+        id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -74,7 +75,7 @@
         NSLog(@"url string from retrievePersonWithIdentifier is %@ RequestString is %@",[url absoluteString], requestString);
         
         NSData *data = [AlfrescoHTTPUtils executeRequestWithURL:url
-                                         authenticationProvider:weakSelf.authenticationProvider
+                                                        session:weakSelf.session
                                                            data:nil
                                                      httpMethod:@"GET"
                                                           error:&operationQueueError];
@@ -105,7 +106,7 @@
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
                                            [weakSelf.session.baseUrl absoluteString], requestString]];
         NSData *data = [AlfrescoHTTPUtils executeRequestWithURL:url
-                                         authenticationProvider:weakSelf.authenticationProvider
+                                                        session:weakSelf.session
                                                            data:nil
                                                      httpMethod:@"GET"
                                                           error:&operationQueueError];
