@@ -68,6 +68,9 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 }
 
 
+/*
+ @Unique_TCRef 33S1
+ */
 - (void) uploadTestDocument:(NSString *)filePath
 {
     __block NSURL *fileUrl = [NSURL URLWithString:filePath];
@@ -110,6 +113,9 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     STAssertTrue(self.lastTestSuccessful, @"uploadTestDocument failed");
 }
 
+/*
+ @Unique_TCRef 24S1
+ */
 - (void) removeTestDocument
 {
     if (nil == self.testAlfrescoDocument)
@@ -140,6 +146,9 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 
 
 
+/*
+ @Unique_TCRef 77S1
+ */
 - (void)authenticateOnPremiseServer
 {
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.server]
@@ -169,6 +178,9 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 }
 
 
+/*
+ @Unique_TCRef 59S1
+ */
 - (void)authenticateCloudServer
 {
     log(@"In authenticateCloudServer");
@@ -203,6 +215,9 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 
 
 
+/*
+ @Unique_TCRef 51S0
+ */
 - (void)retrieveAlfrescoTestFolder
 {
          
@@ -237,6 +252,9 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     }
 }
 
+/*
+ @Unique_TCRef 15S3
+ */
 - (void) setUpTestChildFolder
 {
     if (self.isCloud)

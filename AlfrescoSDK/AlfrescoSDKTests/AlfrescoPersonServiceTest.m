@@ -23,6 +23,7 @@
 @synthesize personService = _personService;
 
 /*
+ @Unique_TCRef 34S1
  */
 - (void)testRetrievePersonForUser
 {
@@ -55,6 +56,7 @@
 }
 
 /*
+ @Unique_TCRef 34F1
  */
 - (void)testRetrievePersonForUserNonExisting
 {
@@ -89,6 +91,10 @@
 }
 
 
+/*
+ @Unique_TCRef 34S1
+ @Unique_TCRef 35S2
+ */
 - (void)testRetrieveAvatarForPerson
 {
     [super runAllSitesTest:^{

@@ -25,6 +25,9 @@
 
 /*
  */
+/*
+ @Unique_TCRef 52S0
+ */
 - (void)testRetrieveAllTags
 {
     [super runAllSitesTest:^{
@@ -52,6 +55,9 @@
     }];
 }
 
+/*
+ @Unique_TCRef 53S0
+ */
 - (void)testRetrieveAllTagsWithPaging
 {
     [super runAllSitesTest:^{
@@ -83,6 +89,9 @@
     }];
 }
 
+/*
+ @Unique_TCRef 54S1
+ */
 - (void)testRetrieveEmptyTagsForNode
 {
     [super runAllSitesTest:^{
@@ -112,6 +121,9 @@
 }
 
 
+/*
+ @Unique_TCRef 55S1
+ */
 - (void)testRetrieveEmptyTagsForNodeWithPaging
 {
     [super runAllSitesTest:^{
@@ -143,6 +155,10 @@
     }];
 }
 
+/*
+ @Unique_TCRef 55S1
+ @Unique_TCRef 56S1
+ */
 - (void)testAddAndRetrieveTags
 {
     [super runAllSitesTest:^{
