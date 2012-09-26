@@ -48,10 +48,7 @@
     
     // get the document library for the site
     self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.session];
-    AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
-    searchOptions.exactMatch = self.exact;
-    searchOptions.includeContent = self.fullText;
-    searchOptions.includeDescendants = NO;
+    AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:self.exact includeContent:self.fullText folder:nil includeDescendants:NO];
     __weak SearchResultViewController *weakSelf = self;
     [self.searchService searchWithKeywords:self.searchText 
                                    options:searchOptions 

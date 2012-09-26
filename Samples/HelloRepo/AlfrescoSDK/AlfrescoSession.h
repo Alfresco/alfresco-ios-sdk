@@ -50,7 +50,7 @@
 /// a default listing context for the session
 @property (nonatomic, strong, readonly) AlfrescoListingContext *defaultListingContext;
 
-@property (nonatomic, assign, readonly)id<AlfrescoSessionDelegate> sessionDelegate;
+@property (nonatomic, weak, readonly)id<AlfrescoSessionDelegate> sessionDelegate;
 /**---------------------------------------------------------------------------------------
  * @name Methods for handling the Repository Settings
  *  ---------------------------------------------------------------------------------------
