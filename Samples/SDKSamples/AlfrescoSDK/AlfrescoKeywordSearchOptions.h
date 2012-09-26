@@ -24,10 +24,10 @@
 #import "AlfrescoFolder.h"
 
 @interface AlfrescoKeywordSearchOptions : NSObject
-@property (nonatomic, assign) BOOL exactMatch;
-@property (nonatomic, assign) BOOL includeContent;
-@property (nonatomic, assign) BOOL includeDescendants;
-@property (nonatomic, strong) AlfrescoFolder *folder;
+@property (nonatomic, assign, readonly) BOOL exactMatch;
+@property (nonatomic, assign, readonly) BOOL includeContent;
+@property (nonatomic, assign, readonly) BOOL includeDescendants;
+@property (nonatomic, strong, readonly) AlfrescoFolder *folder;
 
 - (id)initWithExactMatch:(BOOL)exactMatch includeContent:(BOOL)includeContent;
 

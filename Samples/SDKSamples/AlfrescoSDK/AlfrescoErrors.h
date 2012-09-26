@@ -57,6 +57,7 @@ typedef enum
     kAlfrescoErrorCodeDocumentFolderNilDocument = 605,
     kAlfrescoErrorCodeDocumentFolderNodeNotFound = 606,
     kAlfrescoErrorCodeDocumentFolderWrongNodeType = 607,
+    kAlfrescoErrorCodeDocumentFolderNoThumbnail = 608,
 
     kAlfrescoErrorCodeTagging = 700,
     kAlfrescoErrorCodeTaggingNoTags = 701,
@@ -106,6 +107,7 @@ extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoRenditionServic
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNilDocument;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeNotFound;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderWrongNodeType;
+extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoThumbnail;
 
 extern NSString * const kAlfrescoErrorDescriptionTagging;
 extern NSString * const kAlfrescoErrorDescriptionTaggingNoTags;
@@ -138,7 +140,7 @@ extern NSString * const kAlfrescoErrorDescriptionRatings;
  @param code the code string that represents the error type.
  @return The newly created error.
  */
-+ (NSError *)alfrescoError:(NSError *)error withAlfrescoErrorCode:(AlfrescoErrorCodes)code;
++ (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
 
 /** Creates an error object based on an error code and a description.
@@ -147,7 +149,7 @@ extern NSString * const kAlfrescoErrorDescriptionRatings;
  @param detailedDescription The detailed description of the error.
  @return The newly created error.
  */
-+ (NSError *)createAlfrescoErrorWithCode:(AlfrescoErrorCodes)code;
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
-+ (void)assertArgumentNotNil:(id)argument argumentAsString:(NSString *)argumentString;
++ (void)assertArgumentNotNil:(id)argument argumentName:(NSString *)argumentName;
 @end
