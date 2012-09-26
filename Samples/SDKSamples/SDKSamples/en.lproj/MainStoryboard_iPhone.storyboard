@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2549" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="nt0-Ld-0nE">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2840" systemVersion="12C54" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="nt0-Ld-0nE">
     <dependencies>
-        <deployment defaultVersion="1296" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1498"/>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
     </dependencies>
     <scenes>
         <!--Samples View Controller-->
         <scene sceneID="Iir-Nq-nec">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FZ6-Mc-RDD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="5T4-fQ-Si2" customClass="SamplesViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="7ga-xP-oap">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -163,13 +162,13 @@
                         <outlet property="searchLabel" destination="EOl-2i-9ld" id="fJW-E9-BNl"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FZ6-Mc-RDD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-186" y="-787"/>
         </scene>
         <!--Sites View Controller-->
         <scene sceneID="Mte-jZ-bsB">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xW5-mz-ZXR" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="gWa-bk-pPo" customClass="SitesViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="hF4-yJ-FHX">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -212,13 +211,13 @@
                         <segue destination="eiI-Ds-Xh6" kind="push" identifier="browseSite" id="Hru-ip-ZY5"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xW5-mz-ZXR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="742" y="-624"/>
         </scene>
         <!--MobileSDK Web View Controller-->
         <scene sceneID="UhN-qD-sTf">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="eP8-Vu-EjJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="C1W-er-PJ2" customClass="MobileSDKWebViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BGS-8B-SPh">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -262,13 +261,13 @@
                         <outlet property="webView" destination="4QY-Ul-fhg" id="l1S-2x-Anz"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eP8-Vu-EjJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-186" y="-1632"/>
         </scene>
         <!--Add New Item Table View Controller-->
         <scene sceneID="CWD-86-b3l">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ZXp-EL-4hf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="dki-Ki-Eee" customClass="AddNewItemTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" sectionIndexMinimumDisplayRowCount="1" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Zm0-vS-gfC">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -341,13 +340,13 @@
                         <segue destination="Zyt-F6-jjU" kind="push" identifier="setDocumentInfo" id="L2I-NQ-ZWy"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZXp-EL-4hf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1355" y="-1692"/>
         </scene>
         <!--Add Photo Table View Controller-->
         <scene sceneID="iwV-8G-g2S">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lBv-NP-Ts5" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="Zyt-F6-jjU" customClass="AddPhotoTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="slM-S3-MV5">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -454,13 +453,13 @@
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lBv-NP-Ts5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1771" y="-1692"/>
         </scene>
         <!--MobileSDK Table View Controller-->
         <scene sceneID="RfQ-3o-RjE">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="s3Q-Jj-Km4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="sgn-5o-0D5" customClass="MobileSDKTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="QPu-yF-MoJ">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -562,13 +561,13 @@
                         <outlet property="samplesLabel" destination="jOm-i8-73g" id="ZPw-jm-waB"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="s3Q-Jj-Km4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-754" y="-1073"/>
         </scene>
         <!--Folder View Controller-->
         <scene sceneID="2hB-iw-yKU">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cht-4f-oN3" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="eiI-Ds-Xh6" customClass="FolderViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="vHZ-tz-EsD">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -670,13 +669,13 @@
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cht-4f-oN3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="810" y="-1632"/>
         </scene>
         <!--Document View Controller-->
         <scene sceneID="Jh5-4m-veL">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gTX-Mo-LmH" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="LiO-6G-HTL" customClass="DocumentViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aO5-wt-mN9">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -876,13 +875,13 @@
                         <outlet property="tableView" destination="kQN-k9-7rc" id="ETl-Fc-phS"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gTX-Mo-LmH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1359" y="-316"/>
         </scene>
         <!--Add Comment View Controller-->
         <scene sceneID="D10-oZ-kRH">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OVG-ux-kGk" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="YDG-wD-0S4" customClass="AddCommentViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xyt-7t-yHi">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -909,13 +908,13 @@
                         <outlet property="commentView" destination="LXW-lh-cpd" id="cDn-qC-2sB"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OVG-ux-kGk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1782" y="-316"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="uYq-qV-rjK">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uCi-tU-44m" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController definesPresentationContext="YES" id="nt0-Ld-0nE" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="5qF-6u-IPF">
                         <autoresizingMask key="autoresizingMask"/>
@@ -924,13 +923,13 @@
                         <segue destination="sgn-5o-0D5" kind="relationship" relationship="rootViewController" id="eZv-fL-PPZ"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uCi-tU-44m" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1259" y="-1073"/>
         </scene>
         <!--Activities Table View Controller-->
         <scene sceneID="4Y4-YA-TrO">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="S35-a3-akT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="OR0-jV-ws9" customClass="ActivitiesTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="75" sectionHeaderHeight="22" sectionFooterHeight="22" id="Tuu-Ix-ZB5">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -975,13 +974,13 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="FK8-WE-naI"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="S35-a3-akT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="352" y="739"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="06v-Ff-Ws1">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VoQ-AX-Dwv" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="zAn-9f-BGR" customClass="SearchViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="zQj-Sz-G9b">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -1087,13 +1086,13 @@
                         <outlet property="searchField" destination="arx-TN-NCB" id="Ssi-Ye-kYA"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VoQ-AX-Dwv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="352" y="123"/>
         </scene>
         <!--Search Result View Controller-->
         <scene sceneID="tNS-53-86J">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Iws-rK-YyP" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="Ilu-p1-UJq" customClass="SearchResultViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Tul-QI-Alv">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -1133,6 +1132,7 @@
                         <segue destination="LiO-6G-HTL" kind="push" identifier="showDocument" id="H9W-6n-MRc"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Iws-rK-YyP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="820" y="123"/>
         </scene>
@@ -1155,6 +1155,7 @@
         <class className="AddCommentViewController" superclassName="BaseViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/AddCommentViewController.h"/>
             <relationships>
+                <relationship kind="action" name="addComment:"/>
                 <relationship kind="outlet" name="commentView" candidateClass="UITextView"/>
             </relationships>
         </class>

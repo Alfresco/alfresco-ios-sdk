@@ -21,6 +21,7 @@
 #import "AlfrescoRepositoryInfo.h"
 #import "AlfrescoConstants.h"
 #import "AlfrescoCloudNetwork.h"
+#import "AlfrescoOAuthData.h"
 
 @interface AlfrescoCloudSession : NSObject <AlfrescoSession>
 @property (nonatomic, strong, readonly) AlfrescoCloudNetwork *network;
@@ -89,12 +90,24 @@
                 completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 
+
++ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+                  parameters:(NSDictionary *)parameters
+             sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
+             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
++ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+            networkIdentifer:(NSString *)networkIdentifer
+                  parameters:(NSDictionary *)parameters
+             sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
+             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
+
 /**
  This method obtains a list of available Cloud networks (or domains/tenants) for the registered user.
  @param completionBlock (AlfrescoArrayCompletionBlock). If successful, the block returns an NSArray object with a list of available networks - or nil if error occurs.
  */
 - (void)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
-
 
 
 

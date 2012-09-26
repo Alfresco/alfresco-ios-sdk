@@ -235,9 +235,7 @@
         {
             [[segue destinationViewController] setSession:self.session];
             [[segue destinationViewController] setFolder:(AlfrescoFolder *)node];
-            AlfrescoListingContext *nextListingContext = [[AlfrescoListingContext alloc]init];
-            nextListingContext.maxItems = self.listingContext.maxItems;
-            nextListingContext.skipCount = 0;
+            AlfrescoListingContext *nextListingContext = [[AlfrescoListingContext alloc] initWithMaxItems:self.listingContext.maxItems skipCount:0];
             [[segue destinationViewController] setListingContext:nextListingContext];
         }
         else
@@ -257,7 +255,10 @@
     {
         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell viewWithTag:2];
         [activityIndicator startAnimating];
-        self.listingContext.skipCount = self.displayItemsCount;
+        int maxItems = self.listingContext.maxItems;
+        int skipCount = self.displayItemsCount;
+        self.listingContext = nil;
+        self.listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:skipCount];
         [self loadChildrenForCurrentPage:activityIndicator];
     }
 }
@@ -267,7 +268,9 @@
 {
     self.items = [NSMutableArray array];
     self.displayItemsCount = 0;
-    self.listingContext.skipCount = 0;
+    int maxItems = self.listingContext.maxItems;
+    self.listingContext = nil;
+    self.listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:0];
     [self loadChildrenForCurrentPage:nil];
 }
 

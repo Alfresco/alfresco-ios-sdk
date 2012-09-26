@@ -22,7 +22,7 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoNode.h"
 #import "AlfrescoOAuthData.h"
-#import "AlfrescoOAuthWebViewController.h"
+#import "AlfrescoOAuthLoginViewController.h"
 
 //#import "OAuthLoginWebViewController.h"
 
@@ -146,7 +146,7 @@
             }];
         }
     };
-    AlfrescoOAuthWebViewController *webLoginController = [[AlfrescoOAuthWebViewController alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:REDIRECT completionBlock:completionBlock parameters:parameters];
+    AlfrescoOAuthLoginViewController *webLoginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:REDIRECT completionBlock:completionBlock parameters:parameters];
     [self.navigationController pushViewController:webLoginController animated:YES];
 }
 
