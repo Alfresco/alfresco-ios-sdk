@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoOAuthData.h"
-@interface AlfrescoOAuthAuthenticationProvider : NSObject <AlfrescoAuthenticationProvider, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+@interface AlfrescoOAuthAuthenticationProvider : NSObject <AlfrescoAuthenticationProvider>
 
 /**---------------------------------------------------------------------------------------
  * @name Creates an authentication provider based on cloud OAuth data.

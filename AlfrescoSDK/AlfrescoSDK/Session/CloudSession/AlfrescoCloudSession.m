@@ -50,12 +50,10 @@
 
 
 - (void)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
-                  sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
                   completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 - (void)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
                           network:(NSString *)network
-                  sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
                   completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 - (NSArray *)networkArrayFromJSONData:(NSData *)data error:(NSError **)outError;
@@ -75,10 +73,8 @@
 @property (nonatomic, strong)           AlfrescoISO8601DateFormatter *dateFormatter;
 //@property (nonatomic, strong, readwrite) AlfrescoCloudNetwork *network;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
-@property (nonatomic, strong, readwrite) AlfrescoOAuthData *oauthData;
 @property (nonatomic, strong, readwrite) NSString * apiKey;
 @property BOOL isUsingBaseAuthenticationProvider;
-@property (nonatomic, assign, readwrite)id<AlfrescoSessionDelegate> sessionDelegate;
 @end
 
 
@@ -97,108 +93,8 @@
 @synthesize oauthData = _oauthData;
 @synthesize apiKey = _apiKey;
 @synthesize isUsingBaseAuthenticationProvider = _isUsingBaseAuthenticationProvider;
-@synthesize sessionDelegate = _sessionDelegate;
 #pragma public methods
 
-+ (void)signupWithEmailAddress:(NSString *)emailAddress
-                     firstName:(NSString *)firstName
-                      lastName:(NSString *)lastName
-                      password:(NSString *)password
-                        apiKey:(NSString *)apiKey
-               completionBlock:(AlfrescoCloudSignupRequestCompletionBlock)completionBlock
-{
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",kAlfrescoTestCloudURL, kAlfrescoCloudBindingService, kAlfrescoCloudSignupURL]];
-    NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
-    [operationQueue addOperationWithBlock:^(){
-        NSError *operationQueueError = nil;
-        
-        NSMutableDictionary *jsonInputDict = [NSMutableDictionary dictionary];
-        [jsonInputDict setValue:emailAddress forKey:kAlfrescoJSONEmail];
-        [jsonInputDict setValue:firstName forKey:kAlfrescoJSONSignupFirstName];
-        [jsonInputDict setValue:lastName forKey:kAlfrescoJSONSignupLastName];
-        [jsonInputDict setValue:password forKey:kAlfrescoJSONPassword];
-        [jsonInputDict setValue:kAlfrescoJSONIOSSource forKey:kAlfrescoJSONSource];
-        
-        NSData *jsonInputData = [NSJSONSerialization dataWithJSONObject:jsonInputDict options:kNilOptions error:&operationQueueError];
-        if (nil == jsonInputData)
-        {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
-                completionBlock(nil, operationQueueError);
-            }];
-        }
-        else
-        {
-            NSData *jsonOutputData = [AlfrescoHTTPUtils executeRequestWithURL:url data:jsonInputData httpMethod:@"POST" error:&operationQueueError];
-            if (nil == jsonOutputData)
-            {
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
-                    completionBlock(nil, operationQueueError);
-                }];
-            }
-            else
-            {
-                AlfrescoCloudSignupRequest *signupRequest = nil;
-                id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonOutputData options:kNilOptions error:&operationQueueError];
-                if (nil != jsonObject)
-                {
-                    if ([jsonObject isKindOfClass:[NSDictionary class]])
-                    {
-                        id registrationObject = [jsonObject valueForKey:kAlfrescoJSONRegistration];
-                        if ([registrationObject isKindOfClass:[NSDictionary class]])
-                        {
-                            signupRequest = [[AlfrescoCloudSignupRequest alloc] init];
-                            signupRequest.apiKey = [registrationObject valueForKey:kAlfrescoJSONAPIKey];
-                            signupRequest.identifier = [registrationObject valueForKey:kAlfrescoJSONIdentifier];
-                            signupRequest.emailAddress = [registrationObject valueForKey:kAlfrescoJSONEmail];
-                            NSString *dateString = [registrationObject valueForKey:kAlfrescoJSONRegistrationTime];
-                            AlfrescoISO8601DateFormatter *dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
-                            signupRequest.registeredAt = [dateFormatter dateFromString:dateString];
-                        }
-                        else
-                        {
-                            operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSignUpRequestError];
-                        }
-                    }
-                    else
-                    {
-                        operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSignUpRequestError];
-                    }
-                }
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
-                    completionBlock(signupRequest, operationQueueError);
-                }];
-                
-            }
-        
-        }
-        
-    }];
-}
-
-+ (void)isAccountVerifiedForSignupRequest:(AlfrescoCloudSignupRequest *)signupRequest
-                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
-{
-    NSString *urlString = [NSString stringWithFormat:@"%@%@%@/%@?key=%@",kAlfrescoTestCloudURL, kAlfrescoCloudBindingService, kAlfrescoCloudSignupURL, signupRequest.identifier, signupRequest.apiKey];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
-    [operationQueue addOperationWithBlock:^() {
-        NSError *operationQueueError = nil;
-        NSData *jsonOutputData = [AlfrescoHTTPUtils executeRequestWithURL:url data:nil httpMethod:@"GET" error:&operationQueueError];
-        id jsonDict = [NSJSONSerialization JSONObjectWithData:jsonOutputData options:kNilOptions error:&operationQueueError];
-        BOOL success = NO;
-        if (nil != jsonDict)
-        {
-            if ([jsonDict isKindOfClass:[NSDictionary class]])
-            {
-                NSNumber *isRegisteredValue = [jsonDict valueForKey:kAlfrescoJSONIsRegistered];
-                success = [isRegisteredValue boolValue];
-            }
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
-            completionBlock(success, operationQueueError);
-        }];
-    }];
-}
 
 + (void)connectWithEmailAddress:(NSString *)emailAddress
                        password:(NSString *)password
@@ -231,20 +127,18 @@
 
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
                   parameters:(NSDictionary *)parameters
-             sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:parameters];
     if (nil != sessionInstance)
     {
-        [sessionInstance authenticateWithOAuthData:oauthData sessionDelegate:sessionDelegate completionBlock:completionBlock];
+        [sessionInstance authenticateWithOAuthData:oauthData completionBlock:completionBlock];
     }
 }
 
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
             networkIdentifer:(NSString *)networkIdentifer
                   parameters:(NSDictionary *)parameters
-             sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:parameters];
@@ -252,7 +146,6 @@
     {
         [sessionInstance authenticateWithOAuthData:oauthData
                                            network:networkIdentifer
-                                   sessionDelegate:sessionDelegate
                                    completionBlock:completionBlock];
     }    
 }
@@ -324,11 +217,9 @@
 }
 
 - (void)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
-                  sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
                   completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     self.isUsingBaseAuthenticationProvider = NO;
-    self.sessionDelegate = sessionDelegate;
     NSString *baseURL = kAlfrescoOAuthCloudURL;
     if ([[self.sessionData allKeys] containsObject:kAlfrescoCloudTestParameter])
     {
@@ -368,7 +259,6 @@
                 NSLog(@"*** authenticateWithOAuthData found home network with id %@", homeNetwork.identifier);
                 [self authenticateWithOAuthData:oauthData
                                         network:homeNetwork.identifier
-                                sessionDelegate:sessionDelegate
                                 completionBlock:completionBlock];
 //                completionBlock(self, error);
             }
@@ -381,14 +271,9 @@
 
 - (void)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
                           network:(NSString *)network
-                  sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
                   completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     self.isUsingBaseAuthenticationProvider = NO;
-    if (nil == self.sessionDelegate)
-    {
-        self.sessionDelegate = sessionDelegate;
-    }
     NSLog(@"*** ENTERING authenticateWithOAuthData with specified home network");
     NSString *baseURL = kAlfrescoOAuthCloudURL;
     if ([[self.sessionData allKeys] containsObject:kAlfrescoCloudTestParameter])
@@ -401,6 +286,7 @@
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",baseURL,network]];
     self.oauthData = oauthData;
+    self.personIdentifier = kAlfrescoMe;
     CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
     self.cmisUrl = [NSURL URLWithString:cmisUrl];

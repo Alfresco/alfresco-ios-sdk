@@ -47,7 +47,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.isCloudTest = YES;
+    self.isCloudTest = NO;
     self.navigationItem.title = @"Hello Repo";
 
     self.nodes = [NSMutableArray array];
@@ -133,7 +133,7 @@
         {
             NSLog(@"We got something back: access token is %@", oauthdata.accessToken);
             NSLog(@"The refresh token is %@ the grant_type is %@", oauthdata.refreshToken, oauthdata.tokenType);
-            [AlfrescoCloudSession connectWithOAuthData:oauthdata parameters:parameters sessionDelegate:self completionBlock:^(id<AlfrescoSession> session, NSError *error){
+            [AlfrescoCloudSession connectWithOAuthData:oauthdata parameters:parameters completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
                 }
@@ -220,30 +220,6 @@
     }
 }
 
-#pragma mark - AlfrescoSessionDelegate Methods
-
-- (void)sessionDidExpire
-{
-    NSLog(@"notified that access token expired. But it turns out the refresh token also expired. Therefore we need to login again");
-    [self helloFromCloudWithOAuth];
-    
-}
-- (void)sessionWillRefresh
-{
-    NSLog(@"notified that access token expired and we are about to get a new one");
-    
-}
-- (void)sessionDidRefresh
-{
-    NSLog(@"notified that access token expired and we did get a new one");
-    
-}
-- (void)sessionDidFailWithError:(NSError *)error
-{
-    NSLog(@"notified that access token expired, we tried to get a new one but something wrong happened on the way");
-    NSLog(@"sessionDidFailWithError:: error with %@ and code %d", [error localizedDescription] , [error code]);
-    
-}
 
 
 

@@ -18,7 +18,6 @@
 
 #import "AlfrescoHTTPUtils.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoSessionDelegate.h"
 
 @implementation AlfrescoHTTPUtils
 
@@ -52,8 +51,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
                                                            cachePolicy: NSURLRequestReloadIgnoringCacheData
                                                        timeoutInterval: 10];
-    __block id<AlfrescoSession> alfrescoSession = session;
-    __block id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+    id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
     NSDictionary *httpHeaders = [authenticationProvider willApplyHTTPHeadersForSession:nil];
     NSEnumerator *headerEnumerator = [httpHeaders keyEnumerator];
     for (NSString *key in headerEnumerator)
@@ -77,19 +75,6 @@
         
     NSLog(@"response status %i", [response statusCode]);
     NSLog(@"response %@", [[NSMutableString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
-    if (nil != error)
-    {
-        NSLog(@"executeRequestWithURL: error msg=%@, code = %d, data = %@",[error localizedDescription], [error code], [NSString stringWithCharacters:[responseData bytes] length:responseData.length]);
-        
-        int errorCode = [error code];
-        if (kCFURLErrorUserCancelledAuthentication == errorCode || kCFURLErrorUserAuthenticationRequired == errorCode)
-        {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [authenticationProvider sessionDidExpire:alfrescoSession];
-            }];            
-        }
-        
-    }
     
     if (response.statusCode < 200 || response.statusCode > 299)
     {

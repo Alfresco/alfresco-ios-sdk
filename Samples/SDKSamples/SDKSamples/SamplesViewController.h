@@ -17,13 +17,14 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "AlfrescoSession.h"
+#import "BaseTableViewController.h"
 
-@interface SamplesViewController : UITableViewController
+@interface SamplesViewController : BaseTableViewController
 @property (nonatomic, weak) IBOutlet UILabel *browseCompanyLabel;
 @property (nonatomic, weak) IBOutlet UILabel *browseSitesLabel;
 @property (nonatomic, weak) IBOutlet UILabel *browseFavouriteSitesLabel;
 @property (nonatomic, weak) IBOutlet UILabel *browseAllSitesLabel;
 @property (nonatomic, weak) IBOutlet UILabel *browseActivitiesLabel;
 @property (nonatomic, weak) IBOutlet UILabel *searchLabel;
+//@property (nonatomic, strong) id<AlfrescoSession>session;
 @end
