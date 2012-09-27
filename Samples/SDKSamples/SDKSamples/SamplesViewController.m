@@ -27,7 +27,6 @@
 
 @interface SamplesViewController ()
 @property (nonatomic, assign) BOOL connectionDetailsProvided;
-@property (nonatomic, strong) AlfrescoRepositorySession *session;
 @end
 
 @implementation SamplesViewController
@@ -162,7 +161,7 @@
     self.browseAllSitesLabel.text = localized(@"sample_browse_all_sites_option");
     self.browseActivitiesLabel.text = localized(@"sample_activities_option");
     self.searchLabel.text = localized(@"sample_search_option");
-    [self authenticate];
+//    [self authenticate];
 }
 
 

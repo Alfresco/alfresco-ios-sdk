@@ -72,6 +72,8 @@ NSString * const kAlfrescoClientSecret = @"{clientSecret}";
 NSString * const kAlfrescoCode = @"{code}";
 NSString * const kAlfrescoRedirectURI = @"{redirectURI}";
 NSString * const kAlfrescoRefreshID = @"{refreshID}";
+NSString * const kAlfrescoMe = @"-me-";
+
 
 /**
  Session data key constants
@@ -169,6 +171,8 @@ NSString * const kAlfrescoCloudCommentForNodeAPI = @"nodes/{nodeRef}/comments/{c
 NSString * const kAlfrescoCloudTagsAPI = @"tags";
 NSString * const kAlfrescoCloudTagsForNodeAPI = @"nodes/{nodeRef}/tags";
 NSString * const kAlfrescoCloudPersonAPI = @"people/{personID}";
+
+
 
 /**
  JSON Constants

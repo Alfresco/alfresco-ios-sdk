@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4E4FB21216120A8000D6EDCC /* libAlfrescoSDKv0.0.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E4FB21116120A8000D6EDCC /* libAlfrescoSDKv0.0.2.a */; };
+		4E80E8EB1614540100922D5D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E80E8EA1614540100922D5D /* Default-568h@2x.png */; };
 		82FC411415E7AC7D0081888D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82FC411315E7AC7D0081888D /* UIKit.framework */; };
 		82FC411615E7AC7D0081888D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82FC411515E7AC7D0081888D /* Foundation.framework */; };
 		82FC411815E7AC7D0081888D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82FC411715E7AC7D0081888D /* CoreGraphics.framework */; };
@@ -22,6 +23,7 @@
 		4E0C86701612EE3A008B71DB /* AlfrescoOAuthLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthLoginViewController.h; sourceTree = "<group>"; };
 		4E4FB21016120A8000D6EDCC /* AlfrescoSessionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSessionDelegate.h; sourceTree = "<group>"; };
 		4E4FB21116120A8000D6EDCC /* libAlfrescoSDKv0.0.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAlfrescoSDKv0.0.2.a; sourceTree = "<group>"; };
+		4E80E8EA1614540100922D5D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		4EDBAD3C160B251C00D6305F /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthData.h; sourceTree = "<group>"; };
 		82FC410F15E7AC7D0081888D /* HelloRepo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloRepo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82FC411315E7AC7D0081888D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -131,6 +133,7 @@
 		82FC411A15E7AC7D0081888D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4E80E8EA1614540100922D5D /* Default-568h@2x.png */,
 				82FC411B15E7AC7D0081888D /* HelloRepo-Info.plist */,
 				82FC411C15E7AC7D0081888D /* InfoPlist.strings */,
 				82FC411F15E7AC7D0081888D /* main.m */,
@@ -235,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				82FC411E15E7AC7D0081888D /* InfoPlist.strings in Resources */,
+				4E80E8EB1614540100922D5D /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

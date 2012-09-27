@@ -67,10 +67,6 @@
     return self.httpHeaders;
 }
 
-- (void)sessionDidExpire:(id<AlfrescoSession>)session
-{
-    
-}
 
 
 @end

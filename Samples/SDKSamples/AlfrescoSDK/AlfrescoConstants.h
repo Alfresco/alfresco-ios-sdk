@@ -29,7 +29,6 @@
 #import "AlfrescoSite.h"
 #import "AlfrescoNode.h"
 #import "AlfrescoDocument.h"
-#import "AlfrescoCloudSignupRequest.h"
 #import "AlfrescoComment.h"
 
 @protocol AlfrescoSession;
@@ -51,7 +50,6 @@ typedef void (^AlfrescoContentFileCompletionBlock)(AlfrescoContentFile *contentF
 typedef void (^AlfrescoPermissionsCompletionBlock)(AlfrescoPermissions *permissions, NSError *error);
 typedef void (^AlfrescoPersonCompletionBlock)(AlfrescoPerson *person, NSError *error);
 typedef void (^AlfrescoSiteCompletionBlock)(AlfrescoSite *site, NSError *error);
-typedef void (^AlfrescoCloudSignupRequestCompletionBlock)(AlfrescoCloudSignupRequest *signupRequest, NSError *error);
 typedef void (^AlfrescoSessionCompletionBlock)(id<AlfrescoSession> session, NSError *error);
 typedef void (^AlfrescoCommentCompletionBlock)(AlfrescoComment *comment, NSError *error);
 typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSError *error);
