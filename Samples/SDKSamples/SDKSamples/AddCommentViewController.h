@@ -20,6 +20,7 @@
 #import "BaseViewController.h"
 #import "AlfrescoCommentService.h"
 #import "AlfrescoRepositorySession.h"
+#import "AlfrescoCloudSession.h"
 #import "AlfrescoDocument.h"
 
 @protocol AddCommentViewDelegate <NSObject>

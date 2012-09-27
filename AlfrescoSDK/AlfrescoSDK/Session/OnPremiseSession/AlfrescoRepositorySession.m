@@ -49,7 +49,6 @@
 @synthesize sessionData = _sessionData;
 @synthesize rootFolder = _rootFolder;
 @synthesize defaultListingContext = _defaultListingContext;
-@synthesize sessionDelegate = _sessionDelegate;
 
 + (void)connectWithUrl:(NSURL *)url
               username:(NSString *)username

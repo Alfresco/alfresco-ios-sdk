@@ -25,33 +25,7 @@
 
 @interface AlfrescoCloudSession : NSObject <AlfrescoSession>
 @property (nonatomic, strong, readonly) AlfrescoCloudNetwork *network;
-
-
-/**
- static method to sign up a user for accessing cloud services via the API
- @param emailAddress - the email address of the user to be used for sign up
- @param firstName - first name of user
- @param lastName - last name of user
- @param password - password
- @param apiKey - apiKey to authenticate app at server with
- @param completionBlock (AlfrescoCloudSignupRequestCompletionBlock). If successful, the block returns an AlfrescoCloudSignupRequest object - or nil if error occurred. 
- */
-+ (void)signupWithEmailAddress:(NSString *)emailAddress
-                     firstName:(NSString *)firstName
-                      lastName:(NSString *)lastName
-                      password:(NSString *)password
-                        apiKey:(NSString *)apiKey
-               completionBlock:(AlfrescoCloudSignupRequestCompletionBlock)completionBlock;
-
-
-/**
- verifies the signup request
- @param signupRequest - the AlfrescoCloudSignupRequest object to test if user has right credentials
- @param completionBlock (AlfrescoBOOLCompletionBlock). BOOL block, returns true if account is verified
- */
-+ (void)isAccountVerifiedForSignupRequest:(AlfrescoCloudSignupRequest *)signupRequest
-                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
-
+@property (nonatomic, strong) AlfrescoOAuthData *oauthData;
 
 
 /**
@@ -93,13 +67,11 @@
 
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
                   parameters:(NSDictionary *)parameters
-             sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
             networkIdentifer:(NSString *)networkIdentifer
                   parameters:(NSDictionary *)parameters
-             sessionDelegate:(id<AlfrescoSessionDelegate>)sessionDelegate
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 
