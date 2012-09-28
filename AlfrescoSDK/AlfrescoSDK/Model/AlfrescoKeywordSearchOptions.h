@@ -29,10 +29,24 @@
 @property (nonatomic, assign, readonly) BOOL includeDescendants;
 @property (nonatomic, strong, readonly) AlfrescoFolder *folder;
 
+/**
+ @param exactMatch
+ @param includeContent - searches also the content of files
+ */
 - (id)initWithExactMatch:(BOOL)exactMatch includeContent:(BOOL)includeContent;
 
+/**
+ @param folder - the node to be searched
+ @param includeDescendants - search sub-folders as well
+ */
 - (id)initWithFolder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants;
 
+/**
+ @param exactMatch
+ @param includeContent - searches also the content of files
+ @param folder - the node to be searched
+ @param includeDescendants - search sub-folders as well
+ */
 - (id)initWithExactMatch:(BOOL)exactMatch
           includeContent:(BOOL)includeContent
                   folder:(AlfrescoFolder *)folder

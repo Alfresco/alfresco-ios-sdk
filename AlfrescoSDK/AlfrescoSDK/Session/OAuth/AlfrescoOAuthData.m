@@ -18,6 +18,7 @@
 
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoErrors.h"
 
 @interface AlfrescoOAuthData ()
 @property (nonatomic, strong, readwrite) NSString           * accessToken;
@@ -28,7 +29,6 @@
 @property (nonatomic, strong, readwrite) NSString           * apiKey;
 @property (nonatomic, strong, readwrite) NSString           * secretKey;
 @property (nonatomic, strong, readwrite) NSString           * redirectURI;
-
 @end
 
 @implementation AlfrescoOAuthData
@@ -41,7 +41,22 @@
 @synthesize secretKey = _secretKey;
 @synthesize redirectURI = _redirectURI;
 
+- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey
+{
+    return [self initWithAPIKey:apiKey secretKey:secretKey redirectURI:kAlfrescoCloudDefaultRedirectURI jsonDictionary:nil];
+}
+
 - (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI
+{
+    return [self initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI jsonDictionary:nil];
+}
+
+- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey jsonDictionary:(NSDictionary *)jsonDictionary
+{
+    return [self initWithAPIKey:apiKey secretKey:secretKey redirectURI:kAlfrescoCloudDefaultRedirectURI jsonDictionary:jsonDictionary];    
+}
+
+- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI jsonDictionary:(NSDictionary *)jsonDictionary
 {
     self = [super init];
     if (nil != self)
@@ -54,22 +69,17 @@
         self.expiresIn = nil;
         self.tokenType = nil;
         self.scope = nil;
+        if (nil != jsonDictionary)
+        {
+            self.accessToken    = [jsonDictionary valueForKey:kAlfrescoJSONAccessToken];
+            self.refreshToken   = [jsonDictionary valueForKey:kAlfrescoJSONRefreshToken];
+            self.expiresIn      = [jsonDictionary valueForKey:kAlfrescoJSONExpiresIn];
+            self.scope          = [jsonDictionary valueForKey:kAlfrescoJSONScope];
+            self.tokenType      = [jsonDictionary valueForKey:kAlfrescoJSONTokenType];
+            
+        }
     }
     return self;
 }
-
-- (void)setOAuthDataWithJSONDictionary:(NSDictionary *)jsonDictionary
-{
-    if (nil != jsonDictionary)
-    {
-        self.accessToken    = [jsonDictionary valueForKey:kAlfrescoJSONAccessToken];
-        self.refreshToken   = [jsonDictionary valueForKey:kAlfrescoJSONRefreshToken];
-        self.expiresIn      = [jsonDictionary valueForKey:kAlfrescoJSONExpiresIn];
-        self.scope          = [jsonDictionary valueForKey:kAlfrescoJSONScope];
-        self.tokenType      = [jsonDictionary valueForKey:kAlfrescoJSONTokenType];
-    }
-    
-}
-
 
 @end

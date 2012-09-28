@@ -79,10 +79,10 @@ NSString * const kAlfrescoMe = @"-me-";
  Session data key constants
  */
 NSString * const kAlfrescoSessionKeyCmisSession = @"alfresco_session_key_cmis_session";
-NSString * const kAlfrescoCloudTestParameter = @"org.alfresco.mobile.cloud.isStaging";
-NSString * const kAlfrescoSessionBaseURL = @"org.alfresco.mobile.session.baseURL";
-NSString * const kAlfrescoSessionEmailOrUsername = @"org.alfresco.mobile.session.emailOrUsername";
-NSString * const kAlfrescoSessionPassword = @"org.alfresco.mobile.session.password";
+NSString * const kAlfrescoSessionCloudURL = @"org.alfresco.mobile.internal.session.cloud.url";
+NSString * const kAlfrescoSessionCloudBasicAuth = @"org.alfresco.mobile.internal.session.cloud.basic";
+NSString * const kAlfrescoSessionUsername = @"org.alfresco.mobile.internal.session.username";
+NSString * const kAlfrescoSessionPassword = @"org.alfresco.mobile.internal.session.password";
 
 /**
  Associated object key constants
@@ -171,6 +171,7 @@ NSString * const kAlfrescoCloudCommentForNodeAPI = @"nodes/{nodeRef}/comments/{c
 NSString * const kAlfrescoCloudTagsAPI = @"tags";
 NSString * const kAlfrescoCloudTagsForNodeAPI = @"nodes/{nodeRef}/tags";
 NSString * const kAlfrescoCloudPersonAPI = @"people/{personID}";
+NSString * const kAlfrescoCloudDefaultRedirectURI = @"http://www.alfresco.com/mobile-auth-callback.html";
 
 
 

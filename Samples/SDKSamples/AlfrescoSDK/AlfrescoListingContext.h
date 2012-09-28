@@ -41,10 +41,30 @@
 /// Returns current skip count.
 @property (nonatomic, assign, readonly) int skipCount;
 
+/**
+ In the context of this SDK, maxItems is the maximum number to be used in one listing. The skipCount is a multiple of
+ maxItems. Hence skipCount 0 will return all items from 0 to maxItems - 1. skipCount 1 will return all items between
+ maxItems and (maxItems * 2) - 1 - etc.
+ @param maxItems - the maximum number of items to be used
+ @param skipCount
+ */
 - (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount;
 
+/**
+ In the context of this SDK, maxItems is the maximum number to be used in one listing. The skipCount is a multiple of
+ maxItems. Hence skipCount 0 will return all items from 0 to maxItems - 1. skipCount 1 will return all items between
+ maxItems and (maxItems * 2) - 1 - etc.
+ @param maxItems - the maximum number of items to be used
+ @param skipCount
+ @param sortProperty - a string indicating which value should be used for sorting. A nil string (or invalid string) will result in  default sorting
+ @param sortAscending
+ */
 - (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount sortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending;
 
+/**
+ @param sortProperty - a string indicating which value should be used for sorting. A nil string (or invalid string) will result in  default sorting
+ @param sortAscending
+ */
 - (id)initWithSortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending;
 
 @end

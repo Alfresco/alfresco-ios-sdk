@@ -26,5 +26,4 @@
 @property (nonatomic, weak) IBOutlet UILabel *browseAllSitesLabel;
 @property (nonatomic, weak) IBOutlet UILabel *browseActivitiesLabel;
 @property (nonatomic, weak) IBOutlet UILabel *searchLabel;
-//@property (nonatomic, strong) id<AlfrescoSession>session;
 @end

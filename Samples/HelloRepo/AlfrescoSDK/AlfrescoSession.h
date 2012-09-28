@@ -87,6 +87,9 @@
  */
 - (void)removeParameter:(id)key;
 
+/**
+ clears out the CMIS cache
+ */
 - (void)disconnect;
 
 

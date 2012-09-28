@@ -28,6 +28,50 @@
 @property (nonatomic, strong, readonly) NSString * secretKey;
 @property (nonatomic, strong, readonly) NSString * redirectURI;
 
-- (void)setOAuthDataWithJSONDictionary:(NSDictionary *)jsonDictionary;
-- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI;
+
+/**---------------------------------------------------------------------------------------
+ * @name Initialisers for OAuth data
+ *  ---------------------------------------------------------------------------------------
+ */
+
+/**
+ This initialiser is typically used for the first step of authentication, i.e. obtaining the authorization code.
+ The Alfresco default redirect URI is taken as a value
+ @param apiKey
+ @param secretKey
+ */
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey;
+
+/**
+ This initialiser is typically used for the first step of authentication, i.e. obtaining the authorization code.
+ @param apiKey
+ @param secretKey
+ @param redirectURI
+ */
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey
+         redirectURI:(NSString *)redirectURI;
+
+/**
+ This initialised is typically used for subsequent authentication steps, e.g. obtaining the access token or refresh token.
+ The Alfresco default redirect URI is taken as a value
+ @param apiKey
+ @param secretKey
+ @param jsonDictionary
+ */
+
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey
+      jsonDictionary:(NSDictionary *)jsonDictionary;
+/**
+ @param apiKey
+ @param secretKey
+ @param redirectURI
+ @param jsonDictionary
+ */
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey
+         redirectURI:(NSString *)redirectURI
+      jsonDictionary:(NSDictionary *)jsonDictionary;
 @end

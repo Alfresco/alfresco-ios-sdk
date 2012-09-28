@@ -39,7 +39,6 @@
  Detects the mime type based on the extension of the file
  @param the URL of the file.
  */
-// 
 - (id)initWithUrl:(NSURL *)url;
 
 /** creates a new  file in the temporary folder 
@@ -47,10 +46,13 @@
  @param data The data to initialise the AlfrescoContentFile with
  @param mimeType the mime type of the data
  */
-// 
-
 - (id)initWithData:(NSData *)data mimeType:(NSString *)mimeType;
 
 
+/** creates a new  file in the temporary folder
+ 
+ @param path the full file path of the file to be used
+ @param mimeType the mime type of the data
+ */
 - (id)initWithFilePath:(NSString *)path mimeType:(NSString *)mimeType;
 @end

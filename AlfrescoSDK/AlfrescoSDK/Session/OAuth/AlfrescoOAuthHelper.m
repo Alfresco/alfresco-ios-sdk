@@ -30,6 +30,8 @@
                             oauthData:(AlfrescoOAuthData *)oauthData
                       completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
 - (void)updateAccessToken:(AlfrescoOAuthData *)oauthData completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
+
+- (AlfrescoOAuthData *)updatedOAuthDataFromJSONWithError:(NSError **)error;
 @end
 
 @implementation AlfrescoOAuthHelper
@@ -61,76 +63,51 @@
     
 }
 
-+ (AlfrescoOAuthData *)updateOAuthDataFromJSON:(NSData *)jsonData
-                                     oauthData:(AlfrescoOAuthData *)oauthData
-                                         error:(NSError **)error
+
+#pragma NSURLConnection Delegate methods
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    if (nil == jsonData)
+    NSLog(@"AlfrescoOAuthHelper didReceiveData");
+    if (nil != data && data.length > 0)
     {
-        if (nil == *error)
+        if (nil == self.receivedData)
         {
-            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            self.receivedData = [NSMutableData data];
         }
-        else
+        
+        NSError *error = nil;
+        id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (nil != jsonObj)
         {
-            NSError *internalError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
-            *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:internalError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            if ([jsonObj isKindOfClass:[NSDictionary class]])
+            {
+                [self.receivedData appendBytes:[data bytes] length:data.length];
+            }
+            
         }
-        return nil;
     }
-    if (0 == jsonData.length)
-    {
-        if (nil == *error)
-        {
-            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
-        }
-        else
-        {
-            NSError *internalError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
-            *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:internalError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
-        }
-        return nil;
-    }
-    NSError *jsonError = nil;
-    id jsonDictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:&jsonError];
-    if (nil == jsonDictionary)
-    {
-        *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:jsonError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
-        return nil;
-    }
-    
-    if (![jsonDictionary isKindOfClass:[NSDictionary class]])
-    {
-        if (nil == *error)
-        {
-            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
-        }
-        else
-        {
-            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
-            *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
-        }
-        return nil;
-    }
-    
-    if ([[jsonDictionary allKeys] containsObject:kAlfrescoJSONError])
-    {
-        if (nil == *error)
-        {
-            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
-        }
-        else
-        {
-            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
-            *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
-        }
-        return nil;
-    }
-    [oauthData setOAuthDataWithJSONDictionary:(NSDictionary *)jsonDictionary];
-    
-    return oauthData;
 }
 
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    NSLog(@"AlfrescoOAuthHelper didReceiveResponse");
+    
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    NSLog(@"AlfrescoOAuthHelper didFailWithError");
+    
+    NSError *error = nil;
+    AlfrescoOAuthData *updatedOAuthData = [self updatedOAuthDataFromJSONWithError:&error];
+    self.completionBlock(updatedOAuthData, error);
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    NSLog(@"AlfrescoOAuthHelper didFailWithError");
+    self.completionBlock(nil, error);
+}
 
 
 
@@ -204,50 +181,78 @@
     
 }
 
-
-#pragma NSURLConnection Delegate methods
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+- (AlfrescoOAuthData *)updatedOAuthDataFromJSONWithError:(NSError **)error
 {
-    NSLog(@"AlfrescoOAuthHelper didReceiveData");
-    if (nil != data && data.length > 0)
+    if (nil == self.receivedData)
     {
-        if (nil == self.receivedData)
+        if (nil == *error)
         {
-            self.receivedData = [NSMutableData data];
+            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
-        
-        NSError *error = nil;
-        id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-        if (nil != jsonObj)
+        else
         {
-            if ([jsonObj isKindOfClass:[NSDictionary class]])
-            {
-                [self.receivedData appendBytes:[data bytes] length:data.length];
-            }
-            
+            NSError *internalError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:internalError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
         }
-    }    
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    NSLog(@"AlfrescoOAuthHelper didReceiveResponse");
+        return nil;
+    }
+    if (0 == self.receivedData.length)
+    {
+        if (nil == *error)
+        {
+            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+        }
+        else
+        {
+            NSError *internalError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+            *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:internalError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+        }
+        return nil;
+    }
+    NSError *jsonError = nil;
+    id jsonDictionary = [NSJSONSerialization JSONObjectWithData:self.receivedData options:kNilOptions error:&jsonError];
+    if (nil == jsonDictionary)
+    {
+        *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:jsonError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
+        return nil;
+    }
     
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    NSLog(@"AlfrescoOAuthHelper didFailWithError");
+    if (![jsonDictionary isKindOfClass:[NSDictionary class]])
+    {
+        if (nil == *error)
+        {
+            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        return nil;
+    }
     
-    NSError *error = nil;
-    AlfrescoOAuthData *updatedOAuthData = [AlfrescoOAuthHelper updateOAuthDataFromJSON:self.receivedData oauthData:self.oauthData error:&error];
-    self.completionBlock(updatedOAuthData, error);    
+    if ([[jsonDictionary allKeys] containsObject:kAlfrescoJSONError])
+    {
+        if (nil == *error)
+        {
+            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        return nil;
+    }
+    
+    AlfrescoOAuthData *updatedOAuthData = [[AlfrescoOAuthData alloc] initWithAPIKey:self.oauthData.apiKey
+                                                                          secretKey:self.oauthData.secretKey
+                                                                        redirectURI:self.oauthData.redirectURI
+                                                                     jsonDictionary:(NSDictionary *)jsonDictionary];
+    
+    return updatedOAuthData;
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSLog(@"AlfrescoOAuthHelper didFailWithError");
-    self.completionBlock(nil, error);
-}
+
 
 @end

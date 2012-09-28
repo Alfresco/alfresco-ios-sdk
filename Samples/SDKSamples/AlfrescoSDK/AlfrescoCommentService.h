@@ -73,7 +73,9 @@
  @param title The comment title.
  @param completionBlock The block that's called with the new comment in case the operation succeeds.
  */
-- (void)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content title:(NSString *)title
+- (void)addCommentToNode:(AlfrescoNode *)node
+                 content:(NSString *)content
+                   title:(NSString *)title
          completionBlock:(AlfrescoCommentCompletionBlock)completionBlock;
 
 /** Updates a comment.

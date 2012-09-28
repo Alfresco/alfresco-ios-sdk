@@ -26,6 +26,7 @@
 @property (nonatomic, strong, readwrite) NSMutableData      * receivedData;
 @property (nonatomic, copy, readwrite) AlfrescoOAuthCompletionBlock completionBlock;
 @property (nonatomic, strong, readwrite) AlfrescoOAuthData  * oauthData;
+@property (nonatomic, strong, readwrite) NSString *baseURL;
 @property BOOL isLoginScreenLoad;
 @property BOOL isTest;
 - (void)loadWebView;
@@ -42,13 +43,41 @@
 @synthesize completionBlock = _completionBlock;
 @synthesize isTest = _isTest;
 @synthesize oauthData = _oauthData;
+@synthesize baseURL = _baseURL;
+
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
+{
+    return [self initWithAPIKey:apiKey
+                      secretKey:secretKey
+                    redirectURI:kAlfrescoCloudDefaultRedirectURI
+                completionBlock:completionBlock
+                     parameters:nil];
+}
 
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
          redirectURI:(NSString *)redirectURI
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    return [self initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI completionBlock:completionBlock parameters:nil];
+    return [self initWithAPIKey:apiKey
+                      secretKey:secretKey
+                    redirectURI:redirectURI
+                completionBlock:completionBlock
+                     parameters:nil];
+}
+
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
+          parameters:(NSDictionary *)parameters
+{
+    return [self initWithAPIKey:apiKey
+                      secretKey:secretKey
+                    redirectURI:kAlfrescoCloudDefaultRedirectURI
+                completionBlock:completionBlock
+                     parameters:parameters];
 }
 
 - (id)initWithAPIKey:(NSString *)apiKey
@@ -64,10 +93,13 @@
         self.completionBlock = completionBlock;
         if (nil != parameters)
         {
-            if ([[parameters allKeys] containsObject:kAlfrescoCloudTestParameter])
+            if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudURL])
             {
-                
-                self.isTest = [[parameters valueForKey:kAlfrescoCloudTestParameter] boolValue];
+                self.baseURL = [parameters valueForKey:kAlfrescoSessionCloudURL];
+            }
+            else
+            {
+                self.baseURL = kAlfrescoOAuthAuthorizeURL;
             }
             
         }
@@ -111,8 +143,7 @@
     [self.view addSubview:self.webView];
     
     NSMutableString *stagingURLString = [NSMutableString string];
-    NSString *baseURL = (self.isTest) ? kAlfrescoOAuthTestAuthorizeURL : kAlfrescoOAuthAuthorizeURL;
-    [stagingURLString appendString:baseURL];
+    [stagingURLString appendString:self.baseURL];
     [stagingURLString appendString:@"?"];
     [stagingURLString appendString:[kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey]];
     [stagingURLString appendString:@"&"];

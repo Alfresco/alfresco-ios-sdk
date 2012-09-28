@@ -28,5 +28,9 @@
 @property (nonatomic, assign, readonly) BOOL canAddChildren;
 @property (nonatomic, assign, readonly) BOOL canComment;
 
+/**
+ The set of permissions to set up the AlfrescoPermissions. At present only CMIS defined permissions are used.
+ @param permissionsSet
+ */
 - (id)initWithPermissions:(NSSet *)permissionsSet;
 @end

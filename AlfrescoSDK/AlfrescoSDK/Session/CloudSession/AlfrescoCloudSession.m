@@ -221,13 +221,9 @@
 {
     self.isUsingBaseAuthenticationProvider = NO;
     NSString *baseURL = kAlfrescoOAuthCloudURL;
-    if ([[self.sessionData allKeys] containsObject:kAlfrescoCloudTestParameter])
+    if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
-        BOOL isTest = [[self.sessionData valueForKey:kAlfrescoCloudTestParameter] boolValue];
-        if (isTest)
-        {
-            baseURL = kAlfrescoOAuthTestCloudURL;
-        }
+        baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
     }
     self.baseUrl = [NSURL URLWithString:baseURL];
     self.oauthData = oauthData;
@@ -260,7 +256,6 @@
                 [self authenticateWithOAuthData:oauthData
                                         network:homeNetwork.identifier
                                 completionBlock:completionBlock];
-//                completionBlock(self, error);
             }
             
         }
@@ -276,13 +271,9 @@
     self.isUsingBaseAuthenticationProvider = NO;
     NSLog(@"*** ENTERING authenticateWithOAuthData with specified home network");
     NSString *baseURL = kAlfrescoOAuthCloudURL;
-    if ([[self.sessionData allKeys] containsObject:kAlfrescoCloudTestParameter])
+    if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
-        BOOL isTest = [[self.sessionData valueForKey:kAlfrescoCloudTestParameter] boolValue];
-        if (isTest)
-        {
-            baseURL = kAlfrescoOAuthTestCloudURL;
-        }
+        baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",baseURL,network]];
     self.oauthData = oauthData;
@@ -293,7 +284,6 @@
     params.atomPubUrl = self.cmisUrl;
     NSLog(@"*** authenticateWithOAuthData setting authentication providers");
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
-//    objc_setAssociatedObject(self, &kAlfrescoAuthenticationProviderObjectKey, authProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     CMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[CMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
     params.authenticationProvider = passthroughAuthProvider;
@@ -477,7 +467,6 @@ This authentication method authorises the user to access the home network assign
         else
         {
             // we only use the first repository
-//            AlfrescoCloudSession *session = nil;
             CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
             
             params.repositoryId = repoInfo.identifier;
@@ -490,7 +479,6 @@ This authentication method authorises the user to access the home network assign
             [self.sessionData setObject:cmisSession forKey:kAlfrescoSessionKeyCmisSession];
             
             id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
-//            objc_setAssociatedObject(self, &kAlfrescoAuthenticationProviderObjectKey, authProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
             
             BOOL authenticated = [cmisSession authenticateAndReturnError:&error];
@@ -499,7 +487,6 @@ This authentication method authorises the user to access the home network assign
                 self.personIdentifier = emailAddress;
                 AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                 self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
-//                session = self;
                 
                 CMISObject *retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&error];
                 if (nil != retrievedObject) {

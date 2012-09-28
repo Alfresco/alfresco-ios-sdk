@@ -74,7 +74,6 @@
 /**
  Initialises repository info with a set of parameters
  @param parameters - the NSDictionary containing the set of parameters. Could be nil
- @return - the initialised AlfrescoReporitoryInfo if successful, nil otherwise
  */
 - (id)initWithParameters:(NSDictionary *)parameters;
 @end

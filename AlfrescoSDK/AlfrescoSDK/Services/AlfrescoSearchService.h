@@ -52,8 +52,9 @@
  @param language the query language to be used.
  @param completionBlock The block that's called with the retrieved nodes in case the operation succeeds.
  */
-- (void)searchWithStatement:(NSString *)statement language:(AlfrescoSearchLanguage)language
-           completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (void)searchWithStatement:(NSString *)statement
+                   language:(AlfrescoSearchLanguage)language
+            completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Performs a space delimited keyword search with or without exact matches, optionally including the results of a full text search.
  
@@ -62,9 +63,10 @@
  @param listingContext the ListingContext options used for paging
  @param completionBlock The block that's called with the retrieved nodes in case the operation succeeds.
  */
-- (void)searchWithStatement:(NSString *)statement language:(AlfrescoSearchLanguage)language
+- (void)searchWithStatement:(NSString *)statement
+                   language:(AlfrescoSearchLanguage)language
              listingContext:(AlfrescoListingContext *)listingContext
-                completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /** 
  Performs a space delimited keyword search with or without exact matches, optionally including the results of a full text search.
@@ -74,7 +76,8 @@
  @param options the AlfrescoKeywordSearchOptions objects with the search settings.
  @param completionBlock The block that's called with the retrieved nodes in case the operation succeeds.
  */
-- (void)searchWithKeywords:(NSString *)keywords options:(AlfrescoKeywordSearchOptions *)options
+- (void)searchWithKeywords:(NSString *)keywords
+                   options:(AlfrescoKeywordSearchOptions *)options
            completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Performs a space delimited keyword search with or without exact matches, optionally including the results of a full text search.
@@ -84,10 +87,10 @@
  @param listingContext the ListingContext options used for paging
  @param completionBlock The block that's called with the retrieved nodes in case the operation succeeds.
  */
-- (void)searchWithKeywords:(NSString *)keywords options:(AlfrescoKeywordSearchOptions *)options 
+- (void)searchWithKeywords:(NSString *)keywords
+                   options:(AlfrescoKeywordSearchOptions *)options
             listingContext:(AlfrescoListingContext *)listingContext
            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
-
 
 @end
 
