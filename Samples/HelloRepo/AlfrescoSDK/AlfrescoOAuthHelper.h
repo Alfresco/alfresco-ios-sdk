@@ -21,15 +21,21 @@
 #import "AlfrescoOAuthLoginViewController.h"
 
 @interface AlfrescoOAuthHelper : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+/**
+ @param authorizationCode the authorization code retrieved from the Cloud server at first login
+ @param oauthData - the AlfrescoOAuthData. This object must have the api key, secret key and redirect URI set
+ @param completionBlock
+ */
 + (void)retrieveOAuthDataForAuthorizationCode:(NSString *)authorizationCode
                                     oauthData:(AlfrescoOAuthData *)oauthData
                               completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
 
+/**
+ @param oauthData - the AlfrescoOAuthData, used for refreshing the access token. For that the AlfrescoOAuthData set needs to contain the api key, secret key, refresh token, and current access token 
+ @param completionBlock
+ */
 + (void)refreshAccessToken:(AlfrescoOAuthData *)oauthData
            completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
 
-+ (AlfrescoOAuthData *)updateOAuthDataFromJSON:(NSData *)jsonData
-                                     oauthData:(AlfrescoOAuthData *)oauthData
-                                         error:(NSError **)error;
 
 @end

@@ -33,7 +33,6 @@
  
  @param userIdentifier The user identifier/name registered on the repository.
  @param password The password.
- @return Authentication provider instance.
  */
 - (id)initWithUsername:(NSString *)username andPassword:(NSString *)password;
 

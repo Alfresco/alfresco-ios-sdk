@@ -177,7 +177,7 @@
             </objects>
             <point key="canvasLocation" x="-561" y="-3047"/>
         </scene>
-        <!--Server Selection Table View Controller-->
+        <!--Server Selection Table View Controller - Server Type-->
         <scene sceneID="bld-Zk-wfG">
             <objects>
                 <tableViewController id="b3g-d2-S4t" customClass="ServerSelectionTableViewController" sceneMemberID="viewController">
@@ -237,7 +237,7 @@
                             <outlet property="delegate" destination="b3g-d2-S4t" id="kKN-fK-0RF"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="TnP-xP-YyJ"/>
+                    <navigationItem key="navigationItem" title="Server Type" id="TnP-xP-YyJ"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                     <connections>
                         <segue destination="adh-Ty-GUC" kind="push" identifier="cloudAfterAuthentication" id="H9E-dW-fES"/>
@@ -247,7 +247,7 @@
             </objects>
             <point key="canvasLocation" x="-1333" y="-1836"/>
         </scene>
-        <!--Repository Login View Controller-->
+        <!--Repository Login View Controller - Repository-->
         <scene sceneID="VGo-vu-Trk">
             <objects>
                 <tableViewController id="tp5-Ln-Liq" customClass="RepositoryLoginViewController" sceneMemberID="viewController">
@@ -350,7 +350,7 @@
                             <outlet property="delegate" destination="tp5-Ln-Liq" id="iwp-TH-YtC"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Drd-Cc-2wb">
+                    <navigationItem key="navigationItem" title="Repository" id="Drd-Cc-2wb">
                         <barButtonItem key="rightBarButtonItem" enabled="NO" style="done" systemItem="done" id="2qZ-sj-MER">
                             <connections>
                                 <action selector="authenticateWhenDone:" destination="tp5-Ln-Liq" id="dY9-du-JoF"/>

@@ -21,14 +21,51 @@
 
 @interface AlfrescoSortingUtils : NSObject
 
-+(NSArray *)sortedArrayForArray:(NSArray *)array sortKey:(NSString *)key ascending:(BOOL)isAscending;
+/**
+ @name Sorting utilities
+ */
 
-+(NSArray *)sortedArrayForArray:(NSArray *)array
+/**
+ @param array
+ @param key
+ @param isAscending
+ @return NSArray - the sorted array based on sorting algorithm parameters
+ */
++ (NSArray *)sortedArrayForArray:(NSArray *)array sortKey:(NSString *)key ascending:(BOOL)isAscending;
+
+/**
+ first this method checks whether the sort key is any of the supported ones. If yes, it will be applied in the
+ sorting algorithm. If no, the default sort key will be applied.
+ @param array
+ @param key
+ @param supportedKeys
+ @param defaultKey
+ @param isAscending
+ @return NSArray - the sorted array based on sorting algorithm parameters
+ */
++ (NSArray *)sortedArrayForArray:(NSArray *)array
                         sortKey:(NSString *)key
                   supportedKeys:(NSArray* )keys
                      defaultKey:(NSString *)defaultKey
                       ascending:(BOOL)isAscending;
 
-+(NSString *)sortKeyFromListingContext:(AlfrescoListingContext *)listingContext supportedKeys:(NSArray *)keys defaultKey:(NSString *)defaultKey;
-+(NSString *)sortKeyForDesiredKey:(NSString *)desiredKey supportedKeys:(NSArray *)keys defaultKey:(NSString *)defaultKey;
+/**
+ @param listingContext
+ @param supportedKeys
+ @param defaultKey
+ @param isAscending
+ @return NSArray - the sorted array based on sorting algorithm parameters
+ */
++ (NSString *)sortKeyFromListingContext:(AlfrescoListingContext *)listingContext supportedKeys:(NSArray *)keys defaultKey:(NSString *)defaultKey;
+
+
+/**
+ first this method checks whether the sort key is any of the supported ones. If yes, it will be applied in the
+ sorting algorithm. If no, the default sort key will be applied.
+ @param desiredKey
+ @param supportedKeys
+ @param defaultKey
+ @return NSArray - the sorted array based on sorting algorithm parameters
+ */
++ (NSString *)sortKeyForDesiredKey:(NSString *)desiredKey supportedKeys:(NSArray *)keys defaultKey:(NSString *)defaultKey;
 @end

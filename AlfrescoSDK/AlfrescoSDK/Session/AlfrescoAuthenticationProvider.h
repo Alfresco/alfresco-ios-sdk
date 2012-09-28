@@ -26,5 +26,9 @@
 
 @protocol AlfrescoAuthenticationProvider <NSObject>
 
+/**
+ the method will apply the appropriate authentication headers required for passing on requests to the server (OnRepo or Cloud)
+ @param session
+ */
 - (NSDictionary *)willApplyHTTPHeadersForSession:(id<AlfrescoSession>)session;
 @end

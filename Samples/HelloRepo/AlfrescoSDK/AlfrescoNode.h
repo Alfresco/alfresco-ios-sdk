@@ -90,7 +90,6 @@ extern NSString * const kAlfrescoPermissionsObjectKey;
 /** Returns the value of a property with the given name, nil will be returned if a property with the given name does not exist.
  
  @param propertyName The name of the property for which the value will be retrieved.
- @return the property object - or NIL if not found
  */
 - (id)propertyValueWithName:(NSString *)propertyName;
 
@@ -98,14 +97,12 @@ extern NSString * const kAlfrescoPermissionsObjectKey;
 /** Determines whether the node has an aspect with the given name applied.
  
  @param aspectName The name of the aspect that will be searched for.
- @return YES if node has aspect, NO otherwise
  */
 - (BOOL)hasAspectWithName:(NSString *)aspectName;
 
 /** Returns the AlfrescoNode object preset with the CMIS properties.
  
  @param properties a list of CMIS properties stored in NSDictionary.
- @return the property object - or NIL if not found
  */
 - (id)initWithProperties:(NSDictionary *)properties;
 

@@ -44,7 +44,6 @@
  - kAlfrescoCapabilityCommentsCount
 
  @param capability - the defined capability to check.  
- @return - TRUE if capability is supported.
  */
 - (BOOL)doesSupportCapability:(NSString *)capability;
 @end

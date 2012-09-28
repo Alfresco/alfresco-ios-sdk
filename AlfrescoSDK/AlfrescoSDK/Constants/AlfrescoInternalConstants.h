@@ -78,9 +78,9 @@ extern NSString * const kAlfrescoMe;
  Session data key constants
  */
 extern NSString * const kAlfrescoSessionKeyCmisSession;
-extern NSString * const kAlfrescoCloudTestParameter;
-extern NSString * const kAlfrescoSessionBaseURL;
-extern NSString * const kAlfrescoSessionEmailOrUsername;
+extern NSString * const kAlfrescoSessionCloudURL;
+extern NSString * const kAlfrescoSessionCloudBasicAuth;
+extern NSString * const kAlfrescoSessionUsername;
 extern NSString * const kAlfrescoSessionPassword;
 /**
  Associated object key constants
@@ -170,6 +170,7 @@ extern NSString * const kAlfrescoCloudCommentForNodeAPI;
 extern NSString * const kAlfrescoCloudTagsAPI;
 extern NSString * const kAlfrescoCloudTagsForNodeAPI;
 extern NSString * const kAlfrescoCloudPersonAPI;
+extern NSString * const kAlfrescoCloudDefaultRedirectURI;
 
 
 /**

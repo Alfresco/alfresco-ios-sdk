@@ -977,7 +977,7 @@
             </objects>
             <point key="canvasLocation" x="352" y="739"/>
         </scene>
-        <!--Server Selection Table View Controller-->
+        <!--Server Selection Table View Controller - Server Type-->
         <scene sceneID="5Sr-V1-8wn">
             <objects>
                 <tableViewController id="Jz6-fs-Da5" customClass="ServerSelectionTableViewController" sceneMemberID="viewController">
@@ -1037,7 +1037,7 @@
                             <outlet property="delegate" destination="Jz6-fs-Da5" id="rKm-Tl-Onp"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="inj-SC-eSt"/>
+                    <navigationItem key="navigationItem" title="Server Type" id="inj-SC-eSt"/>
                     <connections>
                         <segue destination="5T4-fQ-Si2" kind="push" identifier="cloudAfterAuthentication" id="uK1-tW-fy4"/>
                     </connections>
@@ -1046,7 +1046,7 @@
             </objects>
             <point key="canvasLocation" x="-696" y="-177"/>
         </scene>
-        <!--Repository Login View Controller-->
+        <!--Repository Login View Controller - Repository-->
         <scene sceneID="iVK-LL-GCw">
             <objects>
                 <tableViewController id="Dtl-aF-sHM" customClass="RepositoryLoginViewController" sceneMemberID="viewController">
@@ -1149,7 +1149,7 @@
                             <outlet property="delegate" destination="Dtl-aF-sHM" id="SXV-1s-J9D"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="NUp-Xm-do1">
+                    <navigationItem key="navigationItem" title="Repository" id="NUp-Xm-do1">
                         <barButtonItem key="rightBarButtonItem" enabled="NO" style="done" systemItem="done" id="fg6-Rn-bZJ">
                             <connections>
                                 <action selector="authenticateWhenDone:" destination="Dtl-aF-sHM" id="XKK-JU-ruJ"/>
@@ -1345,6 +1345,7 @@
         <class className="AddCommentViewController" superclassName="BaseViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/AddCommentViewController.h"/>
             <relationships>
+                <relationship kind="action" name="addComment:"/>
                 <relationship kind="outlet" name="commentView" candidateClass="UITextView"/>
             </relationships>
         </class>

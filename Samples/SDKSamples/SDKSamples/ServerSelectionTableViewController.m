@@ -1,10 +1,20 @@
-//
-//  ServerSelectionTableViewController.m
-//  SDKSamples
-//
-//  Created by Peter Schmidt on 26/09/2012.
-//  Copyright (c) 2012 Alfresco. All rights reserved.
-//
+/*******************************************************************************
+ * Copyright (C) 2005-2012 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Mobile SDK.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ******************************************************************************/
 
 #import "ServerSelectionTableViewController.h"
 #import "AlfrescoCloudSession.h"
@@ -31,11 +41,6 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,7 +79,13 @@
             }];
         }
     };
-    AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY redirectURI:REDIRECT completionBlock:completionBlock];
+    /**
+     if you provide your own redirectURI from the server, then uncomment the line below
+     */
+//    AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY redirectURI:REDIRECTURI completionBlock:completionBlock];
+    
+    //use this is you want to use the Alfresco default redirect URI
+    AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY completionBlock:completionBlock];
     [self.navigationController pushViewController:loginController animated:YES];
 }
 
