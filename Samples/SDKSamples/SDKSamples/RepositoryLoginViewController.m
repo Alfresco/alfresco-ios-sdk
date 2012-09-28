@@ -1,10 +1,20 @@
-//
-//  RepositoryLoginViewController.m
-//  SDKSamples
-//
-//  Created by Peter Schmidt on 26/09/2012.
-//  Copyright (c) 2012 Alfresco. All rights reserved.
-//
+/*******************************************************************************
+ * Copyright (C) 2005-2012 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Mobile SDK.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ******************************************************************************/
 
 #import "RepositoryLoginViewController.h"
 #import "AlfrescoSession.h"
@@ -15,6 +25,8 @@
 @property (nonatomic, strong) NSString * urlText;
 @property (nonatomic, strong) NSString * username;
 @property (nonatomic, strong) NSString * password;
+@property (nonatomic, strong) NSMutableDictionary *defaults;
+- (void)defaultSettings;
 - (void)authenticateRepoSession;
 @end
 
@@ -26,6 +38,8 @@
 @synthesize password = _password;
 @synthesize urlText = _urlText;
 @synthesize doneButton = _doneButton;
+@synthesize  defaults = _defaults;
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -41,7 +55,13 @@
     self.urlText = @"";
     self.username = @"";
     self.password = @"";
-    self.doneButton.enabled = NO;
+    self.defaults = [NSMutableDictionary dictionaryWithCapacity:3];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self defaultSettings];
 }
 
 - (void)didReceiveMemoryWarning
@@ -70,6 +90,53 @@
 }
 
 #pragma mark - private method
+- (void)defaultSettings
+{
+    NSString *host = [[NSUserDefaults standardUserDefaults] stringForKey:@"host"];
+    NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
+    NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
+    if (host == nil || username == nil || password == nil)
+    {        
+        if (nil == host)
+        {
+            [self.defaults setValue:@"http://localhost:8080/alfresco" forKey:@"host"];
+        }
+        else
+        {
+            [self.defaults setValue:host forKey:@"host"];
+        }
+        
+        if (nil == username)
+        {
+            [self.defaults setValue:@"admin" forKey:@"username"];
+        }
+        else
+        {
+            [self.defaults setValue:username forKey:@"username"];
+        }
+        
+        if (nil == password)
+        {
+            [self.defaults setValue:@"admin" forKey:@"password"];
+        }
+        else
+        {
+            [self.defaults setValue:password forKey:@"password"];
+        }
+        
+        [[NSUserDefaults standardUserDefaults] registerDefaults:self.defaults];
+        
+        host = [[NSUserDefaults standardUserDefaults] stringForKey:@"host"];
+        username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
+        password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
+    }
+    self.urlField.text = host;
+    self.usernameField.text = username;
+    self.passwordField.text = password;
+}
+
+
+
 - (void)authenticateRepoSession
 {
     AlfrescoSessionCompletionBlock completionBlock = ^void(id<AlfrescoSession> session, NSError *error){
@@ -105,7 +172,6 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    self.doneButton.enabled = YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
@@ -116,15 +182,18 @@
     {
         case 1:
             self.urlText = textField.text;
+            [self.defaults setValue:self.urlText forKey:@"host"];
             break;
         case 2:
             self.username = textField.text;
+            [self.defaults setValue:self.username forKey:@"username"];
             break;
         case 3:
             self.password = textField.text;
+            [self.defaults setValue:self.password forKey:@"password"];
             break;
     }
-    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:self.defaults];    
 }
 
 /*

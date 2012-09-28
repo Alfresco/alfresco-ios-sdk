@@ -146,10 +146,16 @@ extern NSString * const kAlfrescoErrorDescriptionRatings;
 /** Creates an error object based on an error code and a description.
  
  @param code the code string that represents the error type.
- @param detailedDescription The detailed description of the error.
  @return The newly created error.
  */
 + (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
+
+/**
+ asserts that an argument is not nil. If a required argument is nil, this is considered a fatal error, and the SDK will throw an exception.
+ This will most likely cause the app to exit/crash.
+ @param argument
+ @param argumentName
+ */
 + (void)assertArgumentNotNil:(id)argument argumentName:(NSString *)argumentName;
 @end

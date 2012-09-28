@@ -29,7 +29,6 @@
 /** Creates an instance of an AlfrescoBasicAuthenticationProvider with a username and password.
  
  @param oAuthData
- @return Authentication provider instance.
  */
 - (id)initWithOAuthData:(AlfrescoOAuthData *)oauthData;
 @end

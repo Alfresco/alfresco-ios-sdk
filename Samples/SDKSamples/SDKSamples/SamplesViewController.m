@@ -40,114 +40,6 @@
 @synthesize connectionDetailsProvided = _connectionDetailsProvided;
 @synthesize session = _session;
 
-#pragma mark Alfresco methods being used
-- (void) authenticate
-{
-    if(self.session != nil) return;
-    
-    // gather the user's connection details.
-    NSString *host = [[NSUserDefaults standardUserDefaults] stringForKey:@"host"];
-    NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
-    NSString *pwd = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
-    
-    if (host == nil || username == nil || pwd == nil)
-    {
-        self.connectionDetailsProvided = NO;
-        
-        NSDictionary *appDefaults = [NSMutableDictionary dictionaryWithCapacity:3];
-        if (host == nil)
-        {
-            [appDefaults setValue:@"http://localhost:8080/alfresco" forKey:@"host"];
-        }
-        else 
-        {
-            [appDefaults setValue:host forKey:@"host"];
-        }
-        
-        if (username == nil)
-        {
-            [appDefaults setValue:@"admin" forKey:@"username"];
-        }
-        else 
-        {
-            [appDefaults setValue:username forKey:@"username"];
-        }
-        
-        if (pwd == nil)
-        {
-            [appDefaults setValue:@"admin" forKey:@"password"];
-        }
-        else 
-        {
-            [appDefaults setValue:pwd forKey:@"password"];
-        }
-        
-        [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
-        
-        host = [[NSUserDefaults standardUserDefaults] stringForKey:@"host"];
-        username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
-        pwd = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
-    }
-    
-    NSLog(@"Loading session for user '%@' in background...", username);
-    self.connectionDetailsProvided = YES;
-    
-    // determine which kind of session to create
-    __weak SamplesViewController *weakSelf = self;
-    if ([host isEqualToString:@"http://my.alfresco.com"])
-    {
-        NSLog(@"Connecting to Alfresco in the Cloud server");
-        
-        // create and authenticate an on-premise repository session
-        [AlfrescoCloudSession connectWithEmailAddress:username
-                                             password:pwd
-                                               apiKey:nil
-                                             parameters:nil
-                                      completionBlock:^(id<AlfrescoSession> session, NSError *error) {
-                                          if (nil == session)
-                                          {
-                                              UIAlertView *connectionFailedAlert = [[UIAlertView alloc] initWithTitle:localized(@"error_title")
-                                                                                                              message:localized(@"error_connection_failed")
-                                                                                                             delegate:nil
-                                                                                                    cancelButtonTitle:localized(@"dialog_cancel")
-                                                                                                    otherButtonTitles:nil];
-                                              [connectionFailedAlert show];
-                                          }
-                                          else
-                                          {
-                                              weakSelf.session = session;
-                                              NSLog(@"Authenticated successfully.");
-                                          }
-                                      }];
-    }
-    else
-    {
-        NSURL *url = [NSURL URLWithString:host];
-        NSLog(@"Connecting to on-premise repository at %@", url);
-        
-        // create and authenticate an on-premise repository session
-        [AlfrescoRepositorySession connectWithUrl:url
-                                         username:username
-                                         password:pwd
-                                         parameters:nil
-                                  completionBlock:^(id<AlfrescoSession> session, NSError *error) {
-                                      if (nil == session)
-                                      {
-                                          UIAlertView *connectionFailedAlert = [[UIAlertView alloc] initWithTitle:localized(@"error_title")
-                                                                                                          message:localized(@"error_connection_failed")
-                                                                                                         delegate:nil
-                                                                                                cancelButtonTitle:localized(@"dialog_cancel")
-                                                                                                otherButtonTitles:nil];
-                                          [connectionFailedAlert show];
-                                      }
-                                      else 
-                                      {
-                                          weakSelf.session = session;
-                                          NSLog(@"Authenticated successfully.");
-                                      }
-                                  }];
-    }
-}
 
 #pragma mark View Controller methods
 
@@ -161,7 +53,6 @@
     self.browseAllSitesLabel.text = localized(@"sample_browse_all_sites_option");
     self.browseActivitiesLabel.text = localized(@"sample_activities_option");
     self.searchLabel.text = localized(@"sample_search_option");
-//    [self authenticate];
 }
 
 

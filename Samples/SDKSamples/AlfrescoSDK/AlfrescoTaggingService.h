@@ -89,7 +89,8 @@
  @param node The node to which the tags should be added.
  @param completionBlock The block that's called with the retrieved tags in case the operation succeeds.
  */
-- (void)addTags:(NSArray *)tags toNode:(AlfrescoNode *)node
-        completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+- (void)addTags:(NSArray *)tags
+         toNode:(AlfrescoNode *)node
+completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 @end

@@ -27,25 +27,60 @@
 
 @interface AlfrescoObjectConverter : NSObject
 
-// Initialises the instance using the given Alfresco session object.
+/** Initialises the instance using the given Alfresco session object.
+ @param session
+*/
 - (id)initWithSession:(id<AlfrescoSession>)session;
 
-// Returns an Alfresco repository info object from the given CMIS session object.
+/** Returns an Alfresco repository info object from the given CMIS session object.
+ @param cmisSession
+ @return AlfrescoRepositoryInfo if successful or nil otherwise
+*/
 - (AlfrescoRepositoryInfo *)repositoryInfoFromCMISSession:(CMISSession *)cmisSession;
 
-// Converts the given CMIS object into an Alfresco node object.
+/** Converts the given CMIS object into an Alfresco node object.
+ @param cmisObject
+ @return AlfrescoNode if successful or nil otherwise
+ */
 - (AlfrescoNode *)nodeFromCMISObject:(CMISObject *)cmisObject;
 
-// Converts the given CMIS object data into an Alfresco node object.
+/** Converts the given CMIS object data into an Alfresco node object.
+ @param cmisObjectData
+ @return AlfrescoNode if successful or nil otherwise
+ */
 - (AlfrescoNode *)nodeFromCMISObjectData:(CMISObjectData *)cmisObjectData;
 
-// Converts the given CMIS query result into an Alfresco document object.
+/** Converts the given CMIS query result into an Alfresco document object.
+ @param cmisQueryResult
+ @return AlfrescoDocument if successful or nil otherwise
+ */
 - (AlfrescoDocument *)documentFromCMISQueryResult:(CMISQueryResult *)cmisQueryResult;
 
+/**
+ parses JSON data set based on latest public API. It searches for JSON elements "entries" and returns 
+ the list as NSArray
+ @param data the raw JSON data
+ @param outError
+ @return NSArray containing the objects in the JSON "entries" array - or nil if an error occurred while parsing.
+ */
 + (NSArray *)arrayJSONEntriesFromListData:(NSData *)data error:(NSError **)outError;
+
+/**
+ parses JSON data set based on latest public API. It searches for JSON elements "entry" and returns
+ the data as NSDictionary. "entry" is an element in the JSON "entries" array - or it may be a single JSON entity
+ in a JSON response.
+ @param data the raw JSON data
+ @param outError
+ @return NSDictionary containing the objects in the JSON "entry" array - or nil if an error occurred while parsing.
+ */
 + (NSDictionary *)dictionaryJSONEntryFromListData:(NSData *)data error:(NSError **)outError;
 
-
+/**
+ converts the noderef ID containing a version string (e.g. ";1.0" ) into a node ref without the version id.
+ Some older repositories require the CMIS node ref to be without the version string.
+ @param originalIdentifier
+ @return NSString - the id without the version string
+ */
 + (NSString *)nodeRefWithoutVersionID:(NSString *)originalIdentifier;
 
 @end

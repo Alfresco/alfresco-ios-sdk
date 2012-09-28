@@ -117,10 +117,6 @@
 - (void)helloFromCloudWithOAuth
 {
     NSLog(@"*********** helloFromCloudWithOAuth");
-    __block NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    [parameters setValue:[NSNumber numberWithBool:self.isCloudTest] forKey:@"org.alfresco.mobile.cloud.isStaging"];
-    __block NSString *apiKey = (self.isCloudTest) ? TESTAPIKEY : APIKEY;
-    __block NSString *secretKey = (self.isCloudTest) ? TESTSECRETKEY : SECRETKEY;
     
     
     __weak HelloRepoViewController *weakSelf = self;
@@ -131,9 +127,7 @@
         }
         else
         {
-            NSLog(@"We got something back: access token is %@", oauthdata.accessToken);
-            NSLog(@"The refresh token is %@ the grant_type is %@", oauthdata.refreshToken, oauthdata.tokenType);
-            [AlfrescoCloudSession connectWithOAuthData:oauthdata parameters:parameters completionBlock:^(id<AlfrescoSession> session, NSError *error){
+            [AlfrescoCloudSession connectWithOAuthData:oauthdata parameters:nil completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
                 }
@@ -146,7 +140,8 @@
             }];
         }
     };
-    AlfrescoOAuthLoginViewController *webLoginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:REDIRECT completionBlock:completionBlock parameters:parameters];
+    AlfrescoOAuthLoginViewController *webLoginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY completionBlock:completionBlock parameters:nil];
+    
     [self.navigationController pushViewController:webLoginController animated:YES];
 }
 

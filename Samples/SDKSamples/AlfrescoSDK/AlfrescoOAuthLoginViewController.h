@@ -22,8 +22,55 @@ typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSEr
 
 @interface AlfrescoOAuthLoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 @property (nonatomic, strong) UIWebView * webView;
+/**
+ @name Initialisers
+ The AlfrescoOAuthLoginViewController has 4 different initialisers available. At the minimum an apiKey, secretKey and completionBlock must be provided.
+ */
 
-- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
-- (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey redirectURI:(NSString *)redirectURI completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock parameters:(NSDictionary *)parameters;
+/**
+ This initialiser is using the default Alfresco redirect URI
+ @param apiKey
+ @param secretKey
+ @param completionBlock
+ */
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
+
+/**
+ @param apiKey
+ @param secretKey
+ @param redirectURI
+ @param completionBlock
+ */
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey
+         redirectURI:(NSString *)redirectURI
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
+
+/**
+ This initialiser is using the default Alfresco redirect URI
+ @param apiKey
+ @param secretKey
+ @param completionBlock
+ @param parameters (optional)
+ */
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
+          parameters:(NSDictionary *)parameters;
+
+/**
+ @param apiKey
+ @param secretKey
+ @param redirectURI
+ @param completionBlock
+ @param parameters - (optional)
+ */
+- (id)initWithAPIKey:(NSString *)apiKey
+           secretKey:(NSString *)secretKey
+         redirectURI:(NSString *)redirectURI
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
+          parameters:(NSDictionary *)parameters;
 
 @end

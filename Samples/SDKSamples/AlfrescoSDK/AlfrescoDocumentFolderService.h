@@ -55,8 +55,10 @@
  @param properties Additional properties that are used to create the folder.
  @param completionBlock The block that's called with the created folder in case the operation succeeds.
  */
-- (void)createFolderWithName:(NSString *)folderName inParentFolder:(AlfrescoFolder *)folder properties:(NSDictionary *)properties 
-                   completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+- (void)createFolderWithName:(NSString *)folderName
+              inParentFolder:(AlfrescoFolder *)folder
+                  properties:(NSDictionary *)properties
+             completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 
 
 /** Creates a new document using the contents of a local file. The new document is created within the given folder.
@@ -68,10 +70,12 @@
  @param completionBlock The block that's called with the created document in case the operation succeeds.
  @param progressBlock The block that's called with the upload progress.
  */
-- (void)createDocumentWithName:(NSString *)documentName inParentFolder:(AlfrescoFolder *)folder contentFile:(AlfrescoContentFile *)file 
-                    properties:(NSDictionary *)properties 
-                    completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
-                    progressBlock:(AlfrescoProgressBlock)progressBlock;
+- (void)createDocumentWithName:(NSString *)documentName
+                inParentFolder:(AlfrescoFolder *)folder
+                   contentFile:(AlfrescoContentFile *)file
+                    properties:(NSDictionary *)properties
+               completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                 progressBlock:(AlfrescoProgressBlock)progressBlock;
 
 
 
@@ -182,7 +186,8 @@
  @param folder The root folder that's used to query for a specific node.
  @param completionBlock The block that's called with the retrieved node in case the operation succeeds.
  */
-- (void)retrieveNodeWithFolderPath:(NSString *)path relativeToFolder:(AlfrescoFolder *)folder
+- (void)retrieveNodeWithFolderPath:(NSString *)path
+                  relativeToFolder:(AlfrescoFolder *)folder
                    completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
 
@@ -192,7 +197,7 @@
  @param completionBlock The block that's called with the retrieved parent folder in case the operation succeeds.
  */
 - (void)retrieveParentFolderOfNode:(AlfrescoNode *)node
-             completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+                   completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 
 
 
@@ -203,7 +208,8 @@
  @param renditionName The type of thumbnail to be retrieved. For example 'doclib' can be used (defined as _AlfrescoThumbnailRendition_ )
  @param completionBlock The block that's called with the local AlfrescoContentFile containing the thumbnail URL/data.
  */
-- (void)retrieveRenditionOfNode:(AlfrescoNode *)node renditionName:(NSString *)renditionName
+- (void)retrieveRenditionOfNode:(AlfrescoNode *)node
+                  renditionName:(NSString *)renditionName
                 completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
 
 
@@ -247,8 +253,8 @@
  @param properties The properties that need to be updated for the given node.
  @param completionBlock The block that's called with the updated node in case the operation succeeds.
  */
-- (void)updatePropertiesOfNode:(AlfrescoNode *)node 
-                properties:(NSDictionary *)properties
+- (void)updatePropertiesOfNode:(AlfrescoNode *)node
+                    properties:(NSDictionary *)properties
                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------

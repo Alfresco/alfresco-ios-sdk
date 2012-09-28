@@ -64,11 +64,28 @@
                 completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 
+/**
+ This initialiser uses OAuth authentication processes. It will only be successful if the AlfrescoOAuthData contain a valid access and refresh token.
+ Therefore, this method should only be used after the initial OAuth setup is complete.
+ The method well set the home network/tenant ID as default
+ @param oauthData
+ @param parameters - optional, may be nil
+ @param completionBlock
+ */
 
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
                   parameters:(NSDictionary *)parameters
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
+/**
+ This initialiser uses OAuth authentication processes. It will only be successful if the AlfrescoOAuthData contain a valid access and refresh token.
+ Therefore, this method should only be used after the initial OAuth setup is complete.
+ The method well set to the specified network/tenant ID.
+ @param oauthData
+ @param networkIdentifer - also known as tenent ID
+ @param parameters - optional, may be nil
+ @param completionBlock
+ */
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
             networkIdentifer:(NSString *)networkIdentifer
                   parameters:(NSDictionary *)parameters

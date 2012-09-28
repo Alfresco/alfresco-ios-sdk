@@ -21,5 +21,11 @@
 
 @interface CMISPassThroughAuthenticationProvider : NSObject <CMISAuthenticationProvider>
 @property (nonatomic, strong, readonly) id<AlfrescoAuthenticationProvider> authProvider;
+
+/**
+ The authentication provider passed in as Argument must extend the AlfrescoAuthenticationProvider protocol.
+ The CMISPassThroughAuthenticationProvider wraps up the provider and passes it to the CMIS Objective C library.
+ @param authProvider
+ */
 - (id)initWithAlfrescoAuthenticationProvider:(id<AlfrescoAuthenticationProvider>)authProvider;
 @end

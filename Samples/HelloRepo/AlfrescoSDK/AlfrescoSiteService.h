@@ -73,7 +73,7 @@
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
 - (void)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
-             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 
 /** Retrieves all the favorite sites for the current session user.
@@ -88,7 +88,7 @@
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
 - (void)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
-                     completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+                                completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /** Retrieves a site with the given short name, if the site doesn’t exist nil is returned.
  
