@@ -24,8 +24,6 @@
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoOAuthLoginViewController.h"
 
-//#import "OAuthLoginWebViewController.h"
-
 @interface HelloRepoViewController ()
 
 @property (nonatomic, strong) NSMutableArray *nodes;
@@ -53,8 +51,7 @@
     self.nodes = [NSMutableArray array];
     
 //    [self helloFromRepository];
-//    [self helloFromCloud];
-    [self helloFromCloudWithOAuth];
+    [self helloFromCloud];
 }
 
 #pragma mark - Repository methods
@@ -90,46 +87,19 @@
 - (void)helloFromCloud
 {
     NSLog(@"*********** helloFromCloud");
-    NSString *emailAddress = @"peter.schmidt@alfresco.com";
-    NSString *password = @"alzheimer\"\"";
-    
-    __weak HelloRepoViewController *weakSelf = self;
-    [AlfrescoCloudSession connectWithEmailAddress:emailAddress
-                                         password:password
-                                           apiKey:nil
-                                       parameters:nil
-                                  completionBlock:^(id<AlfrescoSession> session, NSError *error) {
-                                      if (session == nil)
-                                      {
-                                          NSLog(@"Failed to authenticate: %@:", error);
-                                      }
-                                      else
-                                      {
-                                          NSLog(@"Authenticated successfully");
-                                          NSLog(@"Repository edition: %@", session.repositoryInfo.edition);
-                                          weakSelf.session = session;
-                                          [weakSelf loadRootFolder];
-                                      }
-    }];
-}
-
-
-- (void)helloFromCloudWithOAuth
-{
-    NSLog(@"*********** helloFromCloudWithOAuth");
-    
     
     __weak HelloRepoViewController *weakSelf = self;
     AlfrescoOAuthCompletionBlock completionBlock = ^void(AlfrescoOAuthData *oauthdata, NSError *error){
         if (nil == oauthdata)
         {
-            NSLog(@"something went wrong with the authentication. Error message is %@ and code is %d", [error localizedDescription], [error code]);
+            NSLog(@"Failed to authenticate: %@:", error);
         }
         else
         {
             [AlfrescoCloudSession connectWithOAuthData:oauthdata parameters:nil completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
+                    NSLog(@"Failed to create session: %@:", error);
                 }
                 else
                 {
@@ -144,8 +114,6 @@
     
     [self.navigationController pushViewController:webLoginController animated:YES];
 }
-
-
 
 - (void)loadRootFolder
 {
@@ -214,8 +182,5 @@
         return YES;
     }
 }
-
-
-
 
 @end
