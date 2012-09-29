@@ -27,7 +27,6 @@ NSString * const kAlfrescoErrorDescriptionNoRepositoryFound = @"Session Error: N
 NSString * const kAlfrescoErrorDescriptionUnauthorisedAccess = @"Session Error: Unauthorised Access";
 NSString * const kAlfrescoErrorDescriptionHTTPResponse= @"Session Error: the HTTP Response code suggests an error";
 NSString * const kAlfrescoErrorDescriptionNoNetworkFound = @"Session Error: No Cloud network/domain found";
-NSString * const kAlfrescoErrorDescriptionSignUpRequestError = @"Session Error: Error during Cloud sign-up";
 
 NSString * const kAlfrescoErrorDescriptionJSONParsing = @"JSON Data parsing Error";
 NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON Data are nil/empty";
@@ -131,9 +130,6 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
             break;            
         case kAlfrescoErrorCodeNoNetworkFound:
             return kAlfrescoErrorDescriptionNoNetworkFound;
-            break;
-        case kAlfrescoErrorCodeSignUpRequestError:
-            return kAlfrescoErrorDescriptionSignUpRequestError;
             break;
         case kAlfrescoErrorCodeJSONParsing:
             return kAlfrescoErrorDescriptionJSONParsing;

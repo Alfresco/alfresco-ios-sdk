@@ -32,7 +32,6 @@ typedef enum
     kAlfrescoErrorCodeNoRepositoryFound = 101,
     kAlfrescoErrorCodeUnauthorisedAccess = 102,
     kAlfrescoErrorCodeNoNetworkFound = 103,
-    kAlfrescoErrorCodeSignUpRequestError = 104,
 
     kAlfrescoErrorCodeJSONParsing = 200,
     kAlfrescoErrorCodeJSONParsingNilData = 201,
@@ -82,7 +81,6 @@ extern NSString * const kAlfrescoErrorDescriptionNoRepositoryFound;
 extern NSString * const kAlfrescoErrorDescriptionUnauthorisedAccess;
 extern NSString * const kAlfrescoErrorDescriptionHTTPResponse;
 extern NSString * const kAlfrescoErrorDescriptionNoNetworkFound;
-extern NSString * const kAlfrescoErrorDescriptionSignUpRequestError;
 
 extern NSString * const kAlfrescoErrorDescriptionJSONParsing;
 extern NSString * const kAlfrescoErrorDescriptionJSONParsingNilData;
