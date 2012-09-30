@@ -53,6 +53,18 @@
 + (void)connectWithUrl:(NSURL *)url
               username:(NSString *)username
               password:(NSString *)password
+       completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+{
+    AlfrescoRepositorySession *sessionInstance = [[AlfrescoRepositorySession alloc] initWithUrl:url parameters:nil];
+    if (sessionInstance)
+    {
+        [sessionInstance authenticateWithUsername:username andPassword:password completionBlock:completionBlock];
+    }
+}
+
++ (void)connectWithUrl:(NSURL *)url
+              username:(NSString *)username
+              password:(NSString *)password
             parameters:(NSDictionary *)parameters
        completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
