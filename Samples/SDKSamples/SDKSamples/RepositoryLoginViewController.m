@@ -21,10 +21,11 @@
 #import "SamplesViewController.h"
 #import "AlfrescoRepositorySession.h"
 
+NSString * const kAlfrescoSDKSamplesHost = @"host";
+NSString * const kAlfrescoSDKSamplesUsername = @"username";
+NSString * const kAlfrescoSDKSamplesPassword = @"password";
+
 @interface RepositoryLoginViewController ()
-@property (nonatomic, strong) NSString * urlText;
-@property (nonatomic, strong) NSString * username;
-@property (nonatomic, strong) NSString * password;
 @property (nonatomic, strong) NSMutableDictionary *defaults;
 - (void)defaultSettings;
 - (void)authenticateRepoSession;
@@ -34,27 +35,13 @@
 @synthesize urlField = _urlField;
 @synthesize usernameField = _usernameField;
 @synthesize passwordField = _passwordField;
-@synthesize username = _username;
-@synthesize password = _password;
-@synthesize urlText = _urlText;
 @synthesize doneButton = _doneButton;
 @synthesize  defaults = _defaults;
-
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.urlText = @"";
-    self.username = @"";
-    self.password = @"";
+
     self.defaults = [NSMutableDictionary dictionaryWithCapacity:3];
 }
 
@@ -62,113 +49,122 @@
 {
     [super viewWillAppear:animated];
     [self defaultSettings];
+    
+    // enable the done button
+    if (self.urlField.text.length == 0 || self.usernameField.text.length == 0 || self.passwordField.text.length == 0)
+    {
+        [self.doneButton setEnabled:NO];
+    }
+    else
+    {
+        [self.doneButton setEnabled:YES];
+    }
 }
-
-- (void)didReceiveMemoryWarning
-{
-    self.urlText = nil;
-    self.username = nil;
-    self.password = nil;
-    [super didReceiveMemoryWarning];
-}
-
 
 - (IBAction)authenticateWhenDone:(id)sender
 {
-    if ([self.urlText isEqualToString:@""] || [self.username isEqualToString:@""] || [self.password isEqualToString:@""])
+    // this shouldn't happen but check just in case
+    if (self.urlField.text.length == 0 || self.usernameField.text.length == 0 || self.passwordField.text.length == 0)
     {
-        NSLog(@"Nothing to do");
         return;
     }
+    
+    // authenticate using the current credentials
     [self authenticateRepoSession];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"prepareForSegue");
     [[segue destinationViewController] setSession:self.session];
 }
 
-#pragma mark - private method
+#pragma mark - private methods
+
 - (void)defaultSettings
 {
-    NSString *host = [[NSUserDefaults standardUserDefaults] stringForKey:@"host"];
-    NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
-    NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
+    NSString *host = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesHost];
+    NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesUsername];
+    NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesPassword];
     if (host == nil || username == nil || password == nil)
     {        
         if (nil == host)
         {
-            [self.defaults setValue:@"http://localhost:8080/alfresco" forKey:@"host"];
+            [self.defaults setValue:@"http://localhost:8080/alfresco" forKey:kAlfrescoSDKSamplesHost];
         }
         else
         {
-            [self.defaults setValue:host forKey:@"host"];
+            [self.defaults setValue:host forKey:kAlfrescoSDKSamplesHost];
         }
         
         if (nil == username)
         {
-            [self.defaults setValue:@"admin" forKey:@"username"];
+            [self.defaults setValue:@"admin" forKey:kAlfrescoSDKSamplesUsername];
         }
         else
         {
-            [self.defaults setValue:username forKey:@"username"];
+            [self.defaults setValue:username forKey:kAlfrescoSDKSamplesUsername];
         }
         
         if (nil == password)
         {
-            [self.defaults setValue:@"admin" forKey:@"password"];
+            [self.defaults setValue:@"admin" forKey:kAlfrescoSDKSamplesPassword];
         }
         else
         {
-            [self.defaults setValue:password forKey:@"password"];
+            [self.defaults setValue:password forKey:kAlfrescoSDKSamplesPassword];
         }
         
         [[NSUserDefaults standardUserDefaults] registerDefaults:self.defaults];
         
-        host = [[NSUserDefaults standardUserDefaults] stringForKey:@"host"];
-        username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
-        password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
+        host = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesHost];
+        username = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesUsername];
+        password = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesPassword];
     }
+    
     self.urlField.text = host;
     self.usernameField.text = username;
     self.passwordField.text = password;
 }
-
-
 
 - (void)authenticateRepoSession
 {
     AlfrescoSessionCompletionBlock completionBlock = ^void(id<AlfrescoSession> session, NSError *error){
         if (nil == session)
         {
-            NSLog(@"something bad happened");
-            NSString *errorMsg = [NSString stringWithFormat:@"%@ and code %d",[error localizedDescription], [error code]];
-            [self showFailureAlert:errorMsg];
+            [self showFailureAlert:@"Failed to connect, please check your credentials"];
         }
         else
         {
-            NSLog(@"we got a session back and start the seque");
             self.session = (AlfrescoRepositorySession *)session;
             [self performSegueWithIdentifier:@"repoAfterAuthentication" sender:self.session];
         }
     };
     
-    [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.urlText]
-                                     username:self.username
-                                     password:self.password
-                                   parameters:nil
+    [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.urlField.text]
+                                     username:self.usernameField.text
+                                     password:self.passwordField.text
                               completionBlock:completionBlock];
-    
+}
+
+- (void)toggleDoneButtonState:(NSString *)currentValue
+{
+    if (currentValue != nil && currentValue.length > 0)
+    {
+        self.doneButton.enabled = YES;
+    }
+    else
+    {
+        self.doneButton.enabled = NO;
+    }
 }
 
 #pragma mark - Textfield delegate
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
     return YES;
 }
-
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -177,44 +173,29 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     int tag = textField.tag;
-    NSLog(@"textFieldDidEndEditing. the tag is %d and the text is %@", tag, textField.text);
+    
     switch (tag)
     {
         case 1:
-            self.urlText = textField.text;
-            [self.defaults setValue:self.urlText forKey:@"host"];
+            [self.defaults setValue:self.urlField.text forKey:kAlfrescoSDKSamplesHost];
             break;
         case 2:
-            self.username = textField.text;
-            [self.defaults setValue:self.username forKey:@"username"];
+            [self.defaults setValue:self.usernameField.text forKey:kAlfrescoSDKSamplesUsername];
             break;
         case 3:
-            self.password = textField.text;
-            [self.defaults setValue:self.password forKey:@"password"];
+            [self.defaults setValue:self.passwordField.text forKey:kAlfrescoSDKSamplesPassword];
             break;
     }
-    [[NSUserDefaults standardUserDefaults] registerDefaults:self.defaults];    
+    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:self.defaults];
 }
 
-/*
- */
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    
-    int tag = textField.tag;
+    // everytime a character changes check the Done button state
     NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    switch (tag)
-    {
-        case 1:
-            self.urlText = newString;
-            break;
-        case 2:
-            self.username = newString;
-            break;
-        case 3:
-            self.password = newString;
-            break;
-    }
+    [self toggleDoneButtonState:newString];
     return YES;
 }
+
 @end
