@@ -35,6 +35,22 @@
  @param url - the server URL used to establish a session - Required
  @param username The username. - Required
  @param password The password. - Required
+ @param completionBlock (AlfrescoSessionCompletionBlock). The block that's called with the session in case the operation succeeds. - required
+ @return an instance of the repository session
+ */
++ (void)connectWithUrl:(NSURL *)url
+              username:(NSString *)username
+              password:(NSString *)password
+       completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
+/**---------------------------------------------------------------------------------------
+ * @name creates an authenticated instance of the AlfrescoRepositorySession
+ *  ---------------------------------------------------------------------------------------
+ */
+/**
+ @param url - the server URL used to establish a session - Required
+ @param username The username. - Required
+ @param password The password. - Required
  @param parameters a dictionary containing parameters for the session. - Optional (can be nil)
  @param completionBlock (AlfrescoSessionCompletionBlock). The block that's called with the session in case the operation succeeds. - required
  @return an instance of the repository session

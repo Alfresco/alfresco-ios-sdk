@@ -87,6 +87,11 @@
     self = [super init];
     if (nil != self)
     {
+        [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
+        [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
+        [AlfrescoErrors assertArgumentNotNil:redirectURI argumentName:@"redirectURI"];
+        [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+        
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
         self.baseURL = kAlfrescoOAuthAuthorizeURL;
