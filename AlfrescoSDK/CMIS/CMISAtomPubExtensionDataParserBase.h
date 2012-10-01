@@ -18,7 +18,7 @@
 
 @interface CMISAtomPubExtensionDataParserBase : NSObject <CMISAtomPubExtensionElementParserDelegate>
 
-@property (nonatomic, weak) id<NSXMLParserDelegate> childParserDelegate;
+@property (nonatomic, strong) id<NSXMLParserDelegate> childParserDelegate;
 @property (nonatomic, strong) NSMutableArray *currentExtensions;
 @property (nonatomic, strong) CMISExtensionData *currentExtensionData;
 @property (nonatomic, strong) NSMutableArray *previousExtensionDataArray;

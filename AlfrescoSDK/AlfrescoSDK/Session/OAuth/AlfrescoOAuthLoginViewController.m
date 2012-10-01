@@ -28,7 +28,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoOAuthData  * oauthData;
 @property (nonatomic, strong, readwrite) NSString *baseURL;
 @property BOOL isLoginScreenLoad;
-@property BOOL isTest;
 - (void)loadWebView;
 - (NSString *)authorizationCodeFromURL:(NSURL *)url;
 
@@ -41,7 +40,6 @@
 @synthesize connection = _connection;
 @synthesize receivedData = _receivedData;
 @synthesize completionBlock = _completionBlock;
-@synthesize isTest = _isTest;
 @synthesize oauthData = _oauthData;
 @synthesize baseURL = _baseURL;
 
@@ -89,23 +87,21 @@
     self = [super init];
     if (nil != self)
     {
+        [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
+        [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
+        [AlfrescoErrors assertArgumentNotNil:redirectURI argumentName:@"redirectURI"];
+        [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+        
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
+        self.baseURL = kAlfrescoOAuthAuthorizeURL;
+        
         if (nil != parameters)
         {
             if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudURL])
             {
                 self.baseURL = [parameters valueForKey:kAlfrescoSessionCloudURL];
             }
-            else
-            {
-                self.baseURL = kAlfrescoOAuthAuthorizeURL;
-            }
-            
-        }
-        else
-        {
-            self.isTest = NO;
         }
     }
     return self;
@@ -142,28 +138,38 @@
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
     
-    NSMutableString *stagingURLString = [NSMutableString string];
-    [stagingURLString appendString:self.baseURL];
-    [stagingURLString appendString:@"?"];
-    [stagingURLString appendString:[kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey]];
-    [stagingURLString appendString:@"&"];
-    [stagingURLString appendString:[kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.oauthData.redirectURI]];
-    [stagingURLString appendString:@"&"];
-    [stagingURLString appendString:kAlfrescoOAuthScope];
-    [stagingURLString appendString:@"&"];
-    [stagingURLString appendString:kAlfrescoOAuthResponseType];
-    NSLog(@"Staging URL is %@",stagingURLString);
-    NSURL *stagingURL = [NSURL URLWithString:stagingURLString];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:stagingURL]];
+    NSLog(@"baseurl: %@", self.baseURL);
+    NSLog(@"apikey: %@", self.oauthData.apiKey);
+    NSLog(@"apisecret: %@", self.oauthData.secretKey);
+    NSLog(@"redirect: %@", self.oauthData.redirectURI);
+    
+    NSMutableString *authURLString = [NSMutableString string];
+    [authURLString appendString:self.baseURL];
+    [authURLString appendString:@"?"];
+    [authURLString appendString:[kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey]];
+    [authURLString appendString:@"&"];
+    [authURLString appendString:[kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.oauthData.redirectURI]];
+    [authURLString appendString:@"&"];
+    [authURLString appendString:kAlfrescoOAuthScope];
+    [authURLString appendString:@"&"];
+    [authURLString appendString:kAlfrescoOAuthResponseType];
+    NSLog(@"Auth URL is %@", authURLString);
+    
+    // load the authorization URL in the web view
+    NSURL *authURL = [NSURL URLWithString:authURLString];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:authURL]];
 }
 
 
 - (NSString *)authorizationCodeFromURL:(NSURL *)url
 {
+    NSLog(@"callbackURL: %@", url);
+    
     if (nil == url)
     {
         return nil;
     }
+    
     NSArray *components = [[url absoluteString] componentsSeparatedByString:@"code="];
     if (2 == components.count)
     {
@@ -185,6 +191,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     NSLog(@"UIWebviewDelegate webViewDidFinishLoad");
+    
     if (self.isLoginScreenLoad)
     {
         self.isLoginScreenLoad = NO;
@@ -194,6 +201,16 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     NSLog(@"UIWebviewDelegate shouldStartLoadWithRequest");
+    
+    if (self.isLoginScreenLoad)
+    {
+        NSLog(@"isLoginScreenLoad = YES");
+    }
+    else
+    {
+        NSLog(@"isLoginScreenLoad = NO");
+    }
+    
     if (!self.isLoginScreenLoad)
     {
         self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
@@ -225,7 +242,10 @@
  */
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
+    NSLog(@"didReceiveResponse");
     NSString *code = [self authorizationCodeFromURL:response.URL];
+    NSLog(@"Extracted auth code: %@", code);
+    
     if (nil != code)
     {
         [AlfrescoOAuthHelper retrieveOAuthDataForAuthorizationCode:code
