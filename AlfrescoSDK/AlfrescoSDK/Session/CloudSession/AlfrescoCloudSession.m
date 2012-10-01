@@ -35,6 +35,20 @@
 
 
 @interface AlfrescoCloudSession ()
++ (void)connectWithEmailAddress:(NSString *)emailAddress
+                       password:(NSString *)password
+                         apiKey:(NSString *)apiKey
+                     parameters:(NSDictionary *)parameters
+                completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
++ (void)connectWithEmailAddress:(NSString *)emailAddress
+                       password:(NSString *)password
+                         apiKey:(NSString *)apiKey
+               networkIdentifer:(NSString *)networkIdentifer
+                     parameters:(NSDictionary *)parameters
+                completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
+
 - (id)initWithParameters:(NSDictionary *)parameters;
 
 - (void)authenticateWithEmailAddress:(NSString *)emailAddress
@@ -126,6 +140,16 @@
 }
 
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+{
+    AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:nil];
+    if (nil != sessionInstance)
+    {
+        [sessionInstance authenticateWithOAuthData:oauthData completionBlock:completionBlock];
+    }
+}
+
++ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
                   parameters:(NSDictionary *)parameters
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
@@ -133,6 +157,19 @@
     if (nil != sessionInstance)
     {
         [sessionInstance authenticateWithOAuthData:oauthData completionBlock:completionBlock];
+    }
+}
+
++ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+            networkIdentifer:(NSString *)networkIdentifer
+             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+{
+    AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:nil];
+    if (nil != sessionInstance)
+    {
+        [sessionInstance authenticateWithOAuthData:oauthData
+                                           network:networkIdentifer
+                                   completionBlock:completionBlock];
     }
 }
 
