@@ -62,7 +62,7 @@
         {
             NSLog(@"We got something back: access token is %@", oauthdata.accessToken);
             NSLog(@"The refresh token is %@ the grant_type is %@", oauthdata.refreshToken, oauthdata.tokenType);
-            [AlfrescoCloudSession connectWithOAuthData:oauthdata parameters:nil completionBlock:^(id<AlfrescoSession> session, NSError *error){
+            [AlfrescoCloudSession connectWithOAuthData:oauthdata completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
                     [weakSelf.navigationController popToViewController:weakSelf animated:YES ];

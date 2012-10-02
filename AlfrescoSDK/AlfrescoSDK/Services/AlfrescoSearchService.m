@@ -37,7 +37,6 @@
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
 - (NSString *) createSearchQuery:(NSString *)keywords options:(AlfrescoKeywordSearchOptions *)options;
-- (BOOL) isValueSearchLanguage:(NSInteger)language error:(NSError **)error;
 
 @end
 
@@ -281,25 +280,6 @@
     return searchQuery;
     
 }
-
-- (BOOL) isValueSearchLanguage:(NSInteger)language error:(NSError **)error
-{
-    if (AlfrescoSearchLanguageCMIS == language) 
-    {
-        return YES;
-    }
-    if (nil == *error)
-    {
-        *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSearchUnsupportedSearchLanguage];
-    }
-    else
-    {
-        NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSearchUnsupportedSearchLanguage];
-        *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeSearch];
-    }
-    return NO;
-}
-
 
 
 @end

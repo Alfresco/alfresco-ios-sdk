@@ -27,10 +27,11 @@
 @property (nonatomic, copy, readwrite) AlfrescoOAuthCompletionBlock completionBlock;
 @property (nonatomic, strong, readwrite) AlfrescoOAuthData  * oauthData;
 @property (nonatomic, strong, readwrite) NSString *baseURL;
+@property (nonatomic, strong, readwrite) NSDictionary *parameters;
 @property BOOL isLoginScreenLoad;
 - (void)loadWebView;
 - (NSString *)authorizationCodeFromURL:(NSURL *)url;
-
+- (void)createActivityView;
 @end
 
 @implementation AlfrescoOAuthLoginViewController
@@ -42,6 +43,8 @@
 @synthesize completionBlock = _completionBlock;
 @synthesize oauthData = _oauthData;
 @synthesize baseURL = _baseURL;
+@synthesize parameters = _parameters;
+@synthesize activityIndicator = _activityIndicator;
 
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
@@ -87,22 +90,26 @@
     self = [super init];
     if (nil != self)
     {
-        [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
-        [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
-        [AlfrescoErrors assertArgumentNotNil:redirectURI argumentName:@"redirectURI"];
+        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:apiKey argumentName:@"apiKey"];
+        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:secretKey argumentName:@"secretKey"];
+//        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:redirectURI argumentName:@"redirectURI"];
         [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
         
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
-        self.baseURL = kAlfrescoOAuthAuthorizeURL;
+        self.baseURL = [NSString stringWithFormat:@"%@%@",kAlfrescoOAuthCloudURL,kAlfrescoOAuthAuthorize];
         
         if (nil != parameters)
         {
+            self.parameters = parameters;
             if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudURL])
             {
-                self.baseURL = [parameters valueForKey:kAlfrescoSessionCloudURL];
+                NSString *supplementedURL = [parameters valueForKey:kAlfrescoSessionCloudURL];
+                self.baseURL = [NSString stringWithFormat:@"%@%@",supplementedURL,kAlfrescoOAuthAuthorize];
             }
         }
+        
+        
     }
     return self;
 }
@@ -112,6 +119,7 @@
     [super viewDidLoad];
     self.isLoginScreenLoad = YES;
     [self loadWebView];
+    [self createActivityView];
 }
 
 - (void)viewDidUnload
@@ -120,6 +128,13 @@
     self.connection = nil;
     self.receivedData = nil;
     [super viewDidUnload];
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.activityIndicator stopAnimating];
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning
@@ -186,6 +201,21 @@
 }
 
 
+- (void)createActivityView
+{
+    CGSize size = self.view.bounds.size;
+    CGFloat xOffset = size.width/2 - 50;
+    CGFloat yOffset = size.height/2 - 50;
+    CGRect viewFrame = CGRectMake(xOffset, yOffset, 100, 100);
+    
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activityIndicator.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    self.activityIndicator.frame = viewFrame;
+    self.activityIndicator.hidesWhenStopped = YES;
+    [self.view insertSubview:self.activityIndicator aboveSubview:self.webView];
+}
+
+
 #pragma WebViewDelegate methods
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
@@ -213,6 +243,8 @@
     
     if (!self.isLoginScreenLoad)
     {
+        NSLog(@"isLoginScreenLoad = NO and we start the NSURLConnection requet");
+        [self.activityIndicator startAnimating];
         self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
         return NO;
     }
@@ -232,8 +264,10 @@
 }
 
 #pragma NSURLConnection Delegate methods
+
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
+    NSLog(@"LoginViewController:NSURLConnectionDelegate didReceiveData");
 }
 
 /**
@@ -242,26 +276,41 @@
  */
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    NSLog(@"didReceiveResponse");
+    NSLog(@"LoginViewController:didReceiveResponse");
     NSString *code = [self authorizationCodeFromURL:response.URL];
     NSLog(@"Extracted auth code: %@", code);
     
     if (nil != code)
     {
-        [AlfrescoOAuthHelper retrieveOAuthDataForAuthorizationCode:code
-                                                         oauthData:self.oauthData
-                                                   completionBlock:self.completionBlock];
+        AlfrescoOAuthHelper *helper = nil;
+        if (nil != self.parameters)
+        {
+            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:self.parameters];
+        }
+        else
+        {
+            helper = [[AlfrescoOAuthHelper alloc] init];
+        }
+        [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
+    }
+    else
+    {
+        [self.activityIndicator stopAnimating];
+        UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not obtain authentication code from server. Possibly incorrect password/username" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alertview show];
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    NSLog(@"connection error with message %@ and code %d", [error localizedDescription], [error code]);
+    NSLog(@"LoginViewController:connection error with message %@ and code %d", [error localizedDescription], [error code]);
+    [self.activityIndicator stopAnimating];
     self.completionBlock(nil, error);
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    NSLog(@"LoginViewController:connectionDidFinishLoading");
 }
 
 
