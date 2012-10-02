@@ -104,10 +104,8 @@ NSString *const kAlfrescoOAuthClientSecret = @"client_secret={clientSecret}";
 NSString *const kAlfrescoOAuthGrantType = @"grant_type=authorization_code";
 NSString *const kAlfrescoOAuthRedirectURI = @"redirect_uri={redirectURI}";
 NSString *const kAlfrescoOAuthCode = @"code={code}";
-NSString *const kAlfrescoOAuthAuthorizeURL = @"https://api.alfresco.com/auth/oauth/versions/2/authorize";
-NSString *const kAlfrescoOAuthTokenURL = @"https://api.alfresco.com/auth/oauth/versions/2/token";
-NSString *const kAlfrescoOAuthTestAuthorizeURL = @"https://stagapi.alfresco.com/auth/oauth/versions/2/authorize";
-NSString *const kAlfrescoOAuthTestTokenURL = @"https://stagapi.alfresco.com/auth/oauth/versions/2/token";
+NSString *const kAlfrescoOAuthAuthorize = @"/auth/oauth/versions/2/authorize";
+NSString *const kAlfrescoOAuthToken = @"/auth/oauth/versions/2/token";
 NSString *const kAlfrescoOAuthScope = @"scope=pub_api";
 NSString *const kAlfrescoOAuthResponseType = @"response_type=code";
 NSString *const kAlfrescoOAuthGrantTypeRefresh = @"grant_type=refresh_token";
@@ -146,9 +144,8 @@ NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI = @"node/{nodeRef}/cont
  Cloud constants
  */
 NSString * const kAlfrescoOAuthCloudURL = @"https://api.alfresco.com";
-NSString * const kAlfrescoOAuthTestCloudURL = @"https://stagapi.alfresco.com";
 NSString * const kAlfrescoCloudURL = @"http://my.alfresco.com";
-NSString * const kAlfrescoTestCloudURL = @"http://devapis.alfresco.com";
+NSString * const kAlfrescoBasicCloudURL = @"http://devapis.alfresco.com";
 NSString * const kAlfrescoCloudBindingService = @"/alfresco/service";
 NSString * const kAlfrescoCloudSignupURL = @"/internal/cloud/accounts/signupqueue";
 NSString * const kAlfrescoCloudPrecursor = @"/alfresco/a";

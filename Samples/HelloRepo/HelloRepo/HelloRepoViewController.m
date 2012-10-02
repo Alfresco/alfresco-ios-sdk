@@ -32,7 +32,6 @@
 
 - (void)helloFromRepository;
 - (void)helloFromCloud;
-- (void)helloFromCloudWithOAuth;
 - (void)loadRootFolder;
 
 @end

@@ -52,6 +52,7 @@
 #pragma mark - private methods
 - (void)authenticateCloudWithOAuth
 {
+    __block NSMutableDictionary *stagingParams = [NSMutableDictionary dictionary];
     __weak ServerSelectionTableViewController *weakSelf = self;
     AlfrescoOAuthCompletionBlock completionBlock = ^void(AlfrescoOAuthData *oauthdata, NSError *error){
         if (nil == oauthdata)
@@ -62,7 +63,7 @@
         {
             NSLog(@"We got something back: access token is %@", oauthdata.accessToken);
             NSLog(@"The refresh token is %@ the grant_type is %@", oauthdata.refreshToken, oauthdata.tokenType);
-            [AlfrescoCloudSession connectWithOAuthData:oauthdata parameters:nil completionBlock:^(id<AlfrescoSession> session, NSError *error){
+            [AlfrescoCloudSession connectWithOAuthData:oauthdata parameters:stagingParams completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
                     [weakSelf.navigationController popToViewController:weakSelf animated:YES ];
@@ -86,7 +87,8 @@
     // use this is you want to use the Alfresco default redirect URI
     AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
                                                                                                        secretKey:SECRETKEY
-                                                                                                 completionBlock:completionBlock];
+                                                                                                 completionBlock:completionBlock
+                                                                                                      parameters:stagingParams];
     [self.navigationController pushViewController:loginController animated:YES];
 }
 

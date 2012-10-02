@@ -106,6 +106,24 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
     }
 }
 
++ (void)assertStringArgumentNotNilOrEmpty:(NSString *)argument argumentName:(NSString *)argumentName
+{
+    if (nil == argument)
+    {
+        NSString * message = [NSString stringWithFormat:@"%@ must not be nil",argumentName];
+        NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:message userInfo:nil];
+        @throw exception;
+    }
+    else if ([argument isEqualToString:@""])
+    {
+        NSString * message = [NSString stringWithFormat:@"%@ must not be empty",argumentName];
+        NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:message userInfo:nil];
+        @throw exception;        
+    }
+    
+}
+
+
 
 + (NSString *)descriptionForAlfrescoErrorCode:(AlfrescoErrorCodes)code
 {

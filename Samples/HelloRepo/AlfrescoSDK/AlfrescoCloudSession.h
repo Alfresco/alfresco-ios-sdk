@@ -28,40 +28,16 @@
 @property (nonatomic, strong) AlfrescoOAuthData *oauthData;
 
 
-/**
- Note: Cloud networks are also termed domains or tenants. Each user will have a default "home" network (or domain, or tenant) assigned.
- This method parses the available networks on The Cloud and selects the home-network for the registered user.
- If no home network is found, an error is returned and the AlfrescoSession object will be nil.
- 
- @param emailAddress - the email address of the user to be used for sign up
- @param password - password
- @param apiKey - apiKey to authenticate app at server with
- @param parameters - an NSDictionary settings object with additional parameters to be used for authentication (optional)
- @param completionBlock (AlfrescoSessionCompletionBlock). If successful, the block returns a valid AlfrescoSession object - or nil if error occurs.
- */
-+ (void)connectWithEmailAddress:(NSString *)emailAddress
-                       password:(NSString *)password
-                         apiKey:(NSString *)apiKey
-                     parameters:(NSDictionary *)parameters
-                completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
-
 
 /**
- The method looks for a specific Cloud network and returns a AlfrescoSession object if successful.
- 
- @param emailAddress - the email address of the user to be used for sign up
- @param password - password
- @param apiKey - apiKey to authenticate app at server with
- @param networkIdentifer - the network/tenant/domain in the Cloud to connect to
- @param parameters - an NSDictionary settings object with additional parameters to be used for authentication (optional)
- @param completionBlock (AlfrescoSessionCompletionBlock). If successful, the block returns a valid AlfrescoSession object - or nil if error occurs.
+ This initialiser uses OAuth authentication processes. It will only be successful if the AlfrescoOAuthData contain a valid access and refresh token.
+ Therefore, this method should only be used after the initial OAuth setup is complete.
+ The method well set the home network/tenant ID as default
+ @param oauthData
+ @param completionBlock
  */
-+ (void)connectWithEmailAddress:(NSString *)emailAddress
-                       password:(NSString *)password
-                         apiKey:(NSString *)apiKey
-               networkIdentifer:(NSString *)networkIdentifer
-                     parameters:(NSDictionary *)parameters
-                completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
++ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 
 /**
@@ -72,9 +48,20 @@
  @param parameters - optional, may be nil
  @param completionBlock
  */
-
 + (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
                   parameters:(NSDictionary *)parameters
+             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
+/**
+ This initialiser uses OAuth authentication processes. It will only be successful if the AlfrescoOAuthData contain a valid access and refresh token.
+ Therefore, this method should only be used after the initial OAuth setup is complete.
+ The method well set to the specified network/tenant ID.
+ @param oauthData
+ @param networkIdentifer - also known as tenent ID
+ @param completionBlock
+ */
++ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+            networkIdentifer:(NSString *)networkIdentifer
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 /**
