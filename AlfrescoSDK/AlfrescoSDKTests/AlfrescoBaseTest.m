@@ -184,11 +184,12 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 - (void)authenticateCloudServer
 {
     log(@"In authenticateCloudServer");
-    [AlfrescoCloudSession connectWithEmailAddress:self.userName
-                                         password:self.testPassword
-                                           apiKey:nil
-                                       parameters:nil
-                                  completionBlock:^(id<AlfrescoSession> cloudSession, NSError *error){
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
+    [parameters setValue:self.userName forKey:@"org.alfresco.mobile.internal.session.username"];
+    [parameters setValue:self.testPassword forKey:@"org.alfresco.mobile.internal.session.password"];
+    
+    [AlfrescoCloudSession connectWithOAuthData:nil parameters:parameters completionBlock:^(id<AlfrescoSession> cloudSession, NSError *error){
         if (nil == cloudSession)
         {
             log(@"AlfrescoBaseTest::authenticateCloudServer - cloudSession returns NIL");
@@ -206,6 +207,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
             self.callbackCompleted = YES;
         }
     }];
+    
 
     [self waitUntilCompleteWithFixedTimeInterval];
     STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");

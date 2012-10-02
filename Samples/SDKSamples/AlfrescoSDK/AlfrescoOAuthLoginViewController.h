@@ -20,8 +20,9 @@
 #import "AlfrescoOAuthData.h"
 typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
 
-@interface AlfrescoOAuthLoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+@interface AlfrescoOAuthLoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, UIAlertViewDelegate>
 @property (nonatomic, strong) UIWebView * webView;
+@property (nonatomic, strong) UIActivityIndicatorView * activityIndicator;
 /**
  @name Initialisers
  The AlfrescoOAuthLoginViewController has 4 different initialisers available. At the minimum an apiKey, secretKey and completionBlock must be provided.

@@ -20,13 +20,18 @@
 NSString * const kAlfrescoErrorDomainName = @"AlfrescoErrorDomain";
 
 NSString * const kAlfrescoErrorDescriptionUnknown = @"Unknown Alfresco Error";
-NSString * const kAlfrescoErrorDescriptionInvalidArgument = @"Invalid input parameter";
+NSString * const kAlfrescoErrorDescriptionRequestedNodeNotFound = @"The requested node wasn't found";
+NSString * const kAlfrescoErrorDescriptionAccessDenied = @"Access Denied";
 
 NSString * const kAlfrescoErrorDescriptionSession = @"Session Error";
 NSString * const kAlfrescoErrorDescriptionNoRepositoryFound = @"Session Error: No Alfresco repository found";
 NSString * const kAlfrescoErrorDescriptionUnauthorisedAccess = @"Session Error: Unauthorised Access";
 NSString * const kAlfrescoErrorDescriptionHTTPResponse= @"Session Error: the HTTP Response code suggests an error";
 NSString * const kAlfrescoErrorDescriptionNoNetworkFound = @"Session Error: No Cloud network/domain found";
+NSString * const kAlfrescoErrorDescriptionAPIKeyOrSecretKeyUnrecognised = @"The API or Secret Key (or both) are unrecognised";
+NSString * const kAlfrescoErrorDescriptionAuthorizationCodeInvalid = @"The authentication code is invalid";
+NSString * const kAlfrescoErrorDescriptionAccessTokenExpired = @"The access token has expired";
+NSString * const kAlfrescoErrorDescriptionRefreshTokenExpired = @"The refresh token has expired";
 
 NSString * const kAlfrescoErrorDescriptionJSONParsing = @"JSON Data parsing Error";
 NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON Data are nil/empty";
@@ -45,12 +50,15 @@ NSString * const kAlfrescoErrorDescriptionActivityStreamNoActivities =@"Activity
 
 NSString * const kAlfrescoErrorDescriptionDocumentFolder = @"Document Folder Service Error";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderPermissions = @"Document Folder Service Error: Error retrieving Permissions";
-NSString * const kAlfrescoErrorDescriptionDocumentFolderNilFolder = @"Document Folder Service Error: Folder is NIL";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNoParent = @"Document Folder Service Error: No Parent Folder";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNoRenditionService = @"Document Folder Service Error: no thumbnail rendition service available.";
-NSString * const kAlfrescoErrorDescriptionDocumentFolderNilDocument = @"Document Folder Service Error: Document is NIL";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeNotFound = @"Document Folder Service Error: the node wasn't found";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderWrongNodeType = @"Document Folder Service Error: wrong node type. Expected either folder or document.";
+NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists = @"Node already exists";
+NSString * const kAlfrescoErrorDescriptionDocumentFolderFailedToConvertNode = @"Node could not be converted to an Alfresco object";
+
+
+
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNoThumbnail = @"Document Folder Service Error: No Thumbnail found for document/folder.";
 
 NSString * const kAlfrescoErrorDescriptionTagging = @"Tagging Service Error";
@@ -61,9 +69,9 @@ NSString * const kAlfrescoErrorDescriptionPersonNoAvatarFound = @"Person Service
 NSString * const kAlfrescoErrorDescriptionPersonNotFound = @"Person Service Error: person/user wasn't found.";
 
 NSString * const kAlfrescoErrorDescriptionSearch = @"Search Service Error";
-NSString * const kAlfrescoErrorDescriptionSearchUnsupportedSearchLanguage = @"Search Service Error: the selected search language is not supported";
 
 NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
+NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found";
 
 
 
@@ -106,6 +114,24 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
     }
 }
 
++ (void)assertStringArgumentNotNilOrEmpty:(NSString *)argument argumentName:(NSString *)argumentName
+{
+    if (nil == argument)
+    {
+        NSString * message = [NSString stringWithFormat:@"%@ must not be nil",argumentName];
+        NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:message userInfo:nil];
+        @throw exception;
+    }
+    else if ([argument isEqualToString:@""])
+    {
+        NSString * message = [NSString stringWithFormat:@"%@ must not be empty",argumentName];
+        NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:message userInfo:nil];
+        @throw exception;        
+    }
+    
+}
+
+
 
 + (NSString *)descriptionForAlfrescoErrorCode:(AlfrescoErrorCodes)code
 {
@@ -113,11 +139,14 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
         case kAlfrescoErrorCodeUnknown:
             return kAlfrescoErrorDescriptionUnknown;            
             break;
-        case kAlfrescoErrorInvalidArgument:
-            return kAlfrescoErrorDescriptionInvalidArgument;
-            break;
         case kAlfrescoErrorCodeHTTPResponse:
             return kAlfrescoErrorDescriptionHTTPResponse;
+            break;
+        case kAlfrescoErrorCodeRequestedNodeNotFound:
+            return kAlfrescoErrorDescriptionRequestedNodeNotFound;
+            break;
+        case kAlfrescoErrorCodeAccessDenied:
+            return kAlfrescoErrorDescriptionAccessDenied;
             break;
         case kAlfrescoErrorCodeSession:
             return kAlfrescoErrorDescriptionSession;
@@ -127,7 +156,21 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
             break;
         case kAlfrescoErrorCodeUnauthorisedAccess:
             return kAlfrescoErrorDescriptionUnauthorisedAccess;
-            break;            
+            break;
+            
+        case kAlfrescoErrorCodeAPIKeyOrSecretKeyUnrecognised:
+            return kAlfrescoErrorDescriptionAPIKeyOrSecretKeyUnrecognised;
+            break;
+        case kAlfrescoErrorCodeAuthorizationCodeInvalid:
+            return kAlfrescoErrorDescriptionAuthorizationCodeInvalid;
+            break;
+        case kAlfrescoErrorCodeAccessTokenExpired:
+            return kAlfrescoErrorDescriptionAccessTokenExpired;
+            break;
+        case kAlfrescoErrorCodeRefreshTokenExpired:
+            return kAlfrescoErrorDescriptionRefreshTokenExpired;
+            break;
+            
         case kAlfrescoErrorCodeNoNetworkFound:
             return kAlfrescoErrorDescriptionNoNetworkFound;
             break;
@@ -170,8 +213,8 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
         case kAlfrescoErrorCodeDocumentFolderPermissions:
             return kAlfrescoErrorDescriptionDocumentFolderPermissions;
             break;
-        case kAlfrescoErrorCodeDocumentFolderNilFolder:
-            return kAlfrescoErrorDescriptionDocumentFolderNilFolder;
+        case kAlfrescoErrorCodeDocumentFolderNodeAlreadyExists:
+            return kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists;
             break;
         case kAlfrescoErrorCodeDocumentFolderNoParent:
             return kAlfrescoErrorDescriptionDocumentFolderNoParent;
@@ -179,8 +222,8 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
         case kAlfrescoErrorCodeDocumentFolderNoRenditionService:
             return kAlfrescoErrorDescriptionDocumentFolderNoRenditionService;
             break;
-        case kAlfrescoErrorCodeDocumentFolderNilDocument:
-            return kAlfrescoErrorDescriptionDocumentFolderNilDocument;
+        case kAlfrescoErrorCodeDocumentFolderFailedToConvertNode:
+            return kAlfrescoErrorDescriptionDocumentFolderFailedToConvertNode;
             break;
         case kAlfrescoErrorCodeDocumentFolderNodeNotFound:
             return kAlfrescoErrorDescriptionDocumentFolderNodeNotFound;
@@ -209,11 +252,11 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
         case kAlfrescoErrorCodeSearch:
             return kAlfrescoErrorDescriptionSearch;
             break;
-        case kAlfrescoErrorCodeSearchUnsupportedSearchLanguage:
-            return kAlfrescoErrorDescriptionSearchUnsupportedSearchLanguage;
-            break;
         case kAlfrescoErrorCodeRatings:
             return kAlfrescoErrorDescriptionRatings;
+            break;
+        case kAlfrescoErrorCodeRatingsNoRatings:
+            return kAlfrescoErrorDescriptionRatingsNoRatings;
             break;
         default:
             return kAlfrescoErrorDescriptionUnknown;

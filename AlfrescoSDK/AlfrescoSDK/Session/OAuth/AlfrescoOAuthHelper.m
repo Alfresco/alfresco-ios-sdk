@@ -26,11 +26,7 @@
 @property (nonatomic, strong, readwrite) NSMutableData      * receivedData;
 @property (nonatomic, copy, readwrite) AlfrescoOAuthCompletionBlock completionBlock;
 @property (nonatomic, strong, readwrite) AlfrescoOAuthData  * oauthData;
-- (void)oauthDataForAuthorizationCode:(NSString *)authorizationCode
-                            oauthData:(AlfrescoOAuthData *)oauthData
-                      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
-- (void)updateAccessToken:(AlfrescoOAuthData *)oauthData completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
-
+@property (nonatomic, strong, readwrite) NSString * baseURL;
 - (AlfrescoOAuthData *)updatedOAuthDataFromJSONWithError:(NSError **)error;
 @end
 
@@ -39,35 +35,103 @@
 @synthesize receivedData = _receivedData;
 @synthesize completionBlock = _completionBlock;
 @synthesize oauthData = _oauthData;
+@synthesize baseURL = _baseURL;
 
-+ (void)retrieveOAuthDataForAuthorizationCode:(NSString *)authorizationCode
+
+- (id)initWithParameters:(NSDictionary *)parameters
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.baseURL = [NSString stringWithFormat:@"%@%@",kAlfrescoOAuthCloudURL,kAlfrescoOAuthToken];
+        if (nil != parameters)
+        {
+            if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudURL])
+            {
+                NSString *supplementedURL = [parameters valueForKey:kAlfrescoSessionCloudURL];
+                self.baseURL = [NSString stringWithFormat:@"%@%@",supplementedURL,kAlfrescoOAuthToken];
+            }
+        }
+    }
+    return self;
+}
+
+- (void)retrieveOAuthDataForAuthorizationCode:(NSString *)authorizationCode
                                     oauthData:(AlfrescoOAuthData *)oauthData
                               completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    AlfrescoOAuthHelper *helper = [[AlfrescoOAuthHelper alloc] init];
-    if (nil != helper)
-    {
-        [helper oauthDataForAuthorizationCode:authorizationCode oauthData:oauthData completionBlock:completionBlock];
-    }
+    self.completionBlock = completionBlock;
+    self.oauthData = oauthData;
+    self.receivedData = nil;
+    NSURL *url = [NSURL URLWithString:self.baseURL];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
+                                                           cachePolicy: NSURLRequestReloadIgnoringCacheData
+                                                       timeoutInterval: 60];
+    
+    [request setHTTPMethod:@"POST"];
+    
+    NSMutableString *contentString = [NSMutableString string];
+    NSString *codeID   = [kAlfrescoOAuthCode stringByReplacingOccurrencesOfString:kAlfrescoCode withString:authorizationCode];
+    NSString *clientID = [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey];
+    NSString *secretID = [kAlfrescoOAuthClientSecret stringByReplacingOccurrencesOfString:kAlfrescoClientSecret withString:self.oauthData.secretKey];
+    NSString *redirect = [kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.oauthData.redirectURI];
+    
+    [contentString appendString:codeID];
+    [contentString appendString:@"&"];
+    [contentString appendString:clientID];
+    [contentString appendString:@"&"];
+    [contentString appendString:secretID];
+    [contentString appendString:@"&"];
+    [contentString appendString:kAlfrescoOAuthGrantType];
+    [contentString appendString:@"&"];
+    [contentString appendString:redirect];
+    NSLog(@"AlfrescoOAuthHelper::Token Staging URL header is %@",contentString);
+    
+    NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:data];
+    
+    self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
     
 }
 
-+ (void)refreshAccessToken:(AlfrescoOAuthData *)oauthData
+
+- (void)refreshAccessToken:(AlfrescoOAuthData *)oauthData
            completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    AlfrescoOAuthHelper *helper = [[AlfrescoOAuthHelper alloc] init];
-    if (nil != helper)
-    {
-        [helper updateAccessToken:oauthData completionBlock:completionBlock];
-    }
+    self.completionBlock = completionBlock;
+    self.oauthData = oauthData;
+    NSURL *url = [NSURL URLWithString:self.baseURL];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
+                                                           cachePolicy: NSURLRequestReloadIgnoringCacheData
+                                                       timeoutInterval: 60];
+    
+    [request setHTTPMethod:@"POST"];
+    
+    NSMutableString *contentString = [NSMutableString string];
+    NSString *refreshID = [kAlfrescoJSONRefreshToken stringByReplacingOccurrencesOfString:kAlfrescoRefreshID withString:self.oauthData.refreshToken];
+    NSString *clientID  = [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey];
+    NSString *secretID  = [kAlfrescoOAuthClientSecret stringByReplacingOccurrencesOfString:kAlfrescoClientSecret withString:self.oauthData.secretKey];
+    
+    [contentString appendString:refreshID];
+    [contentString appendString:@"&"];
+    [contentString appendString:clientID];
+    [contentString appendString:@"&"];
+    [contentString appendString:secretID];
+    [contentString appendString:@"&"];
+    [contentString appendString:kAlfrescoOAuthGrantTypeRefresh];
+    
+    NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:data];
+    
+    self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
     
 }
+
 
 
 #pragma NSURLConnection Delegate methods
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    NSLog(@"AlfrescoOAuthHelper didReceiveData");
     if (nil != data && data.length > 0)
     {
         if (nil == self.receivedData)
@@ -105,81 +169,29 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    NSLog(@"AlfrescoOAuthHelper didFailWithError");
-    self.completionBlock(nil, error);
+    NSLog(@"AlfrescoOAuthHelper didFailWithError. Error is %@ and code is %d", [error localizedDescription], [error code]);
+    if (nil == self.receivedData)
+    {
+        self.completionBlock(nil, error);
+        return;
+    }
+    if (0 == self.receivedData.length)
+    {
+        self.completionBlock(nil, error);
+        return;
+    }
+    else
+    {
+        NSError *error = nil;
+        AlfrescoOAuthData *updatedOAuthData = [self updatedOAuthDataFromJSONWithError:&error];
+        self.completionBlock(updatedOAuthData, error);        
+    }
+
 }
 
 
 
 #pragma private methods
-- (void)oauthDataForAuthorizationCode:(NSString *)authorizationCode
-                            oauthData:(AlfrescoOAuthData *)oauthData
-                      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
-{
-    self.completionBlock = completionBlock;
-    self.oauthData = oauthData;
-    self.receivedData = nil;
-    NSURL *url = [NSURL URLWithString:kAlfrescoOAuthTokenURL];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
-                                                           cachePolicy: NSURLRequestReloadIgnoringCacheData
-                                                       timeoutInterval: 60];
-    
-    [request setHTTPMethod:@"POST"];
-    
-    NSMutableString *contentString = [NSMutableString string];
-    NSString *codeID   = [kAlfrescoOAuthCode stringByReplacingOccurrencesOfString:kAlfrescoCode withString:authorizationCode];
-    NSString *clientID = [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey];
-    NSString *secretID = [kAlfrescoOAuthClientSecret stringByReplacingOccurrencesOfString:kAlfrescoClientSecret withString:self.oauthData.secretKey];
-    NSString *redirect = [kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.oauthData.redirectURI];
-    
-    [contentString appendString:codeID];
-    [contentString appendString:@"&"];
-    [contentString appendString:clientID];
-    [contentString appendString:@"&"];
-    [contentString appendString:secretID];
-    [contentString appendString:@"&"];
-    [contentString appendString:kAlfrescoOAuthGrantType];
-    [contentString appendString:@"&"];
-    [contentString appendString:redirect];
-    NSLog(@"Token Staging URL is %@",contentString);
-    
-    NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
-    [request setHTTPBody:data];
-    
-    self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-    
-}
-
-- (void)updateAccessToken:(AlfrescoOAuthData *)oauthData completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
-{
-    self.completionBlock = completionBlock;
-    self.oauthData = oauthData;
-    NSURL *url = [NSURL URLWithString:kAlfrescoOAuthTokenURL];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
-                                                           cachePolicy: NSURLRequestReloadIgnoringCacheData
-                                                       timeoutInterval: 60];
-    
-    [request setHTTPMethod:@"POST"];
-    
-    NSMutableString *contentString = [NSMutableString string];
-    NSString *refreshID = [kAlfrescoJSONRefreshToken stringByReplacingOccurrencesOfString:kAlfrescoRefreshID withString:self.oauthData.refreshToken];
-    NSString *clientID  = [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey];
-    NSString *secretID  = [kAlfrescoOAuthClientSecret stringByReplacingOccurrencesOfString:kAlfrescoClientSecret withString:self.oauthData.secretKey];
-    
-    [contentString appendString:refreshID];
-    [contentString appendString:@"&"];
-    [contentString appendString:clientID];
-    [contentString appendString:@"&"];
-    [contentString appendString:secretID];
-    [contentString appendString:@"&"];
-    [contentString appendString:kAlfrescoOAuthGrantTypeRefresh];
-    
-    NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
-    [request setHTTPBody:data];
-    
-    self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-    
-}
 
 - (AlfrescoOAuthData *)updatedOAuthDataFromJSONWithError:(NSError **)error
 {
