@@ -523,7 +523,7 @@
             alfrescoNode = [weakSelf.objectConverter nodeFromCMISObject:cmisObject];
             if (nil == alfrescoNode) 
             {
-                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNilFolder];
+                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
             }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -549,7 +549,7 @@
             alfrescoNode = [weakSelf.objectConverter nodeFromCMISObject:cmisObject];
             if (nil == alfrescoNode) 
             {
-                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNilFolder];
+                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
             }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -761,6 +761,7 @@
     [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
+    
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         
@@ -778,7 +779,7 @@
                     resultDocument = (AlfrescoDocument *)[weakSelf.objectConverter nodeFromCMISObject:resultCmisDocument];
                     if (nil == resultDocument)
                     {
-                        anotherError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNilDocument];
+                        anotherError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
                     }
                 }
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -840,7 +841,7 @@
                 resultNode = [weakSelf.objectConverter nodeFromCMISObject:resultCmisObject];
                 if (nil == resultNode)
                 {
-                    operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNodeNotFound];
+                    operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
                 }
             }
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
