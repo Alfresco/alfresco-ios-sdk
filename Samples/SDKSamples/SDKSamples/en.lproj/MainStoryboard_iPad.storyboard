@@ -80,24 +80,24 @@
                         <sections>
                             <tableViewSection id="cxO-Qc-2nR">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MobileSDKCell" rowHeight="70" id="PG6-7t-v4M">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MobileSDKCell" textLabel="a5Z-0B-8V5" imageView="KuZ-jQ-Gw2" rowHeight="70" style="IBUITableViewCellStyleDefault" id="PG6-7t-v4M">
                                         <rect key="frame" x="0.0" y="30" width="768" height="71"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="45" y="1" width="658" height="69"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="samples.png" id="hqr-vi-OUJ">
-                                                    <rect key="frame" x="20" y="7" width="57" height="57"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="Samples" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="V2h-pc-jIM">
-                                                    <rect key="frame" x="110" y="24" width="397" height="25"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Samples" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="a5Z-0B-8V5">
+                                                    <rect key="frame" x="64" y="0.0" width="584" height="69"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="samples.png" id="KuZ-jQ-Gw2">
+                                                    <rect key="frame" x="10" y="12" width="44" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -106,24 +106,24 @@
                                             <segue destination="b3g-d2-S4t" kind="push" id="R9O-Yu-ld7"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MobileSDKCell" rowHeight="70" id="DM6-0J-scj">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MobileSDKCell" textLabel="w0H-we-ud8" imageView="mb7-0C-3FQ" rowHeight="70" style="IBUITableViewCellStyleDefault" id="DM6-0J-scj">
                                         <rect key="frame" x="0.0" y="101" width="768" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="45" y="0.0" width="658" height="69"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="api-reference.png" id="PXR-RM-Nd6">
-                                                    <rect key="frame" x="20" y="7" width="57" height="57"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="API Reference" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="3XD-mU-Az0">
-                                                    <rect key="frame" x="110" y="22" width="528" height="25"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="API Reference" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="w0H-we-ud8">
+                                                    <rect key="frame" x="64" y="0.0" width="584" height="69"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="api-reference.png" id="mb7-0C-3FQ">
+                                                    <rect key="frame" x="10" y="12" width="44" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -132,24 +132,24 @@
                                             <segue destination="xjb-yc-Vj5" kind="push" identifier="apiReference" id="Qf9-9X-1sU"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MobileSDKCell" rowHeight="70" id="VxU-my-EZf">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MobileSDKCell" textLabel="xeC-2B-2yb" imageView="oee-3E-wIa" rowHeight="70" style="IBUITableViewCellStyleDefault" id="VxU-my-EZf">
                                         <rect key="frame" x="0.0" y="171" width="768" height="71"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="45" y="0.0" width="658" height="69"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="learn-more.png" id="yp5-sp-YrE">
-                                                    <rect key="frame" x="20" y="7" width="57" height="57"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="Learn more" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="IYB-Jg-HRs">
-                                                    <rect key="frame" x="110" y="22" width="528" height="25"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Learn More" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xeC-2B-2yb">
+                                                    <rect key="frame" x="64" y="0.0" width="584" height="69"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="learn-more.png" id="oee-3E-wIa">
+                                                    <rect key="frame" x="10" y="12" width="44" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -167,11 +167,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="Eun-9Q-9bw"/>
-                    <connections>
-                        <outlet property="learnMoreLabel" destination="IYB-Jg-HRs" id="iKT-ip-uMU"/>
-                        <outlet property="referenceLabel" destination="3XD-mU-Az0" id="Tp2-rV-AjL"/>
-                        <outlet property="samplesLabel" destination="V2h-pc-jIM" id="nOp-g2-pfg"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Smd-Lo-clA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -188,20 +183,24 @@
                         <sections>
                             <tableViewSection id="ogt-mJ-r4V">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="PCD-cv-xAN" style="IBUITableViewCellStyleDefault" id="l9Q-eZ-uF1">
-                                        <rect key="frame" x="0.0" y="30" width="768" height="45"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="PCD-cv-xAN" imageView="vfq-pa-Lt5" rowHeight="60" style="IBUITableViewCellStyleDefault" id="l9Q-eZ-uF1">
+                                        <rect key="frame" x="0.0" y="30" width="768" height="61"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="45" y="1" width="658" height="43"/>
+                                            <rect key="frame" x="45" y="1" width="658" height="59"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Repository" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PCD-cv-xAN">
-                                                    <rect key="frame" x="10" y="0.0" width="638" height="43"/>
+                                                    <rect key="frame" x="61" y="0.0" width="587" height="59"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="repository.png" id="vfq-pa-Lt5">
+                                                    <rect key="frame" x="7" y="7" width="44" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -210,20 +209,24 @@
                                             <segue destination="tp5-Ln-Liq" kind="push" id="NeK-dZ-AGz"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="psG-cG-YDe" style="IBUITableViewCellStyleDefault" id="uVs-Dq-nLM">
-                                        <rect key="frame" x="0.0" y="75" width="768" height="45"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="psG-cG-YDe" imageView="eNk-8z-wO8" rowHeight="60" style="IBUITableViewCellStyleDefault" id="uVs-Dq-nLM">
+                                        <rect key="frame" x="0.0" y="91" width="768" height="61"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="45" y="0.0" width="658" height="43"/>
+                                            <rect key="frame" x="45" y="0.0" width="658" height="59"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Cloud" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="psG-cG-YDe">
-                                                    <rect key="frame" x="10" y="0.0" width="638" height="43"/>
+                                                    <rect key="frame" x="61" y="0.0" width="587" height="59"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="cloud.png" id="eNk-8z-wO8">
+                                                    <rect key="frame" x="7" y="7" width="44" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -1324,12 +1327,14 @@
         </scene>
     </scenes>
     <resources>
-        <image name="api-reference.png" width="58" height="58"/>
+        <image name="api-reference.png" width="44" height="44"/>
+        <image name="cloud.png" width="44" height="44"/>
         <image name="comments.png" width="20" height="20"/>
         <image name="download.png" width="23" height="20"/>
-        <image name="learn-more.png" width="58" height="58"/>
+        <image name="learn-more.png" width="44" height="44"/>
         <image name="like-unchecked.png" width="22" height="20"/>
-        <image name="samples.png" width="58" height="58"/>
+        <image name="repository.png" width="44" height="44"/>
+        <image name="samples.png" width="44" height="44"/>
     </resources>
     <classes>
         <class className="ActivitiesTableViewController" superclassName="BaseTableViewController">
@@ -1450,10 +1455,10 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Qf9-9X-1sU"/>
-        <segue reference="sLJ-BA-pOi"/>
-        <segue reference="VSR-jY-40E"/>
-        <segue reference="pJf-LC-M9E"/>
         <segue reference="d5m-e8-0qs"/>
+        <segue reference="VSR-jY-40E"/>
+        <segue reference="H9E-dW-fES"/>
+        <segue reference="Qf9-9X-1sU"/>
+        <segue reference="pJf-LC-M9E"/>
     </inferredMetricsTieBreakers>
 </document>
