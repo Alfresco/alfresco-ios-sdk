@@ -176,15 +176,23 @@
     [self.personService retrievePersonWithIdentifier:userId completionBlock:^(AlfrescoPerson *person, NSError *error) {
         if (nil != person)
         {
+            NSLog(@"DocumentViewController::loadAvatar the userId is %@ and the avatar id is %@", person.identifier, person.avatarIdentifier);
             [weakSelf.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
                 if (nil != contentFile)
                 {
+                    NSLog(@"DocumentViewController::loadAvatar we get a valid avatar back");
                     NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
                     [weakSelf.avatarDictionary setObject:data forKey:userId];
                     avatarImageView.image = [UIImage imageWithData:data];
+                    [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+                }
+                else
+                {
+                    NSLog(@"DocumentViewController::loadAvatar the avatar we get back is NIL. Error %@ with code %d", [error localizedDescription], [error code]);
                 }
             }];
         }
+        
     }];
 }
 
