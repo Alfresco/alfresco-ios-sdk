@@ -17,8 +17,7 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "AlfrescoOAuthData.h"
-typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
+#import "AlfrescoConstants.h"
 
 @interface AlfrescoOAuthLoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, UIAlertViewDelegate>
 @property (nonatomic, strong) UIWebView * webView;
@@ -58,8 +57,8 @@ typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSEr
  */
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
-     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
-          parameters:(NSDictionary *)parameters;
+          parameters:(NSDictionary *)parameters
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
 
 /**
  @param apiKey
@@ -71,7 +70,7 @@ typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSEr
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
          redirectURI:(NSString *)redirectURI
-     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
-          parameters:(NSDictionary *)parameters;
+          parameters:(NSDictionary *)parameters
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
 
 @end

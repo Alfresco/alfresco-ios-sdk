@@ -91,12 +91,20 @@
     [self.personService retrievePersonWithIdentifier:userId completionBlock:^(AlfrescoPerson *person, NSError *error) {
         if (nil != person)
         {
+            NSString *avatarIdentifier = person.avatarIdentifier;
+            NSLog(@"the avatar identifier for person %@ is %@", person.identifier, avatarIdentifier);
             [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
                 if (nil != contentFile)
                 {
+                    NSLog(@"we are getting a valid contentFile back.");
                     NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
                     [weakSelf.avatarDictionary setObject:data forKey:userId];
                     avatarImageView.image = [UIImage imageWithData:data];
+                }
+                else
+                {
+                    NSLog(@"The contentFile is NIL. The error message is %@ and code is %d", [error localizedDescription], [error code]);
+                    
                 }
             }];
         }

@@ -25,13 +25,18 @@
 typedef enum 
 {
     kAlfrescoErrorCodeUnknown = 0,
-    kAlfrescoErrorInvalidArgument = 1,
-    kAlfrescoErrorCodeHTTPResponse = 2,
+    kAlfrescoErrorCodeHTTPResponse = 1,
+    kAlfrescoErrorCodeRequestedNodeNotFound = 2,
+    kAlfrescoErrorCodeAccessDenied = 3,
 
     kAlfrescoErrorCodeSession = 100,
-    kAlfrescoErrorCodeNoRepositoryFound = 101,
-    kAlfrescoErrorCodeUnauthorisedAccess = 102,
-    kAlfrescoErrorCodeNoNetworkFound = 103,
+    kAlfrescoErrorCodeUnauthorisedAccess = 101,
+    kAlfrescoErrorCodeAPIKeyOrSecretKeyUnrecognised = 102,
+    kAlfrescoErrorCodeAuthorizationCodeInvalid = 103,
+    kAlfrescoErrorCodeAccessTokenExpired = 104,
+    kAlfrescoErrorCodeRefreshTokenExpired = 105,
+    kAlfrescoErrorCodeNoRepositoryFound = 106,
+    kAlfrescoErrorCodeNoNetworkFound = 107,
 
     kAlfrescoErrorCodeJSONParsing = 200,
     kAlfrescoErrorCodeJSONParsingNilData = 201,
@@ -49,38 +54,44 @@ typedef enum
     kAlfrescoErrorCodeActivityStreamNoActivities = 501,
 
     kAlfrescoErrorCodeDocumentFolder = 600,
-    kAlfrescoErrorCodeDocumentFolderPermissions = 601,
-    kAlfrescoErrorCodeDocumentFolderNilFolder = 602,
-    kAlfrescoErrorCodeDocumentFolderNoParent = 603,
-    kAlfrescoErrorCodeDocumentFolderNoRenditionService = 604,
-    kAlfrescoErrorCodeDocumentFolderNilDocument = 605,
-    kAlfrescoErrorCodeDocumentFolderNodeNotFound = 606,
-    kAlfrescoErrorCodeDocumentFolderWrongNodeType = 607,
+    kAlfrescoErrorCodeDocumentFolderNodeAlreadyExists = 601,
+    kAlfrescoErrorCodeDocumentFolderWrongNodeType = 602,
+    kAlfrescoErrorCodeDocumentFolderPermissions = 603,
+    kAlfrescoErrorCodeDocumentFolderFailedToConvertNode = 604,
+    kAlfrescoErrorCodeDocumentFolderNoParent = 605,
+    kAlfrescoErrorCodeDocumentFolderNoRenditionService = 606,
+    kAlfrescoErrorCodeDocumentFolderNodeNotFound = 607,
     kAlfrescoErrorCodeDocumentFolderNoThumbnail = 608,
 
     kAlfrescoErrorCodeTagging = 700,
     kAlfrescoErrorCodeTaggingNoTags = 701,
 
     kAlfrescoErrorCodePerson = 800,
-    kAlfrescoErrorCodePersonNoAvatarFound = 801,
-    kAlfrescoErrorCodePersonNotFound = 802,
+    kAlfrescoErrorCodePersonNotFound = 801,
+    kAlfrescoErrorCodePersonNoAvatarFound = 802,
 
     kAlfrescoErrorCodeSearch = 900,
-    kAlfrescoErrorCodeSearchUnsupportedSearchLanguage = 901,
 
-    kAlfrescoErrorCodeRatings = 1000
+    kAlfrescoErrorCodeRatings = 1000,
+    kAlfrescoErrorCodeRatingsNoRatings = 1001
     
 }AlfrescoErrorCodes;
 
 extern NSString * const kAlfrescoErrorDomainName;
 extern NSString * const kAlfrescoErrorDescriptionUnknown;
-extern NSString * const kAlfrescoErrorDescriptionInvalidArgument;
+extern NSString * const kAlfrescoErrorDescriptionRequestedNodeNotFound;
+extern NSString * const kAlfrescoErrorDescriptionAccessDenied;
 
 extern NSString * const kAlfrescoErrorDescriptionSession;
 extern NSString * const kAlfrescoErrorDescriptionNoRepositoryFound;
 extern NSString * const kAlfrescoErrorDescriptionUnauthorisedAccess;
 extern NSString * const kAlfrescoErrorDescriptionHTTPResponse;
 extern NSString * const kAlfrescoErrorDescriptionNoNetworkFound;
+extern NSString * const kAlfrescoErrorDescriptionAPIKeyOrSecretKeyUnrecognised;
+extern NSString * const kAlfrescoErrorDescriptionAuthorizationCodeInvalid;
+extern NSString * const kAlfrescoErrorDescriptionAccessTokenExpired;
+extern NSString * const kAlfrescoErrorDescriptionRefreshTokenExpired;
+
 
 extern NSString * const kAlfrescoErrorDescriptionJSONParsing;
 extern NSString * const kAlfrescoErrorDescriptionJSONParsingNilData;
@@ -99,13 +110,14 @@ extern NSString * const kAlfrescoErrorDescriptionActivityStreamNoActivities;
 
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolder;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderPermissions;
-extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNilFolder;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoParent;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoRenditionService;
-extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNilDocument;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeNotFound;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderWrongNodeType;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoThumbnail;
+extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists;
+extern NSString * const kAlfrescoErrorDescriptionDocumentFolderFailedToConvertNode;
+
 
 extern NSString * const kAlfrescoErrorDescriptionTagging;
 extern NSString * const kAlfrescoErrorDescriptionTaggingNoTags;
@@ -115,9 +127,9 @@ extern NSString * const kAlfrescoErrorDescriptionPersonNoAvatarFound;
 extern NSString * const kAlfrescoErrorDescriptionPersonNotFound;
 
 extern NSString * const kAlfrescoErrorDescriptionSearch;
-extern NSString * const kAlfrescoErrorDescriptionSearchUnsupportedSearchLanguage;
 
 extern NSString * const kAlfrescoErrorDescriptionRatings;
+extern NSString * const kAlfrescoErrorDescriptionRatingsNoRatings;
 
 
 /** AlfrescoErrors is used in case an error occurs when executing an operation against the Alfresco repository.
