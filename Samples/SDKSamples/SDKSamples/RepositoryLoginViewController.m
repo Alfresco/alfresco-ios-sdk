@@ -26,7 +26,6 @@ NSString * const kAlfrescoSDKSamplesUsername = @"username";
 NSString * const kAlfrescoSDKSamplesPassword = @"password";
 
 @interface RepositoryLoginViewController ()
-@property (nonatomic, strong) NSMutableDictionary *defaults;
 - (void)defaultSettings;
 - (void)authenticateRepoSession;
 @end
@@ -36,13 +35,10 @@ NSString * const kAlfrescoSDKSamplesPassword = @"password";
 @synthesize usernameField = _usernameField;
 @synthesize passwordField = _passwordField;
 @synthesize doneButton = _doneButton;
-@synthesize  defaults = _defaults;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    self.defaults = [NSMutableDictionary dictionaryWithCapacity:3];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -82,44 +78,31 @@ NSString * const kAlfrescoSDKSamplesPassword = @"password";
 
 - (void)defaultSettings
 {
-    NSString *host = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesHost];
-    NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesUsername];
-    NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesPassword];
+    NSUserDefaults *defaultSettings = [NSUserDefaults standardUserDefaults];
+    NSString *host = [defaultSettings stringForKey:kAlfrescoSDKSamplesHost];
+    NSString *username = [defaultSettings stringForKey:kAlfrescoSDKSamplesUsername];
+    NSString *password = [defaultSettings stringForKey:kAlfrescoSDKSamplesPassword];
     if (host == nil || username == nil || password == nil)
     {        
         if (nil == host)
         {
-            [self.defaults setValue:@"http://localhost:8080/alfresco" forKey:kAlfrescoSDKSamplesHost];
-        }
-        else
-        {
-            [self.defaults setValue:host forKey:kAlfrescoSDKSamplesHost];
+            host = @"http://localhost:8080/alfresco";
+            [defaultSettings setObject:host forKey:kAlfrescoSDKSamplesHost];
         }
         
         if (nil == username)
         {
-            [self.defaults setValue:@"admin" forKey:kAlfrescoSDKSamplesUsername];
-        }
-        else
-        {
-            [self.defaults setValue:username forKey:kAlfrescoSDKSamplesUsername];
+            username = @"admin";
+            [defaultSettings setObject:username forKey:kAlfrescoSDKSamplesUsername];
         }
         
         if (nil == password)
         {
-            [self.defaults setValue:@"admin" forKey:kAlfrescoSDKSamplesPassword];
+            password = @"admin";
+            [defaultSettings setObject:password forKey:kAlfrescoSDKSamplesPassword];
         }
-        else
-        {
-            [self.defaults setValue:password forKey:kAlfrescoSDKSamplesPassword];
-        }
-        
-        [[NSUserDefaults standardUserDefaults] registerDefaults:self.defaults];
-        
-        host = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesHost];
-        username = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesUsername];
-        password = [[NSUserDefaults standardUserDefaults] stringForKey:kAlfrescoSDKSamplesPassword];
     }
+    [defaultSettings synchronize];
     
     self.urlField.text = host;
     self.usernameField.text = username;
@@ -173,21 +156,21 @@ NSString * const kAlfrescoSDKSamplesPassword = @"password";
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     int tag = textField.tag;
+    NSUserDefaults *defaultSettings = [NSUserDefaults standardUserDefaults];
     
     switch (tag)
     {
         case 1:
-            [self.defaults setValue:self.urlField.text forKey:kAlfrescoSDKSamplesHost];
+            [defaultSettings setObject:self.urlField.text forKey:kAlfrescoSDKSamplesHost];
             break;
         case 2:
-            [self.defaults setValue:self.usernameField.text forKey:kAlfrescoSDKSamplesUsername];
+            [defaultSettings setObject:self.usernameField.text forKey:kAlfrescoSDKSamplesUsername];
             break;
         case 3:
-            [self.defaults setValue:self.passwordField.text forKey:kAlfrescoSDKSamplesPassword];
+            [defaultSettings setObject:self.passwordField.text forKey:kAlfrescoSDKSamplesPassword];
             break;
-    }
-    
-    [[NSUserDefaults standardUserDefaults] registerDefaults:self.defaults];
+    }    
+    [defaultSettings synchronize];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

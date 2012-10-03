@@ -53,8 +53,8 @@
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:kAlfrescoCloudDefaultRedirectURI
-                completionBlock:completionBlock
-                     parameters:nil];
+                     parameters:nil
+                completionBlock:completionBlock];
 }
 
 - (id)initWithAPIKey:(NSString *)apiKey
@@ -65,27 +65,27 @@
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:redirectURI
-                completionBlock:completionBlock
-                     parameters:nil];
+                     parameters:nil
+                completionBlock:completionBlock];
 }
 
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
-     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
           parameters:(NSDictionary *)parameters
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:kAlfrescoCloudDefaultRedirectURI
-                completionBlock:completionBlock
-                     parameters:parameters];
+                     parameters:parameters
+                completionBlock:completionBlock];
 }
 
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
          redirectURI:(NSString *)redirectURI
-     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
           parameters:(NSDictionary *)parameters
+     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
     self = [super init];
     if (nil != self)

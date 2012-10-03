@@ -37,6 +37,10 @@
 @synthesize oauthData = _oauthData;
 @synthesize baseURL = _baseURL;
 
+- (id)init
+{
+    return [self initWithParameters:nil];
+}
 
 - (id)initWithParameters:(NSDictionary *)parameters
 {
@@ -63,6 +67,7 @@
     self.completionBlock = completionBlock;
     self.oauthData = oauthData;
     self.receivedData = nil;
+    NSLog(@"AlfrescoOAuthHelper::the URL used is %@",self.baseURL);
     NSURL *url = [NSURL URLWithString:self.baseURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
                                                            cachePolicy: NSURLRequestReloadIgnoringCacheData
