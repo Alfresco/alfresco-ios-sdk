@@ -49,8 +49,8 @@
 
     self.nodes = [NSMutableArray array];
     
-//    [self helloFromRepository];
-    [self helloFromCloud];
+    [self helloFromRepository];
+//    [self helloFromCloud];
 }
 
 #pragma mark - Repository methods
@@ -109,7 +109,7 @@
             }];
         }
     };
-    AlfrescoOAuthLoginViewController *webLoginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY completionBlock:completionBlock parameters:nil];
+    AlfrescoOAuthLoginViewController *webLoginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY completionBlock:completionBlock];
     
     [self.navigationController pushViewController:webLoginController animated:YES];
 }
