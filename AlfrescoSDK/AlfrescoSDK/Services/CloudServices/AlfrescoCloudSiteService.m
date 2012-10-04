@@ -340,15 +340,35 @@
         
         if (nil != folderDict)
         {
-            NSString *folderId = [folderDict valueForKey:kAlfrescoJSONIdentifier];
-            __block AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-            [docService retrieveNodeWithIdentifier:folderId
-                                   completionBlock:^(AlfrescoNode *node, NSError *error)
-             {
-                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                     completionBlock((AlfrescoFolder *)node, error);}];
-                 docService = nil;
-             }];
+            id folderObj = [folderDict valueForKey:kAlfrescoJSONIdentifier];
+            NSString *folderId = nil;
+            if ([folderObj isKindOfClass:[NSString class]])
+            {
+                folderId = [folderDict valueForKey:kAlfrescoJSONIdentifier];
+            }
+            else if([folderObj isKindOfClass:[NSDictionary class]])
+            {
+                NSDictionary *folderIdDict = (NSDictionary *)folderObj;
+                folderId = [folderIdDict valueForKey:kAlfrescoJSONIdentifier];
+            }
+            if (nil == folderId)
+            {
+                operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    completionBlock(nil, operationQueueError);
+                }];
+            }
+            else
+            {
+                __block AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
+                [docService retrieveNodeWithIdentifier:folderId
+                                       completionBlock:^(AlfrescoNode *node, NSError *error)
+                 {
+                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                         completionBlock((AlfrescoFolder *)node, error);}];
+                     docService = nil;
+                 }];
+            }
         }
         else
         {
@@ -369,7 +389,7 @@
 - (NSArray *) siteArrayWithData:(NSData *)data error:(NSError **)outError
 {
 
-    NSLog(@"parseSiteArrayWithData with JSON data %@",data);
+    NSLog(@"parseSiteArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil != entriesArray)
     {
@@ -389,7 +409,7 @@
 
 - (NSArray *) specifiedSiteArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    NSLog(@"parseSpecifiedSiteArrayWithData with JSON data %@",data);
+    NSLog(@"parseSpecifiedSiteArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil != entriesArray)
     {

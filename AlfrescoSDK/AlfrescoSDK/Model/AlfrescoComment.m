@@ -32,6 +32,7 @@
 @property (nonatomic, readwrite) BOOL canEdit;
 @property (nonatomic, readwrite) BOOL canDelete;
 @property (nonatomic, strong) AlfrescoISO8601DateFormatter * dateFormatter;
+@property (nonatomic, strong) NSDateFormatter * standardDateFormatter;
 - (void)setOnPremiseProperties:(NSDictionary *)properties;
 - (void)setCloudProperties:(NSDictionary *)properties;
 @end
@@ -56,6 +57,8 @@
     self = [super init];
     if (nil != self)
     {
+        self.standardDateFormatter = [[NSDateFormatter alloc] init];
+        [self.standardDateFormatter setDateFormat:@"MMM' 'dd' 'yyyy' 'HH:mm:ss' 'zzz' (UTC)'"];
         self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
         if ([[properties allKeys] containsObject:kAlfrescoJSONTitle])
         {
@@ -111,6 +114,11 @@
         if (nil != created)
         {
             self.createdAt = [self.dateFormatter dateFromString:created];
+//            NSLog(@"createdAt (based on kAlfrescoJSONCreatedOnISO) = %@",self.createdAt);
+        }
+        else
+        {
+//            NSLog(@"NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOnISO] returns NIL");
         }
     }
     if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedOn])
@@ -118,7 +126,12 @@
         NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOn];
         if (nil != created)
         {
-            self.createdAt = [self.dateFormatter dateFromString:created];
+            self.createdAt = [self.standardDateFormatter dateFromString:created];
+//            NSLog(@"createdAt (based on kAlfrescoJSONCreatedOn) = %@",self.createdAt);
+        }
+        else
+        {
+//            NSLog(@"NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOn] returns NIL");
         }
     }
 
@@ -135,7 +148,7 @@
         NSString *modified = [properties valueForKey:kAlfrescoJSONModifiedOn];
         if (nil != modified)
         {
-            self.modifiedAt = [self.dateFormatter dateFromString:modified];
+            self.modifiedAt = [self.standardDateFormatter dateFromString:modified];
         }
     }    
     
