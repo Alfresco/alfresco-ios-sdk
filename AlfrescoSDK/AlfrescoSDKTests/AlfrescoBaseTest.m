@@ -185,6 +185,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 {
     log(@"In authenticateCloudServer");
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:self.server forKey:@"org.alfresco.mobile.internal.session.cloud.url"];
     [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
     [parameters setValue:self.userName forKey:@"org.alfresco.mobile.internal.session.username"];
     [parameters setValue:self.testPassword forKey:@"org.alfresco.mobile.internal.session.password"];
@@ -306,6 +307,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     self.testFolderPathName = nil;
     
     self.server = [plistDictionary valueForKey:@"server"];
+    self.isCloud = [[plistDictionary valueForKey:@"isCloud"] boolValue];
     self.userName = [plistDictionary valueForKey:@"username"];
     self.firstName = [plistDictionary valueForKey:@"firstName"];
     self.testSiteName = [plistDictionary valueForKey:@"testSite"];
@@ -313,7 +315,6 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     self.testSearchFileName = [plistDictionary valueForKey:@"testSearchFile"];
     self.textKeyWord = [plistDictionary valueForKey:@"textKeyWord"];
     self.unitTestFolder = [plistDictionary valueForKey:@"testAddedFolder"];
-    self.isCloud = [self.server isEqualToString:@"http://devapis.alfresco.com"];
     self.testChildFolderName= [plistDictionary valueForKey:@"testChildFolder"];
     self.fixedFileName = [plistDictionary valueForKey:@"fixedFileName"];
     self.testFolderPathName = [plistDictionary valueForKey:@"docFolder"];
@@ -339,13 +340,13 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 
                 if (self.isCloud)
                 {
-                    log(@"Should be Cloud Server with server: %@ and username: %@",self.server, self.userName);
+                    log(@"***************** Running test against Cloud server: %@ with username: %@ *****************", self.server, self.userName);
                     [self authenticateCloudServer];
                     [self resetTestRunVariables];
                 }
                 else
                 {
-                    log(@"Should be OnPremise Server with server: %@ and username: %@",self.server, self.userName);
+                    log(@"***************** Running test against OnPremise server: %@ with username: %@ *****************", self.server, self.userName);
                     self.isCloud = NO;
                     [self authenticateOnPremiseServer];
                     [self resetTestRunVariables];

@@ -20,6 +20,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoPagingUtils.h"
+#import "CMISConstants.h"
 #import "CMISDocument.h"
 #import "CMISSession.h"
 #import "CMISDiscoveryService.h"
@@ -256,11 +257,11 @@
         
         if (YES == options.exactMatch)
         {
-            [searchQuery appendString:[NSString stringWithFormat:@"%@ = '%@'", kCMISNameParameterForSearch, keyword]];
+            [searchQuery appendString:[NSString stringWithFormat:@"%@ = '%@'", kCMISPropertyName, keyword]];
         }
         else 
         {
-            [searchQuery appendString:[NSString stringWithFormat:@"CONTAINS('~%@:*%@*')", kCMISNameParameterForSearch, keyword]];
+            [searchQuery appendString:[NSString stringWithFormat:@"CONTAINS('~%@:*%@*')", kCMISPropertyName, keyword]];
         }
         
         if (YES == options.includeContent)
