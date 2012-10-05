@@ -18,11 +18,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AlfrescoSession.h"
-//#import "AlfrescoRepositorySession.h"
 
 @interface BaseTableViewController : UITableViewController
 
-//@property (nonatomic, strong) AlfrescoRepositorySession *session;
 @property (nonatomic, strong) id<AlfrescoSession>session;
 
 - (void) showFailureAlert:(NSString *)message;

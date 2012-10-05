@@ -88,6 +88,7 @@
 "error_add_folder"="Failed to add folder.";
 "error_add_photo"="Failed to add photo.";
 "error_title"="Error";
+"error_no_keys"="Either the API key or secret key is missing. Please provide the keys and re-start the app.";
 "load_more"="Load more...";
 "document_general_nodata"="None";
 "account_username"="Username";

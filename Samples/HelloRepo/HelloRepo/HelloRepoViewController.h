@@ -17,12 +17,13 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-#warning REPLACE YOUR API AND SECRET KEY
-///enter the api Key and secret key in the #define below
+
+#warning ENTER YOUR API AND SECRET KEY
+
+// Enter the api Key and secret key in the #define below
 #define APIKEY @""
 #define SECRETKEY @""
-/// the redirectURI is optional and may be set at your discretion.
-//#define REDIRECTURI @""
+
 @interface HelloRepoViewController : UITableViewController
 
 @end
