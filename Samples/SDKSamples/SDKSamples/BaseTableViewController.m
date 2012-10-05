@@ -18,10 +18,6 @@
 
 #import "BaseTableViewController.h"
 
-@interface BaseTableViewController ()
-
-@end
-
 @implementation BaseTableViewController
 
 @synthesize session = _session;
@@ -34,26 +30,6 @@
                                           cancelButtonTitle:localized(@"dialog_cancel")
                                           otherButtonTitles:nil];
     [alert show];
-}
-
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) 
-    {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

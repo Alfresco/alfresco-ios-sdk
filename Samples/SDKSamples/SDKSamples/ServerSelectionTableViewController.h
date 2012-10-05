@@ -17,11 +17,12 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "BaseTableViewController.h"
+
 //#warning REPLACE YOUR API AND SECRET KEY
 #define APIKEY @""
 #define SECRETKEY @""
-/// the redirectURI is optional and may be set at your discretion.
-//#define REDIRECTURI @""
-@interface ServerSelectionTableViewController : UITableViewController
+
+@interface ServerSelectionTableViewController : BaseTableViewController
 
 @end

@@ -18,10 +18,6 @@
 
 #import "BaseViewController.h"
 
-@interface BaseViewController ()
-
-@end
-
 @implementation BaseViewController
 
 @synthesize session = _session;
@@ -34,25 +30,6 @@
                                           cancelButtonTitle:localized(@"dialog_cancel")
                                           otherButtonTitles:nil];
     [alert show];
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) 
-    {
-    }
-    return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
