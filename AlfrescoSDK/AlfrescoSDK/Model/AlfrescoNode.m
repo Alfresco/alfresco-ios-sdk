@@ -107,13 +107,13 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
         self.modifiedAt = [properties valueForKey:kCMISPropertyModificationDate];
     }
     
-    if ([[properties allKeys] containsObject:kCMISTitle])
+    if ([[properties allKeys] containsObject:kAlfrescoPropertyTitle])
     {
-        self.title = [properties valueForKey:kCMISTitle];
+        self.title = [properties valueForKey:kAlfrescoPropertyTitle];
     }
-    if ([[properties allKeys] containsObject:kCMISDescription])
+    if ([[properties allKeys] containsObject:kAlfrescoPropertyDescription])
     {
-        self.summary = [properties valueForKey:kCMISDescription];
+        self.summary = [properties valueForKey:kAlfrescoPropertyDescription];
     }
     if ([[properties allKeys] containsObject:kAlfrescoNodeAspects])
     {
