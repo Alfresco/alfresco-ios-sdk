@@ -270,7 +270,7 @@
 #pragma private methods
 - (NSArray *) commentArrayFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
-    NSLog(@"commentArrayFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     if (nil == data)
     {
         if (nil == *outError)
@@ -308,7 +308,7 @@
 
 - (AlfrescoComment *) alfrescoCommentDictFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
-    NSLog(@"alfrescoCommentDictFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     if (nil == data)
     {
         if (nil == *outError)

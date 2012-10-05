@@ -207,7 +207,6 @@
  
 - (NSArray *) activityStreamArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
-//    NSLog(@"activityStreamArrayFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     if (nil == data)
     {
         if (nil == *outError)
@@ -251,7 +250,8 @@
         }
     }
     NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[jsonActivityStreamArray count]];
-    for (NSDictionary *activityDict in jsonActivityStreamArray) {
+    for (NSDictionary *activityDict in jsonActivityStreamArray)
+    {
         [resultArray addObject:[[AlfrescoActivityEntry alloc] initWithProperties:activityDict]];
     }
     return resultArray;

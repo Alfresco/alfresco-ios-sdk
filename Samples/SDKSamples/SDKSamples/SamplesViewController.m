@@ -72,8 +72,6 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"detected segue: %@", segue.identifier);
-    
     [[segue destinationViewController] setSession:self.session];
     
     if([@"browseCompanyHome" isEqualToString:segue.identifier])

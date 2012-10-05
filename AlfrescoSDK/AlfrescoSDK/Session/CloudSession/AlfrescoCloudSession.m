@@ -218,7 +218,7 @@
             }];
         }
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSLog(@"After parsing jsonData. JSON data has string = %@",jsonString);
+        log(@"After parsing jsonData. JSON data has string = %@",jsonString);
         NSArray *networks = [weakSelf networkArrayFromJSONData:jsonData error:&operationQueueError];
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(networks, operationQueueError);
@@ -255,19 +255,19 @@
     if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
-        NSLog(@"attempting to authenticate with the following URL %@",baseURL);
+        log(@"attempting to authenticate with the following URL %@",baseURL);
     }
     self.baseUrl = [NSURL URLWithString:baseURL];
     self.oauthData = oauthData;
     [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
         {
-            NSLog(@"*** authenticateWithOAuthData returns with network array == NIL");
+            log(@"*** authenticateWithOAuthData returns with network array == NIL");
             completionBlock(nil, error);
         }
         else
         {
-            NSLog(@"*** authenticateWithOAuthData we have %d networks",networks.count);
+            log(@"*** authenticateWithOAuthData we have %d networks",networks.count);
             __block AlfrescoCloudNetwork *homeNetwork = nil;
             for (AlfrescoCloudNetwork *network in networks)
             {
@@ -284,7 +284,7 @@
             }
             else
             {
-                NSLog(@"*** authenticateWithOAuthData found home network with id %@", homeNetwork.identifier);
+                log(@"*** authenticateWithOAuthData found home network with id %@", homeNetwork.identifier);
                 [self authenticateWithOAuthData:oauthData
                                         network:homeNetwork.identifier
                                 completionBlock:completionBlock];
@@ -301,12 +301,12 @@
                   completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     self.isUsingBaseAuthenticationProvider = NO;
-    NSLog(@"*** ENTERING authenticateWithOAuthData with specified home network");
+    log(@"*** ENTERING authenticateWithOAuthData with specified home network");
     NSString *baseURL = kAlfrescoOAuthCloudURL;
     if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
-        NSLog(@"attempting to authenticate with the following URL %@",baseURL);
+        log(@"attempting to authenticate with the following URL %@",baseURL);
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",baseURL,network]];
     self.oauthData = oauthData;
@@ -315,7 +315,7 @@
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
     self.cmisUrl = [NSURL URLWithString:cmisUrl];
     params.atomPubUrl = self.cmisUrl;
-    NSLog(@"*** authenticateWithOAuthData setting authentication providers");
+    log(@"*** authenticateWithOAuthData setting authentication providers");
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     CMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[CMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
@@ -356,10 +356,10 @@
             [params setObject:kCMISAlfrescoMode forKey:kCMISSessionParameterMode];
             
             // create the session using the paramters
-            NSLog(@"*** authenticateWithOAuthData before setting CMIS session");
+            log(@"*** authenticateWithOAuthData before setting CMIS session");
             CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];
             [self.sessionData setObject:cmisSession forKey:kAlfrescoSessionKeyCmisSession];
-            NSLog(@"*** authenticateWithOAuthData after setting CMIS session");
+            log(@"*** authenticateWithOAuthData after setting CMIS session");
             
             
             

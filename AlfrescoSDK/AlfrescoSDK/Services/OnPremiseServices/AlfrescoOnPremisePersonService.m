@@ -74,7 +74,7 @@
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
                                            weakSelf.baseApiUrl, requestString]];
         
-        NSLog(@"url string from retrievePersonWithIdentifier is %@ RequestString is %@",[url absoluteString], requestString);
+        log(@"url is %@, requestString is %@",[url absoluteString], requestString);
         
         NSData *data = [AlfrescoHTTPUtils executeRequestWithURL:url
                                                         session:weakSelf.session

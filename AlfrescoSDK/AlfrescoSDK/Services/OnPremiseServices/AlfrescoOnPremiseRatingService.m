@@ -83,7 +83,7 @@
                                                  session:weakSelf.session
                                                    error:&operationQueueError];
         
-        NSLog(@"retrieveLikeCountForNode with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+        log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
         NSNumber *count = nil;
         if(nil != data)
         {
@@ -126,7 +126,7 @@
         }
         else
         {
-            NSLog(@"likeNode with JSON data %@",[[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding]);
+            log(@"JSON data: %@",[[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding]);
             [AlfrescoHTTPUtils executeRequest:requestString
                               baseUrlAsString:weakSelf.baseApiUrl
                                       session:weakSelf.session
@@ -163,7 +163,7 @@
                                                         data:nil
                                                   httpMethod:@"DELETE"
                                                        error:&operationQueueError];
-        NSLog(@"unlikeNode with JSON data %@",[[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding]);
+        log(@"JSON data: %@",[[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding]);
         BOOL success = (nil == operationQueueError) ? YES : NO;
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(success, operationQueueError);
@@ -192,7 +192,7 @@
 
         
         
-        NSLog(@"unlikeNode with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+        log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
         BOOL success = (nil == operationQueueError) ? YES : NO;
         
         BOOL liked = NO;
