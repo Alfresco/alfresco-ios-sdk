@@ -84,7 +84,20 @@
 {
     if ([[properties allKeys] containsObject:kAlfrescoJSONIdentifier])
     {
-        self.shortName = [properties valueForKey:kAlfrescoJSONIdentifier];
+        id siteObj = [properties valueForKey:kAlfrescoJSONIdentifier];
+        if ([siteObj isKindOfClass:[NSString class]])
+        {
+            self.shortName = [properties valueForKey:kAlfrescoJSONIdentifier];
+        }
+        else if([siteObj isKindOfClass:[NSDictionary class]])
+        {
+            NSDictionary *siteDict = (NSDictionary *)siteObj;
+            if ([[siteDict allKeys] containsObject:kAlfrescoJSONIdentifier])
+            {
+                self.shortName = [siteDict valueForKey:kAlfrescoJSONIdentifier];
+            }
+            
+        }
     }
 }
 
