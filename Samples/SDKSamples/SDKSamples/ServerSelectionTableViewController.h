@@ -19,7 +19,9 @@
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
 
-//#warning REPLACE YOUR API AND SECRET KEY
+#warning ENTER YOUR API AND SECRET KEY
+
+// Enter the api Key and secret key in the #define below
 #define APIKEY @""
 #define SECRETKEY @""
 

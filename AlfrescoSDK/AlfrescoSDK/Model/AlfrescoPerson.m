@@ -156,7 +156,20 @@
     }
     if ([[properties allKeys] containsObject:kAlfrescoJSONAvatarId])
     {
-        self.avatarIdentifier = [properties valueForKey:kAlfrescoJSONAvatarId];
+        id avatarObj = [properties valueForKey:kAlfrescoJSONAvatarId];
+        if ([avatarObj isKindOfClass:[NSString class]])
+        {
+            self.avatarIdentifier = [properties valueForKey:kAlfrescoJSONAvatarId];
+        }
+        else if ([avatarObj isKindOfClass:[NSDictionary class]])
+        {
+            NSDictionary *avatarDict = (NSDictionary *)avatarObj;
+            if ([[avatarDict allKeys] containsObject:kAlfrescoJSONIdentifier])
+            {
+                self.avatarIdentifier = [avatarDict valueForKey:kAlfrescoJSONIdentifier];
+            }
+            
+        }
     }
     
 }
