@@ -208,7 +208,7 @@
                                                         data:jsonData
                                                   httpMethod:@"POST"
                                                        error:&operationQueueError];
-            NSLog(@"likeNode with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+            log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
             BOOL success = (nil == operationQueueError) ? YES : NO;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 completionBlock(success, operationQueueError);
@@ -242,7 +242,7 @@
                                                     data:nil
                                               httpMethod:@"DELETE"
                                                    error:&operationQueueError];
-        NSLog(@"unlikeNode with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+        log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
         BOOL success = (nil == operationQueueError) ? YES : NO;
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(success, operationQueueError);
@@ -254,7 +254,7 @@
 - (NSDictionary *) dictionaryFromJSONData:(NSData *)data error:(NSError **)outError
 {
     
-    NSLog(@"dictionaryFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {

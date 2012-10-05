@@ -134,7 +134,7 @@
 #pragma mark - private methods
 - (AlfrescoPerson *) alfrescoPersonFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
-    NSLog(@"alfrescoPersonFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSDictionary *entryDict = [AlfrescoObjectConverter dictionaryJSONEntryFromListData:data error:outError];
     if (nil == entryDict)
     {
