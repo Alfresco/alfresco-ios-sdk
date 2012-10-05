@@ -32,6 +32,7 @@
 @property (nonatomic, readwrite) BOOL canEdit;
 @property (nonatomic, readwrite) BOOL canDelete;
 @property (nonatomic, strong) AlfrescoISO8601DateFormatter * dateFormatter;
+@property (nonatomic, strong) NSDateFormatter * standardDateFormatter;
 - (void)setOnPremiseProperties:(NSDictionary *)properties;
 - (void)setCloudProperties:(NSDictionary *)properties;
 @end
@@ -56,6 +57,8 @@
     self = [super init];
     if (nil != self)
     {
+        self.standardDateFormatter = [[NSDateFormatter alloc] init];
+        [self.standardDateFormatter setDateFormat:@"MMM' 'dd' 'yyyy' 'HH:mm:ss' 'zzz' (UTC)'"];
         self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
         if ([[properties allKeys] containsObject:kAlfrescoJSONTitle])
         {
@@ -105,20 +108,23 @@
         self.isEdited = [[properties valueForKey:kAlfrescoJSONIsUpdated] boolValue];
     }
     
-    if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedOnISO])
+    if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedOnISO] || [[properties allKeys] containsObject:kAlfrescoJSONCreatedOn])
     {
-        NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOnISO];
-        if (nil != created)
+        if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedOnISO])
         {
-            self.createdAt = [self.dateFormatter dateFromString:created];
+            NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOnISO];
+            if (nil != created)
+            {
+                self.createdAt = [self.dateFormatter dateFromString:created];
+            }
         }
-    }
-    if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedOn])
-    {
-        NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOn];
-        if (nil != created)
+        else
         {
-            self.createdAt = [self.dateFormatter dateFromString:created];
+            NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOn];
+            if (nil != created)
+            {
+                self.createdAt = [self.standardDateFormatter dateFromString:created];
+            }
         }
     }
 
@@ -135,7 +141,7 @@
         NSString *modified = [properties valueForKey:kAlfrescoJSONModifiedOn];
         if (nil != modified)
         {
-            self.modifiedAt = [self.dateFormatter dateFromString:modified];
+            self.modifiedAt = [self.standardDateFormatter dateFromString:modified];
         }
     }    
     

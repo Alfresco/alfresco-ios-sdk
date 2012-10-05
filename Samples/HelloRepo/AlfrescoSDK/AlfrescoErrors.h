@@ -60,8 +60,7 @@ typedef enum
     kAlfrescoErrorCodeDocumentFolderFailedToConvertNode = 604,
     kAlfrescoErrorCodeDocumentFolderNoParent = 605,
     kAlfrescoErrorCodeDocumentFolderNoRenditionService = 606,
-    kAlfrescoErrorCodeDocumentFolderNodeNotFound = 607,
-    kAlfrescoErrorCodeDocumentFolderNoThumbnail = 608,
+    kAlfrescoErrorCodeDocumentFolderNoThumbnail = 607,
 
     kAlfrescoErrorCodeTagging = 700,
     kAlfrescoErrorCodeTaggingNoTags = 701,
@@ -112,7 +111,6 @@ extern NSString * const kAlfrescoErrorDescriptionDocumentFolder;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderPermissions;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoParent;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoRenditionService;
-extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeNotFound;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderWrongNodeType;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoThumbnail;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists;

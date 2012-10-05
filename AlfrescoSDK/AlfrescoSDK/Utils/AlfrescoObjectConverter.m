@@ -243,7 +243,12 @@
             for (CMISExtensionElement *aspect in aspectArray) {
                 if ([aspect.name isEqualToString:kAlfrescoAppliedAspects])
                 {
-                    [alfrescoAspectArray addObject:aspect.value];
+                    NSString *aspectValue = aspect.value;
+                    if ([aspectValue hasPrefix:@"P:"])
+                    {
+                        aspectValue = [aspect.value stringByReplacingOccurrencesOfString:@"P:" withString:@""];
+                    }
+                    [alfrescoAspectArray addObject:aspectValue];
                 }
                 else if ([aspect.name isEqualToString:kAlfrescoAspectProperties])
                 {
@@ -251,23 +256,19 @@
                     for (CMISExtensionElement *property in propertyArray) 
                     {
                         NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
-//                        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] init];
                         NSString *extensionPropertyString = [property.attributes valueForKey:kAlfrescoAspectPropertyDefinitionId];
 
                         NSNumber *propTypeIndex = [NSNumber numberWithInt:[AlfrescoObjectConverter typeForCMISProperty:extensionPropertyString]];
                         [propertyDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
 
-                        //                        alfProperty.type = [AlfrescoObjectConverter typeForCMISProperty:extensionPropertyString];
                         
                         CMISExtensionElement *propertyValueElement = (CMISExtensionElement *)[property.children objectAtIndex:0];
                         
                         [propertyDictionary setValue:propertyValueElement.value forKey:kAlfrescoPropertyValue];
 
-                        //                        alfProperty.value = propertyValueElement.value;
                         
                         AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
                         [alfPropertiesDict setValue:alfProperty forKey:extensionPropertyString];
-//                        [alfNode.properties setValue:alfProperty forKey:extensionPropertyString];
                     }
                 }
             }

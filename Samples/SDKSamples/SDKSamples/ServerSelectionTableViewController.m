@@ -77,16 +77,18 @@
     };
     /**
      if you provide your own redirectURI from the server, then uncomment the lines below
+    AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
+                                                                                                       secretKey:SECRETKEY
+                                                                                                     redirectURI:REDIRECTURI
+                                                                                                 completionBlock:completionBlock];
      */
-//    AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
-//                                                                                                       secretKey:SECRETKEY
-//                                                                                                     redirectURI:REDIRECTURI
-//                                                                                                 completionBlock:completionBlock];
     
     // use this is you want to use the Alfresco default redirect URI
     AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
                                                                                                        secretKey:SECRETKEY
                                                                                                  completionBlock:completionBlock];
+    /*
+     */
     [self.navigationController pushViewController:loginController animated:YES];
 }
 
