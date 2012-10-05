@@ -34,8 +34,6 @@
 
 + (AlfrescoPagingResult *) pagedResultFromArray:(CMISPagedResult *)cmisResult objectConverter:(AlfrescoObjectConverter *)converter
 {
-    NSLog(@"cmisResult %i", cmisResult.hasMoreItems);
-    
     NSMutableArray *children = [NSMutableArray arrayWithCapacity:[cmisResult.resultArray count]];
     for (id object in cmisResult.resultArray)
     {

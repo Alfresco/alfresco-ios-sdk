@@ -925,7 +925,7 @@
                  STAssertTrue(pagingResult.totalItems > 0, @"Expected folder children");
                  STAssertTrue(pagingResult.objects.count > 0, @"Expected at least 1 folder children returned");
                  STAssertTrue(pagingResult.hasMoreItems, @"Expected that there are more items left");
-                 NSLog(@"total items %i", pagingResult.objects.count);
+                 log(@"total items %i", pagingResult.objects.count);
                  
                  super.lastTestSuccessful = YES;
              }
@@ -967,7 +967,7 @@
                  {
                      STAssertFalse(pagingResult.hasMoreItems, @"We should not have more than 50 items in total, but instead we have %d",pagingResult.totalItems);
                  }
-                 NSLog(@"total items %i", pagingResult.objects.count);
+                 log(@"total items %i", pagingResult.objects.count);
                  
                  super.lastTestSuccessful = YES;
              }
@@ -1567,7 +1567,7 @@
                           super.callbackCompleted = YES;
                           
                       } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                          NSLog(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                          log(@"progress %i/%i", bytesDownloaded, bytesTotal);
                       }];
                  }
                  else
@@ -1816,13 +1816,13 @@
                              } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
                          }
                      } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                         NSLog(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                         log(@"progress %i/%i", bytesDownloaded, bytesTotal);
                      }];
                 }
             }
             
         } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-            NSLog(@"progress %i/%i", bytesDownloaded, bytesTotal);
+            log(@"progress %i/%i", bytesDownloaded, bytesTotal);
         }];
         
         
@@ -2319,7 +2319,7 @@
                  STAssertTrue(array.count > 0, [NSString stringWithFormat:@"Expected folder children but got %i", array.count]);
                  if (super.isCloud)
                  {
-                     NSLog(@"*************** testThumbnailRenditionImage ISCLOUD");
+                     log(@"*************** testThumbnailRenditionImage ISCLOUD");
                      STAssertTrue([self nodeArray:array containsName:@"Sample Filesrr"], @"Folder children should contain Sample Filesrr");
                  }
                  else
@@ -2334,7 +2334,7 @@
                          NSString *name = node.name;
                          if ([name isEqualToString:@"versioned-quote.txt"])
                          {
-                             NSLog(@"*************** WE FOUND versioned-quote.txt");
+                             log(@"*************** WE FOUND versioned-quote.txt");
                              testVersionedDoc = (AlfrescoDocument *)node;
                          }
 
@@ -2342,9 +2342,9 @@
                  }
                  if (nil != testVersionedDoc)
                  {
-                     NSLog(@"*************** BEFORE CALLING retrieveRenditionOfNode");
+                     log(@"*************** BEFORE CALLING retrieveRenditionOfNode");
                      [weakSelf retrieveRenditionOfNode:testVersionedDoc renditionName:kAlfrescoThumbnailRendition completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
-                         NSLog(@"*************** IN COMPLETIONBLOCK OF retrieveRenditionOfNode");
+                         log(@"*************** IN COMPLETIONBLOCK OF retrieveRenditionOfNode");
                          if (nil == contentFile)
                          {
                              super.lastTestSuccessful = NO;

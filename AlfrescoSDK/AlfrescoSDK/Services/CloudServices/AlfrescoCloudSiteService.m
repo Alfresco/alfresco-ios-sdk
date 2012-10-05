@@ -388,8 +388,7 @@
 #pragma mark Site service internal methods
 - (NSArray *) siteArrayWithData:(NSData *)data error:(NSError **)outError
 {
-
-    NSLog(@"parseSiteArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil != entriesArray)
     {
@@ -409,7 +408,7 @@
 
 - (NSArray *) specifiedSiteArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    NSLog(@"parseSpecifiedSiteArrayWithData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil != entriesArray)
     {
@@ -467,15 +466,14 @@
 
 - (AlfrescoSite *) alfrescoSiteFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    NSLog(@"alfrescoSiteFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSDictionary *entryDictionary = [AlfrescoObjectConverter dictionaryJSONEntryFromListData:data error:outError];
     return [[AlfrescoSite alloc] initWithProperties:entryDictionary];
 }
 
 - (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    
-    NSLog(@"dictionaryFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {

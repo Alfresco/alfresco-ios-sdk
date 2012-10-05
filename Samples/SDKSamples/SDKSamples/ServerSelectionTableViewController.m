@@ -34,12 +34,10 @@
     AlfrescoOAuthCompletionBlock completionBlock = ^void(AlfrescoOAuthData *oauthdata, NSError *error){
         if (nil == oauthdata)
         {
-            NSLog(@"something went wrong with the authentication. Error message is %@ and code is %d", [error localizedDescription], [error code]);
+            log(@"Failed to authenticate, error message is %@ and code is %d", [error localizedDescription], [error code]);
         }
         else
         {
-            NSLog(@"We got something back: access token is %@", oauthdata.accessToken);
-            NSLog(@"The refresh token is %@ the grant_type is %@", oauthdata.refreshToken, oauthdata.tokenType);
             [AlfrescoCloudSession connectWithOAuthData:oauthdata completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {

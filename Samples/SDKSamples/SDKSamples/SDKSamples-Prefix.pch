@@ -15,7 +15,7 @@
 #define localized(str) NSLocalizedStringFromTable(str, @"SDKSamplesLocalizable", nil)
 
 #ifdef DEBUG
-#   define log(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#   define log(fmt, ...) NSLog((@"%s " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__);
 #else
 #   define log(...)
 #endif
