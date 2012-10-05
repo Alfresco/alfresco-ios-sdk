@@ -97,7 +97,7 @@
         
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
-        self.baseURL = [NSString stringWithFormat:@"%@%@",kAlfrescoOAuthCloudURL,kAlfrescoOAuthAuthorize];
+        self.baseURL = [NSString stringWithFormat:@"%@%@", kAlfrescoCloudURL, kAlfrescoOAuthAuthorize];
         
         if (nil != parameters)
         {

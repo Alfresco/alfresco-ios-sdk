@@ -47,7 +47,7 @@
     self = [super init];
     if (nil != self)
     {
-        self.baseURL = [NSString stringWithFormat:@"%@%@",kAlfrescoOAuthCloudURL,kAlfrescoOAuthToken];
+        self.baseURL = [NSString stringWithFormat:@"%@%@", kAlfrescoCloudURL, kAlfrescoOAuthToken];
         if (nil != parameters)
         {
             if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudURL])
