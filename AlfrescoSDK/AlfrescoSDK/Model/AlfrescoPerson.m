@@ -159,17 +159,14 @@
         id avatarObj = [properties valueForKey:kAlfrescoJSONAvatarId];
         if ([avatarObj isKindOfClass:[NSString class]])
         {
-//            NSLog(@"Avatar ID is a String");
             self.avatarIdentifier = [properties valueForKey:kAlfrescoJSONAvatarId];
         }
         else if ([avatarObj isKindOfClass:[NSDictionary class]])
         {
-//            NSLog(@"Avatar ID is a Dictionary");
             NSDictionary *avatarDict = (NSDictionary *)avatarObj;
             if ([[avatarDict allKeys] containsObject:kAlfrescoJSONIdentifier])
             {
                 self.avatarIdentifier = [avatarDict valueForKey:kAlfrescoJSONIdentifier];
-//                NSLog(@"Avatar ID is %@",self.avatarIdentifier);
             }
             
         }

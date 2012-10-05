@@ -108,30 +108,23 @@
         self.isEdited = [[properties valueForKey:kAlfrescoJSONIsUpdated] boolValue];
     }
     
-    if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedOnISO])
+    if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedOnISO] || [[properties allKeys] containsObject:kAlfrescoJSONCreatedOn])
     {
-        NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOnISO];
-        if (nil != created)
+        if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedOnISO])
         {
-            self.createdAt = [self.dateFormatter dateFromString:created];
-//            NSLog(@"createdAt (based on kAlfrescoJSONCreatedOnISO) = %@",self.createdAt);
+            NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOnISO];
+            if (nil != created)
+            {
+                self.createdAt = [self.dateFormatter dateFromString:created];
+            }
         }
         else
         {
-//            NSLog(@"NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOnISO] returns NIL");
-        }
-    }
-    if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedOn])
-    {
-        NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOn];
-        if (nil != created)
-        {
-            self.createdAt = [self.standardDateFormatter dateFromString:created];
-//            NSLog(@"createdAt (based on kAlfrescoJSONCreatedOn) = %@",self.createdAt);
-        }
-        else
-        {
-//            NSLog(@"NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOn] returns NIL");
+            NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOn];
+            if (nil != created)
+            {
+                self.createdAt = [self.standardDateFormatter dateFromString:created];
+            }
         }
     }
 
