@@ -922,8 +922,8 @@
              }
              else 
              {
-                 STAssertTrue(pagingResult.totalItems > 0, @"Expected folder children");
-                 STAssertTrue(pagingResult.objects.count > 0, @"Expected at least 1 folder children returned");
+                 STAssertTrue(pagingResult.totalItems > 0, @"Expected folder children. Total number is %d",pagingResult.totalItems);
+                 STAssertTrue(pagingResult.objects.count > 0, @"Expected at least 1 folder children returned. We have in %d objects in paging result", pagingResult.objects.count);
                  STAssertTrue(pagingResult.hasMoreItems, @"Expected that there are more items left");
                  NSLog(@"total items %i", pagingResult.objects.count);
                  
@@ -1125,8 +1125,8 @@
              }
              else 
              {
-                 STAssertTrue(pagingResult.objects.count == 2, @"Expected 2 documents");
-                 STAssertTrue(pagingResult.totalItems > 2, @"Expected more than 2 documents in total");
+                 STAssertTrue(pagingResult.objects.count == 2, @"Expected 2 documents, but got %d",pagingResult.objects.count);
+                 STAssertTrue(pagingResult.totalItems > 2, @"Expected more than 2 documents in total, but got %d",pagingResult.totalItems);
                  
                  super.lastTestSuccessful = YES;
              }

@@ -149,7 +149,7 @@
 
     AlfrescoRepositoryCapabilities *repoCapabilities = [[AlfrescoRepositoryCapabilities alloc] initWithCapabilities:capabilities];
     [repoDictionary setValue:repoCapabilities forKey:kAlfrescoRepositoryCapabilities];
-    AlfrescoRepositoryInfo *alfrescoRepositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithParameters:repoDictionary];
+    AlfrescoRepositoryInfo *alfrescoRepositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:repoDictionary];
     return alfrescoRepositoryInfo;
 }
 
