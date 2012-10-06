@@ -58,6 +58,7 @@
 - (void)helloFromRepository
 {
     NSLog(@"*********** helloFromRepository");
+    
     NSURL *url = [NSURL URLWithString:@"http://localhost:8080/alfresco"];
     NSString *username = @"admin";
     NSString *password = @"admin";
@@ -109,14 +110,33 @@
             }];
         }
     };
-    AlfrescoOAuthLoginViewController *webLoginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY completionBlock:completionBlock];
     
-    [self.navigationController pushViewController:webLoginController animated:YES];
+    
+    // check the API key and secret have been defined
+    NSString *apiKey = APIKEY;
+    NSString *secretKey = SECRETKEY;
+    if (apiKey.length == 0 || secretKey.length == 0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Either the API key or secret key is missing. Please provide the keys and re-start the app."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+    else
+    {
+        AlfrescoOAuthLoginViewController *webLoginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY secretKey:SECRETKEY completionBlock:completionBlock];
+        [self.navigationController pushViewController:webLoginController animated:YES];
+    }
 }
 
 - (void)loadRootFolder
 {
     NSLog(@"*********** loadRootFolder");
+    
     // create service
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
     __weak HelloRepoViewController *weakSelf = self;

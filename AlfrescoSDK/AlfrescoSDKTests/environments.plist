@@ -35,6 +35,8 @@
 			<string>alzheimer&quot;&quot;</string>
 			<key>server</key>
 			<string>http://devapis.alfresco.com</string>
+			<key>isCloud</key>
+			<true/>
 			<key>firstName</key>
 			<string>Peter</string>
 			<key>testSite</key>

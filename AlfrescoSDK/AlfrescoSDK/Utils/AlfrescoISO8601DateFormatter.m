@@ -327,7 +327,7 @@ static BOOL is_leap_year(unsigned year);
 								} else {
 									//Get month and/or date.
 									segment = read_segment_4digits(ch, &ch, &num_digits);
-									NSLog(@"(%@) parsing month; segment is %u and ch is %s", string, segment, ch);
+									log(@"(%@) parsing month; segment is %u and ch is %s", string, segment, ch);
 									switch(num_digits) {
 										case 4: //YY-MMDD
 											day = segment % 100U;
@@ -384,7 +384,7 @@ static BOOL is_leap_year(unsigned year);
 							break;
                             
 						case 1:; //-YY; -YY-MM (implicit century)
-							NSLog(@"(%@) found %u digits and one hyphen, so this is either -YY or -YY-MM; segment (year) is %u", string, num_digits, segment);
+							log(@"(%@) found %u digits and one hyphen, so this is either -YY or -YY-MM; segment (year) is %u", string, num_digits, segment);
 							unsigned current_year = nowComponents.year;
 							unsigned century = (current_year % 100U);
 							year = segment + (current_year - century);
@@ -394,7 +394,7 @@ static BOOL is_leap_year(unsigned year);
 							if (*ch == '-') {
 								++ch;
 								month_or_week = read_segment_2digits(ch, &ch);
-								NSLog(@"(%@) month is %u", string, month_or_week);
+								log(@"(%@) month is %u", string, month_or_week);
 							}
                             
 							day = 1U;

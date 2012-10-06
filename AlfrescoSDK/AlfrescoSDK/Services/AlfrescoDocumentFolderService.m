@@ -663,13 +663,13 @@
             else
             {
                 CMISRendition *thumbnailRendition = (CMISRendition *)[renditions objectAtIndex:0];
-                NSLog(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@",renditions.count, thumbnailRendition.renditionDocumentId);
+                log(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@",renditions.count, thumbnailRendition.renditionDocumentId);
                 NSString *tmpFileName = [NSTemporaryDirectory() stringByAppendingFormat:@"%@.png",node.name];
-                NSLog(@"************* DOWNLOADING TO FILE %@",tmpFileName);
+                log(@"************* DOWNLOADING TO FILE %@",tmpFileName);
                 
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^{
-                        NSLog(@"************* DOWNLOADED FILE TO TEMPORARY FOLDER/FILE %@",tmpFileName);
+                        log(@"************* DOWNLOADED FILE TO TEMPORARY FOLDER/FILE %@",tmpFileName);
                         AlfrescoContentFile *contentFile = [[AlfrescoContentFile alloc] initWithFilePath:tmpFileName mimeType:@"image/png"];
                         //                    NSError *operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -682,7 +682,7 @@
                         }];
                         
                     } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal){
-                        NSLog(@"************* PROGRESS DOWNLOADING FILE with %d bytes downloaded from %d total ",bytesDownloaded, bytesTotal);
+                        log(@"************* PROGRESS DOWNLOADING FILE with %d bytes downloaded from %d total ",bytesDownloaded, bytesTotal);
                     }];
                 }];
                 
@@ -729,7 +729,7 @@
 
     NSString *tmpFile = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",document.name];
     [self.cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^{
-        NSLog(@"AlfrescoDocumentFolderService::retrieveContentOfDocument. Document name is '%@' and we'll download to %@",document.name, tmpFile);
+        log(@"Document name is '%@' and we'll download to %@",document.name, tmpFile);
         AlfrescoContentFile *downloadedFile = [[AlfrescoContentFile alloc]initWithUrl:[NSURL fileURLWithPath:tmpFile]];
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(downloadedFile, nil);

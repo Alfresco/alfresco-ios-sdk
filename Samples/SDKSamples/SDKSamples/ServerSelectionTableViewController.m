@@ -22,32 +22,10 @@
 #import "AlfrescoOAuthLoginViewController.h"
 
 @interface ServerSelectionTableViewController ()
-@property (nonatomic, strong) AlfrescoCloudSession *session;
 - (void)authenticateCloudWithOAuth;
 @end
 
 @implementation ServerSelectionTableViewController
-@synthesize session = _session;
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 #pragma mark - private methods
 - (void)authenticateCloudWithOAuth
@@ -56,12 +34,10 @@
     AlfrescoOAuthCompletionBlock completionBlock = ^void(AlfrescoOAuthData *oauthdata, NSError *error){
         if (nil == oauthdata)
         {
-            NSLog(@"something went wrong with the authentication. Error message is %@ and code is %d", [error localizedDescription], [error code]);
+            log(@"Failed to authenticate, error message is %@ and code is %d", [error localizedDescription], [error code]);
         }
         else
         {
-            NSLog(@"We got something back: access token is %@", oauthdata.accessToken);
-            NSLog(@"The refresh token is %@ the grant_type is %@", oauthdata.refreshToken, oauthdata.tokenType);
             [AlfrescoCloudSession connectWithOAuthData:oauthdata completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
@@ -75,27 +51,28 @@
             }];
         }
     };
-    /**
-     if you provide your own redirectURI from the server, then uncomment the lines below
-    AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
-                                                                                                       secretKey:SECRETKEY
-                                                                                                     redirectURI:REDIRECTURI
-                                                                                                 completionBlock:completionBlock];
-     */
     
-    // use this is you want to use the Alfresco default redirect URI
-    AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
-                                                                                                       secretKey:SECRETKEY
-                                                                                                 completionBlock:completionBlock];
-    /*
-     */
-    [self.navigationController pushViewController:loginController animated:YES];
+    // check the API key and secret have been defined
+    NSString *apiKey = APIKEY;
+    NSString *secretKey = SECRETKEY;
+    if (apiKey.length == 0 || secretKey.length == 0)
+    {
+        [self showFailureAlert:@"error_no_keys"];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else
+    {
+        // use this is you want to use the Alfresco default redirect URI
+        AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
+                                                                                                           secretKey:SECRETKEY
+                                                                                                     completionBlock:completionBlock];
+        [self.navigationController pushViewController:loginController animated:YES];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"prepareForSegue");
-    [[segue destinationViewController] setSession:self.session];    
+    [[segue destinationViewController] setSession:self.session];
 }
 
 #pragma mark - Table view delegate

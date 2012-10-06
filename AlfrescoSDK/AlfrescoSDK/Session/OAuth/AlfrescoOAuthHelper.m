@@ -47,7 +47,7 @@
     self = [super init];
     if (nil != self)
     {
-        self.baseURL = [NSString stringWithFormat:@"%@%@",kAlfrescoOAuthCloudURL,kAlfrescoOAuthToken];
+        self.baseURL = [NSString stringWithFormat:@"%@%@", kAlfrescoCloudURL, kAlfrescoOAuthToken];
         if (nil != parameters)
         {
             if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudURL])
@@ -67,7 +67,7 @@
     self.completionBlock = completionBlock;
     self.oauthData = oauthData;
     self.receivedData = nil;
-    NSLog(@"AlfrescoOAuthHelper::the URL used is %@",self.baseURL);
+    log(@"AlfrescoOAuthHelper::the URL used is %@",self.baseURL);
     NSURL *url = [NSURL URLWithString:self.baseURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
                                                            cachePolicy: NSURLRequestReloadIgnoringCacheData
@@ -90,7 +90,7 @@
     [contentString appendString:kAlfrescoOAuthGrantType];
     [contentString appendString:@"&"];
     [contentString appendString:redirect];
-    NSLog(@"AlfrescoOAuthHelper::Token Staging URL header is %@",contentString);
+    log(@"AlfrescoOAuthHelper::body is %@", contentString);
     
     NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:data];
@@ -159,13 +159,13 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    NSLog(@"AlfrescoOAuthHelper didReceiveResponse");
+    log(@"AlfrescoOAuthHelper didReceiveResponse");
     
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    NSLog(@"AlfrescoOAuthHelper didFailWithError");
+    log(@"AlfrescoOAuthHelper didFailWithError");
     
     NSError *error = nil;
     AlfrescoOAuthData *updatedOAuthData = [self updatedOAuthDataFromJSONWithError:&error];
@@ -174,7 +174,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    NSLog(@"AlfrescoOAuthHelper didFailWithError. Error is %@ and code is %d", [error localizedDescription], [error code]);
+    log(@"AlfrescoOAuthHelper didFailWithError. Error is %@ and code is %d", [error localizedDescription], [error code]);
     if (nil == self.receivedData)
     {
         self.completionBlock(nil, error);

@@ -254,7 +254,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 
 - (NSArray *) tagArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {    
-    NSLog(@"tagArrayFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {
