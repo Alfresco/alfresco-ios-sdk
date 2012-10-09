@@ -52,7 +52,6 @@ NSString * const kAlfrescoErrorDescriptionDocumentFolder = @"Document Folder Ser
 NSString * const kAlfrescoErrorDescriptionDocumentFolderPermissions = @"Document Folder Service Error: Error retrieving Permissions";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNoParent = @"Document Folder Service Error: No Parent Folder";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNoRenditionService = @"Document Folder Service Error: no thumbnail rendition service available.";
-NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeNotFound = @"Document Folder Service Error: the node wasn't found";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderWrongNodeType = @"Document Folder Service Error: wrong node type. Expected either folder or document.";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists = @"Node already exists";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderFailedToConvertNode = @"Node could not be converted to an Alfresco object";
@@ -224,9 +223,6 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
             break;
         case kAlfrescoErrorCodeDocumentFolderFailedToConvertNode:
             return kAlfrescoErrorDescriptionDocumentFolderFailedToConvertNode;
-            break;
-        case kAlfrescoErrorCodeDocumentFolderNodeNotFound:
-            return kAlfrescoErrorDescriptionDocumentFolderNodeNotFound;
             break;
         case kAlfrescoErrorCodeDocumentFolderWrongNodeType:
             return kAlfrescoErrorDescriptionDocumentFolderWrongNodeType;

@@ -97,7 +97,7 @@
         
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
-        self.baseURL = [NSString stringWithFormat:@"%@%@",kAlfrescoOAuthCloudURL,kAlfrescoOAuthAuthorize];
+        self.baseURL = [NSString stringWithFormat:@"%@%@", kAlfrescoCloudURL, kAlfrescoOAuthAuthorize];
         
         if (nil != parameters)
         {
@@ -153,10 +153,10 @@
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
     
-    NSLog(@"baseurl: %@", self.baseURL);
-    NSLog(@"apikey: %@", self.oauthData.apiKey);
-    NSLog(@"apisecret: %@", self.oauthData.secretKey);
-    NSLog(@"redirect: %@", self.oauthData.redirectURI);
+    log(@"baseurl: %@", self.baseURL);
+    log(@"apikey: %@", self.oauthData.apiKey);
+    log(@"apisecret: %@", self.oauthData.secretKey);
+    log(@"redirect: %@", self.oauthData.redirectURI);
     
     NSMutableString *authURLString = [NSMutableString string];
     [authURLString appendString:self.baseURL];
@@ -168,7 +168,7 @@
     [authURLString appendString:kAlfrescoOAuthScope];
     [authURLString appendString:@"&"];
     [authURLString appendString:kAlfrescoOAuthResponseType];
-    NSLog(@"Auth URL is %@", authURLString);
+    log(@"Auth URL is %@", authURLString);
     
     // load the authorization URL in the web view
     NSURL *authURL = [NSURL URLWithString:authURLString];
@@ -178,7 +178,7 @@
 
 - (NSString *)authorizationCodeFromURL:(NSURL *)url
 {
-    NSLog(@"callbackURL: %@", url);
+    log(@"callbackURL: %@", url);
     
     if (nil == url)
     {
@@ -220,7 +220,7 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    NSLog(@"UIWebviewDelegate webViewDidFinishLoad");
+    log(@"UIWebviewDelegate webViewDidFinishLoad");
     
     if (self.isLoginScreenLoad)
     {
@@ -230,20 +230,20 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    NSLog(@"UIWebviewDelegate shouldStartLoadWithRequest");
+    log(@"UIWebviewDelegate shouldStartLoadWithRequest");
     
     if (self.isLoginScreenLoad)
     {
-        NSLog(@"isLoginScreenLoad = YES");
+        log(@"isLoginScreenLoad = YES");
     }
     else
     {
-        NSLog(@"isLoginScreenLoad = NO");
+        log(@"isLoginScreenLoad = NO");
     }
     
     if (!self.isLoginScreenLoad)
     {
-        NSLog(@"isLoginScreenLoad = NO and we start the NSURLConnection requet");
+        log(@"isLoginScreenLoad = NO and we start the NSURLConnection requet");
         [self.activityIndicator startAnimating];
         self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
         return NO;
@@ -254,20 +254,20 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-    NSLog(@"UIWebviewDelegate webViewDidStartLoad");
+    log(@"UIWebviewDelegate webViewDidStartLoad");
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    NSLog(@"UIWebviewDelegate didFailLoadWithError");
-    NSLog(@"Error occurred while loading page: %@ with code %d and reason %@", [error localizedDescription], [error code], [error localizedFailureReason]);
+    log(@"UIWebviewDelegate didFailLoadWithError");
+    log(@"Error occurred while loading page: %@ with code %d and reason %@", [error localizedDescription], [error code], [error localizedFailureReason]);
 }
 
 #pragma NSURLConnection Delegate methods
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    NSLog(@"LoginViewController:NSURLConnectionDelegate didReceiveData");
+    log(@"LoginViewController:NSURLConnectionDelegate didReceiveData");
 }
 
 /**
@@ -276,9 +276,9 @@
  */
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    NSLog(@"LoginViewController:didReceiveResponse");
+    log(@"LoginViewController:didReceiveResponse");
     NSString *code = [self authorizationCodeFromURL:response.URL];
-    NSLog(@"Extracted auth code: %@", code);
+    log(@"Extracted auth code: %@", code);
     
     if (nil != code)
     {
@@ -303,14 +303,14 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    NSLog(@"LoginViewController:connection error with message %@ and code %d", [error localizedDescription], [error code]);
+    log(@"LoginViewController:connection error with message %@ and code %d", [error localizedDescription], [error code]);
     [self.activityIndicator stopAnimating];
     self.completionBlock(nil, error);
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    NSLog(@"LoginViewController:connectionDidFinishLoading");
+    log(@"LoginViewController:connectionDidFinishLoading");
 }
 
 

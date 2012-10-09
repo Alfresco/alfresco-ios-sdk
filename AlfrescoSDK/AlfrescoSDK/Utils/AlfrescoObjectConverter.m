@@ -243,7 +243,12 @@
             for (CMISExtensionElement *aspect in aspectArray) {
                 if ([aspect.name isEqualToString:kAlfrescoAppliedAspects])
                 {
-                    [alfrescoAspectArray addObject:aspect.value];
+                    NSString *aspectValue = aspect.value;
+                    if ([aspectValue hasPrefix:@"P:"])
+                    {
+                        aspectValue = [aspect.value stringByReplacingOccurrencesOfString:@"P:" withString:@""];
+                    }
+                    [alfrescoAspectArray addObject:aspectValue];
                 }
                 else if ([aspect.name isEqualToString:kAlfrescoAspectProperties])
                 {
@@ -251,23 +256,19 @@
                     for (CMISExtensionElement *property in propertyArray) 
                     {
                         NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
-//                        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] init];
                         NSString *extensionPropertyString = [property.attributes valueForKey:kAlfrescoAspectPropertyDefinitionId];
 
                         NSNumber *propTypeIndex = [NSNumber numberWithInt:[AlfrescoObjectConverter typeForCMISProperty:extensionPropertyString]];
                         [propertyDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
 
-                        //                        alfProperty.type = [AlfrescoObjectConverter typeForCMISProperty:extensionPropertyString];
                         
                         CMISExtensionElement *propertyValueElement = (CMISExtensionElement *)[property.children objectAtIndex:0];
                         
                         [propertyDictionary setValue:propertyValueElement.value forKey:kAlfrescoPropertyValue];
 
-                        //                        alfProperty.value = propertyValueElement.value;
                         
                         AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
                         [alfPropertiesDict setValue:alfProperty forKey:extensionPropertyString];
-//                        [alfNode.properties setValue:alfProperty forKey:extensionPropertyString];
                     }
                 }
             }
@@ -278,13 +279,13 @@
     [propertyDictionary setValue:alfrescoAspectArray forKey:kAlfrescoNodeAspects];
 
 
-    NSString *title = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kCMISTitle]).value];
-
-    [propertyDictionary setValue:title forKey:kCMISTitle];
-    if(((AlfrescoProperty *)[alfPropertiesDict valueForKey:kCMISDescription]).value != nil)
+    NSString *title = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kAlfrescoPropertyTitle]).value];
+    [propertyDictionary setValue:title forKey:kAlfrescoPropertyTitle];
+    
+    if(((AlfrescoProperty *)[alfPropertiesDict valueForKey:kAlfrescoPropertyDescription]).value != nil)
     {
-        NSString *description = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kCMISDescription]).value];
-        [propertyDictionary setValue:description forKey:kCMISDescription];
+        NSString *description = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kAlfrescoPropertyDescription]).value];
+        [propertyDictionary setValue:description forKey:kAlfrescoPropertyDescription];
     }
     
     AlfrescoNode *node = nil;
@@ -486,29 +487,29 @@
 #pragma mark internal methods
 + (AlfrescoPropertyType)typeForCMISProperty:(NSString *)propertyIdentifier
 {
-    if ([[propertyIdentifier lowercaseString] hasSuffix:kCMISPropertyIntValue]) 
+    if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeInt]) 
     {
         return AlfrescoPropertyTypeInteger;
     }
-    else if ([[propertyIdentifier lowercaseString] hasSuffix:kCMISPropertyBooleanValue]) 
+    else if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeBoolean]) 
     {
         return AlfrescoPropertyTypeBoolean;
     }
-    else if ([[propertyIdentifier lowercaseString] hasSuffix:kCMISPropertyDatetimeValue]) 
+    else if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeDatetime]) 
     {
         return AlfrescoPropertyTypeDateTime;
     }
-    else if ([[propertyIdentifier lowercaseString] hasSuffix:kCMISPropertyDecimalValue]) 
+    else if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeDecimal]) 
     {
         return AlfrescoPropertyTypeDecimal;
     }
-    else if ([[propertyIdentifier lowercaseString] hasSuffix:kCMISPropertyIdValue]) 
+    else if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeId]) 
     {
         return AlfrescoPropertyTypeId;
     }
     else
     {
-        return AlfrescoPropertyTypeString;        
+        return AlfrescoPropertyTypeString;
     }
 }
 

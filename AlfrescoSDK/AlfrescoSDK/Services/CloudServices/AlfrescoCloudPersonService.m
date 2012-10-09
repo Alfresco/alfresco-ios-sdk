@@ -134,7 +134,7 @@
 #pragma mark - private methods
 - (AlfrescoPerson *) alfrescoPersonFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
-    NSLog(@"alfrescoPersonFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSDictionary *entryDict = [AlfrescoObjectConverter dictionaryJSONEntryFromListData:data error:outError];
     if (nil == entryDict)
     {
@@ -151,38 +151,7 @@
         return nil;
     }
     return [[AlfrescoPerson alloc] initWithProperties:entryDict];
-//    return (AlfrescoPerson *)[self personFromJSON:entryDict];
     
 }
-/*
-- (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict
-{
-    AlfrescoPerson *alfPerson = [[AlfrescoPerson alloc] init];
-    alfPerson.identifier = [personDict valueForKey:kAlfrescoJSONIdentifier];
-    alfPerson.firstName = [personDict valueForKey:kAlfrescoJSONFirstName];
-    alfPerson.lastName = [personDict valueForKey:kAlfrescoJSONLastName];
-    if (alfPerson.lastName != nil && alfPerson.lastName.length > 0)
-    {
-        if (alfPerson.firstName != nil && alfPerson.firstName.length > 0)
-        {
-            alfPerson.fullName = [NSString stringWithFormat:@"%@ %@", alfPerson.firstName, alfPerson.lastName];
-        }
-        else
-        {
-            alfPerson.fullName = alfPerson.lastName;
-        }
-    }
-    else if (alfPerson.firstName != nil && alfPerson.firstName.length > 0)
-    {
-        alfPerson.fullName = alfPerson.firstName;
-    }
-    else
-    {
-        alfPerson.fullName = alfPerson.identifier;
-    }
-    alfPerson.avatarIdentifier = [personDict valueForKey:kAlfrescoJSONAvatarId];
-    return alfPerson;
-}
-*/
 
 @end

@@ -23,15 +23,19 @@
 /**
  CMIS constants
  */
-NSString * const kCMISNameParameterForSearch = @"cmis:name";
-NSString * const kCMISTitle = @"cm:title";
-NSString * const kCMISDescription = @"cm:description";
-NSString * const kCMISPropertyIntValue = @"int";
-NSString * const kCMISPropertyBooleanValue = @"boolean";
-NSString * const kCMISPropertyDatetimeValue = @"datetime";
-NSString * const kCMISPropertyDecimalValue = @"decimal";
-NSString * const kCMISPropertyIdValue = @"id";
-NSString * const kCMISAlfrescoMode = @"alfresco";
+NSString * const kAlfrescoCMISPropertyTypeInt = @"int";
+NSString * const kAlfrescoCMISPropertyTypeBoolean = @"boolean";
+NSString * const kAlfrescoCMISPropertyTypeDatetime = @"datetime";
+NSString * const kAlfrescoCMISPropertyTypeDecimal = @"decimal";
+NSString * const kAlfrescoCMISPropertyTypeId = @"id";
+NSString * const kAlfrescoCMISSessionMode = @"alfresco";
+
+/**
+ Content Model constants
+ */
+NSString * const kAlfrescoPropertyName = @"cm:name";
+NSString * const kAlfrescoPropertyTitle = @"cm:title";
+NSString * const kAlfrescoPropertyDescription = @"cm:description";
 
 /**
  Property name constants
@@ -143,13 +147,9 @@ NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI = @"node/{nodeRef}/cont
 /**
  Cloud constants
  */
-NSString * const kAlfrescoOAuthCloudURL = @"https://api.alfresco.com";
-NSString * const kAlfrescoCloudURL = @"http://my.alfresco.com";
-NSString * const kAlfrescoBasicCloudURL = @"http://devapis.alfresco.com";
+NSString * const kAlfrescoCloudURL = @"https://api.alfresco.com";
 NSString * const kAlfrescoCloudBindingService = @"/alfresco/service";
-NSString * const kAlfrescoCloudSignupURL = @"/internal/cloud/accounts/signupqueue";
 NSString * const kAlfrescoCloudPrecursor = @"/alfresco/a";
-NSString * const kAlfrescoCloudDefaultTenantID = @"/alfresco.com";
 NSString * const kAlfrescoCloudCMISPath = @"/public/cmis/versions/1/atom";
 NSString * const kAlfrescoCloudAPIPath  = @"/public/alfresco/versions/1/";
 NSString * const kAlfrescoDocumentLibrary =@"documentLibrary";
@@ -243,16 +243,6 @@ NSString * const kAlfrescoJSONExtractMetadata = @"extract-metadata";
 NSString * const kAlfrescoJSONActionDefinitionName = @"actionDefinitionName";
 NSString * const kAlfrescoJSONThumbnailName = @"thumbnailName";
 NSString * const kAlfrescoJSONSite = @"site";
-NSString * const kAlfrescoJSONEmail = @"email";
-NSString * const kAlfrescoJSONSignupFirstName = @"firstName";
-NSString * const kAlfrescoJSONSignupLastName = @"lastName";
-NSString * const kAlfrescoJSONPassword = @"password";
-NSString * const kAlfrescoJSONSource = @"source";
-NSString * const kAlfrescoJSONRegistration = @"registration";
-NSString * const kAlfrescoJSONRegistrationTime = @"registrationDate";
-NSString * const kAlfrescoJSONAPIKey = @"key";
-NSString * const kAlfrescoJSONIOSSource = @"mobile-iOS";
-NSString * const kAlfrescoJSONIsRegistered = @"";
 NSString * const kAlfrescoJSONPostedAt = @"postedAt";
 NSString * const kAlfrescoJSONAvatarId = @"avatarId";
 

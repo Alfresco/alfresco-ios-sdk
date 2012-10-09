@@ -155,8 +155,8 @@
             v4params.repositoryId = repoInfo.identifier;
             
             // enable Alfresco mode in CMIS Session
-            [params setObject:kCMISAlfrescoMode forKey:kCMISSessionParameterMode];
-            [v4params setObject:kCMISAlfrescoMode forKey:kCMISSessionParameterMode];
+            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
+            [v4params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
             
             // create the session using the paramters
             CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];

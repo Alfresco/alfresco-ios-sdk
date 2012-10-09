@@ -23,15 +23,19 @@
 /**
  CMIS constants
  */
-extern NSString * const kCMISNameParameterForSearch;
-extern NSString * const kCMISTitle;
-extern NSString * const kCMISDescription;
-extern NSString * const kCMISPropertyIntValue;
-extern NSString * const kCMISPropertyBooleanValue;
-extern NSString * const kCMISPropertyDatetimeValue;
-extern NSString * const kCMISPropertyDecimalValue;
-extern NSString * const kCMISPropertyIdValue;
-extern NSString * const kCMISAlfrescoMode;
+extern NSString * const kAlfrescoCMISPropertyTypeInt;
+extern NSString * const kAlfrescoCMISPropertyTypeBoolean;
+extern NSString * const kAlfrescoCMISPropertyTypeDatetime;
+extern NSString * const kAlfrescoCMISPropertyTypeDecimal;
+extern NSString * const kAlfrescoCMISPropertyTypeId;
+extern NSString * const kAlfrescoCMISSessionMode;
+
+/**
+ Content Model constants
+ */
+extern NSString * const kAlfrescoPropertyName;
+extern NSString * const kAlfrescoPropertyTitle;
+extern NSString * const kAlfrescoPropertyDescription;
 
 /**
  Property name constants
@@ -82,6 +86,7 @@ extern NSString * const kAlfrescoSessionCloudURL;
 extern NSString * const kAlfrescoSessionCloudBasicAuth;
 extern NSString * const kAlfrescoSessionUsername;
 extern NSString * const kAlfrescoSessionPassword;
+
 /**
  Associated object key constants
  */
@@ -138,17 +143,12 @@ extern NSString * const kAlfrescoOnPremiseMetadataExtractionAPI;
 extern NSString * const kAlfrescoOnPremiseThumbnailCreationAPI;
 extern NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI;
 
-
 /**
  Cloud constants
  */
-extern NSString * const kAlfrescoOAuthCloudURL;
 extern NSString * const kAlfrescoCloudURL;
-extern NSString * const kAlfrescoBasicCloudURL;
 extern NSString * const kAlfrescoCloudBindingService;
-extern NSString * const kAlfrescoCloudSignupURL;
 extern NSString * const kAlfrescoCloudPrecursor;
-extern NSString * const kAlfrescoCloudDefaultTenantID;
 extern NSString * const kAlfrescoCloudAPIPath;
 extern NSString * const kAlfrescoCloudCMISPath;
 extern NSString * const kAlfrescoHomeNetworkType;
@@ -168,7 +168,6 @@ extern NSString * const kAlfrescoCloudTagsAPI;
 extern NSString * const kAlfrescoCloudTagsForNodeAPI;
 extern NSString * const kAlfrescoCloudPersonAPI;
 extern NSString * const kAlfrescoCloudDefaultRedirectURI;
-
 
 /**
  JSON Constants
@@ -241,16 +240,6 @@ extern NSString * const kAlfrescoJSONExtractMetadata;
 extern NSString * const kAlfrescoJSONActionDefinitionName;
 extern NSString * const kAlfrescoJSONThumbnailName;
 extern NSString * const kAlfrescoJSONSite;
-extern NSString * const kAlfrescoJSONEmail;
-extern NSString * const kAlfrescoJSONSignupFirstName;
-extern NSString * const kAlfrescoJSONSignupLastName;
-extern NSString * const kAlfrescoJSONPassword;
-extern NSString * const kAlfrescoJSONSource;
-extern NSString * const kAlfrescoJSONRegistration;
-extern NSString * const kAlfrescoJSONRegistrationTime;
-extern NSString * const kAlfrescoJSONAPIKey;
-extern NSString * const kAlfrescoJSONIOSSource;
-extern NSString * const kAlfrescoJSONIsRegistered;
 extern NSString * const kAlfrescoJSONPostedAt;
 extern NSString * const kAlfrescoJSONAvatarId;
 

@@ -224,7 +224,6 @@
 
 - (NSArray *) activityStreamArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
-//    NSLog(@"activityStreamArrayFromJSONData with JSON data %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {
