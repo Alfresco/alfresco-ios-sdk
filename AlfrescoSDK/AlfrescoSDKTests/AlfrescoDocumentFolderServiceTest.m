@@ -910,27 +910,57 @@
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
+        __block int maxItems = 1;
+        __block int skipCount = 0;
+        __block AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:skipCount];
+        
+        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
+        
+        [self.dfService retrieveChildrenInFolder:super.testDocFolder completionBlock:^(NSArray *array, NSError *error){
+            if (nil == array)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                __block int numberOfChildren = array.count;
+                log(@"<<<<< The total number of children found in the folder is %d >>>>>>>>>>>>", numberOfChildren);
+                STAssertFalse(0 == numberOfChildren, @"There should be at least 1 child element in the folder");
+                [weakSelf retrieveChildrenInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                 {
+                     if (nil == pagingResult)
+                     {
+                         super.lastTestSuccessful = NO;
+                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     }
+                     else
+                     {
+                         STAssertTrue(pagingResult.totalItems <= numberOfChildren, @"We expected that the total number of items should be less equal %d, but instead we got %d", numberOfChildren, pagingResult.totalItems);
+                         
+                         STAssertTrue(pagingResult.objects.count == 1 , @"We are asking for %d maxItems but got back %d", maxItems, pagingResult.objects.count);
+                         
+                         if (numberOfChildren > maxItems)
+                         {
+                             STAssertTrue(pagingResult.hasMoreItems, @"Expected that there are more items left");
+                         }
+                         else
+                         {
+                             STAssertFalse(pagingResult.hasMoreItems, @"the folder has exactly 1 item, so we would not expect to get more back");
+                         }
+                         
+                         
+                         log(@"total items %i", pagingResult.objects.count);
+                         
+                         super.lastTestSuccessful = YES;
+                     }
+                     super.callbackCompleted = YES;
+                 }];
+            }
+        }];
         
         // get the children of the repository's root folder
-        [self.dfService retrieveChildrenInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-         {
-             if (nil == pagingResult) 
-             {
-                 super.lastTestSuccessful = NO;
-                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else 
-             {
-                 STAssertTrue(pagingResult.totalItems > 0, @"Expected folder children. Total number is %d",pagingResult.totalItems);
-                 STAssertTrue(pagingResult.objects.count > 0, @"Expected at least 1 folder children returned. We have in %d objects in paging result", pagingResult.objects.count);
-                 STAssertTrue(pagingResult.hasMoreItems, @"Expected that there are more items left");
-                 log(@"total items %i", pagingResult.objects.count);
-                 
-                 super.lastTestSuccessful = YES;
-             }
-             super.callbackCompleted = YES;
-         }];
         
         [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
@@ -1113,26 +1143,60 @@
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:1];
+        __block int maxItems = 2;
+        __block int skipCount = 1;
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:skipCount];
+        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
+        [self.dfService retrieveDocumentsInFolder:super.testDocFolder completionBlock:^(NSArray *foundDocuments, NSError *error){
+            if (nil == foundDocuments)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                __block int numberOfDocs = foundDocuments.count;
+                log(@"<<<<< The total number of docs found in the folder is %d >>>>>>>>>>>>", numberOfDocs);
+                STAssertFalse(0 == numberOfDocs, @"We should have at least 1 document in the folder. Instead we got none");
+                [weakSelf retrieveDocumentsInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                 {
+                     if (nil == pagingResult)
+                     {
+                         super.lastTestSuccessful = NO;
+                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     }
+                     else
+                     {
+                         STAssertTrue(pagingResult.totalItems == numberOfDocs, @"Expected more than %d documents in total, but got %d",maxItems, pagingResult.totalItems);
+                         if (numberOfDocs > maxItems)
+                         {
+                             STAssertTrue(pagingResult.objects.count == maxItems, @"Expected %d documents, but got %d", maxItems, pagingResult.objects.count);
+                             if (numberOfDocs == maxItems)
+                             {
+                                 STAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
+                             }
+                             else
+                             {
+                                 STAssertTrue(pagingResult.hasMoreItems, @"we should have more items than we got back");
+                             }
+                         }
+                         else
+                         {
+                             STAssertTrue(pagingResult.objects.count == numberOfDocs,@"We have less than %d maxItems we should get back, but instead we got %d", numberOfDocs, pagingResult.objects.count);
+                             STAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
+                         }
+                         
+                         super.lastTestSuccessful = YES;
+                     }
+                     super.callbackCompleted = YES;
+                     
+                 }];
+                
+            }
+        }];
         
         // get the documents of the repository's root folder
-        [self.dfService retrieveDocumentsInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-         {
-             if (nil == pagingResult) 
-             {
-                 super.lastTestSuccessful = NO;
-                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else 
-             {
-                 STAssertTrue(pagingResult.objects.count == 2, @"Expected 2 documents, but got %d",pagingResult.objects.count);
-                 STAssertTrue(pagingResult.totalItems > 2, @"Expected more than 2 documents in total, but got %d",pagingResult.totalItems);
-                 
-                 super.lastTestSuccessful = YES;
-             }
-             super.callbackCompleted = YES;
-             
-         }];
         [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
@@ -1235,37 +1299,59 @@
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        
+        __block int maxItems = 1;
+        __block int skipCount = 0;
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
-        // get the documents of the repository's root folder
-        [self.dfService retrieveFoldersInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-         {
-             if (nil == pagingResult) 
-             {
-                 super.lastTestSuccessful = NO;
-                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else 
-             {
-                 STAssertTrue(pagingResult.objects.count >= 1, @"Expected at least 1 folders");
-                 if (self.isCloud)
+        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
+        [self.dfService retrieveFoldersInFolder:super.testDocFolder completionBlock:^(NSArray *foundFolders, NSError *error){
+            if (nil == foundFolders)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                __block int numberOfFolders = foundFolders.count;
+                [weakSelf retrieveFoldersInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                  {
-                     STAssertTrue(pagingResult.totalItems == 1, @"Expected 1 folder in total, but we have %d",pagingResult.totalItems);
-                     STAssertFalse(pagingResult.hasMoreItems, @"Expected no more folders available, but instead it says there are more items");
-                 }
-                 else
-                 {
-                     STAssertTrue(pagingResult.totalItems > 1, @"Expected more than 1 folders in total, but we have %d",pagingResult.totalItems);
-                     STAssertTrue(pagingResult.hasMoreItems, @"Expected more folders available, but instead it says there are no more items");
+                     if (nil == pagingResult)
+                     {
+                         super.lastTestSuccessful = NO;
+                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     }
+                     else
+                     {
+                         STAssertTrue(pagingResult.totalItems == numberOfFolders, @"Expected %d folders in total, but we have %d",numberOfFolders, pagingResult.totalItems);
+                         
+                         if (numberOfFolders > maxItems)
+                         {
+                             STAssertTrue(pagingResult.objects.count == maxItems, @"Expected at least %d folders, but got back %d", maxItems, pagingResult.objects.count);
+                             if (numberOfFolders == maxItems)
+                             {
+                                 STAssertFalse(pagingResult.hasMoreItems, @"Expected no more folders available, but instead it says there are more items");
+                             }
+                             else
+                             {
+                                 STAssertTrue(pagingResult.hasMoreItems, @"Expected more folders available, but instead it says there are no more items");
+                             }
+                         }
+                         else
+                         {
+                             STAssertTrue(pagingResult.objects.count == numberOfFolders, @"Expected at least %d folders, but got back %d", numberOfFolders, pagingResult.objects.count);
+                             STAssertFalse(pagingResult.hasMoreItems, @"Expected no more folders available, but instead it says there are more items");                             
+                         }
+                         super.lastTestSuccessful = YES;
+                     }
+                     super.callbackCompleted = YES;
                      
-                 }
-                 
-                 super.lastTestSuccessful = YES;
-             }
-             super.callbackCompleted = YES;
-             
-         }];
+                 }];
+                
+            }
+        }];
+        
+        // get the documents of the repository's root folder
         [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
@@ -1920,6 +2006,82 @@
     
 }
 
+- (void)testRenameNode
+{
+    [super runAllSitesTest:^{
+        NSString *filename = @"millenium-dome.jpg";
+        __block NSString *testDescription = @"Peter's test description";
+        __block NSString *testTitle = @"test title";
+        __block NSString *updatedName = @"millenium-dome-2012.jpg";
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
+        // provide the objectTypeId so we can specify the cm:author aspect
+        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                  forKey:kCMISPropertyObjectTypeId];
+        [props setObject:testDescription forKey:@"cm:description"];
+        [props setObject:testTitle forKey:@"cm:title"];
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        
+        [self.dfService
+         createDocumentWithName:filename
+         inParentFolder:super.testDocFolder
+         contentFile:super.testImageFile
+         properties:props
+         completionBlock:^(AlfrescoDocument *imageDoc, NSError *blockError){
+             if (nil == imageDoc)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 NSMutableDictionary *updateProperties = [NSMutableDictionary dictionary];
+                 [updateProperties setObject:updatedName forKey:@"cm:name"];
+                 [weakDfService updatePropertiesOfNode:imageDoc properties:updateProperties completionBlock:^(AlfrescoNode *node, NSError *updateError){
+                     if (nil == node)
+                     {
+                         super.lastTestSuccessful = NO;
+                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [updateError localizedDescription], [blockError localizedFailureReason]];
+                         super.callbackCompleted = YES;
+                     }
+                     else
+                     {
+                         STAssertTrue([node isKindOfClass:[AlfrescoDocument class]], @"the node should be of type AlfrescoDocument");
+                         AlfrescoDocument *updatedDoc = (AlfrescoDocument *)node;
+                         STAssertTrue([updatedDoc.name isEqualToString:updatedName], @"The name of the document should be %@, but instead we got %@", updatedName, updatedDoc.name);
+                         AlfrescoProperty *description = [updatedDoc.properties objectForKey:@"cm:description"];
+                         AlfrescoProperty *title = [updatedDoc.properties objectForKey:@"cm:title"];
+                         STAssertTrue([description.value isEqualToString:testDescription], @"expected description %@, but got %@", testDescription, node.description);
+                         STAssertTrue([title.value isEqualToString:testTitle], @"expected title %@, but got %@", testTitle, node.title);
+                         super.lastTestSuccessful = YES;
+                         [weakDfService deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError){
+                             if (!succeeded)
+                             {
+                                 super.lastTestSuccessful = NO;
+                                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [updateError localizedDescription], [blockError localizedFailureReason]];
+                             }
+                             else
+                             {
+                                 super.lastTestSuccessful = YES;
+                             }
+                             super.callbackCompleted = YES;
+                         }];
+                     }
+                 }];
+             }
+                 
+            
+        } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){
+        }];
+        
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+    
+}
 
 /*
  @Unique_TCRef 27S1

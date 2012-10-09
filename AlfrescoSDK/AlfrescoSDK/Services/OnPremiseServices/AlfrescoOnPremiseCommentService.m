@@ -95,7 +95,10 @@
         if(nil != data)
         {
             NSArray *commentArray = [weakSelf commentArrayFromJSONData:data error:&operationQueueError];
-            sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:commentArray sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+            if (nil != commentArray)
+            {
+                sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:commentArray sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+            }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(sortedCommentArray, operationQueueError);
@@ -289,12 +292,11 @@
     id jsonCommentDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if(error)
     {
-        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeComment];
+        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeCommentNoCommentFound];
         return nil;
     }
     if ([[jsonCommentDict valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
     {
-        // no results found
         return [NSArray array];
     }
     NSArray *jsonCommentArray = [jsonCommentDict valueForKey:kAlfrescoJSONItems];

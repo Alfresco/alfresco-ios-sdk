@@ -56,7 +56,6 @@
 // retrieve children of the folder that is retrieved using the provided objectId
 - (NSArray *)cmisRetrieveChildren:(NSString *)objectId
                       withSession:(__weak AlfrescoDocumentFolderService *)weakSelf
-                   listingContext:(AlfrescoListingContext *)listingContext
                             error:(NSError **)error;
 
 // filter the provided array with items that match the provided class type
@@ -292,7 +291,7 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf listingContext:nil error:&operationQueueError];
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
         NSArray *sortedChildren = nil;
         if (nil != childrenData) 
         {
@@ -333,7 +332,7 @@
         
         NSError *operationQueueError = nil;
         // TODO this is a temporary fix for the failing paging
-        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf listingContext:listingContext error:&operationQueueError];
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
         AlfrescoPagingResult *pagingResult = nil;
         if (nil != childrenData) 
         {
@@ -376,7 +375,7 @@
 
         NSError *operationQueueError = nil;
         NSArray *sortedDocuments = nil;
-        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf listingContext:nil error:&operationQueueError];
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
         if (nil != childrenData) 
         {
             NSArray *documents = [weakSelf retrieveItemsWithClassFilter:[AlfrescoDocument class] withArray:childrenData];
@@ -412,7 +411,7 @@
         
         NSError *operationQueueError = nil;
         AlfrescoPagingResult *pagingResult = nil;
-        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf listingContext:listingContext error:&operationQueueError];
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
         if (nil != childrenData) 
         {
             NSArray *sortedDocuments = nil;
@@ -449,7 +448,7 @@
 
         NSError *operationQueueError = nil;
         NSArray *sortedFolders = nil;
-        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf listingContext:nil error:&operationQueueError];
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
         if (nil != childrenData) 
         {
             NSArray *folders = [weakSelf retrieveItemsWithClassFilter:[AlfrescoFolder class] withArray:childrenData];
@@ -485,7 +484,7 @@
         
         NSError *operationQueueError = nil;
         NSArray *sortedFolders = nil;
-        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf listingContext:listingContext error:&operationQueueError];
+        NSArray *childrenData = [weakSelf cmisRetrieveChildren:folder.identifier withSession:weakSelf error:&operationQueueError];
         AlfrescoPagingResult *pagingResult = nil;
         if (nil != childrenData) 
         {
@@ -829,6 +828,16 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
+    NSMutableDictionary *cmisProperties = [NSMutableDictionary dictionaryWithDictionary:properties];
+    if ([[properties allKeys] containsObject:kAlfrescoPropertyName])
+    {
+        NSString *name = [properties valueForKey:kAlfrescoPropertyName];
+        [cmisProperties setValue:name forKey:@"cmis:name"];
+        [cmisProperties removeObjectForKey:kAlfrescoPropertyName];
+        properties = cmisProperties;
+    }
+    
+    
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         
@@ -890,7 +899,6 @@
 
 - (NSArray *)cmisRetrieveChildren:(NSString *)objectId
                       withSession:(__weak AlfrescoDocumentFolderService *)weakSelf
-                   listingContext:(AlfrescoListingContext *)listingContext
                             error:(NSError **)error
 {
     CMISObject *object = [self.cmisSession retrieveObject:objectId error:error];
@@ -913,20 +921,12 @@
         return nil;
     }
     CMISFolder *folder = (CMISFolder *)object;
-    CMISPagedResult *result = nil;
-    if (nil == listingContext)
-    {
-        result = [folder retrieveChildrenAndReturnError:error];
-    }
-    else
-    {
-        CMISOperationContext *cmisContext = [AlfrescoPagingUtils operationContextFromListingContext:listingContext];
-        result = [folder retrieveChildrenWithOperationContext:cmisContext andReturnError:error];
-    }
+    CMISPagedResult *result = [folder retrieveChildrenAndReturnError:error];
     if (nil == result)
     {
         return nil;
     }
+    log(@"***** AlfrescoDocumentFolderService::cmisRetrieveChildren - the number of returned CMIS objects is %d",result.resultArray.count);
     return (NSArray *)result.resultArray;
 }
 
