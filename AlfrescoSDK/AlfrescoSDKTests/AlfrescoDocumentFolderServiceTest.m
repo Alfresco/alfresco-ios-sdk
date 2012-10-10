@@ -2083,6 +2083,66 @@
     
 }
 
+- (void)testEmptyTitleAndDescriptionProperties
+{
+    [super runAllSitesTest:^{
+        NSString *filename = @"millenium-dome.jpg";
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
+        [self.dfService
+         createDocumentWithName:filename
+         inParentFolder:self.testDocFolder
+         contentFile:self.testImageFile
+         properties:nil
+         completionBlock:^(AlfrescoDocument *doc, NSError *error){
+             if (nil == doc)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 [weakSelf retrieveNodeWithIdentifier:doc.identifier completionBlock:^(AlfrescoNode *node, NSError *propError) {
+                     if (nil == node)
+                     {
+                         super.lastTestSuccessful = NO;
+                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [propError localizedDescription], [propError localizedFailureReason]];
+                         super.callbackCompleted = YES;
+                     }
+                     else
+                     {
+                         STAssertTrue([node isKindOfClass:[AlfrescoDocument class]], @"expected AlfrescoDocument");
+                         AlfrescoDocument *doc = (AlfrescoDocument *)node;
+                         NSString *description = doc.summary;
+                         NSString *title = doc.title;
+                         STAssertNil(description, @"expected description to be NIL");
+                         STAssertNil(title, @"expected title to be NIL");
+                         [weakSelf deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError){
+                             if (!succeeded)
+                             {
+                                 super.lastTestSuccessful = NO;
+                                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                             }
+                             else
+                             {
+                                 super.lastTestSuccessful = YES;                                 
+                             }
+                             super.callbackCompleted = YES;
+                         }];
+                     }
+                 }];
+                 
+             }
+         }
+         progressBlock:^(NSInteger bytesTransferred, NSInteger total){}];
+        
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
 /*
  @Unique_TCRef 27S1
  @Unique_TCRef 31S1
