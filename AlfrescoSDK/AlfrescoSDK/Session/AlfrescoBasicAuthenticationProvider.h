@@ -20,11 +20,6 @@
 
 #import "AlfrescoAuthenticationProvider.h"
 
-/* The AlfrescoBasicAuthenticationProvider manages the authentication credentials for a session.
- 
- Author: Tijs Rademakers (Alfresco)
- */
-
 @interface AlfrescoBasicAuthenticationProvider : NSObject <AlfrescoAuthenticationProvider>
 - (id)initWithUsername:(NSString *)username andPassword:(NSString *)password;
 @end

@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
@@ -14,7 +15,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
 #import "AlfrescoSession.h"
 #import "AlfrescoFolder.h"
@@ -22,6 +24,10 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoCloudNetwork.h"
 #import "AlfrescoOAuthData.h"
+/** The AlfrescoCloudSession manages the session on Alfresco Cloud.
+ 
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ */
 
 @interface AlfrescoCloudSession : NSObject <AlfrescoSession>
 @property (nonatomic, strong, readonly) AlfrescoCloudNetwork *network;

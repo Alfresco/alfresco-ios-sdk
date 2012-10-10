@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
@@ -14,13 +15,14 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
 #import "AlfrescoNode.h"
 
 /** The AlfrescoDocument represents a document in an Alfresco repository.
  
- Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco)
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
 @interface AlfrescoDocument : AlfrescoNode
@@ -46,10 +48,6 @@
 /// Specifies whether this is the latest version.
 @property (nonatomic, assign, readonly) BOOL isLatestVersion;
 
-/** Returns the AlfrescoNode object preset with the CMIS properties.
- 
- @param properties a list of CMIS properties stored in NSDictionary.
- */
 - (id)initWithProperties:(NSDictionary *)properties;
 
 

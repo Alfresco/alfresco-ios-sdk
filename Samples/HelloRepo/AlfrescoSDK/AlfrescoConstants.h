@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
@@ -14,10 +15,9 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
-/** The AlfrescoConstants used in the SDK. 
- Author: Peter Schmidt (Alfresco)
+ *****************************************************************************
  */
+
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoPagingResult.h"
@@ -32,6 +32,9 @@
 #import "AlfrescoOAuthData.h"
 
 @protocol AlfrescoSession;
+/** The AlfrescoConstants used in the SDK.
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ */
 
 /**---------------------------------------------------------------------------------------
  * @name Block definitions

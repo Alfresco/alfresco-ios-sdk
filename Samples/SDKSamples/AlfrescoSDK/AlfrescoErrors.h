@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
@@ -14,13 +15,15 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
-/** The AlfrescoErrors error definitions for Mobile SDK.
- 
- Author: Peter Schmidt (Alfresco)
+ *****************************************************************************
  */
 
+
 #import <Foundation/Foundation.h>
+/** The AlfrescoErrors error definitions for Mobile SDK.
+ 
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ */
 
 typedef enum 
 {
@@ -59,8 +62,7 @@ typedef enum
     kAlfrescoErrorCodeDocumentFolderPermissions = 603,
     kAlfrescoErrorCodeDocumentFolderFailedToConvertNode = 604,
     kAlfrescoErrorCodeDocumentFolderNoParent = 605,
-    kAlfrescoErrorCodeDocumentFolderNoRenditionService = 606,
-    kAlfrescoErrorCodeDocumentFolderNoThumbnail = 607,
+    kAlfrescoErrorCodeDocumentFolderNoThumbnail = 606,
 
     kAlfrescoErrorCodeTagging = 700,
     kAlfrescoErrorCodeTaggingNoTags = 701,
@@ -110,7 +112,6 @@ extern NSString * const kAlfrescoErrorDescriptionActivityStreamNoActivities;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolder;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderPermissions;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoParent;
-extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoRenditionService;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderWrongNodeType;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoThumbnail;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists;
