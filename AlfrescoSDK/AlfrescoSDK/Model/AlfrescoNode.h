@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
@@ -14,21 +15,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoPermissions.h"
 
+/** The AlfrescoNode represents a node that's stored in the Alfresco repository.
+ 
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ */
+
 @class CMISFolder, CMISObject, CMISDocument, CMISObjectData, CMISQueryResult;
 
 extern NSString * const kAlfrescoPermissionsObjectKey;
-/** The AlfrescoNode represents a node that's stored in the Alfresco repository.
- 
- Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco)
- */
 
 @interface AlfrescoNode : NSObject
-
 
 /// The unique identifier of the node.
 @property (nonatomic, strong, readonly) NSString *identifier;
@@ -100,10 +102,6 @@ extern NSString * const kAlfrescoPermissionsObjectKey;
  */
 - (BOOL)hasAspectWithName:(NSString *)aspectName;
 
-/** Returns the AlfrescoNode object preset with the CMIS properties.
- 
- @param properties a list of CMIS properties stored in NSDictionary.
- */
 - (id)initWithProperties:(NSDictionary *)properties;
 
 @end

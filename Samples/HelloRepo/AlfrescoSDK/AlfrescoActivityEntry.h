@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
@@ -14,13 +15,14 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
 #import <Foundation/Foundation.h>
 
 /** The AlfrescoActivityEntry represents an activity in an Alfresco repository.
  
- Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco)
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
 @interface AlfrescoActivityEntry : NSObject
@@ -50,9 +52,6 @@
 /// A dictionary holding the data for the activity, this will vary depending on the activity type.
 @property (nonatomic, strong, readonly) NSDictionary *data;
 
-/**
- @param properties - the list of values to assign to the AlfrescoActivityEntry object
- */
 - (id)initWithProperties:(NSDictionary *)properties;
 
 @end

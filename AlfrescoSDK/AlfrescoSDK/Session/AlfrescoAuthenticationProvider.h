@@ -21,11 +21,6 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoSession.h"
 
-/* The AlfrescoAuthenticationProvider protocol defines the methods used to supply authentication headers.
- 
- Author: Tijs Rademakers (Alfresco)
- */
-
 @protocol AlfrescoAuthenticationProvider <NSObject>
 
 - (NSDictionary *)willApplyHTTPHeadersForSession:(id<AlfrescoSession>)session;

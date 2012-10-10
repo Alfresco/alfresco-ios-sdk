@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
@@ -14,29 +15,21 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
-/** The AlfrescoRepositoryCapabilities are used as a property on AlfrescoRepositoryInfo.
- 
- Author: Peter Schmidt (Alfresco)
+ *****************************************************************************
  */
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoConstants.h"
+/** The AlfrescoRepositoryCapabilities are used as a property on AlfrescoRepositoryInfo.
+ 
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ */
 
 @interface AlfrescoRepositoryCapabilities : NSObject
 @property (nonatomic, assign, readonly) BOOL doesSupportLikingNodes;
 @property (nonatomic, assign, readonly) BOOL doesSupportCommentCounts;
 
-/**---------------------------------------------------------------------------------------
- * @name Initialiser 
- *  ---------------------------------------------------------------------------------------
- */
-
-/**
- Please refer to AlfrescoConstants.h for details on what capabilities are available.
- @param capabilities - the capabilities dictionary to set up the Repo Capabilities with.
- */
-- (id)initWithCapabilities:(NSDictionary *)capabilities;
+- (id)initWithProperties:(NSDictionary *)properties;
 
 /**
  Checks whether the capability is supported. At present 2 capabilities are available
