@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
@@ -14,13 +15,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
 #import <UIKit/UIKit.h>
 #import "AlfrescoConstants.h"
 
+/** The AlfrescoOAuthLoginViewController starts the OAuth authentication processes.
+ 
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ */
+
+
 @interface AlfrescoOAuthLoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, UIAlertViewDelegate>
+/// @param webView - holds the login HTML page
 @property (nonatomic, strong) UIWebView * webView;
+/// @param activityIndicator - indicates loading process
 @property (nonatomic, strong) UIActivityIndicatorView * activityIndicator;
 /**
  @name Initialisers

@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
@@ -14,12 +15,13 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
 
 /** The AlfrescoComment represents a comment that's attached to a node in an Alfresco repository.
  
- Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco)
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
 @interface AlfrescoComment : NSObject
@@ -65,9 +67,6 @@
 /// Returns true if the current user can delete this comment.
 @property (nonatomic, readonly) BOOL canDelete;
 
-/**
- @param properties - the list of values to assign to the AlfrescoActivityEntry object
- */
 - (id)initWithProperties:(NSDictionary *)properties;
 
 @end

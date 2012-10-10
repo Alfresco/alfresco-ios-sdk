@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
@@ -14,16 +15,19 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ * The AlfrescoRepositoryInfo holds the information of a specific Alfresco repository.
+ * Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ *****************************************************************************
+ */
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoFolder.h"
 #import "AlfrescoRepositoryCapabilities.h"
-
-/** The AlfrescoRepositoryInfo holds the information of a specific Alfresco repository.
+/** The AlfrescoRepositoryInfo stores metadata about the repository.
  
- Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco)
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
+
 
 @interface AlfrescoRepositoryInfo : NSObject
 
@@ -67,13 +71,5 @@
 /// Stores the Like/Comment Count capabilities.
 @property (nonatomic, strong, readonly) AlfrescoRepositoryCapabilities *capabilities;
 
-/**---------------------------------------------------------------------------------------
- * @name initialiser.
- *  ---------------------------------------------------------------------------------------
- */
-/**
- Initialises repository info with a set of parameters
- @param parameters - the NSDictionary containing the set of parameters. Could be nil
- */
-- (id)initWithProperties:(NSDictionary *)parameters;
+- (id)initWithProperties:(NSDictionary *)properties;
 @end
