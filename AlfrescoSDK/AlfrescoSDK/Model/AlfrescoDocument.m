@@ -46,6 +46,9 @@
     {
         self.isDocument = YES;
         self.isFolder = NO;
+        self.contentMimeType = nil;
+        self.versionLabel = nil;
+        self.versionComment = nil;
         [self setUpDocumentProperties:properties];
     }
     return self;

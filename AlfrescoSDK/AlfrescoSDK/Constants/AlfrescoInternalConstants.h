@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
@@ -14,15 +15,13 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
 #import <Foundation/Foundation.h>
 
 @interface AlfrescoInternalConstants : NSObject
 
-/**
- CMIS constants
- */
 extern NSString * const kAlfrescoCMISPropertyTypeInt;
 extern NSString * const kAlfrescoCMISPropertyTypeBoolean;
 extern NSString * const kAlfrescoCMISPropertyTypeDatetime;
@@ -30,16 +29,10 @@ extern NSString * const kAlfrescoCMISPropertyTypeDecimal;
 extern NSString * const kAlfrescoCMISPropertyTypeId;
 extern NSString * const kAlfrescoCMISSessionMode;
 
-/**
- Content Model constants
- */
 extern NSString * const kAlfrescoPropertyName;
 extern NSString * const kAlfrescoPropertyTitle;
 extern NSString * const kAlfrescoPropertyDescription;
 
-/**
- Property name constants
- */
 extern NSString * const kAlfrescoRepositoryName;
 extern NSString * const kAlfrescoRepositoryCommunity;
 extern NSString * const kAlfrescoRepositoryEnterprise;
@@ -53,9 +46,6 @@ extern NSString * const kAlfrescoRepositoryMaintenanceVersion;
 extern NSString * const kAlfrescoRepositoryBuildNumber;
 extern NSString * const kAlfrescoRepositoryCapabilities;
 
-/**
- Parametrised strings to be used in API
- */
 extern NSString * const kAlfrescoSiteId;
 extern NSString * const kAlfrescoNodeRef;
 extern NSString * const kAlfrescoPersonId;
@@ -78,23 +68,14 @@ extern NSString * const kAlfrescoRedirectURI;
 extern NSString * const kAlfrescoRefreshID;
 extern NSString * const kAlfrescoMe;
 
-/**
- Session data key constants
- */
 extern NSString * const kAlfrescoSessionKeyCmisSession;
 extern NSString * const kAlfrescoSessionCloudURL;
 extern NSString * const kAlfrescoSessionCloudBasicAuth;
 extern NSString * const kAlfrescoSessionUsername;
 extern NSString * const kAlfrescoSessionPassword;
 
-/**
- Associated object key constants
- */
 extern NSString * const kAlfrescoAuthenticationProviderObjectKey;
 
-/**
- OAuth Constants
- */
 extern NSString *const kAlfrescoJSONAccessToken;
 extern NSString *const kAlfrescoJSONRefreshToken;
 extern NSString *const kAlfrescoJSONTokenType;
@@ -114,9 +95,6 @@ extern NSString *const kAlfrescoOAuthResponseType;
 extern NSString *const kAlfrescoOAuthGrantTypeRefresh;
 extern NSString *const kAlfrescoOAuthRefreshToken;
 
-/**
- On Premise constants
- */
 extern NSString * const kAlfrescoOnPremiseAPIPath;
 extern NSString * const kAlfrescoOnPremiseCMISPath;
 extern NSString * const kAlfrescoOnPremise4_xCMISPath;
@@ -143,9 +121,6 @@ extern NSString * const kAlfrescoOnPremiseMetadataExtractionAPI;
 extern NSString * const kAlfrescoOnPremiseThumbnailCreationAPI;
 extern NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI;
 
-/**
- Cloud constants
- */
 extern NSString * const kAlfrescoCloudURL;
 extern NSString * const kAlfrescoCloudBindingService;
 extern NSString * const kAlfrescoCloudPrecursor;
@@ -169,9 +144,6 @@ extern NSString * const kAlfrescoCloudTagsForNodeAPI;
 extern NSString * const kAlfrescoCloudPersonAPI;
 extern NSString * const kAlfrescoCloudDefaultRedirectURI;
 
-/**
- JSON Constants
- */
 extern NSString * const kAlfrescoCloudJSONList;
 extern NSString * const kAlfrescoCloudJSONEntries;
 extern NSString * const kAlfrescoCloudJSONEntry;

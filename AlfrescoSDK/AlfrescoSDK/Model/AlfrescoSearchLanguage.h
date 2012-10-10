@@ -18,6 +18,9 @@
 /** 
  Author: Peter Schmidt (Alfresco)
  */
+/**---------------------------------------------------------------------------------------
+ * @name supported SQL search language definitions (at present only CMIS)
+ --------------------------------------------------------------------------------------- */
 
 typedef enum {
     AlfrescoSearchLanguageCMIS = 0

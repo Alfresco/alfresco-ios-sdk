@@ -127,23 +127,26 @@
             }
         }
     }
-
-    if ([[properties allKeys] containsObject:kAlfrescoJSONModifiedOnISO])
+    
+    if ([[properties allKeys] containsObject:kAlfrescoJSONModifiedOnISO] || [[properties allKeys] containsObject:kAlfrescoJSONModifiedOn])
     {
-        NSString *modified = [properties valueForKey:kAlfrescoJSONModifiedOnISO];
-        if (nil != modified)
+        if ([[properties allKeys] containsObject:kAlfrescoJSONModifiedOnISO])
         {
-            self.modifiedAt = [self.dateFormatter dateFromString:modified];
+            NSString *modified = [properties valueForKey:kAlfrescoJSONModifiedOnISO];
+            if (nil != modified)
+            {
+                self.modifiedAt = [self.dateFormatter dateFromString:modified];
+            }
+        }
+        else
+        {
+            NSString *modified = [properties valueForKey:kAlfrescoJSONModifiedOn];
+            if (nil != modified)
+            {
+                self.modifiedAt = [self.standardDateFormatter dateFromString:modified];
+            }
         }
     }
-    if ([[properties allKeys] containsObject:kAlfrescoJSONModifiedOn])
-    {
-        NSString *modified = [properties valueForKey:kAlfrescoJSONModifiedOn];
-        if (nil != modified)
-        {
-            self.modifiedAt = [self.standardDateFormatter dateFromString:modified];
-        }
-    }    
     
 }
 

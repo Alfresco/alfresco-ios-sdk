@@ -57,7 +57,8 @@
     int totalItems = 0;
     int totalItemsAdded = 0;
     NSMutableArray *resultArray = [NSMutableArray array];
-    for (id entry in nonPagedArray) {
+    for (id entry in nonPagedArray)
+    {
         totalItems = totalItems + 1;
         if (listingContext.skipCount == 0 || listingContext.skipCount < totalItems)
         {

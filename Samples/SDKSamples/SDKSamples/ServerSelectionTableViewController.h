@@ -24,7 +24,6 @@
 // Enter the api Key and secret key in the #define below
 #define APIKEY @""
 #define SECRETKEY @""
-
 @interface ServerSelectionTableViewController : BaseTableViewController
 
 @end

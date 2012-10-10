@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
@@ -14,21 +15,18 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoSession.h"
 
-/** The AlfrescoAuthenticationProvider protocol defines the methods used to supply authentication headers.
+/* The AlfrescoAuthenticationProvider protocol defines the methods used to supply authentication headers.
  
  Author: Tijs Rademakers (Alfresco)
  */
 
 @protocol AlfrescoAuthenticationProvider <NSObject>
 
-/**
- the method will apply the appropriate authentication headers required for passing on requests to the server (OnRepo or Cloud)
- @param session
- */
 - (NSDictionary *)willApplyHTTPHeadersForSession:(id<AlfrescoSession>)session;
 @end

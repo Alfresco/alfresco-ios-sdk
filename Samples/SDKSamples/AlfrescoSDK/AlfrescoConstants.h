@@ -15,8 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ******************************************************************************/
-/** The AlfrescoErrors error definitions for Mobile SDK.
- 
+/** The AlfrescoConstants used in the SDK. 
  Author: Peter Schmidt (Alfresco)
  */
 
@@ -34,9 +33,9 @@
 
 @protocol AlfrescoSession;
 
-/**
- Block definitions
- */
+/**---------------------------------------------------------------------------------------
+ * @name Block definitions
+ --------------------------------------------------------------------------------------- */
 typedef void (^AlfrescoArrayCompletionBlock)(NSArray *array, NSError *error);
 typedef void (^AlfrescoBOOLCompletionBlock)(BOOL succeeded, NSError *error);
 typedef void (^AlfrescoNumberCompletionBlock)(NSNumber *count, NSError *error);
@@ -56,20 +55,20 @@ typedef void (^AlfrescoCommentCompletionBlock)(AlfrescoComment *comment, NSError
 typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSError *error);
 typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
 
-/**
- Session parameter constants
- */
+/**---------------------------------------------------------------------------------------
+ * @name Session parameters
+ --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoMetadataExtraction;
 extern NSString * const kAlfrescoThumbnailCreation;
 
-/**
- Thumbnail constants
- */
+/**---------------------------------------------------------------------------------------
+ * @name thumbnail constant (for OnPremise services)
+ --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoThumbnailRendition;
 
-/**
- Sorting property constants
- */
+/**---------------------------------------------------------------------------------------
+ * @name sorting properties
+ --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoSortByTitle;
 extern NSString * const kAlfrescoSortByShortname;
 extern NSString * const kAlfrescoSortByCreatedAt;
@@ -77,9 +76,9 @@ extern NSString * const kAlfrescoSortByModifiedAt;
 extern NSString * const kAlfrescoSortByName;
 extern NSString * const kAlfrescoSortByDescription;
 
-/**
- Capabilities constants
- */
+/**---------------------------------------------------------------------------------------
+ * @name capability constants
+ --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoCapabilityLike;
 extern NSString * const kAlfrescoCapabilityCommentsCount;
 

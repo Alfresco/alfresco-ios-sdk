@@ -19,9 +19,24 @@
 #import <Foundation/Foundation.h>
 
 @interface AlfrescoCloudNetwork : NSObject
+/**
+ identifier string for network/tenant
+ */
 @property (nonatomic, strong) NSString * identifier;
+/**
+ flag indicating whether the network object is the Home network
+ */
 @property (nonatomic, assign) BOOL isHomeNetwork;
+/**
+ flag indicating whether this is a paid network
+ */
 @property (nonatomic, assign) BOOL isPaidNetwork;
+/**
+ the subscription level for this network
+ */
 @property (nonatomic, strong) NSString * subscriptionLevel;
+/**
+ the date the network was created at
+ */
 @property (nonatomic, strong) NSDate * createdAt;
 @end
