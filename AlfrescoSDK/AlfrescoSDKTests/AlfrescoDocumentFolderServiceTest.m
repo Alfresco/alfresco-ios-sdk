@@ -681,6 +681,272 @@
 }
 
 /**
+ @Unique_TCRef 14S1
+ */
+- (void)testRetrieveChildrenInFolderWithNoChildren
+{
+    [super runAllSitesTest:^{
+       
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        
+        NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:2];
+        [properties setObject:@"Test Description" forKey:@"cm:description"];
+        [properties setObject:@"Test Title" forKey:@"cm:title"];
+        
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            
+            if (folder == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(folder, @"Folder should not be nil");
+                STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"Folder name should be %@", super.unitTestFolder);
+                
+                // check the properties of the foder are correct
+                NSDictionary *newFolderProps = folder.properties;
+                AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                STAssertTrue([newDescriptionProp.value isEqualToString:@"Test Description"], @"cm:description property value does not match");
+                STAssertTrue([newTitleProp.value isEqualToString:@"Test Title"], @"cm:title property value does not match");
+                
+                // serach folder using paging
+                AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:100 skipCount:0];
+                __block AlfrescoFolder *blockFolder = folder;
+                [weakService retrieveChildrenInFolder:blockFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                    if (pagingResult == nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    }
+                    else
+                    {
+                        STAssertTrue(pagingResult.totalItems == 0, @"Expected 0 folder children, got back %i", pagingResult.totalItems);
+                        NSLog(@"total items %i", pagingResult.objects.count);
+                        
+                        [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
+                         {
+                             if (!success)
+                             {
+                                 super.lastTestSuccessful = NO;
+                                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                             }
+                             else
+                             {
+                                 super.lastTestSuccessful = YES;
+                             }
+                             
+                             super.callbackCompleted = YES;
+                         }];
+                    }
+                }];
+            }
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 14F4
+ */
+- (void)testRetrieveChildrenInFolderWithEmptyPaging
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:0 skipCount:0];
+        
+        [self.dfService retrieveChildrenInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            
+            if (pagingResult == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertTrue(pagingResult.totalItems > 0, @"Expected children to be returned");
+                NSLog(@"Total Items: %i", pagingResult.objects.count);
+                super.lastTestSuccessful = YES;
+            }
+            super.callbackCompleted = YES;
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ Unique_TCRef 14S3
+ */
+- (void)testRetrieveChildrenInFolderWithUpdatedContentFirst
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        AlfrescoListingContext *pagingAndSort = [[AlfrescoListingContext alloc] initWithMaxItems:10 skipCount:0 sortProperty:kAlfrescoSortByModifiedAt sortAscending:NO];
+        
+        [self.dfService retrieveChildrenInFolder:super.testDocFolder listingContext:pagingAndSort completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            
+            if (pagingResult == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertTrue(pagingResult.objects.count > 0, @"Expecting to return more than one result");
+                STAssertTrue(pagingResult.objects.count <= 10, @"Expecting a maximum of 10 results, instead got %i", pagingResult.objects.count);
+                
+                // check if array is sorted correctly
+                NSArray *sortedArray = [pagingResult.objects sortedArrayUsingComparator:^(id a, id b) {
+                    
+                    AlfrescoNode *node1 = (AlfrescoNode *)a;
+                    AlfrescoNode *node2 = (AlfrescoNode *)b;
+                    
+                    return [node2.modifiedAt compare:node1.modifiedAt];
+                }];
+                
+                NSLog(@"Paging Array: %@", pagingResult.objects);
+                NSLog(@"Sorted Array: %@", sortedArray);
+                
+                BOOL isResultSortedAccordingToModifiedDate = [pagingResult.objects isEqualToArray:sortedArray];
+                
+                STAssertTrue(isResultSortedAccordingToModifiedDate, @"The results where not sorted in descending order according to the modified date");
+                
+                super.lastTestSuccessful = YES;
+            }
+            super.callbackCompleted = YES;
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ Unique_TCRef 33F3
+ Unique_TCRef 33F5
+ Unique_TCRef 33F7
+ Unique_TCRef 33F10
+ Unique_TCRef 33F11
+ */
+- (void)testCreateDocumentWithNameUsingInvalidCharacters
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
+        [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
+        [properties setObject:@"Test Description" forKey:@"cm:description"];
+        [properties setObject:@"Test Title" forKey:@"cm:title"];
+        [properties setObject:@"Test Author" forKey:@"cm:author"];
+        
+        __weak AlfrescoDocumentFolderService *weakFolderServer = self.dfService;
+        
+        // check document with * in the file name
+        [self.dfService createDocumentWithName:@"createDocumentTest*.jpg" inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+            if (error == nil)
+            {
+                STAssertTrue(error != nil, @"Expected an error to be thrown");
+                super.lastTestSuccessful = NO;
+            }
+            else
+            {
+                NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                STAssertFalse(document != nil, @"Expected the document not to be created");
+                
+                // check document with " in the file name
+                [weakFolderServer createDocumentWithName:@"createDocumentTest\".jpg" inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+                    if (error == nil)
+                    {
+                        STAssertTrue(error != nil, @"Expected an error to be thrown");
+                        super.lastTestSuccessful = NO;
+                    }
+                    else
+                    {
+                        NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                        STAssertFalse(document != nil, @"Expected the document not to be created");
+                        
+                        // check document with / and \ in the file name
+                        [weakFolderServer createDocumentWithName:@"createDocumentTest\\.jpg" inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+                            if (error == nil)
+                            {
+                                STAssertTrue(error != nil, @"Expected an error to be thrown");
+                                super.lastTestSuccessful = NO;
+                            }
+                            else
+                            {
+                                NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                                STAssertFalse(document != nil, @"Expected the document not to be created");
+                                
+                                // check document with empty name
+                                [weakFolderServer createDocumentWithName:@"createDocument//Test.jpg" inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+                                    if (error == nil)
+                                    {
+                                        STAssertTrue(error != nil, @"Expected an error to be thrown");
+                                        super.lastTestSuccessful = NO;
+                                    }
+                                    else
+                                    {
+                                        NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                                        STAssertFalse(document != nil, @"Expected the document not to be created");
+                                        
+                                        // check document with empty name
+                                        [weakFolderServer createDocumentWithName:@"" inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+                                            if (error == nil)
+                                            {
+                                                STAssertTrue(error != nil, @"Expected an error to be thrown");
+                                                super.lastTestSuccessful = NO;
+                                            }
+                                            else
+                                            {
+                                                NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                                                STAssertFalse(document != nil, @"Expected the document not to be created");
+                                                if (!document)
+                                                {
+                                                    super.lastTestSuccessful = YES;
+                                                }
+                                            }
+                                            super.callbackCompleted = YES;
+                                        }
+                                        progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                                                                       
+                                        }];
+                                    }
+                                }
+                                progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                                                               
+                                }];
+                            }
+                        }
+                        progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                                                       
+                        }];
+                    }
+                }
+                progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                    
+                }];
+            }
+        }
+        progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                                     
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
  @Unique_TCRef 24S0
  @Unique_TCRef 13S1.
  */
