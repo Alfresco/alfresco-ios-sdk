@@ -75,5 +75,5 @@
  Initialises repository info with a set of parameters
  @param parameters - the NSDictionary containing the set of parameters. Could be nil
  */
-- (id)initWithParameters:(NSDictionary *)parameters;
+- (id)initWithProperties:(NSDictionary *)parameters;
 @end

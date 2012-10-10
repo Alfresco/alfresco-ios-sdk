@@ -54,7 +54,9 @@
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
 
 // retrieve children of the folder that is retrieved using the provided objectId
-- (NSArray *)cmisRetrieveChildren:(NSString *) objectId withSession:(__weak AlfrescoDocumentFolderService *) weakSelf error:(NSError **)error;
+- (NSArray *)cmisRetrieveChildren:(NSString *)objectId
+                      withSession:(__weak AlfrescoDocumentFolderService *)weakSelf
+                            error:(NSError **)error;
 
 // filter the provided array with items that match the provided class type
 - (NSArray *)retrieveItemsWithClassFilter:(Class) typeClass withArray:(NSArray *)itemArray;
@@ -465,7 +467,8 @@
     }];
 }
 
-- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingContext
+- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder
+                 listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
@@ -825,6 +828,16 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
+    NSMutableDictionary *cmisProperties = [NSMutableDictionary dictionaryWithDictionary:properties];
+    if ([[properties allKeys] containsObject:kAlfrescoPropertyName])
+    {
+        NSString *name = [properties valueForKey:kAlfrescoPropertyName];
+        [cmisProperties setValue:name forKey:@"cmis:name"];
+        [cmisProperties removeObjectForKey:kAlfrescoPropertyName];
+        properties = cmisProperties;
+    }
+    
+    
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         
@@ -884,7 +897,9 @@
 
 #pragma mark - Internal methods
 
-- (NSArray *)cmisRetrieveChildren:(NSString *)objectId withSession:(__weak AlfrescoDocumentFolderService *)weakSelf error:(NSError **)error
+- (NSArray *)cmisRetrieveChildren:(NSString *)objectId
+                      withSession:(__weak AlfrescoDocumentFolderService *)weakSelf
+                            error:(NSError **)error
 {
     CMISObject *object = [self.cmisSession retrieveObject:objectId error:error];
     if (nil == object) 
@@ -907,10 +922,11 @@
     }
     CMISFolder *folder = (CMISFolder *)object;
     CMISPagedResult *result = [folder retrieveChildrenAndReturnError:error];
-    if (nil == result) 
+    if (nil == result)
     {
         return nil;
     }
+    log(@"***** AlfrescoDocumentFolderService::cmisRetrieveChildren - the number of returned CMIS objects is %d",result.resultArray.count);
     return (NSArray *)result.resultArray;
 }
 

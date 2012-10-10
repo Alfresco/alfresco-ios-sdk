@@ -47,7 +47,7 @@
 @synthesize version = _version;
 @synthesize capabilities = _capabilities;
 
-- (id)initWithParameters:(NSDictionary *)parameters
+- (id)initWithProperties:(NSDictionary *)parameters
 {
     self = [super init];
     if (self) 

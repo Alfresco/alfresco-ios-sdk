@@ -57,7 +57,6 @@
         self.operationQueue = [[NSOperationQueue alloc] init];
         self.operationQueue.maxConcurrentOperationCount = 2;
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -91,7 +90,10 @@
         if(nil != data)
         {
             NSArray *commentArray = [weakSelf commentArrayFromJSONData:data error:&operationQueueError];
-            sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:commentArray sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+            if (nil != commentArray)
+            {
+                sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:commentArray sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+            }
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(sortedCommentArray, operationQueueError);
@@ -266,8 +268,13 @@
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeCommentNoCommentFound];
+        }
         return nil;
     }
+    
     NSMutableArray *resultsArray = [NSMutableArray arrayWithCapacity:entriesArray.count];
     
     for (NSDictionary *entryDict in entriesArray)

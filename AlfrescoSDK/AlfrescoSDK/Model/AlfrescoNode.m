@@ -70,6 +70,17 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     self = [super init];
     if (nil != self)
     {
+        self.identifier = nil;
+        self.name = nil;
+        self.title = nil;
+        self.summary = nil;
+        self.type = nil;
+        self.createdAt = nil;
+        self.createdBy = nil;
+        self.modifiedAt = nil;
+        self.modifiedBy = nil;
+        self.properties = nil;
+        self.aspects = nil;
         [self setUpProperties:properties];
     }
     return self;
