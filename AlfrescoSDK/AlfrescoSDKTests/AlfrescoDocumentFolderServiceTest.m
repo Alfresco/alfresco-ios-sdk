@@ -1567,7 +1567,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         __block int maxItems = 1;
         __block int skipCount = 0;
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:skipCount];
         
         __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
         [self.dfService retrieveFoldersInFolder:super.testDocFolder completionBlock:^(NSArray *foundFolders, NSError *error){
@@ -2107,7 +2107,11 @@
             else
             {
                 STAssertNotNil(contentFile,@"created content file should not be nil");
-                log(@"created content file: url=%@ mimetype = %@ data length = %u",[contentFile.fileUrl path], contentFile.mimeType, contentFile.length);
+                NSError *fileError = nil;
+                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
+                STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
+                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
+                log(@"created content file: url=%@ mimetype = %@ data length = %llu",[contentFile.fileUrl path], contentFile.mimeType, size);
                 NSError *readError = nil;
                 __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
                 if (nil == stringContent)
@@ -2145,7 +2149,11 @@
                                  }
                                  else
                                  {
-                                     STAssertTrue(checkContentFile.length > 0, @"checkContentFile length should be greater than 0. We got %d",checkContentFile.length);
+                                     NSError *fileError = nil;
+                                     NSDictionary *fileDict = [[NSFileManager defaultManager] attributesOfItemAtPath:[checkContentFile.fileUrl path] error:&fileError];
+                                     STAssertNil(fileError, @"expected no error with getting file attributes for content file at path %@",[checkContentFile.fileUrl path]);
+                                     unsigned long long size = [[fileDict valueForKey:NSFileSize] unsignedLongLongValue];
+                                     STAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu",size);
                                      NSError *checkError = nil;
                                      NSString *checkContentString = [NSString stringWithContentsOfFile:[checkContentFile.fileUrl path]
                                                                                               encoding:NSASCIIStringEncoding
@@ -2840,9 +2848,11 @@
                          }
                          else
                          {
-                             NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
-                             STAssertNotNil(data, @"data should not be nil");
-                             STAssertTrue(contentFile.length > 100, @"data should be filled");
+                             NSError *fileError = nil;
+                             NSDictionary *fileDict = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
+                             STAssertNil(fileError, @"expected no error in getting attributes for file at path %@",[contentFile.fileUrl path]);
+                             unsigned long long size = [[fileDict valueForKey:NSFileSize] unsignedLongLongValue];
+                             STAssertTrue(size > 100, @"data should be filled and more than 100 bytes. Instead we get %llu",size);
                              super.lastTestSuccessful = YES;                             
                          }
                          super.callbackCompleted = YES;
