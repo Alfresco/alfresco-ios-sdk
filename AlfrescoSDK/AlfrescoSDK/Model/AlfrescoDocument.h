@@ -34,7 +34,7 @@
 
 
 /// The length of the content stored in the document, in bytes.
-@property (nonatomic, assign, readonly) long contentLength;
+@property (nonatomic, assign, readonly) unsigned long long contentLength;
 
 
 /// The version of the document.

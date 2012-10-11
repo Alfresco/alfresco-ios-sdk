@@ -128,9 +128,11 @@
                       }
                       else
                       {
-                          NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
-                          STAssertNotNil(data, @"data should not be nil");
-                          STAssertTrue(contentFile.length > 100, @"data should be filled");
+                          NSError *fileError = nil;
+                          NSDictionary *dict = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
+                          STAssertNil(fileError, @"expected to get no error in getting attributes for file at path %@", [contentFile.fileUrl path]);
+                          unsigned long long size = [[dict valueForKey:NSFileSize] unsignedLongLongValue];
+                          STAssertTrue(size > 100, @"data should be filled with at least 100 bytes. Instead we got %llu", size);
                           super.lastTestSuccessful = YES;
                       }
                       super.callbackCompleted = YES;

@@ -669,8 +669,7 @@
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^{
                         log(@"************* DOWNLOADED FILE TO TEMPORARY FOLDER/FILE %@",tmpFileName);
-                        AlfrescoContentFile *contentFile = [[AlfrescoContentFile alloc] initWithFilePath:tmpFileName mimeType:@"image/png"];
-                        //                    NSError *operationQueueError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
+                        AlfrescoContentFile *contentFile = [[AlfrescoContentFile alloc] initWithUrl:[NSURL fileURLWithPath:tmpFileName] mimeType:@"image/png"];
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             completionBlock(contentFile, nil);
                         }];
@@ -695,25 +694,6 @@
             }];            
         }
     }];
-/*
-        NSString *renditionString = [kAlfrescoOnPremiseThumbnailRenditionAPI stringByReplacingOccurrencesOfString:kAlfrescoRenditionId withString:renditionName];
-        NSString *requestString = [renditionString stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                             withString:[node.identifier stringByReplacingOccurrencesOfString:@"://"
-                                                                                                                                   withString:@"/"]];
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:kAlfrescoOnPremiseAPIPath
-                                  authenticationProvider:weakSelf.authenticationProvider
-                                                   error:&operationQueueError];
-//        AlfrescoContentFile *thumbnailFile = nil;
-        if (nil != data)
-        {
-            thumbnailFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:kAlfrescoDefaultMimeType];
-        }
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(thumbnailFile, operationQueueError);
-        }];
- */
 
 }
 
