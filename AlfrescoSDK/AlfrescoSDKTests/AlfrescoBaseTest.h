@@ -23,7 +23,7 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoSiteService.h"
 
-#define TIMEINTERVAL 60
+#define TIMEINTERVAL 180
 
 typedef void (^AlfrescoTestBlock)(void);
 typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);

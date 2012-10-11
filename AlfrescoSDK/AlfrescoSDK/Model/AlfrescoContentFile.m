@@ -25,7 +25,7 @@
 + (NSString *) mimeTypeFromFilename:(NSString *)filename;
 + (NSString *) GUIDString;
 @property (nonatomic, strong, readwrite) NSString *mimeType;
-@property (nonatomic, assign, readwrite) NSUInteger length;
+@property (nonatomic, assign, readwrite) unsigned long long length;
 @property (nonatomic, strong, readwrite) NSURL *fileUrl;
 @end
 
@@ -42,28 +42,50 @@
 
 - (id)initWithUrl:(NSURL *)url
 {
-    self = [super init];
-    if (self && nil != url) 
-    {
-        NSString *filename = [url lastPathComponent];
-
-        self.mimeType = [AlfrescoContentFile mimeTypeFromFilename:filename];
-        NSString *pathname = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",filename];
-        NSData *fileContent = [NSData dataWithContentsOfURL:url]; 
-
-        NSURL *fileURL = [NSURL fileURLWithPath:pathname];
-        [fileContent writeToURL:fileURL atomically:YES];
-        self.fileUrl = fileURL;
-        NSData *data = [[NSFileManager defaultManager] contentsAtPath:pathname];
-        self.length = [data length];
-    }
-    return self;
+    return [self initWithUrl:url mimeType:nil];
 }
+
+
+- (id)initWithUrl:(NSURL *)url mimeType:(NSString *)mimeType
+{
+    self = [super init];
+    if (nil != self && nil != url)
+    {
+        
+        NSString *filename = [url lastPathComponent];
+        if (nil != mimeType)
+        {
+            self.mimeType = [AlfrescoContentFile mimeTypeFromFilename:filename];
+        }
+        else
+        {
+            self.mimeType = mimeType;
+        }
+        if ([url isFileReferenceURL])
+        {
+            self.fileUrl = url;
+        }
+        else
+        {
+            NSString *pathname = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",filename];
+            NSData *fileContent = [NSData dataWithContentsOfURL:url];
+            
+            NSURL *fileURL = [NSURL fileURLWithPath:pathname];
+            [fileContent writeToURL:fileURL atomically:YES];
+            self.fileUrl = fileURL;
+        }
+        NSError *fileError = nil;
+        NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:[self.fileUrl path] error:&fileError];
+        self.length = [[fileDictionary valueForKey:NSFileSize] unsignedLongLongValue];
+    }
+    return self;    
+}
+
 
 - (id)initWithData:(NSData *)data mimeType:(NSString *)mimeType
 {
     self = [super init];
-    if (self) 
+    if (nil != self)
     {
         NSString *tmpName = [AlfrescoContentFile GUIDString];
         self.mimeType = mimeType;
@@ -72,30 +94,11 @@
             NSURL *pathURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingFormat:@"%@",tmpName]];
             [data writeToURL:pathURL atomically:YES];
             self.fileUrl = pathURL;
-            NSData *data = [[NSFileManager defaultManager] contentsAtPath:[pathURL path]];
-            self.length = [data length];
+            self.length = data.length;
         }
     }
     return self;
 }
-
-
-- (id)initWithFilePath:(NSString *)path mimeType:(NSString *)mimeType
-{
-    self = [super init];
-    if (nil != self)
-    {
-        self.mimeType = mimeType;
-        if (nil != path)
-        {
-            self.fileUrl = [NSURL fileURLWithPath:path];
-            NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
-            self.length = [data length];
-        }
-    }
-    return self;
-}
-
 
 
 #pragma mark - private methods
