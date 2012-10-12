@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
@@ -14,11 +15,9 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
-/** The AlfrescoErrors error definitions for Mobile SDK.
- 
- Author: Peter Schmidt (Alfresco)
+ *****************************************************************************
  */
+
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoPagingResult.h"
@@ -33,10 +32,13 @@
 #import "AlfrescoOAuthData.h"
 
 @protocol AlfrescoSession;
-
-/**
- Block definitions
+/** The AlfrescoConstants used in the SDK.
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
+
+/**---------------------------------------------------------------------------------------
+ * @name Block definitions
+ --------------------------------------------------------------------------------------- */
 typedef void (^AlfrescoArrayCompletionBlock)(NSArray *array, NSError *error);
 typedef void (^AlfrescoBOOLCompletionBlock)(BOOL succeeded, NSError *error);
 typedef void (^AlfrescoNumberCompletionBlock)(NSNumber *count, NSError *error);
@@ -56,20 +58,20 @@ typedef void (^AlfrescoCommentCompletionBlock)(AlfrescoComment *comment, NSError
 typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSError *error);
 typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
 
-/**
- Session parameter constants
- */
+/**---------------------------------------------------------------------------------------
+ * @name Session parameters
+ --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoMetadataExtraction;
 extern NSString * const kAlfrescoThumbnailCreation;
 
-/**
- Thumbnail constants
- */
+/**---------------------------------------------------------------------------------------
+ * @name thumbnail constant (for OnPremise services)
+ --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoThumbnailRendition;
 
-/**
- Sorting property constants
- */
+/**---------------------------------------------------------------------------------------
+ * @name sorting properties
+ --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoSortByTitle;
 extern NSString * const kAlfrescoSortByShortname;
 extern NSString * const kAlfrescoSortByCreatedAt;
@@ -77,9 +79,9 @@ extern NSString * const kAlfrescoSortByModifiedAt;
 extern NSString * const kAlfrescoSortByName;
 extern NSString * const kAlfrescoSortByDescription;
 
-/**
- Capabilities constants
- */
+/**---------------------------------------------------------------------------------------
+ * @name capability constants
+ --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoCapabilityLike;
 extern NSString * const kAlfrescoCapabilityCommentsCount;
 

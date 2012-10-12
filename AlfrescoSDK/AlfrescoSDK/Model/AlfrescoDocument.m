@@ -22,7 +22,7 @@
 
 @interface AlfrescoDocument ()
 @property (nonatomic, strong, readwrite) NSString *contentMimeType;
-@property (nonatomic, assign, readwrite) long contentLength;
+@property (nonatomic, assign, readwrite) unsigned long long contentLength;
 @property (nonatomic, strong, readwrite) NSString *versionLabel;
 @property (nonatomic, strong, readwrite) NSString *versionComment;
 @property (nonatomic, assign, readwrite) BOOL isLatestVersion;
@@ -46,6 +46,9 @@
     {
         self.isDocument = YES;
         self.isFolder = NO;
+        self.contentMimeType = nil;
+        self.versionLabel = nil;
+        self.versionComment = nil;
         [self setUpDocumentProperties:properties];
     }
     return self;

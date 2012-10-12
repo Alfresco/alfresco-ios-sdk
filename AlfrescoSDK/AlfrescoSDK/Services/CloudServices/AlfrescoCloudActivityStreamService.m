@@ -121,12 +121,7 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        NSString *skipCountRequest = [kAlfrescoPagingRequest stringByReplacingOccurrencesOfString:kAlfrescoSkipCountRequest
-                                                                                       withString:[NSString stringWithFormat:@"%d",listingContext.skipCount]];
-        NSString *pagingRequest = [skipCountRequest stringByReplacingOccurrencesOfString:kAlfrescoMaxItemsRequest
-                                                                                withString:[NSString stringWithFormat:@"%d",listingContext.maxItems]];
-        NSString *baseRequestString = [kAlfrescoCloudActivitiesAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:weakSelf.session.personIdentifier];
-        NSString *requestString = [NSString stringWithFormat:@"%@%@",baseRequestString, pagingRequest];
+        NSString *requestString = [kAlfrescoCloudActivitiesAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:weakSelf.session.personIdentifier];
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
                                                  session:weakSelf.session
@@ -190,16 +185,10 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        NSString *skipCountRequest = [kAlfrescoPagingRequest stringByReplacingOccurrencesOfString:kAlfrescoSkipCountRequest
-                                                                                       withString:[NSString stringWithFormat:@"%d",listingContext.skipCount]];
-        NSString *pagingRequest = [skipCountRequest stringByReplacingOccurrencesOfString:kAlfrescoMaxItemsRequest
-                                                                              withString:[NSString stringWithFormat:@"%d",listingContext.maxItems]];
         
         NSString *peopleRefString = [kAlfrescoCloudActivitiesForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:weakSelf.session.personIdentifier];
-        NSString *baseRequestString = [peopleRefString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
-        
-        NSString *requestString = [NSString stringWithFormat:@"%@%@",baseRequestString, pagingRequest];
-        
+        NSString *requestString = [peopleRefString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
+                
         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
                                          baseUrlAsString:weakSelf.baseApiUrl
                                                  session:weakSelf.session

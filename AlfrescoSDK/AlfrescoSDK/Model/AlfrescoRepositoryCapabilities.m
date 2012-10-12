@@ -28,15 +28,15 @@
 @synthesize doesSupportLikingNodes = _doesSupportLikingNodes;
 @synthesize doesSupportCommentCounts = _doesSupportCommentCounts;
 
-- (id)initWithCapabilities:(NSDictionary *)capabilities
+- (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super init];
     if (nil != self)
     {
-        if (nil != capabilities)
+        if (nil != properties)
         {
-            self.doesSupportCommentCounts = [[capabilities valueForKey:kAlfrescoCapabilityCommentsCount] boolValue];
-            self.doesSupportLikingNodes = [[capabilities valueForKey:kAlfrescoCapabilityLike] boolValue];
+            self.doesSupportCommentCounts = [[properties valueForKey:kAlfrescoCapabilityCommentsCount] boolValue];
+            self.doesSupportLikingNodes = [[properties valueForKey:kAlfrescoCapabilityLike] boolValue];
         }
         else
         {

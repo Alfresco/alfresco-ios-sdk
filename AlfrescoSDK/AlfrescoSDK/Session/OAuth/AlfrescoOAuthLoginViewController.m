@@ -117,6 +117,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     self.isLoginScreenLoad = YES;
     [self loadWebView];
     [self createActivityView];
@@ -129,7 +134,6 @@
     self.receivedData = nil;
     [super viewDidUnload];
 }
-
 
 - (void)viewWillDisappear:(BOOL)animated
 {

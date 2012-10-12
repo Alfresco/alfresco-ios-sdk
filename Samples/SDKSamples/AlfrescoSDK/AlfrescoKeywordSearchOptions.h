@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
@@ -14,14 +15,15 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
-/** The AlfrescoKeywordSearchOptions are used in Alfresco Search Service.
- 
- Author: Peter Schmidt (Alfresco)
+ *****************************************************************************
  */
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoFolder.h"
+/** The AlfrescoKeywordSearchOptions are used in Alfresco Search Service.
+ 
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ */
 
 @interface AlfrescoKeywordSearchOptions : NSObject
 @property (nonatomic, assign, readonly) BOOL exactMatch;

@@ -47,21 +47,21 @@
 @synthesize version = _version;
 @synthesize capabilities = _capabilities;
 
-- (id)initWithParameters:(NSDictionary *)parameters
+- (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super init];
     if (self) 
     {
-        self.name               = (NSString *)[parameters objectForKey:kAlfrescoRepositoryName];
-        self.identifier         = (NSString *)[parameters objectForKey:kAlfrescoRepositoryIdentifier];
-        self.summary            = (NSString *)[parameters objectForKey:kAlfrescoRepositorySummary];
-        self.edition            = (NSString *)[parameters objectForKey:kAlfrescoRepositoryEdition];
-        self.majorVersion       = (NSNumber *)[parameters objectForKey:kAlfrescoRepositoryMajorVersion];
-        self.minorVersion       = (NSNumber *)[parameters objectForKey:kAlfrescoRepositoryMinorVersion];
-        self.maintenanceVersion = (NSNumber *)[parameters objectForKey:kAlfrescoRepositoryMaintenanceVersion];
-        self.buildNumber        = (NSString *)[parameters objectForKey:kAlfrescoRepositoryBuildNumber];
-        self.version            = (NSString *)[parameters objectForKey:kAlfrescoRepositoryVersion];
-        self.capabilities       = (AlfrescoRepositoryCapabilities *)[parameters objectForKey:kAlfrescoRepositoryCapabilities];
+        self.name               = (NSString *)[properties objectForKey:kAlfrescoRepositoryName];
+        self.identifier         = (NSString *)[properties objectForKey:kAlfrescoRepositoryIdentifier];
+        self.summary            = (NSString *)[properties objectForKey:kAlfrescoRepositorySummary];
+        self.edition            = (NSString *)[properties objectForKey:kAlfrescoRepositoryEdition];
+        self.majorVersion       = (NSNumber *)[properties objectForKey:kAlfrescoRepositoryMajorVersion];
+        self.minorVersion       = (NSNumber *)[properties objectForKey:kAlfrescoRepositoryMinorVersion];
+        self.maintenanceVersion = (NSNumber *)[properties objectForKey:kAlfrescoRepositoryMaintenanceVersion];
+        self.buildNumber        = (NSString *)[properties objectForKey:kAlfrescoRepositoryBuildNumber];
+        self.version            = (NSString *)[properties objectForKey:kAlfrescoRepositoryVersion];
+        self.capabilities       = (AlfrescoRepositoryCapabilities *)[properties objectForKey:kAlfrescoRepositoryCapabilities];
     }
     return self;
 }
