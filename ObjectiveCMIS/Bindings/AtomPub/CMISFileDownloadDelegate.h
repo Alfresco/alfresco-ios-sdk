@@ -26,5 +26,5 @@
 @property (nonatomic, strong) CMISVoidCompletionBlock fileRetrievalCompletionBlock;
 @property (nonatomic, strong) CMISErrorFailureBlock fileRetrievalFailureBlock;
 @property (nonatomic, strong) CMISProgressBlock fileRetrievalProgressBlock;
-
+@property (nonatomic, strong) NSNumber * contentStreamLength;
 @end

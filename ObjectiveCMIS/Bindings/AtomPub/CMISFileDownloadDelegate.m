@@ -18,8 +18,8 @@
 
 @interface CMISFileDownloadDelegate ()
 
-@property NSInteger bytesTotal;
-@property NSInteger bytesDownloaded;
+@property unsigned long long bytesTotal;
+@property unsigned long long bytesDownloaded;
 
 @end
 
@@ -32,6 +32,7 @@
 @synthesize fileRetrievalProgressBlock = _fileRetrievalProgressBlock;
 @synthesize bytesTotal = _bytesTotal;
 @synthesize bytesDownloaded = _bytesDownloaded;
+@synthesize contentStreamLength = _contentStreamLength;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
@@ -52,7 +53,15 @@
     else
     {
         self.bytesDownloaded = 0;
-        self.bytesTotal = (NSInteger) response.expectedContentLength;
+        if (NSURLResponseUnknownLength == response.expectedContentLength && nil != self.contentStreamLength)
+        {
+            self.bytesTotal = [self.contentStreamLength unsignedLongLongValue];
+        }
+        else
+        {
+            self.bytesTotal = (unsigned long long) response.expectedContentLength;            
+        }
+        
     }
 }
 

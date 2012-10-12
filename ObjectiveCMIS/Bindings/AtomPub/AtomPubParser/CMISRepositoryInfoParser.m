@@ -181,7 +181,7 @@
     }
     else if ([namespaceURI isEqualToString:kCMISNamespaceApp] || [namespaceURI isEqualToString:kCMISNamespaceAtom])
     {
-        NSLog(@"WARNING: We should not get here");
+        log(@"WARNING: We should not get here");
     }
     else if (self.isParsingExtensionElement)
     {

@@ -77,7 +77,7 @@
     
     if (!parseSuccessful)
     {
-        NSLog(@"Parsing error : %@", [parser parserError]);
+        log(@"Parsing error : %@", [parser parserError]);
         if (*error) {
             *error = [parser parserError];
         }

@@ -83,10 +83,11 @@
                    failureBlock:(CMISErrorFailureBlock)failureBlock
                   progressBlock:(CMISProgressBlock)progressBlock;
 {
+    log(@"ENTERING downloadContentOfObject with objectId '%@' , streamId %@ and filePath %@", objectId, streamId, filePath);
     NSError *objectRetrievalError = nil;
     CMISObjectData *objectData = [self retrieveObjectInternal:objectId error:&objectRetrievalError];
 
-    if (objectRetrievalError)
+    if (nil == objectData)
     {
         log(@"Error while retrieving CMIS object for object id '%@' : %@", objectId, [objectRetrievalError description]);
         NSError *cmisError = [CMISErrors cmisError:&objectRetrievalError withCMISErrorCode:kCMISErrorCodeObjectNotFound];
@@ -97,12 +98,29 @@
     }
     else
     {
+        log(@"We got object data back for id '%@'", objectId);
         // We create a specific delegate object, as potentially multiple threads can be downloading a file.
         CMISFileDownloadDelegate *dataDelegate = [[CMISFileDownloadDelegate alloc] init];
         dataDelegate.filePathForContentRetrieval = filePath;
         dataDelegate.fileRetrievalCompletionBlock = completionBlock;
         dataDelegate.fileRetrievalFailureBlock = failureBlock;
         dataDelegate.fileRetrievalProgressBlock = progressBlock;
+        if ([[objectData.properties.propertiesDictionary allKeys] containsObject:kCMISPropertyContentStreamLength])
+        {
+            id numberObj = [objectData.properties propertyValueForId:kCMISPropertyContentStreamLength];
+            if ([numberObj isKindOfClass:[NSNumber class]])
+            {
+                dataDelegate.contentStreamLength = (NSNumber *)numberObj;
+                log(@"The content length is an NSNumber object and has length %llu",[dataDelegate.contentStreamLength unsignedLongLongValue]);
+            }
+            else if([numberObj isKindOfClass:[NSString class]])
+            {
+                NSString *numberString = (NSString *)numberObj;
+                NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                dataDelegate.contentStreamLength = [numberFormatter numberFromString:numberString];
+                log(@"The content length is an NSString object and has length %llu",[dataDelegate.contentStreamLength unsignedLongLongValue]);
+            }
+        }
 
         NSURL *contentUrl = objectData.contentUrl;
 
