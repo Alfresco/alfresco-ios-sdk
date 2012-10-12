@@ -1302,9 +1302,11 @@
 
         NSDate *testDate = [NSDate date];
         CMISISO8601DateFormatter *dateFormatter = [[CMISISO8601DateFormatter alloc] init];
-        dateFormatter.includeTime = NO;
-        NSString *testDateString = [dateFormatter stringFromDate:testDate];
-        log(@"*** testDateString is %@", testDateString);
+        dateFormatter.includeTime = YES;
+        
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSUInteger unitflags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+        NSDateComponents *origComponents = [calendar components:unitflags fromDate:testDate];
 
         // Create converter
         CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
@@ -1345,12 +1347,11 @@
         // NSDate is using sub-second precision ... and the formatter is not.
         // ... sigh ... hence we test if the dates are 'relatively' (ie 1 second) close
         NSDate *convertedDate = [[convertedProperties propertyForId:kCMISPropertyCreationDate] propertyDateTimeValue];
-        NSString *convertedDateString = [dateFormatter stringFromDate:convertedDate];
-        log(@"*** convertedDateString = %@", convertedDateString);
-        NSTimeInterval elapsedSeconds = [convertedDate timeIntervalSinceDate:testDate];
+        NSDateComponents *convertedComps = [calendar components:unitflags fromDate:convertedDate];
         
+        BOOL isOnSameDate = (origComponents.year == convertedComps.year) && (origComponents.month == convertedComps.month) && (origComponents.day == convertedComps.day);
+        STAssertTrue(isOnSameDate, @"We expected the reconverted date to be on the same date as the original one");
         
-        STAssertTrue( abs(elapsedSeconds) <= 1000, @"Converted times are not within 1 sec, in fact elapsed time is %d", elapsedSeconds);
         STAssertEqualObjects([NSNumber numberWithBool:NO], [[convertedProperties propertyForId:kCMISPropertyIsLatestVersion] propertyBooleanValue], @"Converted property value did not match");
         STAssertEqualObjects([NSNumber numberWithInteger:4], [[convertedProperties propertyForId:kCMISPropertyContentStreamLength] propertyIntegerValue], @"Converted property value did not match");
 
