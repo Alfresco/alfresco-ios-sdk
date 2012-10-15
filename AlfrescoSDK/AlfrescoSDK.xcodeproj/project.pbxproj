@@ -145,6 +145,7 @@
 		4EF1B72715D944BB0038AB3F /* AlfrescoCloudRatingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EF1B72515D944BB0038AB3F /* AlfrescoCloudRatingService.m */; };
 		4EF1B72A15D944D20038AB3F /* AlfrescoOnPremiseRatingService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF1B72815D944D20038AB3F /* AlfrescoOnPremiseRatingService.h */; };
 		4EF1B72B15D944D20038AB3F /* AlfrescoOnPremiseRatingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EF1B72915D944D20038AB3F /* AlfrescoOnPremiseRatingService.m */; };
+		730243B91628388C0028C378 /* AlfrescoSessionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 730243B81628388C0028C378 /* AlfrescoSessionTest.m */; };
 		82D7617215F023BE007712DE /* CMISAclService.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7612315F023BE007712DE /* CMISAclService.h */; };
 		82D7617315F023BE007712DE /* CMISAllowableActions.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7612415F023BE007712DE /* CMISAllowableActions.h */; };
 		82D7617415F023BE007712DE /* CMISAllowableActionsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 82D7612515F023BE007712DE /* CMISAllowableActionsParser.h */; };
@@ -396,6 +397,8 @@
 		4EF1B72515D944BB0038AB3F /* AlfrescoCloudRatingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AlfrescoCloudRatingService.m; path = CloudServices/AlfrescoCloudRatingService.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4EF1B72815D944D20038AB3F /* AlfrescoOnPremiseRatingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOnPremiseRatingService.h; path = OnPremiseServices/AlfrescoOnPremiseRatingService.h; sourceTree = "<group>"; };
 		4EF1B72915D944D20038AB3F /* AlfrescoOnPremiseRatingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AlfrescoOnPremiseRatingService.m; path = OnPremiseServices/AlfrescoOnPremiseRatingService.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		730243B71628388C0028C378 /* AlfrescoSessionTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSessionTest.h; sourceTree = "<group>"; };
+		730243B81628388C0028C378 /* AlfrescoSessionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSessionTest.m; sourceTree = "<group>"; };
 		82D7612315F023BE007712DE /* CMISAclService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAclService.h; path = CMIS/CMISAclService.h; sourceTree = SOURCE_ROOT; };
 		82D7612415F023BE007712DE /* CMISAllowableActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActions.h; path = CMIS/CMISAllowableActions.h; sourceTree = SOURCE_ROOT; };
 		82D7612515F023BE007712DE /* CMISAllowableActionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActionsParser.h; path = CMIS/CMISAllowableActionsParser.h; sourceTree = SOURCE_ROOT; };
@@ -668,6 +671,8 @@
 				4EB077F915B00F5100DF7DED /* AlfrescoRatingServiceTest.m */,
 				4EB077FA15B00F5100DF7DED /* AlfrescoSearchServiceTest.h */,
 				4EB077FB15B00F5200DF7DED /* AlfrescoSearchServiceTest.m */,
+				730243B71628388C0028C378 /* AlfrescoSessionTest.h */,
+				730243B81628388C0028C378 /* AlfrescoSessionTest.m */,
 				4EB077FC15B00F5200DF7DED /* AlfrescoSiteServiceTest.h */,
 				4EB077FD15B00F5200DF7DED /* AlfrescoSiteServiceTest.m */,
 				4EB077FE15B00F5200DF7DED /* AlfrescoTaggingServiceTest.h */,
@@ -1236,6 +1241,7 @@
 				4EB0780515B00F5200DF7DED /* AlfrescoSiteServiceTest.m in Sources */,
 				4EB0780615B00F5200DF7DED /* AlfrescoTaggingServiceTest.m in Sources */,
 				4EB0780715B00F5200DF7DED /* AlfrescoVersionServiceTest.m in Sources */,
+				730243B91628388C0028C378 /* AlfrescoSessionTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

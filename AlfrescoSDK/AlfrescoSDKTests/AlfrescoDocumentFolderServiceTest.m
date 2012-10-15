@@ -2064,6 +2064,13 @@
                                        STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                                        STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
                                        
+                                       STAssertTrue(newDescriptionProp.type == AlfrescoPropertyTypeString, @"cm:description property should be of string type");
+                                       STAssertFalse(newDescriptionProp.isMultiValued, @"isMultiValued property should not be nil");
+                                       STAssertTrue(newTitleProp.type == AlfrescoPropertyTypeString, @"cm:title property should be of string type");
+                                       STAssertFalse(newTitleProp.isMultiValued, @"isMultiValued property should not be nil");
+                                       STAssertTrue(newAuthorProp.type == AlfrescoPropertyTypeString, @"cm:author property should be of string type");
+                                       STAssertFalse(newAuthorProp.isMultiValued, @"isMultiValued property should not be nil");
+                                       
                                        // delete the test document
                                        [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
                                         {
@@ -2928,6 +2935,14 @@
                           {
                               log(@"Cannot edit");
                           }
+                          if (permissions.canComment)
+                          {
+                              log(@"Can comment");
+                          }
+                          else
+                          {
+                              log(@"Cannot comment");
+                          }
                           
                           super.lastTestSuccessful = YES;                          
                       }
@@ -3018,6 +3033,148 @@
     
 }
 
+///*
+// UNIQUE REF HERE
+// */
+//- (void)testUpdateImageWithExifData
+//{
+//    [super runAllSitesTest:^{
+//        
+//        NSString *documentName = @"millenium-dome-exif.jpg";
+//        
+//        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+//        
+//        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+//        
+//        [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:super.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
+//            
+//            if (node == nil)
+//            {
+//                super.lastTestSuccessful = NO;
+//                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+//                super.callbackCompleted = YES;
+//            }
+//            else
+//            {
+//                STAssertNotNil(node, @"document node should not be nil");
+//                STAssertTrue([node.name isEqualToString:documentName], @"Document name is not the same as requested");
+//                
+//                // get existing data required
+//                NSDictionary *existingProperties = node.properties;
+//                NSString *existingDescription = [(AlfrescoProperty *)[existingProperties objectForKey:@"cm:description"] value];
+//                NSString *existingTitle = [(AlfrescoProperty *)[existingProperties objectForKey:@"cm:title"] value];
+//                NSString *existingAuthor = [(AlfrescoProperty *)[existingProperties objectForKey:@"cm:author"] value];
+//                
+//                // generate randomness
+//                NSDate *dateTimeOriginal = [NSDate date];
+//                NSNumber *imagePixelXDimension = [NSNumber numberWithInt:arc4random()%512];
+//                NSNumber *imagePixelYDimension = [NSNumber numberWithInt:arc4random()%382];
+//                NSNumber *imageExposureTime = [NSNumber numberWithInt:(arc4random()%100)/100.0];
+//                NSNumber *imageFNumber = [NSNumber numberWithInt:(arc4random()%100)/100.0];
+//                NSNumber *imageFlash = [NSNumber numberWithBool:YES];
+//                NSNumber *imageFocalLength = [NSNumber numberWithInt:(arc4random()%100)/100.0];
+//                NSString *imageISOSpeedRating = @"ISO Setting";
+//                NSString *imageManufacturer = @"Nikon";
+//                NSString *imageModel = @"D Series";
+//                NSString *imageSoftware = @"Photoshop";
+//                NSNumber *imageOrientation = [NSNumber numberWithInt:arc4random()%1];
+//                NSNumber *imageXResolution = [NSNumber numberWithInt:arc4random()%512];
+//                NSNumber *imageYResolution = [NSNumber numberWithInt:arc4random()%382];
+//                NSString *imageResolutionUnit = @"Resolution Unit";
+//                
+//                // create property
+//                NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+//                [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author,P:exif:exif"]
+//                          forKey:kCMISPropertyObjectTypeId];
+//                [properties setObject:existingDescription forKey:@"cm:description"];
+//                [properties setObject:existingTitle forKey:@"cm:title"];
+//                [properties setObject:existingAuthor forKey:@"cm:author"];
+//                // exif
+//                [properties setObject:dateTimeOriginal forKey:@"exif:dateTimeOriginal"];
+//                [properties setObject:imagePixelXDimension forKey:@"exif:pixelXDimension"];
+//                [properties setObject:imagePixelYDimension forKey:@"exif:pixelYDimension"];
+//                [properties setObject:imageExposureTime forKey:@"exif:exposureTime"];
+//                [properties setObject:imageFNumber forKey:@"exif:fNumber"];
+//                [properties setObject:imageFlash forKey:@"exif:flash"];
+//                [properties setObject:imageFocalLength forKey:@"exif:focalLength"];
+//                [properties setObject:imageISOSpeedRating forKey:@"exif:isoSpeedRatings"];
+//                [properties setObject:imageManufacturer forKey:@"exif:manufacturer"];
+//                [properties setObject:imageModel forKey:@"exif:model"];
+//                [properties setObject:imageSoftware forKey:@"exif:software"];
+//                [properties setObject:imageOrientation forKey:@"exif:orientation"];
+//                [properties setObject:imageXResolution forKey:@"exif:xResolution"];
+//                [properties setObject:imageYResolution forKey:@"exif:yResolution"];
+//                [properties setObject:imageResolutionUnit forKey:@"exif:resolutionUnit"];
+//                
+//                [weakFolderService updatePropertiesOfNode:node properties:properties completionBlock:^(AlfrescoNode *modifiedNode, NSError *modifiedError){
+//                    
+//                    if (modifiedNode == nil || modifiedError != nil) {
+//                        super.lastTestSuccessful = NO;
+//                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [modifiedError localizedDescription], [modifiedError localizedFailureReason]];
+//                        super.callbackCompleted = YES;
+//                    }
+//                    else
+//                    {
+//                        STAssertNotNil(modifiedNode, @"document node should not be nil");
+//                        STAssertTrue([modifiedNode.name isEqualToString:documentName], @"Modified node name is not the same as requested");
+//                        
+//                        // check the properties were changed
+//                        NSDictionary *modifiedProperties = modifiedNode.properties;
+//                        
+//                        AlfrescoProperty *modifiedDescription = [modifiedProperties objectForKey:@"cm:description"];
+//                        AlfrescoProperty *modifiedTitle = [modifiedProperties objectForKey:@"cm:title"];
+//                        AlfrescoProperty *modifiedAuthor = [modifiedProperties objectForKey:@"cm:author"];
+//                        AlfrescoProperty *modifiedDateTimeOriginal = [modifiedProperties objectForKey:@"exif:dateTimeOriginal"];
+//                        AlfrescoProperty *modifiedImagePixelXDimension = [modifiedProperties objectForKey:@"exif:pixelXDimension"];
+//                        AlfrescoProperty *modifiedImagePixelYDimension = [modifiedProperties objectForKey:@"exif:pixelYDimension"];
+//                        AlfrescoProperty *modifiedImageExposureTime = [modifiedProperties objectForKey:@"exif:exposureTime"];
+//                        AlfrescoProperty *modifiedImageFNumber = [modifiedProperties objectForKey:@"exif:fNumber"];
+//                        AlfrescoProperty *modifiedImageFlash = [modifiedProperties objectForKey:@"exif:flash"];
+//                        AlfrescoProperty *modifiedImageFocalLength = [modifiedProperties objectForKey:@"exif:focalLength"];
+//                        AlfrescoProperty *modifiedImageISOSpeedRating= [modifiedProperties objectForKey:@"exif:isoSpeedRatings"];
+//                        AlfrescoProperty *modifiedImageManufacturer = [modifiedProperties objectForKey:@"exif:manufacturer"];
+//                        AlfrescoProperty *modifiedImageModel = [modifiedProperties objectForKey:@"exif:model"];
+//                        AlfrescoProperty *modifiedImageSoftware = [modifiedProperties objectForKey:@"exif:software"];
+//                        AlfrescoProperty *modifiedImageOrientation = [modifiedProperties objectForKey:@"exif:orientation"];
+//                        AlfrescoProperty *modifiedImageXResolution = [modifiedProperties objectForKey:@"exif:xResolution"];
+//                        AlfrescoProperty *modifiedImageYResolution = [modifiedProperties objectForKey:@"exif:yResolution"];
+//                        AlfrescoProperty *modifiedImageResolutionUnit = [modifiedProperties objectForKey:@"exif:resolutionUnit"];
+//                        
+//                        STAssertTrue([modifiedDescription.value isEqualToString:existingDescription], @"Description was not the same after being modified");
+//                        STAssertTrue([modifiedTitle.value isEqualToString:existingTitle], @"Description was not the same after being modified");
+//                        STAssertTrue([modifiedAuthor.value isEqualToString:existingAuthor], @"Description was not the same after being modified");
+//                        //exif
+//                        // all Alfresco "values" return string formated representations of the data. This is not expected behavior
+//                        // and as a result the tests may crash here. Issue to be addressed.
+//                        STAssertTrue([modifiedDateTimeOriginal.value isEqualToDate:dateTimeOriginal], @"Description was not the same after being modified");
+//                        STAssertTrue([modifiedImagePixelXDimension.value isEqualToNumber:imagePixelXDimension], @"Pixel X Dimension was not the same after being modified");
+//                        STAssertTrue([modifiedImagePixelYDimension.value isEqualToNumber:imagePixelYDimension], @"Pixel Y Dimension was not the same after being modified");
+//                        STAssertTrue([modifiedImageExposureTime.value isEqualToNumber:imageExposureTime], @"Exposure Time was not the same after being modified");
+//                        STAssertTrue([modifiedImageFNumber.value isEqualToNumber:imageFNumber], @"F Number was not the same after being modified");
+//                        STAssertTrue([modifiedImageFlash.value isEqualToNumber:imageFlash], @"Flash was not the same after being modified");
+//                        STAssertTrue([modifiedImageFocalLength.value isEqualToNumber:imageFocalLength], @"Focal Length was not the same after being modified");
+//                        STAssertTrue([modifiedImageISOSpeedRating.value isEqualToString:imageISOSpeedRating], @"ISO Speed Rating was not the same after being modified");
+//                        STAssertTrue([modifiedImageManufacturer.value isEqualToString:imageManufacturer], @"Manufacturer was not the same after being modified");
+//                        STAssertTrue([modifiedImageModel.value isEqualToString:imageModel], @"Model was not the same after being modified");
+//                        STAssertTrue([modifiedImageSoftware.value isEqualToString:imageSoftware], @"Software was not the same after being modified");
+//                        STAssertTrue([modifiedImageOrientation.value isEqualToNumber:imageOrientation], @"Orientation was not the same after being modified");
+//                        STAssertTrue([modifiedImageXResolution.value isEqualToNumber:imageXResolution], @"XResolution was not the same after being modified");
+//                        STAssertTrue([modifiedImageYResolution.value isEqualToNumber:imageYResolution], @"YResolution was not the same after being modified");
+//                        STAssertTrue([modifiedImageResolutionUnit.value isEqualToString:imageResolutionUnit], @"Resolution Unit was not the same after being modified");
+//                        
+//                        super.lastTestSuccessful = YES;
+//                    }
+//                    super.callbackCompleted = YES;
+//                }];
+//                
+//            }
+//            
+//        }];
+//        
+//        [super waitUntilCompleteWithFixedTimeInterval];
+//        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+//    }];
+//}
 
 #pragma mark unit test internal methods
 

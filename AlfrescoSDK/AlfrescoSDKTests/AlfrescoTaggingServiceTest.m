@@ -45,6 +45,11 @@
             else 
             {
                 STAssertTrue(array.count > 0, @"expected tag response");
+                for (AlfrescoTag *tag in array)
+                {
+                    STAssertNotNil(tag.identifier, @"Tag identifier should not be nil");
+                    STAssertNotNil(tag.value, @"Tag value should not be nil");
+                }
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;

@@ -54,6 +54,8 @@
                     STAssertNotNil(comment.modifiedAt, @"modificationDate should not be nil");
                     STAssertTrue(comment.canEdit, @"canEdit should be true");
                     STAssertFalse(comment.canDelete, @"canDelete should be false");
+                    STAssertNotNil(comment.name, @"name should not be nil");
+                    STAssertTrue(comment.isEdited || !comment.isEdited, @"isEditied should have a value set");
                 }
                 
                 super.lastTestSuccessful = YES;
