@@ -2064,6 +2064,13 @@
                                        STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                                        STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
                                        
+                                       STAssertTrue(newDescriptionProp.type == AlfrescoPropertyTypeString, @"cm:description property should be of string type");
+                                       STAssertFalse(newDescriptionProp.isMultiValued, @"isMultiValued property should not be nil");
+                                       STAssertTrue(newTitleProp.type == AlfrescoPropertyTypeString, @"cm:title property should be of string type");
+                                       STAssertFalse(newTitleProp.isMultiValued, @"isMultiValued property should not be nil");
+                                       STAssertTrue(newAuthorProp.type == AlfrescoPropertyTypeString, @"cm:author property should be of string type");
+                                       STAssertFalse(newAuthorProp.isMultiValued, @"isMultiValued property should not be nil");
+                                       
                                        // delete the test document
                                        [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
                                         {
@@ -2954,6 +2961,14 @@
                           else
                           {
                               log(@"Cannot edit");
+                          }
+                          if (permissions.canComment)
+                          {
+                              log(@"Can comment");
+                          }
+                          else
+                          {
+                              log(@"Cannot comment");
                           }
                           
                           super.lastTestSuccessful = YES;                          
