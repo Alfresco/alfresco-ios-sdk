@@ -20,7 +20,6 @@
 
 - (void)testCreateDocumentWithDescription
 {
-
     [self runTest:^
     {
         NSString *documentName = [NSString stringWithFormat:@"temp_test_file_alfresco_%@.txt", [self stringFromCurrentDate]];
@@ -33,7 +32,7 @@
         // Create document with description
         __block NSInteger previousBytesUploaded = -1;
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
-        [self.rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
+        [self.testFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
                 withProperties:documentProperties
                 completionBlock:^ (NSString *objectId)
                 {
@@ -86,7 +85,6 @@
         STAssertNil(error, @"Got error while retrieving document with updated description: %@", [error description]);
 
         [self verifyDocumentDescription:document expectedDescription:description];
-
 
         // Cleanup
         [self deleteDocumentAndVerify:document];

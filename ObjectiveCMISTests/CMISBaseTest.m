@@ -15,6 +15,7 @@
 #import "CMISFolder.h"
 #import "CMISSession.h"
 #import "CMISConstants.h"
+#import "CMISErrors.h"
 
 @interface CMISBaseTest ()
 
@@ -59,12 +60,15 @@
         NSString *username = [envDict valueForKey:@"username"];
         NSString *password = [envDict valueForKey:@"password"];
 
-        self.callbackCompleted = NO;
         [self setupCmisSession:url repositoryId:repositoryId username:username password:password extraSessionParameters:extraSessionParameters];
         self.callbackCompleted = NO;
 
         log(@">------------------- Running test against %@ -------------------<", url);
 
+        // Always clean test folder to avoid any garbage
+        [self cleanTestFolder];
+
+        // Actual test
         testBlock();
     }
 }
@@ -156,6 +160,41 @@
 
 #pragma mark Helper Methods - Usable by subclasses
 
+- (void)cleanTestFolder
+{
+    log(@"Cleaning test folder '%@'", CMIS_TEST_FOLDER);
+
+    NSError *error = nil;
+    CMISFolder *folder = (CMISFolder *) [self.session retrieveObjectByPath:[NSString stringWithFormat:@"%@%@", self.rootFolder.path, CMIS_TEST_FOLDER] error:&error];
+
+    if (error != nil && error.code != kCMISErrorCodeObjectNotFound)
+    {
+        STAssertNil(error, @"Error while retrieving test folder: %@", error.description);
+    }
+    else
+    {
+        error = nil; // Error was expected, so we're resetting it
+    }
+
+    // Remove folder
+    if (folder)
+    {
+        [folder deleteTreeWithDeleteAllVersions:YES withUnfileObjects:CMISDelete withContinueOnFailure:YES andReturnError:&error];
+        STAssertNil(error, @"Error while removing test folder: %@", error.description);
+    }
+
+    // Create test folder
+    NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+    [properties setObject:CMIS_TEST_FOLDER forKey:kCMISPropertyName];
+    [properties setObject:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
+    NSString *folderId = [self.session createFolder:properties inFolder:self.rootFolder.identifier error:&error];
+    STAssertNil(error, @"Error while creating test folder: %@", error.description);
+    STAssertNotNil(folderId, @"Expected folder id for created test folder");
+
+    self.testFolder = (CMISFolder *) [self.session retrieveObject:folderId error:&error];
+    STAssertNil(error, @"Error while retrieving test folder: %@", error.description);
+}
+
 - (CMISDocument *)retrieveVersionedTestDocument
 {
     NSError *error = nil;
@@ -180,7 +219,7 @@
     // Upload test file
     __block NSInteger previousUploadedBytes = -1;
     __block NSString *objectId = nil;
-    [self.rootFolder createDocumentFromFilePath:filePath
+    [self.testFolder createDocumentFromFilePath:filePath
             withMimeType:@"text/plain"
             withProperties:documentProperties
             completionBlock: ^ (NSString *newObjectId)

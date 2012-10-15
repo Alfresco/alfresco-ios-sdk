@@ -15,6 +15,12 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "CMISDocument.h"
 
+/**
+* All tests that create content should put the content in this folder.
+* This folder will be cleaned before each test run, to make sure there is no any garbage left from previous tests.
+*/
+#define CMIS_TEST_FOLDER @"cmis-test-folder"
+
 @class CMISFolder;
 @class CMISSession;
 @class CMISSessionParameters;
@@ -26,6 +32,7 @@ typedef void (^CMISTestBlock)(void);
 @property (nonatomic, strong) CMISSessionParameters *parameters;
 @property (nonatomic, strong) CMISSession *session;
 @property (nonatomic, strong) CMISFolder *rootFolder;
+@property (nonatomic, strong) CMISFolder *testFolder;
 @property BOOL callbackCompleted;
 
 #pragma mark Running the test

@@ -170,7 +170,6 @@
 {
     [self runTest:^
     {
-
         // Get some random document
         CMISDocument *document = [self retrieveVersionedTestDocument];
 
@@ -267,9 +266,6 @@
             self.callbackCompleted = YES;
         } progressBlock:nil];
         [self waitForCompletion:60];
-
-
-        // Nice boys clean up after themselves
     }];
 }
 
@@ -291,7 +287,7 @@
         [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
 
         __block NSInteger previousBytesUploaded = -1;
-        [self.rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
+        [self.testFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
              withProperties:documentProperties
              completionBlock:^ (NSString *objectId)
              {
@@ -343,7 +339,7 @@
         [self.session createDocumentFromFilePath:filePath
                 withMimeType:@"text/plain"
                 withProperties:documentProperties
-                inFolder:self.rootFolder.identifier
+                inFolder:self.testFolder.identifier
                 completionBlock: ^ (NSString *newObjectId)
                 {
                     STAssertNotNil(newObjectId, @"Object id should not be nil");
@@ -393,7 +389,7 @@
 
         __block NSInteger previousBytesUploaded = -1;
         __block NSString *objectId;
-        [self.rootFolder createDocumentFromFilePath:fileToUploadPath withMimeType:@"application/pdf"
+        [self.testFolder createDocumentFromFilePath:fileToUploadPath withMimeType:@"application/pdf"
                withProperties:documentProperties
                completionBlock:^(NSString *newObjectId)
                {
@@ -462,8 +458,8 @@
         [properties setObject:folderName forKey:kCMISPropertyName];
         [properties setObject:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
 
-        NSString *newFolderObjectId = [self.rootFolder createFolder:properties error:&error];
-        STAssertNil(error, @"Error while creating folder in root folder: %@", [error description]);
+        NSString *newFolderObjectId = [self.testFolder createFolder:properties error:&error];
+        STAssertNil(error, @"Error while creating folder in test folder: %@", [error description]);
 
         // Delete the test folder again
         CMISFolder *newFolder = (CMISFolder *) [self.session retrieveObject:newFolderObjectId error:&error];
@@ -644,6 +640,7 @@
         STAssertNil([firstResult.properties propertyForId:kCMISPropertyContentStreamLength], @"Content stream length property should be nil");
         STAssertNotNil(firstResult.allowableActions, @"By default, allowable actions whould be included");
         STAssertTrue(firstResult.allowableActions.allowableActionsSet.count > 0, @"Expected at least one allowable action");
+
         // With operationContext
         CMISOperationContext *context = [CMISOperationContext defaultOperationContext];
         context.isIncludeAllowableActions = NO;
@@ -966,7 +963,7 @@
         [properties setObject:@"temp_test_folder" forKey:kCMISPropertyName];
         [properties setObject:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
 
-        NSString *folderId = [self.rootFolder createFolder:properties error:&error];
+        NSString *folderId = [self.testFolder createFolder:properties error:&error];
         STAssertNil(error, @"Got error while creating folder: %@", [error description]);
 
         // Update name of test folder through object service
