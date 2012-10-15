@@ -37,6 +37,7 @@ extern NSString * const kAlfrescoRepositoryName;
 extern NSString * const kAlfrescoRepositoryCommunity;
 extern NSString * const kAlfrescoRepositoryEnterprise;
 extern NSString * const kAlfrescoRepositoryEdition;
+extern NSString * const kAlfrescoCloudEdition;
 extern NSString * const kAlfrescoRepositoryIdentifier;
 extern NSString * const kAlfrescoRepositorySummary;
 extern NSString * const kAlfrescoRepositoryVersion;
