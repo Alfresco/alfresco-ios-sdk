@@ -256,6 +256,8 @@
             {
                 log(@"testRetrieveSiteWithShortName returns the following site=%@ ",super.testSiteName);
                 STAssertTrue([site.shortName isEqualToString:super.testSiteName], [NSString stringWithFormat:@"Expected %@ site but got back %@",super.testSiteName, site.shortName]);
+                STAssertNotNil(site.title, @"site title should not be nil");
+                STAssertNotNil(site.summary, @"site summary should not be nil");
                 super.lastTestSuccessful = YES;
             }
             
