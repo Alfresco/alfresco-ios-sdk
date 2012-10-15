@@ -29,6 +29,7 @@
 #import "CMISConstants.h"
 #import "CMISStringInOutParameter.h"
 #import "CMISRendition.h"
+#import "CMISEnums.h"
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoErrors.h"
@@ -868,12 +869,34 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        BOOL deletedSuccessfully = [weakSelf.cmisSession.binding.objectService deleteObject:node.identifier allVersions:YES error:&operationQueueError];
+        BOOL deletedSuccessfully = NO;
+        if ([node isKindOfClass:[AlfrescoDocument class]])
+        {
+            deletedSuccessfully = [weakSelf.cmisSession.binding.objectService deleteObject:node.identifier
+                                                                               allVersions:YES
+                                                                                     error:&operationQueueError];
+        }
+        else
+        {
+            [weakSelf.cmisSession.binding.objectService deleteTree:node.identifier
+                                                        allVersion:YES
+                                                     unfileObjects:CMISDelete
+                                                 continueOnFailure:YES
+                                                             error:&operationQueueError];
+            if (nil == operationQueueError)
+            {
+                deletedSuccessfully = YES;
+            }
+            
+        }
+        
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(deletedSuccessfully, operationQueueError);
         }];
     }];
 }
+
+
 
 #pragma mark - Internal methods
 
@@ -929,7 +952,15 @@
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
-        [jsonDictionary setValue:node.identifier forKey:kAlfrescoJSONActionedUponNode];
+        
+        NSArray *components = [node.identifier componentsSeparatedByString:@";"];
+        NSString *identifier = node.identifier;
+        if (components.count > 1)
+        {
+            identifier = [components objectAtIndex:0];
+        }
+        
+        [jsonDictionary setValue:identifier forKey:kAlfrescoJSONActionedUponNode];
         [jsonDictionary setValue:kAlfrescoJSONExtractMetadata forKey:kAlfrescoJSONActionDefinitionName];
         NSError *postError = nil;
         NSURL *apiUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
@@ -938,6 +969,9 @@
                             dataWithJSONObject:jsonDictionary 
                             options:kNilOptions 
                             error:&postError];
+        
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding];
+        log(@"jsonstring %@", jsonString);
         if (nil != jsonData)
         {
             [AlfrescoHTTPUtils executeRequestWithURL:apiUrl
