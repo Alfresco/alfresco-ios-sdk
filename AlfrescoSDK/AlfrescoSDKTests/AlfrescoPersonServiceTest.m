@@ -45,6 +45,12 @@
                  STAssertNotNil(person,@"Person should not be nil");
                  STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, super.userName]);
                  STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, super.firstName]);
+                 STAssertNotNil(person.lastName, @"Persons last name should not be nil");
+                 STAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
+                 if (person.avatarIdentifier)
+                 {
+                     STAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
+                 }
                  super.lastTestSuccessful = YES;
              }
              super.callbackCompleted = YES;
@@ -133,6 +139,8 @@
                           STAssertNil(fileError, @"expected to get no error in getting attributes for file at path %@", [contentFile.fileUrl path]);
                           unsigned long long size = [[dict valueForKey:NSFileSize] unsignedLongLongValue];
                           STAssertTrue(size > 100, @"data should be filled with at least 100 bytes. Instead we got %llu", size);
+                          STAssertNotNil(contentFile.mimeType, @"mimetype should not be nil");
+                          STAssertFalse([contentFile.mimeType length] == 0, @"mimetype should not have a length of 0");
                           super.lastTestSuccessful = YES;
                       }
                       super.callbackCompleted = YES;
