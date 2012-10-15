@@ -27,6 +27,7 @@
 @property (nonatomic, copy, readwrite) AlfrescoOAuthCompletionBlock completionBlock;
 @property (nonatomic, strong, readwrite) AlfrescoOAuthData  * oauthData;
 @property (nonatomic, strong, readwrite) NSString * baseURL;
+@property (nonatomic, weak, readwrite) id<AlfrescoOAuthLoginDelegate> oauthDelegate;
 - (AlfrescoOAuthData *)updatedOAuthDataFromJSONWithError:(NSError **)error;
 @end
 
@@ -36,13 +37,19 @@
 @synthesize completionBlock = _completionBlock;
 @synthesize oauthData = _oauthData;
 @synthesize baseURL = _baseURL;
+@synthesize oauthDelegate = _oauthDelegate;
 
 - (id)init
 {
-    return [self initWithParameters:nil];
+    return [self initWithParameters:nil delegate:nil];
 }
 
 - (id)initWithParameters:(NSDictionary *)parameters
+{
+    return [self initWithParameters:parameters delegate:nil];
+}
+
+- (id)initWithParameters:(NSDictionary *)parameters delegate:(id<AlfrescoOAuthLoginDelegate>)oauthDelegate
 {
     self = [super init];
     if (nil != self)
@@ -55,10 +62,13 @@
                 NSString *supplementedURL = [parameters valueForKey:kAlfrescoSessionCloudURL];
                 self.baseURL = [NSString stringWithFormat:@"%@%@",supplementedURL,kAlfrescoOAuthToken];
             }
+            self.oauthDelegate = oauthDelegate;
         }
+        
     }
     return self;
 }
+
 
 - (void)retrieveOAuthDataForAuthorizationCode:(NSString *)authorizationCode
                                     oauthData:(AlfrescoOAuthData *)oauthData
@@ -175,6 +185,15 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     log(@"AlfrescoOAuthHelper didFailWithError. Error is %@ and code is %d", [error localizedDescription], [error code]);
+    
+    if (nil != self.oauthDelegate)
+    {
+        if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
+        {
+            [self.oauthDelegate oauthLoginDidFailWithError:error];
+        }
+    }
+    
     if (nil == self.receivedData)
     {
         self.completionBlock(nil, error);
