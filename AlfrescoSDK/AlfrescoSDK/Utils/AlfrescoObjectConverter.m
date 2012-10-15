@@ -46,6 +46,8 @@
                                     properties:(NSDictionary *)properties;
 
 + (AlfrescoPropertyType)typeForCMISProperty:(NSString *)propertyIdentifier;
+
++ (NSString *)propertyValueWithoutPrecursor:(NSString *)value;
 @end
 
 @implementation AlfrescoObjectConverter
@@ -289,11 +291,7 @@
             for (CMISExtensionElement *aspect in aspectArray) {
                 if ([aspect.name isEqualToString:kAlfrescoAppliedAspects])
                 {
-                    NSString *aspectValue = aspect.value;
-                    if ([aspectValue hasPrefix:@"P:"])
-                    {
-                        aspectValue = [aspect.value stringByReplacingOccurrencesOfString:@"P:" withString:@""];
-                    }
+                    NSString *aspectValue = [AlfrescoObjectConverter propertyValueWithoutPrecursor:aspect.value];
                     [alfrescoAspectArray addObject:aspectValue];
                 }
                 else if ([aspect.name isEqualToString:kAlfrescoAspectProperties])
@@ -563,6 +561,24 @@
     {
         return AlfrescoPropertyTypeString;
     }
+}
+
++ (NSString *)propertyValueWithoutPrecursor:(NSString *)value
+{
+    if ([value hasPrefix:@"P:"])
+    {
+        return [value stringByReplacingOccurrencesOfString:@"P:" withString:@""];
+    }
+    else if([value hasPrefix:@"D:"])
+    {
+        return [value stringByReplacingOccurrencesOfString:@"D:" withString:@""];
+    }
+    else if ([value hasPrefix:@"F:"])
+    {
+        return [value stringByReplacingOccurrencesOfString:@"F:" withString:@""];
+    }
+    else
+        return value;
 }
 
 

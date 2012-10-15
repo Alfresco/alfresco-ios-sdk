@@ -583,10 +583,10 @@ This authentication method authorises the user to access the home network assign
         {
             self.sessionData = [NSMutableDictionary dictionaryWithCapacity:8];
         }
-        
-        // setup defaults
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
+        
+        // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
     }
     return self;

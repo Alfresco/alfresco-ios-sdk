@@ -2677,41 +2677,14 @@
                           {
                               if (!success)
                               {
-                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [innerError localizedDescription], [innerError localizedFailureReason]];
-                                  log(@"Expected error %@",errorMessage);
- 
-                                  [weakService deleteNode:strongInternalFolder completionBlock:^(BOOL internalSuccess, NSError *anotherError){
-                                      if (!internalSuccess)
-                                      {
-                                          super.lastTestSuccessful = NO;
-                                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [anotherError localizedDescription], [anotherError localizedFailureReason]];
-                                          super.callbackCompleted = YES;
-                                      }
-                                      else
-                                      {
-                                          [weakService deleteNode:strongFolder completionBlock:^(BOOL innermostSuccess, NSError *innermostError){
-                                              if (!innermostSuccess)
-                                              {
-                                                  super.lastTestSuccessful = NO;
-                                                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [innermostError localizedDescription], [innermostError localizedFailureReason]];
-                                              }
-                                              else
-                                              {
-                                                  self.lastTestSuccessful = YES;
-                                                  
-                                              }
-                                              super.callbackCompleted = YES;
-                                          }];
-                                      }
-                                  }];
+                                  super.lastTestSuccessful = NO;
+                                  super.lastTestFailureMessage = @"You should be able to delete a folder with content";
                               }
                               else
                               {
-                                  super.lastTestSuccessful = NO;
-                                  super.lastTestFailureMessage = @"You should not be able to delete a folder with content";
-                                  super.callbackCompleted = YES;
+                                  super.lastTestSuccessful = YES;
                               }
-                              
+                              super.callbackCompleted = YES;                              
                           }];
                      }
                  }];

@@ -22,6 +22,7 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoOAuthLoginViewController.h"
 
+@protocol AlfrescoOAuthLoginDelegate;
 /** The AlfrescoOAuthHelper handles OAuth authentication processes.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
@@ -34,6 +35,8 @@
  @param parameters
  */
 - (id)initWithParameters:(NSDictionary *)parameters;
+
+- (id)initWithParameters:(NSDictionary *)parameters delegate:(id<AlfrescoOAuthLoginDelegate>)oauthDelegate;
 
 /**
  @param authorizationCode the authorization code retrieved from the Cloud server at first login
@@ -53,5 +56,11 @@
            completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
 
 
+
+@end
+
+@protocol AlfrescoOAuthLoginDelegate <NSObject>
+
+- (void)oauthLoginDidFailWithError:(NSError *)error;
 
 @end
