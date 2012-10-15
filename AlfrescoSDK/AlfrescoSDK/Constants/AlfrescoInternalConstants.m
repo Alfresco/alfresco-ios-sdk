@@ -44,6 +44,7 @@ NSString * const kAlfrescoRepositoryName = @"name";
 NSString * const kAlfrescoRepositoryCommunity = @"Community";
 NSString * const kAlfrescoRepositoryEnterprise = @"Enterprise";
 NSString * const kAlfrescoRepositoryEdition = @"edition";
+NSString * const kAlfrescoCloudEdition = @"Alfresco in the Cloud";
 NSString * const kAlfrescoRepositoryIdentifier = @"identifier";
 NSString * const kAlfrescoRepositorySummary = @"summary";
 NSString * const kAlfrescoRepositoryVersion = @"version";

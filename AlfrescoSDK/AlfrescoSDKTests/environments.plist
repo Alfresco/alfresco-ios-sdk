@@ -10,7 +10,7 @@
 			<key>password</key>
 			<string>alzheimer</string>
 			<key>server</key>
-			<string>http://ec2-79-125-36-93.eu-west-1.compute.amazonaws.com/alfresco</string>
+			<string>http://ec2-54-247-141-218.eu-west-1.compute.amazonaws.com/alfresco</string>
 			<key>firstName</key>
 			<string>Administrator</string>
 			<key>testSite</key>
