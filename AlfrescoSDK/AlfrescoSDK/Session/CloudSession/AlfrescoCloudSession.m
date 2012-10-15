@@ -61,6 +61,7 @@
 - (id)authProviderToBeUsed;
 
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
+@property (nonatomic, strong, readwrite) NSURL *baseURLWithoutNetwork;
 @property (nonatomic, strong) NSURL *cmisUrl;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;
 @property (nonatomic, strong, readwrite) NSString *personIdentifier;
@@ -78,6 +79,7 @@
 
 @implementation AlfrescoCloudSession
 @synthesize baseUrl = _baseUrl;
+@synthesize baseURLWithoutNetwork = _baseURLWithoutNetwork;
 @synthesize cmisUrl = _cmisUrl;
 @synthesize sessionData = _sessionData;
 @synthesize personIdentifier = _personIdentifier;
@@ -201,7 +203,7 @@
         NSError *operationQueueError = nil;
         id<AlfrescoAuthenticationProvider> authProvider = [weakSelf authProviderToBeUsed];
         [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-        NSData *jsonData = [AlfrescoHTTPUtils executeRequestWithURL:self.baseUrl
+        NSData *jsonData = [AlfrescoHTTPUtils executeRequestWithURL:self.baseURLWithoutNetwork
                                                             session:self
                                                                data:nil
                                                          httpMethod:@"GET"
@@ -278,6 +280,7 @@
         log(@"overriding Cloud URL with: %@", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:baseURL];
+    self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
     self.oauthData = oauthData;
     [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
@@ -329,6 +332,7 @@
         log(@"overriding Cloud URL with: %@", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",baseURL,network]];
+    self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
     self.oauthData = oauthData;
     self.personIdentifier = kAlfrescoMe;
     CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
@@ -435,6 +439,7 @@ This authentication method authorises the user to access the home network assign
         log(@"overriding Cloud URL with: %@", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
+    self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
     self.isUsingBaseAuthenticationProvider = YES;
     self.emailAddress = emailAddress;
     self.password = password;
@@ -491,6 +496,7 @@ This authentication method authorises the user to access the home network assign
         log(@"overriding Cloud URL with: %@", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@", baseURL, kAlfrescoCloudPrecursor, network]];
+    self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
     self.isUsingBaseAuthenticationProvider = YES;
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
     self.cmisUrl = [NSURL URLWithString:cmisUrl];
