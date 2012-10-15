@@ -16,6 +16,12 @@
 #import "CMISSession.h"
 #import "CMISConstants.h"
 
+@interface CMISBaseTest ()
+
+@property (nonatomic, strong) NSMutableDictionary *repositoryIdCache;
+
+@end
+
 
 @implementation CMISBaseTest
 
@@ -23,6 +29,8 @@
 @synthesize session = _session;
 @synthesize rootFolder = _rootFolder;
 @synthesize callbackCompleted = _callbackCompleted;
+
+#pragma mark Run Test Methods
 
 
 - (void) runTest:(CMISTestBlock)testBlock
@@ -68,7 +76,15 @@
     self.parameters.username = username;
     self.parameters.password = password;
     self.parameters.atomPubUrl = [NSURL URLWithString:url];
-    self.parameters.repositoryId = repositoryId;
+
+    if (repositoryId)
+    {
+        self.parameters.repositoryId = repositoryId;
+    }
+    else
+    {
+        self.parameters.repositoryId = [self retrieveRepositoryIdForParameters:self.parameters];
+    }
 
     // Extra cmis params could be provided as method parameter
     if (extraSessionParameters != nil)
@@ -104,11 +120,41 @@
 
 - (NSDictionary *)customCmisParameters
 {
-    // Ment to be overridden.
+    // Ment to be overridden if subclasses want custom params
     return nil;
 }
 
-#pragma mark Helper Methods
+- (NSString *)retrieveRepositoryIdForParameters:(CMISSessionParameters *)parameters
+{
+    if (self.repositoryIdCache == nil)
+    {
+        self.repositoryIdCache = [[NSMutableDictionary alloc] init];
+    }
+
+    if (parameters.repositoryId != nil)
+    {
+        return parameters.repositoryId;
+
+    }
+    else if ([self.repositoryIdCache objectForKey:parameters.atomPubUrl.absoluteString] == nil)
+    {
+        log(@"No repository id found for %@. Retrieving it using cmis.", parameters.atomPubUrl);
+        NSError *error = nil;
+        NSArray *repos = [CMISSession arrayOfRepositories:self.parameters error:&error];
+
+        STAssertNil(error, @"Error when calling arrayOfRepositories : %@", [error description]);
+        STAssertNotNil(repos, @"repos object should not be nil");
+        STAssertTrue(repos.count == 1, @"Sorry, this code was only created for urls with one repo. Provide the repositoryId in the CMISSessionParameters to avoid this.");
+
+        CMISRepositoryInfo *repositoryInfo = [repos objectAtIndex:0];
+        log(@"Found repository id for %@ : %@", parameters.atomPubUrl, repositoryInfo.identifier);
+        [self.repositoryIdCache setValue:repositoryInfo.identifier forKey:parameters.atomPubUrl.absoluteString];
+    }
+
+    return [self.repositoryIdCache objectForKey:parameters.atomPubUrl.absoluteString];
+}
+
+#pragma mark Helper Methods - Usable by subclasses
 
 - (CMISDocument *)retrieveVersionedTestDocument
 {

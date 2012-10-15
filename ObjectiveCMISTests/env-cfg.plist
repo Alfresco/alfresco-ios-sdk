@@ -10,9 +10,7 @@
                 <key>password</key>
                 <string>alzheimer</string>
                 <key>url</key>
-                <string>http://ec2-79-125-36-93.eu-west-1.compute.amazonaws.com:8080/alfresco/service/api/cmis</string>
-                <key>repositoryId</key>
-                <string>368eca28-be2b-4a8d-8bbb-1d7997af7930</string>
+                <string>http://ec2-54-247-141-218.eu-west-1.compute.amazonaws.com:8080/alfresco/service/api/cmis</string>
             </dict>
             <dict>
                 <key>username</key>
@@ -20,9 +18,7 @@
                 <key>password</key>
                 <string>alzheimer</string>
                 <key>url</key>
-                <string>http://ec2-79-125-36-93.eu-west-1.compute.amazonaws.com:8080/alfresco/cmisatom</string>
-                <key>repositoryId</key>
-                <string>368eca28-be2b-4a8d-8bbb-1d7997af7930</string>
+                <string>http://ec2-54-247-141-218.eu-west-1.compute.amazonaws.com:8080/alfresco/cmisatom</string>
             </dict>
         </array>
     </dict>

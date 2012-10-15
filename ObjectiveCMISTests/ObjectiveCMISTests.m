@@ -39,23 +39,6 @@
 
 @implementation ObjectiveCMISTests
 
-- (void)testRepositories
-{
-    [self runTest:^
-    {
-        NSError *error = nil;
-        NSArray *repos = [CMISSession arrayOfRepositories:self.parameters error:&error];
-        STAssertNil(error, @"Error when calling arrayOfRepositories : %@", [error description]);
-        STAssertNotNil(repos, @"repos object should not be nil");
-        STAssertTrue(repos.count > 0, @"There should be at least one repository");
-
-        for (CMISRepositoryInfo *repoInfo in repos)
-        {
-            NSLog(@"Repo id: %@", repoInfo.identifier);
-        }
-    }];
-}
-
 - (void)testAuthenticateWithInvalidCredentials
 {
     [self runTest:^

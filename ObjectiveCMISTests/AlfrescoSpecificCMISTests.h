@@ -17,6 +17,10 @@
 #import "ObjectiveCMISTests.h"
 
 // TODO: Temporary. Must be extracted into separate project
+/**
+ * Runs tests specific for Alfresco.
+ * Also runs all the regular tests, in Alfresco mode (hence the inheritance).
+ */
 @interface AlfrescoSpecificCMISTests : ObjectiveCMISTests
 
 @end

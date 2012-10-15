@@ -52,4 +52,5 @@ typedef void (^CMISTestBlock)(void);
 - (NSDateFormatter *)testDateFormatter;
 
 - (NSString *)stringFromCurrentDate;
+
 @end
