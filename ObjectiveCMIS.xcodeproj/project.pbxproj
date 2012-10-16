@@ -1099,6 +1099,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = /ObjectiveCMIS;
 				SKIP_INSTALL = YES;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Debug;
 		};
@@ -1114,6 +1115,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = /ObjectiveCMIS;
 				SKIP_INSTALL = YES;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Release;
 		};
