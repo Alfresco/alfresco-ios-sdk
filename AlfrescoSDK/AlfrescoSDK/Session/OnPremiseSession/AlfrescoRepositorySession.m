@@ -75,13 +75,6 @@
     }
 }
 
-- (void)disconnect
-{
-    CMISSession *cmisSession = [self.sessionData objectForKey:kAlfrescoSessionKeyCmisSession];
-    [cmisSession.binding clearAllCaches];
-    
-}
-
 /**
  OnPremise services have a dedicated thumbnail rendition API, which we need to enable here.
  */

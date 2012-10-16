@@ -62,4 +62,5 @@ extern NSString * const kAlfrescoTestDataFolder;
 - (void)retrieveAlfrescoTestFolder;
 - (BOOL)waitForCompletion:(NSTimeInterval)timeoutSecs;
 - (void)waitUntilCompleteWithFixedTimeInterval;
+- (void) removeTestDocument;
 @end

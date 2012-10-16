@@ -24,7 +24,6 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 @interface AlfrescoBaseTest ()
 @property (nonatomic, strong) NSString * testPassword;
 - (void) uploadTestDocument:(NSString *)filePath;
-- (void) removeTestDocument;
 - (void) resetTestRunVariables;
 - (void) parseEnvironmentDictionary:(NSDictionary *)plistDictionary;
 + (NSString *)testFileNameFromEnviroment:(NSString *)filename;
