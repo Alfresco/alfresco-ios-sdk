@@ -53,7 +53,7 @@
     {
         
         NSString *filename = [url lastPathComponent];
-        if (nil != mimeType)
+        if (nil == mimeType)
         {
             self.mimeType = [AlfrescoContentFile mimeTypeFromFilename:filename];
         }

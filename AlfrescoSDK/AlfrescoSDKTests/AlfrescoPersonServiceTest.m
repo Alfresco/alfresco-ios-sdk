@@ -139,8 +139,13 @@
                           STAssertNil(fileError, @"expected to get no error in getting attributes for file at path %@", [contentFile.fileUrl path]);
                           unsigned long long size = [[dict valueForKey:NSFileSize] unsignedLongLongValue];
                           STAssertTrue(size > 100, @"data should be filled with at least 100 bytes. Instead we got %llu", size);
-                          STAssertNotNil(contentFile.mimeType, @"mimetype should not be nil");
-                          STAssertFalse([contentFile.mimeType length] == 0, @"mimetype should not have a length of 0");
+                          /*
+                           mimeType is not a reliable test here. For OnPremise we set the mimeType after downloading the image. For Cloud however, we do not
+                           know the mimeType, neither can we deduce it from the filename (as the image is simply called 'avatar')
+                           STAssertNotNil(contentFile.mimeType, @"mimetype should not be nil");
+                           STAssertFalse([contentFile.mimeType length] == 0, @"mimetype should not have a length of 0");
+                           */
+                          
                           super.lastTestSuccessful = YES;
                       }
                       super.callbackCompleted = YES;

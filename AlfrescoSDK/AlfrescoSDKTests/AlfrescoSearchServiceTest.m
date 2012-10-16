@@ -36,8 +36,8 @@
 
 - (void)testQueryWithKeywords
 {
+    
     [super runAllSitesTest:^{
-        
         if (!super.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
@@ -79,6 +79,7 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         }
+        
     }];
 }
 
@@ -88,7 +89,6 @@
 - (void)testQueryWithKeywordsWithPaging
 {
     [super runAllSitesTest:^{
-        
         if (!super.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
@@ -126,6 +126,7 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         }
+        
     }];
 }
 
@@ -135,7 +136,6 @@
 - (void)testQueryWithKeywordsExact
 {
     [super runAllSitesTest:^{
-        
         if (!super.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
@@ -174,6 +174,7 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         }
+        
     }];
 }
 
@@ -183,7 +184,6 @@
 - (void)testQueryWithKeywordsExactWithinFolder
 {
     [super runAllSitesTest:^{
-        
         if (!super.isCloud)
         {
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:YES
@@ -214,6 +214,7 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         }
+        
     }];
 }
 
@@ -223,7 +224,6 @@
 - (void)testQueryWithKeywordsFullText
 {
     [super runAllSitesTest:^{
-        
         if (!super.isCloud)
         {
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:NO includeContent:YES];
@@ -264,6 +264,7 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         }
+        
     }];
 }
 
@@ -273,7 +274,6 @@
 - (void)testQueryWithPlainKeywords
 {
     [super runAllSitesTest:^{
-        
         if (!super.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
@@ -317,6 +317,7 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         }
+        
     }];
 }
 
@@ -326,7 +327,6 @@
 - (void)testQueryWithPlainKeywordsWithPaging
 {
     [super runAllSitesTest:^{
-        
         if (!super.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
@@ -363,9 +363,9 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         }
+        
     }];
 }
-
 
 - (void)testKeywordSearchOptionsPropertiesAfterInstantiation
 {

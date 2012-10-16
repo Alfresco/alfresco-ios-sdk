@@ -21,6 +21,8 @@
 //
 
 #ifdef __OBJC__
+#import <Availability.h>
+#import <AvailabilityMacros.h>
 #import <Foundation/Foundation.h>
 
 #ifdef DEBUG

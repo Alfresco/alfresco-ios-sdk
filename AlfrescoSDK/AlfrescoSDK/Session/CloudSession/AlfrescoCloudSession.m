@@ -224,12 +224,6 @@
     }];
 }
 
-- (void)disconnect
-{
-    CMISSession *cmisSession = [self.sessionData objectForKey:kAlfrescoSessionKeyCmisSession];
-    [cmisSession.binding clearAllCaches];
-}
-
 - (NSArray *)allParameterKeys
 {
     return [self.sessionData allKeys];
@@ -379,10 +373,8 @@
             [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
             
             // create the session using the paramters
-            log(@"*** authenticateWithOAuthData before setting CMIS session");
             CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];
             [self.sessionData setObject:cmisSession forKey:kAlfrescoSessionKeyCmisSession];
-            log(@"*** authenticateWithOAuthData after setting CMIS session");
             
             
             
@@ -393,11 +385,9 @@
                 self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
                 
                 CMISObject *retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&error];
-                log(@"*** authenticateWithOAuthData after retrieving root folder");
                 if (nil != retrievedObject) {
                     if ([retrievedObject isKindOfClass:[CMISFolder class]])
                     {
-                        log(@"*** authenticateWithOAuthData found root folder");
                         self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:retrievedObject];
                     }
                     else
