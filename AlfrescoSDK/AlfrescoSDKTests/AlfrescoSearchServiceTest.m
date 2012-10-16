@@ -367,6 +367,116 @@
     }];
 }
 
+- (void)testKeywordSearchOptionsPropertiesAfterInstantiation
+{
+    [super runAllSitesTest:^{
+        
+        AlfrescoKeywordSearchOptions *searchOptions = nil;
+
+        searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:YES includeContent:YES];
+        STAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
+        STAssertTrue(searchOptions.exactMatch, @"Expected the exact match to be true");
+        STAssertTrue(searchOptions.includeContent, @"Expected the include content property to be true");
+        
+        searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:NO includeContent:YES folder:self.currentSession.rootFolder includeDescendants:YES];
+        STAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
+        STAssertFalse(searchOptions.exactMatch, @"Expected the exact match to be false");
+        STAssertTrue(searchOptions.includeContent, @"Expected the include content to be true");
+        STAssertTrue([searchOptions.folder isEqual:self.currentSession.rootFolder], @"Expected the folder to be that of the the sessions root folder");
+        STAssertTrue(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
+        
+        searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithFolder:self.currentSession.rootFolder includeDescendants:NO];
+        STAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
+        STAssertTrue([searchOptions.folder isEqual:self.currentSession.rootFolder], @"Expected the folder to be that of the the sessions root folder");
+        STAssertFalse(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
+        
+    }];
+}
+
+/*
+ @Unique_TCRef 40S4
+ */
+- (void)testSearchWithStatementWithoutListingContext
+{
+    [super runAllSitesTest:^{
+        
+        if (!super.isCloud)
+        {
+            self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
+            
+            NSString *searchStatement = @"SELECT * FROM cmis:document";
+            
+            [self.searchService searchWithStatement:searchStatement language:AlfrescoSearchLanguageCMIS completionBlock:^(NSArray *resultsArray, NSError *error) {
+                
+                if (resultsArray == nil)
+                {
+                    super.lastTestSuccessful = NO;
+                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
+                else
+                {
+                    STAssertNotNil(resultsArray, @"The results array returned was nil");
+                    STAssertTrue([resultsArray count] >= 1, @"Expected the results array to have atleast one result, instead got back %i", [resultsArray count]);
+                    
+                    super.lastTestSuccessful = YES;
+                }
+                super.callbackCompleted = YES;
+            }];
+            
+            [super waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        }
+    }];
+}
+
+/*
+ @Unique_TCRef 40S5
+ */
+- (void)testSearchWithStatementWithListingContext
+{
+    [super runAllSitesTest:^{
+        
+        if (!super.isCloud)
+        {
+            self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
+            
+            AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:25 skipCount:0];
+            
+            NSString *searchStatement = @"SELECT * FROM cmis:document";
+            
+            [self.searchService searchWithStatement:searchStatement language:AlfrescoSearchLanguageCMIS listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                
+                if (pagingResult == nil)
+                {
+                    super.lastTestSuccessful = NO;
+                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
+                else
+                {
+                    STAssertNotNil(pagingResult, @"Paging result was nil");
+                    STAssertTrue([pagingResult.objects count] >= 1, @"Expected the results to contain atleast one result, but instead got back %i", [pagingResult.objects count]);
+                    
+                    if (pagingResult.hasMoreItems)
+                    {
+                        STAssertTrue([pagingResult.objects count] == 25, @"Expected the objects array to contain 25 objects, instead we got back %i", [pagingResult.objects count]);
+                    }
+                    else
+                    {
+                        STAssertTrue([pagingResult.objects count] <= 25, @"Expected back less than or upto 25 items in the search result, instead got back %i", [pagingResult.objects count]);
+                    }
+                    
+                    super.lastTestSuccessful = YES;
+                }
+                super.callbackCompleted = YES;
+            }];
+            
+            [super waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        }
+        
+    }];
+}
+
 #pragma private methods
 
 + (BOOL)containsTestFile:(NSString *)name array:(NSArray *)array
