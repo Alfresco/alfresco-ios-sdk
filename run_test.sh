@@ -1,1 +1,1 @@
-xcodebuild -sdk iphonesimulator -project ObjectiveCMIS.xcode.proj -target ObjectiveCMISTests -configuration Debug clean build
+xcodebuild -sdk iphonesimulator -project ObjectiveCMIS.xcodeproj -target ObjectiveCMISTests -configuration Debug clean build
