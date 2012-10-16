@@ -8,6 +8,7 @@
 #import "CMISDocument.h"
 #import "CMISFolder.h"
 #import "CMISSession.h"
+#import "AlfrescoCMISObjectConverter.h"
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
 
@@ -15,7 +16,8 @@
 
 - (NSDictionary *)customCmisParameters
 {
-    return [NSDictionary dictionaryWithObject:@"alfresco" forKey:kCMISSessionParameterMode];
+    // We could just write the class name as a NSString, but that would not refactor if we ever would rename this class
+    return [NSDictionary dictionaryWithObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
 }
 
 - (void)testCreateDocumentWithDescription
@@ -44,7 +46,7 @@
                     STAssertTrue([documentName isEqualToString:document.name],
                         @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
 
-                   [self verifyDocumentDescription:document expectedDescription:documentDescription];
+                    [self verifyDocument:document hasExtensionProperty:@"cm:description" withValue:documentDescription];
 
                     // Cleanup after ourselves
                     NSError *deleteError = nil;
@@ -73,7 +75,6 @@
 {
     [self runTest:^
     {
-
         NSError *error = nil;
         CMISDocument *document = [self uploadTestFile];
 
@@ -84,17 +85,52 @@
         document = (CMISDocument *) [document updateProperties:properties error:&error];
         STAssertNil(error, @"Got error while retrieving document with updated description: %@", [error description]);
 
-        [self verifyDocumentDescription:document expectedDescription:description];
+        [self verifyDocument:document hasExtensionProperty:@"cm:description" withValue:description];
 
         // Cleanup
         [self deleteDocumentAndVerify:document];
     }];
 }
 
-- (void)verifyDocumentDescription:(CMISDocument *)document expectedDescription:(NSString *)expectedDescription
+- (void)testRetrieveExifData
 {
-    // Let's do some extension juggling .... (sigh)
-    STAssertNotNil(document.properties.extensions, @"description should be returned as an extension, but none was found");
+    [self runTest:^
+    {
+        NSError *error = nil;
+        CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" error:&error];
+
+        [self verifyDocument:document hasExtensionProperty:@"exif:manufacturer" withValue:@"NIKON"];
+        [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"E950"];
+        [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
+    }];
+}
+
+- (void)testUpdateExifData
+{
+    [self runTest:^
+    {
+        NSError *error = nil;
+        CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" error:&error];
+        [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"E950"];
+
+        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+        NSString *newModelName = @"Ultimate Flash Model 101";
+        [properties setValue:newModelName forKey:@"exif:model"];
+        [properties setValue:@"cmis:document, P:exif:exif" forKey:kCMISPropertyObjectTypeId];
+
+        document = (CMISDocument *) [document updateProperties:properties error:&error];
+        STAssertNil(error, @"Got error while retrieving document with updated description: %@", [error description]);
+
+        [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:newModelName];
+    }];
+}
+
+#pragma mark Helper methods
+
+- (void)verifyDocument:(CMISDocument *)document hasExtensionProperty:(NSString *)expectedProperty withValue:(NSString *)expectedValue
+{
+    // Let's do some extension juggling
+    STAssertNotNil(document.properties.extensions, @"Expected extensions");
     STAssertTrue(document.properties.extensions.count > 0, @"Expected at least one property extension");
 
     // Verify root extension element
@@ -108,27 +144,29 @@
         if ([childExtensionElement.name isEqualToString:@"properties"])
         {
             propertiesExtensionElement = childExtensionElement;
+            break;
         }
     }
     STAssertNotNil(propertiesExtensionElement, @"No properties extension element found");
 
     // Find description property
-    CMISExtensionElement *descriptionElement = nil;
+    CMISExtensionElement *propertyElement = nil;
     for (CMISExtensionElement *childExtensionElement in propertiesExtensionElement.children)
     {
         if (childExtensionElement.attributes != nil &&
-                ([[childExtensionElement.attributes objectForKey:@"propertyDefinitionId"] isEqualToString:@"cm:description"]))
+                ([[childExtensionElement.attributes objectForKey:@"propertyDefinitionId"] isEqualToString:expectedProperty]))
         {
-            descriptionElement = childExtensionElement;
+            propertyElement = childExtensionElement;
+            break;
         }
     }
-    STAssertNotNil(descriptionElement, @"No description element was found");
+    STAssertNotNil(propertyElement, [NSString stringWithFormat:@"No property '%@' was found", expectedProperty]);
 
-    // Finally, verify the description
-    CMISExtensionElement *valueElement = [descriptionElement.children objectAtIndex:0];
-    STAssertNotNil(valueElement, @"There is no value element for the description property");
-    STAssertTrue([valueElement.value isEqualToString:expectedDescription],
-        @"Document description does not match: was %@ but expected %@", valueElement.value, expectedDescription);
+    // Finally, verify the value
+    CMISExtensionElement *valueElement = [propertyElement.children objectAtIndex:0];
+    STAssertNotNil(valueElement, @"There is no value element for the property");
+    STAssertTrue([valueElement.value isEqualToString:expectedValue],
+        @"Document property value does not match: was %@ but expected %@", valueElement.value, expectedValue);
 }
 
 

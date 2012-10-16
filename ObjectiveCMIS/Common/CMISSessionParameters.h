@@ -26,8 +26,12 @@
  */
 extern NSString * const kCMISSessionParameterLinkCacheSize;
 
-// TODO: Temporary, must be extracted into separate project
-extern NSString * const kCMISSessionParameterMode;
+/**
+ * Key for setting the class that is responsible for converting all kinds of CMIS objects.
+ * This value of this class can be a Class instance or a NSString instance.
+ * In the latter case, the string will be used to construct the class using NSClassFromString().
+ */
+extern NSString * const kCMISSessionParameterObjectConverterClassName;
 
 @interface CMISSessionParameters : NSObject
 

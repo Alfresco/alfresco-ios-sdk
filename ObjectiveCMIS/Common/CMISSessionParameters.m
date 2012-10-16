@@ -16,7 +16,7 @@
 
 NSString * const kCMISSessionParameterLinkCacheSize =@"session_param_cache_size_links";
 
-NSString * const kCMISSessionParameterMode = @"session_param_mode";
+NSString * const kCMISSessionParameterObjectConverterClassName = @"session_param_object_converter_class";
 
 @interface CMISSessionParameters ()
 @property (nonatomic, assign, readwrite) CMISBindingType bindingType;
@@ -51,7 +51,7 @@ NSString * const kCMISSessionParameterMode = @"session_param_mode";
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"bindingType: %@, username: %@, password: %@, atomPubUrl: %@", 
+    return [NSString stringWithFormat:@"bindingType: %d, username: %@, password: %@, atomPubUrl: %@",
             self.bindingType, self.username, self.password, self.atomPubUrl];
 }
 

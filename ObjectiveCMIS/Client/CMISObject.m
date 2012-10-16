@@ -111,15 +111,14 @@
 - (CMISObject *)updateProperties:(NSDictionary *)properties error:(NSError **)error
 {
     // Validate properties param
-        if (!properties || properties.count == 0)
+    if (!properties || properties.count == 0)
     {
         *error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Properties cannot be nil or empty"];
         return nil;
     }
 
     // Convert properties to an understandable format for the service
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
-    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:self.objectType error:error];
+    CMISProperties *convertedProperties = [self.session.objectConverter convertProperties:properties forObjectTypeId:self.objectType error:error];
 
     if (convertedProperties != nil)
     {

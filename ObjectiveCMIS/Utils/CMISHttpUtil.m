@@ -282,7 +282,7 @@
             return @"PUT";
     }
 
-    log(@"Could not find matching http request for %@", httpRequestMethod);
+    log(@"Could not find matching http request for %d", httpRequestMethod);
     return nil;
 }
 

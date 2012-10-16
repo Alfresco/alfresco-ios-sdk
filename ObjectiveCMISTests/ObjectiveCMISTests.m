@@ -1289,7 +1289,7 @@
         NSDateComponents *origComponents = [calendar components:unitflags fromDate:testDate];
 
         // Create converter
-        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
+        CMISObjectConverter *converter = self.session.objectConverter;
 
         // Try to convert with already CMISPropertyData. This should work just fine.
         NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];

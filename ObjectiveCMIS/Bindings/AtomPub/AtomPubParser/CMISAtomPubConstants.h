@@ -158,6 +158,7 @@ extern NSString * const kCMISCorePropertyIdDefinition;
 extern NSString * const kCMISCorePropertyBooleanDefinition;
 extern NSString * const kCMISCorePropertyDateTimeDefinition;
 extern NSString * const kCMISCorePropertyIntegerDefinition;
+extern NSString * const kCMISCorePropertyDecimalDefinition;
 extern NSString * const kCMISCoreProperties;
 
 extern NSString * const kCMISCoreRendition;

@@ -220,6 +220,9 @@
     CMISObjectData *objectData = nil;
     HTTPResponse *response = [HttpUtil invokeGETSynchronous:[objectByPathUriBuilder buildUrl] withSession:self.bindingSession error:error];
 
+//    NSString *responseString = [[NSString alloc] initWithData:response.data encoding:NSUTF8StringEncoding];
+//    NSLog(@"----> %@", responseString);
+
     if (response.statusCode == 200 && response.data != nil)
     {
         CMISAtomEntryParser *parser = [[CMISAtomEntryParser alloc] initWithData:response.data];

@@ -91,8 +91,7 @@
         result.hasMoreItems = objectList.hasMoreItems;
         result.numItems = objectList.numItems;
 
-        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
-        result.resultArray = [converter convertObjects:objectList.objects].items;
+        result.resultArray = [self.session.objectConverter convertObjects:objectList.objects].items;
 
         return result;
     };
@@ -116,8 +115,7 @@
 - (NSString *)createFolder:(NSDictionary *)properties error:(NSError **)error;
 {
     NSError *internalError = nil;
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
-    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueFolder error:&internalError];
+    CMISProperties *convertedProperties = [self.session.objectConverter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueFolder error:&internalError];
     if (internalError != nil)
     {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
@@ -132,8 +130,7 @@
                           failureBlock:(CMISErrorFailureBlock)failureBlock progressBlock:(CMISProgressBlock)progressBlock
 {
     NSError *internalError = nil;
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
-    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
+    CMISProperties *convertedProperties = [self.session.objectConverter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
     if (internalError != nil)
     {
         log(@"Could not convert properties: %@", [internalError description]);

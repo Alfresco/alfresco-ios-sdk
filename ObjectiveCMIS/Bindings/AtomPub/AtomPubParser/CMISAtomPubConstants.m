@@ -157,6 +157,7 @@ NSString * const kCMISCorePropertyIdDefinition = @"propertyIdDefinition";
 NSString * const kCMISCorePropertyBooleanDefinition = @"propertyBooleanDefinition";
 NSString * const kCMISCorePropertyDateTimeDefinition = @"propertyDateTimeDefinition";
 NSString * const kCMISCorePropertyIntegerDefinition = @"propertyIntegerDefinition";
+NSString * const kCMISCorePropertyDecimalDefinition = @"propertyDecimalDefinition";
 NSString * const kCMISCoreProperties = @"properties";
 
 NSString * const kCMISCoreRendition = @"rendition";
