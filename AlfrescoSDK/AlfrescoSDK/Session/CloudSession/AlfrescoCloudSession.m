@@ -60,7 +60,6 @@
 
 - (id)authProviderToBeUsed;
 
-//@property (readwrite) BOOL isConnected;
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
 @property (nonatomic, strong, readwrite) NSURL *baseURLWithoutNetwork;
 @property (nonatomic, strong) NSURL *cmisUrl;
@@ -93,7 +92,6 @@
 @synthesize oauthData = _oauthData;
 @synthesize apiKey = _apiKey;
 @synthesize isUsingBaseAuthenticationProvider = _isUsingBaseAuthenticationProvider;
-//@synthesize isConnected = _isConnected;
 
 #pragma mark - Public methods
 
@@ -225,30 +223,6 @@
         }];
     }];
 }
-
-/*
- this method is disabled until we have a solid model on a.) what does it mean to be disconnected and b.) how to handle it in the SDK
- and the subsequent apps using it
-- (void)disconnect
-{
-    CMISSession *cmisSession = [self.sessionData objectForKey:kAlfrescoSessionKeyCmisSession];
-    [cmisSession.binding clearAllCaches];
-    self.baseUrl = nil;
-    self.baseURLWithoutNetwork = nil;
-    self.cmisUrl = nil;
-    self.sessionData = nil;
-    self.personIdentifier = nil;
-    self.repositoryInfo = nil;
-    self.rootFolder = nil;
-    self.emailAddress = nil;
-    self.password = nil;
-    self.defaultListingContext = nil;
-    self.oauthData = nil;
-    self.apiKey = nil;
-    self.dateFormatter = nil;
-    self.isConnected = NO;
-}
-*/
 
 - (NSArray *)allParameterKeys
 {
@@ -428,7 +402,6 @@
                     
                 }
             }
-//            self.isConnected = YES;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 if(completionBlock)
                 {
@@ -566,7 +539,6 @@ This authentication method authorises the user to access the home network assign
             BOOL authenticated = [cmisSession authenticateAndReturnError:&error];
             if (authenticated == YES)
             {
-//                self.isConnected = YES;
                 self.personIdentifier = emailAddress;
                 AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                 self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
@@ -599,7 +571,6 @@ This authentication method authorises the user to access the home network assign
     self = [super init];
     if (nil != self)
     {
-//        self.isConnected = NO;
         if (nil != parameters)
         {
             self.sessionData = [NSMutableDictionary dictionaryWithDictionary:parameters];

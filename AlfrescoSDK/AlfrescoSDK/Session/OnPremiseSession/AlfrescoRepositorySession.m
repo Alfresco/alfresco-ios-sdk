@@ -39,7 +39,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
-//@property (readwrite) BOOL isConnected;
 @end
 
 @implementation AlfrescoRepositorySession
@@ -50,7 +49,6 @@
 @synthesize sessionData = _sessionData;
 @synthesize rootFolder = _rootFolder;
 @synthesize defaultListingContext = _defaultListingContext;
-//@synthesize isConnected = _isConnected;
 
 + (void)connectWithUrl:(NSURL *)url
               username:(NSString *)username
@@ -77,22 +75,6 @@
     }
 }
 
-/*
- this method is disabled until we have a solid model on a.) what does it mean to be disconnected and b.) how to handle it in the SDK
- and the subsequent apps using it
-- (void)disconnect
-{
-    CMISSession *cmisSession = [self.sessionData objectForKey:kAlfrescoSessionKeyCmisSession];
-    [cmisSession.binding clearAllCaches];
-    self.personIdentifier = nil;
-    self.repositoryInfo = nil;
-    self.baseUrl = nil;
-    self.sessionData = nil;
-    self.rootFolder = nil;
-    self.defaultListingContext = nil;
-    self.isConnected = NO;    
-}
-*/
 /**
  OnPremise services have a dedicated thumbnail rendition API, which we need to enable here.
  */
@@ -101,7 +83,6 @@
 {
     if (self = [super init])
     {
-//        self.isConnected = NO;
         self.baseUrl = url;
         if (nil != parameters)
         {
@@ -202,7 +183,6 @@
             BOOL isVersion4 = NO;
             if (authenticated == YES)
             {
-//                self.isConnected = YES;
                 self.personIdentifier = username;
                 AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                 self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];

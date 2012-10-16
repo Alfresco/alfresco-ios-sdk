@@ -51,7 +51,6 @@
 /// a default listing context for the session
 @property (nonatomic, strong, readonly) AlfrescoListingContext *defaultListingContext;
 
-//@property (readonly) BOOL isConnected;
 
 /**---------------------------------------------------------------------------------------
  * @name Methods for handling the Repository Settings
@@ -91,10 +90,6 @@
  */
 - (void)removeParameter:(id)key;
 
-/**
- clears out the CMIS cache
-- (void)disconnect;
- */
 
 
 @end
