@@ -39,6 +39,7 @@
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
+@property (readwrite) BOOL isConnected;
 @end
 
 @implementation AlfrescoRepositorySession
@@ -49,6 +50,7 @@
 @synthesize sessionData = _sessionData;
 @synthesize rootFolder = _rootFolder;
 @synthesize defaultListingContext = _defaultListingContext;
+@synthesize isConnected = _isConnected;
 
 + (void)connectWithUrl:(NSURL *)url
               username:(NSString *)username
@@ -79,7 +81,13 @@
 {
     CMISSession *cmisSession = [self.sessionData objectForKey:kAlfrescoSessionKeyCmisSession];
     [cmisSession.binding clearAllCaches];
-    
+    self.personIdentifier = nil;
+    self.repositoryInfo = nil;
+    self.baseUrl = nil;
+    self.sessionData = nil;
+    self.rootFolder = nil;
+    self.defaultListingContext = nil;
+    self.isConnected = NO;    
 }
 
 /**
@@ -90,6 +98,7 @@
 {
     if (self = [super init])
     {
+        self.isConnected = NO;
         self.baseUrl = url;
         if (nil != parameters)
         {
@@ -190,6 +199,7 @@
             BOOL isVersion4 = NO;
             if (authenticated == YES)
             {
+                self.isConnected = YES;
                 self.personIdentifier = username;
                 AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                 self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];

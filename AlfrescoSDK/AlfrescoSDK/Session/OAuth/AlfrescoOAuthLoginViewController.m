@@ -20,6 +20,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoOAuthHelper.h"
+#import <Availability.h>
 
 @interface AlfrescoOAuthLoginViewController () <AlfrescoOAuthLoginDelegate>
 @property (nonatomic, strong, readwrite) NSURLConnection    * connection;
@@ -118,6 +119,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIDevice *device = [UIDevice currentDevice];
+    [device beginGeneratingDeviceOrientationNotifications];
+    NSNotificationCenter *notificationCentre = [NSNotificationCenter defaultCenter];
+    [notificationCentre addObserver:self selector:@selector(reloadAndReset) name:UIDeviceOrientationDidChangeNotification object:device];
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.view.autoresizesSubviews = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -128,6 +135,22 @@
     [self createActivityView];
 }
 
+#ifdef __IPHONE_6_0
+- (BOOL)shouldAutorotate
+{
+    log(@"<<<<<<<< iOS 6 shouldAutorotate");
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    log(@"<<<<<<<< iOS 6 supportedInterfaceOrientations");
+    return UIInterfaceOrientationMaskAll;
+}
+#endif
+
+
+#if defined(__IPHONE_5_0) || defined (__IPHONE_5_1)
 - (void)viewDidUnload
 {
     self.oauthData = nil;
@@ -135,6 +158,13 @@
     self.receivedData = nil;
     [super viewDidUnload];
 }
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    log(@"<<<<<<<< iOS 5 shouldAutorotateToInterfaceOrientation");
+    return YES;
+}
+#endif
 
 - (void)viewWillDisappear:(BOOL)animated
 {

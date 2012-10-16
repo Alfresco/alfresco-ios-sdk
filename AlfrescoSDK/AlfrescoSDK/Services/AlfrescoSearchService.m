@@ -120,6 +120,8 @@
     {
         listingContext = self.session.defaultListingContext;
     }
+    
+    
 
     if (AlfrescoSearchLanguageCMIS == language)
     {
@@ -132,8 +134,8 @@
                                                                                includeRelationShips:CMISIncludeRelationshipBoth
                                                                                     renditionFilter:nil
                                                                             includeAllowableActions:YES
-                                                                                           maxItems:[NSNumber numberWithInt:50]
-                                                                                          skipCount:0
+                                                                                           maxItems:[NSNumber numberWithInt:listingContext.maxItems]
+                                                                                          skipCount:[NSNumber numberWithInt:listingContext.skipCount]
                                                                                               error:&operationQueueError];
             AlfrescoPagingResult *pagingResult = nil;
             if (nil != queryResultList)
@@ -148,7 +150,7 @@
                                                                    supportedKeys:self.supportedSortKeys
                                                                       defaultKey:self.defaultSortKey
                                                                        ascending:listingContext.sortAscending];
-                pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:YES totalItems:-1];
+                pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:NO totalItems:sortedArray.count];
             }
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 completionBlock(pagingResult, operationQueueError);

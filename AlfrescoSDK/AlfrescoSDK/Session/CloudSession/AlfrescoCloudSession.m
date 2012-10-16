@@ -60,6 +60,7 @@
 
 - (id)authProviderToBeUsed;
 
+@property (readwrite) BOOL isConnected;
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
 @property (nonatomic, strong, readwrite) NSURL *baseURLWithoutNetwork;
 @property (nonatomic, strong) NSURL *cmisUrl;
@@ -92,6 +93,7 @@
 @synthesize oauthData = _oauthData;
 @synthesize apiKey = _apiKey;
 @synthesize isUsingBaseAuthenticationProvider = _isUsingBaseAuthenticationProvider;
+@synthesize isConnected = _isConnected;
 
 #pragma mark - Public methods
 
@@ -228,6 +230,20 @@
 {
     CMISSession *cmisSession = [self.sessionData objectForKey:kAlfrescoSessionKeyCmisSession];
     [cmisSession.binding clearAllCaches];
+    self.baseUrl = nil;
+    self.baseURLWithoutNetwork = nil;
+    self.cmisUrl = nil;
+    self.sessionData = nil;
+    self.personIdentifier = nil;
+    self.repositoryInfo = nil;
+    self.rootFolder = nil;
+    self.emailAddress = nil;
+    self.password = nil;
+    self.defaultListingContext = nil;
+    self.oauthData = nil;
+    self.apiKey = nil;
+    self.dateFormatter = nil;
+    self.isConnected = NO;
 }
 
 - (NSArray *)allParameterKeys
@@ -379,10 +395,8 @@
             [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
             
             // create the session using the paramters
-            log(@"*** authenticateWithOAuthData before setting CMIS session");
             CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];
             [self.sessionData setObject:cmisSession forKey:kAlfrescoSessionKeyCmisSession];
-            log(@"*** authenticateWithOAuthData after setting CMIS session");
             
             
             
@@ -393,11 +407,9 @@
                 self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
                 
                 CMISObject *retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&error];
-                log(@"*** authenticateWithOAuthData after retrieving root folder");
                 if (nil != retrievedObject) {
                     if ([retrievedObject isKindOfClass:[CMISFolder class]])
                     {
-                        log(@"*** authenticateWithOAuthData found root folder");
                         self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:retrievedObject];
                     }
                     else
@@ -412,6 +424,7 @@
                     
                 }
             }
+            self.isConnected = YES;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 if(completionBlock)
                 {
@@ -549,6 +562,7 @@ This authentication method authorises the user to access the home network assign
             BOOL authenticated = [cmisSession authenticateAndReturnError:&error];
             if (authenticated == YES)
             {
+                self.isConnected = YES;
                 self.personIdentifier = emailAddress;
                 AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                 self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
@@ -581,6 +595,7 @@ This authentication method authorises the user to access the home network assign
     self = [super init];
     if (nil != self)
     {
+        self.isConnected = NO;
         if (nil != parameters)
         {
             self.sessionData = [NSMutableDictionary dictionaryWithDictionary:parameters];

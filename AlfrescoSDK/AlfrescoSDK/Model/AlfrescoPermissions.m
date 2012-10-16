@@ -57,6 +57,7 @@
         self.canAddChildren = [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanAddObjectToFolder]] || 
                                 [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanCreateDocument]] || 
                                 [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanCreateFolder]];
+        self.canComment = self.canEdit;
     }
     return self;
 }

@@ -24,7 +24,6 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 @interface AlfrescoBaseTest ()
 @property (nonatomic, strong) NSString * testPassword;
 - (void) uploadTestDocument:(NSString *)filePath;
-- (void) removeTestDocument;
 - (void) resetTestRunVariables;
 - (void) parseEnvironmentDictionary:(NSDictionary *)plistDictionary;
 + (NSString *)testFileNameFromEnviroment:(NSString *)filename;
@@ -120,6 +119,11 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 {
     if (nil == self.testAlfrescoDocument)
     {
+        return;
+    }
+    if (!self.currentSession.isConnected)
+    {
+        log(@"current session is not connected so we need to return immediately");
         return;
     }
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
