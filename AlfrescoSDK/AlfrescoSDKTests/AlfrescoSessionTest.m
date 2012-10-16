@@ -268,7 +268,6 @@
 /*
  @Unique_TCRef 84S1
  @Unique_TCRef 67S1
- */
 - (void)testSessionDisconnection
 {
     [super removeTestDocument];
@@ -309,6 +308,7 @@
         STAssertTrue(super.lastTestSuccessful, @"The session did not clear out the session variables after disconnection");
     }];
 }
+ */
 
 /*
  @Unique_TCRef 84S2

@@ -121,11 +121,6 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     {
         return;
     }
-    if (!self.currentSession.isConnected)
-    {
-        log(@"current session is not connected so we need to return immediately");
-        return;
-    }
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
     [docFolderService deleteNode:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, NSError *error){
         if (!succeeded)
