@@ -55,7 +55,6 @@
                     STAssertTrue(comment.canEdit, @"canEdit should be true");
                     STAssertFalse(comment.canDelete, @"canDelete should be false");
                     STAssertNotNil(comment.name, @"name should not be nil");
-                    STAssertTrue(comment.isEdited || !comment.isEdited, @"isEditied should have a value set");
                 }
                 
                 super.lastTestSuccessful = YES;
@@ -219,6 +218,7 @@
                             STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                             STAssertNotNil(comment.createdAt, @"creationDate should not be nil");
                             STAssertNotNil(comment.modifiedAt, @"modificationDate should not be nil");
+                            STAssertFalse(comment.isEdited, @"isEdited should return false");
                         }
                         [weakCommentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
                          {

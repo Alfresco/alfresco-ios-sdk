@@ -3203,6 +3203,208 @@
 //    }];
 //}
 
+
+- (void)testListingContextAfterInstantiation
+{
+    [super runAllSitesTest:^{
+        
+        AlfrescoListingContext *listingContext = nil;
+        
+        listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:10 skipCount:3];
+        STAssertTrue(listingContext.maxItems == 10, @"Expected maxItems to be 10");
+        STAssertTrue(listingContext.skipCount == 3, @"Expected the skip count to be 3");
+        
+        listingContext = [[AlfrescoListingContext alloc] initWithSortProperty:kAlfrescoSortByDescription sortAscending:NO];
+        STAssertTrue(listingContext.sortProperty == kAlfrescoSortByDescription, @"Expected the sort property to be set to sort by description at option");
+        STAssertFalse(listingContext.sortAscending, @"Expected the sort by ascending property to be set to no");
+        
+        listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:25 skipCount:2 sortProperty:kAlfrescoSortByCreatedAt sortAscending:YES];
+        STAssertTrue(listingContext.maxItems == 25, @"Expected maxItems to be 25");
+        STAssertTrue(listingContext.skipCount == 2, @"Expected the skip count to be 2");
+        STAssertTrue(listingContext.sortProperty == kAlfrescoSortByCreatedAt, @"Expected the sort property to be set to sort by created at option");
+        STAssertTrue(listingContext.sortAscending, @"Expected the sort by ascending property to be set to yes");
+        
+    }];
+}
+
+
+- (void)testAspectPrefix
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
+        [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                  forKey:kCMISPropertyObjectTypeId];
+        [properties setObject:@"test description" forKey:@"cm:description"];
+        [properties setObject:@"test title" forKey:@"cm:title"];
+        [properties setObject:@"test author" forKey:@"cm:author"];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        
+        [self.dfService createDocumentWithName:@"the-millenium-dome.jpg" inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+            
+            if (document == nil && error != nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(document, @"The created document is nil");
+                NSArray *documentAspects = document.aspects;
+                
+                for (NSString *aspectName in documentAspects)
+                {
+                    STAssertFalse([aspectName hasPrefix:@"P:"], @"The aspect %@ has a prefix of P: which is not as expected", aspectName);
+                }
+                
+                STAssertTrue([document hasAspectWithName:@"cm:titled"], @"The document should have the title aspect associated to it");
+                STAssertTrue([document hasAspectWithName:@"sys:localized"], @"The document should have the localized aspect associated with it");
+                
+                [weakDfService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
+                    
+                    if (success)
+                    {
+                        super.lastTestSuccessful = YES;
+                    }
+                    else
+                    {
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        super.lastTestSuccessful = NO;
+                    }
+                    super.callbackCompleted = YES;
+                }];
+            }
+            
+        }
+        progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+                                     
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 25S2
+ */
+- (void)testRetrievePermissionsForFolder
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:nil completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        
+            if (folder == nil || error != nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(folder, @"The folder is nil");
+                
+                [weakService retrievePermissionsOfNode:folder completionBlock:^(AlfrescoPermissions *permissions, NSError *error) {
+                    
+                    if (permissions == nil && error != nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        super.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        STAssertTrue(permissions.canAddChildren, @"Expected to be able to add children to folder");
+                        STAssertTrue(permissions.canComment, @"Expected to be able to comment on the folder");
+                        STAssertTrue(permissions.canDelete, @"Expected to be able to delete the folder");
+                        STAssertTrue(permissions.canEdit, @"Expected to be able to edit the folder");
+                        
+                        [weakService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                            
+                             if (success)
+                             {
+                                 super.lastTestSuccessful = YES;
+                                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                             }
+                             else
+                             {
+                                 super.lastTestSuccessful = NO;
+                             }
+                            
+                            super.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+
+            }
+        
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 25S2
+ */
+- (void)testRetrievePermissionsForDocument
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        
+        // Running as admin, read and write access should be true
+        [self.dfService retrieveNodeWithFolderPath:super.fixedFileName relativeToFolder:super.currentSession.rootFolder completionBlock:^(AlfrescoNode *documentNode, NSError *error) {
+            
+            if (documentNode == nil && error != nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(documentNode, @"Document node is nil");
+                STAssertTrue(documentNode.isDocument, @"Expected the node returned to be a document");
+                
+                [weakService retrievePermissionsOfNode:documentNode completionBlock:^(AlfrescoPermissions *permissions, NSError *error) {
+                    
+                    if (permissions == nil && error != nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        super.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        STAssertTrue(permissions.canAddChildren, @"Expected to be able to add children to folder");
+                        STAssertTrue(permissions.canComment, @"Expected to be able to comment on the folder");
+                        STAssertTrue(permissions.canDelete, @"Expected to be able to delete the folder");
+                        STAssertTrue(permissions.canEdit, @"Expected to be able to edit the folder");
+                        
+                        super.lastTestSuccessful = YES;
+                    }
+                    super.callbackCompleted = YES;
+                }];
+            }
+            
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
 #pragma mark unit test internal methods
 
 - (BOOL)nodeArray:(NSArray *)nodeArray containsName:(NSString *)name
