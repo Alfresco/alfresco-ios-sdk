@@ -343,6 +343,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                     log(@"***************** Running test against Cloud server: %@ with username: %@ *****************", self.server, self.userName);
                     [self authenticateCloudServer];
                     [self resetTestRunVariables];
+
                 }
                 else
                 {
@@ -351,7 +352,8 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                     [self authenticateOnPremiseServer];
                     [self resetTestRunVariables];
                 }
-                
+/*
+ */
                 [self retrieveAlfrescoTestFolder];
                 [self resetTestRunVariables];
                 

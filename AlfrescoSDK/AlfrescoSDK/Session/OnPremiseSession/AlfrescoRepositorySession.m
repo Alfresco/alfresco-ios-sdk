@@ -99,7 +99,23 @@
         {
             self.sessionData = [NSMutableDictionary dictionaryWithCapacity:8];
         }
+        if ([[parameters allKeys] containsObject:kAlfrescoMetadataExtraction])
+        {
+            [self setObject:[parameters valueForKey:kAlfrescoMetadataExtraction] forParameter:kAlfrescoMetadataExtraction];
+        }
+        else
+        {
+            [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
+        }
         
+        if ([[parameters allKeys] containsObject:kAlfrescoThumbnailCreation])
+        {
+            [self setObject:[parameters valueForKey:kAlfrescoThumbnailCreation] forParameter:kAlfrescoThumbnailCreation];
+        }
+        else
+        {
+            [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
+        }
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];        
     }

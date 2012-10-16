@@ -21,7 +21,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoOAuthHelper.h"
 
-@interface AlfrescoOAuthLoginViewController ()
+@interface AlfrescoOAuthLoginViewController () <AlfrescoOAuthLoginDelegate>
 @property (nonatomic, strong, readwrite) NSURLConnection    * connection;
 @property (nonatomic, strong, readwrite) NSMutableData      * receivedData;
 @property (nonatomic, copy, readwrite) AlfrescoOAuthCompletionBlock completionBlock;
@@ -32,6 +32,7 @@
 - (void)loadWebView;
 - (NSString *)authorizationCodeFromURL:(NSURL *)url;
 - (void)createActivityView;
+- (void)reloadAndReset;
 @end
 
 @implementation AlfrescoOAuthLoginViewController
@@ -153,6 +154,10 @@
 #pragma private methods
 - (void)loadWebView
 {
+    if (nil != self.webView)
+    {
+        self.webView = nil;
+    }
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
@@ -219,6 +224,24 @@
     [self.view insertSubview:self.activityIndicator aboveSubview:self.webView];
 }
 
+- (void)reloadAndReset
+{
+    if (nil != self.connection)
+    {
+        [self.connection cancel];
+        self.connection = nil;
+    }
+    if ([self.activityIndicator isAnimating])
+    {
+        [self.activityIndicator stopAnimating];
+    }
+    [self.activityIndicator removeFromSuperview];
+    self.activityIndicator = nil;
+
+    self.isLoginScreenLoad = YES;
+    [self loadWebView];
+    [self createActivityView];
+}
 
 #pragma WebViewDelegate methods
 
@@ -265,6 +288,7 @@
 {
     log(@"UIWebviewDelegate didFailLoadWithError");
     log(@"Error occurred while loading page: %@ with code %d and reason %@", [error localizedDescription], [error code], [error localizedFailureReason]);
+    [self reloadAndReset];
 }
 
 #pragma NSURLConnection Delegate methods
@@ -289,11 +313,11 @@
         AlfrescoOAuthHelper *helper = nil;
         if (nil != self.parameters)
         {
-            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:self.parameters];
+            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:self.parameters delegate:self];
         }
         else
         {
-            helper = [[AlfrescoOAuthHelper alloc] init];
+            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self];
         }
         [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
     }
@@ -310,6 +334,7 @@
     log(@"LoginViewController:connection error with message %@ and code %d", [error localizedDescription], [error code]);
     [self.activityIndicator stopAnimating];
     self.completionBlock(nil, error);
+    [self reloadAndReset];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -317,5 +342,13 @@
     log(@"LoginViewController:connectionDidFinishLoading");
 }
 
+#pragma mark AlfrescoOAuthDelegate method
+/**
+ if the oauth fails simply reload the webview. It could be that someone accidentally hit 'Deny' or put in the wrong username/password
+ */
+- (void)oauthLoginDidFailWithError:(NSError *)error
+{
+    [self reloadAndReset];
+}
 
 @end

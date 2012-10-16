@@ -264,7 +264,7 @@
  *  ---------------------------------------------------------------------------------------
  */
 
-/** Deletes a node from the Alfresco repository.
+/** Deletes an individual node from the Alfresco repository.
  
  @param node The node that needs to be deleted.
  @param completionBlock The block that's called in case the operation succeeds.

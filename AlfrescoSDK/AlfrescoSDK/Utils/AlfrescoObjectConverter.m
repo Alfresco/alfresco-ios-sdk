@@ -46,6 +46,8 @@
                                     properties:(NSDictionary *)properties;
 
 + (AlfrescoPropertyType)typeForCMISProperty:(NSString *)propertyIdentifier;
+
++ (NSString *)propertyValueWithoutPrecursor:(NSString *)value;
 @end
 
 @implementation AlfrescoObjectConverter
@@ -110,31 +112,36 @@
     NSString *buildNumber =  [[buildArray objectAtIndex:1] stringByReplacingOccurrencesOfString:@")" withString:@""];   
     
 
-    [repoDictionary setObject:productName forKey:kAlfrescoRepositoryName];
-    if ([productName rangeOfString:kAlfrescoRepositoryCommunity].location != NSNotFound)
-    {
-        [repoDictionary setObject:kAlfrescoRepositoryCommunity forKey:kAlfrescoRepositoryEdition];
-    }
-    else 
-    {
-        [repoDictionary setObject:kAlfrescoRepositoryEnterprise forKey:kAlfrescoRepositoryEdition];
-    }
-    [repoDictionary setObject:identifier forKey:kAlfrescoRepositoryIdentifier];
-    [repoDictionary setObject:summary forKey:kAlfrescoRepositorySummary];
-    [repoDictionary setObject:version forKey:kAlfrescoRepositoryVersion];
-    [repoDictionary setObject:majorVersionNumber forKey:kAlfrescoRepositoryMajorVersion];    
-    [repoDictionary setObject:minorVersionNumber forKey:kAlfrescoRepositoryMinorVersion];
-    [repoDictionary setObject:maintenanceVersion forKey:kAlfrescoRepositoryMaintenanceVersion];
-    [repoDictionary setObject:buildNumber forKey:kAlfrescoRepositoryBuildNumber];
     
     NSMutableDictionary *capabilities = [NSMutableDictionary dictionary];
     if (self.isCloud)
     {
+        [repoDictionary setObject:kAlfrescoCloudEdition forKey:kAlfrescoRepositoryEdition];
+        [repoDictionary setObject:identifier forKey:kAlfrescoRepositoryIdentifier];
+        [repoDictionary setObject:summary forKey:kAlfrescoRepositorySummary];
+        [repoDictionary setObject:productName forKey:kAlfrescoRepositoryName];
+        
         [capabilities setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoCapabilityLike];
         [capabilities setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoCapabilityCommentsCount];
     }
     else
     {
+        [repoDictionary setObject:productName forKey:kAlfrescoRepositoryName];
+        if ([productName rangeOfString:kAlfrescoRepositoryCommunity].location != NSNotFound)
+        {
+            [repoDictionary setObject:kAlfrescoRepositoryCommunity forKey:kAlfrescoRepositoryEdition];
+        }
+        else
+        {
+            [repoDictionary setObject:kAlfrescoRepositoryEnterprise forKey:kAlfrescoRepositoryEdition];
+        }
+        [repoDictionary setObject:identifier forKey:kAlfrescoRepositoryIdentifier];
+        [repoDictionary setObject:summary forKey:kAlfrescoRepositorySummary];
+        [repoDictionary setObject:version forKey:kAlfrescoRepositoryVersion];
+        [repoDictionary setObject:majorVersionNumber forKey:kAlfrescoRepositoryMajorVersion];
+        [repoDictionary setObject:minorVersionNumber forKey:kAlfrescoRepositoryMinorVersion];
+        [repoDictionary setObject:maintenanceVersion forKey:kAlfrescoRepositoryMaintenanceVersion];
+        [repoDictionary setObject:buildNumber forKey:kAlfrescoRepositoryBuildNumber];
         if ([majorVersionNumber intValue] < 4)
         {
             [capabilities setValue:[NSNumber numberWithBool:NO] forKey:kAlfrescoCapabilityLike];
@@ -289,11 +296,7 @@
             for (CMISExtensionElement *aspect in aspectArray) {
                 if ([aspect.name isEqualToString:kAlfrescoAppliedAspects])
                 {
-                    NSString *aspectValue = aspect.value;
-                    if ([aspectValue hasPrefix:@"P:"])
-                    {
-                        aspectValue = [aspect.value stringByReplacingOccurrencesOfString:@"P:" withString:@""];
-                    }
+                    NSString *aspectValue = [AlfrescoObjectConverter propertyValueWithoutPrecursor:aspect.value];
                     [alfrescoAspectArray addObject:aspectValue];
                 }
                 else if ([aspect.name isEqualToString:kAlfrescoAspectProperties])
@@ -563,6 +566,24 @@
     {
         return AlfrescoPropertyTypeString;
     }
+}
+
++ (NSString *)propertyValueWithoutPrecursor:(NSString *)value
+{
+    if ([value hasPrefix:@"P:"])
+    {
+        return [value stringByReplacingOccurrencesOfString:@"P:" withString:@""];
+    }
+    else if([value hasPrefix:@"D:"])
+    {
+        return [value stringByReplacingOccurrencesOfString:@"D:" withString:@""];
+    }
+    else if ([value hasPrefix:@"F:"])
+    {
+        return [value stringByReplacingOccurrencesOfString:@"F:" withString:@""];
+    }
+    else
+        return value;
 }
 
 
