@@ -10,6 +10,7 @@
 #import "CMISSession.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import "CMISISO8601DateFormatter.h"
+#import "AlfrescoCMISDocument.h"
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
 
@@ -210,6 +211,20 @@
 
     }];
 
+}
+
+- (void)testAddAspectToDocument
+{
+    [self runTest:^
+    {
+        NSError *error = nil;
+        AlfrescoCMISDocument *document = (AlfrescoCMISDocument *) [self uploadTestFile];
+        STAssertFalse([document hasAspect:@"P:exif:exif"], nil);
+
+        [document.aspectTypes addObject:@"P:exif:exif"];
+        document = (AlfrescoCMISDocument *) [document updateProperties:[NSDictionary dictionary] error:&error];
+        STAssertTrue([document hasAspect:@"P:exif:exif"], nil);
+    }];
 }
 
 #pragma mark Helper methods

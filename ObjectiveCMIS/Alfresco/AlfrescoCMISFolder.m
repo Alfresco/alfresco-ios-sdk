@@ -21,14 +21,15 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// AlfrescoCMISDocument 
+// AlfrescoCMISFolder
 //
-#import "AlfrescoCMISDocument.h"
+#import "AlfrescoCMISFolder.h"
 #import "CMISSession.h"
-#import "CMISConstants.h"
 #import "AlfrescoCMISUtil.h"
+#import "CMISConstants.h"
 
-@implementation AlfrescoCMISDocument
+
+@implementation AlfrescoCMISFolder
 
 - (id)initWithObjectData:(CMISObjectData *)objectData withSession:(CMISSession *)session
 {
@@ -60,6 +61,7 @@
 
     return [super updateProperties:aspectAwareProperties error:error];
 }
+
 
 - (BOOL)hasAspect:(NSString *)aspectTypeId
 {

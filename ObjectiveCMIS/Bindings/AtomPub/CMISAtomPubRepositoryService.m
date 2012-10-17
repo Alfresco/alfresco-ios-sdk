@@ -20,18 +20,52 @@
 #import "CMISHttpUtil.h"
 #import "CMISTypeDefinitionAtomEntryParser.h"
 
+#define DEFAULT_TYPE_DEFINITION_CACHE_SIZE 50
+
 @interface CMISAtomPubRepositoryService ()
+
 @property (nonatomic, strong) NSMutableDictionary *repositories;
-@end
+@property (nonatomic, strong) NSCache *typeDefinitionCache;
 
-@interface CMISAtomPubRepositoryService (PrivateMethods)
-- (void)internalRetrieveRepositoriesAndReturnError:(NSError **)error;
 @end
-
 
 @implementation CMISAtomPubRepositoryService
 
 @synthesize repositories = _repositories;
+
+- (id)initWithBindingSession:(CMISBindingSession *)session
+{
+    self = [super initWithBindingSession:session];
+    if (self)
+    {
+        [self createTypeDefinitionCache:session];
+    }
+    return self;
+}
+
+- (void)createTypeDefinitionCache:(CMISBindingSession *)session
+{
+    self.typeDefinitionCache = [[NSCache alloc] init];
+
+    id cacheSize = [session objectForKey:kCMISSessionParameterTypeDefinitionCacheSize];
+    if (cacheSize != nil)
+    {
+        if ([cacheSize isKindOfClass:[NSNumber class]])
+        {
+            self.typeDefinitionCache.countLimit = [(NSNumber *) cacheSize unsignedIntValue];
+        }
+        else
+        {
+            log(@"Invalid object set for %@ session parameter. Ignoring and using default instead", kCMISSessionParameterTypeDefinitionCacheSize);
+        }
+    }
+
+    if (self.typeDefinitionCache.countLimit <= 0)
+    {
+        self.typeDefinitionCache.countLimit = DEFAULT_TYPE_DEFINITION_CACHE_SIZE;
+    }
+}
+
 
 - (NSArray *)retrieveRepositoriesAndReturnError:(NSError **)outError
 {
@@ -75,6 +109,13 @@
         return nil;
     }
 
+    // First, check cache
+    if ([self.typeDefinitionCache objectForKey:typeId] != nil)
+    {
+        return [self.typeDefinitionCache objectForKey:typeId];
+    }
+
+    // Otherwise fetch type definition
     CMISTypeByIdUriBuilder *typeByIdUriBuilder = [self.bindingSession objectForKey:kCMISBindingSessionKeyTypeByIdUriBuilder];
     typeByIdUriBuilder.id = typeId;
 
@@ -85,7 +126,12 @@
         CMISTypeDefinitionAtomEntryParser *parser = [[CMISTypeDefinitionAtomEntryParser alloc] initWithData:response.data];
         if ([parser parseAndReturnError:outError])
         {
-            return  parser.typeDefinition;
+            CMISTypeDefinition *typeDefinition = parser.typeDefinition;
+
+            // Store it in the cache for future reference
+            [self.typeDefinitionCache setObject:typeDefinition forKey:typeId];
+
+            return typeDefinition;
         }
     }
 

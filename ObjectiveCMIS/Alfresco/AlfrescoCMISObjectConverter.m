@@ -31,6 +31,7 @@
 #import "CMISPropertyDefinition.h"
 #import "AlfrescoCMISDocument.h"
 #import "CMISISO8601DateFormatter.h"
+#import "AlfrescoCMISFolder.h"
 
 @interface AlfrescoCMISObjectConverter ()
 
@@ -61,8 +62,7 @@
     }
     else if (objectData.baseType == CMISBaseTypeFolder)
     {
-        // No support yet for Alfresco specific folders
-        object = [[CMISFolder alloc] initWithObjectData:objectData withSession:self.session];
+        object = [[AlfrescoCMISFolder alloc] initWithObjectData:objectData withSession:self.session];
     }
 
     return object;
