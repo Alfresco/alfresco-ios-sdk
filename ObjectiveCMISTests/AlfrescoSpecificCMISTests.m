@@ -9,6 +9,7 @@
 #import "CMISFolder.h"
 #import "CMISSession.h"
 #import "AlfrescoCMISObjectConverter.h"
+#import "CMISISO8601DateFormatter.h"
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
 
@@ -92,7 +93,7 @@
     }];
 }
 
-- (void)testRetrieveExifData
+- (void)testRetrieveExifDataUsingExtensions
 {
     [self runTest:^
     {
@@ -102,6 +103,24 @@
         [self verifyDocument:document hasExtensionProperty:@"exif:manufacturer" withValue:@"NIKON"];
         [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"E950"];
         [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
+    }];
+}
+
+- (void)testRetrieveExifDataUsingProperties
+{
+    [self runTest:^
+    {
+
+        NSError *error = nil;
+        CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" error:&error];
+
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:manufacturer"], @"NIKON", nil);
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:model"], @"E950", nil);
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:flash"], [NSNumber numberWithBool:NO], nil);
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:pixelXDimension"], [NSNumber numberWithInt:800], nil);
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:exposureTime"], [NSNumber numberWithFloat:0.012987012987013f], nil);
+        CMISISO8601DateFormatter *df = [[CMISISO8601DateFormatter alloc] init];
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:dateTimeOriginal"], [df dateFromString:@"2001-04-06T11:51:00.000Z"], nil);
     }];
 }
 

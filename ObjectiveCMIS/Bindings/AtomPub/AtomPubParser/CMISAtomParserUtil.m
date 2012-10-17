@@ -26,38 +26,42 @@
 #import "CMISAtomParserUtil.h"
 #import "CMISAtomPubConstants.h"
 #import "CMISISO8601DateFormatter.h"
-#import "CMISEnums.h"
 
 
 @implementation CMISAtomParserUtil
 
-//+ (CMISPropertyType)atomPubTypeToInternalType:(NSString *)atomPubType
-//{
-//    if([atomPubType isEqualToString:kCMISAtomEntryPropertyId])
-//    {
-//        return CMISPropertyTypeId;
-//    }
-//    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyInteger])
-//       {
-//           return CMISPropertyTypeString;
-//       }
-//    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyInteger])
-//    {
-//        return CMISPropertyTypeInteger;
-//    }
-//    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyBoolean])
-//    {
-//        return CMISPropertyTypeBoolean;
-//    }
-//    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyDateTime])
-//    {
-//        return CMISPropertyTypeDateTime;
-//    }
-//    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyDecimal])
-//    {
-//        return CMISPropertyTypeDecimal;
-//    }
-//}
++ (CMISPropertyType)atomPubTypeToInternalType:(NSString *)atomPubType
+{
+    if([atomPubType isEqualToString:kCMISAtomEntryPropertyId])
+    {
+        return CMISPropertyTypeId;
+    }
+    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyString])
+       {
+           return CMISPropertyTypeString;
+       }
+    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyInteger])
+    {
+        return CMISPropertyTypeInteger;
+    }
+    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyBoolean])
+    {
+        return CMISPropertyTypeBoolean;
+    }
+    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyDateTime])
+    {
+        return CMISPropertyTypeDateTime;
+    }
+    else if ([atomPubType isEqualToString:kCMISAtomEntryPropertyDecimal])
+    {
+        return CMISPropertyTypeDecimal;
+    }
+    else
+    {
+        log(@"Unknow property type %@. Go tell a developer to fix this.", atomPubType);
+        return CMISPropertyTypeString;
+    }
+}
 
 + (NSArray *)parsePropertyValue:(NSString *)stringValue withPropertyType:(NSString *)propertyType
 {
@@ -82,6 +86,11 @@
     else if ([propertyType isEqualToString:kCMISAtomEntryPropertyDecimal])
     {
         return [NSArray arrayWithObject:[NSNumber numberWithFloat:[stringValue floatValue]]];
+    }
+    else
+    {
+        log(@"Unknow property type %@. Go tell a developer to fix this.", propertyType);
+         return [NSArray array];
     }
 }
 

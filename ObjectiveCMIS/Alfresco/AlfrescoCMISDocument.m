@@ -52,7 +52,7 @@
         self.aspectTypes = [[NSMutableArray alloc] init];
 
         // We'll gather all the properties, and expose them as conveniently on the document
-        CMISExtensionElement *propertiesExtensionElement = nil;
+        NSMutableArray *propertyExtensionRootElements = [[NSMutableArray alloc] init];
 
         // Find all Alfresco aspects in the extensions
         if (alfrescoExtensions != nil && alfrescoExtensions.count > 0)
@@ -69,7 +69,7 @@
                         }
                         else if ([childExtensionElement.name isEqualToString:ALFRESCO_EXTENSION_PROPERTIES])
                         {
-                            propertiesExtensionElement = childExtensionElement;
+                            [propertyExtensionRootElements addObject:childExtensionElement];
                         }
                     }
                 }
@@ -89,18 +89,24 @@
         }
 
         // Convert all extended properties to 'real' properties
-        for (CMISExtensionElement *propertyExtension in propertiesExtensionElement.children)
+        for (CMISExtensionElement *propertyRootExtensionElement in propertyExtensionRootElements)
         {
-            CMISPropertyData *propertyData = [[CMISPropertyData alloc] init];
-            propertyData.identifier = [propertyExtension.attributes objectForKey:kCMISAtomEntryPropertyDefId];
-            propertyData.displayName = [propertiesExtensionElement.attributes objectForKey:kCMISAtomEntryDisplayName];
-            propertyData.queryName = [propertiesExtensionElement.attributes objectForKey:kCMISAtomEntryQueryName];
-            propertyData.type = [CMISAtomParserUtil atomPubTypeToInternalType:propertiesExtensionElement.name];
+            for (CMISExtensionElement *propertyExtension in propertyRootExtensionElement.children)
+            {
+                CMISPropertyData *propertyData = [[CMISPropertyData alloc] init];
+                propertyData.identifier = [propertyExtension.attributes objectForKey:kCMISAtomEntryPropertyDefId];
+                propertyData.displayName = [propertyExtension.attributes objectForKey:kCMISAtomEntryDisplayName];
+                propertyData.queryName = [propertyExtension.attributes objectForKey:kCMISAtomEntryQueryName];
+                propertyData.type = [CMISAtomParserUtil atomPubTypeToInternalType:propertyExtension.name];
 
-            CMISExtensionElement *valueExtensionElement = [propertiesExtensionElement.children objectAtIndex:0];
-            propertyData.values = [CMISAtomParserUtil parsePropertyValue:valueExtensionElement.value withPropertyType:propertiesExtensionElement.name];
+                CMISExtensionElement *valueExtensionElement = [propertyExtension.children objectAtIndex:0];
+                if (valueExtensionElement.value)
+                {
+                    propertyData.values = [CMISAtomParserUtil parsePropertyValue:valueExtensionElement.value withPropertyType:propertyExtension.name];
+                }
 
-            [self.properties addProperty:propertyData];
+                [self.properties addProperty:propertyData];
+            }
         }
 
 

@@ -24,11 +24,13 @@
 // CMISAtomParserUtil 
 //
 #import <Foundation/Foundation.h>
+#import "CMISEnums.h"
+
 
 
 @interface CMISAtomParserUtil : NSObject
 
-//+ (CMISPropertyType)atomPubTypeToInternalType:(NSString *)atomPubType;
++ (CMISPropertyType)atomPubTypeToInternalType:(NSString *)atomPubType;
 
 + (NSArray *)parsePropertyValue:(NSString *)stringValue withPropertyType:(NSString *)propertyType;
 
