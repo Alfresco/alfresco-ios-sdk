@@ -222,8 +222,15 @@
             {
                 STAssertNotNil(pagingResult, @"paged result should not be nil");
                 log(@"Objects found is %d",pagingResult.objects.count);
-                STAssertTrue(pagingResult.objects.count == 1, @"Favorite site count should be 1");
-                STAssertTrue(pagingResult.totalItems >= 1, @"Total favorite site count should be larger than 1");
+                STAssertTrue(pagingResult.totalItems >= 1, @"Total favorite site count should be at least 1, but we got %d", pagingResult.totalItems);
+                if (pagingResult.totalItems > 1)
+                {
+                    STAssertTrue(pagingResult.objects.count == 1, @"Favorite site count should be 1, instead we get %d", pagingResult.objects.count);
+                }
+                else
+                {
+                    STAssertTrue(pagingResult.objects.count == 0, @"Favorite site count should be 0, instead we get %d", pagingResult.objects.count);
+                }
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;

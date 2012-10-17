@@ -476,8 +476,8 @@
                  NSDictionary *newFolderProps = folder.properties;
                  AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
                  AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
-                 STAssertTrue([newDescriptionProp.value isEqualToString:description], @"cm:description property value does not match expected value %@",description);
-                 STAssertTrue([newTitleProp.value isEqualToString:title], @"cm:title property value does not match expected value %@",title);
+                 STAssertTrue([newDescriptionProp.value isEqualToString:description], @"cm:description property value does not match expected value %@. Instead we get %@",description, newDescriptionProp.value);
+                 STAssertTrue([newTitleProp.value isEqualToString:title], @"cm:title property value does not match expected value %@. Instead we get %@",title, newTitleProp.value);
                  
                  [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
                   {
@@ -2291,7 +2291,7 @@
 {
     [super runAllSitesTest:^{
         NSString *filename = @"millenium-dome.jpg";
-        __block NSString *testDescription = @"Peter's test description";
+        __block NSString *testDescription = @"Peter\'s test description";
         __block NSString *testTitle = @"test title";
         __block NSString *updatedName = @"millenium-dome-2012.jpg";
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
@@ -2334,8 +2334,8 @@
                          STAssertTrue([updatedDoc.name isEqualToString:updatedName], @"The name of the document should be %@, but instead we got %@", updatedName, updatedDoc.name);
                          AlfrescoProperty *description = [updatedDoc.properties objectForKey:@"cm:description"];
                          AlfrescoProperty *title = [updatedDoc.properties objectForKey:@"cm:title"];
-                         STAssertTrue([description.value isEqualToString:testDescription], @"expected description %@, but got %@", testDescription, node.description);
-                         STAssertTrue([title.value isEqualToString:testTitle], @"expected title %@, but got %@", testTitle, node.title);
+                         STAssertTrue([description.value isEqualToString:testDescription], @"expected description %@, but got %@", testDescription, description.value);
+                         STAssertTrue([title.value isEqualToString:testTitle], @"expected title %@, but got %@", testTitle, title.value);
                          super.lastTestSuccessful = YES;
                          [weakDfService deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError){
                              if (!succeeded)
@@ -3335,9 +3335,10 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
+        NSString *folderPath = [NSString stringWithFormat:@"%@%@",super.testFolderPathName, super.fixedFileName];
         
         // Running as admin, read and write access should be true
-        [self.dfService retrieveNodeWithFolderPath:super.fixedFileName relativeToFolder:super.currentSession.rootFolder completionBlock:^(AlfrescoNode *documentNode, NSError *error) {
+        [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *documentNode, NSError *error) {
             
             if (documentNode == nil && error != nil)
             {
@@ -3377,6 +3378,28 @@
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
+
+- (void)testRetrieveNodeWithFolderPathRelativeToFolder
+{
+    [super runAllSitesTest:^{
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        [self.dfService retrieveNodeWithFolderPath:super.fixedFileName relativeToFolder:super.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
+            if (nil == node)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                super.lastTestSuccessful = YES;
+            }
+            super.callbackCompleted = YES;
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
 
 #pragma mark unit test internal methods
 
