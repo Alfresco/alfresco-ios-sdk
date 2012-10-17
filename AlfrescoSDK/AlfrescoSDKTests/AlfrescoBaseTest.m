@@ -241,6 +241,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                 self.lastTestSuccessful = YES;
                 self.testDocFolder = folder;
                 self.callbackCompleted = YES;
+                self.currentRootFolder = folder;
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -251,6 +252,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
         STAssertTrue([self.currentSession isKindOfClass:[AlfrescoRepositorySession class]], @"expected OnPremise session");
         self.testDocFolder = self.currentSession.rootFolder;
         self.callbackCompleted = YES;
+        self.currentRootFolder = self.currentSession.rootFolder;
     }
 }
 
