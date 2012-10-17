@@ -25,8 +25,8 @@
 "api_reference_option"="API Reference";
 "learn_more_option"="Learn More...";
 "api_reference_title"="API Reference";
-"api_reference_url"="http://docs.alfresco.com/mobile_sdk_ios_preview/index.jsp";
-"learn_more_url"="http://www.alfresco.com/products/mobile";
+"api_reference_url"="http://dev.alfresco.com/resource/mobileSDK/iOS";
+"learn_more_url"="https://developer.alfresco.com/mobile";
 "sample_title"="Select Sample";
 "sample_browse_company_home_option"="Browse Company Home";
 "sample_browse_all_sites_option"="Browse All Sites";
