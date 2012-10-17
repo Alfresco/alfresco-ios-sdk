@@ -529,6 +529,7 @@
         }
         return nil;
     }
+    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSError *error = nil;
     id favoriteSitesObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if(error)
@@ -549,11 +550,37 @@
         }
         return nil;
     }
-    
-    NSArray *favoriteArray = [favoriteSitesObject valueForKeyPath:kAlfrescoOnPremiseFavoriteSites];
-    NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:favoriteArray.count];
-    for (NSString *favoriteDict in favoriteArray) {
-        [resultArray addObject:favoriteDict];
+    NSDictionary *favouriteSitesDictionary = (NSDictionary *)favoriteSitesObject;
+    NSMutableArray *resultArray = [NSMutableArray array];
+
+    id favouriteSitesObj = [favouriteSitesDictionary valueForKeyPath:kAlfrescoOnPremiseFavoriteSites];
+    if ([favouriteSitesObj isKindOfClass:[NSDictionary class]])
+    {
+        NSDictionary *favDict = (NSDictionary *)favouriteSitesObj;
+        for (NSString * favouriteSite in favDict)
+        {
+            id valueObj = [favDict valueForKey:favouriteSite];
+            if ([valueObj isKindOfClass:[NSNumber class]])
+            {
+                BOOL isFavourite = [valueObj boolValue];
+                if (isFavourite)
+                {
+                    [resultArray addObject:favouriteSite];
+                }
+            }
+            else
+            {
+                [resultArray addObject:favouriteSite];
+            }
+        }
+    }
+    else if([favouriteSitesObj isKindOfClass:[NSArray class]])
+    {
+        NSArray *sitesArray = (NSArray *)favouriteSitesObj;
+        for (NSString * favouriteSite in sitesArray)
+        {
+            [resultArray addObject:favouriteSite];
+        }
     }
     return resultArray;
 }
