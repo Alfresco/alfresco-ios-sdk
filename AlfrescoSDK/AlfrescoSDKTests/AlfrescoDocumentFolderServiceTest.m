@@ -3383,14 +3383,16 @@
 {
     [super runAllSitesTest:^{
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        [self.dfService retrieveNodeWithFolderPath:super.fixedFileName relativeToFolder:super.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
+        [self.dfService retrieveNodeWithFolderPath:super.fixedFileName relativeToFolder:super.currentRootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
             if (nil == node)
             {
+                log(@"we could not find the node at path %@", super.fixedFileName);
                 super.lastTestSuccessful = NO;
                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else
             {
+                log(@"we DID find the node at path %@ and the node identifier is %@ and name is %@", super.fixedFileName, node.identifier, node.name);
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;
