@@ -274,12 +274,7 @@
                                                                       defaultKey:self.defaultSortKey
                                                                        ascending:listingContext.sortAscending];
             
-            BOOL hasMore = NO;
-            if(listingContext.skipCount < favoriteSitesArray.count)
-            {
-                hasMore = YES;
-            }
-            pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedSiteArray hasMoreItems:hasMore totalItems:favoriteSitesArray.count];
+            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedSiteArray listingContext:listingContext];
         }
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             completionBlock(pagingResult, operationQueueError);
