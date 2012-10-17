@@ -3379,6 +3379,28 @@
     }];
 }
 
+- (void)testRetrieveNodeWithFolderPathRelativeToFolder
+{
+    [super runAllSitesTest:^{
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        [self.dfService retrieveNodeWithFolderPath:super.fixedFileName relativeToFolder:super.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
+            if (nil == node)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                super.lastTestSuccessful = YES;
+            }
+            super.callbackCompleted = YES;
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
 #pragma mark unit test internal methods
 
 - (BOOL)nodeArray:(NSArray *)nodeArray containsName:(NSString *)name
