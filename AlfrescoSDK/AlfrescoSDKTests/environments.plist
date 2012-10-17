@@ -10,7 +10,7 @@
 			<key>password</key>
 			<string>alzheimer</string>
 			<key>server</key>
-			<string>http://ec2-46-51-138-98.eu-west-1.compute.amazonaws.com//alfresco</string>
+			<string>http://ec2-46-51-138-98.eu-west-1.compute.amazonaws.com/alfresco</string>
 			<key>firstName</key>
 			<string>Administrator</string>
 			<key>testSite</key>
@@ -28,7 +28,7 @@
 			<key>docFolder</key>
 			<string>/</string>
 		</dict>
-        <dict>
+		<dict>
 			<key>username</key>
 			<string>admin</string>
 			<key>password</key>

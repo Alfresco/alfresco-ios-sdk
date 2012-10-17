@@ -546,7 +546,6 @@
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
-        log(@"retrieveNodeWithFolderPath path = %@", path);
         CMISObject *cmisObject = [weakSelf.cmisSession retrieveObjectByPath:path error:&operationQueueError];
         AlfrescoNode *alfrescoNode = nil;
         if (nil != cmisObject) 
@@ -580,7 +579,10 @@
         {
             CMISFolder *folder = (CMISFolder *)object;
             NSString *searchPath = [NSString stringWithFormat:@"%@%@", folder.path, path];
-            log(@"retrieveNodeWithFolderPath path = %@", searchPath);
+            if (![folder.path hasSuffix:@"/"] && ![path hasPrefix:@"/"])
+            {
+                searchPath = [NSString stringWithFormat:@"%@/%@", folder.path, path];
+            }
             [weakSelf retrieveNodeWithFolderPath:searchPath completionBlock:completionBlock];
         }
         else 
