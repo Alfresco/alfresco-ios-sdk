@@ -3378,6 +3378,311 @@
     }];
 }
 
+/*
+ @Unique_TCRef 14S5
+ */
+- (void)testRetrieveChildrenInFolderWithListingContext
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        
+        [self.dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *entireArray, NSError *entireError) {
+            
+            if (entireArray == nil || entireError != nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [entireError localizedDescription], [entireError localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(entireArray, @"Expetced array to not be nil");
+                STAssertTrue([entireArray count] >= 5, @"Expected the entire array to return more than or equal to 5 items, but instead got back %i", [entireArray count]);
+                
+                NSArray *subsetOfEntireArray = [entireArray subarrayWithRange:NSMakeRange(2, 3)];
+                
+                NSLog(@"Subset Array is: %@", subsetOfEntireArray);
+                
+                AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:3 skipCount:2];
+                
+                [weakDfService retrieveChildrenInFolder:self.testDocFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                    
+                    if (pagingResult == nil || error != nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [entireError localizedDescription], [entireError localizedFailureReason]];
+                    }
+                    else
+                    {
+                        STAssertNotNil(pagingResult.objects, @"Expecting the objects array not to be nil");
+                        STAssertTrue([pagingResult.objects count] == 3, @"Expected the results of the objects array to contain 3 items, instead got back %i", [pagingResult.objects count]);
+                        NSLog(@"Paging Array is: %@", pagingResult.objects);
+                        
+                        BOOL matchingArrays = NO;
+                        
+                        for (int i = 0; i < [pagingResult.objects count]; i++)
+                        {
+                            AlfrescoNode *pagingObject = [pagingResult.objects objectAtIndex:i];
+                            AlfrescoNode *entireObject = [subsetOfEntireArray objectAtIndex:i];
+                            
+                            if (![pagingObject.identifier isEqualToString:entireObject.identifier]) {
+                                matchingArrays = NO;
+                                break;
+                            }
+                            matchingArrays = YES;
+                        }
+                        
+                        STAssertTrue(matchingArrays, @"Expected the paging results to be the same as the subset of the entire array");
+                        
+                        super.lastTestSuccessful = YES;
+                    }
+                    super.callbackCompleted = YES;
+                }];
+            }
+            
+        }];
+
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 23S1
+ */
+- (void)testRetrieveRootFolderParentFolder
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        [self.dfService retrieveParentFolderOfNode:super.testDocFolder completionBlock:^(AlfrescoFolder *parentFolder, NSError *error) {
+            
+            if (parentFolder != nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNil(parentFolder, @"Expected the parent folder of the root folder to be nil");
+                STAssertNotNil(error, @"Expected an error to be thrown");
+                super.lastTestSuccessful = YES;
+            }
+            
+            super.callbackCompleted = YES;
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 31S6
+ */
+- (void)testRetrieveContentOfDocumentWithDoubleByteCharacters
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        
+        [self.dfService retrieveContentOfDocument:super.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+            
+            if (contentFile == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(contentFile,@"created content file should not be nil");
+                NSError *fileError = nil;
+                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
+                STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
+                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
+                log(@"created content file: url=%@ mimetype = %@ data length = %llu",[contentFile.fileUrl path], contentFile.mimeType, size);
+                NSError *readError = nil;
+                
+                __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
+                
+                if (stringContent == nil)
+                {
+                    log(@"stringContent::we got nil as content from %@",[contentFile.fileUrl path]);
+                    super.lastTestSuccessful = NO;
+                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
+                    super.callbackCompleted = YES;
+                }
+                else
+                {
+                    __block NSString *updatedContent = [NSString stringWithFormat:@"%@ - and we added some double byte characters ありがと　にほんご", stringContent];
+                    NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
+                    __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:contentFile.mimeType];
+                    [weakDfService updateContentOfDocument:super.testAlfrescoDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error) {
+                         
+                         if (updatedDocument == nil)
+                         {
+                             super.lastTestSuccessful = NO;
+                             super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                             super.callbackCompleted = YES;
+                         }
+                         else
+                         {
+                             STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
+                             STAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
+                             
+                             [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *error){
+                                 if (checkContentFile == nil)
+                                 {
+                                     super.lastTestSuccessful = NO;
+                                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                 }
+                                 else
+                                 {
+                                     NSError *fileError = nil;
+                                     NSDictionary *fileDict = [[NSFileManager defaultManager] attributesOfItemAtPath:[checkContentFile.fileUrl path] error:&fileError];
+                                     STAssertNil(fileError, @"expected no error with getting file attributes for content file at path %@",[checkContentFile.fileUrl path]);
+                                     unsigned long long size = [[fileDict valueForKey:NSFileSize] unsignedLongLongValue];
+                                     STAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu",size);
+                                     NSError *checkError = nil;
+                                     NSString *checkContentString = [NSString stringWithContentsOfFile:[checkContentFile.fileUrl path] encoding:NSUTF8StringEncoding error:&checkError];
+                                     if (checkContentString == nil)
+                                     {
+                                         log(@"checkContentString::we got nil as content from %@",[contentFile.fileUrl path]);
+                                         super.lastTestSuccessful = NO;
+                                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [checkError localizedDescription], [checkError localizedFailureReason]];
+                                     }
+                                     else
+                                     {
+                                         log(@"we got the following text back %@",checkContentString);
+                                         STAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content, instead we get %@",updatedContent);
+                                         super.lastTestSuccessful = YES;
+                                     }
+                                     
+                                 }
+                                 super.callbackCompleted = YES;
+                             } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+                         }
+                     } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                         log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                     }];
+                }
+            }
+            
+        } progressBlock:^(NSInteger bytesDownloaded, NSInteger totalBytes) {
+            
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+
+}
+
+/*
+ @Unique_TCRef 31S6
+ */
+- (void)testUpdatePropertiesOfFolderNode
+{
+    // Currently this test does not check for updating cm:name property. Once this issue has been resolved,
+    // uncomment the lines below
+    [super runAllSitesTest:^{
+        
+        NSString *originalDescriptionString = @"Original Description";
+        NSString *originalTitleString = @"Original Title";
+//        NSString *originalNameString = @"Original Name";
+        NSString *updatedDescriptionString = @"Updated Description";
+        NSString *updatedTitleString = @"Updated Title";
+//        NSString *updatedNameString = @"Updated Name";
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        NSMutableDictionary *originalProperties = [NSMutableDictionary dictionary];
+        [originalProperties setObject:originalDescriptionString forKey:@"cm:description"];
+        [originalProperties setObject:originalTitleString forKey:@"cm:title"];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        
+        [self.dfService createFolderWithName:self.unitTestFolder inParentFolder:self.testDocFolder properties:originalProperties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            
+            if (folder == nil || error != nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(folder, @"Expected the folder not to be nil");
+                STAssertNotNil(folder.properties, @"The folders properties are nil");
+                
+                NSDictionary *folderProperties = folder.properties;
+                AlfrescoProperty *originalDescription = [folderProperties objectForKey:@"cm:description"];
+                AlfrescoProperty *originalTitle = [folderProperties objectForKey:@"cm:title"];
+//                AlfrescoProperty *originalName = [folderProperties objectForKey:@"cm:name"];
+                
+                STAssertNotNil(originalDescription, @"Expected the original description not to be nil");
+                STAssertNotNil(originalTitle, @"Expected the original title not to be nil");
+//                STAssertNotNil(originalName, @"Expected the original name not to be nil");
+                
+                NSMutableDictionary *newFolderProperties = [NSMutableDictionary dictionary];
+                [newFolderProperties setObject:updatedDescriptionString forKey:@"cm:description"];
+                [newFolderProperties setObject:updatedTitleString forKey:@"cm:title"];
+//                [newFolderProperties setObject:updatedNameString forKey:@"cm:name"];
+                
+                [weakDfService updatePropertiesOfNode:folder properties:newFolderProperties completionBlock:^(AlfrescoNode *node, NSError *err) {
+                    
+                    if (node == nil || err != nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    }
+                    else
+                    {
+                        STAssertNotNil(node, @"Expected the returned node not to be nil");
+                        STAssertNotNil(node.properties, @"Expected the returned nodes property not to be nil");
+                        
+                        NSDictionary *nodeProperties = node.properties;
+                        AlfrescoProperty *modifiedDescription = [nodeProperties objectForKey:@"cm:description"];
+                        AlfrescoProperty *modifiedTitle = [nodeProperties objectForKey:@"cm:title"];
+//                        AlfrescoProperty *modifiedName = [nodeProperties objectForKey:@"cm:name"];
+                        
+                        STAssertNotNil(modifiedDescription, @"Expected the modified description not to be nil");
+                        STAssertNotNil(modifiedTitle, @"Expected the modified title not to be nil");
+//                        STAssertNotNil(modifiedName, @"Expected the modified name not to be nil");
+                        
+                        STAssertTrue([modifiedDescription.value isEqualToString:updatedDescriptionString], @"Modified description was expected to be %@", updatedDescriptionString);
+                        STAssertTrue([modifiedTitle.value isEqualToString:updatedTitleString], @"Modified title was expected to be %@", updatedTitleString);
+//                        STAssertTrue([modifiedName.value isEqualToString:updatedNameString], @"Modified name was expected to be %@", updatedNameString);
+                        
+                        super.lastTestSuccessful = YES;
+                        
+                    }
+                    
+                    [weakDfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                     {
+                         if (!success)
+                         {
+                             super.lastTestSuccessful = NO;
+                             super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         }
+                         
+                         super.callbackCompleted = YES;
+                     }];
+                }];
+            }
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
 #pragma mark unit test internal methods
 
 - (BOOL)nodeArray:(NSArray *)nodeArray containsName:(NSString *)name
