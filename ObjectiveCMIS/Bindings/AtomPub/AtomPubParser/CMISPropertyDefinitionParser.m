@@ -77,6 +77,10 @@
         {
             self.propertyDefinition.propertyType = CMISPropertyTypeInteger;
         }
+        else if ([propertyDefinitionElementName isEqualToString:kCMISCorePropertyDecimalDefinition])
+        {
+            self.propertyDefinition.propertyType = CMISPropertyTypeDecimal;
+        }
     }
     return self;
 }
@@ -110,7 +114,8 @@
             || [elementName isEqualToString:kCMISCorePropertyIdDefinition]
             || [elementName isEqualToString:kCMISCorePropertyBooleanDefinition]
             || [elementName isEqualToString:kCMISCorePropertyIntegerDefinition]
-            || [elementName isEqualToString:kCMISCorePropertyDateTimeDefinition])
+            || [elementName isEqualToString:kCMISCorePropertyDateTimeDefinition]
+            || [elementName isEqualToString:kCMISCorePropertyDecimalDefinition])
     {
         if (self.parentDelegate)
         {

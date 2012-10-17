@@ -45,6 +45,9 @@
 /** Convenience method for retrieving the boolean value. Returns nil if property is not of boolean type */
 - (NSNumber *)propertyBooleanValue;
 
+/** Convenience method for retrieving the decimal value. Returns nil if property is not of decimal type */
+- (NSNumber *)propertyDecimalValue;
+
 /** Creation of a string property */
 + (CMISPropertyData *)createPropertyForId:(NSString *)id withStringValue:(NSString *)value;
 

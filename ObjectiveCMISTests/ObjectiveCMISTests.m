@@ -235,7 +235,7 @@
         CMISDocument *randomDoc = nil;
         for (CMISObject *object in children)
         {
-            if ([object class] == [CMISDocument class])
+            if ([object isKindOfClass:[CMISDocument class]])
             {
                 randomDoc = (CMISDocument *)object;
                 break;
@@ -1294,7 +1294,6 @@
         // Try to convert with already CMISPropertyData. This should work just fine.
         NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
         [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:@"testName"] forKey:kCMISPropertyName];
-        [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyObjectTypeId withIdValue:@"cmis:document"] forKey:kCMISPropertyObjectTypeId];
         [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyCreationDate withDateTimeValue:testDate] forKey:kCMISPropertyCreationDate];
         [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyIsLatestVersion withBoolValue:YES] forKey:kCMISPropertyIsLatestVersion];
         [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyContentStreamLength withIntegerValue:5] forKey:kCMISPropertyContentStreamLength];
@@ -1302,9 +1301,8 @@
         CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:@"cmis:document" error:&error];
         STAssertNil(error, @"Error while converting properties: %@", [error description]);
         STAssertNotNil(convertedProperties, @"Conversion failed, nil was returned");
-        STAssertTrue(convertedProperties.propertyList.count == 5, @"Expected 5 converted properties, but was %d", convertedProperties.propertyList.count);
+        STAssertTrue(convertedProperties.propertyList.count == 4, @"Expected 4 converted properties, but was %d", convertedProperties.propertyList.count);
         STAssertEqualObjects(@"testName", [[convertedProperties propertyForId:kCMISPropertyName]propertyStringValue], @"Converted property value did not match");
-        STAssertEqualObjects(@"cmis:document", [[convertedProperties propertyForId:kCMISPropertyObjectTypeId] propertyIdValue], @"Converted property value did not match");
         STAssertEqualObjects(testDate, [[convertedProperties propertyForId:kCMISPropertyCreationDate] propertyDateTimeValue], @"Converted property value did not match");
         STAssertEqualObjects([NSNumber numberWithBool:YES], [[convertedProperties propertyForId:kCMISPropertyIsLatestVersion] propertyBooleanValue], @"Converted property value did not match");
         STAssertEqualObjects([NSNumber numberWithInteger:5], [[convertedProperties propertyForId:kCMISPropertyContentStreamLength] propertyIntegerValue], @"Converted property value did not match");
@@ -1312,7 +1310,6 @@
         // Test with non-CMISPropertyData values
         properties = [[NSMutableDictionary alloc] init];
         [properties setObject:@"test" forKey:kCMISPropertyName];
-        [properties setObject:@"cmis:document" forKey:kCMISPropertyObjectTypeId];
         [properties setObject:[dateFormatter stringFromDate:testDate] forKey:kCMISPropertyCreationDate];
         [properties setObject:[NSNumber numberWithBool:NO] forKey:kCMISPropertyIsLatestVersion];
         [properties setObject:[NSNumber numberWithInt:4] forKey:kCMISPropertyContentStreamLength];
@@ -1320,9 +1317,8 @@
         convertedProperties = [converter convertProperties:properties forObjectTypeId:@"cmis:document" error:&error];
         STAssertNil(error, @"Error while converting properties: %@", [error description]);
         STAssertNotNil(convertedProperties, @"Conversion failed, nil was returned");
-        STAssertTrue(convertedProperties.propertyList.count == 5, @"Expected 5 converted properties, but was %d", convertedProperties.propertyList.count);
+        STAssertTrue(convertedProperties.propertyList.count == 4, @"Expected 4 converted properties, but was %d", convertedProperties.propertyList.count);
         STAssertEqualObjects(@"test", [[convertedProperties propertyForId:kCMISPropertyName] propertyStringValue], @"Converted property value did not match");
-        STAssertEqualObjects(@"cmis:document", [[convertedProperties propertyForId:kCMISPropertyObjectTypeId] propertyIdValue], @"Converted property value did not match");
 
         // NSDate is using sub-second precision ... and the formatter is not.
         // ... sigh ... hence we test if the dates are 'relatively' (ie 1 second) close

@@ -101,7 +101,8 @@
             if (typeDefinition == nil)
             {
                 NSError *internalError = nil;
-                typeDefinition = [self.session.binding.repositoryService retrieveTypeDefinition:objectTypeId error:&internalError];
+                NSString *typeDefinitionId = objectTypeId != nil ? objectTypeId : [properties valueForKey:kCMISPropertyObjectTypeId];
+                typeDefinition = [self.session.binding.repositoryService retrieveTypeDefinition:typeDefinitionId error:&internalError];
 
                 if (internalError != nil)
                 {

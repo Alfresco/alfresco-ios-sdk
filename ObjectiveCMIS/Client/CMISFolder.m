@@ -115,7 +115,7 @@
 - (NSString *)createFolder:(NSDictionary *)properties error:(NSError **)error;
 {
     NSError *internalError = nil;
-    CMISProperties *convertedProperties = [self.session.objectConverter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueFolder error:&internalError];
+    CMISProperties *convertedProperties = [self.session.objectConverter convertProperties:properties forObjectTypeId:nil error:&internalError];
     if (internalError != nil)
     {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
@@ -130,7 +130,7 @@
                           failureBlock:(CMISErrorFailureBlock)failureBlock progressBlock:(CMISProgressBlock)progressBlock
 {
     NSError *internalError = nil;
-    CMISProperties *convertedProperties = [self.session.objectConverter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
+    CMISProperties *convertedProperties = [self.session.objectConverter convertProperties:properties forObjectTypeId:nil error:&internalError];
     if (internalError != nil)
     {
         log(@"Could not convert properties: %@", [internalError description]);

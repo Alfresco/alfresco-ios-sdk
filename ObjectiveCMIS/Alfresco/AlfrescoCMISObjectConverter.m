@@ -29,6 +29,8 @@
 #import "CMISSession.h"
 #import "CMISTypeDefinition.h"
 #import "CMISPropertyDefinition.h"
+#import "AlfrescoCMISDocument.h"
+#import "CMISISO8601DateFormatter.h"
 
 @interface AlfrescoCMISObjectConverter ()
 
@@ -47,6 +49,23 @@
         self.session = session;
     }
     return self;
+}
+
+- (CMISObject *)convertObject:(CMISObjectData *)objectData
+{
+    CMISObject *object = nil;
+
+    if (objectData.baseType == CMISBaseTypeDocument)
+    {
+        object = [[AlfrescoCMISDocument alloc] initWithObjectData:objectData withSession:self.session];
+    }
+    else if (objectData.baseType == CMISBaseTypeFolder)
+    {
+        // No support yet for Alfresco specific folders
+        object = [[CMISFolder alloc] initWithObjectData:objectData withSession:self.session];
+    }
+
+    return object;
 }
 
 - (CMISProperties *)convertProperties:(NSDictionary *)properties forObjectTypeId:(NSString *)objectTypeId error:(NSError **)error
@@ -76,15 +95,7 @@
     }
     else if (objectTypeId)
     {
-        // Todo: this is rather a quick-fix ... but it is pretty hard otherwise to build in this behavior everywhere
-        if ([objectTypeId rangeOfString:@"P:cm:titled"].location == NSNotFound)
-        {
-            objectTypeIdString = [NSString stringWithFormat:@"%@,%@", objectTypeId, @"P:cm:titled"];
-        }
-        else
-        {
-            objectTypeIdString = objectTypeId;
-        }
+        objectTypeIdString = objectTypeId;
     }
 
 
@@ -95,7 +106,7 @@
     }
 
     // Get type definitions
-    CMISTypeDefinition *typeDefinition = nil;
+    CMISTypeDefinition *mainTypeDefinition = nil;
     NSMutableArray *aspectTypes = [[NSMutableArray alloc] init];
 
     // Check if there are actually aspects/
@@ -103,7 +114,7 @@
     if ([objectTypeIdString rangeOfString:@","].location == NSNotFound)
     {
         NSError *internalError = nil;
-        typeDefinition = [self.session.binding.repositoryService retrieveTypeDefinition:objectTypeId error:&internalError];
+        mainTypeDefinition = [self.session.binding.repositoryService retrieveTypeDefinition:objectTypeIdString error:&internalError];
 
         if (internalError != nil)
         {
@@ -118,7 +129,7 @@
 
         // Main type
         NSError *internalError = nil;
-        typeDefinition = [self.session.binding.repositoryService retrieveTypeDefinition:
+        mainTypeDefinition = [self.session.binding.repositoryService retrieveTypeDefinition:
                 [typeDefinitionString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] error:&internalError];
 
         if (internalError != nil)
@@ -156,16 +167,12 @@
 
         if ([propertyId isEqualToString:kCMISPropertyObjectTypeId])
         {
-            if (objectTypeId == nil) // do not merge this if with the parent if. In case it's not nil, we don't do anything!
+            if (objectTypeId == nil)
             {
-                [typeProperties setObject:typeDefinition.id forKey:propertyId];
-            }
-            else
-            {
-                [typeProperties setObject:objectTypeId forKey:propertyId];
+                [typeProperties setValue:propertyValue forKey:kCMISPropertyObjectTypeId];
             }
         }
-        else if ([typeDefinition propertyDefinitionForId:propertyId])
+        else if ([mainTypeDefinition propertyDefinitionForId:propertyId])
         {
             [typeProperties setObject:propertyValue forKey:propertyId];
         }
@@ -272,6 +279,26 @@
                 {
                     stringValue = ((CMISPropertyData *) value).firstValue;
                 }
+                else
+                {
+                    switch (aspectPropertyDefinition.propertyType)
+                    {
+                        case CMISPropertyTypeBoolean:
+                            stringValue = ((NSNumber *)value).boolValue ? @"true" : @"false";
+                            break;
+                        case CMISPropertyTypeDateTime:
+                            stringValue = [self stringFromDate:((NSDate *)value)];
+                            break;
+                        case CMISPropertyTypeInteger:
+                            stringValue = [NSString stringWithFormat:@"%d", ((NSNumber *)value).intValue];
+                            break;
+                        case CMISPropertyTypeDecimal:
+                            stringValue = [NSString stringWithFormat:@"%f", ((NSNumber *)value).floatValue];
+                            break;
+                        default:
+                            stringValue = value;
+                    }
+                }
 
                 CMISExtensionElement *valueExtensionElement = [[CMISExtensionElement alloc] initLeafWithName:@"value"
                     namespaceUri:@"http://docs.oasis-open.org/ns/cmis/core/200908/" attributes:nil value:stringValue];
@@ -288,8 +315,14 @@
                                           namespaceUri:@"http://www.alfresco.org" attributes:nil children:propertyExtensions]];
     }
 
+    // Cmis doesn't understand aspects, so we must replace the objectTypeId if needed
+    if ([typeProperties objectForKey:kCMISPropertyObjectTypeId] != nil)
+    {
+        [typeProperties setValue:mainTypeDefinition.id forKey:kCMISPropertyObjectTypeId];
+    }
+
     // Convert regular type properties
-    CMISProperties *result = [super convertProperties:typeProperties forObjectTypeId:objectTypeId error:error];
+    CMISProperties *result = [super convertProperties:typeProperties forObjectTypeId:mainTypeDefinition.id error:error];
     if (alfrescoExtensions.count > 0)
     {
         result.extensions = [NSArray arrayWithObject:[[CMISExtensionElement alloc] initNodeWithName:@"setAspects"
@@ -297,6 +330,14 @@
     }
 
     return result;
+}
+
+#pragma mark Helper methods
+
+- (NSString *)stringFromDate:(NSDate *)date
+{
+    CMISISO8601DateFormatter *dateFormatter = [[CMISISO8601DateFormatter alloc] init];
+    return [dateFormatter stringFromDate:date];
 }
 
 

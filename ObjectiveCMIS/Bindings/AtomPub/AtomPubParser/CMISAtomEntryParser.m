@@ -16,6 +16,7 @@
 #import "CMISISO8601DateFormatter.h"
 #import "CMISAtomLink.h"
 #import "CMISRenditionData.h"
+#import "CMISAtomParserUtil.h"
 
 @interface CMISAtomEntryParser ()
 
@@ -211,29 +212,7 @@
     if ([self.elementBeingParsed isEqualToString:kCMISAtomEntryValue])
     {
         // TODO: Deal with multi-valued properties
-
-        // add the value to the current property
-        if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyString] ||
-                [self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyId])
-        {
-            self.currentPropertyData.values = [NSArray arrayWithObject:string];
-        }
-        else if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyInteger])
-        {
-            self.currentPropertyData.values = [NSArray arrayWithObject:[NSNumber numberWithInt:[string intValue]]];
-        }
-        else if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyBoolean])
-        {
-            self.currentPropertyData.values = [NSArray arrayWithObject:[NSNumber numberWithBool:[string isEqualToString:kCMISAtomEntryValueTrue]]];
-        }
-        else if ([self.currentPropertyType isEqualToString:kCMISAtomEntryPropertyDateTime])
-        {
-            if (!self.dateFormatter)
-            {
-                self.dateFormatter = [[CMISISO8601DateFormatter alloc] init];
-            }
-            self.currentPropertyData.values = [NSArray arrayWithObject:[self.dateFormatter dateFromString:string]];
-        }
+        self.currentPropertyData.values = [CMISAtomParserUtil parsePropertyValue:string withPropertyType:self.currentPropertyType];
     }
     else if (self.currentRendition != nil)
     {

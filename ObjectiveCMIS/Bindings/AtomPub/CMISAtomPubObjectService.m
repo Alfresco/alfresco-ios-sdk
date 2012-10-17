@@ -446,13 +446,13 @@
     }
 
     // Execute request
-    [self syncSendAtomEntryXmlToLink:selfLink
-                  withHttpRequestMethod:HTTP_PUT
-                  withProperties:properties
-                  withContentFilePath:nil
-                  withContentMimeType:nil
-                  storeInMemory:YES
-                  error:error];
+//    [self syncSendAtomEntryXmlToLink:selfLink
+//                  withHttpRequestMethod:HTTP_PUT
+//                  withProperties:properties
+//                  withContentFilePath:nil
+//                  withContentMimeType:nil
+//                  storeInMemory:YES
+//                  error:error];
 
     // Create XML needed as body of html
 

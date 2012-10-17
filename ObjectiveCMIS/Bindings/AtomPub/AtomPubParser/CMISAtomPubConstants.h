@@ -30,6 +30,7 @@ extern NSString * const kCMISAtomEntryProperties;
 extern NSString * const kCMISAtomEntryPropertyId;
 extern NSString * const kCMISAtomEntryPropertyString;
 extern NSString * const kCMISAtomEntryPropertyInteger;
+extern NSString * const kCMISAtomEntryPropertyDecimal;
 extern NSString * const kCMISAtomEntryPropertyDateTime;
 extern NSString * const kCMISAtomEntryPropertyBoolean;
 extern NSString * const kCMISAtomEntryPropertyDefId;

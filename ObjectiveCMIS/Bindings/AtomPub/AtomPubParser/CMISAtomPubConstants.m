@@ -30,6 +30,7 @@ NSString * const kCMISAtomEntryProperties = @"properties";
 NSString * const kCMISAtomEntryPropertyId = @"propertyId";
 NSString * const kCMISAtomEntryPropertyString = @"propertyString";
 NSString * const kCMISAtomEntryPropertyInteger = @"propertyInteger";
+NSString * const kCMISAtomEntryPropertyDecimal = @"propertyDecimal";
 NSString * const kCMISAtomEntryPropertyDateTime = @"propertyDateTime";
 NSString * const kCMISAtomEntryPropertyBoolean = @"propertyBoolean";
 NSString * const kCMISAtomEntryPropertyDefId = @"propertyDefinitionId";
