@@ -1,4 +1,4 @@
-//
+ //
 //  Created by Joram Barrez
 //  Copyright (c) 2012 Alfresco. All rights reserved.
 //
@@ -78,7 +78,7 @@
     [self runTest:^
     {
         NSError *error = nil;
-        CMISDocument *document = [self uploadTestFileWithAspects];
+        CMISDocument *document = [self uploadTestFileWithAspects:[NSArray arrayWithObject:@"P:cm:titled"]];
 
         NSMutableDictionary *properties = [NSMutableDictionary dictionary];
         NSString *description = @"This is a jolly good description!";
@@ -134,7 +134,6 @@
         NSString *originalModelName = @"E950";
         [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:originalModelName];
         [self verifyDocument:document hasExtensionProperty:@"exif:pixelYDimension" withValue:@"600"];
-//        [self verifyDocument:document hasExtensionProperty:@"exif:fNumber" withValue:@"5.5"];
         [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
 
         NSMutableDictionary *properties = [NSMutableDictionary dictionary];
@@ -148,19 +147,16 @@
         STAssertNil(error, @"Got error while retrieving document with updated description: %@", [error description]);
         [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:newModelName];
         [self verifyDocument:document hasExtensionProperty:@"exif:pixelYDimension" withValue:@"101"];
-//        [self verifyDocument:document hasExtensionProperty:@"exif:fNumber" withValue:@"101.101"];
 
         // Reset image exif data again
         [properties setValue:originalModelName forKey:@"exif:model"];
         [properties setValue:[NSNumber numberWithInt:600] forKey:@"exif:pixelYDimension"];
-//        [properties setValue:[NSNumber numberWithDouble:5.5] forKey:@"exif:fNumber"];
         [properties setValue:[NSNumber numberWithBool:NO] forKey:@"exif:flash"];
         document = (CMISDocument *) [document updateProperties:properties error:&error];
 
         STAssertNil(error, @"Got error while retrieving document with updated description: %@", [error description]);
         [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:originalModelName];
         [self verifyDocument:document hasExtensionProperty:@"exif:pixelYDimension" withValue:@"600"];
-//        [self verifyDocument:document hasExtensionProperty:@"exif:fNumber" withValue:@"5.5"];
         [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
     }];
 }
@@ -227,6 +223,79 @@
     }];
 }
 
+- (void)testApostropheInDescription
+{
+    [self runTest:^
+    {
+        AlfrescoCMISDocument *document = (AlfrescoCMISDocument *) [self uploadTestFileWithAspects:[NSArray arrayWithObjects:@"P:cm:titled", @"P:cm:author", nil]];
+
+        // Set description to some description with apostrophe
+        NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
+        NSString *description = @"This is a 'test'";
+        [documentProperties setObject:description forKey:@"cm:description"];
+
+        NSError *error = nil;
+        [document updateProperties:documentProperties error:&error];
+        STAssertNil(error, @"Error while updating description: %@", error.description);
+
+        // Refetch document and check description
+        document = (AlfrescoCMISDocument *) [self.session retrieveObject:document.identifier error:&error];
+        STAssertNil(error, @"Error while fetching document: %@", error.description);
+        STAssertEqualObjects([document.properties propertyValueForId:@"cm:description"], description, nil);
+
+        // Clean up
+        [self deleteDocumentAndVerify:document];
+    }];
+}
+
+//- (void)testCreateDocumentWithJapaneseProperties
+//{
+//    [self runTest:^
+//    {
+//        NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
+//
+//        NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
+//        [documentProperties setObject:@"cmis:document, P:cm:titled, P:cm:author" forKey:kCMISPropertyObjectTypeId];
+//
+//        NSString *documentName = @"ラヂオコmプタ";
+//        [documentProperties setObject:documentName forKey:kCMISPropertyName];
+//
+//        NSString *title = @"わさび";
+//        [documentProperties setObject:title forKey:@"cm:title"];
+//
+//        NSString *description = @"ありがと　にほんご";
+//        [documentProperties setObject:description forKey:@"cm:description"];
+//
+//        // Upload test file
+//        __block NSString *objectId = nil;
+//        [self.testFolder createDocumentFromFilePath:filePath
+//                withMimeType:@"text/plain"
+//                withProperties:documentProperties
+//                completionBlock: ^ (NSString *newObjectId)
+//                {
+//                    STAssertNotNil(newObjectId, @"Object id should not be nil");
+//                    objectId = newObjectId;
+//                    self.callbackCompleted = YES;
+//                }
+//                failureBlock: ^ (NSError *failureError)
+//                {
+//                    STAssertNil(failureError, @"Got error while uploading document: %@", [failureError description]);
+//                }
+//                progressBlock:nil];
+//
+//        [self waitForCompletion:60];
+//
+//        NSError *error = nil;
+//        CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
+//        STAssertNil(error, @"Got error while creating document: %@", [error description]);
+//        STAssertEquals([document.properties propertyValueForId:@"cm:title"], title, @"Expected %@, but was %@", [document.properties propertyValueForId:@"cm:title"], title);
+//        STAssertEquals([document.properties propertyValueForId:@"cm:description"], description, @"Expected %@, but was %@", [document.properties propertyValueForId:@"cm:description"], description);
+//
+//        // Clean up
+//        [self deleteDocumentAndVerify:document];
+//    }];
+//}
+
 #pragma mark Helper methods
 
 - (void)verifyDocument:(CMISDocument *)document hasExtensionProperty:(NSString *)expectedProperty withValue:(id)expectedValue
@@ -272,14 +341,21 @@
 }
 
 
-- (CMISDocument *)uploadTestFileWithAspects
+- (CMISDocument *)uploadTestFileWithAspects:(NSArray *)aspectTypeIds
 {
     // Set properties on test file
     NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
     NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
     NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
     [documentProperties setObject:documentName forKey:kCMISPropertyName];
-    [documentProperties setObject:@"cmis:document, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
+
+    NSMutableString *objectTypeId = [[NSMutableString alloc] init];
+    [objectTypeId appendString:@"cmis:document"];
+    for (NSString *aspectTypeId in aspectTypeIds)
+    {
+        [objectTypeId appendFormat:@", %@", aspectTypeId];
+    }
+    [documentProperties setObject:objectTypeId forKey:kCMISPropertyObjectTypeId];
 
     // Upload test file
     __block NSInteger previousUploadedBytes = -1;
