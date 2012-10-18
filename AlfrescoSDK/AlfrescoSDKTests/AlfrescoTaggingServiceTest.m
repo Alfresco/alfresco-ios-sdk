@@ -172,9 +172,9 @@
         self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:super.currentSession];
         __weak AlfrescoTaggingService *weakTaggingService = self.taggingService;
         
-        NSArray *tags = [NSArray arrayWithObject:@"test"];
+        NSArray *testtags = [NSArray arrayWithObject:@"test"];
 
-        [self.taggingService addTags:tags toNode:super.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
+        [self.taggingService addTags:testtags toNode:super.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
         {
             if (!success) 
             {
@@ -197,6 +197,19 @@
                         int count = tags.count;
                         STAssertNotNil(tags, @"tags should not be nil");
                         STAssertTrue(count > 0, @"Count should be > 0, and is in fact %d",count);
+                        log(@"the number of tags is %d", tags.count);
+                        NSString *testTag = [testtags objectAtIndex:0];
+                        BOOL found = NO;
+                        for (AlfrescoTag *tag in tags)
+                        {
+                            log(@"the tag value returned is %@", tag.value);
+                            if ([testTag isEqualToString:tag.value])
+                            {
+                                found = YES;
+                                break;
+                            }
+                        }
+                        STAssertTrue(found, @"We should have found the tag %@", testTag);
                         super.lastTestSuccessful = YES;
                     }
                     super.callbackCompleted = YES;
