@@ -80,7 +80,8 @@
             || [elementName isEqualToString:kCMISCorePropertyIdDefinition]
             || [elementName isEqualToString:kCMISCorePropertyBooleanDefinition]
             || [elementName isEqualToString:kCMISCorePropertyIntegerDefinition]
-            || [elementName isEqualToString:kCMISCorePropertyDateTimeDefinition])
+            || [elementName isEqualToString:kCMISCorePropertyDateTimeDefinition]
+            || [elementName isEqualToString:kCMISCorePropertyDecimalDefinition])
     {
         self.childParserDelegate = [CMISPropertyDefinitionParser parserForPropertyDefinition:elementName withParentDelegate:self parser:parser];
     }

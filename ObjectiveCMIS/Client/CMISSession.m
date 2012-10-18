@@ -25,10 +25,11 @@
 #import "CMISTypeDefinition.h"
 
 @interface CMISSession ()
-@property (nonatomic, strong) CMISObjectConverter *objectConverter;
+@property (nonatomic, strong, readwrite) CMISObjectConverter *objectConverter;
 @property (nonatomic, assign, readwrite) BOOL isAuthenticated;
 @property (nonatomic, strong, readwrite) id<CMISBinding> binding;
 @property (nonatomic, strong, readwrite) CMISRepositoryInfo *repositoryInfo;
+
 @end
 
 @interface CMISSession (PrivateMethods)
@@ -43,7 +44,6 @@
 @synthesize sessionParameters = _sessionParameters;
 @synthesize objectConverter = _objectConverter;
 
-#pragma mark -
 #pragma mark Setup
 
 + (NSArray *)arrayOfRepositories:(CMISSessionParameters *)sessionParameters error:(NSError **)error
@@ -73,12 +73,23 @@
                                                              andPassword:self.sessionParameters.password];
         }
 
-        // create the binding the session will use
+        // Create the binding the session will use
         CMISBindingFactory *bindingFactory = [[CMISBindingFactory alloc] init];
         self.binding = [bindingFactory bindingWithParameters:sessionParameters];
 
-        self.objectConverter = [[CMISObjectConverter alloc] initWithSession:self];
-    
+        // Create the Object Converter instance
+        id objectConverterClassValue = [self.sessionParameters objectForKey:kCMISSessionParameterObjectConverterClassName];
+        if (objectConverterClassValue != nil && [objectConverterClassValue isKindOfClass:[NSString class]])
+        {
+            NSString *objectConverterClassName = (NSString *)objectConverterClassValue;
+            log(@"Using a custom object converter class: %@", objectConverterClassName);
+            self.objectConverter = [[NSClassFromString(objectConverterClassName) alloc] initWithSession:self];
+        }
+        else // default
+        {
+            self.objectConverter = [[CMISObjectConverter alloc] initWithSession:self];
+        }
+
         // TODO: setup locale
         // TODO: setup default session parameters
         // TODO: setup caches
@@ -333,10 +344,9 @@
 
         NSMutableArray *resultArray = [[NSMutableArray alloc] init];
         result.resultArray = resultArray;
-        CMISObjectConverter *converter = [[CMISObjectConverter alloc] init];
         for (CMISObjectData *objectData in objectList.objects)
         {
-            [resultArray addObject:[converter convertObject:objectData]];
+            [resultArray addObject:[self.objectConverter convertObject:objectData]];
         }
 
         return result;
@@ -362,9 +372,7 @@
 - (NSString *)createFolder:(NSDictionary *)properties inFolder:(NSString *)folderObjectId error:(NSError **)error
 {
     NSError *internalError = nil;
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self];
-    CMISProperties *convertedProperties = [converter convertProperties:properties
-                             forObjectTypeId:kCMISPropertyObjectTypeIdValueFolder error:&internalError];
+    CMISProperties *convertedProperties = [self.objectConverter convertProperties:properties forObjectTypeId:nil error:&internalError];
     if (internalError != nil)
     {
         *error = [CMISErrors cmisError:&internalError withCMISErrorCode:kCMISErrorCodeRuntime];
@@ -390,8 +398,7 @@
                     progressBlock:(CMISProgressBlock)progressBlock
 {
     NSError *internalError = nil;
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self];
-    CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:kCMISPropertyObjectTypeIdValueDocument error:&internalError];
+    CMISProperties *convertedProperties = [self.objectConverter convertProperties:properties forObjectTypeId:nil error:&internalError];
     if (internalError != nil)
     {
         log(@"Could not convert properties: %@", [internalError description]);

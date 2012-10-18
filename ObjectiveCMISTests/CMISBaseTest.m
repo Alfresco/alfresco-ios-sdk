@@ -15,6 +15,13 @@
 #import "CMISFolder.h"
 #import "CMISSession.h"
 #import "CMISConstants.h"
+#import "CMISErrors.h"
+
+@interface CMISBaseTest ()
+
+@property (nonatomic, strong) NSMutableDictionary *repositoryIdCache;
+
+@end
 
 
 @implementation CMISBaseTest
@@ -24,6 +31,43 @@
 @synthesize rootFolder = _rootFolder;
 @synthesize callbackCompleted = _callbackCompleted;
 
+- (void)cleanTestFolder
+{
+    log(@"Cleaning test folder '%@'", CMIS_TEST_FOLDER);
+
+    NSError *error = nil;
+    CMISFolder *folder = (CMISFolder *) [self.session retrieveObjectByPath:[NSString stringWithFormat:@"%@%@", self.rootFolder.path, CMIS_TEST_FOLDER] error:&error];
+
+    if (error != nil && error.code != kCMISErrorCodeObjectNotFound)
+    {
+        STAssertNil(error, @"Error while retrieving test folder: %@", error.description);
+    }
+    else
+    {
+        error = nil; // Error was expected, so we're resetting it
+    }
+
+    // Remove folder
+    if (folder)
+    {
+        [folder deleteTreeWithDeleteAllVersions:YES withUnfileObjects:CMISDelete withContinueOnFailure:YES andReturnError:&error];
+        STAssertNil(error, @"Error while removing test folder: %@", error.description);
+    }
+
+    // Create test folder
+    NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+    [properties setObject:CMIS_TEST_FOLDER forKey:kCMISPropertyName];
+    [properties setObject:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
+    NSString *folderId = [self.session createFolder:properties inFolder:self.rootFolder.identifier error:&error];
+    STAssertNil(error, @"Error while creating test folder: %@", error.description);
+    STAssertNotNil(folderId, @"Expected folder id for created test folder");
+
+    self.testFolder = (CMISFolder *) [self.session retrieveObject:folderId error:&error];
+    STAssertNil(error, @"Error while retrieving test folder: %@", error.description);
+}
+
+
+#pragma mark Run Test Methods
 
 - (void) runTest:(CMISTestBlock)testBlock
 {
@@ -51,12 +95,15 @@
         NSString *username = [envDict valueForKey:@"username"];
         NSString *password = [envDict valueForKey:@"password"];
 
-        self.callbackCompleted = NO;
         [self setupCmisSession:url repositoryId:repositoryId username:username password:password extraSessionParameters:extraSessionParameters];
         self.callbackCompleted = NO;
 
         log(@">------------------- Running test against %@ -------------------<", url);
 
+        // Always clean test folder to avoid any garbage
+        [self cleanTestFolder];
+
+        // Actual test
         testBlock();
     }
 }
@@ -68,7 +115,6 @@
     self.parameters.username = username;
     self.parameters.password = password;
     self.parameters.atomPubUrl = [NSURL URLWithString:url];
-    self.parameters.repositoryId = repositoryId;
 
     // Extra cmis params could be provided as method parameter
     if (extraSessionParameters != nil)
@@ -89,6 +135,17 @@
         }
     }
 
+    // Repository id can be auto discovered
+    if (repositoryId)
+    {
+        self.parameters.repositoryId = repositoryId;
+    }
+    else
+    {
+        self.parameters.repositoryId = [self retrieveRepositoryIdForParameters:self.parameters];
+    }
+
+    // And now we can create a cmis session
     self.session = [[CMISSession alloc] initWithSessionParameters:self.parameters];
     STAssertNotNil(self.session, @"Session should not be nil");
     STAssertFalse(self.session.isAuthenticated, @"Session should not yet be authenticated");
@@ -104,11 +161,41 @@
 
 - (NSDictionary *)customCmisParameters
 {
-    // Ment to be overridden.
+    // Ment to be overridden if subclasses want custom params
     return nil;
 }
 
-#pragma mark Helper Methods
+- (NSString *)retrieveRepositoryIdForParameters:(CMISSessionParameters *)parameters
+{
+    if (self.repositoryIdCache == nil)
+    {
+        self.repositoryIdCache = [[NSMutableDictionary alloc] init];
+    }
+
+    if (parameters.repositoryId != nil)
+    {
+        return parameters.repositoryId;
+
+    }
+    else if ([self.repositoryIdCache objectForKey:parameters.atomPubUrl.absoluteString] == nil)
+    {
+        log(@"No repository id found for %@. Retrieving it using cmis.", parameters.atomPubUrl);
+        NSError *error = nil;
+        NSArray *repos = [CMISSession arrayOfRepositories:self.parameters error:&error];
+
+        STAssertNil(error, @"Error when calling arrayOfRepositories : %@", [error description]);
+        STAssertNotNil(repos, @"repos object should not be nil");
+        STAssertTrue(repos.count == 1, @"Sorry, this code was only created for urls with one repo. Provide the repositoryId in the CMISSessionParameters to avoid this.");
+
+        CMISRepositoryInfo *repositoryInfo = [repos objectAtIndex:0];
+        log(@"Found repository id for %@ : %@", parameters.atomPubUrl, repositoryInfo.identifier);
+        [self.repositoryIdCache setValue:repositoryInfo.identifier forKey:parameters.atomPubUrl.absoluteString];
+    }
+
+    return [self.repositoryIdCache objectForKey:parameters.atomPubUrl.absoluteString];
+}
+
+#pragma mark Helper Methods - Usable by subclasses
 
 - (CMISDocument *)retrieveVersionedTestDocument
 {
@@ -134,7 +221,7 @@
     // Upload test file
     __block NSInteger previousUploadedBytes = -1;
     __block NSString *objectId = nil;
-    [self.rootFolder createDocumentFromFilePath:filePath
+    [self.testFolder createDocumentFromFilePath:filePath
             withMimeType:@"text/plain"
             withProperties:documentProperties
             completionBlock: ^ (NSString *newObjectId)

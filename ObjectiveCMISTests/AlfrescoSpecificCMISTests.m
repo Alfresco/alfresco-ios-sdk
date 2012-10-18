@@ -8,6 +8,9 @@
 #import "CMISDocument.h"
 #import "CMISFolder.h"
 #import "CMISSession.h"
+#import "AlfrescoCMISObjectConverter.h"
+#import "CMISISO8601DateFormatter.h"
+#import "AlfrescoCMISDocument.h"
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
 
@@ -15,25 +18,25 @@
 
 - (NSDictionary *)customCmisParameters
 {
-    return [NSDictionary dictionaryWithObject:@"alfresco" forKey:kCMISSessionParameterMode];
+    // We could just write the class name as a NSString, but that would not refactor if we ever would rename this class
+    return [NSDictionary dictionaryWithObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
 }
 
 - (void)testCreateDocumentWithDescription
 {
-
     [self runTest:^
     {
         NSString *documentName = [NSString stringWithFormat:@"temp_test_file_alfresco_%@.txt", [self stringFromCurrentDate]];
         NSString *documentDescription = @"This is a test description";
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
-        [documentProperties setObject:@"cmis:document,P:cm:titled" forKey:kCMISPropertyObjectTypeId];
+        [documentProperties setObject:@"cmis:document, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
         [documentProperties setObject:documentDescription forKey:@"cm:description"];
 
         // Create document with description
         __block NSInteger previousBytesUploaded = -1;
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
-        [self.rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
+        [self.testFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
                 withProperties:documentProperties
                 completionBlock:^ (NSString *objectId)
                 {
@@ -45,7 +48,7 @@
                     STAssertTrue([documentName isEqualToString:document.name],
                         @"Document name of created document is wrong: should be %@, but was %@", documentName, document.name);
 
-                   [self verifyDocumentDescription:document expectedDescription:documentDescription];
+                    [self verifyDocument:document hasExtensionProperty:@"cm:description" withValue:documentDescription];
 
                     // Cleanup after ourselves
                     NSError *deleteError = nil;
@@ -74,9 +77,8 @@
 {
     [self runTest:^
     {
-
         NSError *error = nil;
-        CMISDocument *document = [self uploadTestFile];
+        CMISDocument *document = [self uploadTestFileWithAspects];
 
         NSMutableDictionary *properties = [NSMutableDictionary dictionary];
         NSString *description = @"This is a jolly good description!";
@@ -85,18 +87,152 @@
         document = (CMISDocument *) [document updateProperties:properties error:&error];
         STAssertNil(error, @"Got error while retrieving document with updated description: %@", [error description]);
 
-        [self verifyDocumentDescription:document expectedDescription:description];
-
+        [self verifyDocument:document hasExtensionProperty:@"cm:description" withValue:description];
 
         // Cleanup
         [self deleteDocumentAndVerify:document];
     }];
 }
 
-- (void)verifyDocumentDescription:(CMISDocument *)document expectedDescription:(NSString *)expectedDescription
+- (void)testRetrieveExifDataUsingExtensions
 {
-    // Let's do some extension juggling .... (sigh)
-    STAssertNotNil(document.properties.extensions, @"description should be returned as an extension, but none was found");
+    [self runTest:^
+    {
+        NSError *error = nil;
+        CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" error:&error];
+
+        [self verifyDocument:document hasExtensionProperty:@"exif:manufacturer" withValue:@"NIKON"];
+        [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"E950"];
+        [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
+    }];
+}
+
+- (void)testRetrieveExifDataUsingProperties
+{
+    [self runTest:^
+    {
+
+        NSError *error = nil;
+        CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" error:&error];
+
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:manufacturer"], @"NIKON", nil);
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:model"], @"E950", nil);
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:flash"], [NSNumber numberWithBool:NO], nil);
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:pixelXDimension"], [NSNumber numberWithInt:800], nil);
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:exposureTime"], [NSNumber numberWithFloat:0.012987012987013f], nil);
+        CMISISO8601DateFormatter *df = [[CMISISO8601DateFormatter alloc] init];
+        STAssertEqualObjects([document.properties propertyValueForId:@"exif:dateTimeOriginal"], [df dateFromString:@"2001-04-06T11:51:00.000Z"], nil);
+    }];
+}
+
+- (void)testUpdateExifData
+{
+    [self runTest:^
+    {
+        NSError *error = nil;
+        CMISDocument *document = (CMISDocument *) [self.session retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" error:&error];
+        NSString *originalModelName = @"E950";
+        [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:originalModelName];
+        [self verifyDocument:document hasExtensionProperty:@"exif:pixelYDimension" withValue:@"600"];
+//        [self verifyDocument:document hasExtensionProperty:@"exif:fNumber" withValue:@"5.5"];
+        [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
+
+        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+        NSString *newModelName = @"Ultimate Flash Model 101";
+        [properties setValue:newModelName forKey:@"exif:model"];
+        [properties setValue:[NSNumber numberWithInt:101] forKey:@"exif:pixelYDimension"];
+        [properties setValue:[NSNumber numberWithDouble:101.101] forKey:@"exif:fNumber"];
+        [properties setValue:[NSNumber numberWithBool:YES] forKey:@"exif:flash"];
+
+        document = (CMISDocument *) [document updateProperties:properties error:&error];
+        STAssertNil(error, @"Got error while retrieving document with updated description: %@", [error description]);
+        [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:newModelName];
+        [self verifyDocument:document hasExtensionProperty:@"exif:pixelYDimension" withValue:@"101"];
+//        [self verifyDocument:document hasExtensionProperty:@"exif:fNumber" withValue:@"101.101"];
+
+        // Reset image exif data again
+        [properties setValue:originalModelName forKey:@"exif:model"];
+        [properties setValue:[NSNumber numberWithInt:600] forKey:@"exif:pixelYDimension"];
+//        [properties setValue:[NSNumber numberWithDouble:5.5] forKey:@"exif:fNumber"];
+        [properties setValue:[NSNumber numberWithBool:NO] forKey:@"exif:flash"];
+        document = (CMISDocument *) [document updateProperties:properties error:&error];
+
+        STAssertNil(error, @"Got error while retrieving document with updated description: %@", [error description]);
+        [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:originalModelName];
+        [self verifyDocument:document hasExtensionProperty:@"exif:pixelYDimension" withValue:@"600"];
+//        [self verifyDocument:document hasExtensionProperty:@"exif:fNumber" withValue:@"5.5"];
+        [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
+    }];
+}
+
+- (void)testCreateDocumentWithExif
+{
+    [self runTest:^
+    {
+
+        NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
+        NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
+
+        NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
+        [documentProperties setObject:@"cmis:document, P:cm:titled, P:exif:exif" forKey:kCMISPropertyObjectTypeId];
+        [documentProperties setObject:documentName forKey:kCMISPropertyName];
+        [documentProperties setObject:@"UberCam" forKey:@"exif:model"];
+
+        // Upload test file
+        __block NSInteger previousUploadedBytes = -1;
+        __block NSString *objectId = nil;
+        [self.testFolder createDocumentFromFilePath:filePath
+                withMimeType:@"text/plain"
+                withProperties:documentProperties
+                completionBlock: ^ (NSString *newObjectId)
+                {
+                    STAssertNotNil(newObjectId, @"Object id should not be nil");
+                    objectId = newObjectId;
+                    self.callbackCompleted = YES;
+                }
+                failureBlock: ^ (NSError *failureError)
+                {
+                    STAssertNil(failureError, @"Got error while uploading document: %@", [failureError description]);
+                }
+                progressBlock: ^ (NSInteger uploadedBytes, NSInteger totalBytes)
+                {
+                    STAssertTrue(uploadedBytes > previousUploadedBytes, @"no progress");
+                    previousUploadedBytes = uploadedBytes;
+                }];
+
+        [self waitForCompletion:60];
+
+        NSError *error = nil;
+        CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
+        STAssertNil(error, @"Got error while creating document: %@", [error description]);
+        STAssertNotNil(objectId, @"Object id received should be non-nil");
+        STAssertNotNil(document, @"Retrieved document should not be nil");
+        [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"UberCam"];
+
+    }];
+
+}
+
+- (void)testAddAspectToDocument
+{
+    [self runTest:^
+    {
+        NSError *error = nil;
+        AlfrescoCMISDocument *document = (AlfrescoCMISDocument *) [self uploadTestFile];
+        STAssertFalse([document hasAspect:@"P:exif:exif"], nil);
+
+        [document.aspectTypes addObject:@"P:exif:exif"];
+        document = (AlfrescoCMISDocument *) [document updateProperties:[NSDictionary dictionary] error:&error];
+        STAssertTrue([document hasAspect:@"P:exif:exif"], nil);
+    }];
+}
+
+#pragma mark Helper methods
+
+- (void)verifyDocument:(CMISDocument *)document hasExtensionProperty:(NSString *)expectedProperty withValue:(id)expectedValue
+{
+    // Let's do some extension juggling
+    STAssertNotNil(document.properties.extensions, @"Expected extensions");
     STAssertTrue(document.properties.extensions.count > 0, @"Expected at least one property extension");
 
     // Verify root extension element
@@ -110,27 +246,72 @@
         if ([childExtensionElement.name isEqualToString:@"properties"])
         {
             propertiesExtensionElement = childExtensionElement;
+            break;
         }
     }
     STAssertNotNil(propertiesExtensionElement, @"No properties extension element found");
 
     // Find description property
-    CMISExtensionElement *descriptionElement = nil;
+    CMISExtensionElement *propertyElement = nil;
     for (CMISExtensionElement *childExtensionElement in propertiesExtensionElement.children)
     {
         if (childExtensionElement.attributes != nil &&
-                ([[childExtensionElement.attributes objectForKey:@"propertyDefinitionId"] isEqualToString:@"cm:description"]))
+                ([[childExtensionElement.attributes objectForKey:@"propertyDefinitionId"] isEqualToString:expectedProperty]))
         {
-            descriptionElement = childExtensionElement;
+            propertyElement = childExtensionElement;
+            break;
         }
     }
-    STAssertNotNil(descriptionElement, @"No description element was found");
+    STAssertNotNil(propertyElement, [NSString stringWithFormat:@"No property '%@' was found", expectedProperty]);
 
-    // Finally, verify the description
-    CMISExtensionElement *valueElement = [descriptionElement.children objectAtIndex:0];
-    STAssertNotNil(valueElement, @"There is no value element for the description property");
-    STAssertTrue([valueElement.value isEqualToString:expectedDescription],
-        @"Document description does not match: was %@ but expected %@", valueElement.value, expectedDescription);
+    // Finally, verify the value
+    CMISExtensionElement *valueElement = [propertyElement.children objectAtIndex:0];
+    STAssertNotNil(valueElement, @"There is no value element for the property");
+    STAssertTrue([valueElement.value isEqual:expectedValue],
+        @"Document property value does not match: was %@ but expected %@", valueElement.value, expectedValue);
+}
+
+
+- (CMISDocument *)uploadTestFileWithAspects
+{
+    // Set properties on test file
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
+    NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
+    NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
+    [documentProperties setObject:documentName forKey:kCMISPropertyName];
+    [documentProperties setObject:@"cmis:document, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
+
+    // Upload test file
+    __block NSInteger previousUploadedBytes = -1;
+    __block NSString *objectId = nil;
+    [self.testFolder createDocumentFromFilePath:filePath
+            withMimeType:@"text/plain"
+            withProperties:documentProperties
+            completionBlock: ^ (NSString *newObjectId)
+            {
+                STAssertNotNil(newObjectId, @"Object id should not be nil");
+                objectId = newObjectId;
+                self.callbackCompleted = YES;
+            }
+            failureBlock: ^ (NSError *failureError)
+            {
+                STAssertNil(failureError, @"Got error while uploading document: %@", [failureError description]);
+            }
+            progressBlock: ^ (NSInteger uploadedBytes, NSInteger totalBytes)
+            {
+                STAssertTrue(uploadedBytes > previousUploadedBytes, @"no progress");
+                previousUploadedBytes = uploadedBytes;
+            }];
+
+    [self waitForCompletion:60];
+
+    NSError *error = nil;
+    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
+    STAssertNil(error, @"Got error while creating document: %@", [error description]);
+    STAssertNotNil(objectId, @"Object id received should be non-nil");
+    STAssertNotNil(document, @"Retrieved document should not be nil");
+
+    return document;
 }
 
 

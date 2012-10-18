@@ -19,6 +19,7 @@
 #import "CMISStringInOutParameter.h"
 #import "CMISOperationContext.h"
 #import "CMISErrors.h"
+#import "CMISSession.h"
 
 @interface CMISDocument()
 
@@ -79,8 +80,7 @@
 
     if (internalError == nil)
     {
-        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
-        return [converter convertObjects:entries];
+        return [self.session.objectConverter convertObjects:entries];
     }
     else
     {
@@ -127,8 +127,7 @@
 
     if (*error == nil)
     {
-        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
-        return (CMISDocument *) [converter convertObject:objectData];
+        return (CMISDocument *) [self.session.objectConverter convertObject:objectData];
     }
     return nil;
 }

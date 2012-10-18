@@ -92,6 +92,16 @@
     return nil;
 }
 
+- (NSNumber *)propertyDecimalValue
+{
+    if (self.type == CMISPropertyTypeDecimal)
+    {
+        return [self firstValue];
+    }
+    return nil;
+}
+
+
 #pragma mark Creation methods
 
 + (CMISPropertyData *)createPropertyInternal:(NSString *)id value:(id)value type:(CMISPropertyType)type

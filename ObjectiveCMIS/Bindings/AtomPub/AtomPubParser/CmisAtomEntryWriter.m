@@ -64,12 +64,12 @@
 
 - (void)addEntryStartElement
 {
+    NSString *title = [self.cmisProperties propertyValueForId:kCMISPropertyName];
     NSString *atomEntryXmlStart = [NSString stringWithFormat:
            @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\"  >"
                 "<id>urn:uuid:00000000-0000-0000-0000-00000000000</id>"
-                "<title>%@</title>",
-            [self.cmisProperties propertyValueForId:kCMISPropertyName]];
+                "<title>%@</title>", title != nil ? title : @""];
 
     [self appendStringToReturnResult:atomEntryXmlStart];
 }

@@ -21,6 +21,7 @@
 @class CMISOperationContext;
 @class CMISPagedResult;
 @class CMISTypeDefinition;
+@class CMISObjectConverter;
 
 @interface CMISSession : NSObject
 
@@ -36,7 +37,10 @@
 // Information about the repository the session is connected to, will be nil until the session is authenticated.
 @property (nonatomic, strong, readonly) CMISRepositoryInfo *repositoryInfo;
 
-// *** setup ***
+// A converter for all kinds of CMIS objects.
+@property (nonatomic, strong, readonly) CMISObjectConverter *objectConverter;
+
+#pragma mark Setup and Repository discovery
 
 // returns an array of CMISRepositoryInfo objects representing the repositories available at the endpoint.
 + (NSArray *)arrayOfRepositories:(CMISSessionParameters *)sessionParameters
@@ -48,7 +52,7 @@
 // Authenticates using the CMISSessionParameters and returns if the authentication was succesful
 - (BOOL)authenticateAndReturnError:(NSError **)error;
 
-// *** CMIS operations ***
+#pragma mark CMIS operations
 
 /**
  * Retrieves the root folder for the repository.

@@ -15,6 +15,7 @@
 #import "CMISFileableObject.h"
 #import "CMISObjectConverter.h"
 #import "CMISOperationContext.h"
+#import "CMISSession.h"
 
 @implementation CMISFileableObject
 
@@ -34,10 +35,9 @@
                               error:error];
 
     NSMutableArray *parentFolders = [NSMutableArray array];
-    CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
     for (CMISObjectData *parentObjectData in parentObjectDataArray)
     {
-        [parentFolders addObject:[converter convertObject:parentObjectData]];
+        [parentFolders addObject:[self.session.objectConverter convertObject:parentObjectData]];
     }
 
     return parentFolders;

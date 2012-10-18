@@ -39,23 +39,6 @@
 
 @implementation ObjectiveCMISTests
 
-- (void)testRepositories
-{
-    [self runTest:^
-    {
-        NSError *error = nil;
-        NSArray *repos = [CMISSession arrayOfRepositories:self.parameters error:&error];
-        STAssertNil(error, @"Error when calling arrayOfRepositories : %@", [error description]);
-        STAssertNotNil(repos, @"repos object should not be nil");
-        STAssertTrue(repos.count > 0, @"There should be at least one repository");
-
-        for (CMISRepositoryInfo *repoInfo in repos)
-        {
-            NSLog(@"Repo id: %@", repoInfo.identifier);
-        }
-    }];
-}
-
 - (void)testAuthenticateWithInvalidCredentials
 {
     [self runTest:^
@@ -187,7 +170,6 @@
 {
     [self runTest:^
     {
-
         // Get some random document
         CMISDocument *document = [self retrieveVersionedTestDocument];
 
@@ -253,7 +235,7 @@
         CMISDocument *randomDoc = nil;
         for (CMISObject *object in children)
         {
-            if ([object class] == [CMISDocument class])
+            if ([object isKindOfClass:[CMISDocument class]])
             {
                 randomDoc = (CMISDocument *)object;
                 break;
@@ -284,9 +266,6 @@
             self.callbackCompleted = YES;
         } progressBlock:nil];
         [self waitForCompletion:60];
-
-
-        // Nice boys clean up after themselves
     }];
 }
 
@@ -308,7 +287,7 @@
         [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
 
         __block NSInteger previousBytesUploaded = -1;
-        [self.rootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
+        [self.testFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain"
              withProperties:documentProperties
              completionBlock:^ (NSString *objectId)
              {
@@ -360,7 +339,7 @@
         [self.session createDocumentFromFilePath:filePath
                 withMimeType:@"text/plain"
                 withProperties:documentProperties
-                inFolder:self.rootFolder.identifier
+                inFolder:self.testFolder.identifier
                 completionBlock: ^ (NSString *newObjectId)
                 {
                     STAssertNotNil(newObjectId, @"Object id should not be nil");
@@ -410,7 +389,7 @@
 
         __block NSInteger previousBytesUploaded = -1;
         __block NSString *objectId;
-        [self.rootFolder createDocumentFromFilePath:fileToUploadPath withMimeType:@"application/pdf"
+        [self.testFolder createDocumentFromFilePath:fileToUploadPath withMimeType:@"application/pdf"
                withProperties:documentProperties
                completionBlock:^(NSString *newObjectId)
                {
@@ -479,8 +458,8 @@
         [properties setObject:folderName forKey:kCMISPropertyName];
         [properties setObject:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
 
-        NSString *newFolderObjectId = [self.rootFolder createFolder:properties error:&error];
-        STAssertNil(error, @"Error while creating folder in root folder: %@", [error description]);
+        NSString *newFolderObjectId = [self.testFolder createFolder:properties error:&error];
+        STAssertNil(error, @"Error while creating folder in test folder: %@", [error description]);
 
         // Delete the test folder again
         CMISFolder *newFolder = (CMISFolder *) [self.session retrieveObject:newFolderObjectId error:&error];
@@ -661,6 +640,7 @@
         STAssertNil([firstResult.properties propertyForId:kCMISPropertyContentStreamLength], @"Content stream length property should be nil");
         STAssertNotNil(firstResult.allowableActions, @"By default, allowable actions whould be included");
         STAssertTrue(firstResult.allowableActions.allowableActionsSet.count > 0, @"Expected at least one allowable action");
+
         // With operationContext
         CMISOperationContext *context = [CMISOperationContext defaultOperationContext];
         context.isIncludeAllowableActions = NO;
@@ -983,7 +963,7 @@
         [properties setObject:@"temp_test_folder" forKey:kCMISPropertyName];
         [properties setObject:kCMISPropertyObjectTypeIdValueFolder forKey:kCMISPropertyObjectTypeId];
 
-        NSString *folderId = [self.rootFolder createFolder:properties error:&error];
+        NSString *folderId = [self.testFolder createFolder:properties error:&error];
         STAssertNil(error, @"Got error while creating folder: %@", [error description]);
 
         // Update name of test folder through object service
@@ -1309,12 +1289,11 @@
         NSDateComponents *origComponents = [calendar components:unitflags fromDate:testDate];
 
         // Create converter
-        CMISObjectConverter *converter = [[CMISObjectConverter alloc] initWithSession:self.session];
+        CMISObjectConverter *converter = self.session.objectConverter;
 
         // Try to convert with already CMISPropertyData. This should work just fine.
         NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
         [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyName withStringValue:@"testName"] forKey:kCMISPropertyName];
-        [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyObjectTypeId withIdValue:@"cmis:document"] forKey:kCMISPropertyObjectTypeId];
         [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyCreationDate withDateTimeValue:testDate] forKey:kCMISPropertyCreationDate];
         [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyIsLatestVersion withBoolValue:YES] forKey:kCMISPropertyIsLatestVersion];
         [properties setObject:[CMISPropertyData createPropertyForId:kCMISPropertyContentStreamLength withIntegerValue:5] forKey:kCMISPropertyContentStreamLength];
@@ -1322,9 +1301,8 @@
         CMISProperties *convertedProperties = [converter convertProperties:properties forObjectTypeId:@"cmis:document" error:&error];
         STAssertNil(error, @"Error while converting properties: %@", [error description]);
         STAssertNotNil(convertedProperties, @"Conversion failed, nil was returned");
-        STAssertTrue(convertedProperties.propertyList.count == 5, @"Expected 5 converted properties, but was %d", convertedProperties.propertyList.count);
+        STAssertTrue(convertedProperties.propertyList.count == 4, @"Expected 4 converted properties, but was %d", convertedProperties.propertyList.count);
         STAssertEqualObjects(@"testName", [[convertedProperties propertyForId:kCMISPropertyName]propertyStringValue], @"Converted property value did not match");
-        STAssertEqualObjects(@"cmis:document", [[convertedProperties propertyForId:kCMISPropertyObjectTypeId] propertyIdValue], @"Converted property value did not match");
         STAssertEqualObjects(testDate, [[convertedProperties propertyForId:kCMISPropertyCreationDate] propertyDateTimeValue], @"Converted property value did not match");
         STAssertEqualObjects([NSNumber numberWithBool:YES], [[convertedProperties propertyForId:kCMISPropertyIsLatestVersion] propertyBooleanValue], @"Converted property value did not match");
         STAssertEqualObjects([NSNumber numberWithInteger:5], [[convertedProperties propertyForId:kCMISPropertyContentStreamLength] propertyIntegerValue], @"Converted property value did not match");
@@ -1332,7 +1310,6 @@
         // Test with non-CMISPropertyData values
         properties = [[NSMutableDictionary alloc] init];
         [properties setObject:@"test" forKey:kCMISPropertyName];
-        [properties setObject:@"cmis:document" forKey:kCMISPropertyObjectTypeId];
         [properties setObject:[dateFormatter stringFromDate:testDate] forKey:kCMISPropertyCreationDate];
         [properties setObject:[NSNumber numberWithBool:NO] forKey:kCMISPropertyIsLatestVersion];
         [properties setObject:[NSNumber numberWithInt:4] forKey:kCMISPropertyContentStreamLength];
@@ -1340,9 +1317,8 @@
         convertedProperties = [converter convertProperties:properties forObjectTypeId:@"cmis:document" error:&error];
         STAssertNil(error, @"Error while converting properties: %@", [error description]);
         STAssertNotNil(convertedProperties, @"Conversion failed, nil was returned");
-        STAssertTrue(convertedProperties.propertyList.count == 5, @"Expected 5 converted properties, but was %d", convertedProperties.propertyList.count);
+        STAssertTrue(convertedProperties.propertyList.count == 4, @"Expected 4 converted properties, but was %d", convertedProperties.propertyList.count);
         STAssertEqualObjects(@"test", [[convertedProperties propertyForId:kCMISPropertyName] propertyStringValue], @"Converted property value did not match");
-        STAssertEqualObjects(@"cmis:document", [[convertedProperties propertyForId:kCMISPropertyObjectTypeId] propertyIdValue], @"Converted property value did not match");
 
         // NSDate is using sub-second precision ... and the formatter is not.
         // ... sigh ... hence we test if the dates are 'relatively' (ie 1 second) close
