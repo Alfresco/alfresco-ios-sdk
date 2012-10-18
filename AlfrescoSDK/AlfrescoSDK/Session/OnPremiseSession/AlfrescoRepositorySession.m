@@ -25,6 +25,7 @@
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoCMISObjectConverter.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoRepositorySession ()
@@ -164,8 +165,10 @@
             v4params.repositoryId = repoInfo.identifier;
             
             // enable Alfresco mode in CMIS Session
-            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
-            [v4params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
+//            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
+//            [v4params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
+            [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+            [v4params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
             
             // create the session using the paramters
             CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];
