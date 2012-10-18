@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-        <key>environments</key>
-        <array>
-            <dict>
-                <key>username</key>
-                <string>admin</string>
-                <key>password</key>
-                <string>alzheimer</string>
-                <key>url</key>
-                <string>http://ec2-79-125-36-93.eu-west-1.compute.amazonaws.com:8080/alfresco/service/api/cmis</string>
-                <key>repositoryId</key>
-                <string>368eca28-be2b-4a8d-8bbb-1d7997af7930</string>
-            </dict>
-            <dict>
-                <key>username</key>
-                <string>admin</string>
-                <key>password</key>
-                <string>alzheimer</string>
-                <key>url</key>
-                <string>http://ec2-79-125-36-93.eu-west-1.compute.amazonaws.com:8080/alfresco/cmisatom</string>
-                <key>repositoryId</key>
-                <string>368eca28-be2b-4a8d-8bbb-1d7997af7930</string>
-            </dict>
-        </array>
-    </dict>
+<dict>
+	<key>environments</key>
+	<array>
+		<dict>
+			<key>username</key>
+			<string>admin</string>
+			<key>password</key>
+			<string>alzheimer</string>
+			<key>url</key>
+			<string>http://ec2-54-247-141-218.eu-west-1.compute.amazonaws.com:8080/alfresco/service/api/cmis</string>
+			<key>repositoryId</key>
+			<string>368eca28-be2b-4a8d-8bbb-1d7997af7930</string>
+		</dict>
+		<dict>
+			<key>username</key>
+			<string>admin</string>
+			<key>password</key>
+			<string>alzheimer</string>
+			<key>url</key>
+			<string>http://ec2-54-247-141-218.eu-west-1.compute.amazonaws.com:8080/alfresco/cmisatom</string>
+			<key>repositoryId</key>
+			<string>368eca28-be2b-4a8d-8bbb-1d7997af7930</string>
+		</dict>
+	</array>
+</dict>
 </plist>
