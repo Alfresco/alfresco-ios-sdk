@@ -86,8 +86,8 @@
                                                                               includeRelationShips:CMISIncludeRelationshipBoth
                                                                                    renditionFilter:nil
                                                                            includeAllowableActions:YES
-                                                                                          maxItems:[NSNumber numberWithInt:50]
-                                                                                         skipCount:0
+                                                                                          maxItems:[NSNumber numberWithInt:weakSelf.session.defaultListingContext.maxItems]
+                                                                                         skipCount:[NSNumber numberWithInt:weakSelf.session.defaultListingContext.skipCount]
                                                                                              error:&operationQueueError];
             NSMutableArray *resultArray = nil;
             NSArray *sortedResultArray = nil;
@@ -174,7 +174,8 @@
         
         NSError *operationQueueError = nil;
         NSMutableArray *resultArray = nil;
-        NSArray *sortedResultArray = nil;
+        NSArray *sortedResultArray = nil;    
+                
         CMISPagedResult *queryResultList = [weakSelf.cmisSession query:query searchAllVersions:NO error:&operationQueueError];
         if (nil != queryResultList)
         {

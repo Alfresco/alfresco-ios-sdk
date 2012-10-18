@@ -44,7 +44,18 @@
             
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
             
-            NSString *abbreviatedSearchTerm = @"test_file";
+            // Different search terms are required on the different versions of the OnPremise server, due to known indexing issues
+            BOOL isRunningOnVersion3 = (![[[self.currentSession repositoryInfo] capabilities] doesSupportCommentCounts]) ? YES : NO;
+            NSString *abbreviatedSearchTerm = nil;
+            if (isRunningOnVersion3)
+            {
+                abbreviatedSearchTerm = @"test";
+            }
+            else
+            {
+                abbreviatedSearchTerm = @"test_file";
+            }
+            
             if([super.testSearchFileName hasSuffix:@".pptx"])
             {
                 abbreviatedSearchTerm = [super.testSearchFileName stringByReplacingOccurrencesOfString:@".pptx" withString:@""];
@@ -69,6 +80,8 @@
                      else
                      {
                          BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:super.testSearchFileName array:array];
+                         NSLog(@"Search Term: %@", abbreviatedSearchTerm);
+                         NSLog(@"Results array size is: %i, and the first object is: %@", [array count], [[array objectAtIndex:0] name]);
                          STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
                          super.lastTestSuccessful = arrayContainsTestFile;
                      }
@@ -96,7 +109,19 @@
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithFolder:nil includeDescendants:YES];
             
             AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
-            NSString *abbreviatedSearchTerm = @"test_file";
+            
+            // Different search terms are required on the different versions of the OnPremise server, due to known indexing issues
+            BOOL isRunningOnVersion3 = (![[[self.currentSession repositoryInfo] capabilities] doesSupportCommentCounts]) ? YES : NO;
+            NSString *abbreviatedSearchTerm = nil;
+            if (isRunningOnVersion3)
+            {
+                abbreviatedSearchTerm = @"test";
+            }
+            else
+            {
+                abbreviatedSearchTerm = @"test_file";
+            }
+            
             if([super.testSearchFileName hasSuffix:@".pptx"])
             {
                 abbreviatedSearchTerm = [super.testSearchFileName stringByReplacingOccurrencesOfString:@".pptx" withString:@""];
@@ -252,7 +277,7 @@
                      }
                      else
                      {
-                         BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:super.testSearchFileName array:array];
+                         BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:super.fixedFileName array:array];
                          STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
                          
                          super.lastTestSuccessful = arrayContainsTestFile;
@@ -279,11 +304,23 @@
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
             
-            NSString *abbreviatedSearchTerm = @"test_file";
+            // Different search terms are required on the different versions of the OnPremise server, due to known indexing issues
+            BOOL isRunningOnVersion3 = (![[[self.currentSession repositoryInfo] capabilities] doesSupportCommentCounts]) ? YES : NO;
+            NSString *abbreviatedSearchTerm = nil;
+            if (isRunningOnVersion3)
+            {
+                abbreviatedSearchTerm = @"test";
+            }
+            else
+            {
+                abbreviatedSearchTerm = @"test_file";
+            }
+            
             if([super.testSearchFileName hasSuffix:@".pptx"])
             {
                 abbreviatedSearchTerm = [super.testSearchFileName stringByReplacingOccurrencesOfString:@".pptx" withString:@""];
             }
+            
             // search
             [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions completionBlock:^(NSArray *array, NSError *error)
              {
@@ -334,7 +371,19 @@
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
             
             AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
-            NSString *abbreviatedSearchTerm = @"test_file";
+            
+            // Different search terms are required on the different versions of the OnPremise server, due to known indexing issues
+            BOOL isRunningOnVersion3 = (![[[self.currentSession repositoryInfo] capabilities] doesSupportCommentCounts]) ? YES : NO;
+            NSString *abbreviatedSearchTerm = nil;
+            if (isRunningOnVersion3)
+            {
+                abbreviatedSearchTerm = @"test";
+            }
+            else
+            {
+                abbreviatedSearchTerm = @"test_file";
+            }
+            
             if([super.testSearchFileName hasSuffix:@".pptx"])
             {
                 abbreviatedSearchTerm = [super.testSearchFileName stringByReplacingOccurrencesOfString:@".pptx" withString:@""];
@@ -404,7 +453,7 @@
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
             
-            NSString *searchStatement = @"SELECT * FROM cmis:document";
+            NSString *searchStatement = [NSString stringWithFormat:@"SELECT * FROM cmis:document WHERE cmis:name = '%@'", super.fixedFileName];
             
             [self.searchService searchWithStatement:searchStatement language:AlfrescoSearchLanguageCMIS completionBlock:^(NSArray *resultsArray, NSError *error) {
                 
