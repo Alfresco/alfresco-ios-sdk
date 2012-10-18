@@ -450,7 +450,7 @@
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        __block NSString *description = @"ありがと　にほんご";
+        __block NSString *description = @"ありがとにほんご";
         __block NSString *title = @"わさび";
         __block NSString *name = @"ラヂオコmプタ";
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1435,23 +1435,29 @@
                      else
                      {
                          STAssertTrue(pagingResult.totalItems == numberOfDocs, @"Expected more than %d documents in total, but got %d",maxItems, pagingResult.totalItems);
-                         if (numberOfDocs > maxItems)
+                         int maxToBeFound = numberOfDocs - skipCount;
+                         if (maxToBeFound < 0)
+                         {
+                             maxToBeFound = 0;
+                         }
+                         if (maxItems <= maxToBeFound)
                          {
                              STAssertTrue(pagingResult.objects.count == maxItems, @"Expected %d documents, but got %d", maxItems, pagingResult.objects.count);
-                             if (numberOfDocs == maxItems)
+                             if (maxItems < maxToBeFound)
                              {
-                                 STAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
+                                 STAssertTrue(pagingResult.hasMoreItems, @"we should have more items than we got back");
                              }
                              else
                              {
-                                 STAssertTrue(pagingResult.hasMoreItems, @"we should have more items than we got back");
+                                 STAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
                              }
                          }
                          else
                          {
-                             STAssertTrue(pagingResult.objects.count == numberOfDocs,@"We have less than %d maxItems we should get back, but instead we got %d", numberOfDocs, pagingResult.objects.count);
+                             STAssertTrue(pagingResult.objects.count == maxToBeFound, @"Expected %d documents, but got %d", maxToBeFound, pagingResult.objects.count);
                              STAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
                          }
+
                          
                          super.lastTestSuccessful = YES;
                      }
@@ -3235,7 +3241,8 @@
                 }
                 
                 STAssertTrue([document hasAspectWithName:@"cm:titled"], @"The document should have the title aspect associated to it");
-                STAssertTrue([document hasAspectWithName:@"sys:localized"], @"The document should have the localized aspect associated with it");
+                //sys:localized is not supported on 3.4 servers
+//                STAssertTrue([document hasAspectWithName:@"sys:localized"], @"The document should have the localized aspect associated with it");
                 
                 [weakDfService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
                     
@@ -3458,8 +3465,17 @@
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        AlfrescoFolder *topFolder = nil;
+        if (self.isCloud)
+        {
+            topFolder = super.currentSession.rootFolder;
+        }
+        else
+        {
+            topFolder = super.testDocFolder;
+        }
         
-        [self.dfService retrieveParentFolderOfNode:super.testDocFolder completionBlock:^(AlfrescoFolder *parentFolder, NSError *error) {
+        [self.dfService retrieveParentFolderOfNode:topFolder completionBlock:^(AlfrescoFolder *parentFolder, NSError *error) {
             
             if (parentFolder != nil)
             {
