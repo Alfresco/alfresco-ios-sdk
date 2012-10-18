@@ -31,6 +31,7 @@
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoOAuthAuthenticationProvider.h"
 #import "CMISPassThroughAuthenticationProvider.h"
+#import "AlfrescoCMISObjectConverter.h"
 #import <objc/runtime.h>
 
 
@@ -370,7 +371,8 @@
             params.repositoryId = repoInfo.identifier;
             
             // enable Alfresco mode in CMIS Session
-            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
+//            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
+            [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
             
             // create the session using the paramters
             CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];
@@ -527,7 +529,8 @@ This authentication method authorises the user to access the home network assign
             params.repositoryId = repoInfo.identifier;
             
             // enable Alfresco mode in CMIS Session
-            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
+//            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
+            [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
             
             // create the session using the paramters
             CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];

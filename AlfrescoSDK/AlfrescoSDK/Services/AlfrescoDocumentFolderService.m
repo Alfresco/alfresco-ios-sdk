@@ -173,7 +173,7 @@
     if (objectTypeId == nil)
     {
         // Add the titled aspect by default when creating a document.
-        objectTypeId = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled"];
+        objectTypeId = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@", P:cm:titled"];
         [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
     }
     

@@ -41,7 +41,7 @@ typedef enum
 // Property types
 typedef enum
 {
-    CMISPropertyTypeBoolean,
+    CMISPropertyTypeBoolean = 0,
     CMISPropertyTypeId,
     CMISPropertyTypeInteger,
     CMISPropertyTypeDateTime,
