@@ -66,7 +66,8 @@
     if ([[properties allKeys] containsObject:kAlfrescoJSONTag])
     {
         self.identifier = [properties valueForKey:kAlfrescoJSONTag];
-        self.value = [properties valueForKey:kAlfrescoJSONTag];
+        NSString *valueString = [properties valueForKey:kAlfrescoJSONTag];
+        self.value = [valueString stringByReplacingOccurrencesOfString:@"\"" withString:@""];
     }
     
     

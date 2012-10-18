@@ -216,6 +216,7 @@
                         {
                             STAssertTrue([comment.content isEqualToString:@"<p>test</p>"], @"content should equal the test comment message");
                             STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
+                            log(@"Comment dates are createdAt %@ modifiedAt %@", comment.createdAt, comment.modifiedAt);
                             STAssertNotNil(comment.createdAt, @"creationDate should not be nil");
                             STAssertNotNil(comment.modifiedAt, @"modificationDate should not be nil");
                             STAssertFalse(comment.isEdited, @"isEdited should return false");
