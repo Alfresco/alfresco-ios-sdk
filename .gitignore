@@ -1,2 +1,9 @@
+<<<<<<< HEAD
 xcuserdata
 AlfrescoSDK/build
+=======
+xcuserdata/
+.idea/
+build/
+test-reports/
+>>>>>>> 366f0c83b53a2637ae4bfeec936ba72005b3cb33
