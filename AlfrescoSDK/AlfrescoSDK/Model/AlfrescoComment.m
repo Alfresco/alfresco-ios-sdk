@@ -58,7 +58,8 @@
     if (nil != self)
     {
         self.standardDateFormatter = [[NSDateFormatter alloc] init];
-        [self.standardDateFormatter setDateFormat:@"MMM' 'dd' 'yyyy' 'HH:mm:ss' 'zzz' (UTC)'"];
+//        [self.standardDateFormatter setDateFormat:@"MMM' 'dd' 'yyyy' 'HH:mm:ss' 'zzz' (UTC)'"];
+        [self.standardDateFormatter setDateFormat:@"MMM' 'dd' 'yyyy' 'HH:mm:ss' 'zzz"];
         self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
         if ([[properties allKeys] containsObject:kAlfrescoJSONTitle])
         {
@@ -123,7 +124,9 @@
             NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOn];
             if (nil != created)
             {
-                self.createdAt = [self.standardDateFormatter dateFromString:created];
+                NSArray *dateComponents = [created componentsSeparatedByString:@"("];
+                NSString *dateWithZZZTimeZone = [dateComponents objectAtIndex:0];
+                self.createdAt = [self.standardDateFormatter dateFromString:dateWithZZZTimeZone];
             }
         }
     }
@@ -143,7 +146,9 @@
             NSString *modified = [properties valueForKey:kAlfrescoJSONModifiedOn];
             if (nil != modified)
             {
-                self.modifiedAt = [self.standardDateFormatter dateFromString:modified];
+                NSArray *dateComponents = [modified componentsSeparatedByString:@"("];
+                NSString *dateWithZZZTimeZone = [dateComponents objectAtIndex:0];
+                self.modifiedAt = [self.standardDateFormatter dateFromString:dateWithZZZTimeZone];
             }
         }
     }
