@@ -35,6 +35,9 @@
 #import "AlfrescoRepositoryCapabilities.h"
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
+#import "AlfrescoCMISUtil.h"
+#import "AlfrescoCMISFolder.h"
+#import "AlfrescoCMISDocument.h"
 
 @interface AlfrescoObjectConverter ()
 @property (nonatomic, assign) BOOL isCloud;
@@ -266,7 +269,8 @@
     NSArray *propertyArray = [properties propertyList];
     
     NSMutableDictionary *alfPropertiesDict = [NSMutableDictionary dictionary];
-    for (CMISPropertyData *propData in propertyArray) {
+    for (CMISPropertyData *propData in propertyArray)
+    {
         NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
         NSString *propertyStringType = propData.identifier;
         NSNumber *propTypeIndex = [NSNumber numberWithInt:[AlfrescoObjectConverter typeForCMISProperty:propertyStringType]];
@@ -284,72 +288,61 @@
         AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
         [alfPropertiesDict setObject:alfProperty forKey:propData.identifier];
     }
-        
-    
-    
-    NSMutableArray *alfrescoAspectArray = [NSMutableArray array];
-    NSArray *extensionArray = [cmisObject extensionsForExtensionLevel:CMISExtensionLevelProperties];
-    for (CMISExtensionElement *object in extensionArray) {
-        if ([object.name isEqualToString:kAlfrescoAspects])
-        {
-            NSArray *aspectArray = [object children];
-            for (CMISExtensionElement *aspect in aspectArray) {
-                if ([aspect.name isEqualToString:kAlfrescoAppliedAspects])
-                {
-                    NSString *aspectValue = [AlfrescoObjectConverter propertyValueWithoutPrecursor:aspect.value];
-                    [alfrescoAspectArray addObject:aspectValue];
-                }
-                else if ([aspect.name isEqualToString:kAlfrescoAspectProperties])
-                {
-                    NSArray *propertyArray = [aspect children];
-                    for (CMISExtensionElement *property in propertyArray) 
-                    {
-                        NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
-                        NSString *extensionPropertyString = [property.attributes valueForKey:kAlfrescoAspectPropertyDefinitionId];
-
-                        NSNumber *propTypeIndex = [NSNumber numberWithInt:[AlfrescoObjectConverter typeForCMISProperty:extensionPropertyString]];
-                        [propertyDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
-
-                        
-                        CMISExtensionElement *propertyValueElement = (CMISExtensionElement *)[property.children objectAtIndex:0];
-                        
-                        [propertyDictionary setValue:propertyValueElement.value forKey:kAlfrescoPropertyValue];
-
-                        
-                        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
-                        [alfPropertiesDict setValue:alfProperty forKey:extensionPropertyString];
-                    }
-                }
-            }
-        }
-    }
     
     [propertyDictionary setValue:alfPropertiesDict forKey:kAlfrescoNodeProperties];
-    [propertyDictionary setValue:alfrescoAspectArray forKey:kAlfrescoNodeAspects];
-
-
-    NSString *title = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kAlfrescoPropertyTitle]).value];
-    if (![title isEqualToString:@"(null)"])
-    {
-        [propertyDictionary setValue:title forKey:kAlfrescoPropertyTitle];
-    }
-    
-    if(((AlfrescoProperty *)[alfPropertiesDict valueForKey:kAlfrescoPropertyDescription]).value != nil)
-    {
-        NSString *description = [NSString stringWithFormat:@"%@", ((AlfrescoProperty *)[alfPropertiesDict valueForKey:kAlfrescoPropertyDescription]).value];
-        if (![description isEqualToString:@"(null)"])
-        {
-            [propertyDictionary setValue:description forKey:kAlfrescoPropertyDescription];
-        }
-    }
     
     AlfrescoNode *node = nil;
     if ([cmisObject isKindOfClass:[CMISFolder class]])
     {
+        if ([cmisObject isKindOfClass:[AlfrescoCMISFolder class]])
+        {
+            AlfrescoCMISFolder *folder = (AlfrescoCMISFolder *)cmisObject;
+            NSMutableArray *strippedAspectTypes = [NSMutableArray array];
+            for (NSString * type in folder.aspectTypes)
+            {
+                NSString *correctedString = [AlfrescoObjectConverter propertyValueWithoutPrecursor:type];
+                [strippedAspectTypes addObject:correctedString];
+            }
+            NSString *title = [folder.properties propertyValueForId:kAlfrescoPropertyTitle];
+            if (![title isEqualToString:@"(null)"])
+            {
+                [propertyDictionary setValue:title forKey:kAlfrescoPropertyTitle];
+            }
+            NSString *description = [folder.properties propertyValueForId:kAlfrescoPropertyDescription];
+            if (![description isEqualToString:@"(null)"])
+            {
+                [propertyDictionary setValue:description forKey:kAlfrescoPropertyDescription];
+            }
+            [propertyDictionary setValue:strippedAspectTypes forKey:kAlfrescoNodeAspects];
+        }
+        
         node = [self folderFromCMISFolder:(CMISFolder *)cmisObject properties:propertyDictionary];
     }
     else if ([cmisObject isKindOfClass:[CMISDocument class]])
     {
+        if ([cmisObject isKindOfClass:[AlfrescoCMISDocument class]])
+        {
+            AlfrescoCMISDocument *document = (AlfrescoCMISDocument *)cmisObject;
+            NSMutableArray *strippedAspectTypes = [NSMutableArray array];
+            for (NSString * type in document.aspectTypes)
+            {
+                NSString *correctedString = [AlfrescoObjectConverter propertyValueWithoutPrecursor:type];
+                [strippedAspectTypes addObject:correctedString];
+            }
+            NSString *title = [document.properties propertyValueForId:kAlfrescoPropertyTitle];
+            if (![title isEqualToString:@"(null)"])
+            {
+                [propertyDictionary setValue:title forKey:kAlfrescoPropertyTitle];
+            }
+            NSString *description = [document.properties propertyValueForId:kAlfrescoPropertyDescription];
+            if (![description isEqualToString:@"(null)"])
+            {
+                [propertyDictionary setValue:description forKey:kAlfrescoPropertyDescription];
+            }
+            
+            [propertyDictionary setValue:strippedAspectTypes forKey:kAlfrescoNodeAspects];
+        }
+        
         node = [self documentFromCMISDocument:(CMISDocument *)cmisObject properties:propertyDictionary];
     }
     if (nil != node)
