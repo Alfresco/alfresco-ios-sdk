@@ -3067,11 +3067,13 @@
                     
                     // generate randomness
                     NSDate *dateTimeOriginal = [NSDate date];
-                    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:dateTimeOriginal];
+                    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:dateTimeOriginal];
                     NSInteger day = [components day];
                     NSInteger month = [components month];
                     NSInteger year = [components year];
-                    
+                    NSInteger hour = [components hour];
+                    NSInteger minute = [components minute];
+                    NSInteger second = [components second];
                     NSNumber *imagePixelXDimension = [NSNumber numberWithInt:arc4random()%512];
                     NSNumber *imagePixelYDimension = [NSNumber numberWithInt:arc4random()%382];
                     NSNumber *imageExposureTime = [NSNumber numberWithInt:(arc4random()%100)/100.0];
@@ -3140,13 +3142,19 @@
                             AlfrescoProperty *modifiedImageResolutionUnit = [modifiedProperties objectForKey:@"exif:resolutionUnit"];
                             
                             //exif
-                            NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:modifiedDateTimeOriginal.value];
+                            NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:modifiedDateTimeOriginal.value];
                             NSInteger modifiedDay = [components day];
                             NSInteger modifiedMonth = [components month];
                             NSInteger modifiedYear = [components year];
+                            NSInteger modifiedHour = [components hour];
+                            NSInteger mofifiedMinute = [components minute];
+                            NSInteger modifiedSecond = [components second];
                             STAssertTrue(modifiedDay == day, @"Day was not the same after being modified");
                             STAssertTrue(modifiedMonth == month, @"Month was not the same after being modified");
                             STAssertTrue(modifiedYear == year, @"Year was not the same after being modified");
+                            STAssertTrue(modifiedHour == hour, @"hour should be the same but it is %d orig and %d modified", hour, modifiedHour);
+                            STAssertTrue(mofifiedMinute == minute, @"minute should be the same but it is %d orig and %d modified", minute, mofifiedMinute);
+                            STAssertTrue(modifiedSecond == second, @"second should be the same but it is %d orig and %d modified", second, modifiedSecond);
                             
                             STAssertTrue([modifiedImagePixelXDimension.value isEqualToNumber:imagePixelXDimension], @"Pixel X Dimension was not the same after being modified");
                             STAssertTrue([modifiedImagePixelYDimension.value isEqualToNumber:imagePixelYDimension], @"Pixel Y Dimension was not the same after being modified");
