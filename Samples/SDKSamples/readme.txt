@@ -16,7 +16,7 @@ Known Issues
 - Photos uploaded with tags applied will cause two versions to be created.
 - Thumbnails will not be shown for uploaded photos until they have been viewed in Share.
 - For some activity types the avatar of the user who posted the activity is shown rather than the user mentioned in the activity.
-- When connecting to Alfresco in the Cloud only the users home network will be accessed.
+- When connecting to Alfresco in the Cloud only the home network of the user will be accessed.
 - The OAuth login page can be sensitive to device movement and cause some flickering.
 - The Password label field is truncated when running the SDK samples app on the new iPad.
 
