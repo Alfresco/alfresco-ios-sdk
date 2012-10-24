@@ -9,7 +9,7 @@ This SDK provides functionality to connect to both on-premise and Cloud-based se
 Documentation
 -------------
 
-Full documentation, including getting started instructions can be found in the [iOS SDK Reference PDF](https://developer.alfresco.com/resources/alfresco/pdf/iOSSDKReference-v1.0.pdf). 
+Full documentation, including getting started instructions can be found [here](https://developer.alfresco.com/resources/alfresco/pdf/iOS-SDK-1.0.pdf). 
 
 More information can be found on our [developer portal](http://developer.alfresco.com/mobile) and on our [website](http://www.alfresco.com/products/mobile).
 
