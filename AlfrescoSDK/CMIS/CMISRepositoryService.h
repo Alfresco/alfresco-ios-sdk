@@ -22,13 +22,13 @@
 /**
 * Returns an array of CMISRepositoryInfo objects representing the repositories available at the endpoint.
 */
-- (NSArray *)retrieveRepositoriesAndReturnError:(NSError **)outError;
+- (void)retrieveRepositoriesWithCompletionBlock:(void (^)(NSArray *repositories, NSError *error))completionBlock;
 
 /**
 * Returns the repository info for the repository with the given id
 */
-- (CMISRepositoryInfo *)retrieveRepositoryInfoForId:(NSString *)repositoryId error:(NSError **)outError;
+- (void)retrieveRepositoryInfoForId:(NSString *)repositoryId completionBlock:(void (^)(CMISRepositoryInfo *repositoryInfo, NSError *error))completionBlock;
 
-- (CMISTypeDefinition *)retrieveTypeDefinition:(NSString *)typeId error:(NSError **)outError;
+- (void)retrieveTypeDefinition:(NSString *)typeId completionBlock:(void (^)(CMISTypeDefinition *typeDefinition, NSError *error))completionBlock;
 
 @end

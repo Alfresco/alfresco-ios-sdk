@@ -29,7 +29,7 @@
  *
  * The returned objects will be instances of CMISObject.
  */
-- (CMISPagedResult *)retrieveChildrenAndReturnError:(NSError * *)error;
+- (void)retrieveChildrenWithCompletionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
 /**
  * Checks if this folder is the root folder.
@@ -39,27 +39,28 @@
 /**
  * Gets the parent folder object.
  */
-- (CMISFolder *)retrieveFolderParentAndReturnError:(NSError **)error;
+- (void)retrieveFolderParentWithCompletionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
 
 /**
  * Retrieves the children of this folder as a paged result using the provided operation context.
  *
  * The returned objects will be instances of CMISObject.
  */
-- (CMISPagedResult *)retrieveChildrenWithOperationContext:(CMISOperationContext *)operationContext andReturnError:(NSError * *)error;
+- (void)retrieveChildrenWithOperationContext:(CMISOperationContext *)operationContext completionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
-- (NSString *)createFolder:(NSDictionary *)properties error:(NSError * *)error;
+- (void)createFolder:(NSDictionary *)properties completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock;
 
-- (void)createDocumentFromFilePath:(NSString *)filePath withMimeType:(NSString *)mimeType
-                          withProperties:(NSDictionary *)properties
-                         completionBlock:(CMISStringCompletionBlock)completionBlock // the returned string is the object id of the newly created document
-                            failureBlock:(CMISErrorFailureBlock)failureBlock
-                           progressBlock:(CMISProgressBlock)progressBlock;
+- (void)createDocumentFromFilePath:(NSString *)filePath
+                      withMimeType:(NSString *)mimeType
+                    withProperties:(NSDictionary *)properties
+                   completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock
+                     progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
-- (NSArray *)deleteTreeWithDeleteAllVersions:(BOOL)deleteAllversions
-                           withUnfileObjects:(CMISUnfileObject)unfileObjects
-                       withContinueOnFailure:(BOOL)continueOnFailure
-                              andReturnError:(NSError **)error;
+- (void)deleteTreeWithDeleteAllVersions:(BOOL)deleteAllversions
+                      withUnfileObjects:(CMISUnfileObject)unfileObjects
+                  withContinueOnFailure:(BOOL)continueOnFailure
+                        completionBlock:(void (^)(NSArray *failedObjects, NSError *error))completionBlock;
+
 
 @end
 

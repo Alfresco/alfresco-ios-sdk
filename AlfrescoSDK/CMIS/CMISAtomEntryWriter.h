@@ -21,6 +21,7 @@
 @interface CMISAtomEntryWriter : NSObject
 
 @property (nonatomic, strong) NSString *contentFilePath;
+@property (nonatomic, strong) NSInputStream *inputStream;
 @property (nonatomic, strong) NSString *mimeType;
 @property (nonatomic, strong) CMISProperties *cmisProperties;
 

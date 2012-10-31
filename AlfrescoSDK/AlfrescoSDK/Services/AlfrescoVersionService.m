@@ -69,29 +69,30 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoVersionService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSArray *versionArray = [weakSelf.cmisSession.binding.versioningService retrieveAllVersions:document.identifier
-                                                                                             filter:nil
-                                                                            includeAllowableActions:YES
-                                                                                              error:&operationQueueError];
-        
-        NSArray *sortedAlfrescoVersionArray = nil;
-        if (nil != versionArray)
-        {
-            NSMutableArray *alfrescoVersionArray = [NSMutableArray arrayWithCapacity:versionArray.count];
-            for (CMISObjectData *cmisData in versionArray)
-            {
-                AlfrescoNode *alfrescoNode = [weakSelf.objectConverter nodeFromCMISObjectData:cmisData];
-                [alfrescoVersionArray addObject:alfrescoNode];
-            }
-            sortedAlfrescoVersionArray = [AlfrescoSortingUtils sortedArrayForArray:alfrescoVersionArray sortKey:self.defaultSortKey ascending:YES];
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(sortedAlfrescoVersionArray, operationQueueError);
-        }];
-    }];
+    [self.cmisSession.binding.versioningService
+     retrieveAllVersions:document.identifier
+     filter:nil
+     includeAllowableActions:YES
+     completionBlock:^(NSArray *allVersions, NSError *error){
+         if (nil == allVersions)
+         {
+             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                 completionBlock(nil, error);
+             }];
+         }
+         else
+         {
+             NSMutableArray *alfrescoVersions = [NSMutableArray array];
+             for (CMISObjectData *cmisData in allVersions)
+             {
+                 AlfrescoNode *alfrescoNode = [weakSelf.objectConverter nodeFromCMISObjectData:cmisData];
+                 [alfrescoVersions addObject:alfrescoNode];
+             }
+             NSArray *sortedAlfrescoVersionArray = [AlfrescoSortingUtils sortedArrayForArray:alfrescoVersions sortKey:self.defaultSortKey ascending:YES];
+             completionBlock(sortedAlfrescoVersionArray, nil);
+             
+         }
+     }];
 }
 
 - (void)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
@@ -107,34 +108,35 @@
     }
     
     __weak AlfrescoVersionService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSArray *versionArray = [weakSelf.cmisSession.binding.versioningService retrieveAllVersions:document.identifier
-                                                                                             filter:nil
-                                                                            includeAllowableActions:YES
-                                                                                              error:&operationQueueError];
-        AlfrescoPagingResult *pagingResult = nil;
-        if (nil != versionArray)
-        {
-            NSMutableArray *alfrescoVersionArray = [NSMutableArray arrayWithCapacity:versionArray.count];
-            for (CMISObjectData *cmisData in versionArray)
-            {
-                AlfrescoNode *alfrescoNode = [weakSelf.objectConverter nodeFromCMISObjectData:cmisData];
-                [alfrescoVersionArray addObject:alfrescoNode];
-            }
-            NSArray *sortedVersionArray = [AlfrescoSortingUtils sortedArrayForArray:alfrescoVersionArray
-                                                                            sortKey:listingContext.sortProperty
-                                                                      supportedKeys:self.supportedSortKeys
-                                                                         defaultKey:self.defaultSortKey
-                                                                          ascending:listingContext.sortAscending];
-            
-            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedVersionArray listingContext:listingContext];
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(pagingResult, operationQueueError);
-        }];
-    }];
+    [self.cmisSession.binding.versioningService
+     retrieveAllVersions:document.identifier
+     filter:nil
+     includeAllowableActions:YES
+     completionBlock:^(NSArray *allVersions, NSError *error){
+         if (nil == allVersions)
+         {
+             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                 completionBlock(nil, error);
+             }];
+         }
+         else
+         {
+             NSMutableArray *alfrescoVersions = [NSMutableArray array];
+             for (CMISObjectData *cmisData in allVersions)
+             {
+                 AlfrescoNode *alfrescoNode = [weakSelf.objectConverter nodeFromCMISObjectData:cmisData];
+                 [alfrescoVersions addObject:alfrescoNode];
+             }
+             NSArray *sortedVersionArray = [AlfrescoSortingUtils sortedArrayForArray:alfrescoVersions
+                                                                             sortKey:listingContext.sortProperty
+                                                                       supportedKeys:self.supportedSortKeys
+                                                                          defaultKey:self.defaultSortKey
+                                                                           ascending:listingContext.sortAscending];
+             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedVersionArray listingContext:listingContext];
+             completionBlock(pagingResult, nil);
+             
+         }
+     }];
 }
 
 @end

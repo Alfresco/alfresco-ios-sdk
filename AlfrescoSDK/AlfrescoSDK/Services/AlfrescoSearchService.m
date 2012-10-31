@@ -77,32 +77,34 @@
     
     if (AlfrescoSearchLanguageCMIS == language)
     {
-        __weak AlfrescoSearchService *weakSelf = self;
-        [self.operationQueue addOperationWithBlock:^{
-            
-            NSError *operationQueueError = nil;
-            CMISObjectList *queryResultList = [weakSelf.cmisSession.binding.discoveryService query:statement
-                                                                                 searchAllVersions:NO
-                                                                              includeRelationShips:CMISIncludeRelationshipBoth
-                                                                                   renditionFilter:nil
-                                                                           includeAllowableActions:YES
-                                                                                          maxItems:[NSNumber numberWithInt:weakSelf.session.defaultListingContext.maxItems]
-                                                                                         skipCount:[NSNumber numberWithInt:weakSelf.session.defaultListingContext.skipCount]
-                                                                                             error:&operationQueueError];
-            NSMutableArray *resultArray = nil;
-            NSArray *sortedResultArray = nil;
-            if (nil != queryResultList)
-            {
-                resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.objects count]];
-                for (CMISObjectData *queryData in queryResultList.objects) 
-                {
-                    [resultArray addObject:[self.objectConverter nodeFromCMISObjectData:queryData]];
-                }
-                sortedResultArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
-            }
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(sortedResultArray, operationQueueError);
-            }];
+        [self.cmisSession.binding.discoveryService
+         query:statement
+         searchAllVersions:NO
+         includeRelationShips:CMISIncludeRelationshipBoth
+         renditionFilter:nil
+         includeAllowableActions:YES
+         maxItems:[NSNumber numberWithInt:self.session.defaultListingContext.maxItems]
+         skipCount:[NSNumber numberWithInt:self.session.defaultListingContext.skipCount]
+         completionBlock:^(CMISObjectList *objectList, NSError *error){
+             if (nil == objectList)
+             {
+                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                     completionBlock(nil, error);
+                 }];
+             }
+             else
+             {
+                 NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[objectList.objects count]];
+                 for (CMISObjectData *queryData in objectList.objects)
+                 {
+                     [resultArray addObject:[self.objectConverter nodeFromCMISObjectData:queryData]];
+                 }
+                 NSArray *sortedResultArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
+                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                     completionBlock(sortedResultArray, nil);
+                 }];                 
+             }
+             
         }];
     }
     
@@ -125,37 +127,40 @@
 
     if (AlfrescoSearchLanguageCMIS == language)
     {
-        __weak AlfrescoSearchService *weakSelf = self;
-        [self.operationQueue addOperationWithBlock:^{
-            
-            NSError *operationQueueError = nil;
-             CMISObjectList *queryResultList = [weakSelf.cmisSession.binding.discoveryService query:statement
-                                                                                  searchAllVersions:NO
-                                                                               includeRelationShips:CMISIncludeRelationshipBoth
-                                                                                    renditionFilter:nil
-                                                                            includeAllowableActions:YES
-                                                                                           maxItems:[NSNumber numberWithInt:listingContext.maxItems]
-                                                                                          skipCount:[NSNumber numberWithInt:listingContext.skipCount]
-                                                                                              error:&operationQueueError];
-            AlfrescoPagingResult *pagingResult = nil;
-            if (nil != queryResultList)
-            {
-                NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.objects count]];
-                for (CMISObjectData *queryData in queryResultList.objects) 
-                {
-                    [resultArray addObject:[self.objectConverter nodeFromCMISObjectData:queryData]];
-                }
-                NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray
-                                                                         sortKey:listingContext.sortProperty
-                                                                   supportedKeys:self.supportedSortKeys
-                                                                      defaultKey:self.defaultSortKey
-                                                                       ascending:listingContext.sortAscending];
-                pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:NO totalItems:sortedArray.count];
-            }
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(pagingResult, operationQueueError);
-            }];
-        }];
+        [self.cmisSession.binding.discoveryService
+         query:statement
+         searchAllVersions:NO
+         includeRelationShips:CMISIncludeRelationshipBoth
+         renditionFilter:nil
+         includeAllowableActions:YES
+         maxItems:[NSNumber numberWithInt:listingContext.maxItems]
+         skipCount:[NSNumber numberWithInt:listingContext.skipCount]
+         completionBlock:^(CMISObjectList *objectList, NSError *error){
+             if (nil == objectList)
+             {
+                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                     completionBlock(nil, error);
+                 }];
+             }
+             else
+             {
+                 NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[objectList.objects count]];
+                 for (CMISObjectData *queryData in objectList.objects)
+                 {
+                     [resultArray addObject:[self.objectConverter nodeFromCMISObjectData:queryData]];
+                 }
+                 NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray
+                                                                          sortKey:listingContext.sortProperty
+                                                                    supportedKeys:self.supportedSortKeys
+                                                                       defaultKey:self.defaultSortKey
+                                                                        ascending:listingContext.sortAscending];
+                 AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:NO totalItems:sortedArray.count];
+                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                     completionBlock(pagingResult, nil);
+                 }];
+             }
+             
+         }];
     }
     
 }
@@ -169,27 +174,25 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     NSString *query = [self createSearchQuery:keywords options:options];
-    __weak AlfrescoSearchService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSMutableArray *resultArray = nil;
-        NSArray *sortedResultArray = nil;    
-                
-        CMISPagedResult *queryResultList = [weakSelf.cmisSession query:query searchAllVersions:NO error:&operationQueueError];
-        if (nil != queryResultList)
+    [self.cmisSession query:query searchAllVersions:NO completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+        if (nil == pagedResult)
         {
-            resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.resultArray count]];
-            for (CMISQueryResult *queryResult in queryResultList.resultArray) 
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(nil, error);
+            }];
+        }
+        else
+        {
+            NSMutableArray *resultArray = [NSMutableArray array];
+            for (CMISQueryResult *queryResult in pagedResult.resultArray)
             {
                 [resultArray addObject:[self.objectConverter documentFromCMISQueryResult:queryResult]];
             }
-            sortedResultArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
-            
+            NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(sortedArray, nil);
+            }];
         }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(sortedResultArray, operationQueueError);
-        }];
     }];
     
 }
@@ -209,34 +212,28 @@
 
     NSString *query = [self createSearchQuery:keywords options:options];
     CMISOperationContext *operationContext = [AlfrescoPagingUtils operationContextFromListingContext:listingContext];
-    
-    __weak AlfrescoSearchService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSMutableArray *resultArray = nil;
-        NSArray *sortedResultArray = nil;
-        AlfrescoPagingResult *pagingResult = nil;
-        CMISPagedResult *queryResultList = [weakSelf.cmisSession query:query
-                                                     searchAllVersions:NO
-                                                      operationContext:operationContext
-                                                                 error:&operationQueueError];
-        if (nil != queryResultList)
+    [self.cmisSession query:query searchAllVersions:NO operationContext:operationContext completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+        if (nil == pagedResult)
         {
-            resultArray = [NSMutableArray arrayWithCapacity:[queryResultList.resultArray count]];
-            for (CMISQueryResult *queryResult in queryResultList.resultArray)
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(nil, error);
+            }];
+        }
+        else
+        {
+            NSMutableArray *resultArray = [NSMutableArray array];
+            for (CMISQueryResult *queryResult in pagedResult.resultArray)
             {
                 [resultArray addObject:[self.objectConverter documentFromCMISQueryResult:queryResult]];
             }
-            sortedResultArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
-            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedResultArray listingContext:listingContext];
-//            pagingResult = [AlfrescoPagingUtils pagedResultFromArray:queryResultList objectConverter:weakSelf.objectConverter];
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(pagingResult, operationQueueError);
-        }];
-    }];
-    
+            NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
+            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedArray listingContext:listingContext];
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(pagingResult, nil);
+            }];
+            
+        }        
+    }];    
 }
 
 

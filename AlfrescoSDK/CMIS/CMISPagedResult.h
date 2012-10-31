@@ -25,7 +25,8 @@
 
 @end
 
-typedef CMISFetchNextPageBlockResult * (^CMISFetchNextPageBlock)(int skipCount, int maxItems, NSError ** error);
+typedef void (^CMISFetchNextPageBlockCompletionBlock)(CMISFetchNextPageBlockResult *result, NSError *error);
+typedef void (^CMISFetchNextPageBlock)(int skipCount, int maxItems, CMISFetchNextPageBlockCompletionBlock completionBlock);
 
 /**
  * The result of executing an operation which has potentially more results than returned in once.
@@ -36,12 +37,10 @@ typedef CMISFetchNextPageBlockResult * (^CMISFetchNextPageBlock)(int skipCount, 
 @property (readonly) BOOL hasMoreItems;
 @property (readonly) NSInteger numItems;
 
-+ (CMISPagedResult *)pagedResultUsingFetchBlock:(CMISFetchNextPageBlock)fetchNextPageBlock
-                                   andLimitToMaxItems:(NSInteger)maxItems
-                                   andStartFromSkipCount:(NSInteger)skipCount
-                                   error:(NSError **)error;
++ (void)pagedResultUsingFetchBlock:(CMISFetchNextPageBlock)fetchNextPageBlock
+                andLimitToMaxItems:(NSInteger)maxItems andStartFromSkipCount:(NSInteger)skipCount
+                   completionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
-- (CMISPagedResult *)fetchNextPageAndReturnError:(NSError **)error;
-
+- (void)fetchNextPageWithCompletionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
 @end

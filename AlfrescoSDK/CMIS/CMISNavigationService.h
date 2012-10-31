@@ -23,16 +23,12 @@
 /*
  * Retrieves the children for the given object identifier.
  */
-- (CMISObjectList *)retrieveChildren:(NSString *)objectId
-                      orderBy:(NSString *)orderBy
-                       filter:(NSString *)filter
-         includeRelationShips:(CMISIncludeRelationship)includeRelationship
-              renditionFilter:(NSString *)renditionFilter
-      includeAllowableActions:(BOOL)includeAllowableActions
-           includePathSegment:(BOOL)includePathSegment
-                    skipCount:(NSNumber *)skipCount
-                     maxItems:(NSNumber *)maxItems
-                        error:(NSError **)error;
+- (void)retrieveChildren:(NSString *)objectId orderBy:(NSString *)orderBy
+                  filter:(NSString *)filter includeRelationShips:(CMISIncludeRelationship)includeRelationship
+         renditionFilter:(NSString *)renditionFilter includeAllowableActions:(BOOL)includeAllowableActions
+      includePathSegment:(BOOL)includePathSegment skipCount:(NSNumber *)skipCount
+                maxItems:(NSNumber *)maxItems
+         completionBlock:(void (^)(CMISObjectList *objectList, NSError *error))completionBlock;
 
 /**
 * Retrieves the parent of a given object.
@@ -40,12 +36,13 @@
 *
 * TODO: OpenCMIS returns an ObjectParentData object .... is this necessary?
 */
-- (NSArray *)retrieveParentsForObject:(NSString *)objectId
-                           withFilter:(NSString *)filter
-             withIncludeRelationships:(CMISIncludeRelationship)includeRelationship
-                  withRenditionFilter:(NSString *)renditionFilter
-          withIncludeAllowableActions:(BOOL)includeAllowableActions
-       withIncludeRelativePathSegment:(BOOL)includeRelativePathSegment
-                                   error:(NSError * *)error;
+- (void)retrieveParentsForObject:(NSString *)objectId
+                      withFilter:(NSString *)filter
+        withIncludeRelationships:(CMISIncludeRelationship)includeRelationship
+             withRenditionFilter:(NSString *)renditionFilter
+     withIncludeAllowableActions:(BOOL)includeAllowableActions
+  withIncludeRelativePathSegment:(BOOL)includeRelativePathSegment
+                 completionBlock:(void (^)(NSArray *parents, NSError *error))completionBlock;
+
 
 @end

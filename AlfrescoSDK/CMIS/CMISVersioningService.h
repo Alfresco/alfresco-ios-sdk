@@ -24,6 +24,25 @@
 /**
  * Get a the latest Document object in the Version Series.
  */
+- (void)retrieveObjectOfLatestVersion:(NSString *)objectId
+                                major:(BOOL)major
+                               filter:(NSString *)filter
+                 includeRelationShips:(CMISIncludeRelationship)includeRelationships
+                     includePolicyIds:(BOOL)includePolicyIds
+                      renditionFilter:(NSString *)renditionFilter
+                           includeACL:(BOOL)includeACL
+              includeAllowableActions:(BOOL)includeAllowableActions
+                      completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
+
+/*
+ * Returns the list of all Document Object in the given version series, sorted by creationDate descending (ie youngest first)
+ */
+- (void)retrieveAllVersions:(NSString *)objectId
+                     filter:(NSString *)filter
+    includeAllowableActions:(BOOL)includeAllowableActions
+            completionBlock:(void (^)(NSArray *objects, NSError *error))completionBlock;
+
+/* deprecated
 - (CMISObjectData *)retrieveObjectOfLatestVersion:(NSString *)objectId
                                             major:(BOOL)major
                                            filter:(NSString *)filter
@@ -34,12 +53,10 @@
                           includeAllowableActions:(BOOL)includeAllowableActions
                                             error:(NSError **)error;
 
-/*
- * Returns the list of all Document Object in the given version series, sorted by creationDate descending (ie youngest first)
- */
 - (NSArray *)retrieveAllVersions:(NSString *)objectId
                           filter:(NSString *)filter
          includeAllowableActions:(BOOL)includeAllowableActions
                            error:(NSError * *)error;
+ */
 
 @end
