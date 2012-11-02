@@ -171,9 +171,9 @@
         
         // create a new folder in the repository's root folder
         [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *unitTestFolder, NSError *error)
          {
-             if (nil == folder)
+             if (nil == unitTestFolder)
              {
                  super.lastTestSuccessful = NO;
                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
@@ -181,31 +181,31 @@
              }
              else
              {
-                 STAssertNotNil(folder, @"folder should not be nil");
-                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
-                 __block AlfrescoFolder *strongFolder = folder;
+                 STAssertNotNil(unitTestFolder, @"folder should not be nil");
+                 STAssertTrue([unitTestFolder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 __block AlfrescoFolder *strongFolder = unitTestFolder;
                  // check the properties were added at creation time
-                 NSDictionary *newFolderProps = folder.properties;
+                 NSDictionary *newFolderProps = unitTestFolder.properties;
                  AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
                  AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [self.dfService deleteNode:unitTestFolder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
                           super.lastTestSuccessful = NO;
-                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
                           super.callbackCompleted = YES;
                       }
                       else
                       {
-                          [weakService retrieveChildrenInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error){
+                          [weakService retrieveChildrenInFolder:strongFolder completionBlock:^(NSArray *array, NSError *accessError){
                               if (nil == array)
                               {
                                   self.lastTestSuccessful = YES;
-                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [accessError localizedDescription], [accessError localizedFailureReason]];
                                   log(@"We expected this to fail with %@",errorMessage);
                               }
                               else
@@ -593,10 +593,12 @@
                   {
                       if (!success)
                       {
+                          super.lastTestSuccessful = NO;
                           super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                       }
                       else
                       {
+                          super.lastTestSuccessful = YES;
                       }
                       
                       super.callbackCompleted = YES;
@@ -700,6 +702,7 @@
             {
                 super.lastTestSuccessful = NO;
                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
             }
             else
             {
@@ -721,6 +724,7 @@
                     {
                         super.lastTestSuccessful = NO;
                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        super.callbackCompleted = YES;
                     }
                     else
                     {
@@ -857,6 +861,7 @@
             {
                 STAssertTrue(error != nil, @"Expected an error to be thrown");
                 super.lastTestSuccessful = NO;
+                super.callbackCompleted = YES;
             }
             else
             {
@@ -869,6 +874,7 @@
                     {
                         STAssertTrue(error != nil, @"Expected an error to be thrown");
                         super.lastTestSuccessful = NO;
+                        super.callbackCompleted = YES;
                     }
                     else
                     {
@@ -881,6 +887,7 @@
                             {
                                 STAssertTrue(error != nil, @"Expected an error to be thrown");
                                 super.lastTestSuccessful = NO;
+                                super.callbackCompleted = YES;
                             }
                             else
                             {
@@ -893,6 +900,7 @@
                                     {
                                         STAssertTrue(error != nil, @"Expected an error to be thrown");
                                         super.lastTestSuccessful = NO;
+                                        super.callbackCompleted = YES;
                                     }
                                     else
                                     {
@@ -2297,7 +2305,7 @@
 {
     [super runAllSitesTest:^{
         NSString *filename = @"millenium-dome.jpg";
-        __block NSString *testDescription = @"Peter\'s test description";
+        __block NSString *testDescription = @"Peter's test description";
         __block NSString *testTitle = @"test title";
         __block NSString *updatedName = @"millenium-dome-2012.jpg";
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
@@ -2335,6 +2343,7 @@
                      }
                      else
                      {
+                         log(@"node identifier is %@", node.identifier);
                          STAssertTrue([node isKindOfClass:[AlfrescoDocument class]], @"the node should be of type AlfrescoDocument");
                          AlfrescoDocument *updatedDoc = (AlfrescoDocument *)node;
                          STAssertTrue([updatedDoc.name isEqualToString:updatedName], @"The name of the document should be %@, but instead we got %@", updatedName, updatedDoc.name);
@@ -2342,7 +2351,6 @@
                          AlfrescoProperty *title = [updatedDoc.properties objectForKey:@"cm:title"];
                          STAssertTrue([description.value isEqualToString:testDescription], @"expected description %@, but got %@", testDescription, description.value);
                          STAssertTrue([title.value isEqualToString:testTitle], @"expected title %@, but got %@", testTitle, title.value);
-                         super.lastTestSuccessful = YES;
                          [weakDfService deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError){
                              if (!succeeded)
                              {
@@ -2662,9 +2670,9 @@
         
         // create a new folder in the repository's root folder
         [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *unitTestFolder, NSError *error)
          {
-             if (nil == folder)
+             if (nil == unitTestFolder)
              {
                  super.lastTestSuccessful = NO;
                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
@@ -2672,11 +2680,10 @@
              }
              else
              {
-                 STAssertNotNil(folder, @"folder should not be nil");
-                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
-                 __block AlfrescoFolder *strongFolder = folder;
+                 STAssertNotNil(unitTestFolder, @"folder should not be nil");
+                 STAssertTrue([unitTestFolder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
                  
-                 [weakService createFolderWithName:@"SomeTestFolder" inParentFolder:strongFolder properties:props completionBlock:^(AlfrescoFolder *internalFolder, NSError *internalError){
+                 [weakService createFolderWithName:@"SomeTestFolder" inParentFolder:unitTestFolder properties:props completionBlock:^(AlfrescoFolder *internalFolder, NSError *internalError){
                      if (nil == internalFolder)
                      {
                          super.lastTestSuccessful = NO;
@@ -2685,13 +2692,12 @@
                      }
                      else
                      {
-                         __block AlfrescoFolder *strongInternalFolder = internalFolder;
-                         [weakService deleteNode:strongFolder completionBlock:^(BOOL success, NSError *innerError)
+                         [weakService deleteNode:unitTestFolder completionBlock:^(BOOL success, NSError *innerError)
                           {
                               if (!success)
                               {
                                   super.lastTestSuccessful = NO;
-                                  super.lastTestFailureMessage = @"You should be able to delete a folder with content";
+                                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [innerError localizedDescription], [innerError localizedFailureReason]];
                               }
                               else
                               {
@@ -2795,6 +2801,7 @@
              {
                  super.lastTestSuccessful = NO;
                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
              }
              else
              {
@@ -2848,7 +2855,7 @@
                  {
                      super.lastTestSuccessful = NO;
                      super.lastTestFailureMessage = @"Failed to retrieve versioned-quote.txt file.";
-                     super.lastTestSuccessful = YES;                     
+                     super.callbackCompleted = YES;
                  }
              }
 //             super.callbackCompleted = YES;
@@ -3062,7 +3069,7 @@
                 else
                 {
                     STAssertNotNil(node, @"document node should not be nil");
-                    STAssertTrue([node.name isEqualToString:documentName], @"Document name is not the same as requested");
+                    STAssertTrue([node.name isEqualToString:documentName], @"Document name is not the same as requested. We expected %@, but got %@", documentName, node.name);
                     
                     
                     // generate randomness
@@ -3120,7 +3127,7 @@
                         else
                         {
                             STAssertNotNil(modifiedNode, @"document node should not be nil");
-                            STAssertTrue([modifiedNode.name isEqualToString:documentName], @"Modified node name is not the same as requested");
+                            STAssertTrue([modifiedNode.name isEqualToString:documentName], @"Modified node name is not the same as requested. We expected %@ but got %@", documentName, modifiedNode.name);
                             
                             // check the properties were changed
                             NSDictionary *modifiedProperties = modifiedNode.properties;
@@ -3352,7 +3359,7 @@
         // Running as admin, read and write access should be true
         [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *documentNode, NSError *error) {
             
-            if (documentNode == nil && error != nil)
+            if (documentNode == nil)
             {
                 super.lastTestSuccessful = NO;
                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
@@ -3408,6 +3415,7 @@
             {
                 super.lastTestSuccessful = NO;
                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [entireError localizedDescription], [entireError localizedFailureReason]];
+                super.callbackCompleted = YES;
             }
             else
             {
@@ -3638,6 +3646,7 @@
             {
                 super.lastTestSuccessful = NO;
                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
             }
             else
             {

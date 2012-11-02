@@ -99,22 +99,22 @@
                                        STAssertTrue(document.contentLength > 100, @"expected content to be filled");
                                        
                                        // delete the test document
-                                       [dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                       [dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
                                         {
                                             if (!success)
                                             {
                                                 super.lastTestSuccessful = NO;
-                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
                                                 super.callbackCompleted = YES;
                                             }
                                             else
                                             {
-                                                [weakService retrieveCommentsForNode:document completionBlock:^(NSArray *comments, NSError *error){
+                                                [weakService retrieveCommentsForNode:document completionBlock:^(NSArray *comments, NSError *commentError){
                                                     if (nil == comments)
                                                     {
                                                         super.lastTestSuccessful = YES;
-                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
-                                                        log(@"Expected error %@",errorMsg);
+                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [commentError localizedDescription], [commentError localizedFailureReason]];
+                                                        log(@"**** Expected error when adding a comment to a non-existing node %@",errorMsg);
                                                     }
                                                     else
                                                     {
@@ -187,7 +187,7 @@
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
         {
             if (nil == comment) 
             {
@@ -263,7 +263,7 @@
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {
@@ -368,21 +368,21 @@
                                   STAssertTrue(document.contentLength > 100, @"expected content to be filled");
                                   
                                   // delete the test document
-                                  [dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                  [dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
                                    {
                                        if (!success)
                                        {
                                            super.lastTestSuccessful = NO;
-                                           super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                           super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
                                            super.callbackCompleted = YES;
                                        }
                                        else
                                        {
-                                           [weakService addCommentToNode:document content:@"blabla" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error){
+                                           [weakService addCommentToNode:document content:@"blabla" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *commentError){
                                                if (nil == comment)
                                                {
                                                    super.lastTestSuccessful = YES;
-                                                   NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                                                   NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [commentError localizedDescription], [commentError localizedFailureReason]];
                                                    log(@"Expected error %@",errorMsg);
                                                }
                                                else
@@ -422,7 +422,7 @@
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {
@@ -504,7 +504,7 @@
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {
@@ -586,7 +586,7 @@
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
         {
             if (nil == comment) 
             {
@@ -653,7 +653,7 @@
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {
@@ -720,7 +720,7 @@
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {

@@ -78,7 +78,7 @@
 
 - (void)convertProperties:(NSDictionary *)properties forObjectTypeId:(NSString *)objectTypeId completionBlock:(void (^)(CMISProperties *, NSError *))completionBlock
 {
-    log(@"<<<<<< convertProperties forObjectTypeId %@ >>>>>>>>>>>>> ", objectTypeId);
+//    log(@"<<<<<< convertProperties forObjectTypeId %@ >>>>>>>>>>>>> ", objectTypeId);
     [AlfrescoErrors assertArgumentNotNil:properties argumentName:@"properties"];
     NSObject *objectTypeIdValue = [properties objectForKey:kCMISPropertyObjectTypeId];
     NSString *objectTypeIdString = nil;
@@ -278,13 +278,12 @@
             // Cmis doesn't understand aspects, so we must replace the objectTypeId if needed
             if ([typeProperties objectForKey:kCMISPropertyObjectTypeId] != nil)
             {
-                log(@"<<<<<< the mainTypeDefinition is %@  and we are setting it for key: %@  >>>>>>>>>>>>> ", mainTypeDefinition.id, kCMISPropertyObjectTypeId
-                    );
+                log(@"<<<<<< the mainTypeDefinition is %@  and we are setting it for key: %@  >>>>>>>>>>>>> ", mainTypeDefinition.id, kCMISPropertyObjectTypeId);
                 [typeProperties setValue:mainTypeDefinition.id forKey:kCMISPropertyObjectTypeId];
             }
             else
             {
-                log(@"<<<<<<   we couldn't find the type definition %@ in the dictionary >>>>>>>>>>>>> ",kCMISPropertyObjectTypeId);                
+                log(@"<<<<<<   we couldn't find the type definition %@ in the dictionary >>>>>>>>>>>>> ",kCMISPropertyObjectTypeId);
             }
             [super convertProperties:typeProperties forObjectTypeId:mainTypeDefinition.id completionBlock:^(CMISProperties *result, NSError *error){
                 if (nil == result)
@@ -344,7 +343,7 @@
 - (void)retrieveAspectTypeDefinitionsFromObjectID:(NSString *)objectID completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     NSArray *components = [objectID componentsSeparatedByString:@","];
-    log(@"<<<<<< retrieveAspectTypeDefinitionsFromObjectID objectID is %@", objectID);
+//    log(@"<<<<<< retrieveAspectTypeDefinitionsFromObjectID objectID is %@", objectID);
     __block NSMutableArray *aspects = [NSMutableArray array];
     
     if (1 == components.count)
@@ -357,7 +356,7 @@
             }
             else
             {
-                log(@"<<<<<< retrieveAspectTypeDefinitionsFromObjectID objectID is %@ and returned type definition is %@", objectID, typeDefinition.id);
+//                log(@"<<<<<< retrieveAspectTypeDefinitionsFromObjectID objectID is %@ and returned type definition is %@", objectID, typeDefinition.id);
                 [aspects addObject:typeDefinition];
                 completionBlock(aspects, nil);
             }
@@ -374,7 +373,7 @@
                 [self.session.binding.repositoryService retrieveTypeDefinition:trimmedString completionBlock:^(CMISTypeDefinition *typeDefinition, NSError *error){
                     if (nil != typeDefinition)
                     {
-                        log(@"<<<<<< retrieveAspectTypeDefinitionsFromObjectID objectID is %@ and returned type definition is %@", objectID, typeDefinition.id);
+//                        log(@"<<<<<< retrieveAspectTypeDefinitionsFromObjectID objectID is %@ and returned type definition is %@", objectID, typeDefinition.id);
                         [aspects addObject:typeDefinition];
                     }
                     if (index == components.count)

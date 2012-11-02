@@ -88,9 +88,7 @@
          completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
-                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                     completionBlock(nil, error);
-                 }];
+                 completionBlock(nil, error);
              }
              else
              {
@@ -100,9 +98,7 @@
                      [resultArray addObject:[self.objectConverter nodeFromCMISObjectData:queryData]];
                  }
                  NSArray *sortedResultArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
-                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                     completionBlock(sortedResultArray, nil);
-                 }];                 
+                 completionBlock(sortedResultArray, nil);
              }
              
         }];
@@ -138,9 +134,7 @@
          completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
-                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                     completionBlock(nil, error);
-                 }];
+                 completionBlock(nil, error);
              }
              else
              {
@@ -155,9 +149,7 @@
                                                                        defaultKey:self.defaultSortKey
                                                                         ascending:listingContext.sortAscending];
                  AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:NO totalItems:sortedArray.count];
-                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                     completionBlock(pagingResult, nil);
-                 }];
+                 completionBlock(pagingResult, nil);
              }
              
          }];
@@ -177,9 +169,7 @@
     [self.cmisSession query:query searchAllVersions:NO completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
         if (nil == pagedResult)
         {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(nil, error);
-            }];
+            completionBlock(nil, error);
         }
         else
         {
@@ -189,9 +179,7 @@
                 [resultArray addObject:[self.objectConverter documentFromCMISQueryResult:queryResult]];
             }
             NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(sortedArray, nil);
-            }];
+            completionBlock(sortedArray, nil);
         }
     }];
     
@@ -215,9 +203,7 @@
     [self.cmisSession query:query searchAllVersions:NO operationContext:operationContext completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
         if (nil == pagedResult)
         {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(nil, error);
-            }];
+            completionBlock(nil, error);
         }
         else
         {
@@ -228,10 +214,7 @@
             }
             NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedArray listingContext:listingContext];
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(pagingResult, nil);
-            }];
-            
+            completionBlock(pagingResult, nil);            
         }        
     }];    
 }

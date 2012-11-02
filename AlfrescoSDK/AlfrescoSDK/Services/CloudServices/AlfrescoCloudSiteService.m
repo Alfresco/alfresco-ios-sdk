@@ -356,13 +356,15 @@
             else
             {
                 __block AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-                [docService retrieveNodeWithIdentifier:folderId
-                                       completionBlock:^(AlfrescoNode *node, NSError *error)
-                 {
-                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                         completionBlock((AlfrescoFolder *)node, error);}];
-                     docService = nil;
-                 }];
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [docService retrieveNodeWithIdentifier:folderId
+                                           completionBlock:^(AlfrescoNode *node, NSError *error)
+                     {
+                         
+                         completionBlock((AlfrescoFolder *)node, error);
+                         docService = nil;
+                     }];
+                }];
             }
         }
         else
