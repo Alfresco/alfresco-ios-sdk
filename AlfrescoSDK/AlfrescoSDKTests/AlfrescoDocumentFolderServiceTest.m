@@ -3729,6 +3729,543 @@
     }];
 }
 
+/*
+ @Unique_TCRef 29F3
+ */
+- (void)testRetrieveRenditionOfDocumentNodeWithInvalidRenditionName
+{
+    [super runAllSitesTest:^{
+
+        NSString *invalidRenditionName = @"InvalidRenditionName";
+       
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        [self.dfService retrieveRenditionOfNode:super.testAlfrescoDocument renditionName:invalidRenditionName completionBlock:^(AlfrescoContentFile *fileContent, NSError *error) {
+            
+            if (fileContent)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(error, @"Error should occur for the invalid rendition name");
+                
+                super.lastTestSuccessful = YES;
+            }
+            
+            super.callbackCompleted = YES;
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 29F4
+ */
+- (void)testRetrieveRenditionOfFolderNodeWithValidRenditionName
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        [self.dfService retrieveRenditionOfNode:self.testDocFolder renditionName:kAlfrescoThumbnailRendition completionBlock:^(AlfrescoContentFile *fileContent, NSError *error) {
+            
+            if (fileContent)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(error, @"Error should occur whilst trying to get a rendition of a folder using doclib");
+                
+                super.lastTestSuccessful = YES;
+            }
+            
+            super.callbackCompleted = YES;
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 31F4
+ */
+- (void)testUpdatePropertiesOfNodeToPreExistingName
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+                
+        [self.dfService retrieveNodeWithFolderPath:@"Sites" relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
+            
+            if (node == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(node, @"The alfresco node should be returned");
+                
+                NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+                [properties setObject:self.fixedFileName forKey:@"cmis:name"];
+                
+                [weakFolderService updatePropertiesOfNode:node properties:properties completionBlock:^(AlfrescoNode *updateNode, NSError *updateError) {
+                    
+                    if (updateError == nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                    }
+                    else
+                    {
+                        STAssertNotNil(updateError, @"Expected an error to occur when trying to rename the node to and existing name");
+                        STAssertFalse([updateNode.name isEqualToString:self.fixedFileName], @"The node should not have been updated to the existing node's name");
+                        
+                        super.lastTestSuccessful = YES;
+                    }
+                    super.callbackCompleted = YES;
+                }];
+            }
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 31F5
+ */
+- (void)testUpdatePropertiesOfNodeWithInvalidName
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+        
+        [self.dfService retrieveNodeWithFolderPath:@"Sites" relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
+            
+            if (node == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(node, @"An Alfresco node should have been returned");
+                
+                NSString *invalidName = @"Invalid*";
+                
+                NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+                [properties setObject:invalidName forKey:@"cmis:name"];
+                
+                [weakFolderService updatePropertiesOfNode:node properties:properties completionBlock:^(AlfrescoNode *updateNode, NSError *updateError) {
+                    
+                    if (updateError == nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                    }
+                    else
+                    {
+                        STAssertNotNil(updateError, @"Expected an error to occur when trying to rename the node to an invalid name");
+                        STAssertFalse([updateNode.name isEqualToString:invalidName], @"The node should not have been updated to the invalid name");
+                        
+                        super.lastTestSuccessful = YES;
+                    }
+                    super.callbackCompleted = YES;
+                }];
+            }
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 32F4
+ */
+- (void)testCreateDuplicateFolderName
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+        
+        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+        [properties setObject:@"test description" forKey:@"cm:description"];
+        [properties setObject:@"test title" forKey:@"cm:title"];
+        [properties setObject:super.unitTestFolder forKey:@"cmis:name"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            
+            if (folder == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNil(error, @"Error should not have occured trying to create the folder the first time");
+                
+                NSMutableDictionary *props = [NSMutableDictionary dictionary];
+                [props setObject:super.unitTestFolder forKey:@"cmis:name"];
+                
+                // attempt to create the folder again
+                [weakFolderService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder2, NSError *error2) {
+                    
+                    if (error2 == nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                    }
+                    else
+                    {
+                        STAssertNotNil(error2, @"Trying to create another folder with the same name should produce an error");
+                        
+                        // delete the orginal we created - cleanup
+                        [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                            
+                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
+                            
+                            super.lastTestSuccessful = succeeded;
+                            
+                            super.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+            
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 33F4
+ */
+- (void)testCreateDuplicateDocumentName
+{
+    [super runAllSitesTest:^{
+        
+        NSString *duplicateFileName = @"Duplicate.jpg";
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+        
+        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+        [properties setObject:@"test description" forKey:@"cm:description"];
+        [properties setObject:@"test title" forKey:@"cm:title"];
+        [properties setObject:duplicateFileName forKey:@"cmis:name"];
+        
+        [self.dfService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+            
+            if (document == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNil(error, @"Error occured trying to create document the first time");
+                
+                NSMutableDictionary *props = [NSMutableDictionary dictionary];
+                [props setObject:duplicateFileName forKey:@"cmis:name"];
+                
+                [weakFolderService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:props completionBlock:^(AlfrescoDocument *duplicateDocument, NSError *duplicateError) {
+                    
+                    if (duplicateError == nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                    }
+                    else
+                    {
+                        STAssertNotNil(duplicateError, @"Trying to create another file with the same name should produce an error");
+                        
+                        // delete the orginal we created - cleanup
+                        [weakFolderService deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                            
+                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
+                            
+                            super.lastTestSuccessful = succeeded;
+                            
+                            super.callbackCompleted = YES;
+                        }];
+                    }
+                }
+            
+                progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+                
+                }];
+            }
+            
+        } progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+            
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 16F2
+ */
+- (void)testRetrieveNodeWithFolderPathWithInvalidRelativePath
+{
+    [super runAllSitesTest:^{
+        
+        NSString *invalidPath = @"InvalidPathFolder/nonExistantFile.txt";
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        [self.dfService retrieveNodeWithFolderPath:invalidPath relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
+            
+            if (node)
+            {
+                super.lastTestSuccessful = NO;
+            }
+            else
+            {
+                STAssertNotNil(error, @"Error should have occurred trying to access an invalid file path");
+                
+                super.lastTestSuccessful = YES;
+            }
+            
+            super.callbackCompleted = YES;
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 32F14
+ */
+- (void)testCreateFolderWithYesterdayCreationDate
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        NSDate *now = [NSDate date];
+        int daysToAdd = -1;
+        
+        NSDateComponents *components = [[NSDateComponents alloc] init];
+        [components setDay:daysToAdd];
+
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        NSDate *yesterday = [gregorian dateByAddingComponents:components toDate:now options:0];
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionary];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        // set the created value to yesterday
+        [props setObject:yesterday forKey:@"cm:created"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            
+            if (folder)
+            {
+                super.lastTestSuccessful = NO;
+            }
+            else
+            {
+                STAssertNil(folder, @"Folder should be nil as it should not have been created successfully due to invalid properties");
+                STAssertNotNil(error, @"Error should have occured trying to set the created date");
+                
+                super.lastTestSuccessful = YES;
+            }
+            
+            super.callbackCompleted = YES;
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 33F14
+ */
+- (void)testCreateDocumentWithYesterdayCreationDate
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        NSDate *now = [NSDate date];
+        int daysToAdd = -1;
+        
+        NSDateComponents *components = [[NSDateComponents alloc] init];
+        [components setDay:daysToAdd];
+        
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        NSDate *yesterday = [gregorian dateByAddingComponents:components toDate:now options:0];
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionary];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        // set the created value to yesterday
+        [props setObject:yesterday forKey:@"cm:created"];
+        
+        [self.dfService createDocumentWithName:@"testDocument.jpg" inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *error) {
+            
+            if (document)
+            {
+                super.lastTestSuccessful = NO;
+            }
+            else
+            {
+                STAssertNil(document, @"Document should be nil as it should not have been created successfully due to invalid properties");
+                STAssertNotNil(error, @"Error should have occured trying to set the created date");
+                
+                super.lastTestSuccessful = YES;
+            }
+            
+            super.callbackCompleted = YES;
+        }
+        progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+            
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 19F3
+ */
+- (void)testRetrieveDocumentsInFolderWithIncorrectSortProperty
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        AlfrescoListingContext *listingConext = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0 sortProperty:@"***" sortAscending:NO];
+        
+        [self.dfService retrieveDocumentsInFolder:super.testDocFolder listingContext:listingConext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            
+            if (error)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNil(error, @"The retrieval should not have caused an error");
+                STAssertNotNil(pagingResult, @"Paging result should not be nil");
+                STAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %i", [pagingResult.objects count]);
+                
+                // check if array is sorted correctly
+                NSArray *sortedArray = [pagingResult.objects sortedArrayUsingComparator:^(id a, id b) {
+                    
+                    AlfrescoNode *node1 = (AlfrescoNode *)a;
+                    AlfrescoNode *node2 = (AlfrescoNode *)b;
+                    
+                    return [node2.name compare:node1.name options:NSCaseInsensitiveSearch];
+                }];
+                
+                NSLog(@"Paging Array: %@", pagingResult.objects);
+                NSLog(@"Sorted Array: %@", sortedArray);
+                
+                BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
+                
+                STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
+                
+                // check properties
+                [pagingResult.objects enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
+                    AlfrescoDocument *document = (AlfrescoDocument *)object;
+                    STAssertNotNil(document.contentMimeType, @"Mime Type for the object with the name \"%@\" and identifier \"%@\" has no mime type", document.name, document.identifier);
+                    STAssertTrue(document.contentLength > 0, @"Content Length for the object with the name \"%@\" and identifier \"%@\" was less than or equal to 0", document.name, document.identifier);
+                    STAssertNotNil(document.versionLabel, @"Version Label for the object with the name \"%@\" and identifier \"%@\" was nil", document.name, document.identifier);
+//                    Need clearification to the purpose of this property, currently returning nil for all documents
+//                    STAssertNotNil(document.versionComment, @"Version Comment for the object with the name \"%@\" and identifier \"%@\" was nil", document.name, document.identifier);
+                    STAssertTrue(document.isLatestVersion, @"isLatestVersion for the object with the name \"%@\" and identifier \"%@\" should be true", document.name, document.identifier);
+                }];
+                
+                super.lastTestSuccessful = YES;
+            }
+            super.callbackCompleted = YES;
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 21F3
+ */
+- (void)testRetrieveFoldersInFolderWithIncorrectSortProperty
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        AlfrescoListingContext *listingConext = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0 sortProperty:@"***" sortAscending:NO];
+        
+        [self.dfService retrieveFoldersInFolder:super.testDocFolder listingContext:listingConext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            
+            if (error)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNil(error, @"The retrieval should not have caused an error");
+                STAssertNotNil(pagingResult, @"Paging result should not be nil");
+                STAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %i", [pagingResult.objects count]);
+                
+                // check if array is sorted correctly
+                NSArray *sortedArray = [pagingResult.objects sortedArrayUsingComparator:^(id a, id b) {
+                    
+                    AlfrescoNode *node1 = (AlfrescoNode *)a;
+                    AlfrescoNode *node2 = (AlfrescoNode *)b;
+                    
+                    return [node2.name compare:node1.name options:NSCaseInsensitiveSearch];
+                }];
+                
+                NSLog(@"Paging Array: %@", pagingResult.objects);
+                NSLog(@"Sorted Array: %@", sortedArray);
+                
+                BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
+                
+                STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
+                
+//                // check properties
+//                // Currently, the test does not specify the details to check
+//                [pagingResult.objects enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
+//                    AlfrescoFolder *folder = (AlfrescoFolder *)object;
+//                    NSLog(@"%@", folder.name);
+//                }];
+                
+                super.lastTestSuccessful = YES;
+            }
+            super.callbackCompleted = YES;
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
 
 #pragma mark unit test internal methods
 
