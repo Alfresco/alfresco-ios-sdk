@@ -859,6 +859,64 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         }
         else
         {
+            [self.cmisSession.objectConverter
+             convertProperties:cmisProperties
+             forObjectTypeId:cmisObject.objectType
+             completionBlock:^(CMISProperties *convertedProperties, NSError *conversionError){
+                 if (nil == convertedProperties)
+                 {
+                     completionBlock(nil, conversionError);
+                 }
+                 else
+                 {
+                     CMISProperties *updatedProperties = [[CMISProperties alloc] init];
+                     NSEnumerator *enumerator = [convertedProperties.propertiesDictionary keyEnumerator];
+                     for (NSString *cmisKey in enumerator)
+                     {
+                         if (![cmisKey isEqualToString:kCMISPropertyObjectTypeId])
+                         {
+                             CMISPropertyData *propData = [convertedProperties.propertiesDictionary objectForKey:cmisKey];
+                             [updatedProperties addProperty:propData];
+                         }
+                     }
+                     updatedProperties.extensions = convertedProperties.extensions;
+
+                     CMISStringInOutParameter *inOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:cmisObject.identifier];
+                     [weakSelf.cmisSession.binding.objectService
+                      updatePropertiesForObject:inOutParam
+                      withProperties:updatedProperties
+                      withChangeToken:nil
+                      completionBlock:^(NSError *updateError){
+                          if (nil != error)
+                          {
+                              completionBlock(nil, updateError);
+                          }
+                          else
+                          {
+                              [weakSelf.cmisSession retrieveObject:node.identifier completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError){
+                                  if (nil == updatedCMISObject)
+                                  {
+                                      completionBlock(nil, retrievalError);
+                                  }
+                                  else
+                                  {
+                                      AlfrescoNode *resultNode = [weakSelf.objectConverter nodeFromCMISObject:updatedCMISObject];
+                                      NSError *conversionError = nil;
+                                      if (nil == resultNode)
+                                      {
+                                          conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
+                                      }
+                                      completionBlock(resultNode, conversionError);
+                                  }
+                              }];
+                          }
+                     }];
+                 }
+             }];
+            
+        }
+    }];
+/*
             [cmisObject updateProperties:cmisProperties completionBlock:^(CMISObject *updatedObject, NSError *updateError){
                 if (nil == updatedObject)
                 {
@@ -875,8 +933,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     completionBlock(resultNode, conversionError);
                 }
             }];
-        }
-    }];
+ */
 }
 
 - (void)deleteNode:(AlfrescoNode *)node completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock 
@@ -884,22 +941,49 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"deleteNode node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-       
+    log(@"-------- deleteNode %@ --------", node.name);
     if ([node isKindOfClass:[AlfrescoDocument class]])
     {
         [self.cmisSession.binding.objectService deleteObject:node.identifier allVersions:YES completionBlock:^(BOOL objectDeleted, NSError *error){
+            if (!objectDeleted)
+            {
+                log(@"-------- deleteObject %@ FAILED --------", node.name);
+            }
+            else
+            {
+                log(@"-------- deleteObject %@ SUCCEEDED --------", node.name);
+                
+            }
             completionBlock(objectDeleted, error);
         }];
     }
     else
     {
         [self.cmisSession.binding.objectService deleteTree:node.identifier allVersion:YES unfileObjects:CMISDelete continueOnFailure:YES completionBlock:^(NSArray *failedObjects, NSError *error){
+            if(nil == failedObjects)
+            {
+                log(@"-------- deleteTree %@ failedObjects returns with nil --------", node.name);
+                
+            }
+            else
+            {
+                if (0 == failedObjects)
+                {
+                    log(@"-------- deleteTree %@ failedObjects returns with NO ENTRIES --------", node.name);
+                }
+                else
+                {
+                    log(@"-------- deleteTree %@ failedObjects returns with %d ENTRIES --------", node.name, failedObjects.count);
+                }
+            }
             if (error)
             {
+                log(@"-------- deleteTree %@ FAILED error message is %@ --------", node.name, [error localizedDescription]);
                 completionBlock(NO, error);
             }
             else
             {
+                log(@"-------- deleteTree %@ SUCCEEDED --------", node.name);
                 completionBlock(YES, nil);
             }
         }];

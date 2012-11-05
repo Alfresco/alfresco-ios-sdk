@@ -2359,6 +2359,7 @@
                              }
                              else
                              {
+                                 log(@"WE SUCCESSFULLY DELETED THE FILE WITH NAME %@",updatedName);
                                  super.lastTestSuccessful = YES;
                              }
                              super.callbackCompleted = YES;
@@ -2464,12 +2465,12 @@
              {
                  __block NSString *propertyObjectTestValue = @"version-download-test-updated.txt";
                  NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:8];
-//                 [propDict setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-//                              forKey:kCMISPropertyObjectTypeId];
+                 [propDict setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                              forKey:kCMISPropertyObjectTypeId];
                  [propDict setObject:propertyObjectTestValue forKey:kCMISPropertyName];
                  [propDict setObject:@"updated description" forKey:@"cm:description"];
                  [propDict setObject:@"updated title" forKey:@"cm:title"];
-//                 [propDict setObject:@"updated author" forKey:@"cm:author"];
+                 [propDict setObject:@"updated author" forKey:@"cm:author"];
                  
                  [weakDfService updatePropertiesOfNode:super.testAlfrescoDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error)
                   {
@@ -3635,6 +3636,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
         NSMutableDictionary *originalProperties = [NSMutableDictionary dictionary];
+        [originalProperties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
+                  forKey:kCMISPropertyObjectTypeId];
         [originalProperties setObject:originalDescriptionString forKey:@"cm:description"];
         [originalProperties setObject:originalTitleString forKey:@"cm:title"];
         
@@ -3702,7 +3705,10 @@
                              super.lastTestSuccessful = NO;
                              super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                          }
-                         
+                         else
+                         {
+                             super.lastTestSuccessful = YES;
+                         }
                          super.callbackCompleted = YES;
                      }];
                 }];

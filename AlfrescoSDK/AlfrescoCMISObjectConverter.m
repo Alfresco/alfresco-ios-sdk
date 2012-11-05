@@ -127,7 +127,7 @@
                 
                 if ([propertyId isEqualToString:kCMISPropertyObjectTypeId])
                 {
-                    log(@"<<<<<< convertProperties PropertyId %@  is of type ObjectTypeId and we should be setting it to the value objectTypeId %@ property value is %@ >>>>>>>>>>>>> ", propertyId, objectTypeId, propertyValue);
+                    log(@"<<<<<< convertProperties PropertyId '%@' is of type ObjectTypeId and we should be setting it to the value objectTypeId='%@' property value='%@' >>>>>>>>>>>>> ", propertyId, objectTypeId, propertyValue);
                     [typeProperties setValue:propertyValue forKey:kCMISPropertyObjectTypeId];
                 }
                 else if ([mainTypeDefinition propertyDefinitionForId:propertyId])

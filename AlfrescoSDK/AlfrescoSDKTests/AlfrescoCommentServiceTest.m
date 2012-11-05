@@ -31,6 +31,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testRetrieveAllComments Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // get all comments
@@ -78,6 +79,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testRetrieveAllCommentsForNonExistingDocuments Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
         __weak AlfrescoCommentService *weakService = self.commentService;
@@ -145,6 +147,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testRetrieveAllCommentsWithPaging Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
@@ -183,6 +186,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndDeleteComment Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // add a comment
@@ -259,6 +263,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndUpdateCommentNonExisting Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // add a comment
@@ -347,6 +352,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndDeleteForNonExistingDocument Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
         __weak AlfrescoCommentService *weakService = self.commentService;
@@ -417,6 +423,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndDeleteCommentEULanguages Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"Übersicht Ändern Östrogen und das mit ß";
         __block NSString *title = @"Änderungswünsche";
         
@@ -499,6 +506,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndDeleteCommentJPLanguages Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"ありがと　にほんご";
         __block NSString *title = @"わさび";
         
@@ -582,6 +590,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddUpdateAndDeleteComment Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // add a comment
@@ -648,6 +657,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddUpdateAndDeleteCommentEULanguages Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"Übersicht Ändern Östrogen und das mit ß";
         
         
@@ -715,6 +725,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddUpdateAndDeleteCommentJPLanguage Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"ありがと　にほんご";
         
         
