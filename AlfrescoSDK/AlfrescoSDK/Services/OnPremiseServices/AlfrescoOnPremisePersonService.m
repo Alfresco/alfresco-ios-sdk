@@ -66,7 +66,24 @@
 {
     [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",self.baseApiUrl, requestString]];
+    
+    __weak AlfrescoOnPremisePersonService *weakSelf = self;
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+        if (nil == responseData)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            AlfrescoPerson *person = [weakSelf alfrescoPersonFromJSONData:responseData error:&conversionError];
+            completionBlock(person, conversionError);
+        }
+    }];
 
+    /*
     __weak AlfrescoOnPremisePersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         NSError *operationQueueError = nil;
@@ -93,6 +110,7 @@
         }];
         
     }];
+     */
 }
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
@@ -114,6 +132,20 @@
 
 - (void)retrieveAvatarForPersonV4x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
+    NSString *requestString = [kAlfrescoOnPremiseAvatarForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",[self.session.baseUrl absoluteString], requestString]];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+        if (nil == responseData)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            AlfrescoContentFile *avatarFile = [[AlfrescoContentFile alloc] initWithData:responseData mimeType:@"application/octet-stream"];
+            completionBlock(avatarFile, nil);
+        }
+    }];
+    /*
     __weak AlfrescoOnPremisePersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         
@@ -136,10 +168,33 @@
             completionBlock(avatarFile, operationQueueError);
         }];
     }];    
+     */
 }
 
 - (void)retrieveAvatarForPersonV3x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
+    NSString *avatarId = person.avatarIdentifier;
+    if (nil == avatarId)
+    {
+        completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePersonNoAvatarFound]);
+        return;
+    }
+    NSString *requestString = [NSString stringWithFormat:@"%@/service/%@",[self.session.baseUrl absoluteString],avatarId];
+    NSURL *url = [NSURL URLWithString:requestString];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+        if (nil == responseData)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            AlfrescoContentFile *avatarFile = [[AlfrescoContentFile alloc] initWithData:responseData mimeType:@"application/octet-stream"];
+            completionBlock(avatarFile, nil);
+        }
+    }];
+    
+    
+    /*
     __weak AlfrescoOnPremisePersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         NSError *operationQueueError = nil;
@@ -171,6 +226,7 @@
         
         
     }];
+     */
 }
 
 

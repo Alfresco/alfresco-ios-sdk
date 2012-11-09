@@ -50,7 +50,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 @interface AlfrescoDocumentFolderService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) CMISSession *cmisSession;
-@property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
@@ -66,7 +65,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 @implementation AlfrescoDocumentFolderService
 @synthesize session = _session;
 @synthesize cmisSession = _cmisSession;
-@synthesize operationQueue = _operationQueue;
 @synthesize objectConverter = _objectConverter;
 @synthesize authenticationProvider = _authenticationProvider;
 @synthesize supportedSortKeys = _supportedSortKeys;
@@ -80,8 +78,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     {
         self.session = session;
         self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        self.operationQueue = [[NSOperationQueue alloc] init];
-        self.operationQueue.maxConcurrentOperationCount = 2;
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
         self.authenticationProvider = nil;
@@ -1012,6 +1008,34 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 
 - (void)extractMetadataForNode:(AlfrescoNode *)node
 {
+    NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
+    
+    NSArray *components = [node.identifier componentsSeparatedByString:@";"];
+    NSString *identifier = node.identifier;
+    if (components.count > 1)
+    {
+        identifier = [components objectAtIndex:0];
+    }
+    
+    [jsonDictionary setValue:identifier forKey:kAlfrescoJSONActionedUponNode];
+    [jsonDictionary setValue:kAlfrescoJSONExtractMetadata forKey:kAlfrescoJSONActionDefinitionName];
+    NSError *postError = nil;
+    NSURL *apiUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
+                                          self.session.baseUrl,kAlfrescoOnPremiseMetadataExtractionAPI]];
+    NSData *jsonData = [NSJSONSerialization
+                        dataWithJSONObject:jsonDictionary
+                        options:kNilOptions
+                        error:&postError];
+    
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding];
+    log(@"jsonstring %@", jsonString);
+    
+    [AlfrescoHTTPUtils executeRequestWithURL:apiUrl
+                                     session:self.session
+                                 requestBody:jsonData
+                                      method:kAlfrescoHTTPPOST
+                             completionBlock:^(NSData *data, NSError *error){}];
+    /*
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
@@ -1044,10 +1068,30 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                                                error:&postError];
         }
     }];    
+     */
 }
 
 - (void)generateThumbnailForNode:(AlfrescoNode *)node
 {
+    NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
+    [jsonDictionary setValue:kAlfrescoJSONThumbnailName forKey:kAlfrescoThumbnailRendition];
+    NSError *postError = nil;
+    NSString *requestString = [kAlfrescoOnPremiseThumbnailCreationAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+                                                                                                withString:[node.identifier stringByReplacingOccurrencesOfString:@"://"
+                                                                                                                                                      withString:@"/"]];
+    NSURL *apiUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.session.baseUrl, requestString]];
+    
+    NSData *jsonData = [NSJSONSerialization
+                        dataWithJSONObject:jsonDictionary
+                        options:kNilOptions
+                        error:&postError];
+    [AlfrescoHTTPUtils executeRequestWithURL:apiUrl
+                                     session:self.session
+                                 requestBody:jsonData
+                                      method:kAlfrescoHTTPPOST
+                             completionBlock:^(NSData *data, NSError *error){}];
+    
+    /*
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
@@ -1070,7 +1114,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                                           httpMethod:@"POST"
                                                error:&postError];
         }
-    }];    
+    }];  
+     */
 }
 
 

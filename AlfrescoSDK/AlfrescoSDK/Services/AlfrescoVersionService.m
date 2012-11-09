@@ -29,7 +29,6 @@
 @interface AlfrescoVersionService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) CMISSession *cmisSession;
-@property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
@@ -39,7 +38,6 @@
 @implementation AlfrescoVersionService
 @synthesize session = _session;
 @synthesize cmisSession = _cmisSession;
-@synthesize operationQueue = _operationQueue;
 @synthesize objectConverter = _objectConverter;
 @synthesize supportedSortKeys = _supportedSortKeys;
 @synthesize defaultSortKey = _defaultSortKey;
@@ -51,8 +49,6 @@
     {
         self.session = session;
         self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        self.operationQueue = [[NSOperationQueue alloc] init];
-        self.operationQueue.maxConcurrentOperationCount = 2;
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
         self.defaultSortKey = kAlfrescoSortByName;
         self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt, nil];

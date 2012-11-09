@@ -17,7 +17,8 @@
  ******************************************************************************/
 
 #import "AlfrescoHTTPUtils.h"
-#import "AlfrescoInternalConstants.h"
+#import "AlfrescoHTTPRequest.h"
+#import "AlfrescoErrors.h"
 
 @implementation AlfrescoHTTPUtils
 
@@ -119,6 +120,39 @@
     
     return responseData;
 }
+
++ (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock
+{
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:session requestBody:nil method:kAlfrescoHTTPGet completionBlock:completionBlock];
+}
+
++ (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+                       method:(NSString *)method
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock
+{
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:session requestBody:nil method:method completionBlock:completionBlock];
+}
+
+
++ (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+                  requestBody:(NSData *)requestBody
+                       method:(NSString *)method
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock
+{
+    id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+    NSDictionary *httpHeaders = [authenticationProvider willApplyHTTPHeadersForSession:nil];
+    [AlfrescoHTTPRequest
+     requestWithURL:url
+     method:method
+     headers:httpHeaders
+     requestBody:requestBody
+     completionBlock:completionBlock];
+}
+
 
 
 @end

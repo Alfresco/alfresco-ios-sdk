@@ -23,6 +23,7 @@
 #import "AlfrescoSession.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import <objc/runtime.h>
+#import "AlfrescoInternalConstants.h"
 
 @interface AlfrescoHTTPUtils : NSObject
 + (NSData *)executeRequest:(NSString *)api
@@ -50,6 +51,24 @@
                              data:(NSData *)data
                        httpMethod:(NSString *)httpMethod
                             error:(NSError **)outError;
+
+
++ (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+
++ (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+                       method:(NSString *)method
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+
+
++ (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+                  requestBody:(NSData *)requestBody
+                       method:(NSString *)method
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+
 
 
 @end

@@ -68,6 +68,24 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudPersonService *weakSelf = self;
+    NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.baseApiUrl, requestString]];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+        if (nil == responseData)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            AlfrescoPerson *person = [weakSelf alfrescoPersonFromJSONData:responseData error:&conversionError];
+            completionBlock(person, conversionError);
+        }
+    }];
+    
+    
+    /*
+    __weak AlfrescoCloudPersonService *weakSelf = self;
     [self.operationQueue addOperationWithBlock:^{
         NSError *operationQueueError = nil;
         NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
@@ -91,6 +109,7 @@
         }];
         
     }];
+     */
 }
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
@@ -98,7 +117,25 @@
     [AlfrescoErrors assertArgumentNotNil:person argumentName:@"person"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoCloudPersonService *weakSelf = self;
+    if (nil == person.avatarIdentifier)
+    {
+        completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePerson]);
+        return;
+    }
+    AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
+    [docService
+     retrieveNodeWithIdentifier:person.avatarIdentifier
+     completionBlock:^(AlfrescoNode *node, NSError *error){
+         
+        [docService
+         retrieveContentOfDocument:(AlfrescoDocument *)node
+         completionBlock:^(AlfrescoContentFile *avatarFile, NSError *avatarError){
+             completionBlock(avatarFile, avatarError);
+         } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+         
+    }];
+    
+    /*
     [self.operationQueue addOperationWithBlock:^{
         if (nil == person.avatarIdentifier)
         {
@@ -129,6 +166,7 @@
         }
         
     }];
+     */
 }
 
 #pragma mark - private methods
