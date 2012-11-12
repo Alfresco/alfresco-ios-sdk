@@ -72,9 +72,7 @@
      completionBlock:^(NSArray *allVersions, NSError *error){
          if (nil == allVersions)
          {
-             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                 completionBlock(nil, error);
-             }];
+             completionBlock(nil, error);
          }
          else
          {
@@ -111,9 +109,7 @@
      completionBlock:^(NSArray *allVersions, NSError *error){
          if (nil == allVersions)
          {
-             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                 completionBlock(nil, error);
-             }];
+             completionBlock(nil, error);
          }
          else
          {

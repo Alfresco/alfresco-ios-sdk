@@ -52,7 +52,6 @@
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -79,7 +78,7 @@
  {
      [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
      [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.baseApiUrl, kAlfrescoOnPremiseActivityAPI]];
+     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseActivityAPI];
      __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
      [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
          if (nil == responseData)
@@ -126,7 +125,7 @@
      {
          listingContext = self.session.defaultListingContext;
      }
-     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.baseApiUrl, kAlfrescoOnPremiseActivityAPI]];
+     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseActivityAPI];
      __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
      [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
          if (nil == responseData)
@@ -175,7 +174,7 @@
      [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
      
      NSString *requestString = [kAlfrescoOnPremiseActivityForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
-     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.baseApiUrl, requestString]];
+     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
      __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
      [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
          if (nil == responseData)
@@ -223,7 +222,7 @@
         listingContext = self.session.defaultListingContext;
     }
     NSString *requestString = [kAlfrescoOnPremiseActivityForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.baseApiUrl, requestString]];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)

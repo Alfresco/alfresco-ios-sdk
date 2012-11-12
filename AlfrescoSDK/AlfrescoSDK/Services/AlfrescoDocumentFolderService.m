@@ -1020,8 +1020,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [jsonDictionary setValue:identifier forKey:kAlfrescoJSONActionedUponNode];
     [jsonDictionary setValue:kAlfrescoJSONExtractMetadata forKey:kAlfrescoJSONActionDefinitionName];
     NSError *postError = nil;
-    NSURL *apiUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
-                                          self.session.baseUrl,kAlfrescoOnPremiseMetadataExtractionAPI]];
+    NSURL *apiUrl = [AlfrescoHTTPUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:kAlfrescoOnPremiseMetadataExtractionAPI];
     NSData *jsonData = [NSJSONSerialization
                         dataWithJSONObject:jsonDictionary
                         options:kNilOptions
@@ -1079,7 +1078,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     NSString *requestString = [kAlfrescoOnPremiseThumbnailCreationAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                                 withString:[node.identifier stringByReplacingOccurrencesOfString:@"://"
                                                                                                                                                       withString:@"/"]];
-    NSURL *apiUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.session.baseUrl, requestString]];
+    NSURL *apiUrl = [AlfrescoHTTPUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
     
     NSData *jsonData = [NSJSONSerialization
                         dataWithJSONObject:jsonDictionary

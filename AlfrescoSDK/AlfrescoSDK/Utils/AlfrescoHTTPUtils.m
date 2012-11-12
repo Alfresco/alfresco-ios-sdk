@@ -153,6 +153,12 @@
      completionBlock:completionBlock];
 }
 
++ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL
+{
+    NSString *separator = [baseURL hasSuffix:@"/"] ? @"" : @"/";
+    NSString *requestString = [NSString stringWithFormat:@"%@%@%@",baseURL, separator, extensionURL];
+    return [NSURL URLWithString:requestString];
+}
 
 
 @end

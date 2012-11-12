@@ -70,5 +70,6 @@
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 
++ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL;
 
 @end

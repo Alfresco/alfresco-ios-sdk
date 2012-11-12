@@ -29,7 +29,6 @@
 @interface AlfrescoOnPremiseRatingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
-@property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 
 @end
@@ -37,7 +36,6 @@
 @implementation AlfrescoOnPremiseRatingService
 @synthesize baseApiUrl = _baseApiUrl;
 @synthesize session = _session;
-@synthesize operationQueue = _operationQueue;
 @synthesize authenticationProvider = _authenticationProvider;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
@@ -46,8 +44,6 @@
     {
         self.session = session;
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
-        self.operationQueue = [[NSOperationQueue alloc] init];
-        self.operationQueue.maxConcurrentOperationCount = 2;
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
 //        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
@@ -71,7 +67,24 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoOnPremiseRatingService *weakSelf = self;
+    NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
+    NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+        if (nil == responseData)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSDictionary *ratingsDict = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&conversionError];
+            NSNumber *count = [ratingsDict valueForKeyPath:kAlfrescoOnPremiseRatingsCount];
+            completionBlock(count, conversionError);
+        }
+    }];
+    /*
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
@@ -95,6 +108,7 @@
         }];
         
     }];
+     */
 }
  
 - (void)likeNode:(AlfrescoNode *)node
@@ -104,7 +118,28 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoOnPremiseRatingService *weakSelf = self;
+    NSMutableDictionary *likeDict = [NSMutableDictionary dictionaryWithCapacity:2];
+    [likeDict setValue:[NSNumber numberWithInt:1] forKey:kAlfrescoJSONRating];
+    [likeDict setValue:kAlfrescoJSONLikesRatingScheme forKey:kAlfrescoJSONRatingScheme];
+    
+    NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
+    NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:likeDict options:kNilOptions error:&error];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
+        if (nil != error)
+        {
+            completionBlock(NO, error);
+        }
+        else
+        {
+            completionBlock(YES, error);
+        }
+    }];
+    /*
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
@@ -141,6 +176,7 @@
         }
         
     }];
+     */
 }
  
 - (void)unlikeNode:(AlfrescoNode *)node
@@ -150,7 +186,21 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoOnPremiseRatingService *weakSelf = self;
+    NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
+    NSString *requestString = [kAlfrescoOnPremiseRatingsLikingSchemeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session method:kAlfrescoHTTPDelete completionBlock:^(NSData *data, NSError *error){
+        if (nil != error)
+        {
+            completionBlock(NO, error);
+        }
+        else
+        {
+            completionBlock(YES, error);
+        }
+    }];
+    /*
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
@@ -169,6 +219,7 @@
             completionBlock(success, operationQueueError);
         }];
     }];
+     */
 }
  
 - (void)isNodeLiked:(AlfrescoNode *)node completionBlock:(AlfrescoLikedCompletionBlock)completionBlock
@@ -177,7 +228,24 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoOnPremiseRatingService *weakSelf = self;
+    NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
+    NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+        if (nil == data)
+        {
+            completionBlock(NO, NO, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSDictionary *ratingsDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&conversionError];
+            BOOL isLiked = [[ratingsDict valueForKeyPath:kAlfrescoOnPremiseLikesSchemeRatings] boolValue];
+            completionBlock(YES, isLiked, nil);
+        }
+    }];
+    /*
     [self.operationQueue addOperationWithBlock:^{
         
         NSError *operationQueueError = nil;
@@ -205,5 +273,6 @@
             completionBlock(success, liked, operationQueueError);
         }];
     }];
+     */
 }
 @end

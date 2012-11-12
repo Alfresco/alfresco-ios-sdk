@@ -200,7 +200,22 @@
 - (void)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     __weak AlfrescoCloudSession *weakSelf = self;
-    
+    id<AlfrescoAuthenticationProvider> authProvider = [weakSelf authProviderToBeUsed];
+    [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+    [AlfrescoHTTPUtils executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
+        if (nil == data)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *networks = [weakSelf networkArrayFromJSONData:data error:&conversionError];
+            completionBlock(networks, conversionError);
+        }
+        
+    }];
+    /*
     NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
     [operationQueue addOperationWithBlock:^(){
         NSError *operationQueueError = nil;
@@ -225,6 +240,7 @@
             completionBlock(networks, operationQueueError);
         }];
     }];
+     */
 }
 
 - (void)refreshOAuthData:(AlfrescoOAuthData *)refreshedOAuthData
@@ -365,22 +381,18 @@
     AlfrescoArrayCompletionBlock arrayCompletionBlock = ^void(NSArray *repositories, NSError *error){
         if (nil == repositories)
         {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(nil, error);
-                }
-            }];
+            if(completionBlock)
+            {
+                completionBlock(nil, error);
+            }
         }
         else if( 0 == repositories.count)
         {
             error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoRepositoryFound];
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(nil, error);
-                }
-            }];
+            if(completionBlock)
+            {
+                completionBlock(nil, error);
+            }
             
         }
         else
@@ -391,12 +403,10 @@
             [CMISSession connectWithSessionParameters:parameters completionBlock:^(CMISSession *cmisSession, NSError *error){
                 if (nil == cmisSession)
                 {
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        if(completionBlock)
-                        {
-                            completionBlock(nil, error);
-                        }
-                    }];
+                    if(completionBlock)
+                    {
+                        completionBlock(nil, error);
+                    }
                 }
                 else
                 {
@@ -405,22 +415,18 @@
                     [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
                         if (nil == rootFolder)
                         {
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                if(completionBlock)
-                                {
-                                    completionBlock(nil, error);
-                                }
-                            }];
+                            if(completionBlock)
+                            {
+                                completionBlock(nil, error);
+                            }
                         }
                         else
                         {
                             self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                if(completionBlock)
-                                {
-                                    completionBlock(self, nil);
-                                }
-                            }];
+                            if(completionBlock)
+                            {
+                                completionBlock(self, nil);
+                            }
                         }
                     }];
                     

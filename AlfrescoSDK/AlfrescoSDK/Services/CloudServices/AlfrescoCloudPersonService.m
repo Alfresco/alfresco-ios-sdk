@@ -28,7 +28,6 @@
 @interface AlfrescoCloudPersonService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
-@property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (AlfrescoPerson *)alfrescoPersonFromJSONData:(NSData *)data error:(NSError **)outError;
@@ -39,7 +38,6 @@
 @implementation AlfrescoCloudPersonService
 @synthesize baseApiUrl = _baseApiUrl;
 @synthesize session = _session;
-@synthesize operationQueue = _operationQueue;
 @synthesize objectConverter = _objectConverter;
 @synthesize authenticationProvider = _authenticationProvider;
 
@@ -50,10 +48,7 @@
         self.session = session;
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudAPIPath];
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
-        self.operationQueue = [[NSOperationQueue alloc] init];
-        self.operationQueue.maxConcurrentOperationCount = 2;
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -69,7 +64,7 @@
     
     __weak AlfrescoCloudPersonService *weakSelf = self;
     NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.baseApiUrl, requestString]];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {

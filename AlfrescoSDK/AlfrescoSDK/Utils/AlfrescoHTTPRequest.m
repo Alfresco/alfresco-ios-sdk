@@ -86,6 +86,7 @@
     if (nil != requestBody)
     {
         [urlRequest setHTTPBody:requestBody];
+        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     }
     
     self.responseData = nil;    
