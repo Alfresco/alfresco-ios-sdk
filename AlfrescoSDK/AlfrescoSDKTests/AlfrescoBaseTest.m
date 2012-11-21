@@ -60,6 +60,18 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 #pragma mark unit test internal methods
 
 
+- (void)setUp
+{
+
+    log(@"<<<<<<<<<<<<<<<< SETUP >>>>>>>>>>>>>>>>>");
+}
+
+- (void)tearDown
+{
+    log(@"**************** TEARDOWN **************");
+    
+}
+
 + (NSString *)testFileNameFromEnviroment:(NSString *)filename
 {
     NSDate *currentDate = [NSDate date];

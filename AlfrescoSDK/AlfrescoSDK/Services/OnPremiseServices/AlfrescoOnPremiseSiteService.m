@@ -193,7 +193,7 @@
                 {
                     NSError *conversionError = nil;
                     NSArray *allSitesArray = [weakSelf siteArrayFromJSONData:data error:&conversionError];
-                    NSArray *favSitesArray = [weakSelf siteArrayFromJSONData:favData error:&conversionError];
+                    NSArray *favSitesArray = [weakSelf favoriteSitesArrayFromJSONData:favData error:&conversionError];
                     if (nil == favSitesArray || nil == allSitesArray)
                     {
                         completionBlock(nil, conversionError);
@@ -248,7 +248,7 @@
                 {
                     NSError *conversionError = nil;
                     NSArray *allSitesArray = [weakSelf siteArrayFromJSONData:data error:&conversionError];
-                    NSArray *favSitesArray = [weakSelf siteArrayFromJSONData:favData error:&conversionError];
+                    NSArray *favSitesArray = [weakSelf favoriteSitesArrayFromJSONData:favData error:&conversionError];
                     if (nil == favSitesArray || nil == allSitesArray)
                     {
                         completionBlock(nil, conversionError);
