@@ -101,7 +101,7 @@
         completionBlock( nil, [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument withDetailedDescription:@"Type property must be set"]);
         return;
     }
-    log(@"<<<<<< convertProperties forObjectTypeId %@  and objectTypeIdString %@ >>>>>>>>>>>>> ", objectTypeId, objectTypeIdString);
+//    log(@"<<<<<< convertProperties forObjectTypeId %@  and objectTypeIdString %@ >>>>>>>>>>>>> ", objectTypeId, objectTypeIdString);
     
     [self retrieveAspectTypeDefinitionsFromObjectID:objectTypeIdString completionBlock:^(NSArray *returnedTypes, NSError *error){
         if (0 == returnedTypes.count)
@@ -123,11 +123,11 @@
             for (NSString *propertyId in properties)
             {
                 id propertyValue = [properties objectForKey:propertyId];
-                log(@"<<<<<< convertProperties PropertyId %@ and property value is %@ >>>>>>>>>>>>> ", propertyId, propertyValue);
+//                log(@"<<<<<< convertProperties PropertyId %@ and property value is %@ >>>>>>>>>>>>> ", propertyId, propertyValue);
                 
                 if ([propertyId isEqualToString:kCMISPropertyObjectTypeId])
                 {
-                    log(@"<<<<<< convertProperties PropertyId '%@' is of type ObjectTypeId and we should be setting it to the value objectTypeId='%@' property value='%@' >>>>>>>>>>>>> ", propertyId, objectTypeId, propertyValue);
+//                    log(@"<<<<<< convertProperties PropertyId '%@' is of type ObjectTypeId and we should be setting it to the value objectTypeId='%@' property value='%@' >>>>>>>>>>>>> ", propertyId, objectTypeId, propertyValue);
                     [typeProperties setValue:propertyValue forKey:kCMISPropertyObjectTypeId];
                 }
                 else if ([mainTypeDefinition propertyDefinitionForId:propertyId])
@@ -278,12 +278,12 @@
             // Cmis doesn't understand aspects, so we must replace the objectTypeId if needed
             if ([typeProperties objectForKey:kCMISPropertyObjectTypeId] != nil)
             {
-                log(@"<<<<<< the mainTypeDefinition is %@  and we are setting it for key: %@  >>>>>>>>>>>>> ", mainTypeDefinition.id, kCMISPropertyObjectTypeId);
+//                log(@"<<<<<< the mainTypeDefinition is %@  and we are setting it for key: %@  >>>>>>>>>>>>> ", mainTypeDefinition.id, kCMISPropertyObjectTypeId);
                 [typeProperties setValue:mainTypeDefinition.id forKey:kCMISPropertyObjectTypeId];
             }
             else
             {
-                log(@"<<<<<<   we couldn't find the type definition %@ in the dictionary >>>>>>>>>>>>> ",kCMISPropertyObjectTypeId);
+//                log(@"<<<<<<   we couldn't find the type definition %@ in the dictionary >>>>>>>>>>>>> ",kCMISPropertyObjectTypeId);
             }
             [super convertProperties:typeProperties forObjectTypeId:mainTypeDefinition.id completionBlock:^(CMISProperties *result, NSError *error){
                 if (nil == result)

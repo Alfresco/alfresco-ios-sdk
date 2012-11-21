@@ -16,8 +16,13 @@
 
 @interface CMISHttpDownloadRequest : CMISHttpRequest
 
-@property (nonatomic, strong) NSOutputStream *outputStream;     // if outputStream is nil download goes to httpResponse.data
-@property (nonatomic, assign) unsigned long long bytesExpected; // optional; if not set, expected content length from HTTP header is used
+// the outputStream should be unopened but if it is already open it will not be reset but used as is;
+// it is closed on completion; if no outputStream is provided, download goes to httpResponse.data
+@property (nonatomic, strong) NSOutputStream *outputStream;
+
+// optional; if not set, expected content length from HTTP header is used
+@property (nonatomic, assign) unsigned long long bytesExpected;
+
 @property (nonatomic, readonly) unsigned long long bytesDownloaded;
 
 + (CMISHttpDownloadRequest*)startRequest:(NSMutableURLRequest*)urlRequest

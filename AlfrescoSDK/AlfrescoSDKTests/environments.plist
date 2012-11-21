@@ -52,32 +52,6 @@
 			<key>docFolder</key>
 			<string>/</string>
 		</dict>
-		<dict>
-			<key>username</key>
-			<string>peter.schmidt@alfresco.com</string>
-			<key>password</key>
-			<string>alzheimer&quot;&quot;</string>
-			<key>server</key>
-			<string>http://devapis.alfresco.com</string>
-			<key>isCloud</key>
-			<true/>
-			<key>firstName</key>
-			<string>Peter</string>
-			<key>testSite</key>
-			<string>dev-api-test-site</string>
-			<key>testSearchFile</key>
-			<string>Alfresco.pptx</string>
-			<key>textKeyWord</key>
-			<string>Founded</string>
-			<key>testAddedFolder</key>
-			<string>SDKUnitTestFolder</string>
-			<key>testChildFolder</key>
-			<string>Sample Filesrr</string>
-			<key>fixedFileName</key>
-			<string>versioned-quote.txt</string>
-			<key>docFolder</key>
-			<string>/sites/dev-api-test-site/documentLibrary/</string>
-		</dict>
 	</array>
 </dict>
 </plist>

@@ -91,29 +91,7 @@
              NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:responseData error:&conversionError];
              completionBlock(activityStreamArray, conversionError);
          }
-     }];
-    
-    /*
-     __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
-     [self.operationQueue addOperationWithBlock:^{
-         
-         NSError *operationQueueError = nil;
-         
-         NSData *data = [AlfrescoHTTPUtils executeRequest:kAlfrescoOnPremiseActivityAPI
-                                          baseUrlAsString:weakSelf.baseApiUrl
-                                                  session:weakSelf.session
-                                                    error:&operationQueueError];
-         
-         NSArray *activityStreamArray = nil;
-         if(nil != data)
-         {
-             activityStreamArray = [weakSelf activityStreamArrayFromJSONData:data error:&operationQueueError];
-         }
-         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-             completionBlock(activityStreamArray, operationQueueError);
-         }];
-     }];
-     */
+     }];    
  }
  
  - (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext
@@ -139,33 +117,7 @@
              AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
              completionBlock(pagingResult, conversionError);
          }
-     }];
- 
-     /*
-     __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
-     [self.operationQueue addOperationWithBlock:^{
-         
-         NSError *operationQueueError = nil;
-         
-         NSData *data = [AlfrescoHTTPUtils executeRequest:kAlfrescoOnPremiseActivityAPI
-                                          baseUrlAsString:weakSelf.baseApiUrl
-                                                  session:weakSelf.session
-                                                    error:&operationQueueError];
-         
-         AlfrescoPagingResult *pagingResult = nil;
-         if(nil != data)
-         {
-             NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:data error:&operationQueueError];
-             if (nil != activityStreamArray)
-             {
-                 pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
-             }
-         }
-         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-             completionBlock(pagingResult, operationQueueError);
-         }];
-     }];
-      */
+     }]; 
  }
  
  - (void)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
@@ -187,28 +139,7 @@
              NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:responseData error:&conversionError];
              completionBlock(activityStreamArray, conversionError);
          }
-     }];
-     
-     /*
-     [self.operationQueue addOperationWithBlock:^{
-         
-         NSError *operationQueueError = nil;
-         NSString *requestString = [kAlfrescoOnPremiseActivityForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
-         NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                          baseUrlAsString:weakSelf.baseApiUrl
-                                                  session:weakSelf.session
-                                                    error:&operationQueueError];
-         
-         NSArray *activityStreamArray = nil;
-         if(nil != data)
-         {
-             activityStreamArray = [weakSelf activityStreamArrayFromJSONData:data error:&operationQueueError];
-         }
-         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-             completionBlock(activityStreamArray, operationQueueError);
-         }];
-     }];
-      */
+     }];     
  }
  
 - (void)retrieveActivityStreamForSite:(AlfrescoSite *)site
@@ -236,34 +167,7 @@
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
         }
-    }];
-    
-    /*
-    __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSString *requestString = [kAlfrescoOnPremiseActivityForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
-        
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                   error:&operationQueueError];
-        
-        AlfrescoPagingResult *pagingResult = nil;
-        if(nil != data)
-        {
-            NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:data error:&operationQueueError];
-            if (nil != activityStreamArray)
-            {
-                pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
-            }
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(pagingResult, operationQueueError);
-        }];
-    }];
-     */
+    }];    
 }
  
  #pragma mark Activity stream service internal methods

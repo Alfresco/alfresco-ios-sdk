@@ -78,34 +78,6 @@
         }
     }];
 
-    /*
-    __weak AlfrescoOnPremisePersonService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        NSError *operationQueueError = nil;
-        NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
-                                           weakSelf.baseApiUrl, requestString]];
-        
-        log(@"url is %@, requestString is %@",[url absoluteString], requestString);
-        
-        NSData *data = [AlfrescoHTTPUtils executeRequestWithURL:url
-                                                        session:weakSelf.session
-                                                           data:nil
-                                                     httpMethod:@"GET"
-                                                          error:&operationQueueError];
-        AlfrescoPerson *person = nil;
-        if (nil != data)
-        {
-            person = [weakSelf alfrescoPersonFromJSONData:data error:&operationQueueError];
-        }
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            log(@"returned json data");
-            completionBlock(person, operationQueueError);
-        }];
-        
-    }];
-     */
 }
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
@@ -140,30 +112,6 @@
             completionBlock(avatarFile, nil);
         }
     }];
-    /*
-    __weak AlfrescoOnPremisePersonService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSString *requestString = [kAlfrescoOnPremiseAvatarForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
-                                           [weakSelf.session.baseUrl absoluteString], requestString]];
-        NSData *data = [AlfrescoHTTPUtils executeRequestWithURL:url
-                                                        session:weakSelf.session
-                                                           data:nil
-                                                     httpMethod:@"GET"
-                                                          error:&operationQueueError];
-        
-        AlfrescoContentFile *avatarFile = nil;
-        if (nil != data)
-        {
-            avatarFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"application/octet-stream"];
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(avatarFile, operationQueueError);
-        }];
-    }];    
-     */
 }
 
 - (void)retrieveAvatarForPersonV3x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
@@ -189,39 +137,6 @@
     }];
     
     
-    /*
-    __weak AlfrescoOnPremisePersonService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        NSError *operationQueueError = nil;
-        NSString *avatarId = person.avatarIdentifier;
-        if (nil == avatarId)
-        {
-            operationQueueError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePersonNoAvatarFound];
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(nil, operationQueueError);
-            }];
-        }
-        NSString *requestString = [NSString stringWithFormat:@"%@/service/%@",[weakSelf.session.baseUrl absoluteString],avatarId];
-        NSURL *url = [NSURL URLWithString:requestString];
-        NSData *data = [AlfrescoHTTPUtils executeRequestWithURL:url
-                                                        session:weakSelf.session
-                                                           data:nil
-                                                     httpMethod:@"GET"
-                                                          error:&operationQueueError];
-        
-        AlfrescoContentFile *avatarFile = nil;
-        if (nil != data)
-        {
-            avatarFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"application/octet-stream"];
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(avatarFile, operationQueueError);
-        }];
-        
-        
-        
-    }];
-     */
 }
 
 

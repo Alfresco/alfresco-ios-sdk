@@ -54,7 +54,6 @@
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -94,35 +93,6 @@
             completionBlock(sortedCommentArray, conversionError);
         }
     }];
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-        NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
-        NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                           withString:cleanNodeId];
-        
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                   error:&operationQueueError];
-        
-        
-        NSArray *sortedCommentArray = nil;
-        if(nil != data)
-        {
-            NSArray *commentArray = [weakSelf commentArrayFromJSONData:data error:&operationQueueError];
-            if (nil != commentArray)
-            {
-                sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:commentArray sortKey:kAlfrescoSortByCreatedAt ascending:YES];
-            }
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(sortedCommentArray, operationQueueError);
-        }];
-    }];
-     */
 }
 
 - (void)retrieveCommentsForNode:(AlfrescoNode *)node
@@ -157,36 +127,6 @@
             completionBlock(pagingResult, conversionError);
         }
     }];
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-        NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
-        
-        NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                           withString:cleanNodeId];
-        
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                   error:&operationQueueError];
-        
-        AlfrescoPagingResult *pagingResult = nil;
-        if(nil != data)
-        {
-            NSArray *commentArray = [weakSelf commentArrayFromJSONData:data error:&operationQueueError];
-            if (nil != commentArray)
-            {
-                NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:commentArray sortKey:kAlfrescoSortByCreatedAt ascending:listingContext.sortAscending];
-                pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedArray listingContext:listingContext];
-            }
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(pagingResult, operationQueueError);
-        }];
-    }];
-     */
 }
 
 - (void)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content
@@ -223,37 +163,6 @@
         }
     }];
     
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSString *nodeString = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
-        
-        NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
-        [commentDict setValue:content forKey:kAlfrescoJSONContent];
-        [commentDict setValue:nodeString forKey:kAlfrescoJSONNodeRef];
-        [commentDict setValue:title forKey:kAlfrescoJSONTitle];
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&operationQueueError];
-        
-        NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                           withString:[nodeString stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                    data:jsonData httpMethod:@"POST"
-                                                   error:&operationQueueError];
-        
-        
-        AlfrescoComment *comment = nil;
-        if(nil != data)
-        {
-            comment = [weakSelf alfrescoCommentDictFromJSONData:data error:&operationQueueError];
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(comment, operationQueueError);
-        }];
-    }];
-     */
 }
 
 - (void)updateCommentOnNode:(AlfrescoNode *)node
@@ -291,38 +200,6 @@
             completionBlock(comment, conversionError);
         }
     }];
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSString *commentId = [AlfrescoObjectConverter nodeRefWithoutVersionID:comment.identifier];
-        NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
-        [commentDict setValue:content forKey:kAlfrescoJSONContent];
-        [commentDict setValue:commentId forKey:kAlfrescoJSONNodeRef];
-
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&operationQueueError];
-        NSString *requestString = [kAlfrescoOnPremiseCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
-                                                                                           withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
-        
-        
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                    data:jsonData
-                                              httpMethod:@"PUT"
-                                                   error:&operationQueueError];
-        
-        
-        AlfrescoComment *comment = nil;
-        if(nil != data)
-        {
-            comment = [weakSelf alfrescoCommentDictFromJSONData:data error:&operationQueueError];
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(comment, operationQueueError);
-        }];
-    }];
-     */
 }
 
 - (void)deleteCommentFromNode:(AlfrescoNode *)node
@@ -352,32 +229,6 @@
             completionBlock(YES, nil);
         }
     }];
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        
-        NSString *commentId = [AlfrescoObjectConverter nodeRefWithoutVersionID:comment.identifier];
-        NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
-        [commentDict setValue:commentId forKey:kAlfrescoJSONNodeRef];
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&operationQueueError];
-        NSString *requestString = [kAlfrescoOnPremiseCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
-                                                                                                 withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
-        
-        [AlfrescoHTTPUtils executeRequest:requestString
-                          baseUrlAsString:weakSelf.baseApiUrl
-                                  session:weakSelf.session
-                                     data:jsonData
-                               httpMethod:@"DELETE"
-                                    error:&operationQueueError];
-        
-        BOOL success = (nil == operationQueueError) ? YES : NO;
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(success, operationQueueError);
-        }];
-     
-    }];
-     */
 }
 
 

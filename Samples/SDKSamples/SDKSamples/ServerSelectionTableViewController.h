@@ -22,8 +22,9 @@
 #warning ENTER YOUR API AND SECRET KEY
 
 // Enter the api Key and secret key in the #define below
-#define APIKEY @""
-#define SECRETKEY @""
+#define APIKEY @"l7xx6f56d3e7e94343afb788f4d6a148e8da"
+#define SECRETKEY @"42b22c5c093f4d4eac399364317254fc"
+#define REDIRECT @"http://www.alfresco.com/mobile-auth-callback.html"
 @interface ServerSelectionTableViewController : BaseTableViewController
 
 @end

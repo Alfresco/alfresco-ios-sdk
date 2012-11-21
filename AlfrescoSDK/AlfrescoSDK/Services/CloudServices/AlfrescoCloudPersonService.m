@@ -77,34 +77,6 @@
             completionBlock(person, conversionError);
         }
     }];
-    
-    
-    /*
-    __weak AlfrescoCloudPersonService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        NSError *operationQueueError = nil;
-        NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
-                                           weakSelf.baseApiUrl, requestString]];
-        
-        NSData *data = [AlfrescoHTTPUtils executeRequestWithURL:url
-                                                        session:weakSelf.session
-                                                           data:nil
-                                                     httpMethod:@"GET"
-                                                          error:&operationQueueError];
-        
-        AlfrescoPerson *person = nil;
-        if (nil != data)
-        {
-            person = [weakSelf alfrescoPersonFromJSONData:data error:&operationQueueError];
-        }
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(person, operationQueueError);
-        }];
-        
-    }];
-     */
 }
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
@@ -128,40 +100,7 @@
              completionBlock(avatarFile, avatarError);
          } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
          
-    }];
-    
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        if (nil == person.avatarIdentifier)
-        {
-            NSError * error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePerson];
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(nil, error);
-            }];
-        }
-        else
-        {
-            __block AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:weakSelf.session];
-            [docService retrieveNodeWithIdentifier:person.avatarIdentifier completionBlock:^(AlfrescoNode *avatarFile, NSError *retrieveError){
-                if (nil == avatarFile)
-                {
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        completionBlock(nil, retrieveError);
-                    }];
-                }
-                else
-                {
-                    [docService retrieveContentOfDocument:(AlfrescoDocument *)avatarFile completionBlock:^(AlfrescoContentFile *downloadedAvatar, NSError * downloadError){
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            completionBlock(downloadedAvatar, downloadError);
-                        }];
-                    }progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal){}];
-                }
-            }];                    
-        }
-        
-    }];
-     */
+    }];    
 }
 
 #pragma mark - private methods

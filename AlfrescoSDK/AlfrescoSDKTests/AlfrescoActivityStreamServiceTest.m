@@ -64,17 +64,17 @@
  */
 - (void)testRetrieveActivityStreamForLoggedinUser
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
+        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
         
         // create a new folder in the repository's root folder
         [self.activityStreamService retrieveActivityStreamWithCompletionBlock:^(NSArray *array, NSError *error) 
         {
             if (nil == array) 
             {
-                super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -90,9 +90,9 @@
                     STAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
                 }
                 
-                super.lastTestSuccessful = YES;
+                self.lastTestSuccessful = YES;
             }
-            super.callbackCompleted = YES;
+            self.callbackCompleted = YES;
             
         }];
         

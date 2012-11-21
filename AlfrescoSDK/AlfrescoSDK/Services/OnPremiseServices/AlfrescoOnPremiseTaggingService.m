@@ -223,7 +223,8 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
            [[jsonTagArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
         {
             // no results found
-            return [NSArray array];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
+            return nil;
         }
         else
         {

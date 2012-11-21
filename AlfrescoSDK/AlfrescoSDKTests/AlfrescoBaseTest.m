@@ -24,11 +24,13 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 @interface AlfrescoBaseTest ()
 @property (nonatomic, strong) NSString * testPassword;
 - (void) uploadTestDocument:(NSString *)filePath;
-- (void) resetTestRunVariables;
 - (void) parseEnvironmentDictionary:(NSDictionary *)plistDictionary;
 + (NSString *)testFileNameFromEnviroment:(NSString *)filename;
 - (void) setUpTestImageFile:(NSString *)filePath;
 - (void) setUpTestChildFolder;
+- (void) runTestOnCloudServer:(AlfrescoTestBlock)sessionTestBlock;
+- (void) resetTestVariables;
+- (void)setUpTestRunForOnPremise:(AlfrescoTestBlock)sessionTestBlock testImagePath:(NSString *)imagePath testDocPath:(NSString *)docPath;
 @end
 
 @implementation AlfrescoBaseTest
@@ -42,7 +44,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 @synthesize currentRootFolder = _currentRootFolder;
 @synthesize testDocFolder = _testDocFolder;
 @synthesize currentSession = _currentSession;
-@synthesize userName = _userName;
+@synthesize userName = _userName; 
 @synthesize firstName = _firstName;
 @synthesize testSiteName = _testSiteName;
 @synthesize server = _server;
@@ -116,6 +118,9 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     STAssertTrue(self.lastTestSuccessful, @"uploadTestDocument failed");
 }
 
+
+
+
 /*
  @Unique_TCRef 24S1
  */
@@ -147,11 +152,15 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                 self.callbackCompleted = YES;
             }
         }];
-        [self waitUntilCompleteWithFixedTimeInterval];
     }
+    [self waitUntilCompleteWithFixedTimeInterval];
     STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
 }
 
+- (void) runTestOnCloudServer:(AlfrescoTestBlock)sessionTestBlock
+{
+    
+}
 
 
 /*
@@ -181,6 +190,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                                       self.currentSession = session;
                                       log(@"***************** authenticateOnPremiseServer Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
                                       self.callbackCompleted = YES;
+                                      self.currentRootFolder = self.currentSession.rootFolder;
                                   }
     }];
     
@@ -269,7 +279,6 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
         log(@"***************** retrieveAlfrescoTestFolder Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
         STAssertTrue([self.currentSession isKindOfClass:[AlfrescoRepositorySession class]], @"expected OnPremise session");
         self.testDocFolder = self.currentSession.rootFolder;
-        self.callbackCompleted = YES;
         self.currentRootFolder = self.currentSession.rootFolder;
     }
 }
@@ -308,7 +317,6 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     {
         log(@"***************** setUpTestChildFolder Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
         self.testChildFolder = self.currentSession.rootFolder;
-        self.callbackCompleted = YES;
     }
 }
 
@@ -348,60 +356,143 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     self.testFolderPathName = [plistDictionary valueForKey:@"docFolder"];
 }
 
+
+- (void)setUpTestRunForOnPremise:(AlfrescoTestBlock)sessionTestBlock testImagePath:(NSString *)imagePath testDocPath:(NSString *)docPath
+{
+    [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.server]
+                                     username:self.userName
+                                     password:self.testPassword
+                                   parameters:nil
+                              completionBlock:^(id<AlfrescoSession> session, NSError *error){
+                                  if (nil == session)
+                                  {
+                                      self.lastTestSuccessful = NO;
+                                      self.lastTestFailureMessage = [NSString stringWithFormat:@"Session could not be authenticated. Error %@",[error localizedDescription]];
+                                      self.callbackCompleted = YES;
+                                  }
+                                  else
+                                  {
+                                      if (self.currentSession)
+                                      {
+                                          self.currentSession = nil;
+                                      }
+                                      STAssertNotNil(session,@"Session should not be nil");
+                                      self.lastTestSuccessful = YES;
+                                      self.currentSession = session;
+                                      log(@"***************** setUpTestRunForOnPremise Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
+                                      self.currentRootFolder = self.currentSession.rootFolder;
+                                      NSData *imageData = [NSData dataWithContentsOfFile:imagePath];
+                                      self.testImageFile = [[AlfrescoContentFile alloc] initWithData:imageData mimeType:@"image/jpeg"];
+                                      self.testChildFolder = self.currentSession.rootFolder;
+                                      self.testDocFolder = self.currentSession.rootFolder;
+                                      
+                                      NSURL *fileUrl = [NSURL URLWithString:docPath];
+                                      NSString *newName = [AlfrescoBaseTest testFileNameFromEnviroment:[fileUrl lastPathComponent]];
+                                      NSData *fileData = [NSData dataWithContentsOfFile:docPath];
+                                      AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"text/plain"];
+                                      NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+                                      [props setObject:@"test file description" forKey:@"cm:description"];
+                                      [props setObject:@"test file title" forKey:@"cm:title"];
+                                      log(@"***************** about to upload test doc with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
+                                      
+                                      AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:session];
+                                      [docFolderService createDocumentWithName:newName
+                                                                inParentFolder:self.testDocFolder
+                                                                   contentFile:textContentFile
+                                                                    properties:props
+                                                               completionBlock:^(AlfrescoDocument *document, NSError *error){
+                                                                   if (nil == document)
+                                                                   {
+                                                                       log(@"We failed uploading the document with name %@",newName);
+                                                                       self.lastTestSuccessful = NO;
+                                                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not upload test document. Error %@",[error localizedDescription]];
+                                                                       self.callbackCompleted = YES;
+                                                                   }
+                                                                   else
+                                                                   {
+                                                                       log(@"<<<<< Test Document with name %@ has nodeID %@ >>>>>>",document.name, document.identifier);
+                                                                       STAssertNotNil(document, @"document should not be nil");
+                                                                       self.lastTestSuccessful = YES;
+                                                                       self.testAlfrescoDocument = document;
+                                                                       self.testSearchFileName = self.testAlfrescoDocument.name;
+                                                                       sessionTestBlock();
+                                                                   }
+                                                               }
+                                                                 progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){
+                                                                 }];
+                                  }
+                              }];
+    
+    [self waitUntilCompleteWithFixedTimeInterval];
+}
+
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock
 {
-    [self resetTestRunVariables];
-    for (NSBundle *bundle in [NSBundle allBundles]) {
-        if([NSBundle mainBundle] != bundle)
+    
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString *envsPListPath = [bundle pathForResource:@"environments" ofType:@"plist"];
+    NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
+    NSString *testImagePath = [bundle pathForResource:@"millenium-dome.jpg" ofType:nil];
+    NSDictionary *environmentsDict = [[NSDictionary alloc] initWithContentsOfFile:envsPListPath];
+    NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
+
+    [self resetTestVariables];
+    for (NSDictionary *environment in environmentArray)
+    {
+        [self parseEnvironmentDictionary:environment];
+        
+        if (self.isCloud)
         {
-            
-            NSString *envsPListPath = [bundle pathForResource:@"environments" ofType:@"plist"];
-            NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
-            NSString *testImagePath = [bundle pathForResource:@"millenium-dome.jpg" ofType:nil];
-            NSDictionary *environmentsDict = [[NSDictionary alloc] initWithContentsOfFile:envsPListPath];
-            NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
-            
-            for (NSDictionary *environmentDict in environmentArray)
-            {
-                [self parseEnvironmentDictionary:environmentDict];
-
-                if (self.isCloud)
-                {
-                    log(@"***************** Running test against Cloud server: %@ with username: %@ *****************", self.server, self.userName);
-                    [self authenticateCloudServer];
-                    [self resetTestRunVariables];
-
-                }
-                else
-                {
-                    log(@"***************** Running test against OnPremise server: %@ with username: %@ *****************", self.server, self.userName);
-                    [self authenticateOnPremiseServer];
-                    [self resetTestRunVariables];
-                }
-/*
- */
-                [self retrieveAlfrescoTestFolder];
-                [self resetTestRunVariables];
-                
-
-                [self uploadTestDocument:testFilePath];
-                [self resetTestRunVariables];
-                
-                [self setUpTestImageFile:testImagePath];
-                [self resetTestRunVariables];
-                
-                [self setUpTestChildFolder];
-                [self resetTestRunVariables];
-
-                log(@"***************** About to start test run for server: %@ *****************", self.server);
-                sessionTestBlock();
-                
-                [self removeTestDocument];
-                [self resetTestRunVariables];
-            }
+            log(@"***************** Running test against Cloud server: %@ with username: %@ *****************", self.server, self.userName);
+            [self authenticateCloudServer];
+            [self resetTestVariables];
         }
-    }    
+        else
+        {
+            log(@"***************** Running test against OnPremise server: %@ with username: %@ *****************", self.server, self.userName);
+            [self authenticateOnPremiseServer];
+            [self resetTestVariables];
+        }
+
+        [self retrieveAlfrescoTestFolder];
+        [self resetTestVariables];
+        
+        
+        [self uploadTestDocument:testFilePath];
+        [self resetTestVariables];
+        
+        [self setUpTestImageFile:testImagePath];
+        [self resetTestVariables];
+        
+        [self setUpTestChildFolder];
+        [self resetTestVariables];
+        
+        log(@"***************** About to start test run for server: %@ *****************", self.server);
+        sessionTestBlock();
+        [self resetTestVariables];
+        /*
+        if (self.isCloud)
+        {
+        }
+        else
+        {
+            [self setUpTestRunForOnPremise:sessionTestBlock testImagePath:testImagePath testDocPath:testFilePath];
+        }
+         */
+        
+        [self removeTestDocument];
+        [self resetTestVariables];
+    }
+    
 }
+
+- (void) resetTestVariables
+{
+    self.callbackCompleted = NO;
+    self.lastTestSuccessful = NO;
+    self.lastTestFailureMessage = @"Test failed in runAllSitesTest method";    
+}
+
 
 - (void)setUpTestImageFile:(NSString *)filePath
 {
@@ -409,16 +500,8 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"image/jpeg"];
     self.testImageFile = textContentFile;
-    self.callbackCompleted = YES;
 }
 
-- (void) resetTestRunVariables
-{
-    self.callbackCompleted = NO;
-    self.lastTestSuccessful = NO;
-    self.lastTestFailureMessage = @"Test failed in runAllSitesTest method";
-    log(@"<<<<<<<<<<<<<<<<< we have reset the Runtime variables >>>>>>>>>>>>>>>>>>>>>>");
-}
 
 - (void)waitForCompletion
 {
@@ -438,7 +521,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
     } while (!self.callbackCompleted && [timeoutDate timeIntervalSinceNow] > 0 );
     STAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEINTERVAL);
-    self.callbackCompleted = YES;
+    log(@"<<<<<<<<< waitUntilCompleteWithFixedTimeInterval >>>>>>>>>>>>");
 }
 
 

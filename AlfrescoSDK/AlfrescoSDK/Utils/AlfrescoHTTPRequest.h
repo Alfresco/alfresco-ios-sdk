@@ -22,7 +22,7 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
 
-@interface AlfrescoHTTPRequest : NSObject <NSURLConnectionDataDelegate>
+@interface AlfrescoHTTPRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 
 + (void)requestWithURL:(NSURL *)requestURL
                 method:(NSString *)method

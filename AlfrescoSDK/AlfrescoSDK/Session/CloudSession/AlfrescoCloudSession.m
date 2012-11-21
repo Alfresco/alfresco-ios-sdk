@@ -73,7 +73,6 @@
 @property (nonatomic, strong, readwrite) NSString *emailAddress;
 @property (nonatomic, strong, readwrite) NSString *password;
 @property (nonatomic, strong)           AlfrescoISO8601DateFormatter *dateFormatter;
-//@property (nonatomic, strong, readwrite) AlfrescoCloudNetwork *network;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) NSString * apiKey;
 @property BOOL isUsingBaseAuthenticationProvider;
@@ -215,32 +214,7 @@
         }
         
     }];
-    /*
-    NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
-    [operationQueue addOperationWithBlock:^(){
-        NSError *operationQueueError = nil;
-        id<AlfrescoAuthenticationProvider> authProvider = [weakSelf authProviderToBeUsed];
-        [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-        NSData *jsonData = [AlfrescoHTTPUtils executeRequestWithURL:self.baseURLWithoutNetwork
-                                                            session:self
-                                                               data:nil
-                                                         httpMethod:@"GET"
-                                                              error:&operationQueueError];
-        if (nil == jsonData)
-        {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                log(@"***retrieveNetworksForUsername jsonData is NIL");
-                completionBlock(nil, operationQueueError);
-            }];
-        }
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        log(@"After parsing jsonData. JSON data has string = %@",jsonString);
-        NSArray *networks = [weakSelf networkArrayFromJSONData:jsonData error:&operationQueueError];
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(networks, operationQueueError);
-        }];
-    }];
-     */
+
 }
 
 - (void)refreshOAuthData:(AlfrescoOAuthData *)refreshedOAuthData

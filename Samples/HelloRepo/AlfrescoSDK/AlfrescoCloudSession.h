@@ -91,6 +91,9 @@
  */
 - (void)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
-
+/**
+ This method updates the OAuth data for a given cloud session. Use this after calling refreshAccessToken from AlfrescoOAuthHelper 
+ */
+- (void)refreshOAuthData:(AlfrescoOAuthData *)refreshedOAuthData;
 
 @end

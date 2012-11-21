@@ -84,31 +84,6 @@
             completionBlock(count, conversionError);
         }
     }];
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-        NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
-        NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                   error:&operationQueueError];
-        
-        log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-        NSNumber *count = nil;
-        if(nil != data)
-        {
-            NSDictionary *ratingsDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&operationQueueError];
-            count = [ratingsDict valueForKeyPath:kAlfrescoOnPremiseRatingsCount];
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(count, operationQueueError);
-        }];
-        
-    }];
-     */
 }
  
 - (void)likeNode:(AlfrescoNode *)node
@@ -139,44 +114,6 @@
             completionBlock(YES, error);
         }
     }];
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        
-        NSMutableDictionary *likeDict = [NSMutableDictionary dictionaryWithCapacity:2];
-        [likeDict setValue:[NSNumber numberWithInt:1] forKey:kAlfrescoJSONRating];
-        [likeDict setValue:kAlfrescoJSONLikesRatingScheme forKey:kAlfrescoJSONRatingScheme];
-        
-        NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-        NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
-        NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:likeDict options:kNilOptions error:&operationQueueError];
-        
-        if (nil == jsonData)
-        {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(NO, operationQueueError);
-            }];
-        }
-        else
-        {
-            log(@"JSON data: %@",[[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding]);
-            [AlfrescoHTTPUtils executeRequest:requestString
-                              baseUrlAsString:weakSelf.baseApiUrl
-                                      session:weakSelf.session
-                                         data:jsonData
-                                   httpMethod:@"POST"
-                                        error:&operationQueueError];
-            BOOL success = (nil == operationQueueError) ? YES : NO;
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(success, operationQueueError);
-            }];
-            
-        }
-        
-    }];
-     */
 }
  
 - (void)unlikeNode:(AlfrescoNode *)node
@@ -200,26 +137,6 @@
             completionBlock(YES, error);
         }
     }];
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-        NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
-        NSString *requestString = [kAlfrescoOnPremiseRatingsLikingSchemeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
-        NSData *jsonData = [AlfrescoHTTPUtils executeRequest:requestString
-                                             baseUrlAsString:weakSelf.baseApiUrl
-                                                     session:weakSelf.session
-                                                        data:nil
-                                                  httpMethod:@"DELETE"
-                                                       error:&operationQueueError];
-        log(@"JSON data: %@",[[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding]);
-        BOOL success = (nil == operationQueueError) ? YES : NO;
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(success, operationQueueError);
-        }];
-    }];
-     */
 }
  
 - (void)isNodeLiked:(AlfrescoNode *)node completionBlock:(AlfrescoLikedCompletionBlock)completionBlock
@@ -245,34 +162,5 @@
             completionBlock(YES, isLiked, nil);
         }
     }];
-    /*
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        
-        NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-        NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
-        NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                   error:&operationQueueError];
-
-        
-        
-        log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-        BOOL success = (nil == operationQueueError) ? YES : NO;
-        
-        BOOL liked = NO;
-        if(nil != data)
-        {
-            NSDictionary *ratingsDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&operationQueueError];
-            liked = [[ratingsDict valueForKeyPath:kAlfrescoOnPremiseLikesSchemeRatings] boolValue];
-        }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(success, liked, operationQueueError);
-        }];
-    }];
-     */
 }
 @end
