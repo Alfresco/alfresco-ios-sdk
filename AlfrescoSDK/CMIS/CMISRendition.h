@@ -14,7 +14,6 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISRenditionData.h"
-#import "CMISTypeDefs.h"
 
 @class CMISDocument;
 @class CMISOperationContext;
@@ -25,13 +24,17 @@
 
 - (id)initWithRenditionData:(CMISRenditionData *)renditionData andObjectId:(NSString *)objectId andSession:(CMISSession *)session;
 
-- (CMISDocument *)retrieveRenditionDocumentAndReturnError:(NSError **)error;
+- (void)retrieveRenditionDocumentWithCompletionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
 
-- (CMISDocument *)retrieveRenditionDocumentWithOperationContext:(CMISOperationContext *)operationContext withError:(NSError **)error;
+- (void)retrieveRenditionDocumentWithOperationContext:(CMISOperationContext *)operationContext
+                                      completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
 
 - (void)downloadRenditionContentToFile:(NSString *)filePath
-                                completionBlock:(CMISVoidCompletionBlock)completionBlock
-                                failureBlock:(CMISErrorFailureBlock)failureBlock
-                                progressBlock:(CMISProgressBlock)progressBlock;
+                       completionBlock:(void (^)(NSError *error))completionBlock
+                         progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+- (void)downloadRenditionContentToOutputStream:(NSOutputStream *)outputStream
+                               completionBlock:(void (^)(NSError *error))completionBlock
+                                 progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
 @end

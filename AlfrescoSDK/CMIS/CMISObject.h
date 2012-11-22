@@ -51,7 +51,7 @@
  *
  * @return the updated object (a repository might have created a new version of the object)
 */
-- (CMISObject *)updateProperties:(NSDictionary *)properties error:(NSError **)error;
+- (void)updateProperties:(NSDictionary *)properties completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
 
 /**
  * Returns the extensions for the given level as an array of CMISExtensionElement

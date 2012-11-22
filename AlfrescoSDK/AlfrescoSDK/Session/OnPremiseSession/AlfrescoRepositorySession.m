@@ -28,11 +28,8 @@
 #import "AlfrescoCMISObjectConverter.h"
 #import <objc/runtime.h>
 
+
 @interface AlfrescoRepositorySession ()
-- (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
-- (void)authenticateWithUsername:(NSString *)username
-                     andPassword:(NSString *)password
-                 completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;
 @property (nonatomic, strong, readwrite) NSString *personIdentifier;
@@ -40,6 +37,13 @@
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
+- (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
+- (void)authenticateWithUsername:(NSString *)username
+                     andPassword:(NSString *)password
+                 completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+- (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password;
+
++ (NSNumber *)majorVersionFromString:(NSString *)versionString;
 @end
 
 @implementation AlfrescoRepositorySession
@@ -122,10 +126,10 @@
                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseCMISPath];
-    __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
-    params.username = username;
-    params.password = password;
-    params.atomPubUrl = [NSURL URLWithString:cmisUrl];
+    __block CMISSessionParameters *v3params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
+    v3params.username = username;
+    v3params.password = password;
+    v3params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     
     NSString *v4cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremise4_xCMISPath];
     __block CMISSessionParameters *v4params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
@@ -133,132 +137,105 @@
     v4params.password = password;
     v4params.atomPubUrl = [NSURL URLWithString:v4cmisUrl];
     
-    NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
-    [operationQueue addOperationWithBlock:^{
-        NSError *error = nil;
-        NSArray *repositories = [CMISSession arrayOfRepositories:params error:&error];
-        if(error)
+    log(@"**** authenticateWithUsername OnPremise ****");
+
+    [CMISSession arrayOfRepositories:v3params completionBlock:^(NSArray *repositories, NSError *error){
+        if (nil == repositories)
         {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(nil, error);
-                }
-            }];
+            completionBlock(nil, error);
         }
-        else if(repositories.count == 0)
+        else if( repositories.count == 0)
         {
             error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoRepositoryFound];
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
+            completionBlock(nil, error);
+        }
+        else
+        {
+            CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
+            log(@"**** authenticateWithUsername OnPremise we got ONE repository back ****");
+            
+            v3params.repositoryId = repoInfo.identifier;
+            [v3params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+
+            v4params.repositoryId = repoInfo.identifier;
+            [v4params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+            
+            void (^rootFolderCompletionBlock)(CMISFolder *folder, NSError *error) = ^void(CMISFolder *rootFolder, NSError *error){
+                log(@"**** authenticateWithUsername OnPremise rootFolderCompletionBlock ****");
+                if (nil == rootFolder)
+                {
+                    log(@"**** authenticateWithUsername OnPremise rootFolderCompletionBlock ROOT FOLDER IS NIL ****");
+                    completionBlock(nil, error);
+                }
+                else
+                {
+                    log(@"**** authenticateWithUsername OnPremise rootFolderCompletionBlock ROOT FOLDER IS NOT!!!! NIL ****");
+                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
+                    completionBlock(self, error);
+                }
+            };
+            
+            void (^sessionv4CompletionBlock)(CMISSession *session, NSError *error) = ^void( CMISSession *v4Session, NSError *error ){
+                log(@"**** authenticateWithUsername OnPremise sessionv4CompletionBlock ****");
+                if (nil == v4Session)
                 {
                     completionBlock(nil, error);
                 }
-            }];
-        }
-        else 
-        {
-            // we only use the first repository
-            CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
-            
-            params.repositoryId = repoInfo.identifier;
-            v4params.repositoryId = repoInfo.identifier;
-            
-            // enable Alfresco mode in CMIS Session
-//            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
-//            [v4params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
-            [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
-            [v4params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
-            
-            // create the session using the paramters
-            CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];
-            CMISSession *v4CMISSession = [[CMISSession alloc] initWithSessionParameters:v4params];
-//            [self setObject:cmisSession forParameter:kAlfrescoSessionKeyCmisSession];
-            
-            id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
-                                                                                                                andPassword:password];
-            [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-//            objc_setAssociatedObject(self, &kAlfrescoAuthenticationProviderObjectKey, authProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-            
-            
-            BOOL authenticated = [cmisSession authenticateAndReturnError:&error];
-            
-            BOOL isVersion4 = NO;
-            if (authenticated == YES)
-            {
-                self.personIdentifier = username;
-                AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
-                self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
-                
-                NSString *version = self.repositoryInfo.version;
-                NSArray *versionArray = [version componentsSeparatedByString:@"."];
-                NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-                NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
-
-                if ([majorVersionNumber intValue] >= 4)
+                else
                 {
-
-                    [self setObject:v4CMISSession forParameter:kAlfrescoSessionKeyCmisSession];
-                    [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-
-//                    objc_setAssociatedObject(self, &kAlfrescoAuthenticationProviderObjectKey, authProvider, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                    [self establishCMISSession:v4Session username:username password:password];
+                    [v4Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
+                }
+            };
+            
+            void (^sessionv3CompletionBlock)(CMISSession *session, NSError *error) = ^void( CMISSession *v3Session, NSError *error){
+                log(@"**** authenticateWithUsername OnPremise sessionv3CompletionBlock ****");
+                if (nil == v3Session)
+                {
+                    log(@"**** authenticateWithUsername OnPremise sessionv3CompletionBlock SESSION IS NIL. We failed ****");
+                    completionBlock(nil, error);
+                }
+                else
+                {
+                    self.personIdentifier = username;
+                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:v3Session];
                     
-                    BOOL authenticatedAgain = [v4CMISSession authenticateAndReturnError:&error];
-                    if (authenticatedAgain)
+                    NSString *version = self.repositoryInfo.version;
+                    NSArray *versionArray = [version componentsSeparatedByString:@"."];
+                    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                    NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
+                    log(@"**** authenticateWithUsername OnPremise sessionv3CompletionBlock SESSION IS NOT !! NIL User name is %@ and version is %@ ****", username, version);
+                    if ([majorVersionNumber intValue] >= 4)
                     {
-                        objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
-                        self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:v4CMISSession];                        
+                        [CMISSession connectWithSessionParameters:v4params completionBlock:sessionv4CompletionBlock];
                     }
-                    isVersion4 = YES;
-//                    [self setObject:cmisSession forParameter:kAlfrescoSessionKeyCmisSession];
-                }
-                else
-                {
-                    [self setObject:cmisSession forParameter:kAlfrescoSessionKeyCmisSession];
-                }
-                CMISObject *retrievedObject = nil;
-                if (isVersion4)
-                {
-//                    retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&error];
-                    retrievedObject = [v4CMISSession retrieveRootFolderAndReturnError:&error];
-                }
-                else
-                {
-                    retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&error];                    
-                }
-                if (nil != retrievedObject) {
-                    if ([retrievedObject isKindOfClass:[CMISFolder class]])
+                    else
                     {
-                        self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:retrievedObject];
+                        [self establishCMISSession:v3Session username:username password:password];
+                        [v3Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
                     }
+                    
                 }
-                
-                
-            }
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(self, error);
-                }
-            }];
-            /*
-            if (authenticated && isVersion4)
-            {
-                [self reAuthenticateWithUsername:username password:password completionBlock:completionBlock];
-            }
-            else
-            {
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    if(completionBlock)
-                    {
-                        completionBlock(self, error);
-                    }
-                }];                
-            }
-             */
+            };
+            
+            [CMISSession connectWithSessionParameters:v3params completionBlock:sessionv3CompletionBlock];
         }
     }];
+    
 }
+
+- (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password
+{    
+    [self setObject:session forParameter:kAlfrescoSessionKeyCmisSession];
+    id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
+                                                                                                        andPassword:password];
+    [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+    self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:session];
+}
+
 
 
 - (NSArray *)allParameterKeys
@@ -285,5 +262,14 @@
 {
     [self.sessionData removeObjectForKey:key];
 }
+
++ (NSNumber *)majorVersionFromString:(NSString *)versionString
+{
+    NSArray *versionArray = [versionString componentsSeparatedByString:@"."];
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
+    return majorVersionNumber;
+}
+
 
 @end

@@ -94,13 +94,12 @@
     {
         [AlfrescoErrors assertStringArgumentNotNilOrEmpty:apiKey argumentName:@"apiKey"];
         [AlfrescoErrors assertStringArgumentNotNilOrEmpty:secretKey argumentName:@"secretKey"];
-//        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:redirectURI argumentName:@"redirectURI"];
+        //        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:redirectURI argumentName:@"redirectURI"];
         [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
         
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
         self.baseURL = [NSString stringWithFormat:@"%@%@", kAlfrescoCloudURL, kAlfrescoOAuthAuthorize];
-        
         if (nil != parameters)
         {
             self.parameters = parameters;
@@ -115,6 +114,8 @@
     }
     return self;
 }
+
+
 
 - (void)viewDidLoad
 {
@@ -269,8 +270,6 @@
     self.activityIndicator = nil;
 
     self.isLoginScreenLoad = YES;
-    [self loadWebView];
-    [self createActivityView];
 }
 
 #pragma WebViewDelegate methods
