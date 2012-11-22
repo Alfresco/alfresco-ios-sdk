@@ -66,7 +66,7 @@
 
 - (void)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"retrieveCommentsForNode node"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
@@ -99,7 +99,7 @@
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"retrieveCommentsForNode node"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
@@ -132,7 +132,7 @@
 - (void)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content
                    title:(NSString *)title completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"addCommentToNode node"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
@@ -170,7 +170,7 @@
                     content:(NSString *)content
             completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"updateCommentOnNode node"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:comment argumentName:@"comment"];
     [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentName:@"comment.identifier"];
@@ -206,7 +206,7 @@
                       comment:(AlfrescoComment *)comment
               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:comment argumentName:@"deleteCommentFromNode comment"];
+    [AlfrescoErrors assertArgumentNotNil:comment argumentName:@"comment"];
     [AlfrescoErrors assertArgumentNotNil:comment.identifier argumentName:@"comment.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     

@@ -13,14 +13,6 @@
 		4E0C866D1612EB32008B71DB /* AlfrescoOAuthLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0C866B1612EB32008B71DB /* AlfrescoOAuthLoginViewController.m */; };
 		4E2271C715E62675006644DA /* versioned-quote.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E2271C615E62675006644DA /* versioned-quote.txt */; };
 		4E24640F15ED1BC000168C5F /* millenium-dome.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4E24640E15ED1BC000168C5F /* millenium-dome.jpg */; };
-		4E39DF6F163AA30700F21DE6 /* AlfrescoCMISDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E39DF67163AA30700F21DE6 /* AlfrescoCMISDocument.h */; };
-		4E39DF70163AA30700F21DE6 /* AlfrescoCMISDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E39DF68163AA30700F21DE6 /* AlfrescoCMISDocument.m */; };
-		4E39DF71163AA30700F21DE6 /* AlfrescoCMISFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E39DF69163AA30700F21DE6 /* AlfrescoCMISFolder.h */; };
-		4E39DF72163AA30700F21DE6 /* AlfrescoCMISFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E39DF6A163AA30700F21DE6 /* AlfrescoCMISFolder.m */; };
-		4E39DF73163AA30700F21DE6 /* AlfrescoCMISObjectConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E39DF6B163AA30700F21DE6 /* AlfrescoCMISObjectConverter.h */; };
-		4E39DF74163AA30700F21DE6 /* AlfrescoCMISObjectConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E39DF6C163AA30700F21DE6 /* AlfrescoCMISObjectConverter.m */; };
-		4E39DF75163AA30700F21DE6 /* AlfrescoCMISUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E39DF6D163AA30700F21DE6 /* AlfrescoCMISUtil.h */; };
-		4E39DF76163AA30700F21DE6 /* AlfrescoCMISUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E39DF6E163AA30700F21DE6 /* AlfrescoCMISUtil.m */; };
 		4E39DFCD163AB82000F21DE6 /* CMISAclService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E39DF81163AB82000F21DE6 /* CMISAclService.h */; };
 		4E39DFCE163AB82000F21DE6 /* CMISAllowableActions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E39DF82163AB82000F21DE6 /* CMISAllowableActions.h */; };
 		4E39DFCF163AB82000F21DE6 /* CMISAllowableActionsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E39DF83163AB82000F21DE6 /* CMISAllowableActionsParser.h */; };
@@ -97,6 +89,14 @@
 		4E39E016163AB82000F21DE6 /* CMISVersioningService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E39DFCA163AB82000F21DE6 /* CMISVersioningService.h */; };
 		4E39E017163AB82000F21DE6 /* CMISWorkspace.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E39DFCB163AB82000F21DE6 /* CMISWorkspace.h */; };
 		4E39E018163AB82000F21DE6 /* libObjectiveCMIS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E39DFCC163AB82000F21DE6 /* libObjectiveCMIS.a */; };
+		4E3FE88D165E192500BDAB31 /* AlfrescoCMISDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E3FE885165E192500BDAB31 /* AlfrescoCMISDocument.h */; };
+		4E3FE88E165E192500BDAB31 /* AlfrescoCMISDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3FE886165E192500BDAB31 /* AlfrescoCMISDocument.m */; };
+		4E3FE88F165E192500BDAB31 /* AlfrescoCMISFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E3FE887165E192500BDAB31 /* AlfrescoCMISFolder.h */; };
+		4E3FE890165E192500BDAB31 /* AlfrescoCMISFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3FE888165E192500BDAB31 /* AlfrescoCMISFolder.m */; };
+		4E3FE891165E192500BDAB31 /* AlfrescoCMISObjectConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E3FE889165E192500BDAB31 /* AlfrescoCMISObjectConverter.h */; };
+		4E3FE892165E192500BDAB31 /* AlfrescoCMISObjectConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3FE88A165E192500BDAB31 /* AlfrescoCMISObjectConverter.m */; };
+		4E3FE893165E192500BDAB31 /* AlfrescoCMISUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E3FE88B165E192500BDAB31 /* AlfrescoCMISUtil.h */; };
+		4E3FE894165E192500BDAB31 /* AlfrescoCMISUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3FE88C165E192500BDAB31 /* AlfrescoCMISUtil.m */; };
 		4E4E379715DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E4E379515DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h */; };
 		4E4E379815DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4E379615DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.m */; };
 		4E4E379C15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E4E379A15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h */; };
@@ -263,14 +263,6 @@
 		4E0C866B1612EB32008B71DB /* AlfrescoOAuthLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AlfrescoOAuthLoginViewController.m; path = OAuth/AlfrescoOAuthLoginViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4E2271C615E62675006644DA /* versioned-quote.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "versioned-quote.txt"; sourceTree = "<group>"; };
 		4E24640E15ED1BC000168C5F /* millenium-dome.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "millenium-dome.jpg"; sourceTree = "<group>"; };
-		4E39DF67163AA30700F21DE6 /* AlfrescoCMISDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoCMISDocument.h; sourceTree = SOURCE_ROOT; };
-		4E39DF68163AA30700F21DE6 /* AlfrescoCMISDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoCMISDocument.m; sourceTree = SOURCE_ROOT; };
-		4E39DF69163AA30700F21DE6 /* AlfrescoCMISFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoCMISFolder.h; sourceTree = SOURCE_ROOT; };
-		4E39DF6A163AA30700F21DE6 /* AlfrescoCMISFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoCMISFolder.m; sourceTree = SOURCE_ROOT; };
-		4E39DF6B163AA30700F21DE6 /* AlfrescoCMISObjectConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoCMISObjectConverter.h; sourceTree = SOURCE_ROOT; };
-		4E39DF6C163AA30700F21DE6 /* AlfrescoCMISObjectConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoCMISObjectConverter.m; sourceTree = SOURCE_ROOT; };
-		4E39DF6D163AA30700F21DE6 /* AlfrescoCMISUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoCMISUtil.h; sourceTree = SOURCE_ROOT; };
-		4E39DF6E163AA30700F21DE6 /* AlfrescoCMISUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoCMISUtil.m; sourceTree = SOURCE_ROOT; };
 		4E39DF81163AB82000F21DE6 /* CMISAclService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAclService.h; path = CMIS/CMISAclService.h; sourceTree = SOURCE_ROOT; };
 		4E39DF82163AB82000F21DE6 /* CMISAllowableActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActions.h; path = CMIS/CMISAllowableActions.h; sourceTree = SOURCE_ROOT; };
 		4E39DF83163AB82000F21DE6 /* CMISAllowableActionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISAllowableActionsParser.h; path = CMIS/CMISAllowableActionsParser.h; sourceTree = SOURCE_ROOT; };
@@ -347,6 +339,14 @@
 		4E39DFCA163AB82000F21DE6 /* CMISVersioningService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISVersioningService.h; path = CMIS/CMISVersioningService.h; sourceTree = SOURCE_ROOT; };
 		4E39DFCB163AB82000F21DE6 /* CMISWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMISWorkspace.h; path = CMIS/CMISWorkspace.h; sourceTree = SOURCE_ROOT; };
 		4E39DFCC163AB82000F21DE6 /* libObjectiveCMIS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libObjectiveCMIS.a; path = CMIS/libObjectiveCMIS.a; sourceTree = SOURCE_ROOT; };
+		4E3FE885165E192500BDAB31 /* AlfrescoCMISDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCMISDocument.h; path = CMIS/AlfrescoCMIS/AlfrescoCMISDocument.h; sourceTree = SOURCE_ROOT; };
+		4E3FE886165E192500BDAB31 /* AlfrescoCMISDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCMISDocument.m; path = CMIS/AlfrescoCMIS/AlfrescoCMISDocument.m; sourceTree = SOURCE_ROOT; };
+		4E3FE887165E192500BDAB31 /* AlfrescoCMISFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCMISFolder.h; path = CMIS/AlfrescoCMIS/AlfrescoCMISFolder.h; sourceTree = SOURCE_ROOT; };
+		4E3FE888165E192500BDAB31 /* AlfrescoCMISFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCMISFolder.m; path = CMIS/AlfrescoCMIS/AlfrescoCMISFolder.m; sourceTree = SOURCE_ROOT; };
+		4E3FE889165E192500BDAB31 /* AlfrescoCMISObjectConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCMISObjectConverter.h; path = CMIS/AlfrescoCMIS/AlfrescoCMISObjectConverter.h; sourceTree = SOURCE_ROOT; };
+		4E3FE88A165E192500BDAB31 /* AlfrescoCMISObjectConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCMISObjectConverter.m; path = CMIS/AlfrescoCMIS/AlfrescoCMISObjectConverter.m; sourceTree = SOURCE_ROOT; };
+		4E3FE88B165E192500BDAB31 /* AlfrescoCMISUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCMISUtil.h; path = CMIS/AlfrescoCMIS/AlfrescoCMISUtil.h; sourceTree = SOURCE_ROOT; };
+		4E3FE88C165E192500BDAB31 /* AlfrescoCMISUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCMISUtil.m; path = CMIS/AlfrescoCMIS/AlfrescoCMISUtil.m; sourceTree = SOURCE_ROOT; };
 		4E4E379515DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoPlaceholderTaggingService.h; path = PlaceholderServices/AlfrescoPlaceholderTaggingService.h; sourceTree = "<group>"; };
 		4E4E379615DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoPlaceholderTaggingService.m; path = PlaceholderServices/AlfrescoPlaceholderTaggingService.m; sourceTree = "<group>"; };
 		4E4E379A15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudTaggingService.h; path = CloudServices/AlfrescoCloudTaggingService.h; sourceTree = "<group>"; };
@@ -554,14 +554,14 @@
 		4E39DF66163AA2D900F21DE6 /* AlfrescoCMIS */ = {
 			isa = PBXGroup;
 			children = (
-				4E39DF67163AA30700F21DE6 /* AlfrescoCMISDocument.h */,
-				4E39DF68163AA30700F21DE6 /* AlfrescoCMISDocument.m */,
-				4E39DF69163AA30700F21DE6 /* AlfrescoCMISFolder.h */,
-				4E39DF6A163AA30700F21DE6 /* AlfrescoCMISFolder.m */,
-				4E39DF6B163AA30700F21DE6 /* AlfrescoCMISObjectConverter.h */,
-				4E39DF6C163AA30700F21DE6 /* AlfrescoCMISObjectConverter.m */,
-				4E39DF6D163AA30700F21DE6 /* AlfrescoCMISUtil.h */,
-				4E39DF6E163AA30700F21DE6 /* AlfrescoCMISUtil.m */,
+				4E3FE885165E192500BDAB31 /* AlfrescoCMISDocument.h */,
+				4E3FE886165E192500BDAB31 /* AlfrescoCMISDocument.m */,
+				4E3FE887165E192500BDAB31 /* AlfrescoCMISFolder.h */,
+				4E3FE888165E192500BDAB31 /* AlfrescoCMISFolder.m */,
+				4E3FE889165E192500BDAB31 /* AlfrescoCMISObjectConverter.h */,
+				4E3FE88A165E192500BDAB31 /* AlfrescoCMISObjectConverter.m */,
+				4E3FE88B165E192500BDAB31 /* AlfrescoCMISUtil.h */,
+				4E3FE88C165E192500BDAB31 /* AlfrescoCMISUtil.m */,
 			);
 			name = AlfrescoCMIS;
 			sourceTree = "<group>";
@@ -1018,10 +1018,6 @@
 				4E4E37B415DD079A0064F2DE /* AlfrescoOnPremisePersonService.h in Headers */,
 				82DC7D641616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.h in Headers */,
 				82DC7D681616B1440007F49D /* CMISPassThroughAuthenticationProvider.h in Headers */,
-				4E39DF6F163AA30700F21DE6 /* AlfrescoCMISDocument.h in Headers */,
-				4E39DF71163AA30700F21DE6 /* AlfrescoCMISFolder.h in Headers */,
-				4E39DF73163AA30700F21DE6 /* AlfrescoCMISObjectConverter.h in Headers */,
-				4E39DF75163AA30700F21DE6 /* AlfrescoCMISUtil.h in Headers */,
 				4E39DFCD163AB82000F21DE6 /* CMISAclService.h in Headers */,
 				4E39DFCE163AB82000F21DE6 /* CMISAllowableActions.h in Headers */,
 				4E39DFCF163AB82000F21DE6 /* CMISAllowableActionsParser.h in Headers */,
@@ -1105,6 +1101,10 @@
 				4E960908163FE9C8004CE73C /* CMISHttpUploadRequest.h in Headers */,
 				4E960909163FE9C8004CE73C /* CMISRequest.h in Headers */,
 				4EBF68F9164D1C4900D6F06C /* AlfrescoHTTPRequest.h in Headers */,
+				4E3FE88D165E192500BDAB31 /* AlfrescoCMISDocument.h in Headers */,
+				4E3FE88F165E192500BDAB31 /* AlfrescoCMISFolder.h in Headers */,
+				4E3FE891165E192500BDAB31 /* AlfrescoCMISObjectConverter.h in Headers */,
+				4E3FE893165E192500BDAB31 /* AlfrescoCMISUtil.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1283,11 +1283,11 @@
 				4E80E8E91614438800922D5D /* AlfrescoOAuthHelper.m in Sources */,
 				82DC7D651616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.m in Sources */,
 				82DC7D691616B1440007F49D /* CMISPassThroughAuthenticationProvider.m in Sources */,
-				4E39DF70163AA30700F21DE6 /* AlfrescoCMISDocument.m in Sources */,
-				4E39DF72163AA30700F21DE6 /* AlfrescoCMISFolder.m in Sources */,
-				4E39DF74163AA30700F21DE6 /* AlfrescoCMISObjectConverter.m in Sources */,
-				4E39DF76163AA30700F21DE6 /* AlfrescoCMISUtil.m in Sources */,
 				4EBF68FA164D1C4900D6F06C /* AlfrescoHTTPRequest.m in Sources */,
+				4E3FE88E165E192500BDAB31 /* AlfrescoCMISDocument.m in Sources */,
+				4E3FE890165E192500BDAB31 /* AlfrescoCMISFolder.m in Sources */,
+				4E3FE892165E192500BDAB31 /* AlfrescoCMISObjectConverter.m in Sources */,
+				4E3FE894165E192500BDAB31 /* AlfrescoCMISUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

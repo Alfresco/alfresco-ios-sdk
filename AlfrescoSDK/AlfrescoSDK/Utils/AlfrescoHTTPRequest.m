@@ -80,6 +80,7 @@
     [urlRequest setHTTPMethod:method];
     
     [header enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
+        log(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
         [urlRequest addValue:headerValue forHTTPHeaderField:headerKey];
     }];
 

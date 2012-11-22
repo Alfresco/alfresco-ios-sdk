@@ -199,7 +199,7 @@
 - (void)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     __weak AlfrescoCloudSession *weakSelf = self;
-    id<AlfrescoAuthenticationProvider> authProvider = [weakSelf authProviderToBeUsed];
+    id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     [AlfrescoHTTPUtils executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
@@ -217,19 +217,25 @@
 
 }
 
-- (void)refreshOAuthData:(AlfrescoOAuthData *)refreshedOAuthData
+- (void)setOauthData:(AlfrescoOAuthData *)oauthData
 {
-    if (nil == refreshedOAuthData)
+    if (_oauthData == oauthData)
     {
         return;
     }
-    if (nil != self.oauthData)
+    if (nil != _oauthData)
     {
-        self.oauthData = nil;
+        _oauthData = nil;
     }
-    
-    self.oauthData = refreshedOAuthData;
+    _oauthData = oauthData;
+
+    if (nil != _oauthData)
+    {
+        id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
+        [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+    }
 }
+
 
 - (NSArray *)allParameterKeys
 {
@@ -430,6 +436,7 @@ This authentication method authorises the user to access the home network assign
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
     self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
+    log(@"**** baseURLWithoutNetwork = %@ ****", [self.baseURLWithoutNetwork absoluteString]);
     self.isUsingBaseAuthenticationProvider = YES;
     self.emailAddress = emailAddress;
     self.password = password;
@@ -581,6 +588,7 @@ This authentication method authorises the user to access the home network assign
         return nil;
     }
     NSError *error = nil;
+    log(@"****** NETWORK JSON DATA RETURN: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if (nil == jsonDictionary)
     {

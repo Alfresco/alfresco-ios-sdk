@@ -26,32 +26,6 @@
 #import "AlfrescoInternalConstants.h"
 
 @interface AlfrescoHTTPUtils : NSObject
-+ (NSData *)executeRequest:(NSString *)api
-           baseUrlAsString:(NSString *)baseUrl
-                   session:(id<AlfrescoSession>)session
-                     error:(NSError **)outError;
-
-
-+ (NSData *)executeRequest:(NSString *)api
-           baseUrlAsString:(NSString *)baseUrl
-                   session:(id<AlfrescoSession>)session
-                      data:(NSData *)data
-                httpMethod:(NSString *)httpMethod
-                     error:(NSError **)outError;
-
-
-+ (NSData *)executeRequestWithURL:(NSURL *)url
-                          session:(id<AlfrescoSession>)session
-                             data:(NSData *)data
-                       httpMethod:(NSString *)httpMethod
-                            error:(NSError **)outError;
-
-
-+ (NSData *)executeRequestWithURL:(NSURL *)url
-                             data:(NSData *)data
-                       httpMethod:(NSString *)httpMethod
-                            error:(NSError **)outError;
-
 
 + (void)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
