@@ -26,7 +26,6 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-
 @interface AlfrescoOAuthLoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, UIAlertViewDelegate>
 /// @param webView - holds the login HTML page
 @property (nonatomic, strong) UIWebView * webView;
@@ -74,8 +73,8 @@
  @param apiKey
  @param secretKey
  @param redirectURI
- @param completionBlock
  @param parameters - (optional)
+ @param completionBlock
  */
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey

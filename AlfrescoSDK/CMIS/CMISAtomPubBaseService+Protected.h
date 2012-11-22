@@ -20,15 +20,15 @@
 
 @interface CMISAtomPubBaseService (Protected)
 
-- (void)fetchRepositoryInfoAndReturnError:(NSError * *)error;
+- (void)fetchRepositoryInfoWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 
-- (NSArray *)retrieveCMISWorkspacesAndReturnError:(NSError * *)error;
+- (void)retrieveCMISWorkspacesWithCompletionBlock:(void (^)(NSArray *workspaces, NSError *error))completionBlock;
 
 /** Convenience method with all the defaults for the retrieval parameters */
-- (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId error:(NSError **)error;
+- (void)retrieveObjectInternal:(NSString *)objectId completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
 
 /** Full-blown object retrieval version */
-- (CMISObjectData *)retrieveObjectInternal:(NSString *)objectId
+- (void)retrieveObjectInternal:(NSString *)objectId
                          withReturnVersion:(CMISReturnVersion)cmisReturnVersion
                                 withFilter:(NSString *)filter
                    andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
@@ -36,21 +36,27 @@
                         andRenditionFilder:(NSString *)renditionFilter
                              andIncludeACL:(BOOL)includeACL
                 andIncludeAllowableActions:(BOOL)includeAllowableActions
-                                     error:(NSError **)error;
+               completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
 
-- (CMISObjectData *)retrieveObjectByPathInternal:(NSString *)path
-                                      withFilter:(NSString *)filter
-                         andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
-                             andIncludePolicyIds:(BOOL)includePolicyIds
-                              andRenditionFilder:(NSString *)renditionFilter
-                                   andIncludeACL:(BOOL)includeACL
-                      andIncludeAllowableActions:(BOOL)includeAllowableActions
-                                           error:(NSError **)error;
+- (void)retrieveObjectByPathInternal:(NSString *)path
+                          withFilter:(NSString *)filter
+             andIncludeRelationShips:(CMISIncludeRelationship)includeRelationship
+                 andIncludePolicyIds:(BOOL)includePolicyIds
+                  andRenditionFilder:(NSString *)renditionFilter
+                       andIncludeACL:(BOOL)includeACL
+          andIncludeAllowableActions:(BOOL)includeAllowableActions
+                     completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
 
-- (id) retrieveFromCache:(NSString *)cacheKey error:(NSError * *)error;
+- (void)retrieveFromCache:(NSString *)cacheKey
+          completionBlock:(void (^)(id object, NSError *error))completionBlock;
 
-- (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel error:(NSError **)error;
+- (void)loadLinkForObjectId:(NSString *)objectId
+                andRelation:(NSString *)rel
+            completionBlock:(void (^)(NSString *link, NSError *error))completionBlock;
 
-- (NSString *)loadLinkForObjectId:(NSString *)objectId andRelation:(NSString *)rel andType:(NSString *)type error:(NSError **)error;
+- (void)loadLinkForObjectId:(NSString *)objectId
+                andRelation:(NSString *)rel
+                    andType:(NSString *)type
+            completionBlock:(void (^)(NSString *link, NSError *error))completionBlock;
 
 @end

@@ -360,9 +360,9 @@
 - (AlfrescoNode *)nodeFromCMISObjectData:(CMISObjectData *)cmisObjectData
 {
     CMISSession *cmisSession = [self.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-    CMISObjectConverter *cmisObjectConverter = [[CMISObjectConverter alloc] initWithSession:cmisSession];
+//    CMISObjectConverter *cmisObjectConverter = [[CMISObjectConverter alloc] initWithSession:cmisSession];
     
-    CMISObject *cmisObject = [cmisObjectConverter convertObject:cmisObjectData];
+    CMISObject *cmisObject = [cmisSession.objectConverter convertObject:cmisObjectData];
     return [self nodeFromCMISObject:cmisObject];
 }
 
@@ -374,9 +374,9 @@
     data.baseType = CMISBaseTypeDocument;
     data.properties = cmisQueryResult.properties;
     data.allowableActions = cmisQueryResult.allowableActions;
-    CMISObjectConverter *cmisObjectConverter = [[CMISObjectConverter alloc] initWithSession:cmisSession];
+//    CMISObjectConverter *cmisObjectConverter = [[CMISObjectConverter alloc] initWithSession:cmisSession];
     
-    CMISObject *cmisObject = [cmisObjectConverter convertObject:data];
+    CMISObject *cmisObject = [cmisSession.objectConverter convertObject:data];
     return (AlfrescoDocument *)[self nodeFromCMISObject:cmisObject];
 }
 

@@ -222,4 +222,8 @@ extern NSString * const kAlfrescoPropertyType;
 extern NSString * const kAlfrescoPropertyValue;
 extern NSString * const kAlfrescoPropertyIsMultiValued;
 
+extern NSString * const kAlfrescoHTTPDelete;
+extern NSString * const kAlfrescoHTTPGet;
+extern NSString * const kAlfrescoHTTPPOST;
+extern NSString * const kAlfrescoHTTPPut;
 @end

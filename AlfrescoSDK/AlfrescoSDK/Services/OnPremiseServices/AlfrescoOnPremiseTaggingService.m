@@ -29,7 +29,6 @@
 @interface AlfrescoOnPremiseTaggingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
-@property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (NSArray *) tagArrayFromJSONData:(NSData *)data error:(NSError **)outError;
@@ -40,7 +39,6 @@
 @implementation AlfrescoOnPremiseTaggingService
 @synthesize baseApiUrl = _baseApiUrl;
 @synthesize session = _session;
-@synthesize operationQueue = _operationQueue;
 @synthesize objectConverter = _objectConverter;
 @synthesize authenticationProvider = _authenticationProvider;
 
@@ -51,8 +49,6 @@
         self.session = session;
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
-        self.operationQueue = [[NSOperationQueue alloc] init];
-        self.operationQueue.maxConcurrentOperationCount = 2;
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
 //        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
@@ -69,22 +65,18 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError;
-        NSData *data = [AlfrescoHTTPUtils executeRequest:kAlfrescoOnPremiseTagsAPI
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                   error:&operationQueueError];
-        
-        NSArray *tagArray = nil;
-        if(nil != data)
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+        if (nil == data)
         {
-            tagArray = [weakSelf tagArrayFromJSONData:data error:&operationQueueError];
+            completionBlock(nil, error);
         }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(tagArray, operationQueueError);
-        }];
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *tagArray = [weakSelf tagArrayFromJSONData:data error:&conversionError];
+            completionBlock(tagArray, conversionError);
+        }
     }];
 }
 
@@ -98,27 +90,19 @@
     }
     
     __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError;
-        
-        NSData *data = [AlfrescoHTTPUtils executeRequest:kAlfrescoOnPremiseTagsAPI
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                   error:&operationQueueError];
-        
-        AlfrescoPagingResult *pagingResult = nil;
-        if(nil != data)
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+        if (nil == data)
         {
-            NSArray *tagArray = [weakSelf tagArrayFromJSONData:data error:&operationQueueError];
-            if (nil != tagArray)
-            {
-                pagingResult = [AlfrescoPagingUtils pagedResultFromArray:tagArray listingContext:listingContext];
-            }
+            completionBlock(nil, error);
         }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(pagingResult, operationQueueError);
-        }];
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *tagArray = [weakSelf tagArrayFromJSONData:data error:&conversionError];
+            AlfrescoPagingResult *pagingResults = [AlfrescoPagingUtils pagedResultFromArray:tagArray listingContext:listingContext];
+            completionBlock(pagingResults, conversionError);
+        }
     }];
 }
 
@@ -130,28 +114,21 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError;
-        NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
-        NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-        NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                              withString:cleanId];
-
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                   error:&operationQueueError];
-        
-        NSArray *tagArray = nil;
-        if(nil != data)
+    NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+    NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+                                                                                          withString:cleanId];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+        if(nil == data)
         {
-            // the node tags service returns an invalid JSON array, therefore parsing it ourselves
-            tagArray = [weakSelf customTagArrayFromJSONData:data];
+            completionBlock(nil, error);
         }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(tagArray, operationQueueError);
-        }];
+        else
+        {
+            NSArray *tagArray = [weakSelf customTagArrayFromJSONData:data];
+            completionBlock(tagArray, nil);
+        }
     }];
 }
 
@@ -167,34 +144,22 @@
     }
     
     __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        
-        NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
-        NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-        NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                              withString:cleanId];
-        
-        NSData *data = [AlfrescoHTTPUtils executeRequest:requestString
-                                         baseUrlAsString:weakSelf.baseApiUrl
-                                                 session:weakSelf.session
-                                                   error:&operationQueueError];
-        
-        AlfrescoPagingResult *pagingResult = nil;
-        if(nil != data)
+    NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+    NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+                                                                                          withString:cleanId];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+        if(nil == data)
         {
-            // the node tags service returns an invalid JSON array, therefore parsing it ourselves
-            NSArray *tagArray = [weakSelf customTagArrayFromJSONData:data];
-            if (nil != tagArray)
-            {
-                pagingResult = [AlfrescoPagingUtils pagedResultFromArray:tagArray listingContext:listingContext];
-            }
+            completionBlock(nil, error);
         }
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(pagingResult, operationQueueError);
-        }];
-        
+        else
+        {
+            NSArray *tagArray = [weakSelf customTagArrayFromJSONData:data];
+            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:tagArray listingContext:listingContext];
+            completionBlock(pagingResult, nil);
+        }
     }];
 }
 
@@ -206,31 +171,25 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        
-        NSError *operationQueueError = nil;
-        NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
-        NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-        NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                              withString:cleanId];
-        
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tags options:kNilOptions error:&operationQueueError];
-        if (nil != jsonData)
+    NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+    NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+                                                                                          withString:cleanId];
+    NSError *jsonError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tags options:kNilOptions error:&jsonError];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
+        if (nil != error)
         {
-            [AlfrescoHTTPUtils executeRequest:requestString
-                              baseUrlAsString:weakSelf.baseApiUrl
-                                      session:weakSelf.session
-                                         data:jsonData httpMethod:@"POST"
-                                        error:&operationQueueError];
+            completionBlock(NO, error);
         }
-                
-        BOOL success = (nil == operationQueueError) ? YES : NO;
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(success, operationQueueError);
-        }];
-        
+        else
+        {
+            completionBlock(YES, nil);
+        }
     }];
+        
 }
 
 #pragma mark Site service internal methods
@@ -264,7 +223,8 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
            [[jsonTagArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
         {
             // no results found
-            return [NSArray array];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
+            return nil;
         }
         else
         {

@@ -129,7 +129,7 @@ typedef enum
     CMISDelete,  // default
 } CMISUnfileObject;
 
-@interface CMISEnums
+@interface CMISEnums : NSObject 
 
 + (NSString *)stringForIncludeRelationShip:(CMISIncludeRelationship)includeRelationship;
 + (NSString *)stringForUnfileObject:(CMISUnfileObject)unfileObject;

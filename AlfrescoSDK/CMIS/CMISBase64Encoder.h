@@ -22,6 +22,10 @@
 
 + (NSString *)encodeContentOfFile:(NSString *)sourceFilePath;
 
++ (NSString *)encodeContentFromInputStream:(NSInputStream*)inputStream;
+
 + (void)encodeContentOfFile:(NSString *)sourceFilePath andAppendToFile:(NSString *)destinationFilePath;
+
++ (void)encodeContentFromInputStream:(NSInputStream*)inputStream andAppendToFile:(NSString *)destinationFilePath;
 
 @end

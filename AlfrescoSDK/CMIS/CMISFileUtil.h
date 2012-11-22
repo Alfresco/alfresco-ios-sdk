@@ -19,6 +19,6 @@
 
 + (void)appendToFileAtPath:(NSString *)filePath data:(NSData *)data;
 
-+ (long long)fileSizeForFileAtPath:(NSString *)filePath error:(NSError * *)outError;
++ (unsigned long long)fileSizeForFileAtPath:(NSString *)filePath error:(NSError * *)outError;
 
 @end
