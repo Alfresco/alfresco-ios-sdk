@@ -125,14 +125,14 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     [docFolderService deleteNode:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, NSError *error){
         if (!succeeded)
         {
-            log(@"We failed to delete the document on the server");
+            log(@"We failed to delete the document on the server %@", self.server);
             self.lastTestSuccessful = NO;
             self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete test document. Error %@",[error localizedDescription]];
             self.callbackCompleted = YES;
         }
         else
         {
-            log(@"We succeeded to delete the document on the server");
+            log(@"We succeeded to delete the document on the server %@", self.server);
             self.lastTestSuccessful = YES;
             self.callbackCompleted = YES;
         }

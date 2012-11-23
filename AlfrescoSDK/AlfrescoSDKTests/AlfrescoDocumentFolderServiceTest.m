@@ -1760,6 +1760,8 @@
                 STAssertNotNil(node, @"node should not be nil");
                 STAssertNotNil(node.identifier, @"nodeRef should not be nil");
                 STAssertTrue([node.name isEqualToString:super.fixedFileName], @"name should be equal to %@",super.fixedFileName);
+                STAssertTrue(node.isFolder, @"Node should be a folder");
+                STAssertFalse(node.isDocument, @"Node should not be a document");
                 
                 super.lastTestSuccessful = YES;
             }
@@ -2433,6 +2435,7 @@
 /*
  @Unique_TCRef 27S1
  @Unique_TCRef 31S1
+ @Unique_TCRef 31S3
  */
 - (void)testUpdatePropertiesForDocument
 {
@@ -3064,6 +3067,14 @@
                     STAssertNotNil(node, @"document node should not be nil");
                     STAssertTrue([node.name isEqualToString:documentName], @"Document name is not the same as requested");
                     
+                    STAssertNotNil(node.identifier, @"The identifier of the node should not be nil");
+                    STAssertNotNil(node.name, @"The name of the node should not be nil");
+                    STAssertNotNil(node.title, @"The title should not be nil");
+                    STAssertTrue(node.isDocument, @"The node retrieved should be a document");
+                    STAssertFalse(node.isFolder, @"The node retrieved should not be a folder");
+                    STAssertNotNil(node.properties, @"The node properties should not be nil");
+                    STAssertNotNil(node.aspects, @"The node aspects should not be nil");
+                    STAssertNotNil(node.createdAt, @"The creation date/time should not be nil");
                     
                     // generate randomness
                     NSDate *dateTimeOriginal = [NSDate date];
@@ -3276,6 +3287,7 @@
 
 /*
  @Unique_TCRef 25S2
+ @Unique_TCRef 32S9
  */
 - (void)testRetrievePermissionsForFolder
 {
@@ -3503,7 +3515,7 @@
 }
 
 /*
- @Unique_TCRef 31S6
+ @Unique_TCRef 27S6
  */
 - (void)testRetrieveContentOfDocumentWithDoubleByteCharacters
 {
@@ -3798,6 +3810,7 @@
  */
 - (void)testUpdatePropertiesOfNodeToPreExistingName
 {
+    // Working on local server, however, removal of the test document fails when testing against 4.x server on amazon servers
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
@@ -3846,6 +3859,7 @@
  */
 - (void)testUpdatePropertiesOfNodeWithInvalidName
 {
+    // Working on local server, however, removal of the test document fails when testing against 4.x server on amazon servers
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
@@ -4260,6 +4274,433 @@
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 13S3
+ */
+- (void)testRetrieveChildrenInFolderWithOneSubFolder
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+        
+        NSString *parentFolderDescription = @"Test Description";
+        NSString *parentFolderTitle = @"Test Title";
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:parentFolderDescription forKey:@"cm:description"];
+        [props setObject:parentFolderTitle forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            
+            if (error)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(folder, @"Folder should have successfully been created");
+                
+                NSString *subFolderName = @"SubFolder";
+                NSString *subFolderDescription = @"Test Description";
+                NSString *subFolderTitle = @"Test Title";
+                
+                NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:2];
+                [properties setObject:subFolderDescription forKey:@"cm:description"];
+                [properties setObject:subFolderTitle forKey:@"cm:title"];
+                
+                [weakFolderService createFolderWithName:subFolderName inParentFolder:folder properties:properties completionBlock:^(AlfrescoFolder *subFolder, NSError *subFolderError) {
+                    
+                    if (subFolderError)
+                    {
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [subFolderError localizedDescription], [subFolderError localizedFailureReason]];
+                    }
+                    else
+                    {
+                        NSDate *actualCreation = subFolder.createdAt;
+                        
+                        // do a retrieve of the unit test folder
+                        [weakFolderService retrieveChildrenInFolder:folder completionBlock:^(NSArray *childrenArray, NSError *childrenError) {
+                            
+                            if (childrenError)
+                            {
+                                super.lastTestSuccessful = NO;
+                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [childrenError localizedDescription], [childrenError localizedFailureReason]];
+                            }
+                            else
+                            {
+                                STAssertNotNil(childrenArray, @"The array returned should not be nil");
+                                
+                                STAssertTrue([childrenArray count] == 1, @"Expected only one node to be returned");
+                                
+                                AlfrescoNode *subFolderNode = [childrenArray objectAtIndex:0];
+                                STAssertTrue(subFolderNode.isFolder, @"The node returned should be a folder");
+                                STAssertFalse(subFolderNode.isDocument, @"The node returned should not be a document");
+                                STAssertNotNil(subFolderNode.identifier, @"The node's identifier should not be nil");
+                                STAssertTrue([subFolderNode.name isEqualToString:subFolderName], @"The node's name should be %@, but instead is called %@", subFolderName, subFolderNode.name);
+                                STAssertTrue([subFolderNode.summary isEqualToString:parentFolderDescription], @"The node's description should be %@, but instead got back %@", subFolderDescription, subFolderNode.summary);
+                                STAssertTrue([subFolderNode.title isEqualToString:parentFolderTitle], @"The node's title should be %@, but instead got back %@", subFolderTitle, subFolderNode.title);
+                                STAssertNotNil(subFolderNode.type , @"Type should be filled");
+                                STAssertNotNil(subFolderNode.createdBy, @"CreatedBy should not be a nil value");
+                                STAssertTrue([subFolderNode.createdAt isEqualToDate:actualCreation], @"The creation dates of the folders do not match");
+                                STAssertNotNil(subFolderNode.properties, @"The properties of the subfolder should not be nil");
+                                STAssertNotNil(subFolderNode.aspects, @"The aspects of the subfolder should not be nil");
+                            }
+                            
+                            [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *error) {
+                                
+                                if (error == nil)
+                                {
+                                    super.lastTestSuccessful = succeeded;
+                                }
+                                
+                                super.callbackCompleted = YES;
+                            }];
+                        }];
+                    }
+                }];
+            }
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 13S4
+ */
+- (void)testRetrieveChildrenInFolderWithOneDocument
+{
+    
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+        
+        NSString *parentFolderDescription = @"Test Description";
+        NSString *parentFolderTitle = @"Test Title";
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:parentFolderDescription forKey:@"cm:description"];
+        [props setObject:parentFolderTitle forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            
+            if (error)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(folder, @"Folder should have successfully been created");
+                
+                NSString *documentName = @"Testing.jpg";
+                NSString *documentDescription = @"Test Description";
+                NSString *documentTitle = @"Test Title";
+                NSString *documentAuthor = @"Test Author";
+                
+                NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
+                [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
+                [properties setObject:documentDescription forKey:@"cm:description"];
+                [properties setObject:documentTitle forKey:@"cm:title"];
+                [properties setObject:documentAuthor forKey:@"cm:author"];
+                
+                [weakFolderService createDocumentWithName:documentName inParentFolder:folder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *docError) {
+                    
+                    if (docError)
+                    {
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [docError localizedDescription], [docError localizedFailureReason]];
+                    }
+                    else
+                    {
+                        NSDate *actualCreation = document.createdAt;
+                        
+                        // do a retrieve of the unit test folder
+                        [weakFolderService retrieveChildrenInFolder:folder completionBlock:^(NSArray *childrenArray, NSError *childrenError) {
+                            
+                            if (childrenError)
+                            {
+                                super.lastTestSuccessful = NO;
+                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [childrenError localizedDescription], [childrenError localizedFailureReason]];
+                            }
+                            else
+                            {
+                                STAssertNotNil(childrenArray, @"The array returned should not be nil");
+                                
+                                STAssertTrue([childrenArray count] == 1, @"Expected only one node to be returned");
+                                
+                                AlfrescoNode *document = [childrenArray objectAtIndex:0];
+                                STAssertFalse(document.isFolder, @"The node returned should not be a folder");
+                                STAssertTrue(document.isDocument, @"The node returned should be a document");
+                                STAssertNotNil(document.identifier, @"The node's identifier should not be nil");
+                                STAssertTrue([document.name isEqualToString:documentName], @"The node's name should be %@, but instead is called %@", documentName, document.name);
+                                STAssertTrue([document.summary isEqualToString:documentDescription], @"The node's description should be %@, but instead got back %@", documentDescription, document.summary);
+                                STAssertTrue([document.title isEqualToString:parentFolderTitle], @"The node's title should be %@, but instead got back %@", documentTitle, document.title);
+                                STAssertNotNil(document.type , @"Type should be filled");
+                                STAssertNotNil(document.createdBy, @"CreatedBy should not be a nil value");
+                                STAssertTrue([document.createdAt isEqualToDate:actualCreation], @"The creation dates of the folders do not match");
+                                STAssertNotNil(document.properties, @"The properties of the subfolder should not be nil");
+                                STAssertNotNil(document.aspects, @"The aspects of the subfolder should not be nil");
+                            }
+                            
+                            [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *error) {
+                                
+                                if (error == nil)
+                                {
+                                    super.lastTestSuccessful = succeeded;
+                                }
+                                
+                                super.callbackCompleted = YES;
+                            }];
+                        }];
+                    }
+                } progressBlock:^(NSInteger bytesTransfered, NSInteger totalBytes) {
+                    
+                }];
+            }
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 17S5
+ */
+- (void)testRetrieveNodeWithIdentifierForFolderNode
+{
+    [super runAllSitesTest:^{
+       
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+        
+        NSString *subFolderDescription = @"Test Description";
+        NSString *subFolderTitle = @"Test Title";
+        
+        NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:2];
+        [properties setObject:subFolderDescription forKey:@"cm:description"];
+        [properties setObject:subFolderTitle forKey:@"cm:title"];
+        
+        [self.dfService createFolderWithName:self.unitTestFolder inParentFolder:self.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+           
+            if (error)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                // check values here
+                NSString *createdIdentifier = folder.identifier;
+                NSString *createdName = folder.name;
+                NSString *createdTitle = folder.title;
+                NSString *createdSummary = folder.summary;
+                NSString *createdType = folder.type;
+                NSDate *createdDate = folder.createdAt;
+                NSString *createdBy = folder.createdBy;
+                NSDictionary *createdProperties = folder.properties;
+                NSArray *createdAspects = folder.aspects;
+                
+                [weakFolderService retrieveNodeWithIdentifier:folder.identifier completionBlock:^(AlfrescoNode *retrievedNode, NSError *retrievedError) {
+                    
+                    if (retrievedError)
+                    {
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrievedError localizedDescription], [retrievedError localizedFailureReason]];
+                    }
+                    else
+                    {
+                        // check with created
+                        STAssertTrue([retrievedNode.identifier isEqualToString:createdIdentifier], @"Expected the identifier of the node to be %@, instead got back %@", createdIdentifier, retrievedNode.identifier);
+                        STAssertTrue([retrievedNode.name isEqualToString:createdName], @"Expected the name of the node to be %@, instead got back %@", createdName, retrievedNode.name);
+                        STAssertTrue([retrievedNode.title isEqualToString:createdTitle], @"Expected the title of the node to be %@, instead got back %@", createdTitle, retrievedNode.title);
+                        STAssertTrue([retrievedNode.summary isEqualToString:createdSummary], @"Expected the summary of the node to be %@, instead got back %@", createdSummary, retrievedNode.summary);
+                        STAssertTrue([retrievedNode.type isEqualToString:createdType], @"Expected the created of the node to be %@, instead got back %@", createdType, retrievedNode.type);
+                        STAssertTrue([retrievedNode.createdAt isEqualToDate:createdDate], @"Expected the created date of the node to be %@, instead got back %@", createdDate, retrievedNode.createdAt);
+                        STAssertTrue([retrievedNode.createdBy isEqualToString:createdBy], @"Expected the created by of the node to be %@, instead got back %@", createdBy, retrievedNode.createdBy);
+                        STAssertTrue([retrievedNode.properties count] == [createdProperties count], @"Expected the properties count of the node to be %@, instead got back %@", [createdProperties count], [retrievedNode.properties count]);
+                        STAssertTrue([retrievedNode.aspects isEqualToArray:createdAspects], @"Expected the aspects of the node to be %@, instead got back %@", createdAspects, retrievedNode.aspects);
+                        STAssertTrue(retrievedNode.isFolder, @"Expected the identifier of the node to be %i, instead got back %i", YES, retrievedNode.isFolder);
+                        STAssertFalse(retrievedNode.isDocument, @"Expected the identifier of the node to be %i, instead got back %i", NO, retrievedNode.isDocument);
+                        
+                        [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                            
+                            if (!deleteError)
+                            {
+                                super.lastTestSuccessful = succeeded;
+                            }
+                            super.callbackCompleted = YES;
+                        }];
+                    }
+                    
+                }];
+            }
+            
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/**
+ @Unique_TCRef 21S6
+ */
+- (void)testRetrieveFoldersInFolderWithListingContext
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        int maxItemsExpected = 5;
+        int skipCountExpected = 0;
+        
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:maxItemsExpected skipCount:skipCountExpected sortProperty:kAlfrescoSortByTitle sortAscending:NO];
+        
+        [self.dfService retrieveFoldersInFolder:super.testDocFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            
+            if (error)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(pagingResult, @"The paging result should not be nil");
+                
+                STAssertTrue([pagingResult.objects count] == maxItemsExpected, @"Expected the objects array to be of size %i, instead got back a size %i", maxItemsExpected, [pagingResult.objects count]);
+                STAssertTrue(pagingResult.hasMoreItems, @"Expected the paging result to have more items");
+                STAssertTrue(pagingResult.totalItems > maxItemsExpected, @"Expected the paging result to have more than %i items as the total number, but instead got back %i", maxItemsExpected, pagingResult.totalItems);
+                
+                // check if array is sorted correctly
+                NSArray *sortedArray = [pagingResult.objects sortedArrayUsingComparator:^(id a, id b) {
+                    
+                    AlfrescoNode *node1 = (AlfrescoNode *)a;
+                    AlfrescoNode *node2 = (AlfrescoNode *)b;
+                    
+                    return [node2.title compare:node1.title options:NSCaseInsensitiveSearch];
+                }];
+                
+                NSLog(@"Paging Array: %@", pagingResult.objects);
+                NSLog(@"Sorted Array: %@", sortedArray);
+                
+                BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
+                
+                STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
+                
+                super.lastTestSuccessful = YES;
+            }
+            super.callbackCompleted = YES;
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+/*
+ @Unique_TCRef 27S2
+ @Unique_TCRef 30S4
+ */
+- (void)testRetrieveContentOfEmptyDocument
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakDocumentService = self.dfService;
+        
+        [self.dfService retrieveContentOfDocument:super.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error) {
+            
+            if (contentFile == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(contentFile,@"created content file should not be nil");
+                NSError *fileError = nil;
+                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
+                STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
+                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
+                log(@"created content file: url=%@ mimetype = %@ data length = %llu",[contentFile.fileUrl path], contentFile.mimeType, size);
+                NSError *readError = nil;
+                
+                __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
+                
+                if (stringContent == nil)
+                {
+                    log(@"stringContent::we got nil as content from %@",[contentFile.fileUrl path]);
+                    super.lastTestSuccessful = NO;
+                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
+                    super.callbackCompleted = YES;
+                }
+                else
+                {
+                    // update the content to an empty document
+                    __block NSString *updatedContent = @"\0";
+                    NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
+                    
+                    __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:contentFile.mimeType];
+                    
+                    [weakDocumentService updateContentOfDocument:super.testAlfrescoDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error) {
+                        
+                        if (updatedDocument == nil)
+                        {
+                            super.lastTestSuccessful = NO;
+                            super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                            super.callbackCompleted = YES;
+                        }
+                        else
+                        {
+                            STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
+                            
+                            [weakDocumentService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *checkError){
+                                
+                                if (checkContentFile == nil)
+                                {
+                                    super.lastTestSuccessful = NO;
+                                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [checkError localizedDescription], [checkError localizedFailureReason]];
+                                }
+                                else
+                                {
+                                    STAssertNotNil(checkContentFile, @"Should have returned a content file object");
+                                    // document content size should be the same as that of the updated content (empty document)
+                                    NSLog(@"Updated Document Content Size: %llu ... Retrieved Content Size: %llu", updatedDocument.contentLength, checkContentFile.length);
+                                    STAssertTrue(checkContentFile.length == updatedDocument.contentLength, @"Expected the length of the content file to be %f, but instead got back %f", updatedDocument.contentLength, checkContentFile.length);
+                                    STAssertTrue([checkContentFile.mimeType isEqualToString:@"text/plain"], @"Expected the mime type to be %@, but instead got back %@", @"text/plain", contentFile.mimeType);
+                                    
+                                    super.lastTestSuccessful = YES;
+                                }
+                                super.callbackCompleted = YES;
+                            } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                            
+                            }];
+                        }
+                    } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                        log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                    }];
+                }
+            }
+            
+        } progressBlock:^(NSInteger bytesDownloaded, NSInteger totalBytes) {
+            
         }];
         
         [super waitUntilCompleteWithFixedTimeInterval];
