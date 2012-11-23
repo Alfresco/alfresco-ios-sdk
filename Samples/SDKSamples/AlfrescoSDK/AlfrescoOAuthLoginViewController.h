@@ -20,6 +20,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AlfrescoConstants.h"
+#import "AlfrescoOAuthLoginDelegate.h"
 
 /** The AlfrescoOAuthLoginViewController starts the OAuth authentication processes.
  
@@ -31,6 +32,8 @@
 @property (nonatomic, strong) UIWebView * webView;
 /// @param activityIndicator - indicates loading process
 @property (nonatomic, strong) UIActivityIndicatorView * activityIndicator;
+/// @param oauthDelegate - call back for when things go wrong
+@property (nonatomic, weak) id<AlfrescoOAuthLoginDelegate> oauthDelegate;
 /**
  @name Initialisers
  The AlfrescoOAuthLoginViewController has 4 different initialisers available. At the minimum an apiKey, secretKey and completionBlock must be provided.

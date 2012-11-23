@@ -21,8 +21,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoOAuthLoginViewController.h"
-
-@protocol AlfrescoOAuthLoginDelegate;
+#import "AlfrescoOAuthLoginDelegate.h"
 /** The AlfrescoOAuthHelper handles OAuth authentication processes.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
@@ -59,8 +58,3 @@
 
 @end
 
-@protocol AlfrescoOAuthLoginDelegate <NSObject>
-
-- (void)oauthLoginDidFailWithError:(NSError *)error;
-
-@end
