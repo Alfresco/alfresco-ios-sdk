@@ -18,12 +18,13 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
+#import "AlfrescoOAuthLoginDelegate.h"
 
 #warning ENTER YOUR API AND SECRET KEY
 
 // Enter the api Key and secret key in the #define below
 #define APIKEY @""
 #define SECRETKEY @""
-@interface ServerSelectionTableViewController : BaseTableViewController
+@interface ServerSelectionTableViewController : BaseTableViewController <AlfrescoOAuthLoginDelegate, UIAlertViewDelegate>
 
 @end
