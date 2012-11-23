@@ -39,6 +39,11 @@
         }
         else
         {
+            NSData *archivedOAuthData = [NSKeyedArchiver archivedDataWithRootObject:oauthdata];
+            NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+            [standardDefaults setObject:archivedOAuthData forKey:@"ArchivedOAuthData"];
+            [standardDefaults synchronize];
+            
             [AlfrescoCloudSession connectWithOAuthData:oauthdata completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
