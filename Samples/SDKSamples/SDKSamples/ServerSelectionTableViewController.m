@@ -39,6 +39,11 @@
         }
         else
         {
+            NSData *archivedOAuthData = [NSKeyedArchiver archivedDataWithRootObject:oauthdata];
+            NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+            [standardDefaults setObject:archivedOAuthData forKey:@"ArchivedOAuthData"];
+            [standardDefaults synchronize];
+            
             [AlfrescoCloudSession connectWithOAuthData:oauthdata completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
@@ -65,7 +70,7 @@
     {
         // use this is you want to use the Alfresco default redirect URI
         self.loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
-                                                                              secretKey:SECRETKEY
+                                                                              secretKey:SECRETKEY redirectURI:REDIRECT
                                                                         completionBlock:completionBlock];
         self.loginController.oauthDelegate = self;
         [self.navigationController pushViewController:self.loginController animated:YES];

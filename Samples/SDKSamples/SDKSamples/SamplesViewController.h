@@ -18,6 +18,6 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
-
-@interface SamplesViewController : BaseTableViewController
+#import "AlfrescoOAuthLoginDelegate.h"
+@interface SamplesViewController : BaseTableViewController <AlfrescoOAuthLoginDelegate, UIAlertViewDelegate>
 @end
