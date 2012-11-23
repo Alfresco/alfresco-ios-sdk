@@ -22,6 +22,10 @@
 
 #import "AlfrescoConstants.h"
 
+/**
+ SDK Version constants
+ */
+NSString * const kAlfrescoSDKVersion = @"1.0.2";
 
 /**
  Session parameter constants
