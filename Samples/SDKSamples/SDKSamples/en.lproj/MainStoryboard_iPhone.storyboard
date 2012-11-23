@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="nt0-Ld-0nE">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
     </dependencies>
     <scenes>
@@ -1336,10 +1335,10 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="qfb-3z-kbL"/>
-        <segue reference="uK1-tW-fy4"/>
-        <segue reference="ob3-9I-oT3"/>
         <segue reference="x7a-lp-bJj"/>
+        <segue reference="uK1-tW-fy4"/>
+        <segue reference="qfb-3z-kbL"/>
+        <segue reference="ob3-9I-oT3"/>
         <segue reference="H9W-6n-MRc"/>
     </inferredMetricsTieBreakers>
 </document>
