@@ -28,7 +28,6 @@
 @interface AlfrescoCloudPersonService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
-@property (nonatomic, strong, readwrite) NSOperationQueue *operationQueue;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (AlfrescoPerson *)alfrescoPersonFromJSONData:(NSData *)data error:(NSError **)outError;
@@ -39,7 +38,6 @@
 @implementation AlfrescoCloudPersonService
 @synthesize baseApiUrl = _baseApiUrl;
 @synthesize session = _session;
-@synthesize operationQueue = _operationQueue;
 @synthesize objectConverter = _objectConverter;
 @synthesize authenticationProvider = _authenticationProvider;
 
@@ -50,10 +48,7 @@
         self.session = session;
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudAPIPath];
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
-        self.operationQueue = [[NSOperationQueue alloc] init];
-        self.operationQueue.maxConcurrentOperationCount = 2;
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -68,28 +63,19 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __weak AlfrescoCloudPersonService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        NSError *operationQueueError = nil;
-        NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",
-                                           weakSelf.baseApiUrl, requestString]];
-        
-        NSData *data = [AlfrescoHTTPUtils executeRequestWithURL:url
-                                                        session:weakSelf.session
-                                                           data:nil
-                                                     httpMethod:@"GET"
-                                                          error:&operationQueueError];
-        
-        AlfrescoPerson *person = nil;
-        if (nil != data)
+    NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
+    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+        if (nil == responseData)
         {
-            person = [weakSelf alfrescoPersonFromJSONData:data error:&operationQueueError];
+            completionBlock(nil, error);
         }
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(person, operationQueueError);
-        }];
-        
+        else
+        {
+            NSError *conversionError = nil;
+            AlfrescoPerson *person = [weakSelf alfrescoPersonFromJSONData:responseData error:&conversionError];
+            completionBlock(person, conversionError);
+        }
     }];
 }
 
@@ -98,37 +84,23 @@
     [AlfrescoErrors assertArgumentNotNil:person argumentName:@"person"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoCloudPersonService *weakSelf = self;
-    [self.operationQueue addOperationWithBlock:^{
-        if (nil == person.avatarIdentifier)
-        {
-            NSError * error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePerson];
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(nil, error);
-            }];
-        }
-        else
-        {
-            __block AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:weakSelf.session];
-            [docService retrieveNodeWithIdentifier:person.avatarIdentifier completionBlock:^(AlfrescoNode *avatarFile, NSError *retrieveError){
-                if (nil == avatarFile)
-                {
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        completionBlock(nil, retrieveError);
-                    }];
-                }
-                else
-                {
-                    [docService retrieveContentOfDocument:(AlfrescoDocument *)avatarFile completionBlock:^(AlfrescoContentFile *downloadedAvatar, NSError * downloadError){
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            completionBlock(downloadedAvatar, downloadError);
-                        }];
-                    }progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal){}];
-                }
-            }];                    
-        }
-        
-    }];
+    if (nil == person.avatarIdentifier)
+    {
+        completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePerson]);
+        return;
+    }
+    AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
+    [docService
+     retrieveNodeWithIdentifier:person.avatarIdentifier
+     completionBlock:^(AlfrescoNode *node, NSError *error){
+         
+        [docService
+         retrieveContentOfDocument:(AlfrescoDocument *)node
+         completionBlock:^(AlfrescoContentFile *avatarFile, NSError *avatarError){
+             completionBlock(avatarFile, avatarError);
+         } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+         
+    }];    
 }
 
 #pragma mark - private methods

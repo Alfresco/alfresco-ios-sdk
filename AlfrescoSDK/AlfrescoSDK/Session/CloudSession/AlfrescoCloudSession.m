@@ -61,6 +61,8 @@
 
 - (id)authProviderToBeUsed;
 
+- (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
 @property (nonatomic, strong, readwrite) NSURL *baseURLWithoutNetwork;
 @property (nonatomic, strong) NSURL *cmisUrl;
@@ -71,7 +73,6 @@
 @property (nonatomic, strong, readwrite) NSString *emailAddress;
 @property (nonatomic, strong, readwrite) NSString *password;
 @property (nonatomic, strong)           AlfrescoISO8601DateFormatter *dateFormatter;
-//@property (nonatomic, strong, readwrite) AlfrescoCloudNetwork *network;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) NSString * apiKey;
 @property BOOL isUsingBaseAuthenticationProvider;
@@ -198,32 +199,43 @@
 - (void)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     __weak AlfrescoCloudSession *weakSelf = self;
-    
-    NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
-    [operationQueue addOperationWithBlock:^(){
-        NSError *operationQueueError = nil;
-        id<AlfrescoAuthenticationProvider> authProvider = [weakSelf authProviderToBeUsed];
-        [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-        NSData *jsonData = [AlfrescoHTTPUtils executeRequestWithURL:self.baseURLWithoutNetwork
-                                                            session:self
-                                                               data:nil
-                                                         httpMethod:@"GET"
-                                                              error:&operationQueueError];
-        if (nil == jsonData)
+    id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
+    [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+    [AlfrescoHTTPUtils executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
+        if (nil == data)
         {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                log(@"***retrieveNetworksForUsername jsonData is NIL");
-                completionBlock(nil, operationQueueError);
-            }];
+            completionBlock(nil, error);
         }
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        log(@"After parsing jsonData. JSON data has string = %@",jsonString);
-        NSArray *networks = [weakSelf networkArrayFromJSONData:jsonData error:&operationQueueError];
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            completionBlock(networks, operationQueueError);
-        }];
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *networks = [weakSelf networkArrayFromJSONData:data error:&conversionError];
+            completionBlock(networks, conversionError);
+        }
+        
     }];
+
 }
+
+- (void)setOauthData:(AlfrescoOAuthData *)oauthData
+{
+    if (_oauthData == oauthData)
+    {
+        return;
+    }
+    if (nil != _oauthData)
+    {
+        _oauthData = nil;
+    }
+    _oauthData = oauthData;
+
+    if (nil != _oauthData)
+    {
+        id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
+        [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+    }
+}
+
 
 - (NSArray *)allParameterKeys
 {
@@ -340,78 +352,70 @@
     CMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[CMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
     params.authenticationProvider = passthroughAuthProvider;
     
-    NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
-    [operationQueue addOperationWithBlock:^{
-        NSError *error = nil;
-        NSArray *repositories = [CMISSession arrayOfRepositories:params error:&error];
-        if(error)
+    AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params completionBlock:completionBlock];
+    [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
+}
+
+- (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+{
+    AlfrescoArrayCompletionBlock arrayCompletionBlock = ^void(NSArray *repositories, NSError *error){
+        if (nil == repositories)
         {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(nil, error);
-                }
-            }];
+            if(completionBlock)
+            {
+                completionBlock(nil, error);
+            }
         }
-        else if(repositories.count == 0)
+        else if( 0 == repositories.count)
         {
             error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoRepositoryFound];
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(nil, error);
-                }
-            }];
+            if(completionBlock)
+            {
+                completionBlock(nil, error);
+            }
+            
         }
         else
         {
-            // we only use the first repository
             CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
-            
-            params.repositoryId = repoInfo.identifier;
-            
-            // enable Alfresco mode in CMIS Session
-//            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
-            [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
-            
-            // create the session using the paramters
-            CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];
-            [self.sessionData setObject:cmisSession forKey:kAlfrescoSessionKeyCmisSession];
-            
-            
-            
-            BOOL authenticated = [cmisSession authenticateAndReturnError:&error];
-            if (authenticated == YES)
-            {
-                AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
-                self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
-                
-                CMISObject *retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&error];
-                if (nil != retrievedObject) {
-                    if ([retrievedObject isKindOfClass:[CMISFolder class]])
+            parameters.repositoryId = repoInfo.identifier;
+            [parameters setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+            [CMISSession connectWithSessionParameters:parameters completionBlock:^(CMISSession *cmisSession, NSError *error){
+                if (nil == cmisSession)
+                {
+                    if(completionBlock)
                     {
-                        self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:retrievedObject];
-                    }
-                    else
-                    {
-                        
-                        log(@"*** authenticateWithOAuthData root folder appears not be a folder at all");
+                        completionBlock(nil, error);
                     }
                 }
                 else
                 {
-                    log(@"*** authenticateWithOAuthData error returning root folder %@ with code %d", [error localizedDescription], [error code]);
+                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
+                    [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
+                        if (nil == rootFolder)
+                        {
+                            if(completionBlock)
+                            {
+                                completionBlock(nil, error);
+                            }
+                        }
+                        else
+                        {
+                            self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
+                            if(completionBlock)
+                            {
+                                completionBlock(self, nil);
+                            }
+                        }
+                    }];
                     
                 }
-            }
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(self, error);
-                }
             }];
+            
         }
-    }];
+    };
+    return arrayCompletionBlock;
 }
 
 
@@ -432,6 +436,7 @@ This authentication method authorises the user to access the home network assign
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
     self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
+    log(@"**** baseURLWithoutNetwork = %@ ****", [self.baseURLWithoutNetwork absoluteString]);
     self.isUsingBaseAuthenticationProvider = YES;
     self.emailAddress = emailAddress;
     self.password = password;
@@ -498,70 +503,8 @@ This authentication method authorises the user to access the home network assign
     params.username = emailAddress;
     params.password = password;
     params.atomPubUrl = self.cmisUrl;
-    NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
-    [operationQueue addOperationWithBlock:^{
-        NSError *error = nil;
-        NSArray *repositories = [CMISSession arrayOfRepositories:params error:&error];
-        if(error)
-        {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(nil, error);
-                }
-            }];
-        }
-        else if(repositories.count == 0)
-        {
-            error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoRepositoryFound];
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(nil, error);
-                }
-            }];
-        }
-        else
-        {
-            // we only use the first repository
-            CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
-            
-            params.repositoryId = repoInfo.identifier;
-            
-            // enable Alfresco mode in CMIS Session
-//            [params setObject:kAlfrescoCMISSessionMode forKey:kCMISSessionParameterMode];
-            [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
-            
-            // create the session using the paramters
-            CMISSession *cmisSession = [[CMISSession alloc] initWithSessionParameters:params];
-            [self.sessionData setObject:cmisSession forKey:kAlfrescoSessionKeyCmisSession];
-            
-            id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
-            [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-            
-            BOOL authenticated = [cmisSession authenticateAndReturnError:&error];
-            if (authenticated == YES)
-            {
-                self.personIdentifier = emailAddress;
-                AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
-                self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
-                
-                CMISObject *retrievedObject = [cmisSession retrieveRootFolderAndReturnError:&error];
-                if (nil != retrievedObject) {
-                    if ([retrievedObject isKindOfClass:[CMISFolder class]])
-                    {
-                        self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:retrievedObject];
-                    }
-                }
-            }
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if(completionBlock)
-                {
-                    completionBlock(self, error);
-                }
-            }];
-        }
-    }];
+    AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params completionBlock:completionBlock];
+    [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
 }
 
 /**
@@ -645,6 +588,7 @@ This authentication method authorises the user to access the home network assign
         return nil;
     }
     NSError *error = nil;
+    log(@"****** NETWORK JSON DATA RETURN: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if (nil == jsonDictionary)
     {

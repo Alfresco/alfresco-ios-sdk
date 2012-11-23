@@ -23,14 +23,15 @@
 *
 * Will be nil for root folder and non-fileable objects.
 */
-- (NSArray *)retrieveParentsAndReturnError:(NSError * *)error;
-
+- (void)retrieveParentsWithCompletionBlock:(void (^)(NSArray *parentFolders, NSError *error))completionBlock;
 
 /**
 * Returns all the parents of this object as an array of CMISFolder objects.
 *
 * Will be nil for root folder and non-fileable objects.
 */
-- (NSArray *)retrieveParentsWithOperationContext:(CMISOperationContext *)operationContext andReturnError:(NSError * *)error;
+- (void)retrieveParentsWithOperationContext:(CMISOperationContext *)operationContext 
+                            completionBlock:(void (^)(NSArray *parentFolders, NSError *error))completionBlock;
+
 
 @end

@@ -28,18 +28,13 @@
 extern NSString * const kCMISSessionParameterObjectConverterClassName;
 
 /**
- * Key for setting the size of the cache of links.
+ * Key for setting the value of the cache of links.
  * Value should be an NSNumber, indicating the amount of objects whose links will be cached.
  */
 extern NSString * const kCMISSessionParameterLinkCacheSize;
 
-/**
- * Key for setting the size of the type definition cache. Default is 50.
- * Value should be an NSNumber, indicating the amount of type definitions whose links will be cached.
- */
-extern NSString * const kCMISSessionParameterTypeDefinitionCacheSize;
-
-
+// TODO: Temporary, must be extracted into separate project
+extern NSString * const kCMISSessionParameterMode;
 
 @interface CMISSessionParameters : NSObject
 

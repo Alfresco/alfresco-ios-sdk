@@ -31,6 +31,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testRetrieveAllComments Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // get all comments
@@ -78,6 +79,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testRetrieveAllCommentsForNonExistingDocuments Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
         __weak AlfrescoCommentService *weakService = self.commentService;
@@ -99,22 +101,22 @@
                                        STAssertTrue(document.contentLength > 100, @"expected content to be filled");
                                        
                                        // delete the test document
-                                       [dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                       [dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
                                         {
                                             if (!success)
                                             {
                                                 super.lastTestSuccessful = NO;
-                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
                                                 super.callbackCompleted = YES;
                                             }
                                             else
                                             {
-                                                [weakService retrieveCommentsForNode:document completionBlock:^(NSArray *comments, NSError *error){
+                                                [weakService retrieveCommentsForNode:document completionBlock:^(NSArray *comments, NSError *commentError){
                                                     if (nil == comments)
                                                     {
                                                         super.lastTestSuccessful = YES;
-                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
-                                                        log(@"Expected error %@",errorMsg);
+                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [commentError localizedDescription], [commentError localizedFailureReason]];
+                                                        log(@"**** Expected error when adding a comment to a non-existing node %@",errorMsg);
                                                     }
                                                     else
                                                     {
@@ -145,6 +147,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testRetrieveAllCommentsWithPaging Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
@@ -183,11 +186,12 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndDeleteComment Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
         {
             if (nil == comment) 
             {
@@ -259,11 +263,12 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndUpdateCommentNonExisting Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {
@@ -347,6 +352,7 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndDeleteForNonExistingDocument Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
         __weak AlfrescoCommentService *weakService = self.commentService;
@@ -368,21 +374,21 @@
                                   STAssertTrue(document.contentLength > 100, @"expected content to be filled");
                                   
                                   // delete the test document
-                                  [dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                  [dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
                                    {
                                        if (!success)
                                        {
                                            super.lastTestSuccessful = NO;
-                                           super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                           super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
                                            super.callbackCompleted = YES;
                                        }
                                        else
                                        {
-                                           [weakService addCommentToNode:document content:@"blabla" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error){
+                                           [weakService addCommentToNode:document content:@"blabla" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *commentError){
                                                if (nil == comment)
                                                {
                                                    super.lastTestSuccessful = YES;
-                                                   NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                                                   NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [commentError localizedDescription], [commentError localizedFailureReason]];
                                                    log(@"Expected error %@",errorMsg);
                                                }
                                                else
@@ -417,12 +423,13 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndDeleteCommentEULanguages Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"Übersicht Ändern Östrogen und das mit ß";
         __block NSString *title = @"Änderungswünsche";
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {
@@ -499,12 +506,13 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddAndDeleteCommentJPLanguages Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"ありがと　にほんご";
         __block NSString *title = @"わさび";
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {
@@ -582,11 +590,12 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddUpdateAndDeleteComment Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
         {
             if (nil == comment) 
             {
@@ -648,12 +657,13 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddUpdateAndDeleteCommentEULanguages Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"Übersicht Ändern Östrogen und das mit ß";
         
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {
@@ -715,12 +725,13 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
+        log(@"<<< testAddUpdateAndDeleteCommentJPLanguage Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"ありがと　にほんご";
         
         
         // add a comment
         __weak AlfrescoCommentService *weakCommentService = self.commentService;
-        [weakCommentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
+        [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
              {

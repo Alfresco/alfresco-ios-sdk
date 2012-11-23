@@ -21,25 +21,17 @@
 
 @interface CMISObjectConverter : NSObject
 
-/**
- * Initializes an instance of this class.
- */
 - (id)initWithSession:(CMISSession *)session;
 
-/**
- * Converts data received by the server to a CmisObject (document, folder, etc.)
- */
 - (CMISObject *)convertObject:(CMISObjectData *)objectData;
-
-/**
- * Convenience method that converts a list of objects at once.
- */
 - (CMISCollection *)convertObjects:(NSArray *)objects;
 
 /**
  * Converts the given dictionary of properties, where the key is the property id and the value
  * can be a CMISPropertyData or a regular string.
  */
-- (CMISProperties *)convertProperties:(NSDictionary *)properties forObjectTypeId:(NSString *)objectTypeId error:(NSError **)error;
+- (void)convertProperties:(NSDictionary *)properties 
+          forObjectTypeId:(NSString *)objectTypeId 
+          completionBlock:(void (^)(CMISProperties *convertedProperties, NSError *error))completionBlock;
 
 @end

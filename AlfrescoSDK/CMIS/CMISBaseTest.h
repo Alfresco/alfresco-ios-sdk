@@ -15,12 +15,6 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "CMISDocument.h"
 
-/**
-* All tests that create content should put the content in this folder.
-* This folder will be cleaned before each test run, to make sure there is no any garbage left from previous tests.
-*/
-#define CMIS_TEST_FOLDER @"cmis-test-folder"
-
 @class CMISFolder;
 @class CMISSession;
 @class CMISSessionParameters;
@@ -32,8 +26,7 @@ typedef void (^CMISTestBlock)(void);
 @property (nonatomic, strong) CMISSessionParameters *parameters;
 @property (nonatomic, strong) CMISSession *session;
 @property (nonatomic, strong) CMISFolder *rootFolder;
-@property (nonatomic, strong) CMISFolder *testFolder;
-@property BOOL callbackCompleted;
+@property BOOL testCompleted;
 
 #pragma mark Running the test
 
@@ -48,16 +41,15 @@ typedef void (^CMISTestBlock)(void);
 
 #pragma mark Helper Methods
 
-- (CMISDocument *)retrieveVersionedTestDocument;
+- (void)retrieveVersionedTestDocumentWithCompletionBlock:(void (^)(CMISDocument *document))completionBlock;
 
-- (CMISDocument *)uploadTestFile;
+- (void)uploadTestFileWithCompletionBlock:(void (^)(CMISDocument *document))completionBlock;
+
+- (void)deleteDocumentAndVerify:(CMISDocument *)document completionBlock:(void (^)(void))completionBlock;
 
 - (void)waitForCompletion:(NSTimeInterval)timeoutSecs;
-
-- (void)deleteDocumentAndVerify:(CMISDocument *)document;
 
 - (NSDateFormatter *)testDateFormatter;
 
 - (NSString *)stringFromCurrentDate;
-
 @end

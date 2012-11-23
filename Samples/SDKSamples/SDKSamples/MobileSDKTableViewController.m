@@ -36,6 +36,8 @@
     self.samplesLabel.text = localized(@"samples_option");
     self.referenceLabel.text = localized(@"api_reference_option");
     self.learnMoreLabel.text = localized(@"learn_more_option");
+    
+    log(@"SDKSamples is using v%@ of the Alfresco SDK.", kAlfrescoSDKVersion);
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
