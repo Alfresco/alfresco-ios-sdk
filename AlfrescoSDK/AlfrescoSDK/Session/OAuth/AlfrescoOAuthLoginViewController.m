@@ -22,7 +22,7 @@
 #import "AlfrescoOAuthHelper.h"
 #import <Availability.h>
 
-@interface AlfrescoOAuthLoginViewController () <AlfrescoOAuthLoginDelegate>
+@interface AlfrescoOAuthLoginViewController ()
 @property (nonatomic, strong, readwrite) NSURLConnection    * connection;
 @property (nonatomic, strong, readwrite) NSMutableData      * receivedData;
 @property (nonatomic, copy, readwrite) AlfrescoOAuthCompletionBlock completionBlock;
@@ -30,6 +30,7 @@
 @property (nonatomic, strong, readwrite) NSString *baseURL;
 @property (nonatomic, strong, readwrite) NSDictionary *parameters;
 @property BOOL isLoginScreenLoad;
+@property BOOL hasValidAuthenticationCode;
 - (void)loadWebView;
 - (NSString *)authorizationCodeFromURL:(NSURL *)url;
 - (void)createActivityView;
@@ -47,6 +48,7 @@
 @synthesize baseURL = _baseURL;
 @synthesize parameters = _parameters;
 @synthesize activityIndicator = _activityIndicator;
+@synthesize hasValidAuthenticationCode = _hasValidAuthenticationCode;
 
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
@@ -317,7 +319,17 @@
 {
     log(@"UIWebviewDelegate didFailLoadWithError");
     log(@"Error occurred while loading page: %@ with code %d and reason %@", [error localizedDescription], [error code], [error localizedFailureReason]);
-    [self reloadAndReset];
+    if (nil != self.oauthDelegate)
+    {
+        if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
+        {
+            [self.oauthDelegate oauthLoginDidFailWithError:error];
+        }
+    }
+    else
+    {
+        [self reloadAndReset];        
+    }
 }
 
 #pragma NSURLConnection Delegate methods
@@ -339,22 +351,22 @@
     
     if (nil != code)
     {
+        self.hasValidAuthenticationCode = YES;
         AlfrescoOAuthHelper *helper = nil;
         if (nil != self.parameters)
         {
-            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:self.parameters delegate:self];
+            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:self.parameters delegate:self.oauthDelegate];
         }
         else
         {
-            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self];
+            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self.oauthDelegate];
         }
         [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
     }
     else
     {
         [self.activityIndicator stopAnimating];
-        UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not obtain authentication code from server. Possibly incorrect password/username" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        [alertview show];
+        self.hasValidAuthenticationCode = NO;
     }
 }
 
@@ -362,6 +374,13 @@
 {
     log(@"LoginViewController:connection error with message %@ and code %d", [error localizedDescription], [error code]);
     [self.activityIndicator stopAnimating];
+    if (nil != self.oauthDelegate)
+    {
+        if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
+        {
+            [self.oauthDelegate oauthLoginDidFailWithError:error];
+        }
+    }
     self.completionBlock(nil, error);
     [self reloadAndReset];
 }
@@ -369,15 +388,32 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     log(@"LoginViewController:connectionDidFinishLoading");
-}
-
-#pragma mark AlfrescoOAuthDelegate method
-/**
- if the oauth fails simply reload the webview. It could be that someone accidentally hit 'Deny' or put in the wrong username/password
- */
-- (void)oauthLoginDidFailWithError:(NSError *)error
-{
-    [self reloadAndReset];
+    if (!self.hasValidAuthenticationCode)
+    {
+        NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+        BOOL showAlert = NO;
+        if (nil != self.oauthDelegate)
+        {
+            if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
+            {
+                [self.oauthDelegate oauthLoginDidFailWithError:error];
+            }
+            else
+            {
+                showAlert = YES;
+            }
+        }
+        else
+        {
+            showAlert = YES;
+        }
+        if (showAlert)
+        {
+            UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not obtain authentication code from server. Possibly incorrect password/username" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alertview show];            
+        }
+        
+    }
 }
 
 @end

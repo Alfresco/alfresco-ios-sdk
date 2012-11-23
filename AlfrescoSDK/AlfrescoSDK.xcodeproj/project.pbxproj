@@ -97,6 +97,7 @@
 		4E3FE892165E192500BDAB31 /* AlfrescoCMISObjectConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3FE88A165E192500BDAB31 /* AlfrescoCMISObjectConverter.m */; };
 		4E3FE893165E192500BDAB31 /* AlfrescoCMISUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E3FE88B165E192500BDAB31 /* AlfrescoCMISUtil.h */; };
 		4E3FE894165E192500BDAB31 /* AlfrescoCMISUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3FE88C165E192500BDAB31 /* AlfrescoCMISUtil.m */; };
+		4E3FE89D165E805700BDAB31 /* AlfrescoOAuthLoginDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E3FE89C165E805700BDAB31 /* AlfrescoOAuthLoginDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E4E379715DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E4E379515DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h */; };
 		4E4E379815DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4E379615DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.m */; };
 		4E4E379C15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E4E379A15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h */; };
@@ -347,6 +348,7 @@
 		4E3FE88A165E192500BDAB31 /* AlfrescoCMISObjectConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCMISObjectConverter.m; path = CMIS/AlfrescoCMIS/AlfrescoCMISObjectConverter.m; sourceTree = SOURCE_ROOT; };
 		4E3FE88B165E192500BDAB31 /* AlfrescoCMISUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCMISUtil.h; path = CMIS/AlfrescoCMIS/AlfrescoCMISUtil.h; sourceTree = SOURCE_ROOT; };
 		4E3FE88C165E192500BDAB31 /* AlfrescoCMISUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCMISUtil.m; path = CMIS/AlfrescoCMIS/AlfrescoCMISUtil.m; sourceTree = SOURCE_ROOT; };
+		4E3FE89C165E805700BDAB31 /* AlfrescoOAuthLoginDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthLoginDelegate.h; path = OAuth/AlfrescoOAuthLoginDelegate.h; sourceTree = "<group>"; };
 		4E4E379515DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoPlaceholderTaggingService.h; path = PlaceholderServices/AlfrescoPlaceholderTaggingService.h; sourceTree = "<group>"; };
 		4E4E379615DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoPlaceholderTaggingService.m; path = PlaceholderServices/AlfrescoPlaceholderTaggingService.m; sourceTree = "<group>"; };
 		4E4E379A15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudTaggingService.h; path = CloudServices/AlfrescoCloudTaggingService.h; sourceTree = "<group>"; };
@@ -547,6 +549,7 @@
 				4E80E8E71614438700922D5D /* AlfrescoOAuthHelper.m */,
 				4E0C866A1612EB32008B71DB /* AlfrescoOAuthLoginViewController.h */,
 				4E0C866B1612EB32008B71DB /* AlfrescoOAuthLoginViewController.m */,
+				4E3FE89C165E805700BDAB31 /* AlfrescoOAuthLoginDelegate.h */,
 			);
 			name = OAuth;
 			sourceTree = "<group>";
@@ -988,6 +991,7 @@
 				4EB077D815B00EE800DF7DED /* AlfrescoVersionService.h in Headers */,
 				4E0457C21608C124005A6C76 /* AlfrescoOAuthData.h in Headers */,
 				4E0C866C1612EB32008B71DB /* AlfrescoOAuthLoginViewController.h in Headers */,
+				4E3FE89D165E805700BDAB31 /* AlfrescoOAuthLoginDelegate.h in Headers */,
 				4E80E8E81614438800922D5D /* AlfrescoOAuthHelper.h in Headers */,
 				4E90EE7C15D25F9200302F5D /* AlfrescoConstants.h in Headers */,
 				4E6380CD15B976200010E05F /* AlfrescoISO8601DateFormatter.h in Headers */,

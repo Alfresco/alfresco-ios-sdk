@@ -24,7 +24,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoOAuthData : NSObject
+@interface AlfrescoOAuthData : NSObject <NSCoding>
 @property (nonatomic, strong, readonly) NSString * accessToken;
 @property (nonatomic, strong, readonly) NSString * refreshToken;
 @property (nonatomic, strong, readonly) NSNumber * expiresIn;
