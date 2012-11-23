@@ -20,6 +20,7 @@
 
 @implementation AlfrescoInternalConstants
 
+NSString * const kAlfrescoISO8601DateStringFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZ";
 /**
  CMIS constants
  */

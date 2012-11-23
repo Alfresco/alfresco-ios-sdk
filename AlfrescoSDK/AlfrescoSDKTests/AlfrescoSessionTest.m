@@ -18,6 +18,8 @@
 
 #import "AlfrescoSessionTest.h"
 #import "AlfrescoListingContext.h"
+#import "AlfrescoOAuthData.h"
+#import "AlfrescoInternalConstants.h"
 
 @implementation AlfrescoSessionTest
 
@@ -497,9 +499,47 @@
             
             super.lastTestSuccessful = YES;
         }
-        STAssertTrue(super.lastTestSuccessful, @"The session does not contian valid respository information");
+        STAssertTrue(super.lastTestSuccessful, @"The session does not contain valid respository information");
     }];
 }
 
+- (void)testOAuthSerialization
+{
+    [self runAllSitesTest:^{
+        
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+
+        NSString *apiKey = @"ThisIsMyAPIKey-For-Alfresco-In-The-Cloud";
+        NSString *secretKey = @"ThisIsMySecretKey-For-Alfresco-In-The-Cloud";
+        NSString *redirect = @"http://www.alfresco.com";
+        
+        NSString *accessToken = @"6dbe853d-8390-4a69-b3d5-20e2125fb6e4";
+        NSString *refreshToken = @"087ed018-c29e-4b69-8c94-95805dd03a4f";
+        NSNumber *expiresIn = [NSNumber numberWithInt:3600];
+        NSString *tokenType = @"Bearer";
+        NSString *scope = @"pub_api";
+        
+        [dictionary setObject:accessToken forKey:kAlfrescoJSONAccessToken];
+        [dictionary setObject:refreshToken forKey:kAlfrescoJSONRefreshToken];
+        
+        [dictionary setObject:expiresIn forKey:kAlfrescoJSONExpiresIn];
+        [dictionary setObject:tokenType forKey:kAlfrescoJSONTokenType];
+        [dictionary setObject:scope forKey:kAlfrescoJSONScope];
+        
+        AlfrescoOAuthData *origOAuthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirect jsonDictionary:dictionary];
+        NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:origOAuthData];
+        
+        AlfrescoOAuthData *archivedOAuthData = [NSKeyedUnarchiver unarchiveObjectWithData:archivedData];
+        STAssertTrue([apiKey isEqualToString:archivedOAuthData.apiKey], @"apiKey should be the same but we got %@", archivedOAuthData.apiKey);
+        STAssertTrue([secretKey isEqualToString:archivedOAuthData.secretKey], @"secretKey should be the same but we got %@", archivedOAuthData.secretKey);
+        STAssertTrue([redirect isEqualToString:archivedOAuthData.redirectURI], @"redirect should be the same but we got %@", archivedOAuthData.redirectURI);
+        STAssertTrue([accessToken isEqualToString:archivedOAuthData.accessToken], @"accessToken should be the same but we got %@", archivedOAuthData.accessToken);
+        STAssertTrue([refreshToken isEqualToString:archivedOAuthData.refreshToken], @"refreshToken should be the same but we got %@", archivedOAuthData.refreshToken);
+        STAssertTrue([tokenType isEqualToString:archivedOAuthData.tokenType], @"tokenType should be the same but we got %@", archivedOAuthData.tokenType);
+        STAssertTrue([scope isEqualToString:archivedOAuthData.scope], @"scope should be the same but we got %@", archivedOAuthData.scope);
+        STAssertEquals(3600, [archivedOAuthData.expiresIn intValue], @"Expires in should be 3600, but instead it is %d",[archivedOAuthData.expiresIn intValue]);
+        
+    }];
+}
 
 @end

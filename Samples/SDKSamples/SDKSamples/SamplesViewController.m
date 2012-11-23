@@ -30,13 +30,6 @@
 @end
 
 @implementation SamplesViewController
-@synthesize browseCompanyLabel = _browseCompanyLabel;
-@synthesize browseSitesLabel = _browseSitesLabel;
-@synthesize browseFavouriteSitesLabel = _browseFavouriteSitesLabel;
-@synthesize browseAllSitesLabel = _browseAllSitesLabel;
-@synthesize browseActivitiesLabel = _browseActivitiesLabel;
-@synthesize searchLabel = _searchLabel;
-
 @synthesize connectionDetailsProvided = _connectionDetailsProvided;
 @synthesize session = _session;
 
@@ -47,12 +40,7 @@
 {
     [super viewDidLoad];
     self.navigationItem.title = localized(@"sample_title");
-    self.browseCompanyLabel.text = localized(@"sample_browse_company_home_option");
-    self.browseSitesLabel.text = localized(@"sample_browse_my_sites_option");
-    self.browseFavouriteSitesLabel.text = localized(@"sample_browse_favourite_sites_option");
-    self.browseAllSitesLabel.text = localized(@"sample_browse_all_sites_option");
-    self.browseActivitiesLabel.text = localized(@"sample_activities_option");
-    self.searchLabel.text = localized(@"sample_search_option");
+
 }
 
 
@@ -65,6 +53,82 @@
     else 
     {
         return YES;
+    }
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
+    {
+        return 7;
+    }
+    else
+    {
+        return 6;
+    }
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellIdentifier = @"samplesCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    switch (indexPath.row)
+    {
+        case 0:
+            cell.textLabel.text = localized(@"sample_browse_favourite_sites_option");
+            break;
+        case 1:
+            cell.textLabel.text = localized(@"sample_browse_my_sites_option");
+            break;
+        case 2:
+            cell.textLabel.text = localized(@"sample_browse_all_sites_option");
+            break;
+        case 3:
+            cell.textLabel.text = localized(@"sample_browse_company_home_option");
+            break;
+        case 4:
+            cell.textLabel.text = localized(@"sample_activities_option");
+            break;
+        case 5:
+            cell.textLabel.text = localized(@"sample_search_option");
+            break;
+        case 6:
+            cell.textLabel.text = @"Refresh access";
+            break;
+    }
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch (indexPath.row)
+    {
+        case 0:
+            [self performSegueWithIdentifier:@"browseFavoriteSites" sender:self];
+            break;
+        case 1:
+            [self performSegueWithIdentifier:@"browseMySites" sender:self];
+            break;
+        case 2:
+            [self performSegueWithIdentifier:@"browseAllSites" sender:self];
+            break;
+        case 3:
+            [self performSegueWithIdentifier:@"browseCompanyHome" sender:self];
+            break;
+        case 4:
+            [self performSegueWithIdentifier:@"activities" sender:self];
+            break;
+        case 5:
+            [self performSegueWithIdentifier:@"search" sender:self];
+            break;
+        case 6:
+            break;
     }
 }
 
