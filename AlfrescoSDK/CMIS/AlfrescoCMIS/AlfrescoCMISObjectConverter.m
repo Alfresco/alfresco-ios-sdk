@@ -330,7 +330,7 @@
     NSMutableArray *aspects = [NSMutableArray array];
     for (CMISTypeDefinition * type in typeArray)
     {
-        if (![type.id hasPrefix:@"cmis:"])
+        if (![type.id hasPrefix:@"cmis:"] && ![type.id hasPrefix:@"D:"] && ![type.id hasPrefix:@"F:"])
         {
             [aspects addObject:type];
         }
