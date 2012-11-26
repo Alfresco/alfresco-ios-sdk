@@ -1,4 +1,0 @@
-Documentation set was installed to Xcode!
-
-Path: /Users/pschmidt/Library/Developer/Shared/Documentation/DocSets/com.alfresco.alfrescosdk.AlfrescoSDK.docset
-Time: 2012-11-23 12:28:05 +0000
