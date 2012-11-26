@@ -55,6 +55,8 @@ extern NSString * const kAlfrescoTestDataFolder;
 
 @property (nonatomic, assign) BOOL isCloud;
 
++ (NSString *)testFileNameFromFilename:(NSString *)filename;
+
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock;
 - (void)authenticateOnPremiseServer;
 - (void)authenticateCloudServer;
