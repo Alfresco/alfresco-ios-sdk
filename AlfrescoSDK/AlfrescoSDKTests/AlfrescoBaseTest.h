@@ -22,10 +22,13 @@
 #import "AlfrescoDocument.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoSiteService.h"
+#import "CMISSession.h"
+#import "CMISFolder.h"
 
 #define TIMEINTERVAL 120
 
 typedef void (^AlfrescoTestBlock)(void);
+typedef void (^CMISTestBlock)(void);
 typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
 
 extern NSString * const kAlfrescoTestDataFolder;
@@ -52,10 +55,14 @@ extern NSString * const kAlfrescoTestDataFolder;
 @property (nonatomic, strong) NSString *testFolderPathName;
 @property (nonatomic, strong) NSString *fixedFileName;
 @property (nonatomic, strong) AlfrescoContentFile *testImageFile;
-
+@property (nonatomic, strong) CMISSession *cmisSession;
+@property (nonatomic, strong) CMISFolder *cmisRootFolder;
 @property (nonatomic, assign) BOOL isCloud;
 
++ (NSString *)testFileNameFromEnviroment:(NSString *)filename;
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock;
+- (void) runCMISTest:(CMISTestBlock)cmisTestBlock;
+- (void) setUpCMISSession;
 - (void)authenticateOnPremiseServer;
 - (void)authenticateCloudServer;
 
