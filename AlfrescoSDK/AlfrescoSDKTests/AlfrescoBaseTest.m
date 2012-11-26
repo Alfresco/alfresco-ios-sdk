@@ -18,6 +18,7 @@
 
 #import "AlfrescoBaseTest.h"
 #import "AlfrescoContentFile.h"
+#import "CMISConstants.h"
 
 NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 
@@ -25,7 +26,6 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 @property (nonatomic, strong) NSString * testPassword;
 - (void) uploadTestDocument:(NSString *)filePath;
 - (void) parseEnvironmentDictionary:(NSDictionary *)plistDictionary;
-+ (NSString *)testFileNameFromEnviroment:(NSString *)filename;
 - (void) setUpTestImageFile:(NSString *)filePath;
 - (void) setUpTestChildFolder;
 - (void) resetTestVariables;
@@ -68,7 +68,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     
 }
 
-+ (NSString *)testFileNameFromEnviroment:(NSString *)filename
++ (NSString *)testFileNameFromFilename:(NSString *)filename
 {
     NSDate *currentDate = [NSDate date];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -85,12 +85,14 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 {
     NSURL *fileUrl = [NSURL URLWithString:filePath];
 
-    NSString *newName = [AlfrescoBaseTest testFileNameFromEnviroment:[fileUrl lastPathComponent]];
+    NSString *newName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"text/plain"];
-    NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+    NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
+    [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
     [props setObject:@"test file description" forKey:@"cm:description"];
     [props setObject:@"test file title" forKey:@"cm:title"];
+    [props setObject:@"test author" forKey:@"cm:author"];
     log(@"***************** uploadTestDocument Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
 
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
