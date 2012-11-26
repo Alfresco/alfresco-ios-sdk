@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoTaggingService.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoTaggingService</TokenIdentifier>
+			<Abstract type="html">The AlfrescoTaggingService provides various ways to retrieve tags and can add tags to a node
+in a Alfresco repository.</Abstract>
+			<DeclaredIn>AlfrescoTaggingService.h</DeclaredIn>
+			
+			<NodeRef refid="31"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoTaggingService/initWithSession:</TokenIdentifier>
+			<Abstract type="html">Initialises with a standard Cloud or OnPremise session</Abstract>
+			<DeclaredIn>AlfrescoTaggingService.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithSession:(id&lt;AlfrescoSession&gt;)session</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">the AlfrescoSession to initialise the site service with.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/initWithSession:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoTaggingService/retrieveAllTagsWithCompletionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all tags available in the repository.</Abstract>
+			<DeclaredIn>AlfrescoTaggingService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved tags in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveAllTagsWithCompletionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoTaggingService/retrieveAllTagsWithListingContext:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all tags available in the repository with a listing context.</Abstract>
+			<DeclaredIn>AlfrescoTaggingService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>listingContext</Name>
+					<Abstract type="html">The listing context with a paging definition that&apos;s used to retrieve the tags.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved tags in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveAllTagsWithListingContext:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoTaggingService/retrieveTagsForNode:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all tags applied to a given node.</Abstract>
+			<DeclaredIn>AlfrescoTaggingService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveTagsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>node</Name>
+					<Abstract type="html">The node for which the tags should be retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved tags in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveTagsForNode:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoTaggingService/retrieveTagsForNode:listingContext:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all tags applied to a given node with a listing context.</Abstract>
+			<DeclaredIn>AlfrescoTaggingService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveTagsForNode:(AlfrescoNode *)node listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>node</Name>
+					<Abstract type="html">The node for which the tags should be retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>listingContext</Name>
+					<Abstract type="html">The listing context with a paging definition that&apos;s used to retrieve the tags.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved tags in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveTagsForNode:listingContext:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoTaggingService/addTags:toNode:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Adds the given tags to the given node.</Abstract>
+			<DeclaredIn>AlfrescoTaggingService.h</DeclaredIn>			
+			
+			<Declaration>- (void)addTags:(NSArray *)tags toNode:(AlfrescoNode *)node completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>tags</Name>
+					<Abstract type="html">The tags that should be added.</Abstract>
+				</Parameter><Parameter>
+					<Name>node</Name>
+					<Abstract type="html">The node to which the tags should be added.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved tags in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/addTags:toNode:completionBlock:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

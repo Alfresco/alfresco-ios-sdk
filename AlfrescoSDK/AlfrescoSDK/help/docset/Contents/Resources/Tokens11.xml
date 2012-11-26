@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoFolder.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoFolder</TokenIdentifier>
+			<Abstract type="html">The AlfrescoFolder represents a folder in an Alfresco repository.</Abstract>
+			<DeclaredIn>AlfrescoFolder.h</DeclaredIn>
+			
+			<NodeRef refid="11"/>
+		</Token>
+		
+		
+	</File>
+</Tokens>

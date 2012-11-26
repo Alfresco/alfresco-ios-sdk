@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoNode.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoNode</TokenIdentifier>
+			<Abstract type="html">The AlfrescoNode represents a node that&apos;s stored in the Alfresco repository.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>
+			
+			<NodeRef refid="14"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setIdentifier:</TokenIdentifier>
+			<Abstract type="html">The unique identifier of the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *identifier</Declaration>
+			
+			
+			<Anchor>//api/name/identifier</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/identifier</TokenIdentifier>
+			<Abstract type="html">The unique identifier of the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *identifier</Declaration>
+			
+			
+			<Anchor>//api/name/identifier</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setName:</TokenIdentifier>
+			<Abstract type="html">The name of the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *name</Declaration>
+			
+			
+			<Anchor>//api/name/name</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/name</TokenIdentifier>
+			<Abstract type="html">The name of the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *name</Declaration>
+			
+			
+			<Anchor>//api/name/name</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setTitle:</TokenIdentifier>
+			<Abstract type="html">The title of the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *title</Declaration>
+			
+			
+			<Anchor>//api/name/title</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/title</TokenIdentifier>
+			<Abstract type="html">The title of the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *title</Declaration>
+			
+			
+			<Anchor>//api/name/title</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setSummary:</TokenIdentifier>
+			<Abstract type="html">The description of the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *summary</Declaration>
+			
+			
+			<Anchor>//api/name/summary</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/summary</TokenIdentifier>
+			<Abstract type="html">The description of the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *summary</Declaration>
+			
+			
+			<Anchor>//api/name/summary</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setType:</TokenIdentifier>
+			<Abstract type="html">The object type of the node i.e. cm:content.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *type</Declaration>
+			
+			
+			<Anchor>//api/name/type</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/type</TokenIdentifier>
+			<Abstract type="html">The object type of the node i.e. cm:content.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *type</Declaration>
+			
+			
+			<Anchor>//api/name/type</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setCreatedBy:</TokenIdentifier>
+			<Abstract type="html">The id of the user that created the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *createdBy</Declaration>
+			
+			
+			<Anchor>//api/name/createdBy</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/createdBy</TokenIdentifier>
+			<Abstract type="html">The id of the user that created the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *createdBy</Declaration>
+			
+			
+			<Anchor>//api/name/createdBy</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setCreatedAt:</TokenIdentifier>
+			<Abstract type="html">The date the node was created.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDate *createdAt</Declaration>
+			
+			
+			<Anchor>//api/name/createdAt</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/createdAt</TokenIdentifier>
+			<Abstract type="html">The date the node was created.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDate *createdAt</Declaration>
+			
+			
+			<Anchor>//api/name/createdAt</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setModifiedBy:</TokenIdentifier>
+			<Abstract type="html">The id of the user that last modified the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *modifiedBy</Declaration>
+			
+			
+			<Anchor>//api/name/modifiedBy</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/modifiedBy</TokenIdentifier>
+			<Abstract type="html">The id of the user that last modified the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *modifiedBy</Declaration>
+			
+			
+			<Anchor>//api/name/modifiedBy</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setModifiedAt:</TokenIdentifier>
+			<Abstract type="html">The date the node was last modified.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDate *modifiedAt</Declaration>
+			
+			
+			<Anchor>//api/name/modifiedAt</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/modifiedAt</TokenIdentifier>
+			<Abstract type="html">The date the node was last modified.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDate *modifiedAt</Declaration>
+			
+			
+			<Anchor>//api/name/modifiedAt</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setProperties:</TokenIdentifier>
+			<Abstract type="html">A dictionary of AlfrescoProperty objects representing the properties stored on the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDictionary *properties</Declaration>
+			
+			
+			<Anchor>//api/name/properties</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/properties</TokenIdentifier>
+			<Abstract type="html">A dictionary of AlfrescoProperty objects representing the properties stored on the node.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDictionary *properties</Declaration>
+			
+			
+			<Anchor>//api/name/properties</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setAspects:</TokenIdentifier>
+			<Abstract type="html">The list of aspects the node has applied.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSArray *aspects</Declaration>
+			
+			
+			<Anchor>//api/name/aspects</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/aspects</TokenIdentifier>
+			<Abstract type="html">The list of aspects the node has applied.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSArray *aspects</Declaration>
+			
+			
+			<Anchor>//api/name/aspects</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setIsFolder:</TokenIdentifier>
+			<Abstract type="html">Specifies whether this node represents a folder.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL isFolder</Declaration>
+			
+			
+			<Anchor>//api/name/isFolder</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/isFolder</TokenIdentifier>
+			<Abstract type="html">Specifies whether this node represents a folder.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL isFolder</Declaration>
+			
+			
+			<Anchor>//api/name/isFolder</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/setIsDocument:</TokenIdentifier>
+			<Abstract type="html">Specifies whether this node represents a document.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL isDocument</Declaration>
+			
+			
+			<Anchor>//api/name/isDocument</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoNode/isDocument</TokenIdentifier>
+			<Abstract type="html">Specifies whether this node represents a document.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL isDocument</Declaration>
+			
+			
+			<Anchor>//api/name/isDocument</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/propertyValueWithName:</TokenIdentifier>
+			<Abstract type="html">Returns the value of a property with the given name, nil will be returned if a property with the given name does not exist.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>- (id)propertyValueWithName:(NSString *)propertyName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>propertyName</Name>
+					<Abstract type="html">The name of the property for which the value will be retrieved.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/propertyValueWithName:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoNode/hasAspectWithName:</TokenIdentifier>
+			<Abstract type="html">Determines whether the node has an aspect with the given name applied.</Abstract>
+			<DeclaredIn>AlfrescoNode.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)hasAspectWithName:(NSString *)aspectName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>aspectName</Name>
+					<Abstract type="html">The name of the aspect that will be searched for.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/hasAspectWithName:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

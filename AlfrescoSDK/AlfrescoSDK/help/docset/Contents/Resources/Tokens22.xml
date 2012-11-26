@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoProperty.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoProperty</TokenIdentifier>
+			<Abstract type="html">The AlfrescoProperty represents a property that&apos;s associated with a specific node.</Abstract>
+			<DeclaredIn>AlfrescoProperty.h</DeclaredIn>
+			
+			<NodeRef refid="22"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoProperty/setType:</TokenIdentifier>
+			<Abstract type="html">The data type of the property</Abstract>
+			<DeclaredIn>AlfrescoProperty.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) AlfrescoPropertyType type</Declaration>
+			
+			
+			<Anchor>//api/name/type</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoProperty/type</TokenIdentifier>
+			<Abstract type="html">The data type of the property</Abstract>
+			<DeclaredIn>AlfrescoProperty.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) AlfrescoPropertyType type</Declaration>
+			
+			
+			<Anchor>//api/name/type</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoProperty/setIsMultiValued:</TokenIdentifier>
+			<Abstract type="html">Specifies whether the property value is multi-valued.</Abstract>
+			<DeclaredIn>AlfrescoProperty.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL isMultiValued</Declaration>
+			
+			
+			<Anchor>//api/name/isMultiValued</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoProperty/isMultiValued</TokenIdentifier>
+			<Abstract type="html">Specifies whether the property value is multi-valued.</Abstract>
+			<DeclaredIn>AlfrescoProperty.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL isMultiValued</Declaration>
+			
+			
+			<Anchor>//api/name/isMultiValued</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoProperty/setValue:</TokenIdentifier>
+			<Abstract type="html">The value of the property.</Abstract>
+			<DeclaredIn>AlfrescoProperty.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) id value</Declaration>
+			
+			
+			<Anchor>//api/name/value</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoProperty/value</TokenIdentifier>
+			<Abstract type="html">The value of the property.</Abstract>
+			<DeclaredIn>AlfrescoProperty.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) id value</Declaration>
+			
+			
+			<Anchor>//api/name/value</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

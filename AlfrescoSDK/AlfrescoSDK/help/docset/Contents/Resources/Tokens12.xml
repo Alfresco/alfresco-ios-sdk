@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoKeywordSearchOptions.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoKeywordSearchOptions</TokenIdentifier>
+			<Abstract type="html">The AlfrescoKeywordSearchOptions are used in Alfresco Search Service.</Abstract>
+			<DeclaredIn>AlfrescoKeywordSearchOptions.h</DeclaredIn>
+			
+			<NodeRef refid="12"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoKeywordSearchOptions/initWithExactMatch:includeContent:</TokenIdentifier>
+			<Abstract type="html">@param exactMatch</Abstract>
+			<DeclaredIn>AlfrescoKeywordSearchOptions.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithExactMatch:(BOOL)exactMatch includeContent:(BOOL)includeContent</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>includeContent</Name>
+					<Abstract type="html">- searches also the content of files</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/initWithExactMatch:includeContent:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoKeywordSearchOptions/initWithFolder:includeDescendants:</TokenIdentifier>
+			<Abstract type="html">- the node to be searched</Abstract>
+			<DeclaredIn>AlfrescoKeywordSearchOptions.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithFolder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">- the node to be searched</Abstract>
+				</Parameter><Parameter>
+					<Name>includeDescendants</Name>
+					<Abstract type="html">- search sub-folders as well</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/initWithFolder:includeDescendants:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoKeywordSearchOptions/initWithExactMatch:includeContent:folder:includeDescendants:</TokenIdentifier>
+			<Abstract type="html">@param exactMatch</Abstract>
+			<DeclaredIn>AlfrescoKeywordSearchOptions.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithExactMatch:(BOOL)exactMatch includeContent:(BOOL)includeContent folder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>includeContent</Name>
+					<Abstract type="html">- searches also the content of files</Abstract>
+				</Parameter><Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">- the node to be searched</Abstract>
+				</Parameter><Parameter>
+					<Name>includeDescendants</Name>
+					<Abstract type="html">- search sub-folders as well</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/initWithExactMatch:includeContent:folder:includeDescendants:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

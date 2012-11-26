@@ -1,0 +1,1707 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>AlfrescoDocumentFolderService Class Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<meta name="viewport" content="width=550" />
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.0.5 (build 789)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">AlfrescoSDK </a></h1>
+				<a id="developerHome" href="../index.html">Alfresco</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">AlfrescoDocumentFolderService Class Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:</option>
+	
+	<option value="//api/name/createFolderWithName:inParentFolder:properties:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- createFolderWithName:inParentFolder:properties:completionBlock:</option>
+	
+	<option value="//api/name/deleteNode:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- deleteNode:completionBlock:</option>
+	
+	<option value="//api/name/initWithSession:">&nbsp;&nbsp;&nbsp;&nbsp;- initWithSession:</option>
+	
+	<option value="//api/name/retrieveChildrenInFolder:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveChildrenInFolder:completionBlock:</option>
+	
+	<option value="//api/name/retrieveChildrenInFolder:listingContext:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveChildrenInFolder:listingContext:completionBlock:</option>
+	
+	<option value="//api/name/retrieveContentOfDocument:completionBlock:progressBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveContentOfDocument:completionBlock:progressBlock:</option>
+	
+	<option value="//api/name/retrieveDocumentsInFolder:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveDocumentsInFolder:completionBlock:</option>
+	
+	<option value="//api/name/retrieveDocumentsInFolder:listingContext:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveDocumentsInFolder:listingContext:completionBlock:</option>
+	
+	<option value="//api/name/retrieveFoldersInFolder:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveFoldersInFolder:completionBlock:</option>
+	
+	<option value="//api/name/retrieveFoldersInFolder:listingContext:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveFoldersInFolder:listingContext:completionBlock:</option>
+	
+	<option value="//api/name/retrieveNodeWithFolderPath:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveNodeWithFolderPath:completionBlock:</option>
+	
+	<option value="//api/name/retrieveNodeWithFolderPath:relativeToFolder:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveNodeWithFolderPath:relativeToFolder:completionBlock:</option>
+	
+	<option value="//api/name/retrieveNodeWithIdentifier:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveNodeWithIdentifier:completionBlock:</option>
+	
+	<option value="//api/name/retrieveParentFolderOfNode:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveParentFolderOfNode:completionBlock:</option>
+	
+	<option value="//api/name/retrievePermissionsOfNode:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrievePermissionsOfNode:completionBlock:</option>
+	
+	<option value="//api/name/retrieveRenditionOfNode:renditionName:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveRenditionOfNode:renditionName:completionBlock:</option>
+	
+	<option value="//api/name/retrieveRootFolderWithCompletionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- retrieveRootFolderWithCompletionBlock:</option>
+	
+	<option value="//api/name/updateContentOfDocument:contentFile:completionBlock:progressBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- updateContentOfDocument:contentFile:completionBlock:progressBlock:</option>
+	
+	<option value="//api/name/updatePropertiesOfNode:properties:completionBlock:">&nbsp;&nbsp;&nbsp;&nbsp;- updatePropertiesOfNode:properties:completionBlock:</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Initialialisation">Initialialisation</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Creating folders and documents methods.">Creating folders and documents methods.</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Retrieval methods.">Retrieval methods.</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Updating/downloading documents and properties.">Updating/downloading documents and properties.</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Deletes a node.">Deletes a node.</a></span></li>
+	
+</ul></li>
+
+
+
+
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:">createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/createFolderWithName:inParentFolder:properties:completionBlock:">createFolderWithName:inParentFolder:properties:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/deleteNode:completionBlock:">deleteNode:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/initWithSession:">initWithSession:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveChildrenInFolder:completionBlock:">retrieveChildrenInFolder:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveChildrenInFolder:listingContext:completionBlock:">retrieveChildrenInFolder:listingContext:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveContentOfDocument:completionBlock:progressBlock:">retrieveContentOfDocument:completionBlock:progressBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveDocumentsInFolder:completionBlock:">retrieveDocumentsInFolder:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveDocumentsInFolder:listingContext:completionBlock:">retrieveDocumentsInFolder:listingContext:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveFoldersInFolder:completionBlock:">retrieveFoldersInFolder:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveFoldersInFolder:listingContext:completionBlock:">retrieveFoldersInFolder:listingContext:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveNodeWithFolderPath:completionBlock:">retrieveNodeWithFolderPath:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveNodeWithFolderPath:relativeToFolder:completionBlock:">retrieveNodeWithFolderPath:relativeToFolder:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveNodeWithIdentifier:completionBlock:">retrieveNodeWithIdentifier:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveParentFolderOfNode:completionBlock:">retrieveParentFolderOfNode:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrievePermissionsOfNode:completionBlock:">retrievePermissionsOfNode:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveRenditionOfNode:renditionName:completionBlock:">retrieveRenditionOfNode:renditionName:completionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/retrieveRootFolderWithCompletionBlock:">retrieveRootFolderWithCompletionBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/updateContentOfDocument:contentFile:completionBlock:progressBlock:">updateContentOfDocument:contentFile:completionBlock:progressBlock:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/updatePropertiesOfNode:properties:completionBlock:">updatePropertiesOfNode:properties:completionBlock:</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="AlfrescoDocumentFolderService Class Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">AlfrescoDocumentFolderService Class Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Inherits from</td>
+	<td class="specification-value">NSObject</td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">AlfrescoDocumentFolderService.h</td>
+</tr>
+						</tbody></table></div>
+					
+					
+					
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>The AlfrescoDocumentFolderService manages folders and documents of an Alfresco
+repository. The service provides methods to retrieve documents and folders, but also
+provides methods to create and update documents and folders.</p>
+
+<p>Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)</p>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						<a title="Initialialisation" name="task_Initialialisation"></a>
+						<h3 class="subsubtitle task-title">Initialialisation</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/initWithSession:">&ndash;&nbsp;initWithSession:</a></code>
+		<span class="tooltip"><p>Initialises with a standard Cloud or OnPremise session</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Creating folders and documents methods." name="task_Creating folders and documents methods."></a>
+						<h3 class="subsubtitle task-title">Creating folders and documents methods.</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/createFolderWithName:inParentFolder:properties:completionBlock:">&ndash;&nbsp;createFolderWithName:inParentFolder:properties:completionBlock:</a></code>
+		<span class="tooltip"><p>Creates a new folder using the given properties in the given folder.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:">&ndash;&nbsp;createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:</a></code>
+		<span class="tooltip"><p>Creates a new document using the contents of a local file. The new document is created within the given folder.</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Retrieval methods." name="task_Retrieval methods."></a>
+						<h3 class="subsubtitle task-title">Retrieval methods.</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveRootFolderWithCompletionBlock:">&ndash;&nbsp;retrieveRootFolderWithCompletionBlock:</a></code>
+		<span class="tooltip"><p>Called when the call completes</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrievePermissionsOfNode:completionBlock:">&ndash;&nbsp;retrievePermissionsOfNode:completionBlock:</a></code>
+		<span class="tooltip"><p>the node for which permissions are being queried</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveChildrenInFolder:completionBlock:">&ndash;&nbsp;retrieveChildrenInFolder:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves all the children of the given folder.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveChildrenInFolder:listingContext:completionBlock:">&ndash;&nbsp;retrieveChildrenInFolder:listingContext:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves all the children of the given folder with a listing context.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveDocumentsInFolder:completionBlock:">&ndash;&nbsp;retrieveDocumentsInFolder:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves all the documents in the given folder.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveDocumentsInFolder:listingContext:completionBlock:">&ndash;&nbsp;retrieveDocumentsInFolder:listingContext:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves all the documents in the given folder with a listing context.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveFoldersInFolder:completionBlock:">&ndash;&nbsp;retrieveFoldersInFolder:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves all the sub folders in the given folder.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveFoldersInFolder:listingContext:completionBlock:">&ndash;&nbsp;retrieveFoldersInFolder:listingContext:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves all the sub folders in the given folder with a listing context</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveNodeWithIdentifier:completionBlock:">&ndash;&nbsp;retrieveNodeWithIdentifier:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves a document or folder with the given node identifier.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveNodeWithFolderPath:completionBlock:">&ndash;&nbsp;retrieveNodeWithFolderPath:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves a node from the repository with the given folder path.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveNodeWithFolderPath:relativeToFolder:completionBlock:">&ndash;&nbsp;retrieveNodeWithFolderPath:relativeToFolder:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves a node from the repository with the given folder path relative to the given folder.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveParentFolderOfNode:completionBlock:">&ndash;&nbsp;retrieveParentFolderOfNode:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves the parent folder of the given node.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveRenditionOfNode:renditionName:completionBlock:">&ndash;&nbsp;retrieveRenditionOfNode:renditionName:completionBlock:</a></code>
+		<span class="tooltip"><p>Retrieves the thumbnail rendition file for the given node.</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Updating/downloading documents and properties." name="task_Updating/downloading documents and properties."></a>
+						<h3 class="subsubtitle task-title">Updating/downloading documents and properties.</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/retrieveContentOfDocument:completionBlock:progressBlock:">&ndash;&nbsp;retrieveContentOfDocument:completionBlock:progressBlock:</a></code>
+		<span class="tooltip"><p>Downloads the content of the given document and stores it in the given file. The delegate object
+will be informed when the content is downloaded.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/updateContentOfDocument:contentFile:completionBlock:progressBlock:">&ndash;&nbsp;updateContentOfDocument:contentFile:completionBlock:progressBlock:</a></code>
+		<span class="tooltip"><p>Updates a document with the contents of a local file.</p></span>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/updatePropertiesOfNode:properties:completionBlock:">&ndash;&nbsp;updatePropertiesOfNode:properties:completionBlock:</a></code>
+		<span class="tooltip"><p>Updates the properties of a specific node.</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Deletes a node." name="task_Deletes a node."></a>
+						<h3 class="subsubtitle task-title">Deletes a node.</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/deleteNode:completionBlock:">&ndash;&nbsp;deleteNode:completionBlock:</a></code>
+		<span class="tooltip"><p>Deletes an individual node from the Alfresco repository.</p></span>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:" title="createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:"></a>
+	<h3 class="subsubtitle method-title">createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Creates a new document using the contents of a local file. The new document is created within the given folder.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)createDocumentWithName:(NSString *)<em>documentName</em> inParentFolder:(AlfrescoFolder *)<em>folder</em> contentFile:(AlfrescoContentFile *)<em>file</em> properties:(NSDictionary *)<em>properties</em> completionBlock:(AlfrescoDocumentCompletionBlock)<em>completionBlock</em> progressBlock:(AlfrescoProgressBlock)<em>progressBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>documentName</em></dt>
+			<dd><p>The name of the document to be created in the repository</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folder</em></dt>
+			<dd><p>The parent folder to create the document in.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>file</em></dt>
+			<dd><p>The local file to be uploaded.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>properties</em></dt>
+			<dd><p>Additional properties that are used to create the document.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the created document in case the operation succeeds.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progressBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the upload progress.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Creates a new document using the contents of a local file. The new document is created within the given folder.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/createFolderWithName:inParentFolder:properties:completionBlock:" title="createFolderWithName:inParentFolder:properties:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">createFolderWithName:inParentFolder:properties:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Creates a new folder using the given properties in the given folder.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)createFolderWithName:(NSString *)<em>folderName</em> inParentFolder:(AlfrescoFolder *)<em>folder</em> properties:(NSDictionary *)<em>properties</em> completionBlock:(AlfrescoFolderCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folderName</em></dt>
+			<dd><p>The name of the folder to be created.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folder</em></dt>
+			<dd><p>The parent folder of the new folder.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>properties</em></dt>
+			<dd><p>Additional properties that are used to create the folder.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the created folder in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Creates a new folder using the given properties in the given folder.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/deleteNode:completionBlock:" title="deleteNode:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">deleteNode:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Deletes an individual node from the Alfresco repository.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)deleteNode:(AlfrescoNode *)<em>node</em> completionBlock:(AlfrescoBOOLCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>node</em></dt>
+			<dd><p>The node that needs to be deleted.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Deletes an individual node from the Alfresco repository.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/initWithSession:" title="initWithSession:"></a>
+	<h3 class="subsubtitle method-title">initWithSession:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Initialises with a standard Cloud or OnPremise session</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (id)initWithSession:(id&lt;AlfrescoSession&gt;)<em>session</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>session</em></dt>
+			<dd><p>the <a href="../Protocols/AlfrescoSession.html">AlfrescoSession</a> to initialise the site service with.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Initialises with a standard Cloud or OnPremise session</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveChildrenInFolder:completionBlock:" title="retrieveChildrenInFolder:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveChildrenInFolder:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves all the children of the given folder.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveChildrenInFolder:(AlfrescoFolder *)<em>folder</em> completionBlock:(AlfrescoArrayCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folder</em></dt>
+			<dd><p>The folder for which the children are retrieved.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved children in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves all the children of the given folder.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveChildrenInFolder:listingContext:completionBlock:" title="retrieveChildrenInFolder:listingContext:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveChildrenInFolder:listingContext:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves all the children of the given folder with a listing context.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveChildrenInFolder:(AlfrescoFolder *)<em>folder</em> listingContext:(AlfrescoListingContext *)<em>listingContext</em> completionBlock:(AlfrescoPagingResultCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folder</em></dt>
+			<dd><p>The folder for which the children are retrieved.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>listingContext</em></dt>
+			<dd><p>The listing context with a paging definition that&rsquo;s used to retrieve the children.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved children in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves all the children of the given folder with a listing context.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveContentOfDocument:completionBlock:progressBlock:" title="retrieveContentOfDocument:completionBlock:progressBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveContentOfDocument:completionBlock:progressBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Downloads the content of the given document and stores it in the given file. The delegate object
+will be informed when the content is downloaded.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveContentOfDocument:(AlfrescoDocument *)<em>document</em> completionBlock:(AlfrescoContentFileCompletionBlock)<em>completionBlock</em> progressBlock:(AlfrescoProgressBlock)<em>progressBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>document</em></dt>
+			<dd><p>The document that needs to be downloaded.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block containing an <a href="../Classes/AlfrescoContentFile.html">AlfrescoContentFile</a> and NSError object. error will be nil if successful. Otherwise, <a href="../Classes/AlfrescoContentFile.html">AlfrescoContentFile</a> will be nil.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progressBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the download progress.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Downloads the content of the given document and stores it in the given file. The delegate object
+will be informed when the content is downloaded.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveDocumentsInFolder:completionBlock:" title="retrieveDocumentsInFolder:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveDocumentsInFolder:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves all the documents in the given folder.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)<em>folder</em> completionBlock:(AlfrescoArrayCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folder</em></dt>
+			<dd><p>The folder for which the documents are retrieved.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved documents in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves all the documents in the given folder.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveDocumentsInFolder:listingContext:completionBlock:" title="retrieveDocumentsInFolder:listingContext:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveDocumentsInFolder:listingContext:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves all the documents in the given folder with a listing context.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)<em>folder</em> listingContext:(AlfrescoListingContext *)<em>listingContext</em> completionBlock:(AlfrescoPagingResultCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folder</em></dt>
+			<dd><p>The folder for which the documents are retrieved.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>listingContext</em></dt>
+			<dd><p>The listing context with a paging definition that&rsquo;s used to retrieve the documents.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved documents in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves all the documents in the given folder with a listing context.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveFoldersInFolder:completionBlock:" title="retrieveFoldersInFolder:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveFoldersInFolder:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves all the sub folders in the given folder.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveFoldersInFolder:(AlfrescoFolder *)<em>folder</em> completionBlock:(AlfrescoArrayCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folder</em></dt>
+			<dd><p>The folder for which the sub folders are retrieved.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved sub folders in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves all the sub folders in the given folder.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveFoldersInFolder:listingContext:completionBlock:" title="retrieveFoldersInFolder:listingContext:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveFoldersInFolder:listingContext:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves all the sub folders in the given folder with a listing context</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveFoldersInFolder:(AlfrescoFolder *)<em>folder</em> listingContext:(AlfrescoListingContext *)<em>listingContext</em> completionBlock:(AlfrescoPagingResultCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folder</em></dt>
+			<dd><p>The folder for which the sub folders are retrieved.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>listingContext</em></dt>
+			<dd><p>The listing context with a paging definition that&rsquo;s used to retrieve the sub folders.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved sub folders in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves all the sub folders in the given folder with a listing context</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveNodeWithFolderPath:completionBlock:" title="retrieveNodeWithFolderPath:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveNodeWithFolderPath:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves a node from the repository with the given folder path.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveNodeWithFolderPath:(NSString *)<em>path</em> completionBlock:(AlfrescoNodeCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>path</em></dt>
+			<dd><p>The folder path that&rsquo;s used to query for a specific node.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved node in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves a node from the repository with the given folder path.</p>
+
+<p>An folder path can be for example:</p>
+
+<p>/important.docx
+/work/example.pptx</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveNodeWithFolderPath:relativeToFolder:completionBlock:" title="retrieveNodeWithFolderPath:relativeToFolder:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveNodeWithFolderPath:relativeToFolder:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves a node from the repository with the given folder path relative to the given folder.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveNodeWithFolderPath:(NSString *)<em>path</em> relativeToFolder:(AlfrescoFolder *)<em>folder</em> completionBlock:(AlfrescoNodeCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>path</em></dt>
+			<dd><p>The folder path that&rsquo;s used to query for a specific node.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>folder</em></dt>
+			<dd><p>The root folder that&rsquo;s used to query for a specific node.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved node in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves a node from the repository with the given folder path relative to the given folder.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveNodeWithIdentifier:completionBlock:" title="retrieveNodeWithIdentifier:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveNodeWithIdentifier:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves a document or folder with the given node identifier.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveNodeWithIdentifier:(NSString *)<em>identifier</em> completionBlock:(AlfrescoNodeCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>identifier</em></dt>
+			<dd><p>The node identifier that&rsquo;s used to query for a specific node.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved node in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves a document or folder with the given node identifier.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveParentFolderOfNode:completionBlock:" title="retrieveParentFolderOfNode:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveParentFolderOfNode:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves the parent folder of the given node.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveParentFolderOfNode:(AlfrescoNode *)<em>node</em> completionBlock:(AlfrescoFolderCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>node</em></dt>
+			<dd><p>The node for which the parent folder is retrieved.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the retrieved parent folder in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves the parent folder of the given node.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrievePermissionsOfNode:completionBlock:" title="retrievePermissionsOfNode:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrievePermissionsOfNode:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>the node for which permissions are being queried</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrievePermissionsOfNode:(AlfrescoNode *)<em>node</em> completionBlock:(AlfrescoPermissionsCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>node</em></dt>
+			<dd><p>the node for which permissions are being queried</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>the block returns an <a href="../Classes/AlfrescoPermissions.html">AlfrescoPermissions</a> and NSError object)</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveRenditionOfNode:renditionName:completionBlock:" title="retrieveRenditionOfNode:renditionName:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveRenditionOfNode:renditionName:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Retrieves the thumbnail rendition file for the given node.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveRenditionOfNode:(AlfrescoNode *)<em>node</em> renditionName:(NSString *)<em>renditionName</em> completionBlock:(AlfrescoContentFileCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>node</em></dt>
+			<dd><p>the <a href="../Classes/AlfrescoNode.html">AlfrescoNode</a> for which a thumbnail rendition image is to be retrieved.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>renditionName</em></dt>
+			<dd><p>The type of thumbnail to be retrieved. For example &lsquo;doclib&rsquo; can be used (defined as <em>AlfrescoThumbnailRendition</em> )</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the local <a href="../Classes/AlfrescoContentFile.html">AlfrescoContentFile</a> containing the thumbnail URL/data.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Retrieves the thumbnail rendition file for the given node.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/retrieveRootFolderWithCompletionBlock:" title="retrieveRootFolderWithCompletionBlock:"></a>
+	<h3 class="subsubtitle method-title">retrieveRootFolderWithCompletionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Called when the call completes</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)retrieveRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>Called when the call completes</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/updateContentOfDocument:contentFile:completionBlock:progressBlock:" title="updateContentOfDocument:contentFile:completionBlock:progressBlock:"></a>
+	<h3 class="subsubtitle method-title">updateContentOfDocument:contentFile:completionBlock:progressBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Updates a document with the contents of a local file.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)updateContentOfDocument:(AlfrescoDocument *)<em>document</em> contentFile:(AlfrescoContentFile *)<em>file</em> completionBlock:(AlfrescoDocumentCompletionBlock)<em>completionBlock</em> progressBlock:(AlfrescoProgressBlock)<em>progressBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>document</em></dt>
+			<dd><p>The document that needs to be updated.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the updated document in case the operation succeeds.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progressBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the upload progress.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>contentFile</em></dt>
+			<dd><p>The Alfresco Content File to be updated.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Updates a document with the contents of a local file.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/updatePropertiesOfNode:properties:completionBlock:" title="updatePropertiesOfNode:properties:completionBlock:"></a>
+	<h3 class="subsubtitle method-title">updatePropertiesOfNode:properties:completionBlock:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Updates the properties of a specific node.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)updatePropertiesOfNode:(AlfrescoNode *)<em>node</em> properties:(NSDictionary *)<em>properties</em> completionBlock:(AlfrescoNodeCompletionBlock)<em>completionBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>node</em></dt>
+			<dd><p>The node that needs to be updated.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>properties</em></dt>
+			<dd><p>The properties that need to be updated for the given node.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completionBlock</em></dt>
+			<dd><p>The block that&rsquo;s called with the updated node in case the operation succeeds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Updates the properties of a specific node.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AlfrescoDocumentFolderService.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2012 Alfresco. All rights reserved. (Last updated: 2012-11-23)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.0.5 (build 789)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

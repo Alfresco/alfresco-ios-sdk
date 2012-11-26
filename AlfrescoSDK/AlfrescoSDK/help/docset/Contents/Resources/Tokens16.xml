@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoOAuthHelper.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoOAuthHelper</TokenIdentifier>
+			<Abstract type="html">The AlfrescoOAuthHelper handles OAuth authentication processes.</Abstract>
+			<DeclaredIn>AlfrescoOAuthHelper.h</DeclaredIn>
+			
+			<NodeRef refid="16"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoOAuthHelper/initWithParameters:</TokenIdentifier>
+			<Abstract type="html">this is an internal initialiser used for testing purposes only. Do not use for production services
+@param parameters</Abstract>
+			<DeclaredIn>AlfrescoOAuthHelper.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithParameters:(NSDictionary *)parameters</Declaration>
+			
+			
+			<Anchor>//api/name/initWithParameters:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoOAuthHelper/retrieveOAuthDataForAuthorizationCode:oauthData:completionBlock:</TokenIdentifier>
+			<Abstract type="html">the authorization code retrieved from the Cloud server at first login</Abstract>
+			<DeclaredIn>AlfrescoOAuthHelper.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveOAuthDataForAuthorizationCode:(NSString *)authorizationCode oauthData:(AlfrescoOAuthData *)oauthData completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>authorizationCode</Name>
+					<Abstract type="html">the authorization code retrieved from the Cloud server at first login</Abstract>
+				</Parameter><Parameter>
+					<Name>oauthData</Name>
+					<Abstract type="html">- the AlfrescoOAuthData. This object must have the api key, secret key and redirect URI set
+@param completionBlock</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveOAuthDataForAuthorizationCode:oauthData:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoOAuthHelper/refreshAccessToken:completionBlock:</TokenIdentifier>
+			<Abstract type="html">- the AlfrescoOAuthData, used for refreshing the access token. For that the AlfrescoOAuthData set needs to contain the api key, secret key, refresh token, and current access token
+@param completionBlock</Abstract>
+			<DeclaredIn>AlfrescoOAuthHelper.h</DeclaredIn>			
+			
+			<Declaration>- (void)refreshAccessToken:(AlfrescoOAuthData *)oauthData completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>oauthData</Name>
+					<Abstract type="html">- the AlfrescoOAuthData, used for refreshing the access token. For that the AlfrescoOAuthData set needs to contain the api key, secret key, refresh token, and current access token
+@param completionBlock</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/refreshAccessToken:completionBlock:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

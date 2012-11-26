@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoPersonService.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoPersonService</TokenIdentifier>
+			<Abstract type="html">The AlfrescoPersonService to obtain details about registered users.</Abstract>
+			<DeclaredIn>AlfrescoPersonService.h</DeclaredIn>
+			
+			<NodeRef refid="21"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoPersonService/initWithSession:</TokenIdentifier>
+			<Abstract type="html">Initialises with a standard Cloud or OnPremise session</Abstract>
+			<DeclaredIn>AlfrescoPersonService.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithSession:(id&lt;AlfrescoSession&gt;)session</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">the AlfrescoSession to initialise the site service with.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/initWithSession:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoPersonService/retrievePersonWithIdentifier:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Gets the person with given identifier</Abstract>
+			<DeclaredIn>AlfrescoPersonService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>identifier</Name>
+					<Abstract type="html">- The person identifier to be looked up.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">- contains the AlfrescoPerson object if successful, or nil if not.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrievePersonWithIdentifier:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoPersonService/retrieveAvatarForPerson:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Gets the person with given identifier</Abstract>
+			<DeclaredIn>AlfrescoPersonService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>person</Name>
+					<Abstract type="html">- AlfrescoPerson object for which the avatar is being retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">- contains the AlfrescoContentFile object with a pointer to the avatar image if successful, or nil if not.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveAvatarForPerson:completionBlock:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

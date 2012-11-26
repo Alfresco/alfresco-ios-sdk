@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoComment.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoComment</TokenIdentifier>
+			<Abstract type="html">The AlfrescoComment represents a comment that&apos;s attached to a node in an Alfresco repository.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>
+			
+			<NodeRef refid="5"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setIdentifier:</TokenIdentifier>
+			<Abstract type="html">Returns the unique identifier of the comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *identifier</Declaration>
+			
+			
+			<Anchor>//api/name/identifier</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/identifier</TokenIdentifier>
+			<Abstract type="html">Returns the unique identifier of the comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *identifier</Declaration>
+			
+			
+			<Anchor>//api/name/identifier</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setName:</TokenIdentifier>
+			<Abstract type="html">Returns the name of this comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *name</Declaration>
+			
+			
+			<Anchor>//api/name/name</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/name</TokenIdentifier>
+			<Abstract type="html">Returns the name of this comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *name</Declaration>
+			
+			
+			<Anchor>//api/name/name</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setTitle:</TokenIdentifier>
+			<Abstract type="html">Returns the title of this comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *title</Declaration>
+			
+			
+			<Anchor>//api/name/title</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/title</TokenIdentifier>
+			<Abstract type="html">Returns the title of this comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *title</Declaration>
+			
+			
+			<Anchor>//api/name/title</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setCreatedAt:</TokenIdentifier>
+			<Abstract type="html">Returns the timestamp in the session’s locale when this comment was created.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDate *createdAt</Declaration>
+			
+			
+			<Anchor>//api/name/createdAt</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/createdAt</TokenIdentifier>
+			<Abstract type="html">Returns the timestamp in the session’s locale when this comment was created.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDate *createdAt</Declaration>
+			
+			
+			<Anchor>//api/name/createdAt</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setModifiedAt:</TokenIdentifier>
+			<Abstract type="html">Returns the timestamp in the session’s locale when this comment has been modified.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDate *modifiedAt</Declaration>
+			
+			
+			<Anchor>//api/name/modifiedAt</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/modifiedAt</TokenIdentifier>
+			<Abstract type="html">Returns the timestamp in the session’s locale when this comment has been modified.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSDate *modifiedAt</Declaration>
+			
+			
+			<Anchor>//api/name/modifiedAt</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setContent:</TokenIdentifier>
+			<Abstract type="html">Returns the content of the comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *content</Declaration>
+			
+			
+			<Anchor>//api/name/content</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/content</TokenIdentifier>
+			<Abstract type="html">Returns the content of the comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *content</Declaration>
+			
+			
+			<Anchor>//api/name/content</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setCreatedBy:</TokenIdentifier>
+			<Abstract type="html">Returns the author of the comment as Person Object.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *createdBy</Declaration>
+			
+			
+			<Anchor>//api/name/createdBy</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/createdBy</TokenIdentifier>
+			<Abstract type="html">Returns the author of the comment as Person Object.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, strong, readonly) NSString *createdBy</Declaration>
+			
+			
+			<Anchor>//api/name/createdBy</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setIsEdited:</TokenIdentifier>
+			<Abstract type="html">Indicates whether the comment has been edited since it was initially created.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) BOOL isEdited</Declaration>
+			
+			
+			<Anchor>//api/name/isEdited</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/isEdited</TokenIdentifier>
+			<Abstract type="html">Indicates whether the comment has been edited since it was initially created.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) BOOL isEdited</Declaration>
+			
+			
+			<Anchor>//api/name/isEdited</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setCanEdit:</TokenIdentifier>
+			<Abstract type="html">Returns true if the current user can edit this comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) BOOL canEdit</Declaration>
+			
+			
+			<Anchor>//api/name/canEdit</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/canEdit</TokenIdentifier>
+			<Abstract type="html">Returns true if the current user can edit this comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) BOOL canEdit</Declaration>
+			
+			
+			<Anchor>//api/name/canEdit</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoComment/setCanDelete:</TokenIdentifier>
+			<Abstract type="html">Returns true if the current user can delete this comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) BOOL canDelete</Declaration>
+			
+			
+			<Anchor>//api/name/canDelete</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoComment/canDelete</TokenIdentifier>
+			<Abstract type="html">Returns true if the current user can delete this comment.</Abstract>
+			<DeclaredIn>AlfrescoComment.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly) BOOL canDelete</Declaration>
+			
+			
+			<Anchor>//api/name/canDelete</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

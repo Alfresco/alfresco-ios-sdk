@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoRepositorySession.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoRepositorySession</TokenIdentifier>
+			<Abstract type="html">The AlfrescoRepositorySession manages the session with an Alfresco Repository.</Abstract>
+			<DeclaredIn>AlfrescoRepositorySession.h</DeclaredIn>
+			
+			<NodeRef refid="26"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/AlfrescoRepositorySession/connectWithUrl:username:password:completionBlock:</TokenIdentifier>
+			<Abstract type="html">- the server URL used to establish a session - Required</Abstract>
+			<DeclaredIn>AlfrescoRepositorySession.h</DeclaredIn>			
+			
+			<Declaration>+ (void)connectWithUrl:(NSURL *)url username:(NSString *)username password:(NSString *)password completionBlock:(AlfrescoSessionCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>url</Name>
+					<Abstract type="html">- the server URL used to establish a session - Required</Abstract>
+				</Parameter><Parameter>
+					<Name>username</Name>
+					<Abstract type="html">The username. - Required</Abstract>
+				</Parameter><Parameter>
+					<Name>password</Name>
+					<Abstract type="html">The password. - Required</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">(AlfrescoSessionCompletionBlock). The block that&apos;s called with the session in case the operation succeeds. - required</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">an instance of the repository session</Abstract></ReturnValue>
+			<Anchor>//api/name/connectWithUrl:username:password:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/AlfrescoRepositorySession/connectWithUrl:username:password:parameters:completionBlock:</TokenIdentifier>
+			<Abstract type="html">- the server URL used to establish a session - Required</Abstract>
+			<DeclaredIn>AlfrescoRepositorySession.h</DeclaredIn>			
+			
+			<Declaration>+ (void)connectWithUrl:(NSURL *)url username:(NSString *)username password:(NSString *)password parameters:(NSDictionary *)parameters completionBlock:(AlfrescoSessionCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>url</Name>
+					<Abstract type="html">- the server URL used to establish a session - Required</Abstract>
+				</Parameter><Parameter>
+					<Name>username</Name>
+					<Abstract type="html">The username. - Required</Abstract>
+				</Parameter><Parameter>
+					<Name>password</Name>
+					<Abstract type="html">The password. - Required</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">a dictionary containing parameters for the session. - Optional (can be nil)</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">(AlfrescoSessionCompletionBlock). The block that&apos;s called with the session in case the operation succeeds. - required</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">an instance of the repository session</Abstract></ReturnValue>
+			<Anchor>//api/name/connectWithUrl:username:password:parameters:completionBlock:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

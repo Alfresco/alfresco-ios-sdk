@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoDocumentFolderService.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoDocumentFolderService</TokenIdentifier>
+			<Abstract type="html">The AlfrescoDocumentFolderService manages folders and documents of an Alfresco
+repository. The service provides methods to retrieve documents and folders, but also
+provides methods to create and update documents and folders.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>
+			
+			<NodeRef refid="9"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/initWithSession:</TokenIdentifier>
+			<Abstract type="html">Initialises with a standard Cloud or OnPremise session</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithSession:(id&lt;AlfrescoSession&gt;)session</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">the AlfrescoSession to initialise the site service with.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/initWithSession:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/createFolderWithName:inParentFolder:properties:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Creates a new folder using the given properties in the given folder.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)createFolderWithName:(NSString *)folderName inParentFolder:(AlfrescoFolder *)folder properties:(NSDictionary *)properties completionBlock:(AlfrescoFolderCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>folderName</Name>
+					<Abstract type="html">The name of the folder to be created.</Abstract>
+				</Parameter><Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">The parent folder of the new folder.</Abstract>
+				</Parameter><Parameter>
+					<Name>properties</Name>
+					<Abstract type="html">Additional properties that are used to create the folder.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the created folder in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/createFolderWithName:inParentFolder:properties:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:</TokenIdentifier>
+			<Abstract type="html">Creates a new document using the contents of a local file. The new document is created within the given folder.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)createDocumentWithName:(NSString *)documentName inParentFolder:(AlfrescoFolder *)folder contentFile:(AlfrescoContentFile *)file properties:(NSDictionary *)properties completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock progressBlock:(AlfrescoProgressBlock)progressBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>documentName</Name>
+					<Abstract type="html">The name of the document to be created in the repository</Abstract>
+				</Parameter><Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">The parent folder to create the document in.</Abstract>
+				</Parameter><Parameter>
+					<Name>file</Name>
+					<Abstract type="html">The local file to be uploaded.</Abstract>
+				</Parameter><Parameter>
+					<Name>properties</Name>
+					<Abstract type="html">Additional properties that are used to create the document.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the created document in case the operation succeeds.</Abstract>
+				</Parameter><Parameter>
+					<Name>progressBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the upload progress.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/createDocumentWithName:inParentFolder:contentFile:properties:completionBlock:progressBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveRootFolderWithCompletionBlock:</TokenIdentifier>
+			<Abstract type="html">Called when the call completes</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">Called when the call completes</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveRootFolderWithCompletionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrievePermissionsOfNode:completionBlock:</TokenIdentifier>
+			<Abstract type="html">the node for which permissions are being queried</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrievePermissionsOfNode:(AlfrescoNode *)node completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>node</Name>
+					<Abstract type="html">the node for which permissions are being queried</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">the block returns an AlfrescoPermissions and NSError object)</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrievePermissionsOfNode:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveChildrenInFolder:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all the children of the given folder.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder completionBlock:(AlfrescoArrayCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">The folder for which the children are retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved children in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveChildrenInFolder:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveChildrenInFolder:listingContext:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all the children of the given folder with a listing context.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">The folder for which the children are retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>listingContext</Name>
+					<Abstract type="html">The listing context with a paging definition that&apos;s used to retrieve the children.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved children in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveChildrenInFolder:listingContext:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveDocumentsInFolder:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all the documents in the given folder.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder completionBlock:(AlfrescoArrayCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">The folder for which the documents are retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved documents in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveDocumentsInFolder:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveDocumentsInFolder:listingContext:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all the documents in the given folder with a listing context.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">The folder for which the documents are retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>listingContext</Name>
+					<Abstract type="html">The listing context with a paging definition that&apos;s used to retrieve the documents.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved documents in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveDocumentsInFolder:listingContext:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveFoldersInFolder:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all the sub folders in the given folder.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder completionBlock:(AlfrescoArrayCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">The folder for which the sub folders are retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved sub folders in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveFoldersInFolder:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveFoldersInFolder:listingContext:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all the sub folders in the given folder with a listing context</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">The folder for which the sub folders are retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>listingContext</Name>
+					<Abstract type="html">The listing context with a paging definition that&apos;s used to retrieve the sub folders.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved sub folders in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveFoldersInFolder:listingContext:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveNodeWithIdentifier:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves a document or folder with the given node identifier.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveNodeWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoNodeCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>identifier</Name>
+					<Abstract type="html">The node identifier that&apos;s used to query for a specific node.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved node in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveNodeWithIdentifier:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveNodeWithFolderPath:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves a node from the repository with the given folder path.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveNodeWithFolderPath:(NSString *)path completionBlock:(AlfrescoNodeCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>path</Name>
+					<Abstract type="html">The folder path that&apos;s used to query for a specific node.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved node in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveNodeWithFolderPath:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveNodeWithFolderPath:relativeToFolder:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves a node from the repository with the given folder path relative to the given folder.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveNodeWithFolderPath:(NSString *)path relativeToFolder:(AlfrescoFolder *)folder completionBlock:(AlfrescoNodeCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>path</Name>
+					<Abstract type="html">The folder path that&apos;s used to query for a specific node.</Abstract>
+				</Parameter><Parameter>
+					<Name>folder</Name>
+					<Abstract type="html">The root folder that&apos;s used to query for a specific node.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved node in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveNodeWithFolderPath:relativeToFolder:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveParentFolderOfNode:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves the parent folder of the given node.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveParentFolderOfNode:(AlfrescoNode *)node completionBlock:(AlfrescoFolderCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>node</Name>
+					<Abstract type="html">The node for which the parent folder is retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the retrieved parent folder in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveParentFolderOfNode:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveRenditionOfNode:renditionName:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves the thumbnail rendition file for the given node.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveRenditionOfNode:(AlfrescoNode *)node renditionName:(NSString *)renditionName completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>node</Name>
+					<Abstract type="html">the AlfrescoNode for which a thumbnail rendition image is to be retrieved.</Abstract>
+				</Parameter><Parameter>
+					<Name>renditionName</Name>
+					<Abstract type="html">The type of thumbnail to be retrieved. For example &apos;doclib&apos; can be used (defined as AlfrescoThumbnailRendition )</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the local AlfrescoContentFile containing the thumbnail URL/data.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveRenditionOfNode:renditionName:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/retrieveContentOfDocument:completionBlock:progressBlock:</TokenIdentifier>
+			<Abstract type="html">Downloads the content of the given document and stores it in the given file. The delegate object
+will be informed when the content is downloaded.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveContentOfDocument:(AlfrescoDocument *)document completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock progressBlock:(AlfrescoProgressBlock)progressBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>document</Name>
+					<Abstract type="html">The document that needs to be downloaded.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block containing an AlfrescoContentFile and NSError object. error will be nil if successful. Otherwise, AlfrescoContentFile will be nil.</Abstract>
+				</Parameter><Parameter>
+					<Name>progressBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the download progress.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveContentOfDocument:completionBlock:progressBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/updateContentOfDocument:contentFile:completionBlock:progressBlock:</TokenIdentifier>
+			<Abstract type="html">Updates a document with the contents of a local file.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)updateContentOfDocument:(AlfrescoDocument *)document contentFile:(AlfrescoContentFile *)file completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock progressBlock:(AlfrescoProgressBlock)progressBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>document</Name>
+					<Abstract type="html">The document that needs to be updated.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the updated document in case the operation succeeds.</Abstract>
+				</Parameter><Parameter>
+					<Name>progressBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the upload progress.</Abstract>
+				</Parameter><Parameter>
+					<Name>contentFile</Name>
+					<Abstract type="html">The Alfresco Content File to be updated.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/updateContentOfDocument:contentFile:completionBlock:progressBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/updatePropertiesOfNode:properties:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Updates the properties of a specific node.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)updatePropertiesOfNode:(AlfrescoNode *)node properties:(NSDictionary *)properties completionBlock:(AlfrescoNodeCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>node</Name>
+					<Abstract type="html">The node that needs to be updated.</Abstract>
+				</Parameter><Parameter>
+					<Name>properties</Name>
+					<Abstract type="html">The properties that need to be updated for the given node.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the updated node in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/updatePropertiesOfNode:properties:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoDocumentFolderService/deleteNode:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Deletes an individual node from the Alfresco repository.</Abstract>
+			<DeclaredIn>AlfrescoDocumentFolderService.h</DeclaredIn>			
+			
+			<Declaration>- (void)deleteNode:(AlfrescoNode *)node completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>node</Name>
+					<Abstract type="html">The node that needs to be deleted.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/deleteNode:completionBlock:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

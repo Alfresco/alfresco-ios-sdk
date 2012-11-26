@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoRepositoryCapabilities.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoRepositoryCapabilities</TokenIdentifier>
+			<Abstract type="html">The AlfrescoRepositoryCapabilities are used as a property on AlfrescoRepositoryInfo.</Abstract>
+			<DeclaredIn>AlfrescoRepositoryCapabilities.h</DeclaredIn>
+			
+			<NodeRef refid="24"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoRepositoryCapabilities/doesSupportCapability:</TokenIdentifier>
+			<Abstract type="html">Checks whether the capability is supported. At present 2 capabilities are available
+- kAlfrescoCapabilityLike
+- kAlfrescoCapabilityCommentsCount</Abstract>
+			<DeclaredIn>AlfrescoRepositoryCapabilities.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)doesSupportCapability:(NSString *)capability</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>capability</Name>
+					<Abstract type="html">- the defined capability to check.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/doesSupportCapability:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

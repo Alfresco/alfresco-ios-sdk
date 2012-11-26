@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoErrors.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoErrors</TokenIdentifier>
+			<Abstract type="html">AlfrescoErrors is used in case an error occurs when executing an operation against the Alfresco repository.</Abstract>
+			<DeclaredIn>AlfrescoErrors.h</DeclaredIn>
+			
+			<NodeRef refid="10"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/AlfrescoErrors/alfrescoErrorWithUnderlyingError:andAlfrescoErrorCode:</TokenIdentifier>
+			<Abstract type="html">Creates an error object based on another NSError instance.</Abstract>
+			<DeclaredIn>AlfrescoErrors.h</DeclaredIn>			
+			
+			<Declaration>+ (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>error</Name>
+					<Abstract type="html">The error that&apos;s used to create an Alfresco error instance.</Abstract>
+				</Parameter><Parameter>
+					<Name>code</Name>
+					<Abstract type="html">the code string that represents the error type.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The newly created error.</Abstract></ReturnValue>
+			<Anchor>//api/name/alfrescoErrorWithUnderlyingError:andAlfrescoErrorCode:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/AlfrescoErrors/alfrescoErrorWithAlfrescoErrorCode:</TokenIdentifier>
+			<Abstract type="html">Creates an error object based on an error code and a description.</Abstract>
+			<DeclaredIn>AlfrescoErrors.h</DeclaredIn>			
+			
+			<Declaration>+ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>code</Name>
+					<Abstract type="html">the code string that represents the error type.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The newly created error.</Abstract></ReturnValue>
+			<Anchor>//api/name/alfrescoErrorWithAlfrescoErrorCode:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/AlfrescoErrors/assertArgumentNotNil:argumentName:</TokenIdentifier>
+			<Abstract type="html">asserts that an argument is not nil. If a required argument is nil, this is considered a fatal error, and the SDK will throw an exception.
+This will most likely cause the app to exit/crash.
+@param argument
+@param argumentName</Abstract>
+			<DeclaredIn>AlfrescoErrors.h</DeclaredIn>			
+			
+			<Declaration>+ (void)assertArgumentNotNil:(id)argument argumentName:(NSString *)argumentName</Declaration>
+			
+			
+			<Anchor>//api/name/assertArgumentNotNil:argumentName:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/AlfrescoErrors/assertStringArgumentNotNilOrEmpty:argumentName:</TokenIdentifier>
+			<Abstract type="html">asserts that an argument is not nil. If a required argument is nil, this is considered a fatal error, and the SDK will throw an exception.
+This will most likely cause the app to exit/crash.
+@param argument
+@param argumentName</Abstract>
+			<DeclaredIn>AlfrescoErrors.h</DeclaredIn>			
+			
+			<Declaration>+ (void)assertStringArgumentNotNilOrEmpty:(NSString *)argument argumentName:(NSString *)argumentName</Declaration>
+			
+			
+			<Anchor>//api/name/assertStringArgumentNotNilOrEmpty:argumentName:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

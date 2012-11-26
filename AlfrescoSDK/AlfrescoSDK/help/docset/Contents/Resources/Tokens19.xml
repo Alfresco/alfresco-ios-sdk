@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoPermissions.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoPermissions</TokenIdentifier>
+			<Abstract type="html">The AlfrescoPermissions holds the doable actions for nodes (documents/folders).</Abstract>
+			<DeclaredIn>AlfrescoPermissions.h</DeclaredIn>
+			
+			<NodeRef refid="19"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoPermissions/setCanEdit:</TokenIdentifier>
+			<Abstract type="html">edit flag</Abstract>
+			<DeclaredIn>AlfrescoPermissions.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL canEdit</Declaration>
+			
+			
+			<Anchor>//api/name/canEdit</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoPermissions/canEdit</TokenIdentifier>
+			<Abstract type="html">edit flag</Abstract>
+			<DeclaredIn>AlfrescoPermissions.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL canEdit</Declaration>
+			
+			
+			<Anchor>//api/name/canEdit</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoPermissions/setCanDelete:</TokenIdentifier>
+			<Abstract type="html">delete flag</Abstract>
+			<DeclaredIn>AlfrescoPermissions.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL canDelete</Declaration>
+			
+			
+			<Anchor>//api/name/canDelete</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoPermissions/canDelete</TokenIdentifier>
+			<Abstract type="html">delete flag</Abstract>
+			<DeclaredIn>AlfrescoPermissions.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL canDelete</Declaration>
+			
+			
+			<Anchor>//api/name/canDelete</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoPermissions/setCanAddChildren:</TokenIdentifier>
+			<Abstract type="html">add children flag</Abstract>
+			<DeclaredIn>AlfrescoPermissions.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL canAddChildren</Declaration>
+			
+			
+			<Anchor>//api/name/canAddChildren</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoPermissions/canAddChildren</TokenIdentifier>
+			<Abstract type="html">add children flag</Abstract>
+			<DeclaredIn>AlfrescoPermissions.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL canAddChildren</Declaration>
+			
+			
+			<Anchor>//api/name/canAddChildren</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoPermissions/setCanComment:</TokenIdentifier>
+			<Abstract type="html">add comment flag</Abstract>
+			<DeclaredIn>AlfrescoPermissions.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL canComment</Declaration>
+			
+			
+			<Anchor>//api/name/canComment</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AlfrescoPermissions/canComment</TokenIdentifier>
+			<Abstract type="html">add comment flag</Abstract>
+			<DeclaredIn>AlfrescoPermissions.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, assign, readonly) BOOL canComment</Declaration>
+			
+			
+			<Anchor>//api/name/canComment</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

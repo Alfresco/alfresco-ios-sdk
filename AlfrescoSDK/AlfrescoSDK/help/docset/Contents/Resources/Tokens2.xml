@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AlfrescoActivityStreamService.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AlfrescoActivityStreamService</TokenIdentifier>
+			<Abstract type="html">The AlfrescoActivityStreamService provides various ways to retrieve an activity stream.</Abstract>
+			<DeclaredIn>AlfrescoActivityStreamService.h</DeclaredIn>
+			
+			<NodeRef refid="2"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoActivityStreamService/initWithSession:</TokenIdentifier>
+			<Abstract type="html">Initialises with a standard Cloud or OnPremise session</Abstract>
+			<DeclaredIn>AlfrescoActivityStreamService.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithSession:(id&lt;AlfrescoSession&gt;)session</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>session</Name>
+					<Abstract type="html">the AlfrescoSession to initialise the site service with.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/initWithSession:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoActivityStreamService/retrieveActivityStreamWithCompletionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all activities for the logged-in user.</Abstract>
+			<DeclaredIn>AlfrescoActivityStreamService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveActivityStreamWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the activity stream in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveActivityStreamWithCompletionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoActivityStreamService/retrieveActivityStreamWithListingContext:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all activities for the logged-in user with a listing context.</Abstract>
+			<DeclaredIn>AlfrescoActivityStreamService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveActivityStreamWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>listingContext</Name>
+					<Abstract type="html">The listing context with a paging definition that&apos;s used to retrieve the activity stream.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the activity stream in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveActivityStreamWithListingContext:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoActivityStreamService/retrieveActivityStreamForPerson:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all activities for the given user.</Abstract>
+			<DeclaredIn>AlfrescoActivityStreamService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier completionBlock:(AlfrescoArrayCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>personIdentifier</Name>
+					<Abstract type="html">The user name to be used to retrieve the user&apos;s activity stream.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the activity stream in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveActivityStreamForPerson:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoActivityStreamService/retrieveActivityStreamForPerson:listingContext:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all activities for the given user with a listing context.</Abstract>
+			<DeclaredIn>AlfrescoActivityStreamService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>personIdentifier</Name>
+					<Abstract type="html">The user name to be used to retrieve the user&apos;s activity stream.</Abstract>
+				</Parameter><Parameter>
+					<Name>listingContext</Name>
+					<Abstract type="html">The listing context with a paging definition that&apos;s used to retrieve the activity stream.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the activity stream in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveActivityStreamForPerson:listingContext:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoActivityStreamService/retrieveActivityStreamForSite:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all activities for the given site.</Abstract>
+			<DeclaredIn>AlfrescoActivityStreamService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>site</Name>
+					<Abstract type="html">The site to be used to retrieve the site&apos;s activity stream.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the activity stream in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveActivityStreamForSite:completionBlock:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AlfrescoActivityStreamService/retrieveActivityStreamForSite:listingContext:completionBlock:</TokenIdentifier>
+			<Abstract type="html">Retrieves all activities for the given site with a listing context.</Abstract>
+			<DeclaredIn>AlfrescoActivityStreamService.h</DeclaredIn>			
+			
+			<Declaration>- (void)retrieveActivityStreamForSite:(AlfrescoSite *)site listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>site</Name>
+					<Abstract type="html">The site to be used to retrieve the site&apos;s activity stream.</Abstract>
+				</Parameter><Parameter>
+					<Name>listingContext</Name>
+					<Abstract type="html">The listing context with a paging definition that&apos;s used to retrieve the activity stream.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionBlock</Name>
+					<Abstract type="html">The block that&apos;s called with the activity stream in case the operation succeeds.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/retrieveActivityStreamForSite:listingContext:completionBlock:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>
