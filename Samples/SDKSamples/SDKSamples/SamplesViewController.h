@@ -18,12 +18,6 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
-
-@interface SamplesViewController : BaseTableViewController
-@property (nonatomic, weak) IBOutlet UILabel *browseCompanyLabel;
-@property (nonatomic, weak) IBOutlet UILabel *browseSitesLabel;
-@property (nonatomic, weak) IBOutlet UILabel *browseFavouriteSitesLabel;
-@property (nonatomic, weak) IBOutlet UILabel *browseAllSitesLabel;
-@property (nonatomic, weak) IBOutlet UILabel *browseActivitiesLabel;
-@property (nonatomic, weak) IBOutlet UILabel *searchLabel;
+#import "AlfrescoOAuthLoginDelegate.h"
+@interface SamplesViewController : BaseTableViewController <AlfrescoOAuthLoginDelegate, UIAlertViewDelegate>
 @end

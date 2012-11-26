@@ -23,20 +23,17 @@
 #import "AlfrescoCloudSession.h"
 #import "ActivitiesTableViewController.h"
 #import "AlfrescoListingContext.h"
-
+#import "AlfrescoOAuthHelper.h"
+#import "AlfrescoOAuthData.h"
 
 @interface SamplesViewController ()
 @property (nonatomic, assign) BOOL connectionDetailsProvided;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+- (void)refreshAccessToken;
+- (void)createActivityView;
 @end
 
 @implementation SamplesViewController
-@synthesize browseCompanyLabel = _browseCompanyLabel;
-@synthesize browseSitesLabel = _browseSitesLabel;
-@synthesize browseFavouriteSitesLabel = _browseFavouriteSitesLabel;
-@synthesize browseAllSitesLabel = _browseAllSitesLabel;
-@synthesize browseActivitiesLabel = _browseActivitiesLabel;
-@synthesize searchLabel = _searchLabel;
-
 @synthesize connectionDetailsProvided = _connectionDetailsProvided;
 @synthesize session = _session;
 
@@ -47,12 +44,8 @@
 {
     [super viewDidLoad];
     self.navigationItem.title = localized(@"sample_title");
-    self.browseCompanyLabel.text = localized(@"sample_browse_company_home_option");
-    self.browseSitesLabel.text = localized(@"sample_browse_my_sites_option");
-    self.browseFavouriteSitesLabel.text = localized(@"sample_browse_favourite_sites_option");
-    self.browseAllSitesLabel.text = localized(@"sample_browse_all_sites_option");
-    self.browseActivitiesLabel.text = localized(@"sample_activities_option");
-    self.searchLabel.text = localized(@"sample_search_option");
+    [self createActivityView];
+
 }
 
 
@@ -65,6 +58,83 @@
     else 
     {
         return YES;
+    }
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
+    {
+        return 7;
+    }
+    else
+    {
+        return 6;
+    }
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellIdentifier = @"samplesCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    switch (indexPath.row)
+    {
+        case 0:
+            cell.textLabel.text = localized(@"sample_browse_favourite_sites_option");
+            break;
+        case 1:
+            cell.textLabel.text = localized(@"sample_browse_my_sites_option");
+            break;
+        case 2:
+            cell.textLabel.text = localized(@"sample_browse_all_sites_option");
+            break;
+        case 3:
+            cell.textLabel.text = localized(@"sample_browse_company_home_option");
+            break;
+        case 4:
+            cell.textLabel.text = localized(@"sample_activities_option");
+            break;
+        case 5:
+            cell.textLabel.text = localized(@"sample_search_option");
+            break;
+        case 6:
+            cell.textLabel.text = @"Refresh access";
+            break;
+    }
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch (indexPath.row)
+    {
+        case 0:
+            [self performSegueWithIdentifier:@"browseFavoriteSites" sender:self];
+            break;
+        case 1:
+            [self performSegueWithIdentifier:@"browseMySites" sender:self];
+            break;
+        case 2:
+            [self performSegueWithIdentifier:@"browseAllSites" sender:self];
+            break;
+        case 3:
+            [self performSegueWithIdentifier:@"browseCompanyHome" sender:self];
+            break;
+        case 4:
+            [self performSegueWithIdentifier:@"activities" sender:self];
+            break;
+        case 5:
+            [self performSegueWithIdentifier:@"search" sender:self];
+            break;
+        case 6:
+            [self refreshAccessToken];
+            break;
     }
 }
 
@@ -90,6 +160,86 @@
     {
         [[segue destinationViewController] setBrowsingType:AlfrescoSiteBrowsingMySites];
     }
+}
+
+- (void)refreshAccessToken
+{
+    if (nil != self.activityIndicator)
+    {
+        [self.activityIndicator startAnimating];
+    }
+    NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+    NSData *archivedOAuthData = [standardDefaults objectForKey:@"ArchivedOAuthData"];
+    if (nil == archivedOAuthData)
+    {
+        NSString *message = @"There are no Archived OAuth data";
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alertView show];
+        return;
+    }
+
+    AlfrescoOAuthData *oauthData = [NSKeyedUnarchiver unarchiveObjectWithData:archivedOAuthData];
+    AlfrescoOAuthHelper *oauthHelper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self];
+    [oauthHelper refreshAccessToken:oauthData completionBlock:^(AlfrescoOAuthData *refreshedOAuthData, NSError *error){
+        if (nil == refreshedOAuthData)
+        {
+            if (nil != self.activityIndicator)
+            {
+                [self.activityIndicator stopAnimating];
+            }
+            
+            NSString *message = [NSString stringWithFormat:@"Error refreshing OAuth Data %@", [error localizedDescription]];
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alertView show];
+        }
+        else
+        {
+            if (nil != self.activityIndicator)
+            {
+                [self.activityIndicator stopAnimating];
+            }
+
+            NSData *refreshedData = [NSKeyedArchiver archivedDataWithRootObject:refreshedOAuthData];
+            [standardDefaults removeObjectForKey:@"ArchivedOAuthData"];
+            [standardDefaults setObject:refreshedData forKey:@"ArchivedOAuthData"];
+            [standardDefaults synchronize];
+            
+            if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
+            {
+                AlfrescoCloudSession *cloudSession = (AlfrescoCloudSession *)self.session;
+                cloudSession.oauthData = refreshedOAuthData;
+            }
+            
+            
+            NSString *message = @"OAuth Data have been refreshed";
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alertView show];
+            
+        }
+    }];
+}
+
+
+- (void)createActivityView
+{
+    CGSize size = self.view.bounds.size;
+    CGFloat xOffset = size.width/2 - 50;
+    CGFloat yOffset = size.height/2 - 50;
+    CGRect viewFrame = CGRectMake(xOffset, yOffset, 100, 100);
+    
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activityIndicator.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    self.activityIndicator.frame = viewFrame;
+    self.activityIndicator.hidesWhenStopped = YES;
+    [self.view insertSubview:self.activityIndicator aboveSubview:self.tableView];
+}
+
+#pragma mark - OAuth delegate method
+- (void)oauthLoginDidFailWithError:(NSError *)error
+{
+    NSString *message = [NSString stringWithFormat:@"Refresh error %@", [error localizedDescription]];
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alertView show];
 }
 
 @end

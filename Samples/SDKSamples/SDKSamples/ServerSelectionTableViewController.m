@@ -22,11 +22,12 @@
 #import "AlfrescoOAuthLoginViewController.h"
 
 @interface ServerSelectionTableViewController ()
+@property (nonatomic, strong) AlfrescoOAuthLoginViewController *loginController;
 - (void)authenticateCloudWithOAuth;
 @end
 
 @implementation ServerSelectionTableViewController
-
+@synthesize loginController = _loginController;
 #pragma mark - private methods
 - (void)authenticateCloudWithOAuth
 {
@@ -38,6 +39,11 @@
         }
         else
         {
+            NSData *archivedOAuthData = [NSKeyedArchiver archivedDataWithRootObject:oauthdata];
+            NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+            [standardDefaults setObject:archivedOAuthData forKey:@"ArchivedOAuthData"];
+            [standardDefaults synchronize];
+            
             [AlfrescoCloudSession connectWithOAuthData:oauthdata completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
@@ -63,10 +69,11 @@
     else
     {
         // use this is you want to use the Alfresco default redirect URI
-        AlfrescoOAuthLoginViewController *loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
-                                                                                                           secretKey:SECRETKEY
-                                                                                                     completionBlock:completionBlock];
-        [self.navigationController pushViewController:loginController animated:YES];
+        self.loginController = [[AlfrescoOAuthLoginViewController alloc] initWithAPIKey:APIKEY
+                                                                              secretKey:SECRETKEY
+                                                                        completionBlock:completionBlock];
+        self.loginController.oauthDelegate = self;
+        [self.navigationController pushViewController:self.loginController animated:YES];
     }
 }
 
@@ -82,6 +89,15 @@
     if (1 == indexPath.row) //cloud row
     {
         [self authenticateCloudWithOAuth];
+    }
+}
+
+#pragma mark - OAuth delegate
+- (void)oauthLoginDidFailWithError:(NSError *)error
+{
+    if (nil != self.loginController)
+    {
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

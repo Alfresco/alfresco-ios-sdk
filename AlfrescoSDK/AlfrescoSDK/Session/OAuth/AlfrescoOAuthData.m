@@ -82,4 +82,85 @@
     return self;
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    if (nil != self.apiKey)
+    {
+        [aCoder encodeObject:self.apiKey forKey:@"apiKey"];
+    }
+    if (nil != self.secretKey)
+    {
+        [aCoder encodeObject:self.secretKey forKey:@"secretKey"];
+    }
+    if (nil != self.accessToken)
+    {
+        [aCoder encodeObject:self.accessToken forKey:@"accessToken"];
+    }
+    if (nil != self.refreshToken)
+    {
+        [aCoder encodeObject:self.refreshToken forKey:@"refreshToken"];
+    }
+    if (nil != self.expiresIn)
+    {
+        [aCoder encodeObject:self.expiresIn forKey:@"expiresIn"];
+    }
+    if (nil != self.tokenType)
+    {
+        [aCoder encodeObject:self.tokenType forKey:@"tokenType"];
+    }
+    if (nil != self.redirectURI)
+    {
+        [aCoder encodeObject:self.redirectURI forKey:@"redirectURI"];
+    }
+    if (nil != self.scope)
+    {
+        [aCoder encodeObject:self.scope forKey:@"scope"];
+    }
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    NSString *apiKey = [aDecoder decodeObjectForKey:@"apiKey"];
+    NSString *secretKey = [aDecoder decodeObjectForKey:@"secretKey"];
+    NSString *redirectURI = [aDecoder decodeObjectForKey:@"redirectURI"];
+    
+    NSString *accessToken = [aDecoder decodeObjectForKey:@"accessToken"];
+    NSString *refreshToken = [aDecoder decodeObjectForKey:@"refreshToken"];
+    NSNumber *expiresIn = [aDecoder decodeObjectForKey:@"expiresIn"];
+    NSString *tokenType = [aDecoder decodeObjectForKey:@"tokenType"];
+    NSString *scope = [aDecoder decodeObjectForKey:@"scope"];
+    
+    
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    if (nil != accessToken)
+    {
+        [dictionary setObject:accessToken forKey:kAlfrescoJSONAccessToken];
+    }
+    if (nil != refreshToken)
+    {
+        [dictionary setObject:refreshToken forKey:kAlfrescoJSONRefreshToken];
+    }
+    if (nil != expiresIn)
+    {
+        [dictionary setObject:expiresIn forKey:kAlfrescoJSONExpiresIn];
+    }
+    if (nil != tokenType)
+    {
+        [dictionary setObject:tokenType forKey:kAlfrescoJSONTokenType];
+    }
+    if (nil != scope)
+    {
+        [dictionary setObject:scope forKey:kAlfrescoJSONScope];
+    }
+    
+    if (0 < dictionary.count)
+    {
+        return [self initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI jsonDictionary:dictionary];
+    }
+    else
+    {
+        return [self initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
+    }    
+}
+
 @end

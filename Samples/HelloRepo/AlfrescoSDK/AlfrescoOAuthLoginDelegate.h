@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
@@ -14,17 +15,11 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
-#import <UIKit/UIKit.h>
-#import "BaseTableViewController.h"
-#import "AlfrescoOAuthLoginDelegate.h"
+#import <Foundation/Foundation.h>
 
-#warning ENTER YOUR API AND SECRET KEY
-
-// Enter the api Key and secret key in the #define below
-#define APIKEY @""
-#define SECRETKEY @""
-@interface ServerSelectionTableViewController : BaseTableViewController <AlfrescoOAuthLoginDelegate, UIAlertViewDelegate>
-
+@protocol AlfrescoOAuthLoginDelegate <NSObject>
+- (void)oauthLoginDidFailWithError:(NSError *)error;
 @end
