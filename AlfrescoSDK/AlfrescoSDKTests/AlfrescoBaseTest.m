@@ -403,6 +403,9 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
         [self setUpTestChildFolder];
         [self resetTestVariables];
         
+        [self removePreExistingUnitTestFolder];
+        [self resetTestVariables];
+        
         log(@"***************** About to start test run for server: %@ *****************", self.server);
         sessionTestBlock();
         [self resetTestVariables];
@@ -451,6 +454,30 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     log(@"<<<<<<<<< waitUntilCompleteWithFixedTimeInterval >>>>>>>>>>>>");
 }
 
-
+- (void)removePreExistingUnitTestFolder
+{
+    AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+    __weak AlfrescoDocumentFolderService *weakDocumentService = dfService;
+    
+    [dfService retrieveNodeWithFolderPath:self.unitTestFolder relativeToFolder:self.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
+        if (node)
+        {
+            NSLog(@"********** Unit test folder exists **********");
+            NSLog(@"********** Attempting to remove **********");
+            
+            [weakDocumentService deleteNode:node completionBlock:^(BOOL succeeded, NSError *error) {
+                
+                if (succeeded)
+                {
+                    NSLog(@"********** Unit test folder removed **********");
+                }
+                else
+                {
+                    NSLog(@"********** Error occured in removePreExistingUnitTestFolder **********");
+                }
+            }];
+        }
+    }];
+}
 
 @end
