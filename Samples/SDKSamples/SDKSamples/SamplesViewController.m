@@ -23,10 +23,14 @@
 #import "AlfrescoCloudSession.h"
 #import "ActivitiesTableViewController.h"
 #import "AlfrescoListingContext.h"
-
+#import "AlfrescoOAuthHelper.h"
+#import "AlfrescoOAuthData.h"
 
 @interface SamplesViewController ()
 @property (nonatomic, assign) BOOL connectionDetailsProvided;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+- (void)refreshAccessToken;
+- (void)createActivityView;
 @end
 
 @implementation SamplesViewController
@@ -40,6 +44,7 @@
 {
     [super viewDidLoad];
     self.navigationItem.title = localized(@"sample_title");
+    [self createActivityView];
 
 }
 
@@ -128,6 +133,7 @@
             [self performSegueWithIdentifier:@"search" sender:self];
             break;
         case 6:
+            [self refreshAccessToken];
             break;
     }
 }
@@ -154,6 +160,86 @@
     {
         [[segue destinationViewController] setBrowsingType:AlfrescoSiteBrowsingMySites];
     }
+}
+
+- (void)refreshAccessToken
+{
+    if (nil != self.activityIndicator)
+    {
+        [self.activityIndicator startAnimating];
+    }
+    NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+    NSData *archivedOAuthData = [standardDefaults objectForKey:@"ArchivedOAuthData"];
+    if (nil == archivedOAuthData)
+    {
+        NSString *message = @"There are no Archived OAuth data";
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alertView show];
+        return;
+    }
+
+    AlfrescoOAuthData *oauthData = [NSKeyedUnarchiver unarchiveObjectWithData:archivedOAuthData];
+    AlfrescoOAuthHelper *oauthHelper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self];
+    [oauthHelper refreshAccessToken:oauthData completionBlock:^(AlfrescoOAuthData *refreshedOAuthData, NSError *error){
+        if (nil == refreshedOAuthData)
+        {
+            if (nil != self.activityIndicator)
+            {
+                [self.activityIndicator stopAnimating];
+            }
+            
+            NSString *message = [NSString stringWithFormat:@"Error refreshing OAuth Data %@", [error localizedDescription]];
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alertView show];
+        }
+        else
+        {
+            if (nil != self.activityIndicator)
+            {
+                [self.activityIndicator stopAnimating];
+            }
+
+            NSData *refreshedData = [NSKeyedArchiver archivedDataWithRootObject:refreshedOAuthData];
+            [standardDefaults removeObjectForKey:@"ArchivedOAuthData"];
+            [standardDefaults setObject:refreshedData forKey:@"ArchivedOAuthData"];
+            [standardDefaults synchronize];
+            
+            if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
+            {
+                AlfrescoCloudSession *cloudSession = (AlfrescoCloudSession *)self.session;
+                cloudSession.oauthData = refreshedOAuthData;
+            }
+            
+            
+            NSString *message = @"OAuth Data have been refreshed";
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alertView show];
+            
+        }
+    }];
+}
+
+
+- (void)createActivityView
+{
+    CGSize size = self.view.bounds.size;
+    CGFloat xOffset = size.width/2 - 50;
+    CGFloat yOffset = size.height/2 - 50;
+    CGRect viewFrame = CGRectMake(xOffset, yOffset, 100, 100);
+    
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activityIndicator.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    self.activityIndicator.frame = viewFrame;
+    self.activityIndicator.hidesWhenStopped = YES;
+    [self.view insertSubview:self.activityIndicator aboveSubview:self.tableView];
+}
+
+#pragma mark - OAuth delegate method
+- (void)oauthLoginDidFailWithError:(NSError *)error
+{
+    NSString *message = [NSString stringWithFormat:@"Refresh error %@", [error localizedDescription]];
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alertView show];
 }
 
 @end
