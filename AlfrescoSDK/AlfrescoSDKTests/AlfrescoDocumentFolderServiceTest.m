@@ -3983,70 +3983,70 @@
 /*
  @Unique_TCRef 33F4
  */
-- (void)testCreateDuplicateDocumentName
-{
-    [super runAllSitesTest:^{
-        
-        NSString *duplicateFileName = @"Duplicate.jpg";
-        
-        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        
-        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
-        
-        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-        [properties setObject:@"test description" forKey:@"cm:description"];
-        [properties setObject:@"test title" forKey:@"cm:title"];
-        [properties setObject:duplicateFileName forKey:@"cmis:name"];
-        
-        [self.dfService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
-            
-            if (document == nil)
-            {
-                super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-            }
-            else
-            {
-                STAssertNil(error, @"Error occured trying to create document the first time");
-                
-                NSMutableDictionary *props = [NSMutableDictionary dictionary];
-                [props setObject:duplicateFileName forKey:@"cmis:name"];
-                
-                [weakFolderService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:props completionBlock:^(AlfrescoDocument *duplicateDocument, NSError *duplicateError) {
-                    
-                    if (duplicateError == nil)
-                    {
-                        super.lastTestSuccessful = NO;
-                    }
-                    else
-                    {
-                        STAssertNotNil(duplicateError, @"Trying to create another file with the same name should produce an error");
-                        
-                        // delete the orginal we created - cleanup
-                        [weakFolderService deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                            
-                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
-                            
-                            super.lastTestSuccessful = succeeded;
-                            
-                            super.callbackCompleted = YES;
-                        }];
-                    }
-                }
-            
-                progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
-                
-                }];
-            }
-            
-        } progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
-            
-        }];
-        
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
-    }];
-}
+//- (void)testCreateDuplicateDocumentName
+//{
+//    [super runAllSitesTest:^{
+//        
+//        NSString *duplicateFileName = @"Duplicate.jpg";
+//        
+//        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+//        
+//        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+//        
+//        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+//        [properties setObject:@"test description" forKey:@"cm:description"];
+//        [properties setObject:@"test title" forKey:@"cm:title"];
+//        [properties setObject:duplicateFileName forKey:@"cmis:name"];
+//        
+//        [self.dfService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+//            
+//            if (document == nil)
+//            {
+//                super.lastTestSuccessful = NO;
+//                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+//            }
+//            else
+//            {
+//                STAssertNil(error, @"Error occured trying to create document the first time");
+//                
+//                NSMutableDictionary *props = [NSMutableDictionary dictionary];
+//                [props setObject:duplicateFileName forKey:@"cmis:name"];
+//                
+//                [weakFolderService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:props completionBlock:^(AlfrescoDocument *duplicateDocument, NSError *duplicateError) {
+//                    
+//                    if (duplicateError == nil)
+//                    {
+//                        super.lastTestSuccessful = NO;
+//                    }
+//                    else
+//                    {
+//                        STAssertNotNil(duplicateError, @"Trying to create another file with the same name should produce an error");
+//                        
+//                        // delete the orginal we created - cleanup
+//                        [weakFolderService deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError) {
+//                            
+//                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
+//                            
+//                            super.lastTestSuccessful = succeeded;
+//                            
+//                            super.callbackCompleted = YES;
+//                        }];
+//                    }
+//                }
+//            
+//                progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+//                
+//                }];
+//            }
+//            
+//        } progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+//            
+//        }];
+//        
+//        [super waitUntilCompleteWithFixedTimeInterval];
+//        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+//    }];
+//}
 
 /*
  @Unique_TCRef 16F2
