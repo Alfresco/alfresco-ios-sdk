@@ -346,37 +346,55 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     self.testChildFolderName = nil;
     self.testFolderPathName = nil;
     
-    self.server = [plistDictionary valueForKey:@"server"];
-    if ([[plistDictionary allKeys] containsObject:@"isCloud"])
+    
+    if (nil == plistDictionary)
     {
-        self.isCloud = [[plistDictionary valueForKey:@"isCloud"] boolValue];
+        self.server = @"http://localhost:8080/alfresco";
+        self.isCloud = NO;
+        self.userName = @"admin";
+        self.firstName = @"Administrator";
+        self.testSiteName = @"remoteapi";
+        self.testPassword = @"admin";
+        self.testSearchFileName = @"unknown";
+        self.textKeyWord = @"Rooney";
+        self.unitTestFolder = @"SDKUnitTestFolder";
+        self.testChildFolderName = @"unknown";
+        self.fixedFileName = @"versioned-quote.txt";
+        self.testFolderPathName = @"/";
     }
     else
     {
-        self.isCloud = NO;
+        self.server = [plistDictionary valueForKey:@"server"];
+        if ([[plistDictionary allKeys] containsObject:@"isCloud"])
+        {
+            self.isCloud = [[plistDictionary valueForKey:@"isCloud"] boolValue];
+        }
+        else
+        {
+            self.isCloud = NO;
+        }
+        self.userName = [plistDictionary valueForKey:@"username"];
+        self.firstName = [plistDictionary valueForKey:@"firstName"];
+        self.testSiteName = [plistDictionary valueForKey:@"testSite"];
+        self.testPassword = [plistDictionary valueForKey:@"password"];
+        self.testSearchFileName = [plistDictionary valueForKey:@"testSearchFile"];
+        self.textKeyWord = [plistDictionary valueForKey:@"textKeyWord"];
+        self.unitTestFolder = [plistDictionary valueForKey:@"testAddedFolder"];
+        self.testChildFolderName= [plistDictionary valueForKey:@"testChildFolder"];
+        self.fixedFileName = [plistDictionary valueForKey:@"fixedFileName"];
+        self.testFolderPathName = [plistDictionary valueForKey:@"docFolder"];        
     }
-    self.userName = [plistDictionary valueForKey:@"username"];
-    self.firstName = [plistDictionary valueForKey:@"firstName"];
-    self.testSiteName = [plistDictionary valueForKey:@"testSite"];
-    self.testPassword = [plistDictionary valueForKey:@"password"];
-    self.testSearchFileName = [plistDictionary valueForKey:@"testSearchFile"];
-    self.textKeyWord = [plistDictionary valueForKey:@"textKeyWord"];
-    self.unitTestFolder = [plistDictionary valueForKey:@"testAddedFolder"];
-    self.testChildFolderName= [plistDictionary valueForKey:@"testChildFolder"];
-    self.fixedFileName = [plistDictionary valueForKey:@"fixedFileName"];
-    self.testFolderPathName = [plistDictionary valueForKey:@"docFolder"];
+    
 }
 
 - (void) runCMISTest:(CMISTestBlock)cmisTestBlock
 {
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSString *envsPListPath = [bundle pathForResource:@"environments" ofType:@"plist"];
-    NSDictionary *environmentsDict = [[NSDictionary alloc] initWithContentsOfFile:envsPListPath];
-    NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
-    [self resetTestVariables];
-    for (NSDictionary *environment in environmentArray)
+    if (nil == envsPListPath)
     {
-        [self parseEnvironmentDictionary:environment];
+        [self resetTestVariables];
+        [self parseEnvironmentDictionary:nil];
         
         [self setUpCMISSession];
         [self resetTestVariables];
@@ -390,8 +408,34 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
         {
             log(@"We were not able to run the tests as either the CMIS session or the CMIS root folder are NIL");
         }
-        
     }
+    else
+    {
+        NSDictionary *environmentsDict = [[NSDictionary alloc] initWithContentsOfFile:envsPListPath];
+        NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
+        [self resetTestVariables];
+        for (NSDictionary *environment in environmentArray)
+        {
+            [self parseEnvironmentDictionary:environment];
+            
+            [self setUpCMISSession];
+            [self resetTestVariables];
+            
+            if (nil != self.cmisSession && nil != self.cmisRootFolder)
+            {
+                cmisTestBlock();
+                [self resetTestVariables];
+            }
+            else
+            {
+                log(@"We were not able to run the tests as either the CMIS session or the CMIS root folder are NIL");
+            }
+            
+        }        
+    }
+    
+    
+    
 }
 
 - (void) setUpCMISSession
@@ -466,33 +510,20 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 {
     
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSString *envsPListPath = [bundle pathForResource:@"environments" ofType:@"plist"];
     NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
     NSString *testImagePath = [bundle pathForResource:@"millenium-dome.jpg" ofType:nil];
-    NSDictionary *environmentsDict = [[NSDictionary alloc] initWithContentsOfFile:envsPListPath];
-    NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
 
-    [self resetTestVariables];
-    for (NSDictionary *environment in environmentArray)
+    NSString *envsPListPath = [bundle pathForResource:@"environments" ofType:@"plist"];
+    if (nil == envsPListPath)
     {
-        [self parseEnvironmentDictionary:environment];
+        [self resetTestVariables];
+        [self parseEnvironmentDictionary:nil];
         
-        if (self.isCloud)
-        {
-            log(@"***************** Running test against Cloud server: %@ with username: %@ *****************", self.server, self.userName);
-            [self authenticateCloudServer];
-            [self resetTestVariables];
-        }
-        else
-        {
-            log(@"***************** Running test against OnPremise server: %@ with username: %@ *****************", self.server, self.userName);
-            [self authenticateOnPremiseServer];
-            [self resetTestVariables];
-        }
-
-        [self retrieveAlfrescoTestFolder];
+        [self authenticateOnPremiseServer];
         [self resetTestVariables];
         
+        [self retrieveAlfrescoTestFolder];
+        [self resetTestVariables];        
         
         [self uploadTestDocument:testFilePath];
         [self resetTestVariables];
@@ -513,6 +544,56 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
         [self removeTestDocument];
         [self resetTestVariables];
     }
+    else
+    {
+        NSDictionary *environmentsDict = [[NSDictionary alloc] initWithContentsOfFile:envsPListPath];
+        NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
+        
+        [self resetTestVariables];
+        for (NSDictionary *environment in environmentArray)
+        {
+            [self parseEnvironmentDictionary:environment];
+            
+            if (self.isCloud)
+            {
+                log(@"***************** Running test against Cloud server: %@ with username: %@ *****************", self.server, self.userName);
+                [self authenticateCloudServer];
+                [self resetTestVariables];
+            }
+            else
+            {
+                log(@"***************** Running test against OnPremise server: %@ with username: %@ *****************", self.server, self.userName);
+                [self authenticateOnPremiseServer];
+                [self resetTestVariables];
+            }
+            
+            [self retrieveAlfrescoTestFolder];
+            [self resetTestVariables];
+            
+            
+            [self uploadTestDocument:testFilePath];
+            [self resetTestVariables];
+            
+            [self setUpTestImageFile:testImagePath];
+            [self resetTestVariables];
+            
+            [self setUpTestChildFolder];
+            [self resetTestVariables];
+            
+            [self removePreExistingUnitTestFolder];
+            [self resetTestVariables];
+            
+            log(@"***************** About to start test run for server: %@ *****************", self.server);
+            sessionTestBlock();
+            [self resetTestVariables];
+            
+            [self removeTestDocument];
+            [self resetTestVariables];
+        }
+        
+    }
+    
+    
     
 }
 
