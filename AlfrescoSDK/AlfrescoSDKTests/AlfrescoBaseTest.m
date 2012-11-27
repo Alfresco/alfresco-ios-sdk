@@ -390,7 +390,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 - (void) runCMISTest:(CMISTestBlock)cmisTestBlock
 {
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSString *envsPListPath = [bundle pathForResource:@"environments" ofType:@"plist"];
+    NSString *envsPListPath = [bundle pathForResource:@"test-servers" ofType:@"plist"];
     if (nil == envsPListPath)
     {
         [self resetTestVariables];
@@ -513,7 +513,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
     NSString *testImagePath = [bundle pathForResource:@"millenium-dome.jpg" ofType:nil];
 
-    NSString *envsPListPath = [bundle pathForResource:@"environments" ofType:@"plist"];
+    NSString *envsPListPath = [bundle pathForResource:@"test-servers" ofType:@"plist"];
     if (nil == envsPListPath)
     {
         [self resetTestVariables];
