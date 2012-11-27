@@ -2469,8 +2469,6 @@
              {
                  __block NSString *propertyObjectTestValue = @"version-download-test-updated.txt";
                  NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:8];
-                 [propDict setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-                              forKey:kCMISPropertyObjectTypeId];
                  [propDict setObject:propertyObjectTestValue forKey:kCMISPropertyName];
                  [propDict setObject:@"updated description" forKey:@"cm:description"];
                  [propDict setObject:@"updated title" forKey:@"cm:title"];
@@ -2495,10 +2493,10 @@
                           NSDictionary *updatedProps = updatedDocument.properties;
                           AlfrescoProperty *updatedDescription = [updatedProps objectForKey:@"cm:description"];
                           AlfrescoProperty *updatedTitle = [updatedProps objectForKey:@"cm:title"];
-//                          AlfrescoProperty *updatedAuthor = [updatedProps objectForKey:@"cm:author"];
+                          AlfrescoProperty *updatedAuthor = [updatedProps objectForKey:@"cm:author"];
                           STAssertTrue([updatedDescription.value isEqualToString:@"updated description"], @"Updated description is incorrect");
                           STAssertTrue([updatedTitle.value isEqualToString:@"updated title"], @"Updated title is incorrect");
-//                          STAssertTrue([updatedAuthor.value isEqualToString:@"updated author"], @"Updated author is incorrect");
+                          STAssertTrue([updatedAuthor.value isEqualToString:@"updated author"], @"Updated author is incorrect");
                           
                           id propertyValue = [updatedDocument propertyValueWithName:kCMISPropertyName];
                           if ([propertyValue isKindOfClass:[NSString class]])
@@ -3266,8 +3264,6 @@
                 }
                 
                 STAssertTrue([document hasAspectWithName:@"cm:titled"], @"The document should have the title aspect associated to it");
-                //sys:localized is not supported on 3.4 servers
-//                STAssertTrue([document hasAspectWithName:@"sys:localized"], @"The document should have the localized aspect associated with it");
                 
                 [weakDfService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
                     
@@ -3649,8 +3645,6 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
         NSMutableDictionary *originalProperties = [NSMutableDictionary dictionary];
-        [originalProperties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-                  forKey:kCMISPropertyObjectTypeId];
         [originalProperties setObject:originalDescriptionString forKey:@"cm:description"];
         [originalProperties setObject:originalTitleString forKey:@"cm:title"];
         
@@ -3926,133 +3920,133 @@
 /*
  @Unique_TCRef 32F4
  */
-- (void)testCreateDuplicateFolderName
-{
-    [super runAllSitesTest:^{
-        
-        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        
-        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
-        
-        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-        [properties setObject:@"test description" forKey:@"cm:description"];
-        [properties setObject:@"test title" forKey:@"cm:title"];
-        [properties setObject:super.unitTestFolder forKey:@"cmis:name"];
-        
-        // create a new folder in the repository's root folder
-        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
-            
-            if (folder == nil)
-            {
-                super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                super.callbackCompleted = YES;
-            }
-            else
-            {
-                STAssertNil(error, @"Error should not have occured trying to create the folder the first time");
-                
-                NSMutableDictionary *props = [NSMutableDictionary dictionary];
-                [props setObject:super.unitTestFolder forKey:@"cmis:name"];
-                
-                // attempt to create the folder again
-                [weakFolderService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder2, NSError *error2) {
-                    
-                    if (error2 == nil)
-                    {
-                        super.lastTestSuccessful = NO;
-                    }
-                    else
-                    {
-                        STAssertNotNil(error2, @"Trying to create another folder with the same name should produce an error");
-                        
-                        // delete the orginal we created - cleanup
-                        [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                            
-                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
-                            
-                            super.lastTestSuccessful = succeeded;
-                            
-                            super.callbackCompleted = YES;
-                        }];
-                    }
-                }];
-            }
-            
-        }];
-        
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
-    }];
-}
+//- (void)testCreateDuplicateFolderName
+//{
+//    [super runAllSitesTest:^{
+//        
+//        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+//        
+//        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+//        
+//        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+//        [properties setObject:@"test description" forKey:@"cm:description"];
+//        [properties setObject:@"test title" forKey:@"cm:title"];
+//        [properties setObject:super.unitTestFolder forKey:@"cmis:name"];
+//        
+//        // create a new folder in the repository's root folder
+//        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+//            
+//            if (folder == nil)
+//            {
+//                super.lastTestSuccessful = NO;
+//                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+//                super.callbackCompleted = YES;
+//            }
+//            else
+//            {
+//                STAssertNil(error, @"Error should not have occured trying to create the folder the first time");
+//                
+//                NSMutableDictionary *props = [NSMutableDictionary dictionary];
+//                [props setObject:super.unitTestFolder forKey:@"cmis:name"];
+//                
+//                // attempt to create the folder again
+//                [weakFolderService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder2, NSError *error2) {
+//                    
+//                    if (error2 == nil)
+//                    {
+//                        super.lastTestSuccessful = NO;
+//                    }
+//                    else
+//                    {
+//                        STAssertNotNil(error2, @"Trying to create another folder with the same name should produce an error");
+//                        
+//                        // delete the orginal we created - cleanup
+//                        [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *deleteError) {
+//                            
+//                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
+//                            
+//                            super.lastTestSuccessful = succeeded;
+//                            
+//                            super.callbackCompleted = YES;
+//                        }];
+//                    }
+//                }];
+//            }
+//            
+//        }];
+//        
+//        [super waitUntilCompleteWithFixedTimeInterval];
+//        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+//    }];
+//}
 
 /*
  @Unique_TCRef 33F4
  */
-- (void)testCreateDuplicateDocumentName
-{
-    [super runAllSitesTest:^{
-        
-        NSString *duplicateFileName = @"Duplicate.jpg";
-        
-        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        
-        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
-        
-        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-        [properties setObject:@"test description" forKey:@"cm:description"];
-        [properties setObject:@"test title" forKey:@"cm:title"];
-        [properties setObject:duplicateFileName forKey:@"cmis:name"];
-        
-        [self.dfService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
-            
-            if (document == nil)
-            {
-                super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-            }
-            else
-            {
-                STAssertNil(error, @"Error occured trying to create document the first time");
-                
-                NSMutableDictionary *props = [NSMutableDictionary dictionary];
-                [props setObject:duplicateFileName forKey:@"cmis:name"];
-                
-                [weakFolderService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:props completionBlock:^(AlfrescoDocument *duplicateDocument, NSError *duplicateError) {
-                    
-                    if (duplicateError == nil)
-                    {
-                        super.lastTestSuccessful = NO;
-                    }
-                    else
-                    {
-                        STAssertNotNil(duplicateError, @"Trying to create another file with the same name should produce an error");
-                        
-                        // delete the orginal we created - cleanup
-                        [weakFolderService deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                            
-                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
-                            
-                            super.lastTestSuccessful = succeeded;
-                            
-                            super.callbackCompleted = YES;
-                        }];
-                    }
-                }
-            
-                progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
-                
-                }];
-            }
-            
-        } progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
-            
-        }];
-        
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
-    }];
-}
+//- (void)testCreateDuplicateDocumentName
+//{
+//    [super runAllSitesTest:^{
+//        
+//        NSString *duplicateFileName = @"Duplicate.jpg";
+//        
+//        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+//        
+//        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+//        
+//        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+//        [properties setObject:@"test description" forKey:@"cm:description"];
+//        [properties setObject:@"test title" forKey:@"cm:title"];
+//        [properties setObject:duplicateFileName forKey:@"cmis:name"];
+//        
+//        [self.dfService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+//            
+//            if (document == nil)
+//            {
+//                super.lastTestSuccessful = NO;
+//                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+//            }
+//            else
+//            {
+//                STAssertNil(error, @"Error occured trying to create document the first time");
+//                
+//                NSMutableDictionary *props = [NSMutableDictionary dictionary];
+//                [props setObject:duplicateFileName forKey:@"cmis:name"];
+//                
+//                [weakFolderService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:props completionBlock:^(AlfrescoDocument *duplicateDocument, NSError *duplicateError) {
+//                    
+//                    if (duplicateError == nil)
+//                    {
+//                        super.lastTestSuccessful = NO;
+//                    }
+//                    else
+//                    {
+//                        STAssertNotNil(duplicateError, @"Trying to create another file with the same name should produce an error");
+//                        
+//                        // delete the orginal we created - cleanup
+//                        [weakFolderService deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError) {
+//                            
+//                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
+//                            
+//                            super.lastTestSuccessful = succeeded;
+//                            
+//                            super.callbackCompleted = YES;
+//                        }];
+//                    }
+//                }
+//            
+//                progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+//                
+//                }];
+//            }
+//            
+//        } progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+//            
+//        }];
+//        
+//        [super waitUntilCompleteWithFixedTimeInterval];
+//        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+//    }];
+//}
 
 /*
  @Unique_TCRef 16F2
@@ -4724,6 +4718,128 @@
         
         [super waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+- (void)testCreateDocumentWithCustomType
+{
+    [super runAllSitesTest:^{
+        if (!super.isCloud)
+        {
+            NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
+            
+            // provide the objectTypeId so we can specify the custom type
+            [props setObject:@"D:fdk:everything" forKey:kCMISPropertyObjectTypeId];
+
+            NSString *customTypeTestFileName = [AlfrescoBaseTest testFileNameFromFilename:@"everything.txt"];
+            
+            // create a ContentFile object file for the content
+            NSString *contentString = @"This is the content for the custom type";
+            AlfrescoContentFile *contentFile = [[AlfrescoContentFile alloc] initWithData:[contentString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                mimeType:@"text/plain"];
+            
+            self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+            [self.dfService createDocumentWithName:customTypeTestFileName inParentFolder:super.testDocFolder
+                                       contentFile:contentFile
+                                        properties:props
+                                   completionBlock:^(AlfrescoDocument *document, NSError *blockError){
+                                       if (nil == document)
+                                       {
+                                           super.lastTestSuccessful = NO;
+                                           super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                                           super.callbackCompleted = YES;
+                                       }
+                                       else
+                                       {
+                                           STAssertNotNil(document.identifier, @"document identifier should be filled");
+                                           STAssertTrue([document.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect");
+                                           STAssertTrue([document.name isEqualToString:customTypeTestFileName], @"document name is incorrect");
+                                           STAssertTrue(document.contentLength > 10, @"expected content to be filled");
+                                           
+                                           // delete the test document
+                                           [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                            {
+                                                if (!success)
+                                                {
+                                                    super.lastTestSuccessful = NO;
+                                                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                }
+                                                else
+                                                {
+                                                    super.lastTestSuccessful = YES;
+                                                }
+                                                super.callbackCompleted = YES;
+                                            }];
+                                       }
+                                   } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                                   }];
+            
+            [super waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        }
+    }];
+}
+
+- (void)testUpdatePropertiesForDocumentWithCustomType
+{
+    [super runAllSitesTest:^{
+        if (!super.isCloud)
+        {
+            self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+            __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+
+            // Locate the document named custom-type.txt in the root folder (should be of type fdk:everything)
+            [self.dfService retrieveNodeWithFolderPath:@"custom-type.txt" relativeToFolder:super.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
+                 
+                 if (nil == node)
+                 {
+                     super.lastTestSuccessful = NO;
+                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     super.callbackCompleted = YES;
+                 }
+                 else
+                 {
+                     STAssertTrue(node.isDocument, @"Expecting to find a document node");
+                     STAssertTrue([node.name isEqualToString:@"custom-type.txt"], @"Expecting to find a node named everything but found a node named %@", node.name);
+                     STAssertTrue([node.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect");
+                     
+                     NSString *text = [NSString stringWithFormat:@"Text %i", arc4random()%10];
+                     NSNumber *number = [NSNumber numberWithInt:arc4random()%512];
+                     
+                     NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:2];
+                     [propDict setObject:text forKey:@"fdk:text"];
+                     [propDict setObject:number forKey:@"fdk:int"];
+                     
+                     [weakDfService updatePropertiesOfNode:node properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error) {
+                          
+                          if (nil == updatedNode)
+                          {
+                              super.lastTestSuccessful = NO;
+                              super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          }
+                          else
+                          {
+                              AlfrescoDocument *updatedDocument = (AlfrescoDocument *)updatedNode;
+                              STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
+                              STAssertTrue([node.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect");
+                              
+                              // check the updated properties
+                              NSDictionary *updatedProps = updatedDocument.properties;
+                              AlfrescoProperty *updatedText = [updatedProps objectForKey:@"fdk:text"];
+                              AlfrescoProperty *updatedNumber = [updatedProps objectForKey:@"fdk:int"];
+                              STAssertTrue([updatedText.value isEqualToString:text], @"Updated fdk:text property is incorrect");
+                              STAssertTrue([updatedNumber.value isEqualToNumber:number], @"Updated fdk:int property is incorrect");
+                              
+                              super.lastTestSuccessful = YES;
+                          }
+                          super.callbackCompleted = YES;
+                      }];
+                 }
+             }];
+            
+            [super waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        }
     }];
 }
 

@@ -182,7 +182,7 @@
     }
     if (![objectType isEqualToString:emptyString])
     {
-        [properties setValue:objectType forKey:kCMISPropertyObjectTypeId];
+        [properties setValue:[AlfrescoObjectConverter propertyValueWithoutPrecursor:objectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
     {
@@ -224,7 +224,7 @@
     }
     if (![objectType isEqualToString:emptyString])
     {
-        [properties setValue:objectType forKey:kCMISPropertyObjectTypeId];
+        [properties setValue:[AlfrescoObjectConverter propertyValueWithoutPrecursor:objectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
     {

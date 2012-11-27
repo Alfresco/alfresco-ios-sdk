@@ -851,6 +851,26 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         [cmisProperties setValue:node.name forKey:@"cmis:name"];
     }
     
+    NSString *objectTypeId = [properties objectForKey:kCMISPropertyObjectTypeId];
+    if (objectTypeId == nil && [node.type hasPrefix:@"cmis:"])
+    {
+        objectTypeId = node.type;
+        
+        // iterate around the aspects the node has and append them (expect system aspects)
+        for (NSString *aspectName in node.aspects)
+        {
+            if (![aspectName hasPrefix:@"sys:"])
+            {
+                objectTypeId = [objectTypeId stringByAppendingFormat:@",P:%@", aspectName];
+            }
+        }
+    
+        log(@"cmis:objectTypeId = %@", objectTypeId);
+        
+        // set the fully qualified objectTypeId
+        [cmisProperties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
+    }
+    
     __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.cmisSession retrieveObject:node.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
@@ -916,24 +936,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             
         }
     }];
-/*
-            [cmisObject updateProperties:cmisProperties completionBlock:^(CMISObject *updatedObject, NSError *updateError){
-                if (nil == updatedObject)
-                {
-                    completionBlock(nil, updateError);
-                }
-                else
-                {
-                    AlfrescoNode *resultNode = [weakSelf.objectConverter nodeFromCMISObject:updatedObject];
-                    NSError *conversionError = nil;
-                    if (nil == resultNode)
-                    {
-                        conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
-                    }
-                    completionBlock(resultNode, conversionError);
-                }
-            }];
- */
 }
 
 - (void)deleteNode:(AlfrescoNode *)node completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock 
