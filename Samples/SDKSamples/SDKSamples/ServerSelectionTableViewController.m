@@ -29,6 +29,18 @@
 @implementation ServerSelectionTableViewController
 @synthesize loginController = _loginController;
 #pragma mark - private methods
+
+/**
+ this method authenticates with Alfresco In The Cloud
+ Look out for the AlfrescoOAuthCompletionBlock code. In there, we get the access/refresh tokens in form of AlfrescoOAuthData object,
+ which we need to pass on to create an AlfrescoCloudSession.
+ 
+ AlfrescoOAuthData is serializable. In production code, you may want to take the opportunity to store the
+ AlfrescoOAuthData object to e.g. User defaults. Look at the commented out code in the AlfrescoOAuthCompletionBlock.
+ 
+ A more comprehensive example of how to archive/unarchive AlfrescoOAuthData is shown in SamplesViewController
+ */
+
 - (void)authenticateCloudWithOAuth
 {
     __weak ServerSelectionTableViewController *weakSelf = self;
@@ -39,10 +51,12 @@
         }
         else
         {
+            /* ---- store OAuth data to user defaults ----
             NSData *archivedOAuthData = [NSKeyedArchiver archivedDataWithRootObject:oauthdata];
             NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
             [standardDefaults setObject:archivedOAuthData forKey:@"ArchivedOAuthData"];
             [standardDefaults synchronize];
+             */
             
             [AlfrescoCloudSession connectWithOAuthData:oauthdata completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)

@@ -98,6 +98,7 @@
 		4E3FE893165E192500BDAB31 /* AlfrescoCMISUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E3FE88B165E192500BDAB31 /* AlfrescoCMISUtil.h */; };
 		4E3FE894165E192500BDAB31 /* AlfrescoCMISUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3FE88C165E192500BDAB31 /* AlfrescoCMISUtil.m */; };
 		4E3FE89D165E805700BDAB31 /* AlfrescoOAuthLoginDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E3FE89C165E805700BDAB31 /* AlfrescoOAuthLoginDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4E4B773D16637978005E1762 /* AlfrescoSpecificCMISTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B773C16637978005E1762 /* AlfrescoSpecificCMISTests.m */; };
 		4E4E379715DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E4E379515DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h */; };
 		4E4E379815DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4E379615DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.m */; };
 		4E4E379C15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E4E379A15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h */; };
@@ -349,6 +350,8 @@
 		4E3FE88B165E192500BDAB31 /* AlfrescoCMISUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCMISUtil.h; path = CMIS/AlfrescoCMIS/AlfrescoCMISUtil.h; sourceTree = SOURCE_ROOT; };
 		4E3FE88C165E192500BDAB31 /* AlfrescoCMISUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCMISUtil.m; path = CMIS/AlfrescoCMIS/AlfrescoCMISUtil.m; sourceTree = SOURCE_ROOT; };
 		4E3FE89C165E805700BDAB31 /* AlfrescoOAuthLoginDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthLoginDelegate.h; path = OAuth/AlfrescoOAuthLoginDelegate.h; sourceTree = "<group>"; };
+		4E4B773B16637978005E1762 /* AlfrescoSpecificCMISTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSpecificCMISTests.h; sourceTree = "<group>"; };
+		4E4B773C16637978005E1762 /* AlfrescoSpecificCMISTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSpecificCMISTests.m; sourceTree = "<group>"; };
 		4E4E379515DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoPlaceholderTaggingService.h; path = PlaceholderServices/AlfrescoPlaceholderTaggingService.h; sourceTree = "<group>"; };
 		4E4E379615DCDDBA0064F2DE /* AlfrescoPlaceholderTaggingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoPlaceholderTaggingService.m; path = PlaceholderServices/AlfrescoPlaceholderTaggingService.m; sourceTree = "<group>"; };
 		4E4E379A15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudTaggingService.h; path = CloudServices/AlfrescoCloudTaggingService.h; sourceTree = "<group>"; };
@@ -703,6 +706,8 @@
 		4EB076B015B00D8E00DF7DED /* AlfrescoSDKTests */ = {
 			isa = PBXGroup;
 			children = (
+				4E4B773B16637978005E1762 /* AlfrescoSpecificCMISTests.h */,
+				4E4B773C16637978005E1762 /* AlfrescoSpecificCMISTests.m */,
 				4EB077E715B00F3800DF7DED /* AlfrescoActivityStreamServiceTest.h */,
 				4EB077E815B00F3800DF7DED /* AlfrescoActivityStreamServiceTest.m */,
 				4EB077E915B00F3800DF7DED /* AlfrescoBaseTest.h */,
@@ -1310,6 +1315,7 @@
 				4EB0780615B00F5200DF7DED /* AlfrescoTaggingServiceTest.m in Sources */,
 				4EB0780715B00F5200DF7DED /* AlfrescoVersionServiceTest.m in Sources */,
 				730243B91628388C0028C378 /* AlfrescoSessionTest.m in Sources */,
+				4E4B773D16637978005E1762 /* AlfrescoSpecificCMISTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

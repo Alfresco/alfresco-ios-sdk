@@ -23,7 +23,6 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoHTTPUtils.h"
 #import "AlfrescoPagingUtils.h"
-#import "AlfrescoISO8601DateFormatter.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoObjectConverter.h"
 #import <objc/runtime.h>
@@ -33,7 +32,6 @@
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
-@property (nonatomic, strong)AlfrescoISO8601DateFormatter *dateFormatter;
 
 - (NSArray *) commentArrayFromJSONData:(NSData *)data error:(NSError **)outError;
 - (AlfrescoComment *) alfrescoCommentDictFromJSONData:(NSData *)data error:(NSError **)outError;
@@ -44,7 +42,6 @@
 @synthesize session = _session;
 @synthesize objectConverter = _objectConverter;
 @synthesize authenticationProvider = _authenticationProvider;
-@synthesize dateFormatter = _dateFormatter;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -59,7 +56,6 @@
         {
             self.authenticationProvider = (AlfrescoBasicAuthenticationProvider *)authenticationObject;
         }
-        self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
     }
     return self;
 }

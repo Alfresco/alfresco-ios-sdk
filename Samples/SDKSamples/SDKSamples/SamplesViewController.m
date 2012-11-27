@@ -162,12 +162,23 @@
     }
 }
 
+/**
+ The AlfrescoOAuthHelper class facilitates refresh of access tokens. For that it requires the existing AlfrescoOAuthData set.
+ In our example here, we simply obtain the AlfrescoOAuthData from the AlfrescoCloudSession object directly.
+ For production code, a different route may be chosen:
+ AlfrescoOAuthData is serializable. Therefore, the data may be stored, e.g. in User defaults. 
+ The commented out code demonstrates how you obtain the archived OAuthData from user defaults.
+ It then shows how we reset the archived OAuth data to the updated object containing the new access/refresh token.
+ 
+ Storing/archiving AlfrescoOAuthData is also demonstrated in the ServerSelectionTableViewController
+ */
 - (void)refreshAccessToken
 {
     if (nil != self.activityIndicator)
     {
         [self.activityIndicator startAnimating];
     }
+    /* ---- obtain the archived AlfrescoOAuthData with the original access/refresh token from User defaults ----
     NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
     NSData *archivedOAuthData = [standardDefaults objectForKey:@"ArchivedOAuthData"];
     if (nil == archivedOAuthData)
@@ -179,8 +190,11 @@
     }
 
     AlfrescoOAuthData *oauthData = [NSKeyedUnarchiver unarchiveObjectWithData:archivedOAuthData];
+     */
+    
+    AlfrescoCloudSession *cloudSession = (AlfrescoCloudSession *)self.session;
     AlfrescoOAuthHelper *oauthHelper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self];
-    [oauthHelper refreshAccessToken:oauthData completionBlock:^(AlfrescoOAuthData *refreshedOAuthData, NSError *error){
+    [oauthHelper refreshAccessToken:cloudSession.oauthData completionBlock:^(AlfrescoOAuthData *refreshedOAuthData, NSError *error){
         if (nil == refreshedOAuthData)
         {
             if (nil != self.activityIndicator)
@@ -199,10 +213,12 @@
                 [self.activityIndicator stopAnimating];
             }
 
+            /* ---- now that we refreshed the access/refresh tokens -> archive them back to User defaults ----
             NSData *refreshedData = [NSKeyedArchiver archivedDataWithRootObject:refreshedOAuthData];
             [standardDefaults removeObjectForKey:@"ArchivedOAuthData"];
             [standardDefaults setObject:refreshedData forKey:@"ArchivedOAuthData"];
             [standardDefaults synchronize];
+             */
             
             if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
             {
