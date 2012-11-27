@@ -59,7 +59,7 @@ extern NSString * const kAlfrescoTestDataFolder;
 @property (nonatomic, strong) CMISFolder *cmisRootFolder;
 @property (nonatomic, assign) BOOL isCloud;
 
-+ (NSString *)testFileNameFromEnviroment:(NSString *)filename;
++ (NSString *)testFileNameFromFilename:(NSString *)filename;
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock;
 - (void) runCMISTest:(CMISTestBlock)cmisTestBlock;
 - (void) setUpCMISSession;

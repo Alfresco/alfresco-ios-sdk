@@ -26,6 +26,7 @@
 #import "CMISISO8601DateFormatter.h"
 #import "AlfrescoCMISDocument.h"
 #import "CMISDateUtil.h"
+#import "CMISStringInOutParameter.h"
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
 
@@ -43,7 +44,7 @@
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromEnviroment:[fileUrl lastPathComponent]];
+        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
         NSString *documentDescription = @"This is a test description";
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
@@ -97,13 +98,14 @@
         }];
 }
 
+/*
 - (void)testUpdateDocumentDescription
 {
     [self runCMISTest:^
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromEnviroment:[fileUrl lastPathComponent]];
+        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         
@@ -134,29 +136,65 @@
                         NSMutableDictionary *properties = [NSMutableDictionary dictionary];
                         NSString *description = @"This is a jolly good description!";
                         [properties setObject:description forKey:@"cm:description"];
+                        [documentProperties setObject:@"cmis:document, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
                         
-                        
-                        [doc updateProperties:properties completionBlock:^(CMISObject *updatedObject, NSError *updateError){
-                            if (nil == updatedObject)
+                        [self.cmisSession.objectConverter convertProperties:properties forObjectTypeId:cmisObject.objectType completionBlock:^(CMISProperties *convertedProps, NSError *convError){
+                            if (nil == convertedProps)
                             {
                                 self.lastTestSuccessful = NO;
                                 self.callbackCompleted = YES;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [updateError localizedDescription], [updateError localizedFailureReason]];
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [convError localizedDescription], [convError localizedFailureReason]];
                             }
                             else
                             {
-                                [self verifyDocument:doc hasExtensionProperty:@"cm:description" withValue:description];
-                                [doc deleteAllVersionsWithCompletionBlock:^(BOOL documentDeleted, NSError *deleteError){
-                                    if (deleteError)
+                                CMISProperties *updatedProperties = [[CMISProperties alloc] init];
+                                NSEnumerator *enumerator = [convertedProps.propertiesDictionary keyEnumerator];
+                                for (NSString *cmisKey in enumerator)
+                                {
+                                    if (![cmisKey isEqualToString:kCMISPropertyObjectTypeId])
+                                    {
+                                        CMISPropertyData *propData = [convertedProps.propertiesDictionary objectForKey:cmisKey];
+                                        [updatedProperties addProperty:propData];
+                                    }
+                                }
+                                updatedProperties.extensions = convertedProps.extensions;
+                                CMISStringInOutParameter *inOut = [CMISStringInOutParameter inOutParameterUsingInParameter:cmisObject.identifier];
+                                [self.cmisSession.binding.objectService updatePropertiesForObject:inOut withProperties:updatedProperties withChangeToken:nil completionBlock:^(NSError *updError){
+                                    if (updError)
                                     {
                                         self.lastTestSuccessful = NO;
                                         self.callbackCompleted = YES;
-                                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [convError localizedDescription], [convError localizedFailureReason]];
                                     }
                                     else
                                     {
-                                        self.lastTestSuccessful = YES;
-                                        self.callbackCompleted = YES;
+                                        [self.cmisSession retrieveObject:cmisObject.identifier completionBlock:^(CMISObject *updatedObj, NSError *retrError){
+                                            if (nil == updatedObj)
+                                            {
+                                                self.lastTestSuccessful = NO;
+                                                self.callbackCompleted = YES;
+                                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrError localizedDescription], [retrError localizedFailureReason]];
+                                            }
+                                            else
+                                            {
+                                                CMISDocument *doc = (CMISDocument *)updatedObj;
+                                                [self verifyDocument:doc hasExtensionProperty:@"cm:description" withValue:description];
+                                                [doc deleteAllVersionsWithCompletionBlock:^(BOOL documentDeleted, NSError *deleteError){
+                                                    if (deleteError)
+                                                    {
+                                                        self.lastTestSuccessful = NO;
+                                                        self.callbackCompleted = YES;
+                                                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                                                    }
+                                                    else
+                                                    {
+                                                        self.lastTestSuccessful = YES;
+                                                        self.callbackCompleted = YES;
+                                                    }
+                                                }];
+                                                
+                                            }
+                                        }];
                                     }
                                 }];
                             }
@@ -171,7 +209,7 @@
 
     }];
 }
-
+*/
 - (void)testRetrieveExifDataUsingExtensions
 {
     [self runCMISTest:^
@@ -228,6 +266,7 @@
     }];
 }
 
+/*
 - (void)testUpdateExifData
 {
     [self runCMISTest:^
@@ -309,7 +348,8 @@
         
     }];
 }
-
+*/
+ 
 - (void)testCreateDocumentWithExif
 {
     [self runCMISTest:^
@@ -317,7 +357,7 @@
 
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromEnviroment:[fileUrl lastPathComponent]];
+        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:@"cmis:document, P:cm:titled, P:exif:exif" forKey:kCMISPropertyObjectTypeId];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
@@ -373,7 +413,7 @@
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromEnviroment:[fileUrl lastPathComponent]];
+        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
@@ -442,7 +482,7 @@
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromEnviroment:[fileUrl lastPathComponent]];
+        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
         __block NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         [documentProperties setObject:@"cmis:document, P:cm:titled, P:cm:author" forKey:kCMISPropertyObjectTypeId];
