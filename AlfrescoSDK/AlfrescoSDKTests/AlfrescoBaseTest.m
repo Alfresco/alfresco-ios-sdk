@@ -350,6 +350,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     if (nil == plistDictionary)
     {
         self.server = @"http://localhost:8080/alfresco";
+        log(@"***************** We set the server to localhost %@ *****************", self.server);
         self.isCloud = NO;
         self.userName = @"admin";
         self.firstName = @"Administrator";
@@ -365,9 +366,11 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     else
     {
         self.server = [plistDictionary valueForKey:@"server"];
+        log(@"***************** We set the server to a real value %@ *****************", self.server);
         if ([[plistDictionary allKeys] containsObject:@"isCloud"])
         {
             self.isCloud = [[plistDictionary valueForKey:@"isCloud"] boolValue];
+            log(@"***************** ISCLOUD value %@ *****************", self.server);
         }
         else
         {
@@ -389,9 +392,9 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 
 - (void) runCMISTest:(CMISTestBlock)cmisTestBlock
 {
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSString *envsPListPath = [bundle pathForResource:@"test-servers" ofType:@"plist"];
-    if (nil == envsPListPath)
+    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+    if (nil == environmentsDict)
     {
         [self resetTestVariables];
         [self parseEnvironmentDictionary:nil];
@@ -411,7 +414,6 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     }
     else
     {
-        NSDictionary *environmentsDict = [[NSDictionary alloc] initWithContentsOfFile:envsPListPath];
         NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
         [self resetTestVariables];
         for (NSDictionary *environment in environmentArray)
@@ -509,13 +511,16 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock
 {
     
+    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+    
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
     NSString *testImagePath = [bundle pathForResource:@"millenium-dome.jpg" ofType:nil];
 
-    NSString *envsPListPath = [bundle pathForResource:@"test-servers" ofType:@"plist"];
-    if (nil == envsPListPath)
+    if (nil == environmentsDict)
     {
+        log(@"!!!!! We are not having a test-servers.plist file and are running tests from hardcoded values !!!!!");
         [self resetTestVariables];
         [self parseEnvironmentDictionary:nil];
         
@@ -546,12 +551,12 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     }
     else
     {
-        NSDictionary *environmentsDict = [[NSDictionary alloc] initWithContentsOfFile:envsPListPath];
         NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
         
         [self resetTestVariables];
         for (NSDictionary *environment in environmentArray)
         {
+            log(@"!!!!! WE ARE RUNNING THE TEST FROM test-servers.plist !!!!!");
             [self parseEnvironmentDictionary:environment];
             
             if (self.isCloud)
