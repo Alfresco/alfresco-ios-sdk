@@ -18,6 +18,10 @@
 
 #import "AlfrescoBaseTest.h"
 #import "AlfrescoContentFile.h"
+#import "AlfrescoInternalConstants.h"
+#import "AlfrescoCMISObjectConverter.h"
+#import "CMISConstants.h"
+#import "CMISDocument.h"
 
 NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 
@@ -25,7 +29,6 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 @property (nonatomic, strong) NSString * testPassword;
 - (void) uploadTestDocument:(NSString *)filePath;
 - (void) parseEnvironmentDictionary:(NSDictionary *)plistDictionary;
-+ (NSString *)testFileNameFromEnviroment:(NSString *)filename;
 - (void) setUpTestImageFile:(NSString *)filePath;
 - (void) setUpTestChildFolder;
 - (void) resetTestVariables;
@@ -55,6 +58,8 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 @synthesize testFolderPathName = _testFolderPathName;
 @synthesize fixedFileName = _fixedFileName;
 @synthesize testImageFile = _testImageFile;
+@synthesize cmisSession = _cmisSession;
+@synthesize cmisRootFolder = _cmisRootFolder;
 #pragma mark unit test internal methods
 
 
@@ -68,7 +73,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     
 }
 
-+ (NSString *)testFileNameFromEnviroment:(NSString *)filename
++ (NSString *)testFileNameFromFilename:(NSString *)filename
 {
     NSDate *currentDate = [NSDate date];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -85,12 +90,14 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 {
     NSURL *fileUrl = [NSURL URLWithString:filePath];
 
-    NSString *newName = [AlfrescoBaseTest testFileNameFromEnviroment:[fileUrl lastPathComponent]];
+    NSString *newName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"text/plain"];
-    NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+    NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
+    [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
     [props setObject:@"test file description" forKey:@"cm:description"];
     [props setObject:@"test file title" forKey:@"cm:title"];
+    [props setObject:@"test author" forKey:@"cm:author"];
     log(@"***************** uploadTestDocument Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
 
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
@@ -360,6 +367,99 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     self.testFolderPathName = [plistDictionary valueForKey:@"docFolder"];
 }
 
+- (void) runCMISTest:(CMISTestBlock)cmisTestBlock
+{
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString *envsPListPath = [bundle pathForResource:@"environments" ofType:@"plist"];
+    NSDictionary *environmentsDict = [[NSDictionary alloc] initWithContentsOfFile:envsPListPath];
+    NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
+    [self resetTestVariables];
+    for (NSDictionary *environment in environmentArray)
+    {
+        [self parseEnvironmentDictionary:environment];
+        
+        [self setUpCMISSession];
+        [self resetTestVariables];
+        
+        if (nil != self.cmisSession && nil != self.cmisRootFolder)
+        {
+            cmisTestBlock();
+            [self resetTestVariables];
+        }
+        else
+        {
+            log(@"We were not able to run the tests as either the CMIS session or the CMIS root folder are NIL");
+        }
+        
+    }
+}
+
+- (void) setUpCMISSession
+{
+    NSString *urlString = nil;
+    if (self.isCloud)
+    {
+        urlString = [self.server stringByAppendingString:kAlfrescoCloudCMISPath];
+    }
+    else
+    {
+        urlString = [self.server stringByAppendingString:kAlfrescoOnPremiseCMISPath];
+    }
+    __block CMISSessionParameters *params = [[CMISSessionParameters alloc]
+                                     initWithBindingType:CMISBindingTypeAtomPub];
+    params.username = self.userName;
+    params.password = self.testPassword;
+    params.atomPubUrl = [NSURL URLWithString:urlString];
+    [CMISSession arrayOfRepositories:params completionBlock:^(NSArray *repositories, NSError *error){
+        if (nil == repositories)
+        {
+            self.lastTestSuccessful = NO;
+            self.callbackCompleted = YES;
+            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+        }
+        else if( 0 == repositories.count)
+        {
+            self.lastTestSuccessful = NO;
+            self.callbackCompleted = YES;
+            self.lastTestFailureMessage = @"!!! NO VALID REPO FOUND !!!";
+        }
+        else
+        {
+            CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
+            params.repositoryId = repoInfo.identifier;
+            [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+            [CMISSession connectWithSessionParameters:params completionBlock:^(CMISSession *cmisSession, NSError *cmisError){
+                if (nil == cmisSession)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.callbackCompleted = YES;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [cmisError localizedDescription], [cmisError localizedFailureReason]];
+                }
+                else
+                {
+                    self.cmisSession = cmisSession;
+                    [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *folder, NSError *folderError){
+                        if (nil == folder)
+                        {
+                            self.lastTestSuccessful = NO;
+                            self.callbackCompleted = YES;
+                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [folderError localizedDescription], [folderError localizedFailureReason]];
+                        }
+                        else
+                        {
+                            self.lastTestSuccessful = YES;
+                            self.callbackCompleted = YES;
+                            self.cmisRootFolder = folder;                            
+                        }
+                    }];
+                }
+            }];
+        }
+    }];
+    [self waitUntilCompleteWithFixedTimeInterval];
+    STAssertTrue(self.lastTestSuccessful, @"setUpTestChildFolder failed");
+    
+}
 
 
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock

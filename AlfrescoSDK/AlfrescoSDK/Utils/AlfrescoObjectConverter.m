@@ -28,7 +28,6 @@
 #import "AlfrescoComment.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoPermissions.h"
-#import "AlfrescoISO8601DateFormatter.h"
 #import "AlfrescoErrors.h"
 #import <objc/runtime.h>
 #import "AlfrescoInternalConstants.h"
@@ -42,7 +41,6 @@
 @interface AlfrescoObjectConverter ()
 @property (nonatomic, assign) BOOL isCloud;
 @property (nonatomic, strong)id<AlfrescoSession>session;
-@property (nonatomic, strong)AlfrescoISO8601DateFormatter *dateFormatter;
 - (AlfrescoFolder *)folderFromCMISFolder:(CMISFolder *)cmisFolder
                               properties:(NSDictionary *)properties;
 - (AlfrescoDocument *)documentFromCMISDocument:(CMISDocument *)cmisDocument
@@ -56,7 +54,6 @@
 @implementation AlfrescoObjectConverter
 
 @synthesize session = _session;
-@synthesize dateFormatter = _dateFormatter;
 @synthesize isCloud = _isCloud;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
@@ -64,7 +61,6 @@
     if (self = [super init])
     {
         self.session = session;
-        self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
         if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
         {
             self.isCloud = YES;
@@ -186,7 +182,7 @@
     }
     if (![objectType isEqualToString:emptyString])
     {
-        [properties setValue:objectType forKey:kCMISPropertyObjectTypeId];
+        [properties setValue:[AlfrescoObjectConverter propertyValueWithoutPrecursor:objectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
     {
@@ -228,7 +224,7 @@
     }
     if (![objectType isEqualToString:emptyString])
     {
-        [properties setValue:objectType forKey:kCMISPropertyObjectTypeId];
+        [properties setValue:[AlfrescoObjectConverter propertyValueWithoutPrecursor:objectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
     {
