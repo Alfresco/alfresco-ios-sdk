@@ -224,7 +224,6 @@
 		4EB0780515B00F5200DF7DED /* AlfrescoSiteServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB077FD15B00F5200DF7DED /* AlfrescoSiteServiceTest.m */; };
 		4EB0780615B00F5200DF7DED /* AlfrescoTaggingServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB077FF15B00F5200DF7DED /* AlfrescoTaggingServiceTest.m */; };
 		4EB0780715B00F5200DF7DED /* AlfrescoVersionServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0780115B00F5200DF7DED /* AlfrescoVersionServiceTest.m */; };
-		4EB0780915B00F6B00DF7DED /* environments.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4EB0780815B00F6B00DF7DED /* environments.plist */; };
 		4EB0781115B0129B00DF7DED /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0781015B0129B00DF7DED /* MobileCoreServices.framework */; };
 		4EBF68F9164D1C4900D6F06C /* AlfrescoHTTPRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EBF68F7164D1C4900D6F06C /* AlfrescoHTTPRequest.h */; };
 		4EBF68FA164D1C4900D6F06C /* AlfrescoHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EBF68F8164D1C4900D6F06C /* AlfrescoHTTPRequest.m */; };
@@ -490,7 +489,6 @@
 		4EB077FF15B00F5200DF7DED /* AlfrescoTaggingServiceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoTaggingServiceTest.m; sourceTree = "<group>"; };
 		4EB0780015B00F5200DF7DED /* AlfrescoVersionServiceTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoVersionServiceTest.h; sourceTree = "<group>"; };
 		4EB0780115B00F5200DF7DED /* AlfrescoVersionServiceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoVersionServiceTest.m; sourceTree = "<group>"; };
-		4EB0780815B00F6B00DF7DED /* environments.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = environments.plist; sourceTree = "<group>"; };
 		4EB0780A15B0123A00DF7DED /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4EB0780C15B0126000DF7DED /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4EB0780E15B0127900DF7DED /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -741,7 +739,6 @@
 				4E24640E15ED1BC000168C5F /* millenium-dome.jpg */,
 				4E2271C615E62675006644DA /* versioned-quote.txt */,
 				4E944AE415E27EED00E89D69 /* test_file.txt */,
-				4EB0780815B00F6B00DF7DED /* environments.plist */,
 				4EB076B215B00D8E00DF7DED /* AlfrescoSDKTests-Info.plist */,
 				4EB076B315B00D8E00DF7DED /* InfoPlist.strings */,
 			);
@@ -1189,7 +1186,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EB076B515B00D8E00DF7DED /* InfoPlist.strings in Resources */,
-				4EB0780915B00F6B00DF7DED /* environments.plist in Resources */,
 				4E944AE515E27EED00E89D69 /* test_file.txt in Resources */,
 				4E2271C715E62675006644DA /* versioned-quote.txt in Resources */,
 				4E24640F15ED1BC000168C5F /* millenium-dome.jpg in Resources */,

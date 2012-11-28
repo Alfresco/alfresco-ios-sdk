@@ -342,18 +342,19 @@
     self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
     self.oauthData = oauthData;
     self.personIdentifier = kAlfrescoMe;
-    CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
-    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
-    self.cmisUrl = [NSURL URLWithString:cmisUrl];
-    params.atomPubUrl = self.cmisUrl;
-    log(@"*** authenticateWithOAuthData setting authentication providers");
+
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     CMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[CMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
+
+    __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
+    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
+    params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     params.authenticationProvider = passthroughAuthProvider;
     
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params completionBlock:completionBlock];
     [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
+    
 }
 
 - (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
@@ -380,7 +381,11 @@
             CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
             parameters.repositoryId = repoInfo.identifier;
             [parameters setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+
+            log(@"**** repositoriesWithParameters. the URL is %@ and the repo ID is %@ ****", [parameters.atomPubUrl absoluteString], repoInfo.identifier);
+
             [CMISSession connectWithSessionParameters:parameters completionBlock:^(CMISSession *cmisSession, NSError *error){
+                log(@"**** repositoriesWithParameters/connectWithSessionParameters. the URL is %@ ****", [cmisSession.sessionParameters.atomPubUrl absoluteString]);
                 if (nil == cmisSession)
                 {
                     if(completionBlock)
@@ -390,6 +395,7 @@
                 }
                 else
                 {
+                    [self setObject:cmisSession forParameter:kAlfrescoSessionKeyCmisSession];
                     AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
                     [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
@@ -428,20 +434,20 @@ This authentication method authorises the user to access the home network assign
                             password:(NSString *)password
                      completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    self.isUsingBaseAuthenticationProvider = YES;
     NSString *baseURL = kAlfrescoCloudURL;
     if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
-        log(@"overriding Cloud URL with: %@", baseURL);
+        log(@"**** overriding Cloud URL with: %@ ****", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
     self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
     log(@"**** baseURLWithoutNetwork = %@ ****", [self.baseURLWithoutNetwork absoluteString]);
-    self.isUsingBaseAuthenticationProvider = YES;
     self.emailAddress = emailAddress;
     self.password = password;
+    self.personIdentifier = emailAddress;
     self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
-    __weak AlfrescoCloudSession *weakSelf = self;
     [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
         {
@@ -467,8 +473,8 @@ This authentication method authorises the user to access the home network assign
             }
             else
             {
-                [weakSelf authenticateWithEmailAddress:weakSelf.emailAddress
-                                              password:weakSelf.password
+                [self authenticateWithEmailAddress:emailAddress
+                                              password:password
                                                network:homeNetwork.identifier
                                        completionBlock:completionBlock];
             }
@@ -486,23 +492,30 @@ This authentication method authorises the user to access the home network assign
                              network:(NSString *)network
                      completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    self.isUsingBaseAuthenticationProvider = YES;
     NSString *baseURL = kAlfrescoCloudURL;
     if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
-        log(@"overriding Cloud URL with: %@", baseURL);
+        log(@"**** overriding Cloud URL with: %@ ****", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@", baseURL, kAlfrescoCloudPrecursor, network]];
     self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
-    self.isUsingBaseAuthenticationProvider = YES;
+    self.emailAddress = emailAddress;
+    self.password = password;
+    self.personIdentifier = emailAddress;
+    
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
-    self.cmisUrl = [NSURL URLWithString:cmisUrl];
     self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
 
-    CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
+    __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     params.username = emailAddress;
     params.password = password;
-    params.atomPubUrl = self.cmisUrl;
+    params.atomPubUrl = [NSURL URLWithString:cmisUrl];
+
+    id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
+    [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params completionBlock:completionBlock];
     [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
 }
