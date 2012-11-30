@@ -198,7 +198,7 @@
 
 - (void)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    __weak AlfrescoCloudSession *weakSelf = self;
+//    __weak AlfrescoCloudSession *weakSelf = self;
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     [AlfrescoHTTPUtils executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
@@ -209,7 +209,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *networks = [weakSelf networkArrayFromJSONData:data error:&conversionError];
+            NSArray *networks = [self networkArrayFromJSONData:data error:&conversionError];
             completionBlock(networks, conversionError);
         }
         

@@ -38,19 +38,19 @@
     {
         // add a comment using an AlfrescoCommentService
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:self.session];
-        __weak AddCommentViewController *weakSelf = self;
+//        __weak AddCommentViewController *weakSelf = self;
         [self.commentService addCommentToNode:self.document content:self.commentView.text title:nil completionBlock:^(AlfrescoComment *comment, NSError *error) {
             if (nil == comment) 
             {
-                [weakSelf showFailureAlert:@"error_add_comment"];
+                [self showFailureAlert:@"error_add_comment"];
             }
-            else if ([weakSelf.addCommentDelegate respondsToSelector:@selector(updateComments)])
+            else if ([self.addCommentDelegate respondsToSelector:@selector(updateComments)])
             {
-                [weakSelf.addCommentDelegate updateComments];
+                [self.addCommentDelegate updateComments];
             }
             
             
-            [weakSelf.navigationController popViewControllerAnimated:YES];
+            [self.navigationController popViewControllerAnimated:YES];
         }];
     }
 }

@@ -1188,7 +1188,7 @@
         __block int skipCount = 0;
         __block AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:skipCount];
         
-        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
+//        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
         
         [self.dfService retrieveChildrenInFolder:super.testDocFolder completionBlock:^(NSArray *array, NSError *error){
             if (nil == array)
@@ -1202,7 +1202,7 @@
                 __block int numberOfChildren = array.count;
                 log(@"<<<<< The total number of children found in the folder is %d >>>>>>>>>>>>", numberOfChildren);
                 STAssertFalse(0 == numberOfChildren, @"There should be at least 1 child element in the folder");
-                [weakSelf retrieveChildrenInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                [self.dfService retrieveChildrenInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                  {
                      if (nil == pagingResult)
                      {
@@ -1420,7 +1420,7 @@
         __block int maxItems = 2;
         __block int skipCount = 1;
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:skipCount];
-        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
+//        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
         [self.dfService retrieveDocumentsInFolder:super.testDocFolder completionBlock:^(NSArray *foundDocuments, NSError *error){
             if (nil == foundDocuments)
             {
@@ -1433,7 +1433,7 @@
                 __block int numberOfDocs = foundDocuments.count;
                 log(@"<<<<< The total number of docs found in the folder is %d >>>>>>>>>>>>", numberOfDocs);
                 STAssertFalse(0 == numberOfDocs, @"We should have at least 1 document in the folder. Instead we got none");
-                [weakSelf retrieveDocumentsInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                [self.dfService retrieveDocumentsInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                  {
                      if (nil == pagingResult)
                      {
@@ -1583,7 +1583,7 @@
         __block int skipCount = 0;
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:skipCount];
         
-        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
+//        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
         [self.dfService retrieveFoldersInFolder:super.testDocFolder completionBlock:^(NSArray *foundFolders, NSError *error){
             if (nil == foundFolders)
             {
@@ -1594,7 +1594,7 @@
             else
             {
                 __block int numberOfFolders = foundFolders.count;
-                [weakSelf retrieveFoldersInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                [self.dfService retrieveFoldersInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                  {
                      if (nil == pagingResult)
                      {
@@ -2387,7 +2387,7 @@
     [super runAllSitesTest:^{
         NSString *filename = @"millenium-dome.jpg";
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
+//        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
         [self.dfService
          createDocumentWithName:filename
          inParentFolder:self.testDocFolder
@@ -2402,7 +2402,7 @@
              }
              else
              {
-                 [weakSelf retrieveNodeWithIdentifier:doc.identifier completionBlock:^(AlfrescoNode *node, NSError *propError) {
+                 [self.dfService retrieveNodeWithIdentifier:doc.identifier completionBlock:^(AlfrescoNode *node, NSError *propError) {
                      if (nil == node)
                      {
                          super.lastTestSuccessful = NO;
@@ -2417,7 +2417,7 @@
                          NSString *title = doc.title;
                          STAssertNil(description, @"expected description to be NIL");
                          STAssertNil(title, @"expected title to be NIL");
-                         [weakSelf deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError){
+                         [self.dfService deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError){
                              if (!succeeded)
                              {
                                  super.lastTestSuccessful = NO;
@@ -2795,7 +2795,7 @@
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
+//        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
         
         // get the children of the repository's root folder
         [self.dfService retrieveChildrenInFolder:super.testDocFolder completionBlock:^(NSArray *array, NSError *error)
@@ -2835,7 +2835,7 @@
                  if (nil != testVersionedDoc)
                  {
                      log(@"*************** BEFORE CALLING retrieveRenditionOfNode");
-                     [weakSelf retrieveRenditionOfNode:testVersionedDoc renditionName:kAlfrescoThumbnailRendition completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+                     [self.dfService retrieveRenditionOfNode:testVersionedDoc renditionName:kAlfrescoThumbnailRendition completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
                          log(@"*************** IN COMPLETIONBLOCK OF retrieveRenditionOfNode");
                          if (nil == contentFile)
                          {
@@ -3648,7 +3648,7 @@
         [originalProperties setObject:originalDescriptionString forKey:@"cm:description"];
         [originalProperties setObject:originalTitleString forKey:@"cm:title"];
         
-        __weak AlfrescoDocumentFolderServiceTest *weakSelf = self;
+//        __weak AlfrescoDocumentFolderServiceTest *weakSelf = self;
         
         [self.dfService createFolderWithName:self.unitTestFolder inParentFolder:self.testDocFolder properties:originalProperties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
             
@@ -3677,7 +3677,7 @@
                 [newFolderProperties setObject:updatedTitleString forKey:@"cm:title"];
                 [newFolderProperties setObject:updatedNameString forKey:@"cmis:name"];
                 
-                [weakSelf.dfService updatePropertiesOfNode:folder properties:newFolderProperties completionBlock:^(AlfrescoNode *node, NSError *err) {
+                [self.dfService updatePropertiesOfNode:folder properties:newFolderProperties completionBlock:^(AlfrescoNode *node, NSError *err) {
                     
                     if (node == nil || err != nil)
                     {
@@ -3705,7 +3705,7 @@
                         super.lastTestSuccessful = YES;
                     }
                     
-                    [weakSelf.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                    [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
                         
                          if (!success)
                          {
@@ -3753,7 +3753,6 @@
 
 /*
  @Unique_TCRef 29F3
- */
 - (void)testRetrieveRenditionOfDocumentNodeWithInvalidRenditionName
 {
     [super runAllSitesTest:^{
@@ -3783,6 +3782,7 @@
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
+ */
 
 /*
  @Unique_TCRef 29F4

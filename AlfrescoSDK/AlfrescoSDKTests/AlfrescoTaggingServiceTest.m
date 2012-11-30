@@ -170,7 +170,7 @@
         
         
         self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:super.currentSession];
-        __weak AlfrescoTaggingService *weakTaggingService = self.taggingService;
+//        __weak AlfrescoTaggingService *weakTaggingService = self.taggingService;
         
         NSArray *testtags = [NSArray arrayWithObject:@"test"];
 
@@ -186,7 +186,7 @@
             {
                 super.lastTestSuccessful = YES;
                 STAssertTrue(success, @"a dummy test to see if we still have the retain cycle problem");
-                [weakTaggingService retrieveTagsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *tags, NSError *error){
+                [self.taggingService retrieveTagsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *tags, NSError *error){
                     if (nil == tags)
                     {
                         super.lastTestSuccessful = NO;

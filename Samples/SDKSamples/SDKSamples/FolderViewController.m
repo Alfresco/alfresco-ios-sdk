@@ -55,20 +55,20 @@
     }
     
     self.documentFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-    __weak FolderViewController *weakSelf = self;
+//    __weak FolderViewController *weakSelf = self;
     [self.documentFolderService retrieveChildrenInFolder:self.folder listingContext:self.listingContext
                                          completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error){
          [activityIndicator stopAnimating];
          if (nil == pagingResult) 
          {
-             [weakSelf showFailureAlert:@"error_retrieve_children"];
+             [self showFailureAlert:@"error_retrieve_children"];
          }
          else 
          {
-             [weakSelf.items addObjectsFromArray:pagingResult.objects];
-             weakSelf.displayItemsCount = weakSelf.displayItemsCount + pagingResult.objects.count;
-             weakSelf.hasMoreItems = pagingResult.hasMoreItems;
-             [weakSelf.tableView reloadData];
+             [self.items addObjectsFromArray:pagingResult.objects];
+             self.displayItemsCount = self.displayItemsCount + pagingResult.objects.count;
+             self.hasMoreItems = pagingResult.hasMoreItems;
+             [self.tableView reloadData];
          }
      }];
 }

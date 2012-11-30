@@ -49,7 +49,7 @@
 {
     // get the children for the folder using an AlfrescoDocumentFolderService
     self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.session];
-    __weak SitesViewController *weakSelf = self;
+//    __weak SitesViewController *weakSelf = self;
     if(nil != self.session)
     {
         if(self.browsingType == AlfrescoSiteBrowsingAll)
@@ -58,13 +58,13 @@
             [self.siteService retrieveAllSitesWithCompletionBlock:^(NSArray *array, NSError *error) {
                 if (nil == array) 
                 {
-                    [weakSelf showFailureAlert:@"error_retrieve_sites"];
+                    [self showFailureAlert:@"error_retrieve_sites"];
                 }
                 else 
                 {
                     // update the items array and reload the table data
-                    weakSelf.sites = [NSArray arrayWithArray:array];
-                    [weakSelf.tableView reloadData];
+                    self.sites = [NSArray arrayWithArray:array];
+                    [self.tableView reloadData];
                 }
                 
             }];
@@ -75,13 +75,13 @@
             [self.siteService retrieveFavoriteSitesWithCompletionBlock:^(NSArray *array, NSError *error) {
                 if (nil == array) 
                 {
-                    [weakSelf showFailureAlert:@"error_retrieve_sites"];
+                    [self showFailureAlert:@"error_retrieve_sites"];
                 }
                 else 
                 {
                     // update the items array and reload the table data
-                    weakSelf.sites = [NSArray arrayWithArray:array];
-                    [weakSelf.tableView reloadData];
+                    self.sites = [NSArray arrayWithArray:array];
+                    [self.tableView reloadData];
                 }
                 
             }];
@@ -92,13 +92,13 @@
             [self.siteService retrieveSitesWithCompletionBlock:^(NSArray *array, NSError *error) {
                 if (nil == array) 
                 {
-                    [weakSelf showFailureAlert:@"error_retrieve_sites"];
+                    [self showFailureAlert:@"error_retrieve_sites"];
                 }
                 else 
                 {
                     // update the items array and reload the table data
-                    weakSelf.sites = [NSArray arrayWithArray:array];
-                    [weakSelf.tableView reloadData];
+                    self.sites = [NSArray arrayWithArray:array];
+                    [self.tableView reloadData];
                 }
                 
             }];
@@ -114,16 +114,16 @@
 {
     // get the document library for the site
     self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.session];
-    __weak SitesViewController *weakSelf = self;
+//    __weak SitesViewController *weakSelf = self;
     [self.siteService retrieveDocumentLibraryFolderForSite:site.shortName 
                                            completionBlock:^(AlfrescoFolder *folder, NSError *error){
          if (nil == folder) 
          {
-             [weakSelf showFailureAlert:@"error_retrieve_doc_library"];
+             [self showFailureAlert:@"error_retrieve_doc_library"];
          }
          else 
          {
-             [weakSelf performSegueWithIdentifier:@"browseSite" sender:folder];
+             [self performSegueWithIdentifier:@"browseSite" sender:folder];
          }
      }];
 }

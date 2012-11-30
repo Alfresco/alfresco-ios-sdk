@@ -64,7 +64,7 @@
     NSString *requestString = [kAlfrescoCloudRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                   withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __weak AlfrescoCloudRatingService *weakSelf = self;
+//    __weak AlfrescoCloudRatingService *weakSelf = self;
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
@@ -74,7 +74,7 @@
         {
             NSError *conversionError = nil;
             NSNumber *count = nil;
-            NSDictionary *ratingsDict = [weakSelf dictionaryFromJSONData:data error:&conversionError];
+            NSDictionary *ratingsDict = [self dictionaryFromJSONData:data error:&conversionError];
             id aggregateObject = [ratingsDict valueForKey:kAlfrescoJSONAggregate];
             if ([aggregateObject isKindOfClass:[NSDictionary class]])
             {
@@ -99,7 +99,7 @@
     NSString *requestString = [kAlfrescoCloudRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                   withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __weak AlfrescoCloudRatingService *weakSelf = self;
+//    __weak AlfrescoCloudRatingService *weakSelf = self;
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
@@ -110,7 +110,7 @@
             NSError *conversionError = nil;
             BOOL isLiked = NO;
             BOOL success = NO;
-            NSDictionary *ratingsDict = [weakSelf dictionaryFromJSONData:data error:&conversionError];
+            NSDictionary *ratingsDict = [self dictionaryFromJSONData:data error:&conversionError];
             if (nil == ratingsDict)
             {
                 completionBlock(NO, NO, error);

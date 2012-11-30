@@ -43,7 +43,7 @@
 
 - (void)authenticateCloudWithOAuth
 {
-    __weak ServerSelectionTableViewController *weakSelf = self;
+//    __weak ServerSelectionTableViewController *weakSelf = self;
     AlfrescoOAuthCompletionBlock completionBlock = ^void(AlfrescoOAuthData *oauthdata, NSError *error){
         if (nil == oauthdata)
         {
@@ -61,12 +61,12 @@
             [AlfrescoCloudSession connectWithOAuthData:oauthdata completionBlock:^(id<AlfrescoSession> session, NSError *error){
                 if (nil == session)
                 {
-                    [weakSelf.navigationController popToViewController:weakSelf animated:YES ];
+                    [self.navigationController popToViewController:self animated:YES ];
                 }
                 else
                 {
-                    weakSelf.session = session;
-                    [weakSelf performSegueWithIdentifier:@"cloudAfterAuthentication" sender:weakSelf.session];
+                    self.session = session;
+                    [self performSegueWithIdentifier:@"cloudAfterAuthentication" sender:self.session];
                 }
             }];
         }
