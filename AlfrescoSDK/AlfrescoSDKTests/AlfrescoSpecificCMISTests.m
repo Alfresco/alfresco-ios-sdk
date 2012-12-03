@@ -214,7 +214,17 @@
 {
     [self runCMISTest:^
     {
-        [self.cmisSession retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" completionBlock:^(CMISObject *cmisObject, NSError *error){
+        NSString *testFilePath = nil;
+        if (self.isCloud)
+        {
+            testFilePath = [NSString stringWithFormat:@"%@ios-test/image-with-exif.jpg", self.testFolderPathName];
+        }
+        else
+        {
+            testFilePath = @"/ios-test/image-with-exif.jpg";
+            
+        }
+        [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
                 self.lastTestSuccessful = NO;
@@ -241,7 +251,17 @@
     [self runCMISTest:^
     {
 
-        [self.cmisSession retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" completionBlock:^(CMISObject *cmisObject, NSError *error){
+        NSString *testFilePath = nil;
+        if (self.isCloud)
+        {
+            testFilePath = [NSString stringWithFormat:@"%@ios-test/image-with-exif.jpg", self.testFolderPathName];
+        }
+        else
+        {
+            testFilePath = @"/ios-test/image-with-exif.jpg";
+            
+        }
+        [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
                 self.lastTestSuccessful = NO;

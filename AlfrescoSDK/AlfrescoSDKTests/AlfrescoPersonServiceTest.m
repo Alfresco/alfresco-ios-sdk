@@ -106,7 +106,7 @@
     [super runAllSitesTest:^{
         
         self.personService = [[AlfrescoPersonService alloc] initWithSession:super.currentSession];
-        __weak AlfrescoPersonService *weakPersonService = self.personService;
+//        __weak AlfrescoPersonService *weakPersonService = self.personService;
         
         // get thumbnail
         [self.personService retrievePersonWithIdentifier:super.userName completionBlock:^(AlfrescoPerson *person, NSError *error)
@@ -125,7 +125,7 @@
                  STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, super.userName]);
                  STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, super.firstName]);
 
-                 [weakPersonService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
+                 [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
                   {
                       if (nil == contentFile)
                       {

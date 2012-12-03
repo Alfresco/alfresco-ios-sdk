@@ -48,17 +48,17 @@
 - (void)loadTags
 {
     self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.session];
-    __weak AddPhotoTableViewController *weakSelf = self;
+//    __weak AddPhotoTableViewController *weakSelf = self;
     [self.taggingService retrieveAllTagsWithCompletionBlock:^(NSArray *array, NSError *error) {
         if (nil == array) 
         {
-            [weakSelf showFailureAlert:@"error_retrieve_tags"];
+            [self showFailureAlert:@"error_retrieve_tags"];
         }
         else 
         {
-            weakSelf.tags = array;
-            weakSelf.tagsInSearchResult = [NSMutableArray arrayWithArray:weakSelf.tags];
-            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
+            self.tags = array;
+            self.tagsInSearchResult = [NSMutableArray arrayWithArray:self.tags];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
         }
     }];
 }

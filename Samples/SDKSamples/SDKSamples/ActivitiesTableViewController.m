@@ -51,18 +51,18 @@
     }
     self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.session];
     [self.activityIndicator startAnimating];
-    __weak ActivitiesTableViewController *weakSelf = self;
+//    __weak ActivitiesTableViewController *weakSelf = self;
     [self.activityStreamService retrieveActivityStreamWithCompletionBlock:^(NSArray *array, NSError *error){
          if (nil == array) 
          {
-             [weakSelf showFailureAlert:@"error_retrieve_activities"];
+             [self showFailureAlert:@"error_retrieve_activities"];
          }
          else 
          {
-             weakSelf.activities = [NSMutableArray arrayWithArray:array];
-             [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+             self.activities = [NSMutableArray arrayWithArray:array];
+             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
          }
-         [weakSelf.activityIndicator stopAnimating];
+         [self.activityIndicator stopAnimating];
      }];    
 }
 
@@ -87,7 +87,7 @@
         [avatarImageView setImage:[UIImage imageNamed:@"avatar.png"]];
     }
     
-    __weak ActivitiesTableViewController *weakSelf = self;
+//    __weak ActivitiesTableViewController *weakSelf = self;
     [self.personService retrievePersonWithIdentifier:userId completionBlock:^(AlfrescoPerson *person, NSError *error) {
         if (nil != person)
         {
@@ -95,7 +95,7 @@
                 if (nil != contentFile)
                 {
                     NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
-                    [weakSelf.avatarDictionary setObject:data forKey:userId];
+                    [self.avatarDictionary setObject:data forKey:userId];
                     avatarImageView.image = [UIImage imageWithData:data];
                 }
                 else

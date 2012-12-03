@@ -78,7 +78,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     NSString *requestString = [kAlfrescoCloudActivitiesAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
+//    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
@@ -87,7 +87,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:responseData error:&conversionError];
+            NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
             completionBlock(activityStreamArray, conversionError);
         }
     }];
@@ -106,7 +106,7 @@
     }
     NSString *requestString = [kAlfrescoCloudActivitiesAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
+//    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
@@ -115,7 +115,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:responseData error:&conversionError];
+            NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
         }
@@ -130,7 +130,7 @@
     NSString *peopleRefString = [kAlfrescoCloudActivitiesForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSString *requestString = [peopleRefString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
+//    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
@@ -139,7 +139,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:responseData error:&conversionError];
+            NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
             completionBlock(activityStreamArray, conversionError);
         }
     }];
@@ -161,7 +161,7 @@
     NSString *peopleRefString = [kAlfrescoCloudActivitiesForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSString *requestString = [peopleRefString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
+//    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
@@ -170,7 +170,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *activityStreamArray = [weakSelf activityStreamArrayFromJSONData:responseData error:&conversionError];
+            NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
         }

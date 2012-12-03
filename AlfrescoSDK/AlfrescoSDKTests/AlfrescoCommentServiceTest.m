@@ -82,7 +82,7 @@
         log(@"<<< testRetrieveAllCommentsForNonExistingDocuments Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
-        __weak AlfrescoCommentService *weakService = self.commentService;
+//        __weak AlfrescoCommentService *weakService = self.commentService;
         
         [dfService createDocumentWithName:@"millenium-dome.jpg" inParentFolder:super.testDocFolder
                                    contentFile:super.testImageFile
@@ -111,7 +111,7 @@
                                             }
                                             else
                                             {
-                                                [weakService retrieveCommentsForNode:document completionBlock:^(NSArray *comments, NSError *commentError){
+                                                [self.commentService retrieveCommentsForNode:document completionBlock:^(NSArray *comments, NSError *commentError){
                                                     if (nil == comments)
                                                     {
                                                         super.lastTestSuccessful = YES;
@@ -190,7 +190,7 @@
         
         
         // add a comment
-        __weak AlfrescoCommentService *weakCommentService = self.commentService;
+//        __weak AlfrescoCommentService *weakCommentService = self.commentService;
         [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
         {
             if (nil == comment) 
@@ -205,7 +205,7 @@
                 STAssertTrue([comment.content isEqualToString:@"<p>test</p>"], @"content should equal the test comment message");
                 STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                 
-                [weakCommentService retrieveCommentsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error){
+                [self.commentService retrieveCommentsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error){
                     if (nil == array)
                     {
                         super.lastTestSuccessful = NO;
@@ -225,7 +225,7 @@
                             STAssertNotNil(comment.modifiedAt, @"modificationDate should not be nil");
                             STAssertFalse(comment.isEdited, @"isEdited should return false");
                         }
-                        [weakCommentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
+                        [self.commentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
                          {
                              if (!success)
                              {
@@ -267,7 +267,7 @@
         
         
         // add a comment
-        __weak AlfrescoCommentService *weakCommentService = self.commentService;
+//        __weak AlfrescoCommentService *weakCommentService = self.commentService;
         [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
@@ -283,7 +283,7 @@
                  STAssertTrue([comment.content isEqualToString:@"<p>test</p>"], @"content should equal the test comment message");
                  STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                  
-                 [weakCommentService retrieveCommentsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error){
+                 [self.commentService retrieveCommentsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error){
                      if (nil == array)
                      {
                          super.lastTestSuccessful = NO;
@@ -301,7 +301,7 @@
                              STAssertNotNil(comment.createdAt, @"creationDate should not be nil");
                              STAssertNotNil(comment.modifiedAt, @"modificationDate should not be nil");
                          }
-                         [weakCommentService deleteCommentFromNode:super.testAlfrescoDocument comment:strongComment completionBlock:^(BOOL success, NSError *error)
+                         [self.commentService deleteCommentFromNode:super.testAlfrescoDocument comment:strongComment completionBlock:^(BOOL success, NSError *error)
                           {
                               if (!success)
                               {
@@ -311,7 +311,7 @@
                               }
                               else
                               {
-                                  [weakCommentService updateCommentOnNode:super.testAlfrescoDocument comment:strongComment content:@"Another string" completionBlock:^(AlfrescoComment *updatedComment, NSError *error){
+                                  [self.commentService updateCommentOnNode:super.testAlfrescoDocument comment:strongComment content:@"Another string" completionBlock:^(AlfrescoComment *updatedComment, NSError *error){
                                       if (nil == updatedComment)
                                       {
                                           super.lastTestSuccessful = YES;
@@ -355,7 +355,7 @@
         log(@"<<< testAddAndDeleteForNonExistingDocument Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
-        __weak AlfrescoCommentService *weakService = self.commentService;
+//        __weak AlfrescoCommentService *weakService = self.commentService;
         
         [dfService createDocumentWithName:@"millenium-dome.jpg" inParentFolder:super.testDocFolder
                               contentFile:super.testImageFile
@@ -384,7 +384,7 @@
                                        }
                                        else
                                        {
-                                           [weakService addCommentToNode:document content:@"blabla" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *commentError){
+                                           [self.commentService addCommentToNode:document content:@"blabla" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *commentError){
                                                if (nil == comment)
                                                {
                                                    super.lastTestSuccessful = YES;
@@ -428,7 +428,7 @@
         __block NSString *title = @"Änderungswünsche";
         
         // add a comment
-        __weak AlfrescoCommentService *weakCommentService = self.commentService;
+//        __weak AlfrescoCommentService *weakCommentService = self.commentService;
         [self.commentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
@@ -446,7 +446,7 @@
                  {
                      STAssertTrue([comment.title isEqualToString:title], @"the comment title should be equal to %@ but instead we got %@",title, comment.title);
                  }
-                 [weakCommentService retrieveCommentsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error){
+                 [self.commentService retrieveCommentsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error){
                      if (nil == array)
                      {
                          super.lastTestSuccessful = NO;
@@ -469,7 +469,7 @@
                              STAssertNotNil(retrievedComment.createdAt, @"creationDate should not be nil");
                              STAssertNotNil(retrievedComment.modifiedAt, @"modificationDate should not be nil");
                          }
-                         [weakCommentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
+                         [self.commentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
                           {
                               if (!success)
                               {
@@ -511,7 +511,7 @@
         __block NSString *title = @"わさび";
         
         // add a comment
-        __weak AlfrescoCommentService *weakCommentService = self.commentService;
+//        __weak AlfrescoCommentService *weakCommentService = self.commentService;
         [self.commentService addCommentToNode:super.testAlfrescoDocument content:content title:title completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
@@ -529,7 +529,7 @@
                  {
                      STAssertTrue([comment.title isEqualToString:title], @"the comment title should be equal to %@ but instead we got %@",title, comment.title);
                  }
-                 [weakCommentService retrieveCommentsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error){
+                 [self.commentService retrieveCommentsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error){
                      if (nil == array)
                      {
                          super.lastTestSuccessful = NO;
@@ -552,7 +552,7 @@
                              STAssertNotNil(retrievedComment.createdAt, @"creationDate should not be nil");
                              STAssertNotNil(retrievedComment.modifiedAt, @"modificationDate should not be nil");
                          }
-                         [weakCommentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
+                         [self.commentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
                           {
                               if (!success)
                               {
@@ -594,7 +594,7 @@
         
         
         // add a comment
-        __weak AlfrescoCommentService *weakCommentService = self.commentService;
+//        __weak AlfrescoCommentService *weakCommentService = self.commentService;
         [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
         {
             if (nil == comment) 
@@ -608,7 +608,7 @@
                 STAssertTrue([comment.content isEqualToString:@"<p>test</p>"], @"content should equal the test comment message");
                 STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                 
-                [weakCommentService updateCommentOnNode:super.testAlfrescoDocument comment:comment content:@"<p>test2</p>" completionBlock:^(AlfrescoComment *comment, NSError *error) 
+                [self.commentService updateCommentOnNode:super.testAlfrescoDocument comment:comment content:@"<p>test2</p>" completionBlock:^(AlfrescoComment *comment, NSError *error) 
                  {
                      
                      if (nil == comment) 
@@ -621,7 +621,7 @@
                      {
                          STAssertTrue([comment.content isEqualToString:@"<p>test2</p>"], @"content should equal the test comment message");
                          
-                         [weakCommentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
+                         [self.commentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
                           {
                               if (!success) 
                               {
@@ -662,7 +662,7 @@
         
         
         // add a comment
-        __weak AlfrescoCommentService *weakCommentService = self.commentService;
+//        __weak AlfrescoCommentService *weakCommentService = self.commentService;
         [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
@@ -676,7 +676,7 @@
                  STAssertTrue([comment.content isEqualToString:@"<p>test</p>"], @"content should equal the test comment message");
                  STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                  
-                 [weakCommentService updateCommentOnNode:super.testAlfrescoDocument comment:comment content:content completionBlock:^(AlfrescoComment *comment, NSError *error)
+                 [self.commentService updateCommentOnNode:super.testAlfrescoDocument comment:comment content:content completionBlock:^(AlfrescoComment *comment, NSError *error)
                   {
                       
                       if (nil == comment)
@@ -689,7 +689,7 @@
                       {
                           STAssertTrue([comment.content isEqualToString:content], @"content should equal to %@ but instead we got %@", content, comment.content);
                           
-                          [weakCommentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
+                          [self.commentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
                            {
                                if (!success)
                                {
@@ -730,7 +730,7 @@
         
         
         // add a comment
-        __weak AlfrescoCommentService *weakCommentService = self.commentService;
+//        __weak AlfrescoCommentService *weakCommentService = self.commentService;
         [self.commentService addCommentToNode:super.testAlfrescoDocument content:@"<p>test</p>" title:@"test" completionBlock:^(AlfrescoComment *comment, NSError *error)
          {
              if (nil == comment)
@@ -744,7 +744,7 @@
                  STAssertTrue([comment.content isEqualToString:@"<p>test</p>"], @"content should equal the test comment message");
                  STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                  
-                 [weakCommentService updateCommentOnNode:super.testAlfrescoDocument comment:comment content:content completionBlock:^(AlfrescoComment *comment, NSError *error)
+                 [self.commentService updateCommentOnNode:super.testAlfrescoDocument comment:comment content:content completionBlock:^(AlfrescoComment *comment, NSError *error)
                   {
                       
                       if (nil == comment)
@@ -757,7 +757,7 @@
                       {
                           STAssertTrue([comment.content isEqualToString:content], @"content should equal to %@ but instead we got %@", content, comment.content);
                           
-                          [weakCommentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
+                          [self.commentService deleteCommentFromNode:super.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error)
                            {
                                if (!success)
                                {
