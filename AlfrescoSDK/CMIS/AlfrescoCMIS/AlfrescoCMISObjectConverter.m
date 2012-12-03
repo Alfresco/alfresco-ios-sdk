@@ -118,7 +118,6 @@
             NSMutableDictionary *aspectProperties = [NSMutableDictionary dictionary];
             NSMutableDictionary *aspectPropertyDefinitions = [NSMutableDictionary dictionary];
             
-            BOOL success = NO;
             // Loop over all provided properties and put them in the right dictionary
             for (NSString *propertyId in properties)
             {
@@ -155,7 +154,6 @@
                         }
                         index++;
                     }
-                    success = matchingPropertyDefinitionFound;
                     // If no match was found, throw an exception
                     if (!matchingPropertyDefinitionFound)
                     {

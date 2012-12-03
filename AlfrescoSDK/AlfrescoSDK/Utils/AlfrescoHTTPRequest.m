@@ -127,15 +127,9 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    BOOL success = NO;
     NSError *error = nil;
-    if (self.statusCode >= 200 && self.statusCode <= 299)
+    if (self.statusCode < 200 || self.statusCode > 299)
     {
-        success = YES;
-    }
-    else
-    {
-        success = NO;
         error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
     }
     
