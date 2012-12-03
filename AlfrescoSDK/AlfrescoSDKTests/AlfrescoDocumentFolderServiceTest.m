@@ -3917,12 +3917,15 @@
 //    }];
 //}
 
+// REMOVED DUE TO ERROR SEEN RELATED TO MOBSDK-466
 /*
  @Unique_TCRef 32F4
  */
 //- (void)testCreateDuplicateFolderName
 //{
 //    [super runAllSitesTest:^{
+//        
+//        NSString *folderName = [self addTimeStampToFileOrFolderName:super.unitTestFolder];
 //        
 //        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
 //        
@@ -3931,10 +3934,10 @@
 //        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
 //        [properties setObject:@"test description" forKey:@"cm:description"];
 //        [properties setObject:@"test title" forKey:@"cm:title"];
-//        [properties setObject:super.unitTestFolder forKey:@"cmis:name"];
+//        [properties setObject:folderName forKey:@"cmis:name"];
 //        
 //        // create a new folder in the repository's root folder
-//        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+//        [self.dfService createFolderWithName:folderName inParentFolder:super.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
 //            
 //            if (folder == nil)
 //            {
@@ -3947,14 +3950,15 @@
 //                STAssertNil(error, @"Error should not have occured trying to create the folder the first time");
 //                
 //                NSMutableDictionary *props = [NSMutableDictionary dictionary];
-//                [props setObject:super.unitTestFolder forKey:@"cmis:name"];
+//                [props setObject:folderName forKey:@"cmis:name"];
 //                
 //                // attempt to create the folder again
-//                [weakFolderService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder2, NSError *error2) {
+//                [weakFolderService createFolderWithName:folderName inParentFolder:super.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder2, NSError *error2) {
 //                    
 //                    if (error2 == nil)
 //                    {
 //                        super.lastTestSuccessful = NO;
+//                        super.callbackCompleted = YES;
 //                    }
 //                    else
 //                    {
@@ -3983,70 +3987,71 @@
 /*
  @Unique_TCRef 33F4
  */
-//- (void)testCreateDuplicateDocumentName
-//{
-//    [super runAllSitesTest:^{
-//        
-//        NSString *duplicateFileName = @"Duplicate.jpg";
-//        
-//        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-//        
-//        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
-//        
-//        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-//        [properties setObject:@"test description" forKey:@"cm:description"];
-//        [properties setObject:@"test title" forKey:@"cm:title"];
-//        [properties setObject:duplicateFileName forKey:@"cmis:name"];
-//        
-//        [self.dfService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
-//            
-//            if (document == nil)
-//            {
-//                super.lastTestSuccessful = NO;
-//                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-//            }
-//            else
-//            {
-//                STAssertNil(error, @"Error occured trying to create document the first time");
-//                
-//                NSMutableDictionary *props = [NSMutableDictionary dictionary];
-//                [props setObject:duplicateFileName forKey:@"cmis:name"];
-//                
-//                [weakFolderService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:props completionBlock:^(AlfrescoDocument *duplicateDocument, NSError *duplicateError) {
-//                    
-//                    if (duplicateError == nil)
-//                    {
-//                        super.lastTestSuccessful = NO;
-//                    }
-//                    else
-//                    {
-//                        STAssertNotNil(duplicateError, @"Trying to create another file with the same name should produce an error");
-//                        
-//                        // delete the orginal we created - cleanup
-//                        [weakFolderService deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError) {
-//                            
-//                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
-//                            
-//                            super.lastTestSuccessful = succeeded;
-//                            
-//                            super.callbackCompleted = YES;
-//                        }];
-//                    }
-//                }
-//            
-//                progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
-//                
-//                }];
-//            }
-//            
-//        } progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
-//            
-//        }];
-//        
-//        [super waitUntilCompleteWithFixedTimeInterval];
-//        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
-//    }];
-//}
+- (void)testCreateDuplicateDocumentName
+{
+    [super runAllSitesTest:^{
+        
+        NSString *duplicateFileName = [self addTimeStampToFileOrFolderName:@"Duplicate.jpg"];
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
+        
+        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+        [properties setObject:@"test description" forKey:@"cm:description"];
+        [properties setObject:@"test title" forKey:@"cm:title"];
+        [properties setObject:duplicateFileName forKey:@"cmis:name"];
+        
+        [self.dfService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+            
+            if (document == nil)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNil(error, @"Error occured trying to create document the first time");
+                
+                NSMutableDictionary *props = [NSMutableDictionary dictionary];
+                [props setObject:duplicateFileName forKey:@"cmis:name"];
+                
+                [weakFolderService createDocumentWithName:duplicateFileName inParentFolder:super.testDocFolder contentFile:super.testImageFile properties:props completionBlock:^(AlfrescoDocument *duplicateDocument, NSError *duplicateError) {
+                    
+                    if (duplicateError == nil)
+                    {
+                        super.lastTestSuccessful = NO;
+                        super.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        STAssertNotNil(duplicateError, @"Trying to create another file with the same name should produce an error");
+                        
+                        // delete the orginal we created - cleanup
+                        [weakFolderService deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                            
+                            STAssertNil(deleteError, @"Error occured trying to delete the folder node");
+                            
+                            super.lastTestSuccessful = succeeded;
+                            
+                            super.callbackCompleted = YES;
+                        }];
+                    }
+                }
+            
+                progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+                
+                }];
+            }
+            
+        } progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+            
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
 
 /*
  @Unique_TCRef 16F2
@@ -4854,6 +4859,23 @@
         }
     }
     return NO;
+}
+
+- (NSString *)addTimeStampToFileOrFolderName:(NSString *)string
+{
+    NSDate *currentDate = [NSDate date];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd'T'HH-mm-ss-SSS'"];
+    
+    NSString *pathExt = [string pathExtension];
+    NSString *strippedString = [string stringByDeletingPathExtension];
+    
+    if (![pathExt isEqualToString:@""])
+    {
+        return [NSString stringWithFormat:@"%@%@.%@", strippedString, [formatter stringFromDate:currentDate], pathExt];
+    }
+    
+    return [NSString stringWithFormat:@"%@%@", strippedString, [formatter stringFromDate:currentDate]];
 }
 
 @end
