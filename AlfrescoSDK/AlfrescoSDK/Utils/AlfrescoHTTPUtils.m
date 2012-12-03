@@ -57,9 +57,20 @@
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL
 {
-    NSString *separator = [baseURL hasSuffix:@"/"] ? @"" : @"/";
-    NSString *requestString = [NSString stringWithFormat:@"%@%@%@",baseURL, separator, extensionURL];
-    return [NSURL URLWithString:requestString];
+    NSMutableString *mutableRequestString = [NSMutableString string];
+    if ([baseURL hasSuffix:@"/"] && [extensionURL hasPrefix:@"/"])
+    {
+        [mutableRequestString appendString:[baseURL substringToIndex:baseURL.length - 1]];
+        [mutableRequestString appendString:extensionURL];
+    }
+    else
+    {
+        NSString *separator = ([baseURL hasSuffix:@"/"] || [extensionURL hasPrefix:@"/"]) ? @"" : @"/";
+        [mutableRequestString appendString:baseURL];
+        [mutableRequestString appendString:separator];
+        [mutableRequestString appendString:extensionURL];        
+    }
+    return [NSURL URLWithString:mutableRequestString];
 }
 
 

@@ -26,7 +26,7 @@
 
 @synthesize document = _document;
 @synthesize commentView = _commentView;
-@synthesize commentService = _commentService;
+//@synthesize commentService = _commentService;
 @synthesize addCommentDelegate = _addCommentDelegate;
 
 /**
@@ -37,9 +37,9 @@
     if(nil != self.session && self.document != nil)
     {
         // add a comment using an AlfrescoCommentService
-        self.commentService = [[AlfrescoCommentService alloc] initWithSession:self.session];
+        AlfrescoCommentService *commentService = [[AlfrescoCommentService alloc] initWithSession:self.session];
 //        __weak AddCommentViewController *weakSelf = self;
-        [self.commentService addCommentToNode:self.document content:self.commentView.text title:nil completionBlock:^(AlfrescoComment *comment, NSError *error) {
+        [commentService addCommentToNode:self.document content:self.commentView.text title:nil completionBlock:^(AlfrescoComment *comment, NSError *error) {
             if (nil == comment) 
             {
                 [self showFailureAlert:@"error_add_comment"];
@@ -48,7 +48,6 @@
             {
                 [self.addCommentDelegate updateComments];
             }
-            
             
             [self.navigationController popViewControllerAnimated:YES];
         }];

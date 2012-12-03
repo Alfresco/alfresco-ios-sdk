@@ -32,7 +32,7 @@
 @interface AddCommentViewController : BaseViewController
 
 @property (nonatomic, strong) AlfrescoDocument *document;
-@property (nonatomic, strong) AlfrescoCommentService *commentService;
+//@property (nonatomic, strong) AlfrescoCommentService *commentService;
 @property (nonatomic, strong) IBOutlet UITextView *commentView;
 @property (nonatomic, weak) id<AddCommentViewDelegate>addCommentDelegate;
 
