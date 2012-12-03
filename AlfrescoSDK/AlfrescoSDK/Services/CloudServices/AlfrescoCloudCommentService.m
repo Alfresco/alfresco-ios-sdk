@@ -65,7 +65,7 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoCloudCommentService *weakSelf = self;
+//    __weak AlfrescoCloudCommentService *weakSelf = self;
     NSString *requestString = [kAlfrescoCloudCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                    withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
@@ -77,7 +77,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *comments = [weakSelf commentArrayFromJSONData:responseData error:&conversionError];
+            NSArray *comments = [self commentArrayFromJSONData:responseData error:&conversionError];
             NSArray *sortedCommentArray = nil;
             if (nil != comments)
             {
@@ -101,7 +101,7 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    __weak AlfrescoCloudCommentService *weakSelf = self;
+//    __weak AlfrescoCloudCommentService *weakSelf = self;
     NSString *requestString = [kAlfrescoCloudCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                    withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
@@ -113,7 +113,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *comments = [weakSelf commentArrayFromJSONData:responseData error:&conversionError];
+            NSArray *comments = [self commentArrayFromJSONData:responseData error:&conversionError];
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:comments listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
         }
@@ -127,7 +127,7 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoCloudCommentService *weakSelf = self;
+//    __weak AlfrescoCloudCommentService *weakSelf = self;
     NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
     [commentDict setValue:content forKey:kAlfrescoJSONContent];
     NSError *error = nil;
@@ -144,7 +144,7 @@
         else
         {
             NSError *conversionError = nil;
-            AlfrescoComment *comment = [weakSelf alfrescoCommentFromJSONData:data error:&conversionError];
+            AlfrescoComment *comment = [self alfrescoCommentFromJSONData:data error:&conversionError];
             completionBlock(comment, conversionError);
         }
     }];
@@ -170,7 +170,7 @@
     NSString *requestString = [nodeRefString stringByReplacingOccurrencesOfString:kAlfrescoCommentId
                                                                        withString:[comment.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __weak AlfrescoCloudCommentService *weakSelf = self;
+//    __weak AlfrescoCloudCommentService *weakSelf = self;
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPut completionBlock:^(NSData *data, NSError *responseError){
         if (nil == data)
         {
@@ -179,7 +179,7 @@
         else
         {
             NSError *conversionError = nil;
-            AlfrescoComment *comment = [weakSelf alfrescoCommentFromJSONData:data error:&conversionError];
+            AlfrescoComment *comment = [self alfrescoCommentFromJSONData:data error:&conversionError];
             completionBlock(comment, conversionError);
         }
     }];

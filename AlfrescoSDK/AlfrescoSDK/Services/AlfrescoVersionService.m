@@ -64,7 +64,7 @@
     [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoVersionService *weakSelf = self;
+//    __weak AlfrescoVersionService *weakSelf = self;
     [self.cmisSession.binding.versioningService
      retrieveAllVersions:document.identifier
      filter:nil
@@ -79,7 +79,7 @@
              NSMutableArray *alfrescoVersions = [NSMutableArray array];
              for (CMISObjectData *cmisData in allVersions)
              {
-                 AlfrescoNode *alfrescoNode = [weakSelf.objectConverter nodeFromCMISObjectData:cmisData];
+                 AlfrescoNode *alfrescoNode = [self.objectConverter nodeFromCMISObjectData:cmisData];
                  [alfrescoVersions addObject:alfrescoNode];
              }
              NSArray *sortedAlfrescoVersionArray = [AlfrescoSortingUtils sortedArrayForArray:alfrescoVersions sortKey:self.defaultSortKey ascending:YES];
@@ -101,7 +101,7 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    __weak AlfrescoVersionService *weakSelf = self;
+//    __weak AlfrescoVersionService *weakSelf = self;
     [self.cmisSession.binding.versioningService
      retrieveAllVersions:document.identifier
      filter:nil
@@ -116,7 +116,7 @@
              NSMutableArray *alfrescoVersions = [NSMutableArray array];
              for (CMISObjectData *cmisData in allVersions)
              {
-                 AlfrescoNode *alfrescoNode = [weakSelf.objectConverter nodeFromCMISObjectData:cmisData];
+                 AlfrescoNode *alfrescoNode = [self.objectConverter nodeFromCMISObjectData:cmisData];
                  [alfrescoVersions addObject:alfrescoNode];
              }
              NSArray *sortedVersionArray = [AlfrescoSortingUtils sortedArrayForArray:alfrescoVersions

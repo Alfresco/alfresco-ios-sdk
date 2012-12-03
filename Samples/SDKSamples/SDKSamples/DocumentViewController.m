@@ -84,26 +84,30 @@
     - retrieving the avatar image of the users who commented
  
  A word on using references to 'self' from within blocks.
- To avoid retain cycles, the reference to the obj being used inside a block must be weak.
- Therefore, this class - as well as all other examples in the Sample app - will use the following technique
+ Objects are stored as strong references within a block. This means, if you declare a block as a class property you run into the danger of
+ creating a strong reference cycle (retain cycle).
  
- ... outside the block do the following
- __weak <YourClassName> *weakSelf = self;
+ Say your class contains a property
+ @property (nonatomic, copy)  AlfrescoArrayCompletionBlock completionBlock;
  
- ... inside the block use reference to the class like so
- [weakself doSomething];
+ And you reference the block in your code as
+ myclass.completionBlock = ^(void)(NSArray *array, NSError *error)
+ {
+    [self.doSomething];
+ };
  
- Example:
- __weak DocumentViewController *weakSelf = self;
- [self.documentService retrieveRenditionOfNode:self.document renditionName:kAlfrescoThumbnailRendition completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
-        if (nil != contentFile)
-        {
-            NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
-            weakSelf.thumbnail = [UIImage imageWithData:data];
-            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-        }}];
+ this would be a candidate for a retain cycle, as self is referenced strongly from within the block through its instance variable, while the class itself has a relationship to the block
+ through its property.
+ The recommended way to deal with this scenario is to do the following:
  
+ MyClass __weak *weakSelf = self;
+ myclass.completionBlock = ^(void)(NSArray *array, NSError *error)
+ {
+    [weakSelf.doSomething];
+ }
  
+ However, if you use the block locally from within the lexical scope of a function, then there is no need for this. The block gets created on the stack and goes out of scope once the method/block complete.
+
  */
 
 /**
@@ -116,13 +120,13 @@
     if(nil != self.session && self.document != nil)
     {
         self.documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-        __weak DocumentViewController *weakSelf = self;
+//        __weak DocumentViewController *weakSelf = self;
         [self.documentService retrieveRenditionOfNode:self.document renditionName:kAlfrescoThumbnailRendition completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
              if (nil != contentFile)
              {
                  NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
-                 weakSelf.thumbnail = [UIImage imageWithData:data];
-                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+                 self.thumbnail = [UIImage imageWithData:data];
+                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
              }
          }];
     }
@@ -137,20 +141,20 @@
     {
         // get the comments using an AlfrescoCommentService
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:self.session];
-        __weak DocumentViewController *weakSelf = self;
+//        __weak DocumentViewController *weakSelf = self;
         [self.activityIndicator startAnimating];
         
         [self.commentService retrieveCommentsForNode:self.document completionBlock:^(NSArray *array, NSError *error){
             if (nil == array) 
             {
-                [weakSelf showFailureAlert:@"error_retrieve_comments"];
+                [self showFailureAlert:@"error_retrieve_comments"];
             }
             else if (0 < [array count]) 
             {
-                weakSelf.comments = [NSArray arrayWithArray:array];
-                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+                self.comments = [NSArray arrayWithArray:array];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
             }
-            [weakSelf.activityIndicator stopAnimating];
+            [self.activityIndicator stopAnimating];
         }];
     }
 }
@@ -172,17 +176,18 @@
         return;
     }
     
-    __weak DocumentViewController *weakSelf = self;
+//    __weak DocumentViewController *weakSelf = self;
     [self.personService retrievePersonWithIdentifier:userId completionBlock:^(AlfrescoPerson *person, NSError *error) {
         if (nil != person)
         {
-            [weakSelf.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+            [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
                 if (nil != contentFile)
                 {
                     NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
-                    [weakSelf.avatarDictionary setObject:data forKey:userId];
+                    log(@"the avatar file is at location %@ and the lenght of the image data is %d",[contentFile.fileUrl path], data.length);
+                    [self.avatarDictionary setObject:data forKey:userId];
                     avatarImageView.image = [UIImage imageWithData:data];
-                    [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+                    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
                 }
                 else
                 {
@@ -202,20 +207,20 @@
     if(nil != self.session && self.document != nil)
     {
         self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.session];
-        __weak DocumentViewController *weakSelf = self;
+//        __weak DocumentViewController *weakSelf = self;
         [self.activityIndicator startAnimating];
         [self.taggingService retrieveTagsForNode:self.document 
                                  completionBlock:^(NSArray *array, NSError *error){
              if (nil == array) 
              {
-                 [weakSelf showFailureAlert:@"error_retrieve_tags"];
+                 [self showFailureAlert:@"error_retrieve_tags"];
              }
              else 
              {
-                 [weakSelf.activityIndicator stopAnimating];
-                 weakSelf.tags = [NSMutableArray arrayWithArray:array];
+                 [self.activityIndicator stopAnimating];
+                 self.tags = [NSMutableArray arrayWithArray:array];
              }
-             [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationNone];
+             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationNone];
          }];        
     }
 }
@@ -229,20 +234,20 @@
     {
         // get the document versions using the AlfrescoVersionService
         self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.session];
-        __weak DocumentViewController *weakSelf = self;
+//        __weak DocumentViewController *weakSelf = self;
         [self.activityIndicator startAnimating];
         
         [self.versionService retrieveAllVersionsOfDocument:self.document completionBlock:^(NSArray *array, NSError *error){
             if (nil == array) 
             {
-                [weakSelf showFailureAlert:@"error_retrieve_versions"];
+                [self showFailureAlert:@"error_retrieve_versions"];
             }
             else 
             {
-                [weakSelf.activityIndicator stopAnimating];
-                weakSelf.versions = [NSArray arrayWithArray:array];
+                [self.activityIndicator stopAnimating];
+                self.versions = [NSArray arrayWithArray:array];
             }
-            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:4] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:4] withRowAnimation:UITableViewRowAnimationNone];
         }];
     }
 }
@@ -262,28 +267,28 @@
     if(nil != self.session && self.document != nil)
     {
         self.ratingService = [[AlfrescoRatingService alloc] initWithSession:self.session];
-        __weak DocumentViewController *weakSelf = self;
+//        __weak DocumentViewController *weakSelf = self;
         [self.activityIndicator startAnimating];
         [self.ratingService isNodeLiked:self.document 
                       completionBlock:^(BOOL success, BOOL pIsLiked, NSError *error){
              if (!success) 
              {
-                 [weakSelf showFailureAlert:@"error_retrieve_likes"];
+                 [self showFailureAlert:@"error_retrieve_likes"];
              }
              else 
              {
-                 weakSelf.isLiked = pIsLiked;
+                 self.isLiked = pIsLiked;
                  if (pIsLiked == YES) 
                  {
-                     [weakSelf.likeButton setImage:[UIImage imageNamed:@"like-checked.png"]];
+                     [self.likeButton setImage:[UIImage imageNamed:@"like-checked.png"]];
                  }
                  else 
                  {
-                     [weakSelf.likeButton setImage:[UIImage imageNamed:@"like-unchecked.png"]];
+                     [self.likeButton setImage:[UIImage imageNamed:@"like-unchecked.png"]];
                  }
-                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
              }
-             [weakSelf.activityIndicator stopAnimating];
+             [self.activityIndicator stopAnimating];
          }];        
     }
 }
@@ -296,21 +301,21 @@
 - (IBAction)setLikeDocumentTag:(id)sender
 {
     [self.activityIndicator startAnimating];
-    __weak DocumentViewController *weakSelf = self;
+//    __weak DocumentViewController *weakSelf = self;
     if (self.isLiked == YES) 
     {
         [self.ratingService unlikeNode:self.document 
                      completionBlock:^(BOOL success, NSError *error){
              if (!success) 
              {
-                 [weakSelf showFailureAlert:@"error_retrieve_likes"];
+                 [self showFailureAlert:@"error_retrieve_likes"];
              }
              else 
              {
-                 [weakSelf.likeButton setImage:[UIImage imageNamed:@"like-unchecked.png"]];
-                 weakSelf.isLiked = NO;
+                 [self.likeButton setImage:[UIImage imageNamed:@"like-unchecked.png"]];
+                 self.isLiked = NO;
              }
-             [weakSelf.activityIndicator stopAnimating];
+             [self.activityIndicator stopAnimating];
          }];
     }
     else 
@@ -319,14 +324,14 @@
                    completionBlock:^(BOOL success, NSError *error){
              if (!success) 
              {
-                 [weakSelf showFailureAlert:@"error_retrieve_likes"];
+                 [self showFailureAlert:@"error_retrieve_likes"];
              }
              else 
              {
-                 [weakSelf.likeButton setImage:[UIImage imageNamed:@"like-checked.png"]];
-                 weakSelf.isLiked = YES;
+                 [self.likeButton setImage:[UIImage imageNamed:@"like-checked.png"]];
+                 self.isLiked = YES;
              }
-             [weakSelf.activityIndicator stopAnimating];
+             [self.activityIndicator stopAnimating];
          }];
     }
 }
@@ -342,34 +347,34 @@
     self.documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
     self.progressView.hidden = NO;
     self.progressView.progress = 0.0;
-    __weak DocumentViewController *weakSelf = self;
+//    __weak DocumentViewController *weakSelf = self;
     if(nil != self.session && self.document != nil)
     {
         [self.documentService retrieveContentOfDocument:self.document
                                         completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
              if (nil == contentFile) 
              {
-                 [weakSelf showFailureAlert:@"error_downloading_document"];
+                 [self showFailureAlert:@"error_downloading_document"];
              }
              else 
              {
-                 weakSelf.progressView.progress = 1.0;
-                 weakSelf.documentPreviewItem = [[BasicPreviewItem alloc] initWithUrl:contentFile.fileUrl andTitle:self.document.name];
+                 self.progressView.progress = 1.0;
+                 self.documentPreviewItem = [[BasicPreviewItem alloc] initWithUrl:contentFile.fileUrl andTitle:self.document.name];
                  QLPreviewController *previewController = [[QLPreviewController alloc] init];
                  
                  //setting the datasource property to self
                  previewController.dataSource = self;
                  
                  //pushing the QLPreviewController to the navigation stack
-                 [[weakSelf navigationController] pushViewController:previewController animated:YES];
-                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
+                 [[self navigationController] pushViewController:previewController animated:YES];
+                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
              }
-             weakSelf.progressView.hidden = YES;
-             [weakSelf.activityIndicator stopAnimating];
+             self.progressView.hidden = YES;
+             [self.activityIndicator stopAnimating];
          } 
                                           progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal)
          {
-             weakSelf.progressView.progress = (float)bytesDownloaded/(float)bytesTotal;
+             self.progressView.progress = (float)bytesDownloaded/(float)bytesTotal;
          }];
     }
 }

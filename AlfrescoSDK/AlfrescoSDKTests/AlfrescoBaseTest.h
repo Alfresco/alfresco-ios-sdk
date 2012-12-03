@@ -32,6 +32,7 @@ typedef void (^CMISTestBlock)(void);
 typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
 
 extern NSString * const kAlfrescoTestDataFolder;
+extern NSString * const kAlfrescoTestNetworkID;
 @interface AlfrescoBaseTest : SenTestCase
 
 @property (nonatomic, assign) BOOL callbackCompleted;

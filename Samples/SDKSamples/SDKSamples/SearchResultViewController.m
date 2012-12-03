@@ -49,19 +49,19 @@
     // get the document library for the site
     self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.session];
     AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:self.exact includeContent:self.fullText folder:nil includeDescendants:NO];
-    __weak SearchResultViewController *weakSelf = self;
+//    __weak SearchResultViewController *weakSelf = self;
     [self.searchService searchWithKeywords:self.searchText 
                                    options:searchOptions 
                            completionBlock:^(NSArray *array, NSError *error) {
-        [weakSelf.activityIndicator stopAnimating];
+        [self.activityIndicator stopAnimating];
         if (nil == array) 
         {
-            [weakSelf showFailureAlert:@"error_search"];
+            [self showFailureAlert:@"error_search"];
         }
         else 
         {
-            weakSelf.resultArray = [NSArray arrayWithArray:array];
-            [weakSelf.tableView reloadData];
+            self.resultArray = [NSArray arrayWithArray:array];
+            [self.tableView reloadData];
         }
         
     }];

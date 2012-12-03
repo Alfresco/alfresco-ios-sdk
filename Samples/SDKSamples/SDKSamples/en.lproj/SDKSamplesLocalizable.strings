@@ -34,6 +34,8 @@
 "sample_browse_my_sites_option"="Browse My Sites";
 "sample_search_option"="Search";
 "sample_activities_option"="Activities";
+"sample_refresh_access_token"="Refresh Access Token";
+"sample_alert_refresh_success"="The access token was refreshed successfully";
 "select_company_home_title"="Company Home";
 "select_favourite_sites_title"="Favourite Sites";
 "select_activities_title"="Activities";
@@ -88,6 +90,7 @@
 "error_add_folder"="Failed to add folder.";
 "error_add_photo"="Failed to add photo.";
 "error_title"="Error";
+"error_refresh_access_token"="Failure to refresh access token";
 "error_no_keys"="Either the API key or secret key is missing. Please provide the keys and re-start the app.";
 "load_more"="Load more...";
 "document_general_nodata"="None";

@@ -62,7 +62,7 @@
     [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __weak AlfrescoCloudPersonService *weakSelf = self;
+//    __weak AlfrescoCloudPersonService *weakSelf = self;
     NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
@@ -73,7 +73,7 @@
         else
         {
             NSError *conversionError = nil;
-            AlfrescoPerson *person = [weakSelf alfrescoPersonFromJSONData:responseData error:&conversionError];
+            AlfrescoPerson *person = [self alfrescoPersonFromJSONData:responseData error:&conversionError];
             completionBlock(person, conversionError);
         }
     }];

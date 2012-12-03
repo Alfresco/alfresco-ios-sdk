@@ -103,7 +103,7 @@
             cell.textLabel.text = localized(@"sample_search_option");
             break;
         case 6:
-            cell.textLabel.text = @"Refresh access";
+            cell.textLabel.text = localized(@"sample_refresh_access_token");
             break;
     }
     
@@ -202,8 +202,9 @@
                 [self.activityIndicator stopAnimating];
             }
             
+            NSString *title = localized(@"error_refresh_access_token");
             NSString *message = [NSString stringWithFormat:@"Error refreshing OAuth Data %@", [error localizedDescription]];
-            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
             [alertView show];
         }
         else
@@ -227,8 +228,8 @@
             }
             
             
-            NSString *message = @"OAuth Data have been refreshed";
-            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            NSString *message = localized(@"sample_alert_refresh_success");
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
             [alertView show];
             
         }

@@ -24,6 +24,7 @@
 #import "CMISDocument.h"
 
 NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
+NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 @interface AlfrescoBaseTest ()
 @property (nonatomic, strong) NSString * testPassword;
@@ -423,7 +424,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
             [self setUpCMISSession];
             [self resetTestVariables];
             
-            if (nil != self.cmisSession && nil != self.cmisRootFolder)
+            if (nil != self.cmisSession && nil != self.cmisRootFolder && !self.isCloud)
             {
                 cmisTestBlock();
                 [self resetTestVariables];
@@ -445,7 +446,7 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
     NSString *urlString = nil;
     if (self.isCloud)
     {
-        urlString = [self.server stringByAppendingString:kAlfrescoCloudCMISPath];
+        urlString = [self.server stringByAppendingString:[NSString stringWithFormat:@"%@%@%@",kAlfrescoCloudPrecursor, kAlfrescoTestNetworkID, kAlfrescoCloudCMISPath]];
     }
     else
     {
@@ -484,26 +485,47 @@ NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
                 else
                 {
                     self.cmisSession = cmisSession;
-                    [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *folder, NSError *folderError){
-                        if (nil == folder)
-                        {
-                            self.lastTestSuccessful = NO;
-                            self.callbackCompleted = YES;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [folderError localizedDescription], [folderError localizedFailureReason]];
-                        }
-                        else
-                        {
-                            self.lastTestSuccessful = YES;
-                            self.callbackCompleted = YES;
-                            self.cmisRootFolder = folder;                            
-                        }
-                    }];
+                    if (self.isCloud)
+                    {
+                        [cmisSession retrieveObjectByPath:self.testFolderPathName completionBlock:^(CMISObject *object, NSError *folderError){
+                            if (nil == object)
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.callbackCompleted = YES;
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [folderError localizedDescription], [folderError localizedFailureReason]];
+                            }
+                            else
+                            {
+                                CMISFolder *rootFolder = (CMISFolder *)object;
+                                self.lastTestSuccessful = YES;
+                                self.callbackCompleted = YES;
+                                self.cmisRootFolder = rootFolder;
+                            }
+                        }];
+                    }
+                    else
+                    {
+                        [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *folder, NSError *folderError){
+                            if (nil == folder)
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.callbackCompleted = YES;
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [folderError localizedDescription], [folderError localizedFailureReason]];
+                            }
+                            else
+                            {
+                                self.lastTestSuccessful = YES;
+                                self.callbackCompleted = YES;
+                                self.cmisRootFolder = folder;
+                            }
+                        }];
+                    }
                 }
             }];
         }
     }];
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"setUpTestChildFolder failed");
+    STAssertTrue(self.lastTestSuccessful, @"setUpCMISSession failed");
     
 }
 

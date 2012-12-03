@@ -64,7 +64,7 @@
     NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
-    __weak AlfrescoOnPremisePersonService *weakSelf = self;
+//    __weak AlfrescoOnPremisePersonService *weakSelf = self;
     [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
@@ -73,7 +73,7 @@
         else
         {
             NSError *conversionError = nil;
-            AlfrescoPerson *person = [weakSelf alfrescoPersonFromJSONData:responseData error:&conversionError];
+            AlfrescoPerson *person = [self alfrescoPersonFromJSONData:responseData error:&conversionError];
             completionBlock(person, conversionError);
         }
     }];
