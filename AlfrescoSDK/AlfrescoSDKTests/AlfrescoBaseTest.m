@@ -424,7 +424,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             [self setUpCMISSession];
             [self resetTestVariables];
             
-            if (nil != self.cmisSession && nil != self.cmisRootFolder)
+            if (nil != self.cmisSession && nil != self.cmisRootFolder && !self.isCloud)
             {
                 cmisTestBlock();
                 [self resetTestVariables];
