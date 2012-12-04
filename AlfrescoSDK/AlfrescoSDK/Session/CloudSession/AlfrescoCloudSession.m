@@ -231,7 +231,7 @@
 
     if (nil != _oauthData)
     {
-        id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
+        id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:oauthData];
         [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     }
 }

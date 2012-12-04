@@ -192,7 +192,7 @@
     AlfrescoOAuthData *oauthData = [NSKeyedUnarchiver unarchiveObjectWithData:archivedOAuthData];
      */
     
-    AlfrescoCloudSession *cloudSession = (AlfrescoCloudSession *)self.session;
+    __block AlfrescoCloudSession *cloudSession = (AlfrescoCloudSession *)self.session;
     AlfrescoOAuthHelper *oauthHelper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self];
     [oauthHelper refreshAccessToken:cloudSession.oauthData completionBlock:^(AlfrescoOAuthData *refreshedOAuthData, NSError *error){
         if (nil == refreshedOAuthData)
@@ -221,11 +221,7 @@
             [standardDefaults synchronize];
              */
             
-            if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
-            {
-                AlfrescoCloudSession *cloudSession = (AlfrescoCloudSession *)self.session;
-                cloudSession.oauthData = refreshedOAuthData;
-            }
+            [cloudSession setOauthData:refreshedOAuthData];
             
             
             NSString *message = localized(@"sample_alert_refresh_success");

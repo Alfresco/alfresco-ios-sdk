@@ -301,7 +301,7 @@
     
     if (!self.isLoginScreenLoad)
     {
-        log(@"isLoginScreenLoad = NO and we start the NSURLConnection requet");
+        log(@"isLoginScreenLoad = NO and we start the NSURLConnection request");
         [self.activityIndicator startAnimating];
         self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
         return NO;
@@ -365,6 +365,7 @@
     }
     else
     {
+        log(@"We don't have a valid authentication code");
         [self.activityIndicator stopAnimating];
         self.hasValidAuthenticationCode = NO;
     }
@@ -392,6 +393,7 @@
     {
         NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
         BOOL showAlert = NO;
+        log(@"We don't have a valid authentication code");
         if (nil != self.oauthDelegate)
         {
             if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
