@@ -643,7 +643,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 - (void)waitForCompletion
 {
-    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:20];
+    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:10];
     
     do {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];

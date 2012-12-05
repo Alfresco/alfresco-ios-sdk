@@ -3201,6 +3201,10 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         }
+        else
+        {
+            [super waitForCompletion];
+        }
 
     }];
 }
@@ -4782,6 +4786,10 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         }
+        else
+        {
+            [super waitForCompletion];
+        }
     }];
 }
 
@@ -4844,6 +4852,10 @@
             
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        }
+        else
+        {
+            [super waitForCompletion];
         }
     }];
 }

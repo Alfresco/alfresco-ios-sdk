@@ -56,6 +56,10 @@
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, @"OnPremise Session authentication succeeded with invalid credentials");
         }
+        else
+        {
+            [super waitForCompletion];
+        }
     }];
 }
 
@@ -175,6 +179,7 @@
         {
             super.lastTestSuccessful = NO;
         }
+        [super waitForCompletion];
         STAssertTrue(super.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
     }];
 }
@@ -497,6 +502,7 @@
             STAssertNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.maintenanceVersion);
             STAssertNil(sessionRepositoryInfo.version, @"Expected the version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.version);
             
+            [super waitForCompletion];
             super.lastTestSuccessful = YES;
         }
         STAssertTrue(super.lastTestSuccessful, @"The session does not contain valid respository information");
@@ -538,6 +544,10 @@
         STAssertTrue([tokenType isEqualToString:archivedOAuthData.tokenType], @"tokenType should be the same but we got %@", archivedOAuthData.tokenType);
         STAssertTrue([scope isEqualToString:archivedOAuthData.scope], @"scope should be the same but we got %@", archivedOAuthData.scope);
         STAssertEquals(3600, [archivedOAuthData.expiresIn intValue], @"Expires in should be 3600, but instead it is %d",[archivedOAuthData.expiresIn intValue]);
+        if (super.isCloud)
+        {
+            [super waitForCompletion];
+        }
         
     }];
 }
