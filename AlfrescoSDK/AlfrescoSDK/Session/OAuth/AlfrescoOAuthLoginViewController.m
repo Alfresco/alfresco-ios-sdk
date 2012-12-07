@@ -128,12 +128,14 @@
     [notificationCentre addObserver:self selector:@selector(reloadAndReset) name:UIDeviceOrientationDidChangeNotification object:device];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view.autoresizesSubviews = YES;
+    log(@"UIWebviewDelegate viewDidLoad");
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     self.isLoginScreenLoad = YES;
+    log(@"UIWebviewDelegate viewWillAppear");
     [self loadWebView];
     [self createActivityView];
 }
@@ -210,10 +212,10 @@
     [authURLString appendString:kAlfrescoOAuthScope];
     [authURLString appendString:@"&"];
     [authURLString appendString:kAlfrescoOAuthResponseType];
-    log(@"Auth URL is %@", authURLString);
     
     // load the authorization URL in the web view
     NSURL *authURL = [NSURL URLWithString:authURLString];
+    log(@"UIWebviewDelegate loadWebView: just before loading request with %@",authURLString);
     [self.webView loadRequest:[NSURLRequest requestWithURL:authURL]];
 }
 
@@ -245,6 +247,7 @@
 
 - (void)createActivityView
 {
+    log(@"UIWebviewDelegate createActivityView");
     CGSize size = self.view.bounds.size;
     CGFloat xOffset = size.width/2 - 50;
     CGFloat yOffset = size.height/2 - 50;
@@ -259,6 +262,7 @@
 
 - (void)reloadAndReset
 {
+    log(@"UIWebviewDelegate reloadAndReset");
     if (nil != self.connection)
     {
         [self.connection cancel];
@@ -280,8 +284,15 @@
 {
     log(@"UIWebviewDelegate webViewDidFinishLoad");
     
+    if (self.webView.loading)
+    {
+        log(@"UIWebviewDelegate webViewDidFinishLoad. Webview is still loading the frame. Send stopLoading to Webview");
+        [self.webView stopLoading];
+    }
+    
     if (self.isLoginScreenLoad)
     {
+        log(@"UIWebviewDelegate webViewDidFinishLoad setting isLoginScreenLoad = NO");
         self.isLoginScreenLoad = NO;
     }
 }
@@ -289,6 +300,22 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     log(@"UIWebviewDelegate shouldStartLoadWithRequest");
+    
+    switch (navigationType)
+    {
+        case UIWebViewNavigationTypeFormSubmitted:
+            log(@"UIWebviewDelegate shouldStartLoadWithRequest. Form submission");
+            self.isLoginScreenLoad = NO;
+            break;
+        case UIWebViewNavigationTypeFormResubmitted:
+            log(@"UIWebviewDelegate shouldStartLoadWithRequest. Form re-submission");
+            self.isLoginScreenLoad = NO;
+            break;
+            
+        default:
+            break;
+    }
+    
     
     if (self.isLoginScreenLoad)
     {
