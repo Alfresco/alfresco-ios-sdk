@@ -128,14 +128,12 @@
     [notificationCentre addObserver:self selector:@selector(reloadAndReset) name:UIDeviceOrientationDidChangeNotification object:device];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view.autoresizesSubviews = YES;
-    log(@"UIWebviewDelegate viewDidLoad");
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     self.isLoginScreenLoad = YES;
-    log(@"UIWebviewDelegate viewWillAppear");
     [self loadWebView];
     [self createActivityView];
 }
@@ -143,13 +141,11 @@
 #ifdef __IPHONE_6_0
 - (BOOL)shouldAutorotate
 {
-    log(@"<<<<<<<< iOS 6 shouldAutorotate");
     return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations
 {
-    log(@"<<<<<<<< iOS 6 supportedInterfaceOrientations");
     return UIInterfaceOrientationMaskAll;
 }
 #endif
@@ -166,7 +162,6 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    log(@"<<<<<<<< iOS 5 shouldAutorotateToInterfaceOrientation");
     return YES;
 }
 #endif
@@ -196,12 +191,7 @@
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
-    
-    log(@"baseurl: %@", self.baseURL);
-    log(@"apikey: %@", self.oauthData.apiKey);
-    log(@"apisecret: %@", self.oauthData.secretKey);
-    log(@"redirect: %@", self.oauthData.redirectURI);
-    
+        
     NSMutableString *authURLString = [NSMutableString string];
     [authURLString appendString:self.baseURL];
     [authURLString appendString:@"?"];
@@ -222,7 +212,6 @@
 
 - (NSString *)authorizationCodeFromURL:(NSURL *)url
 {
-    log(@"callbackURL: %@", url);
     
     if (nil == url)
     {
@@ -247,7 +236,6 @@
 
 - (void)createActivityView
 {
-    log(@"UIWebviewDelegate createActivityView");
     CGSize size = self.view.bounds.size;
     CGFloat xOffset = size.width/2 - 50;
     CGFloat yOffset = size.height/2 - 50;
@@ -262,7 +250,6 @@
 
 - (void)reloadAndReset
 {
-    log(@"UIWebviewDelegate reloadAndReset");
     if (nil != self.connection)
     {
         [self.connection cancel];
@@ -282,33 +269,27 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    log(@"UIWebviewDelegate webViewDidFinishLoad");
     
     if (self.webView.loading)
     {
-        log(@"UIWebviewDelegate webViewDidFinishLoad. Webview is still loading the frame. Send stopLoading to Webview");
         [self.webView stopLoading];
     }
     
     if (self.isLoginScreenLoad)
     {
-        log(@"UIWebviewDelegate webViewDidFinishLoad setting isLoginScreenLoad = NO");
         self.isLoginScreenLoad = NO;
     }
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    log(@"UIWebviewDelegate shouldStartLoadWithRequest");
     
     switch (navigationType)
     {
         case UIWebViewNavigationTypeFormSubmitted:
-            log(@"UIWebviewDelegate shouldStartLoadWithRequest. Form submission");
             self.isLoginScreenLoad = NO;
             break;
         case UIWebViewNavigationTypeFormResubmitted:
-            log(@"UIWebviewDelegate shouldStartLoadWithRequest. Form re-submission");
             self.isLoginScreenLoad = NO;
             break;
             
@@ -316,19 +297,8 @@
             break;
     }
     
-    
-    if (self.isLoginScreenLoad)
-    {
-        log(@"isLoginScreenLoad = YES");
-    }
-    else
-    {
-        log(@"isLoginScreenLoad = NO");
-    }
-    
     if (!self.isLoginScreenLoad)
     {
-        log(@"isLoginScreenLoad = NO and we start the NSURLConnection request");
         [self.activityIndicator startAnimating];
         self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
         return NO;
@@ -363,7 +333,6 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    log(@"LoginViewController:NSURLConnectionDelegate didReceiveData");
 }
 
 /**
