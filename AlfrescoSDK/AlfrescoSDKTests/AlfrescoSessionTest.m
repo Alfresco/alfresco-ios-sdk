@@ -139,6 +139,7 @@
                 super.lastTestSuccessful = NO;
             }
             
+            [super waitForCompletion];
             STAssertTrue(super.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
         }
     }];
@@ -179,7 +180,10 @@
         {
             super.lastTestSuccessful = NO;
         }
-        [super waitForCompletion];
+        if (super.isCloud)
+        {
+            [super waitForCompletion];
+        }
         STAssertTrue(super.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
     }];
 }
@@ -204,6 +208,10 @@
         else
         {
             super.lastTestSuccessful = NO;
+        }
+        if (super.isCloud)
+        {
+            [super waitForCompletion];
         }
         STAssertTrue(super.lastTestSuccessful, @"OnPremise Session did not return the appropriate personal identifier");
     }];
@@ -236,6 +244,10 @@
         {
             super.lastTestSuccessful = NO;
         }
+        if (super.isCloud)
+        {
+            [super waitForCompletion];
+        }
         STAssertTrue(super.lastTestSuccessful, @"The session's default listing context state was not as expected");
     }];
 }
@@ -267,6 +279,10 @@
         else
         {
             super.lastTestSuccessful = NO;
+        }
+        if (super.isCloud)
+        {
+            [super waitForCompletion];
         }
         STAssertTrue(super.lastTestSuccessful, @"The session's root folder did not return correct values");
     }];
@@ -350,6 +366,10 @@
         {
             super.lastTestSuccessful = NO;
         }
+        if (super.isCloud)
+        {
+            [super waitForCompletion];
+        }
         STAssertTrue(super.lastTestSuccessful, @"The OnPremise Session did not overwrite the value for an existing key");
     }];
 }
@@ -406,6 +426,10 @@
         {
             super.lastTestSuccessful = NO;
         }
+        if (super.isCloud)
+        {
+            [super waitForCompletion];
+        }
         STAssertTrue(super.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
     }];
 }
@@ -431,6 +455,10 @@
         else
         {
             super.lastTestSuccessful = NO;
+        }
+        if (super.isCloud)
+        {
+            [super waitForCompletion];
         }
         STAssertTrue(super.lastTestSuccessful, @"The session does not contain an object for the key provided, but still returned a value");
     }];
