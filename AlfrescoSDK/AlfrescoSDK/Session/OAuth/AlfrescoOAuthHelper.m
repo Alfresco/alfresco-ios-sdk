@@ -124,7 +124,7 @@
     
     // add the access token header
     NSString *authHeader = [NSString stringWithFormat:@"%@ %@",self.oauthData.tokenType, self.oauthData.accessToken];
-    log(@"auth header is %@", authHeader);
+    log(@"URL is: %@ auth header is %@", self.baseURL, authHeader);
     [request addValue:authHeader forHTTPHeaderField:@"Authorization"];
     
     NSMutableString *contentString = [NSMutableString string];

@@ -31,6 +31,12 @@
 
 @interface AlfrescoCloudSession : NSObject <AlfrescoSession>
 @property (nonatomic, strong, readonly) AlfrescoCloudNetwork *network;
+
+/**
+ There is a custom setter method of oauthData, which is used for refreshing access tokens. This resets the authentication and CMIS session.
+ For initialising a AlfrescoCloudSession, one of the connectWithOAuthData methods must be used.
+ @param oauthData
+ */
 @property (nonatomic, strong) AlfrescoOAuthData *oauthData;
 
 
