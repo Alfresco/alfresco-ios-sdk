@@ -217,6 +217,16 @@
 
 }
 
+/**
+ This is a custom setter method for oauthData. The only use case for this is in case the access token has to be refreshed (AlfrescoCloudSession is instantiated with oauth data).
+ This has 2 major consequences:
+ 1.) we need to recreate the Authentication Provider. This also needs to filter through to the CMIS library/CMIS Session. 
+ 2.) because we use a custom setter for the oauthData property, AlfrescoCloudSession uses the instance variable _oauthData internally to avoid calling the setter inadvertently.
+ 
+ TODO:
+ For now we need to re-initialise/create the CMIS session entirely, even though we only change one parameter on the CMISSessionParameter property of the session.
+ Future versions of ObjectiveCMIS lib need to ensure that this won't be necessary and that we will be able to change the parameter 'on the fly'.
+ */
 - (void)setOauthData:(AlfrescoOAuthData *)oauthData
 {
     if (_oauthData == oauthData)
@@ -233,6 +243,31 @@
     {
         id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:oauthData];
         [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+        CMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[CMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
+        CMISSession *cmisSession = [self objectForParameter:kAlfrescoSessionKeyCmisSession];
+        if (cmisSession)
+        {
+            __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
+            params.atomPubUrl = cmisSession.sessionParameters.atomPubUrl;
+            params.authenticationProvider = passthroughAuthProvider;
+            params.repositoryId = cmisSession.sessionParameters.repositoryId;
+            [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+            [CMISSession connectWithSessionParameters:params completionBlock:^(CMISSession *newCMISsession, NSError *error){
+                if (newCMISsession)
+                {
+                    [self setObject:newCMISsession forParameter:kAlfrescoSessionKeyCmisSession];
+                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:newCMISsession];
+                    [newCMISsession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
+                        if (rootFolder)
+                        {
+                            self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
+                        }
+                    }];
+                    
+                }
+            }];
+        }
     }
 }
 
@@ -263,7 +298,6 @@
 }
 
 #pragma mark - Private methods
-
 - (id)authProviderToBeUsed
 {
     if (self.isUsingBaseAuthenticationProvider)
@@ -272,7 +306,9 @@
     }
     else
     {
-        return [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:self.oauthData];
+        /// strictly speaking we could use the property, i.e. self.oauthData here. however, i wanted to be consistent in the use of oauthData and only
+        /// use the instance variable internally to avoid the use of self.oauthData as a setter
+        return [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:_oauthData];
     }
 }
 
@@ -288,7 +324,7 @@
     }
     self.baseUrl = [NSURL URLWithString:baseURL];
     self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
-    self.oauthData = oauthData;
+    _oauthData = oauthData; ///setting oauthData only via instance variable. The setter method recreates a CMIS session and this shouldn't be used here.
     [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
         {
@@ -340,7 +376,7 @@
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",baseURL,network]];
     self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
-    self.oauthData = oauthData;
+    _oauthData = oauthData; ///setting oauthData only via instance variable. The setter method recreates a CMIS session and this shouldn't be used here.
     self.personIdentifier = kAlfrescoMe;
 
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
