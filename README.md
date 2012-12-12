@@ -18,7 +18,7 @@ Releases
 --------
 
 The master branch is used for development of new features so it's stability can not be guaranteed, for the current stable release 
-[download the pre-built binaries](https://developer.alfresco.com/resources/alfresco/downloads/alfresco-ios-sdk.zip) from the developer portal. 
+[download the pre-built binaries](https://developer.alfresco.com/resources/alfresco/downloads/alfresco-ios-sdk-1.0.2.zip) from the developer portal. 
 Alternatively, use one of the [tags](https://github.com/Alfresco/alfresco-ios-sdk/tags) to build from source.
 
 
