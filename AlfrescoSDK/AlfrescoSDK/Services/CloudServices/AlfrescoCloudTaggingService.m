@@ -202,6 +202,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
         [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
             if (nil != error)
             {
+                log(@"addTags::error with data %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
                 completionBlock(NO, error);
             }
             else
