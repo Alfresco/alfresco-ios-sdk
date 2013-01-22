@@ -18,20 +18,14 @@
  *****************************************************************************
  */
 
+/** AlfrescoPlaceholderFileManager
+ 
+ Author: Tauseef Mughal (Alfresco)
+ */
+
 #import <Foundation/Foundation.h>
-#import "AlfrescoErrors.h"
-#import "AlfrescoSession.h"
-#import "AlfrescoAuthenticationProvider.h"
-#import <objc/runtime.h>
-#import "AlfrescoInternalConstants.h"
-#import "AlfrescoHTTPRequest.h"
+#import "AlfrescoFileManager.h"
 
-@interface AlfrescoHTTPUtils : NSObject
-
-+ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL;
-
-+ (void)addRequestObject:(id<AlfrescoHTTPRequest>)request toArray:(NSMutableArray *)requestArray;
-
-+ (void)removeRequestObject:(id<AlfrescoHTTPRequest>)request fromArray:(NSMutableArray *)requestArray;
+@interface AlfrescoPlaceholderFileManager : AlfrescoFileManager
 
 @end

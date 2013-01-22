@@ -27,7 +27,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import <objc/runtime.h>
-
+#import "AlfrescoNSHTTPRequest.h"
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -37,11 +37,13 @@
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
+@property (nonatomic, strong, readwrite) Class networkProvider;
 - (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
 - (void)authenticateWithUsername:(NSString *)username
                      andPassword:(NSString *)password
                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 - (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password;
+- (BOOL)validateCustomNetworkProperty:(id)objectFromParameters;
 
 + (NSNumber *)majorVersionFromString:(NSString *)versionString;
 @end
@@ -54,6 +56,7 @@
 @synthesize sessionData = _sessionData;
 @synthesize rootFolder = _rootFolder;
 @synthesize defaultListingContext = _defaultListingContext;
+@synthesize networkProvider = _networkProvider;
 
 + (void)connectWithUrl:(NSURL *)url
               username:(NSString *)username
@@ -114,6 +117,24 @@
         {
             [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         }
+        
+        self.networkProvider = [AlfrescoNSHTTPRequest class];
+        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
+        {
+            id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
+            if ([self validateCustomNetworkProperty:networkObject])
+            {
+                Class customNetworkProvider = NSClassFromString((NSString *)networkObject);
+                self.networkProvider = customNetworkProvider;
+            }
+            else
+            {
+                @throw([NSException exceptionWithName:@"Error with custom network provider"
+                                               reason:@"The custom network provider must be a string representation of the network class and must conform to the AlfrescoHTTPRequest protocol"
+                                             userInfo:nil]);
+            }
+        }
+        
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];        
     }
@@ -261,6 +282,29 @@
 - (void)removeParameter:(id)key
 {
     [self.sessionData removeObjectForKey:key];
+}
+
+- (BOOL)validateCustomNetworkProperty:(id)objectFromParameters
+{
+    BOOL customClassIsValid = NO;
+    if (![objectFromParameters isKindOfClass:[NSString class]])
+    {
+        return customClassIsValid;
+    }
+    
+    Class networkProviderClass = NSClassFromString((NSString *)objectFromParameters);
+    
+    if (!networkProviderClass)
+    {
+        return customClassIsValid;
+    }
+    
+    if (![networkProviderClass conformsToProtocol:@protocol(AlfrescoHTTPRequest)])
+    {
+        return customClassIsValid;
+    }
+    
+    return customClassIsValid = YES;
 }
 
 + (NSNumber *)majorVersionFromString:(NSString *)versionString

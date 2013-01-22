@@ -30,6 +30,7 @@
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
+@property (nonatomic, strong, readwrite) __block NSMutableArray *allRequests;
 
 @end
 
@@ -37,6 +38,7 @@
 @synthesize baseApiUrl = _baseApiUrl;
 @synthesize session = _session;
 @synthesize authenticationProvider = _authenticationProvider;
+@synthesize allRequests = _allRequests;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -56,6 +58,7 @@
         {
             return nil;
         }
+        self.allRequests = [NSMutableArray array];
     }
     return self;
 }
@@ -71,7 +74,8 @@
     NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
     NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    __block id<AlfrescoHTTPRequest> request = nil;
+    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -83,7 +87,9 @@
             NSNumber *count = [ratingsDict valueForKeyPath:kAlfrescoOnPremiseRatingsCount];
             completionBlock(count, conversionError);
         }
+        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
+    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
  
 - (void)likeNode:(AlfrescoNode *)node
@@ -104,7 +110,8 @@
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:likeDict options:kNilOptions error:&error];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
+    __block id<AlfrescoHTTPRequest> request = nil;
+    request = [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
         if (nil != error)
         {
             completionBlock(NO, error);
@@ -113,7 +120,9 @@
         {
             completionBlock(YES, error);
         }
+        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
+    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
  
 - (void)unlikeNode:(AlfrescoNode *)node
@@ -127,7 +136,8 @@
     NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
     NSString *requestString = [kAlfrescoOnPremiseRatingsLikingSchemeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session method:kAlfrescoHTTPDelete completionBlock:^(NSData *data, NSError *error){
+    __block id<AlfrescoHTTPRequest> request = nil;
+    request = [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPDelete completionBlock:^(NSData *data, NSError *error){
         if (nil != error)
         {
             completionBlock(NO, error);
@@ -136,7 +146,9 @@
         {
             completionBlock(YES, error);
         }
+        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
+    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
  
 - (void)isNodeLiked:(AlfrescoNode *)node completionBlock:(AlfrescoLikedCompletionBlock)completionBlock
@@ -149,7 +161,8 @@
     NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
     NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    __block id<AlfrescoHTTPRequest> request = nil;
+    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(NO, NO, error);
@@ -161,6 +174,8 @@
             BOOL isLiked = [[ratingsDict valueForKeyPath:kAlfrescoOnPremiseLikesSchemeRatings] boolValue];
             completionBlock(YES, isLiked, nil);
         }
+        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
+    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 @end

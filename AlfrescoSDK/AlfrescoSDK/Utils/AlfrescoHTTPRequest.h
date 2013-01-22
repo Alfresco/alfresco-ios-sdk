@@ -19,15 +19,24 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoConstants.h"
-#import "AlfrescoInternalConstants.h"
+#import "AlfrescoSession.h"
 
-@interface AlfrescoHTTPRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+@protocol AlfrescoHTTPRequest <NSObject>
 
-+ (void)requestWithURL:(NSURL *)requestURL
-                method:(NSString *)method
-               headers:(NSDictionary *)header
-           requestBody:(NSData *)data
-       completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
++ (id<AlfrescoHTTPRequest>)executeRequestWithURL:(NSURL *)url
+                                         session:(id<AlfrescoSession>)session
+                                 completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+
++ (id<AlfrescoHTTPRequest>)executeRequestWithURL:(NSURL *)url
+                                         session:(id<AlfrescoSession>)session
+                                          method:(NSString *)method
+                                 completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+
+
++ (id<AlfrescoHTTPRequest>)executeRequestWithURL:(NSURL *)url
+                                         session:(id<AlfrescoSession>)session
+                                     requestBody:(NSData *)requestBody
+                                          method:(NSString *)method
+                                 completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 @end

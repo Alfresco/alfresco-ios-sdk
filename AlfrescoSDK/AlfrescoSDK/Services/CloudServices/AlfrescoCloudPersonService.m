@@ -30,6 +30,7 @@
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
+@property (nonatomic, strong, readwrite) __block NSMutableArray *allRequests;
 - (AlfrescoPerson *)alfrescoPersonFromJSONData:(NSData *)data error:(NSError **)outError;
 //- (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict;
 @end
@@ -40,6 +41,7 @@
 @synthesize session = _session;
 @synthesize objectConverter = _objectConverter;
 @synthesize authenticationProvider = _authenticationProvider;
+@synthesize allRequests = _allRequests;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -54,6 +56,7 @@
         {
             self.authenticationProvider = (AlfrescoBasicAuthenticationProvider *)authenticationObject;
         }
+        self.allRequests = [NSMutableArray array];
     }
     return self;
 }
@@ -65,7 +68,8 @@
 //    __weak AlfrescoCloudPersonService *weakSelf = self;
     NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
     NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    __block id<AlfrescoHTTPRequest> request = nil;
+    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -76,7 +80,9 @@
             AlfrescoPerson *person = [self alfrescoPersonFromJSONData:responseData error:&conversionError];
             completionBlock(person, conversionError);
         }
+        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
+    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock

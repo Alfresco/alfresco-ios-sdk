@@ -18,20 +18,31 @@
  *****************************************************************************
  */
 
-#import <Foundation/Foundation.h>
-#import "AlfrescoErrors.h"
-#import "AlfrescoSession.h"
-#import "AlfrescoAuthenticationProvider.h"
-#import <objc/runtime.h>
-#import "AlfrescoInternalConstants.h"
-#import "AlfrescoHTTPRequest.h"
+#import "AlfrescoCustomClassParameters.h"
 
-@interface AlfrescoHTTPUtils : NSObject
+@implementation AlfrescoCustomClassParameters
 
-+ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL;
+@synthesize customClassDictionary = _customClassDictionary;
+@synthesize customClassesSet = _customClassesSet;
 
-+ (void)addRequestObject:(id<AlfrescoHTTPRequest>)request toArray:(NSMutableArray *)requestArray;
++ (AlfrescoCustomClassParameters *)sharedInstance
+{
+    static AlfrescoCustomClassParameters *sharedClassParameters;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedClassParameters = [[self alloc] init];
+    });
+    return sharedClassParameters;
+}
 
-+ (void)removeRequestObject:(id<AlfrescoHTTPRequest>)request fromArray:(NSMutableArray *)requestArray;
+- (void)setCustomClassDictionary:(NSDictionary *)customClassDictionary
+{
+    // stop the class dictionary to be set more than once
+    if (self.customClassDictionary) {
+        return;
+    }
+    _customClassDictionary = customClassDictionary;
+    _customClassesSet = YES;
+}
 
 @end

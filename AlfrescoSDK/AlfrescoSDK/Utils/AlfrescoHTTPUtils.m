@@ -17,43 +17,10 @@
  ******************************************************************************/
 
 #import "AlfrescoHTTPUtils.h"
-#import "AlfrescoHTTPRequest.h"
+#import "AlfrescoNSHTTPRequest.h"
 #import "AlfrescoErrors.h"
 
 @implementation AlfrescoHTTPUtils
-
- 
-+ (void)executeRequestWithURL:(NSURL *)url
-                      session:(id<AlfrescoSession>)session
-              completionBlock:(AlfrescoDataCompletionBlock)completionBlock
-{
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:session requestBody:nil method:kAlfrescoHTTPGet completionBlock:completionBlock];
-}
-
-+ (void)executeRequestWithURL:(NSURL *)url
-                      session:(id<AlfrescoSession>)session
-                       method:(NSString *)method
-              completionBlock:(AlfrescoDataCompletionBlock)completionBlock
-{
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:session requestBody:nil method:method completionBlock:completionBlock];
-}
-
-
-+ (void)executeRequestWithURL:(NSURL *)url
-                      session:(id<AlfrescoSession>)session
-                  requestBody:(NSData *)requestBody
-                       method:(NSString *)method
-              completionBlock:(AlfrescoDataCompletionBlock)completionBlock
-{
-    id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-    NSDictionary *httpHeaders = [authenticationProvider willApplyHTTPHeadersForSession:nil];
-    [AlfrescoHTTPRequest
-     requestWithURL:url
-     method:method
-     headers:httpHeaders
-     requestBody:requestBody
-     completionBlock:completionBlock];
-}
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL
 {
@@ -73,5 +40,20 @@
     return [NSURL URLWithString:mutableRequestString];
 }
 
++ (void)addRequestObject:(id<AlfrescoHTTPRequest>)request toArray:(NSMutableArray *)requestArray
+{
+    if (![request isKindOfClass:[AlfrescoNSHTTPRequest class]])
+    {
+        [requestArray addObject:request];
+    }
+}
+
++ (void)removeRequestObject:(id<AlfrescoHTTPRequest>)request fromArray:(NSMutableArray *)requestArray
+{
+    if (![request isKindOfClass:[AlfrescoNSHTTPRequest class]])
+    {
+        [requestArray removeObject:request];
+    }
+}
 
 @end

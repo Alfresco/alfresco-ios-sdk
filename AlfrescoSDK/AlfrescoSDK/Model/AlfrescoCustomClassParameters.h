@@ -19,19 +19,12 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoErrors.h"
-#import "AlfrescoSession.h"
-#import "AlfrescoAuthenticationProvider.h"
-#import <objc/runtime.h>
-#import "AlfrescoInternalConstants.h"
-#import "AlfrescoHTTPRequest.h"
 
-@interface AlfrescoHTTPUtils : NSObject
+@interface AlfrescoCustomClassParameters : NSObject
 
-+ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL;
+@property (nonatomic, strong) NSDictionary *customClassDictionary;
+@property (nonatomic, assign, readonly) BOOL customClassesSet;
 
-+ (void)addRequestObject:(id<AlfrescoHTTPRequest>)request toArray:(NSMutableArray *)requestArray;
-
-+ (void)removeRequestObject:(id<AlfrescoHTTPRequest>)request fromArray:(NSMutableArray *)requestArray;
++ (AlfrescoCustomClassParameters *)sharedInstance;
 
 @end

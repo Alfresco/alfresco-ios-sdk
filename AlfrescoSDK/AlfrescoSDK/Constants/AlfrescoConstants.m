@@ -32,6 +32,7 @@ NSString * const kAlfrescoSDKVersion = @"1.0.2";
  */
 NSString * const kAlfrescoMetadataExtraction = @"org.alfresco.mobile.features.extractmetadata";
 NSString * const kAlfrescoThumbnailCreation = @"org.alfresco.mobile.features.generatethumbnails";
+NSString * const kAlfrescoCustomNetworkProviderClass = @"org.alfresco.mobile.session.networkprovider.classname";
 
 /**
  Thumbnail constants
@@ -53,3 +54,15 @@ NSString * const kAlfrescoSortByDescription = @"description";
  */
 NSString * const kAlfrescoCapabilityLike = @"CapabilityLike";
 NSString * const kAlfrescoCapabilityCommentsCount = @"CapabilityCommentsCount";
+
+/**
+ File Attribute Constants
+ */
+NSString * const kAlfrescoFileSize = @"fileSize";
+NSString * const kAlfrescoFileLastModification = @"lastModificationDate";
+NSString * const kAlfrescoIsFolder = @"isFolder";
+
+/**
+ Custom File Manager
+ */
+NSString * const kAlfrescoFileManagerClass = @"org.alfresco.mobile.filemanager.classname";

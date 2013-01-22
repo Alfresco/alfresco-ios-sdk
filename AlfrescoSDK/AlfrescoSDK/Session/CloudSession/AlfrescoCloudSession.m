@@ -33,7 +33,7 @@
 #import "CMISPassThroughAuthenticationProvider.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import <objc/runtime.h>
-
+#import "AlfrescoNSHTTPRequest.h"
 
 @interface AlfrescoCloudSession ()
 
@@ -63,6 +63,8 @@
 
 - (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
+- (BOOL)validateCustomNetworkProperty:(id)objectFromParameters;
+
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
 @property (nonatomic, strong, readwrite) NSURL *baseURLWithoutNetwork;
 @property (nonatomic, strong) NSURL *cmisUrl;
@@ -75,6 +77,8 @@
 @property (nonatomic, strong)           AlfrescoISO8601DateFormatter *dateFormatter;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) NSString * apiKey;
+@property (nonatomic, strong, readwrite) Class networkProvider;
+@property (nonatomic, strong, readwrite) __block NSMutableArray *allRequests;
 @property BOOL isUsingBaseAuthenticationProvider;
 @end
 
@@ -94,6 +98,8 @@
 @synthesize oauthData = _oauthData;
 @synthesize apiKey = _apiKey;
 @synthesize isUsingBaseAuthenticationProvider = _isUsingBaseAuthenticationProvider;
+@synthesize networkProvider = _networkProvider;
+@synthesize allRequests = _allRequests;
 
 #pragma mark - Public methods
 
@@ -201,7 +207,8 @@
 //    __weak AlfrescoCloudSession *weakSelf = self;
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-    [AlfrescoHTTPUtils executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
+    __block id<AlfrescoHTTPRequest> request = nil;
+    request = [self.networkProvider executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -212,9 +219,9 @@
             NSArray *networks = [self networkArrayFromJSONData:data error:&conversionError];
             completionBlock(networks, conversionError);
         }
-        
+        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
-
+    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 /**
@@ -577,6 +584,25 @@ This authentication method authorises the user to access the home network assign
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         
+        self.networkProvider = [AlfrescoNSHTTPRequest class];
+        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
+        {
+            id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
+            if ([self validateCustomNetworkProperty:networkObject])
+            {
+                Class customNetworkProvider = NSClassFromString((NSString *)networkObject);
+                self.networkProvider = customNetworkProvider;
+            }
+            else
+            {
+                @throw([NSException exceptionWithName:@"Error with custom network provider"
+                                               reason:@"The custom network provider must be a string representation of the network class and must conform to the AlfrescoHTTPRequest protocol"
+                                             userInfo:nil]);
+            }
+        }
+        
+        self.allRequests = [NSMutableArray array];
+        
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
     }
@@ -711,6 +737,29 @@ This authentication method authorises the user to access the home network assign
     }
     return resultsArray;
     
+}
+
+- (BOOL)validateCustomNetworkProperty:(id)objectFromParameters
+{
+    BOOL customClassIsValid = NO;
+    if (![objectFromParameters isKindOfClass:[NSString class]])
+    {
+        return customClassIsValid;
+    }
+    
+    Class networkProviderClass = NSClassFromString((NSString *)objectFromParameters);
+    
+    if (!networkProviderClass)
+    {
+        return customClassIsValid;
+    }
+    
+    if (![networkProviderClass conformsToProtocol:@protocol(AlfrescoHTTPRequest)])
+    {
+        return customClassIsValid;
+    }
+    
+    return customClassIsValid = YES;
 }
 
 @end

@@ -19,19 +19,11 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoErrors.h"
-#import "AlfrescoSession.h"
-#import "AlfrescoAuthenticationProvider.h"
-#import <objc/runtime.h>
-#import "AlfrescoInternalConstants.h"
 #import "AlfrescoHTTPRequest.h"
+#import <GD/GDNETiOS.h>
+#import "AlfrescoSession.h"
+#import "AlfrescoConstants.h"
 
-@interface AlfrescoHTTPUtils : NSObject
-
-+ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL;
-
-+ (void)addRequestObject:(id<AlfrescoHTTPRequest>)request toArray:(NSMutableArray *)requestArray;
-
-+ (void)removeRequestObject:(id<AlfrescoHTTPRequest>)request fromArray:(NSMutableArray *)requestArray;
+@interface AlfrescoGDHTTPRequest : NSObject <AlfrescoHTTPRequest, GDHttpRequestDelegate>
 
 @end

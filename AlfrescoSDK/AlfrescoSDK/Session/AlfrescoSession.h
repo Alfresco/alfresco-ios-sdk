@@ -51,6 +51,9 @@
 /// a default listing context for the session
 @property (nonatomic, strong, readonly) AlfrescoListingContext *defaultListingContext;
 
+/// The class name of the HTTP request class
+@property (nonatomic, strong, readonly) Class networkProvider;
+
 
 /**---------------------------------------------------------------------------------------
  * @name Methods for handling the Repository Settings
