@@ -21,7 +21,6 @@
 #import "AlfrescoPlaceholderFileManager.h"
 #import "AlfrescoConstants.h"
 #import "AlfrescoNSFileManager.h"
-#import "AlfrescoGDFileManager.h"
 
 @implementation AlfrescoPlaceholderFileManager
 
@@ -34,7 +33,7 @@
         Class customFileManagerClass = NSClassFromString((NSString *)customFileManagerClassString);
         if ([customFileManagerClass isSubclassOfClass:[AlfrescoFileManager class]])
         {
-            return (id)[[AlfrescoGDFileManager alloc] init];
+            return (id)[[customFileManagerClass alloc] init];
         }
         else
         {

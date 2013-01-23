@@ -241,27 +241,13 @@
 		730243B91628388C0028C378 /* AlfrescoSessionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 730243B81628388C0028C378 /* AlfrescoSessionTest.m */; };
 		73971A9116AD5B700056031F /* AlfrescoFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 73971A8916AD5B700056031F /* AlfrescoFileManager.h */; };
 		73971A9216AD5B700056031F /* AlfrescoFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 73971A8A16AD5B700056031F /* AlfrescoFileManager.m */; };
-		73971A9316AD5B700056031F /* AlfrescoGDFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 73971A8B16AD5B700056031F /* AlfrescoGDFileManager.h */; };
-		73971A9416AD5B700056031F /* AlfrescoGDFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 73971A8C16AD5B700056031F /* AlfrescoGDFileManager.m */; };
 		73971A9516AD5B700056031F /* AlfrescoNSFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 73971A8D16AD5B700056031F /* AlfrescoNSFileManager.h */; };
 		73971A9616AD5B700056031F /* AlfrescoNSFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 73971A8E16AD5B700056031F /* AlfrescoNSFileManager.m */; };
 		73971A9716AD5B700056031F /* AlfrescoPlaceholderFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 73971A8F16AD5B700056031F /* AlfrescoPlaceholderFileManager.h */; };
 		73971A9816AD5B700056031F /* AlfrescoPlaceholderFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 73971A9016AD5B700056031F /* AlfrescoPlaceholderFileManager.m */; };
-		73971A9E16AD65F30056031F /* AlfrescoGDHTTPRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 73971A9A16AD65F30056031F /* AlfrescoGDHTTPRequest.h */; };
-		73971A9F16AD65F30056031F /* AlfrescoGDHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 73971A9B16AD65F30056031F /* AlfrescoGDHTTPRequest.m */; };
 		73971AA016AD65F30056031F /* AlfrescoNSHTTPRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 73971A9C16AD65F30056031F /* AlfrescoNSHTTPRequest.h */; };
 		73971AA116AD65F30056031F /* AlfrescoNSHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 73971A9D16AD65F30056031F /* AlfrescoNSHTTPRequest.m */; };
-		73971AA316AD9DF90056031F /* GD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73971AA216AD9DF90056031F /* GD.framework */; };
-		73971AA716AD9F200056031F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73971AA616AD9F1F0056031F /* CoreGraphics.framework */; };
-		73971AA916AD9F400056031F /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73971AA816AD9F3F0056031F /* CoreTelephony.framework */; };
-		73971AAB16AD9F4C0056031F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73971AAA16AD9F4B0056031F /* Security.framework */; };
-		73971AAD16AD9F560056031F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73971AAC16AD9F560056031F /* CFNetwork.framework */; };
-		73971AAF16AD9F770056031F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73971AAE16AD9F760056031F /* CoreData.framework */; };
 		73971AB016ADA0100056031F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0780A15B0123A00DF7DED /* libz.dylib */; };
-		73971AB216ADA01C0056031F /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 73971AB116ADA01B0056031F /* libstdc++.dylib */; };
-		73971AB316ADA0840056031F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0780C15B0126000DF7DED /* UIKit.framework */; };
-		73971AB516ADA0A20056031F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73971AB416ADA0A20056031F /* QuartzCore.framework */; };
-		73971AB616ADA1210056031F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0780E15B0127900DF7DED /* SystemConfiguration.framework */; };
 		82D761C115F02438007712DE /* libAlfrescoSDKv1.0.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.0.2.a */; };
 		82DC7D641616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 82DC7D621616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.h */; };
 		82DC7D651616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 82DC7D631616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.m */; };
@@ -532,24 +518,12 @@
 		730243B81628388C0028C378 /* AlfrescoSessionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSessionTest.m; sourceTree = "<group>"; };
 		73971A8916AD5B700056031F /* AlfrescoFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoFileManager.h; sourceTree = "<group>"; };
 		73971A8A16AD5B700056031F /* AlfrescoFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoFileManager.m; sourceTree = "<group>"; };
-		73971A8B16AD5B700056031F /* AlfrescoGDFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoGDFileManager.h; sourceTree = "<group>"; };
-		73971A8C16AD5B700056031F /* AlfrescoGDFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoGDFileManager.m; sourceTree = "<group>"; };
 		73971A8D16AD5B700056031F /* AlfrescoNSFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoNSFileManager.h; sourceTree = "<group>"; };
 		73971A8E16AD5B700056031F /* AlfrescoNSFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoNSFileManager.m; sourceTree = "<group>"; };
 		73971A8F16AD5B700056031F /* AlfrescoPlaceholderFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoPlaceholderFileManager.h; sourceTree = "<group>"; };
 		73971A9016AD5B700056031F /* AlfrescoPlaceholderFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoPlaceholderFileManager.m; sourceTree = "<group>"; };
-		73971A9A16AD65F30056031F /* AlfrescoGDHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoGDHTTPRequest.h; sourceTree = "<group>"; };
-		73971A9B16AD65F30056031F /* AlfrescoGDHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoGDHTTPRequest.m; sourceTree = "<group>"; };
 		73971A9C16AD65F30056031F /* AlfrescoNSHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoNSHTTPRequest.h; sourceTree = "<group>"; };
 		73971A9D16AD65F30056031F /* AlfrescoNSHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoNSHTTPRequest.m; sourceTree = "<group>"; };
-		73971AA216AD9DF90056031F /* GD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GD.framework; path = System/Library/Frameworks/GD.framework; sourceTree = SDKROOT; };
-		73971AA616AD9F1F0056031F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		73971AA816AD9F3F0056031F /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
-		73971AAA16AD9F4B0056031F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		73971AAC16AD9F560056031F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
-		73971AAE16AD9F760056031F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		73971AB116ADA01B0056031F /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
-		73971AB416ADA0A20056031F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		82DC7D621616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthAuthenticationProvider.h; path = OAuth/AlfrescoOAuthAuthenticationProvider.h; sourceTree = "<group>"; };
 		82DC7D631616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoOAuthAuthenticationProvider.m; path = OAuth/AlfrescoOAuthAuthenticationProvider.m; sourceTree = "<group>"; };
 		82DC7D661616B1440007F49D /* CMISPassThroughAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISPassThroughAuthenticationProvider.h; sourceTree = "<group>"; };
@@ -570,17 +544,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73971AB616ADA1210056031F /* SystemConfiguration.framework in Frameworks */,
-				73971AB516ADA0A20056031F /* QuartzCore.framework in Frameworks */,
-				73971AB316ADA0840056031F /* UIKit.framework in Frameworks */,
-				73971AB216ADA01C0056031F /* libstdc++.dylib in Frameworks */,
 				73971AB016ADA0100056031F /* libz.dylib in Frameworks */,
-				73971AAF16AD9F770056031F /* CoreData.framework in Frameworks */,
-				73971AAD16AD9F560056031F /* CFNetwork.framework in Frameworks */,
-				73971AAB16AD9F4C0056031F /* Security.framework in Frameworks */,
-				73971AA916AD9F400056031F /* CoreTelephony.framework in Frameworks */,
-				73971AA716AD9F200056031F /* CoreGraphics.framework in Frameworks */,
-				73971AA316AD9DF90056031F /* GD.framework in Frameworks */,
 				82D761C115F02438007712DE /* libAlfrescoSDKv1.0.2.a in Frameworks */,
 				4EB0781115B0129B00DF7DED /* MobileCoreServices.framework in Frameworks */,
 				4EB076A915B00D8E00DF7DED /* SenTestingKit.framework in Frameworks */,
@@ -722,14 +686,6 @@
 		4EB0769915B00D8E00DF7DED /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				73971AB116ADA01B0056031F /* libstdc++.dylib */,
-				73971AAE16AD9F760056031F /* CoreData.framework */,
-				73971AAC16AD9F560056031F /* CFNetwork.framework */,
-				73971AAA16AD9F4B0056031F /* Security.framework */,
-				73971AA816AD9F3F0056031F /* CoreTelephony.framework */,
-				73971AA616AD9F1F0056031F /* CoreGraphics.framework */,
-				73971AB416ADA0A20056031F /* QuartzCore.framework */,
-				73971AA216AD9DF90056031F /* GD.framework */,
 				4EB0781015B0129B00DF7DED /* MobileCoreServices.framework */,
 				4EB0780E15B0127900DF7DED /* SystemConfiguration.framework */,
 				4EB0780C15B0126000DF7DED /* UIKit.framework */,
@@ -1003,8 +959,6 @@
 				4EBF68F7164D1C4900D6F06C /* AlfrescoHTTPRequest.h */,
 				73971A9C16AD65F30056031F /* AlfrescoNSHTTPRequest.h */,
 				73971A9D16AD65F30056031F /* AlfrescoNSHTTPRequest.m */,
-				73971A9A16AD65F30056031F /* AlfrescoGDHTTPRequest.h */,
-				73971A9B16AD65F30056031F /* AlfrescoGDHTTPRequest.m */,
 				4E90EE6F15D255B000302F5D /* AlfrescoHTTPUtils.h */,
 				4E90EE7015D255B000302F5D /* AlfrescoHTTPUtils.m */,
 				4EB0775415B00EE700DF7DED /* AlfrescoObjectConverter.h */,
@@ -1022,8 +976,6 @@
 			children = (
 				73971A8916AD5B700056031F /* AlfrescoFileManager.h */,
 				73971A8A16AD5B700056031F /* AlfrescoFileManager.m */,
-				73971A8B16AD5B700056031F /* AlfrescoGDFileManager.h */,
-				73971A8C16AD5B700056031F /* AlfrescoGDFileManager.m */,
 				73971A8D16AD5B700056031F /* AlfrescoNSFileManager.h */,
 				73971A8E16AD5B700056031F /* AlfrescoNSFileManager.m */,
 				73971A8F16AD5B700056031F /* AlfrescoPlaceholderFileManager.h */,
@@ -1191,10 +1143,8 @@
 				4E3FE891165E192500BDAB31 /* AlfrescoCMISObjectConverter.h in Headers */,
 				4E3FE893165E192500BDAB31 /* AlfrescoCMISUtil.h in Headers */,
 				73971A9116AD5B700056031F /* AlfrescoFileManager.h in Headers */,
-				73971A9316AD5B700056031F /* AlfrescoGDFileManager.h in Headers */,
 				73971A9516AD5B700056031F /* AlfrescoNSFileManager.h in Headers */,
 				73971A9716AD5B700056031F /* AlfrescoPlaceholderFileManager.h in Headers */,
-				73971A9E16AD65F30056031F /* AlfrescoGDHTTPRequest.h in Headers */,
 				73971AA016AD65F30056031F /* AlfrescoNSHTTPRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1378,10 +1328,8 @@
 				4E3FE892165E192500BDAB31 /* AlfrescoCMISObjectConverter.m in Sources */,
 				4E3FE894165E192500BDAB31 /* AlfrescoCMISUtil.m in Sources */,
 				73971A9216AD5B700056031F /* AlfrescoFileManager.m in Sources */,
-				73971A9416AD5B700056031F /* AlfrescoGDFileManager.m in Sources */,
 				73971A9616AD5B700056031F /* AlfrescoNSFileManager.m in Sources */,
 				73971A9816AD5B700056031F /* AlfrescoPlaceholderFileManager.m in Sources */,
-				73971A9F16AD65F30056031F /* AlfrescoGDHTTPRequest.m in Sources */,
 				73971AA116AD65F30056031F /* AlfrescoNSHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1528,7 +1476,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -1544,7 +1492,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
