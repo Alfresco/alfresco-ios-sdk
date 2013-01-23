@@ -43,6 +43,7 @@
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoCloudSession.h"
+#import "AlfrescoFileManager.h"
 
 
 typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error);
@@ -194,6 +195,67 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             
         }
     } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
+        if (progressBlock)
+        {
+            progressBlock(bytesUploaded, bytesTotal);
+        }
+    }];
+}
+
+- (void)createDocumentWithName:(NSString *)documentName
+                inParentFolder:(AlfrescoFolder *)folder
+                   contentFile:(AlfrescoContentFile *)file
+                    properties:(NSDictionary *)properties
+                   inputStream:(NSInputStream *)inputStream
+               completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                 progressBlock:(AlfrescoProgressBlock)progressBlock
+{
+    NSDictionary *fileAttributes = [[AlfrescoFileManager defaultManager] attributesOfItemAtPath:[file.fileUrl path] error:nil];
+    unsigned long long expectedBytes = [[fileAttributes objectForKey:kAlfrescoFileSize] unsignedLongLongValue];
+    
+    if(properties == nil)
+    {
+        properties = [NSMutableDictionary dictionaryWithCapacity:2];
+    }
+    [properties setValue:documentName forKey:kCMISPropertyName];
+    
+    // check for a user supplied objectTypeId and use if present.
+    NSString *objectTypeId = [properties objectForKey:kCMISPropertyObjectTypeId];
+    if (objectTypeId == nil)
+    {
+        // Add the titled aspect by default when creating a document.
+        objectTypeId = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@", P:cm:titled"];
+        [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
+    }
+    
+    
+    [self.cmisSession createDocumentFromInputStream:inputStream withMimeType:file.mimeType withProperties:properties inFolder:folder.identifier bytesExpected:expectedBytes completionBlock:^(NSString *objectId, NSError *error) {
+        if (nil == objectId)
+        {
+            NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            completionBlock(nil, alfrescoError);
+        }
+        else
+        {
+            [self retrieveNodeWithIdentifier:objectId completionBlock:^(AlfrescoNode *node, NSError *error) {
+                
+                completionBlock((AlfrescoDocument *)node, error);
+                if (nil != node)
+                {
+                    BOOL isExtractMetadata = [[self.session objectForParameter:kAlfrescoMetadataExtraction] boolValue];
+                    if (isExtractMetadata)
+                    {
+                        [self extractMetadataForNode:node];
+                    }
+                    BOOL isGenerateThumbnails = [[self.session objectForParameter:kAlfrescoThumbnailCreation] boolValue];
+                    if (isGenerateThumbnails)
+                    {
+                        [self generateThumbnailForNode:node];
+                    }
+                }
+            }];
+        }
+    } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
         if (progressBlock)
         {
             progressBlock(bytesUploaded, bytesTotal);
@@ -769,6 +831,34 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         }
     }];
     
+}
+
+- (void)retrieveContentOfDocument:(AlfrescoDocument *)document
+                       toFilePath:(NSString *)filePath
+                     outputStream:(NSOutputStream *)outputStream
+                  completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+                    progressBlock:(AlfrescoProgressBlock)progressBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    [self.cmisSession downloadContentOfCMISObject:document.identifier toOutputStream:outputStream completionBlock:^(NSError *error) {
+        if (error)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            AlfrescoContentFile *downloadedFile = [[AlfrescoContentFile alloc] initWithUrl:[NSURL fileURLWithPath:filePath]];
+            completionBlock(downloadedFile, nil);
+        }
+    } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
+        if (progressBlock)
+        {
+            progressBlock(bytesDownloaded, bytesTotal);
+        }
+    }];
 }
 
 #pragma mark - Modification methods
