@@ -21,15 +21,15 @@
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
-#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
+#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremisePersonService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
-@property (nonatomic, strong, readwrite) __block NSMutableArray *allRequests;
 - (AlfrescoPerson *) alfrescoPersonFromJSONData:(NSData *)data error:(NSError **)outError;
 - (void)retrieveAvatarForPersonV4x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
 - (void)retrieveAvatarForPersonV3x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
@@ -41,7 +41,6 @@
 @synthesize session = _session;
 @synthesize objectConverter = _objectConverter;
 @synthesize authenticationProvider = _authenticationProvider;
-@synthesize allRequests = _allRequests;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -56,7 +55,6 @@
         {
             self.authenticationProvider = (AlfrescoBasicAuthenticationProvider *)authenticationObject;
         }
-        self.allRequests = [NSMutableArray array];
     }
     return self;
 }
@@ -65,11 +63,10 @@
     [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
 //    __weak AlfrescoOnPremisePersonService *weakSelf = self;
-    __block id<AlfrescoHTTPRequest> request = nil;
-    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -80,9 +77,7 @@
             AlfrescoPerson *person = [self alfrescoPersonFromJSONData:responseData error:&conversionError];
             completionBlock(person, conversionError);
         }
-        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 - (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
@@ -105,9 +100,8 @@
 - (void)retrieveAvatarForPersonV4x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     NSString *requestString = [kAlfrescoOnPremiseAvatarForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
-    __block id<AlfrescoHTTPRequest> request = nil;
-    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -117,9 +111,7 @@
             AlfrescoContentFile *avatarFile = [[AlfrescoContentFile alloc] initWithData:responseData mimeType:@"application/octet-stream"];
             completionBlock(avatarFile, nil);
         }
-        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 - (void)retrieveAvatarForPersonV3x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
@@ -132,8 +124,7 @@
     }
     NSString *requestString = [NSString stringWithFormat:@"%@/service/%@",[self.session.baseUrl absoluteString],avatarId];
     NSURL *url = [NSURL URLWithString:requestString];
-    __block id<AlfrescoHTTPRequest> request = nil;
-    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -143,9 +134,7 @@
             AlfrescoContentFile *avatarFile = [[AlfrescoContentFile alloc] initWithData:responseData mimeType:@"application/octet-stream"];
             completionBlock(avatarFile, nil);
         }
-        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 

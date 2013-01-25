@@ -25,7 +25,7 @@
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoCloudNetwork.h"
-#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoURLUtils.h"
 #import "AlfrescoISO8601DateFormatter.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoOAuthData.h"
@@ -33,7 +33,7 @@
 #import "CMISPassThroughAuthenticationProvider.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import <objc/runtime.h>
-#import "AlfrescoNSHTTPRequest.h"
+#import "AlfrescoDefaultNetworkProvider.h"
 
 @interface AlfrescoCloudSession ()
 
@@ -78,7 +78,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) NSString * apiKey;
 @property (nonatomic, strong, readwrite) Class networkProvider;
-@property (nonatomic, strong, readwrite) __block NSMutableArray *allRequests;
 @property BOOL isUsingBaseAuthenticationProvider;
 @end
 
@@ -99,7 +98,6 @@
 @synthesize apiKey = _apiKey;
 @synthesize isUsingBaseAuthenticationProvider = _isUsingBaseAuthenticationProvider;
 @synthesize networkProvider = _networkProvider;
-@synthesize allRequests = _allRequests;
 
 #pragma mark - Public methods
 
@@ -207,8 +205,7 @@
 //    __weak AlfrescoCloudSession *weakSelf = self;
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-    __block id<AlfrescoHTTPRequest> request = nil;
-    request = [self.networkProvider executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
+    [self.networkProvider executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -219,9 +216,7 @@
             NSArray *networks = [self networkArrayFromJSONData:data error:&conversionError];
             completionBlock(networks, conversionError);
         }
-        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 /**
@@ -584,7 +579,7 @@ This authentication method authorises the user to access the home network assign
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         
-        self.networkProvider = [AlfrescoNSHTTPRequest class];
+        self.networkProvider = [AlfrescoDefaultNetworkProvider class];
         if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
         {
             id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
@@ -600,9 +595,7 @@ This authentication method authorises the user to access the home network assign
                                              userInfo:nil]);
             }
         }
-        
-        self.allRequests = [NSMutableArray array];
-        
+                
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
     }
@@ -754,7 +747,7 @@ This authentication method authorises the user to access the home network assign
         return customClassIsValid;
     }
     
-    if (![networkProviderClass conformsToProtocol:@protocol(AlfrescoHTTPRequest)])
+    if (![networkProviderClass conformsToProtocol:@protocol(AlfrescoNetworkProvider)])
     {
         return customClassIsValid;
     }

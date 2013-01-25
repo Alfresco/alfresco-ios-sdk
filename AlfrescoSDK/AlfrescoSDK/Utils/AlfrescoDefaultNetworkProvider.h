@@ -19,19 +19,10 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoErrors.h"
-#import "AlfrescoSession.h"
-#import "AlfrescoAuthenticationProvider.h"
-#import <objc/runtime.h>
+#import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoHTTPRequest.h"
+#import "AlfrescoNetworkProvider.h"
 
-@interface AlfrescoHTTPUtils : NSObject
-
-+ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL;
-
-+ (void)addRequestObject:(id<AlfrescoHTTPRequest>)request toArray:(NSMutableArray *)requestArray;
-
-+ (void)removeRequestObject:(id<AlfrescoHTTPRequest>)request fromArray:(NSMutableArray *)requestArray;
+@interface AlfrescoDefaultNetworkProvider : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate, AlfrescoNetworkProvider>
 
 @end

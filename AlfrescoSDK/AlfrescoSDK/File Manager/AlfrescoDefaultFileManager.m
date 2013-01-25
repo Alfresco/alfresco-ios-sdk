@@ -18,10 +18,10 @@
  *****************************************************************************
  */
 
-#import "AlfrescoNSFileManager.h"
+#import "AlfrescoDefaultFileManager.h"
 #import "AlfrescoConstants.h"
 
-@implementation AlfrescoNSFileManager
+@implementation AlfrescoDefaultFileManager
 
 - (NSString *)homeDirectory
 {
@@ -76,7 +76,6 @@
 
 - (NSDictionary *)attributesOfItemAtPath:(NSString *)path error:(NSError **)error
 {
-    // find out if path is a folder
     BOOL isDir;
     [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
     

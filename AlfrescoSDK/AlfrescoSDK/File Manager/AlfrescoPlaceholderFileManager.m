@@ -20,7 +20,7 @@
 
 #import "AlfrescoPlaceholderFileManager.h"
 #import "AlfrescoConstants.h"
-#import "AlfrescoNSFileManager.h"
+#import "AlfrescoDefaultFileManager.h"
 
 @implementation AlfrescoPlaceholderFileManager
 
@@ -37,13 +37,12 @@
         }
         else
         {
-            // throw exception?
             @throw ([NSException exceptionWithName:@"Class provided should extend AlfrescoFileManager"
                                             reason:@"The custom file manager class provided should extend AlfrescoFileManager"
                                           userInfo:nil]);
         }
     }
-    return (id)[[AlfrescoNSFileManager alloc] init];
+    return (id)[[AlfrescoDefaultFileManager alloc] init];
 }
 
 @end

@@ -27,7 +27,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import <objc/runtime.h>
-#import "AlfrescoNSHTTPRequest.h"
+#import "AlfrescoDefaultNetworkProvider.h"
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -118,7 +118,7 @@
             [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         }
         
-        self.networkProvider = [AlfrescoNSHTTPRequest class];
+        self.networkProvider = [AlfrescoDefaultNetworkProvider class];
         if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
         {
             id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
@@ -299,7 +299,7 @@
         return customClassIsValid;
     }
     
-    if (![networkProviderClass conformsToProtocol:@protocol(AlfrescoHTTPRequest)])
+    if (![networkProviderClass conformsToProtocol:@protocol(AlfrescoNetworkProvider)])
     {
         return customClassIsValid;
     }

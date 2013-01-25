@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*
+ ******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
@@ -14,13 +15,12 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
-#import "AlfrescoHTTPUtils.h"
-#import "AlfrescoNSHTTPRequest.h"
-#import "AlfrescoErrors.h"
+#import "AlfrescoURLUtils.h"
 
-@implementation AlfrescoHTTPUtils
+@implementation AlfrescoURLUtils
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL
 {
@@ -35,25 +35,9 @@
         NSString *separator = ([baseURL hasSuffix:@"/"] || [extensionURL hasPrefix:@"/"]) ? @"" : @"/";
         [mutableRequestString appendString:baseURL];
         [mutableRequestString appendString:separator];
-        [mutableRequestString appendString:extensionURL];        
+        [mutableRequestString appendString:extensionURL];
     }
     return [NSURL URLWithString:mutableRequestString];
-}
-
-+ (void)addRequestObject:(id<AlfrescoHTTPRequest>)request toArray:(NSMutableArray *)requestArray
-{
-    if (![request isKindOfClass:[AlfrescoNSHTTPRequest class]])
-    {
-        [requestArray addObject:request];
-    }
-}
-
-+ (void)removeRequestObject:(id<AlfrescoHTTPRequest>)request fromArray:(NSMutableArray *)requestArray
-{
-    if (![request isKindOfClass:[AlfrescoNSHTTPRequest class]])
-    {
-        [requestArray removeObject:request];
-    }
 }
 
 @end

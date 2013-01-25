@@ -18,22 +18,27 @@
  *****************************************************************************
  */
 
+/** All custom network providers need to implement the AlfrescoNetworkProvider.
+ 
+ Author: Tauseef Mughal (Alfresco)
+ */
+
 #import <Foundation/Foundation.h>
 #import "AlfrescoSession.h"
 
-@protocol AlfrescoHTTPRequest <NSObject>
+@protocol AlfrescoNetworkProvider <NSObject>
 
-+ (id<AlfrescoHTTPRequest>)executeRequestWithURL:(NSURL *)url
++ (id<AlfrescoNetworkProvider>)executeRequestWithURL:(NSURL *)url
                                          session:(id<AlfrescoSession>)session
                                  completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
-+ (id<AlfrescoHTTPRequest>)executeRequestWithURL:(NSURL *)url
++ (id<AlfrescoNetworkProvider>)executeRequestWithURL:(NSURL *)url
                                          session:(id<AlfrescoSession>)session
                                           method:(NSString *)method
                                  completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 
-+ (id<AlfrescoHTTPRequest>)executeRequestWithURL:(NSURL *)url
++ (id<AlfrescoNetworkProvider>)executeRequestWithURL:(NSURL *)url
                                          session:(id<AlfrescoSession>)session
                                      requestBody:(NSData *)requestBody
                                           method:(NSString *)method

@@ -18,11 +18,15 @@
  *****************************************************************************
  */
 
-#import <Foundation/Foundation.h>
-#import "AlfrescoConstants.h"
-#import "AlfrescoInternalConstants.h"
-#import "AlfrescoHTTPRequest.h"
+/** The AlfrescoDefaultFileManager is a file manager which mirrors the functionality
+ of the Apple NSFileManager.
+ 
+ Author: Tauseef Mughal (Alfresco)
+ */
 
-@interface AlfrescoNSHTTPRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate, AlfrescoHTTPRequest>
+#import <Foundation/Foundation.h>
+#import "AlfrescoFileManager.h"
+
+@interface AlfrescoDefaultFileManager : AlfrescoFileManager
 
 @end

@@ -21,16 +21,16 @@
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
-#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoTag.h"
+#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoCloudTaggingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
-@property (nonatomic, strong, readwrite) __block NSMutableArray *allRequests;
 - (NSArray *) tagArrayFromJSONData:(NSData *)data error:(NSError **)outError;
 //- (AlfrescoTag *)tagFromJSON:(NSDictionary *)jsonDict;
 @end
@@ -40,7 +40,6 @@
 @synthesize session = _session;
 @synthesize objectConverter = _objectConverter;
 @synthesize authenticationProvider = _authenticationProvider;
-@synthesize allRequests = _allRequests;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -55,7 +54,6 @@
         {
             self.authenticationProvider = (AlfrescoBasicAuthenticationProvider *)authenticationObject;
         }
-        self.allRequests = [NSMutableArray array];
     }
     return self;
 }
@@ -66,9 +64,8 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     NSAssert(nil != completionBlock, @"completionBlock must not be nil");
 //    __weak AlfrescoCloudTaggingService *weakSelf = self;
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudTagsAPI];
-    __block id<AlfrescoHTTPRequest> request = nil;
-    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudTagsAPI];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -79,9 +76,7 @@
             NSArray *tagArray = [self tagArrayFromJSONData:data error:&conversionError];
             completionBlock(tagArray, conversionError);
         }
-        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 - (void)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext
@@ -94,9 +89,8 @@
     }
     
 //    __weak AlfrescoCloudTaggingService *weakSelf = self;
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudTagsAPI];
-    __block id<AlfrescoHTTPRequest> request = nil;
-    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudTagsAPI];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -108,9 +102,7 @@
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:tagArray listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
         }
-        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 - (void)retrieveTagsForNode:(AlfrescoNode *)node
@@ -123,9 +115,8 @@
 //    __weak AlfrescoCloudTaggingService *weakSelf = self;
     NSString *requestString = [kAlfrescoCloudTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                       withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __block id<AlfrescoHTTPRequest> request = nil;
-    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -136,9 +127,7 @@
             NSArray *tagArray = [self tagArrayFromJSONData:data error:&conversionError];
             completionBlock(tagArray, conversionError);
         }
-        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 - (void)retrieveTagsForNode:(AlfrescoNode *)node listingContext:(AlfrescoListingContext *)listingContext
@@ -155,9 +144,8 @@
 //    __weak AlfrescoCloudTaggingService *weakSelf = self;
     NSString *requestString = [kAlfrescoCloudTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                       withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __block id<AlfrescoHTTPRequest> request = nil;
-    request = [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -169,9 +157,7 @@
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:tagArray listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
         }
-        [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
     }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 
@@ -191,7 +177,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     NSString *requestString = [kAlfrescoCloudTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                       withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     NSData *jsonData = nil;
     NSError *jsonError = nil;
     if (1 == tags.count)
@@ -214,8 +200,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     }
     if (nil != jsonData)
     {
-        __block id<AlfrescoHTTPRequest> request = nil;
-        request = [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
+        [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
             if (nil != error)
             {
                 completionBlock(NO, error);
@@ -224,9 +209,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
             {
                 completionBlock(YES, nil);
             }
-            [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
         }];
-        [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
     }
     else
     {

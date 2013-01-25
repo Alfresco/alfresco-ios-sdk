@@ -18,15 +18,14 @@
  *****************************************************************************
  */
 
-/** The AlfrescoNSFileManager is a file manager that implements the
- AlfrescoFileManagerDelegate. All functionality mirrors that of NSFileManager.
- 
+/**
  Author: Tauseef Mughal (Alfresco)
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoFileManager.h"
 
-@interface AlfrescoNSFileManager : AlfrescoFileManager
+@interface AlfrescoURLUtils : NSObject
+
++ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL;
 
 @end

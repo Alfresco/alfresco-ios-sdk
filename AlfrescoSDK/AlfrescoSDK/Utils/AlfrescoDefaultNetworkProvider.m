@@ -18,12 +18,12 @@
  *****************************************************************************
  */
 
-#import "AlfrescoNSHTTPRequest.h"
+#import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoAuthenticationProvider.h"
 
-@interface AlfrescoNSHTTPRequest ()
+@interface AlfrescoDefaultNetworkProvider ()
 @property (nonatomic, strong) NSURLConnection * connection;
 @property (nonatomic, strong) NSMutableData * responseData;
 @property (nonatomic, assign) NSInteger statusCode;
@@ -35,27 +35,27 @@
            requestBody:(NSData *)requestBody
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
-+ (id<AlfrescoHTTPRequest>)requestWithURL:(NSURL *)requestURL
++ (id<AlfrescoNetworkProvider>)requestWithURL:(NSURL *)requestURL
                 method:(NSString *)method
                headers:(NSDictionary *)header
            requestBody:(NSData *)data
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 @end
 
-@implementation AlfrescoNSHTTPRequest
+@implementation AlfrescoDefaultNetworkProvider
 @synthesize responseData = _responseData;
 @synthesize completionBlock = _completionBlock;
 @synthesize connection = _connection;
 @synthesize statusCode = _statusCode;
 
-+ (id<AlfrescoHTTPRequest>)executeRequestWithURL:(NSURL *)url
++ (id<AlfrescoNetworkProvider>)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
     return [self executeRequestWithURL:url session:session requestBody:nil method:kAlfrescoHTTPGet completionBlock:completionBlock];
 }
 
-+ (id<AlfrescoHTTPRequest>)executeRequestWithURL:(NSURL *)url
++ (id<AlfrescoNetworkProvider>)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
                        method:(NSString *)method
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock
@@ -64,7 +64,7 @@
 }
 
 
-+ (id<AlfrescoHTTPRequest>)executeRequestWithURL:(NSURL *)url
++ (id<AlfrescoNetworkProvider>)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
                   requestBody:(NSData *)requestBody
                        method:(NSString *)method
@@ -75,13 +75,13 @@
     return [self requestWithURL:url method:method headers:httpHeaders requestBody:requestBody completionBlock:completionBlock];
 }
 
-+ (id<AlfrescoHTTPRequest>)requestWithURL:(NSURL *)requestURL
++ (id<AlfrescoNetworkProvider>)requestWithURL:(NSURL *)requestURL
                 method:(NSString *)method
                headers:(NSDictionary *)header
            requestBody:(NSData *)data
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 {
-    AlfrescoNSHTTPRequest *alfrescoRequest = [[AlfrescoNSHTTPRequest alloc] init];
+    AlfrescoDefaultNetworkProvider *alfrescoRequest = [[AlfrescoDefaultNetworkProvider alloc] init];
     if (nil != alfrescoRequest)
     {
         [alfrescoRequest connectWithURL:requestURL method:method header:header requestBody:data completionBlock:completionBlock];

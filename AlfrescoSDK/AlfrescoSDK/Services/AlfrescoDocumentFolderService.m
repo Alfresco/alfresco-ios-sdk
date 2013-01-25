@@ -38,12 +38,13 @@
 #import <objc/runtime.h>
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoPagingUtils.h"
-#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoURLUtils.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoFileManager.h"
+#import "AlfrescoNetworkProvider.h"
 
 
 typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error);
@@ -55,7 +56,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
-@property (nonatomic, strong, readwrite) __block NSMutableArray *allRequests;
 
 // filter the provided array with items that match the provided class type
 - (NSArray *)retrieveItemsWithClassFilter:(Class) typeClass withArray:(NSArray *)itemArray;
@@ -71,7 +71,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 @synthesize authenticationProvider = _authenticationProvider;
 @synthesize supportedSortKeys = _supportedSortKeys;
 @synthesize defaultSortKey = _defaultSortKey;
-@synthesize allRequests = _allRequests;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -89,7 +88,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         }
         self.defaultSortKey = kAlfrescoSortByName;
         self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt, nil];
-        self.allRequests = [NSMutableArray array];
     }
     return self;
 }
@@ -1118,7 +1116,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [jsonDictionary setValue:identifier forKey:kAlfrescoJSONActionedUponNode];
     [jsonDictionary setValue:kAlfrescoJSONExtractMetadata forKey:kAlfrescoJSONActionDefinitionName];
     NSError *postError = nil;
-    NSURL *apiUrl = [AlfrescoHTTPUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:kAlfrescoOnPremiseMetadataExtractionAPI];
+    NSURL *apiUrl = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:kAlfrescoOnPremiseMetadataExtractionAPI];
     NSData *jsonData = [NSJSONSerialization
                         dataWithJSONObject:jsonDictionary
                         options:kNilOptions
@@ -1127,15 +1125,12 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding];
     log(@"jsonstring %@", jsonString);
     
-    __block id<AlfrescoHTTPRequest> request = nil;
-    request = [self.session.networkProvider executeRequestWithURL:apiUrl
+    [self.session.networkProvider executeRequestWithURL:apiUrl
                                      session:self.session
                                  requestBody:jsonData
                                       method:kAlfrescoHTTPPOST
                              completionBlock:^(NSData *data, NSError *error){
-                                 [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
                              }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 - (void)generateThumbnailForNode:(AlfrescoNode *)node
@@ -1146,21 +1141,19 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     NSString *requestString = [kAlfrescoOnPremiseThumbnailCreationAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                                 withString:[node.identifier stringByReplacingOccurrencesOfString:@"://"
                                                                                                                                                       withString:@"/"]];
-    NSURL *apiUrl = [AlfrescoHTTPUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
+    NSURL *apiUrl = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
     
     NSData *jsonData = [NSJSONSerialization
                         dataWithJSONObject:jsonDictionary
                         options:kNilOptions
                         error:&postError];
-    __block id<AlfrescoHTTPRequest> request = nil;
+    __block id<AlfrescoNetworkProvider> request = nil;
     request = [self.session.networkProvider executeRequestWithURL:apiUrl
                                      session:self.session
                                  requestBody:jsonData
                                       method:kAlfrescoHTTPPOST
                              completionBlock:^(NSData *data, NSError *error){
-                                 [AlfrescoHTTPUtils removeRequestObject:request fromArray:self.allRequests];
                              }];
-    [AlfrescoHTTPUtils addRequestObject:request toArray:self.allRequests];
 }
 
 
