@@ -77,7 +77,7 @@
 @property (nonatomic, strong)           AlfrescoISO8601DateFormatter *dateFormatter;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) NSString * apiKey;
-@property (nonatomic, strong, readwrite) Class networkProvider;
+@property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property BOOL isUsingBaseAuthenticationProvider;
 @end
 
@@ -579,14 +579,14 @@ This authentication method authorises the user to access the home network assign
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         
-        self.networkProvider = [AlfrescoDefaultNetworkProvider class];
+        self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
         if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
         {
             id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
             if ([self validateCustomNetworkProperty:networkObject])
             {
                 Class customNetworkProvider = NSClassFromString((NSString *)networkObject);
-                self.networkProvider = customNetworkProvider;
+                self.networkProvider = [[customNetworkProvider alloc] init];
             }
             else
             {

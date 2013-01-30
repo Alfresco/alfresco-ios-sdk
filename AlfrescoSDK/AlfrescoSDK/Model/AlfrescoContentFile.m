@@ -69,15 +69,15 @@
         }
         else
         {
-            NSString *pathname = [[[AlfrescoFileManager defaultManager] temporaryDirectory] stringByAppendingPathComponent:filename];
-            NSData *fileContent = [[AlfrescoFileManager defaultManager] dataWithContentsOfURL:url];
+            NSString *pathname = [[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingPathComponent:filename];
+            NSData *fileContent = [[AlfrescoFileManager sharedManager] dataWithContentsOfURL:url];
             
             NSURL *fileURL = [NSURL fileURLWithPath:pathname];
-            [[AlfrescoFileManager defaultManager] createFileAtPath:[fileURL path] contents:fileContent error:nil];
+            [[AlfrescoFileManager sharedManager] createFileAtPath:[fileURL path] contents:fileContent error:nil];
             self.fileUrl = fileURL;
         }
         NSError *fileError = nil;
-        NSDictionary *fileDictionary =  [[AlfrescoFileManager defaultManager] attributesOfItemAtPath:[self.fileUrl path] error:&fileError];
+        NSDictionary *fileDictionary =  [[AlfrescoFileManager sharedManager] attributesOfItemAtPath:[self.fileUrl path] error:&fileError];
         self.length = [[fileDictionary valueForKey:kAlfrescoFileSize] unsignedLongLongValue];
     }
     return self;    
@@ -93,8 +93,8 @@
         self.mimeType = mimeType;
         if (nil != tmpName) 
         {
-            NSURL *pathURL = [NSURL fileURLWithPath:[[[AlfrescoFileManager defaultManager] temporaryDirectory] stringByAppendingPathComponent:tmpName]];
-            [[AlfrescoFileManager defaultManager] createFileAtPath:[pathURL path] contents:data error:nil];
+            NSURL *pathURL = [NSURL fileURLWithPath:[[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingPathComponent:tmpName]];
+            [[AlfrescoFileManager sharedManager] createFileAtPath:[pathURL path] contents:data error:nil];
             self.fileUrl = pathURL;
             self.length = data.length;
         }

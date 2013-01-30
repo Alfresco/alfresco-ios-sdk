@@ -23,20 +23,36 @@
 
 @implementation AlfrescoDefaultFileManager
 
-- (NSString *)homeDirectory
-{
-    return NSHomeDirectory();
-}
+@synthesize homeDirectory = _homeDirectory;
+@synthesize documentsDirectory = _documentsDirectory;
+@synthesize temporaryDirectory = _temporaryDirectory;
 
-- (NSString *)documentsDirectory
-{
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    return path;
-}
+//- (NSString *)homeDirectory
+//{
+//    return NSHomeDirectory();
+//}
+//
+//- (NSString *)documentsDirectory
+//{
+//    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+//    return path;
+//}
+//
+//- (NSString *)temporaryDirectory
+//{
+//    return NSTemporaryDirectory();
+//}
 
-- (NSString *)temporaryDirectory
+- (id)init
 {
-    return NSTemporaryDirectory();
+    self = [super init];
+    if (self)
+    {
+        _homeDirectory = NSHomeDirectory();
+        _documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+        _temporaryDirectory = NSTemporaryDirectory();
+    }
+    return self;
 }
 
 - (BOOL)fileExistsAtPath:(NSString *)path

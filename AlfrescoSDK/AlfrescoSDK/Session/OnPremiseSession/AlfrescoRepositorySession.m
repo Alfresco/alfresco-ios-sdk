@@ -37,7 +37,7 @@
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
-@property (nonatomic, strong, readwrite) Class networkProvider;
+@property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 - (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
 - (void)authenticateWithUsername:(NSString *)username
                      andPassword:(NSString *)password
@@ -118,14 +118,14 @@
             [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         }
         
-        self.networkProvider = [AlfrescoDefaultNetworkProvider class];
+        self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
         if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
         {
             id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
             if ([self validateCustomNetworkProperty:networkObject])
             {
                 Class customNetworkProvider = NSClassFromString((NSString *)networkObject);
-                self.networkProvider = customNetworkProvider;
+                self.networkProvider = [[customNetworkProvider alloc] init];
             }
             else
             {
@@ -157,6 +157,27 @@
     v4params.username = username;
     v4params.password = password;
     v4params.atomPubUrl = [NSURL URLWithString:v4cmisUrl];
+    
+    NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
+    id customNetworkProviderObject = [infoPlist objectForKey:kAlfrescoCMISNetworkProvider];
+    
+    Class customNetworkProviderClass = NSClassFromString((NSString *)customNetworkProviderObject);
+    if (customNetworkProviderClass)
+    {
+        if ([customNetworkProviderClass conformsToProtocol:@protocol(CMISNetworkProvider)])
+        {
+            id<CMISNetworkProvider> customNetworkInstance = [[customNetworkProviderClass alloc] init];
+            v3params.networkProvider = customNetworkInstance;
+            v4params.networkProvider = customNetworkInstance;
+        }
+        else
+        {
+            @throw ([NSException exceptionWithName:@"Instantiation error"
+                                            reason:@"Error in instantiating the CMIS custom network provider. The class must implement CMISNetworkProvider."
+                                          userInfo:nil]);
+        }
+        
+    }
     
     log(@"**** authenticateWithUsername OnPremise ****");
 

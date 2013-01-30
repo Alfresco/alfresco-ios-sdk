@@ -35,7 +35,7 @@
     }
 }
 
-+ (id)defaultManager
++ (id)sharedManager
 {
     static dispatch_once_t onceToken;
     static AlfrescoPlaceholderFileManager *placeholderFileManager = nil;

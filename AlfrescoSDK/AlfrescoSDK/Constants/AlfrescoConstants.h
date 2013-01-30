@@ -68,7 +68,6 @@ typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSEr
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoMetadataExtraction;
 extern NSString * const kAlfrescoThumbnailCreation;
-extern NSString * const kAlfrescoCustomNetworkProviderClass;
 
 /**---------------------------------------------------------------------------------------
  * @name thumbnail constant (for OnPremise services)
@@ -99,6 +98,11 @@ extern NSString * const kAlfrescoFileLastModification;
 extern NSString * const kAlfrescoIsFolder;
 
 /**---------------------------------------------------------------------------------------
- * @name File Manager
+ * @name Custom File Manager
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoFileManagerClass;
+
+/**---------------------------------------------------------------------------------------
+ * @name Custom Network Provider
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoCustomNetworkProviderClass;

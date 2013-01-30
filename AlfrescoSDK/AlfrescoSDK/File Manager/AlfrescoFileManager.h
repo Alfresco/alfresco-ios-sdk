@@ -29,24 +29,24 @@
 @interface AlfrescoFileManager : NSObject
 
 /**
- Call this fucntion to get a shared instance of the AlfrescoFileManager
+ Property holds a string representation to the home directory on the file system
  */
-+ (id)defaultManager;
+@property (nonatomic, strong, readonly) NSString *homeDirectory;
 
 /**
- Call this function to get the home directory for the app
+ Property holds a string representation to the documents directory on the file system
  */
-- (NSString *)homeDirectory;
+@property (nonatomic, strong, readonly) NSString *documentsDirectory;
 
 /**
- Call this function to get the documents directory for the app
+ Property holds a string representation to the temp directory on the file system
  */
-- (NSString *)documentsDirectory;
+@property (nonatomic, strong, readonly) NSString *temporaryDirectory;
 
 /**
- Call this function to get the temporary directory for the app
+ Call this function to get a shared instance of the AlfrescoFileManager
  */
-- (NSString *)temporaryDirectory;
++ (id)sharedManager;
 
 /**
  Call this to check if a file exists at the path location

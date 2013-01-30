@@ -208,7 +208,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                  progressBlock:(AlfrescoProgressBlock)progressBlock
 {
-    NSDictionary *fileAttributes = [[AlfrescoFileManager defaultManager] attributesOfItemAtPath:[file.fileUrl path] error:nil];
+    NSDictionary *fileAttributes = [[AlfrescoFileManager sharedManager] attributesOfItemAtPath:[file.fileUrl path] error:nil];
     unsigned long long expectedBytes = [[fileAttributes objectForKey:kAlfrescoFileSize] unsignedLongLongValue];
     
     if(properties == nil)
@@ -1147,8 +1147,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                         dataWithJSONObject:jsonDictionary
                         options:kNilOptions
                         error:&postError];
-    __block id<AlfrescoNetworkProvider> request = nil;
-    request = [self.session.networkProvider executeRequestWithURL:apiUrl
+    [self.session.networkProvider executeRequestWithURL:apiUrl
                                      session:self.session
                                  requestBody:jsonData
                                       method:kAlfrescoHTTPPOST

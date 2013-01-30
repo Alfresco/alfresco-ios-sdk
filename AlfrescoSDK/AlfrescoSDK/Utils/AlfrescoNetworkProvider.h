@@ -24,24 +24,25 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoSession.h"
+#import "AlfrescoConstants.h"
+
+@protocol AlfrescoSession;
 
 @protocol AlfrescoNetworkProvider <NSObject>
 
-+ (id<AlfrescoNetworkProvider>)executeRequestWithURL:(NSURL *)url
-                                         session:(id<AlfrescoSession>)session
-                                 completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+- (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
-+ (id<AlfrescoNetworkProvider>)executeRequestWithURL:(NSURL *)url
-                                         session:(id<AlfrescoSession>)session
-                                          method:(NSString *)method
-                                 completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+- (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+                       method:(NSString *)method
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
-
-+ (id<AlfrescoNetworkProvider>)executeRequestWithURL:(NSURL *)url
-                                         session:(id<AlfrescoSession>)session
-                                     requestBody:(NSData *)requestBody
-                                          method:(NSString *)method
-                                 completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+- (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+                  requestBody:(NSData *)requestBody
+                       method:(NSString *)method
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 @end
