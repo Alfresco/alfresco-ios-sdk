@@ -118,22 +118,46 @@
             [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         }
         
+        if ([[parameters allKeys] containsObject:kAlfrescoCMISNetworkProvider])
+        {
+            id customCMISNetworkProvider = [parameters objectForKey:kAlfrescoCMISNetworkProvider];
+            [self setObject:customCMISNetworkProvider forParameter:kAlfrescoCMISNetworkProvider];
+        }
+        
         self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
         if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
         {
-            id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
-            if ([self validateCustomNetworkProperty:networkObject])
+            id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
+            BOOL conformsToAlfrescoNetworkProvider = [customAlfrescoNetworkProvider conformsToProtocol:@protocol(AlfrescoNetworkProvider)];
+            
+            if (conformsToAlfrescoNetworkProvider)
             {
-                Class customNetworkProvider = NSClassFromString((NSString *)networkObject);
-                self.networkProvider = [[customNetworkProvider alloc] init];
+                self.networkProvider = (id<AlfrescoNetworkProvider>)customAlfrescoNetworkProvider;
             }
             else
             {
                 @throw([NSException exceptionWithName:@"Error with custom network provider"
-                                               reason:@"The custom network provider must be a string representation of the network class and must conform to the AlfrescoHTTPRequest protocol"
+                                               reason:@"The custom network provider must be an object that conforms to the AlfrescoNetworkProvider protocol"
                                              userInfo:nil]);
             }
         }
+        
+//        self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
+//        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
+//        {
+//            id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
+//            if ([self validateCustomNetworkProperty:networkObject])
+//            {
+//                Class customNetworkProvider = NSClassFromString((NSString *)networkObject);
+//                self.networkProvider = [[customNetworkProvider alloc] init];
+//            }
+//            else
+//            {
+//                @throw([NSException exceptionWithName:@"Error with custom network provider"
+//                                               reason:@"The custom network provider must be a string representation of the network class and must conform to the AlfrescoHTTPRequest protocol"
+//                                             userInfo:nil]);
+//            }
+//        }
         
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];        
@@ -158,26 +182,44 @@
     v4params.password = password;
     v4params.atomPubUrl = [NSURL URLWithString:v4cmisUrl];
     
-    NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-    id customNetworkProviderObject = [infoPlist objectForKey:kAlfrescoCMISNetworkProvider];
-    
-    Class customNetworkProviderClass = NSClassFromString((NSString *)customNetworkProviderObject);
-    if (customNetworkProviderClass)
+    if ([self.sessionData objectForKey:kAlfrescoCMISNetworkProvider])
     {
-        if ([customNetworkProviderClass conformsToProtocol:@protocol(CMISNetworkProvider)])
+        id customCMISNetworkProvider = [self.sessionData objectForKey:kAlfrescoCMISNetworkProvider];
+        BOOL conformsToCMISNetworkProvider = [customCMISNetworkProvider conformsToProtocol:@protocol(CMISNetworkProvider)];
+        
+        if (conformsToCMISNetworkProvider)
         {
-            id<CMISNetworkProvider> customNetworkInstance = [[customNetworkProviderClass alloc] init];
-            v3params.networkProvider = customNetworkInstance;
-            v4params.networkProvider = customNetworkInstance;
+            v3params.networkProvider = (id<CMISNetworkProvider>)customCMISNetworkProvider;
+            v4params.networkProvider = (id<CMISNetworkProvider>)customCMISNetworkProvider;
         }
         else
         {
-            @throw ([NSException exceptionWithName:@"Instantiation error"
-                                            reason:@"Error in instantiating the CMIS custom network provider. The class must implement CMISNetworkProvider."
-                                          userInfo:nil]);
+            @throw([NSException exceptionWithName:@"Error with custom CMIS network provider"
+                                           reason:@"The custom network provider must be an object that conforms to the CMISNetworkProvider protocol"
+                                         userInfo:nil]);
         }
-        
     }
+    
+//    NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
+//    id customNetworkProviderObject = [infoPlist objectForKey:kAlfrescoCMISNetworkProvider];
+//    
+//    Class customNetworkProviderClass = NSClassFromString((NSString *)customNetworkProviderObject);
+//    if (customNetworkProviderClass)
+//    {
+//        if ([customNetworkProviderClass conformsToProtocol:@protocol(CMISNetworkProvider)])
+//        {
+//            id<CMISNetworkProvider> customNetworkInstance = [[customNetworkProviderClass alloc] init];
+//            v3params.networkProvider = customNetworkInstance;
+//            v4params.networkProvider = customNetworkInstance;
+//        }
+//        else
+//        {
+//            @throw ([NSException exceptionWithName:@"Instantiation error"
+//                                            reason:@"Error in instantiating the CMIS custom network provider. The class must implement CMISNetworkProvider."
+//                                          userInfo:nil]);
+//        }
+//        
+//    }
     
     log(@"**** authenticateWithUsername OnPremise ****");
 

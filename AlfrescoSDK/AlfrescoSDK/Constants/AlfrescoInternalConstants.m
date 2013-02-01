@@ -265,9 +265,4 @@ NSString * const kAlfrescoHTTPPut = @"PUT";
  */
 NSString * const kAlfrescoCMISFileManager = @"CMISFileManagerClassName";
 
-/**
- Custom CMIS Network Provider
- */
-NSString * const kAlfrescoCMISNetworkProvider = @"org.alfresco.mobile.internal.session.cmis.networkprovider.classname";
-
 @end

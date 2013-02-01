@@ -229,5 +229,4 @@ extern NSString * const kAlfrescoHTTPPOST;
 extern NSString * const kAlfrescoHTTPPut;
 
 extern NSString * const kAlfrescoCMISFileManager;
-extern NSString * const kAlfrescoCMISNetworkProvider;
 @end

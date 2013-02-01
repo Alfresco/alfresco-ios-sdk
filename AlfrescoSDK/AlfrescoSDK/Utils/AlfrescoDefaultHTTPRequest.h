@@ -18,9 +18,21 @@
  *****************************************************************************
  */
 
-#import <Foundation/Foundation.h>
-#import "AlfrescoNetworkProvider.h"
+/**
+ The AlfrescoDefaultHTTPRequest class utilizes NSURLConnection to make requests.
+ 
+ Author: Tauseef Mughal (Alfresco)
+ */
 
-@interface AlfrescoDefaultNetworkProvider : NSObject <AlfrescoNetworkProvider>
+#import <Foundation/Foundation.h>
+#import "AlfrescoConstants.h"
+
+@interface AlfrescoDefaultHTTPRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+
+- (void)connectWithURL:(NSURL*)requestURL
+                method:(NSString *)method
+                header:(NSDictionary *)header
+           requestBody:(NSData *)requestBody
+       completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 @end

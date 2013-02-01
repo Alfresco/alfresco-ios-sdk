@@ -22,18 +22,10 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoAuthenticationProvider.h"
+#import "AlfrescoDefaultHTTPRequest.h"
+#import "AlfrescoInternalConstants.h"
 
 @interface AlfrescoDefaultNetworkProvider ()
-@property (nonatomic, strong) NSURLConnection * connection;
-@property (nonatomic, strong) NSMutableData * responseData;
-@property (nonatomic, assign) NSInteger statusCode;
-@property (nonatomic, copy) AlfrescoDataCompletionBlock completionBlock;
-
-- (void)connectWithURL:(NSURL*)requestURL
-                method:(NSString *)method
-                header:(NSDictionary *)header
-           requestBody:(NSData *)requestBody
-       completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 - (void)requestWithURL:(NSURL *)requestURL
                 method:(NSString *)method
@@ -43,10 +35,6 @@
 @end
 
 @implementation AlfrescoDefaultNetworkProvider
-@synthesize responseData = _responseData;
-@synthesize completionBlock = _completionBlock;
-@synthesize connection = _connection;
-@synthesize statusCode = _statusCode;
 
 - (void)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
@@ -81,106 +69,15 @@
            requestBody:(NSData *)data
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 {
-    AlfrescoDefaultNetworkProvider *alfrescoRequest = [[AlfrescoDefaultNetworkProvider alloc] init];
-    if (nil != alfrescoRequest)
+    AlfrescoDefaultHTTPRequest *alfrescoDefaultRequest = [[AlfrescoDefaultHTTPRequest alloc] init];
+    if (alfrescoDefaultRequest)
     {
-        [alfrescoRequest connectWithURL:requestURL method:method header:header requestBody:data completionBlock:completionBlock];
+        [alfrescoDefaultRequest connectWithURL:requestURL method:method header:header requestBody:data completionBlock:completionBlock];
     }
     else
     {
         completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnknown]);
     }
 }
-
-
-
-
-#pragma private method
-
-- (void)connectWithURL:(NSURL*)requestURL
-                method:(NSString *)method
-                header:(NSDictionary *)header
-           requestBody:(NSData *)requestBody
-       completionBlock:(AlfrescoDataCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-
-    self.completionBlock = completionBlock;
-
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:requestURL
-                                                              cachePolicy:NSURLRequestReloadIgnoringCacheData
-                                                          timeoutInterval:60];
-    
-    [urlRequest setHTTPMethod:method];
-    
-    [header enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
-        log(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
-        [urlRequest addValue:headerValue forHTTPHeaderField:headerKey];
-    }];
-
-    if (nil != requestBody)
-    {
-        [urlRequest setHTTPBody:requestBody];
-        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    }
-    
-    self.responseData = nil;    
-    self.connection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-}
-
-#pragma URL delegate methods
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    self.responseData = [NSMutableData data];
-    if ([response isKindOfClass:[NSHTTPURLResponse class]])
-    {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        self.statusCode = httpResponse.statusCode;
-    }
-    else
-    {
-        self.statusCode = -1;
-    }
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    if (nil == data)
-    {
-        return;
-    }
-    if (0 == data.length)
-    {
-        return;
-    }
-    if (nil != self.responseData)
-    {
-        [self.responseData appendData:data];
-    }
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    NSError *error = nil;
-    if (self.statusCode < 200 || self.statusCode > 299)
-    {
-        error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
-    }
-    
-    self.completionBlock(self.responseData, error);
-
-    self.completionBlock = nil;
-    self.connection = nil;
-    self.responseData = nil;
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    self.completionBlock(nil, error);
-    self.connection = nil;
-}
-
-
-
 
 @end

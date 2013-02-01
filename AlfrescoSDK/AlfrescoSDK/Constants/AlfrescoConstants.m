@@ -70,3 +70,8 @@ NSString * const kAlfrescoFileManagerClass = @"AlfrescoFileManagerClassName";
  Custom Network Provider
  */
 NSString * const kAlfrescoCustomNetworkProviderClass = @"org.alfresco.mobile.session.networkprovider.classname";
+
+/**
+ Custom CMIS Network Provider
+ */
+NSString * const kAlfrescoCMISNetworkProvider = @"org.alfresco.mobile.internal.session.cmis.networkprovider.classname";

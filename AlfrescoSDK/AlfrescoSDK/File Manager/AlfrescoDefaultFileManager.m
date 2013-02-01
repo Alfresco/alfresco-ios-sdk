@@ -27,22 +27,6 @@
 @synthesize documentsDirectory = _documentsDirectory;
 @synthesize temporaryDirectory = _temporaryDirectory;
 
-//- (NSString *)homeDirectory
-//{
-//    return NSHomeDirectory();
-//}
-//
-//- (NSString *)documentsDirectory
-//{
-//    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-//    return path;
-//}
-//
-//- (NSString *)temporaryDirectory
-//{
-//    return NSTemporaryDirectory();
-//}
-
 - (id)init
 {
     self = [super init];
@@ -139,7 +123,10 @@
     {
         NSString *fullPath = nil;
         [fileURL getResourceValue:&fullPath forKey:NSURLPathKey error:nil];
-        block(fullPath);
+        if (block != NULL)
+        {
+            block(fullPath);
+        }
     }
 }
 
@@ -163,14 +150,14 @@
 
 - (NSString *)internalFilePathFromName:(NSString *)fileName
 {
-    return [[self temporaryDirectory] stringByAppendingPathComponent:fileName];
+    return [self.temporaryDirectory stringByAppendingPathComponent:fileName];
 }
 
 - (BOOL)fileStreamIsOpen:(NSStream *)stream
 {
     BOOL isStreamOpen = NO;
     NSOutputStream *outputStream = (NSOutputStream *)stream;
-    isStreamOpen = outputStream.streamStatus == NSStreamStatusOpen;
+    isStreamOpen = (outputStream.streamStatus == NSStreamStatusOpen);
     return isStreamOpen;
 }
 
