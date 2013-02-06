@@ -13,12 +13,9 @@
  */
 
 #import <Foundation/Foundation.h>
-//#import "CMISSessionParameters.h"
+#import "CMISSessionParameters.h"
 #import "CMISAuthenticationProvider.h"
 #import "CMISNetworkProvider.h"
-#import "CMISFileManager.h"
-
-@class CMISSessionParameters;
 
 extern NSString * const kCMISBindingSessionKeyAtomPubUrl;
 extern NSString * const kCMISBindingSessionKeyObjectByIdUriBuilder;
@@ -36,7 +33,6 @@ extern NSString * const kCMISBindingSessionKeyLinkCache;
 @property (nonatomic, strong, readonly) NSString *repositoryId;
 @property (nonatomic, strong, readonly) id<CMISAuthenticationProvider> authenticationProvider;
 @property (nonatomic, strong, readonly) id<CMISNetworkProvider> networkProvider;
-@property (nonatomic, strong, readonly) CMISFileManager *fileManager;
 - (id)initWithSessionParameters:(CMISSessionParameters *)sessionParameters;
 
 // Object storage methods

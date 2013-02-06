@@ -13,6 +13,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "CMISFileUtil.h"
 
 @interface CMISBase64Encoder : NSObject 
 
@@ -25,5 +26,11 @@
 + (void)encodeContentOfFile:(NSString *)sourceFilePath andAppendToFile:(NSString *)destinationFilePath;
 
 + (NSString *)encodeContentFromInputStream:(id)inputStream;
+
+/*
+ @param inputStream The input stream from which the data will be taken for encoding
+ @param filePath The file path to which the encoded data will be appended
+ */
++ (void)encodeContentFromInputStream:(NSInputStream *)inputStream andAppendToFile:(NSString *)filePath;
 
 @end

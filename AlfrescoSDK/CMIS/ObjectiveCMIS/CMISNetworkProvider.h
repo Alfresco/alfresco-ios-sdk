@@ -20,10 +20,11 @@ typedef enum {
     HTTP_DELETE
 } CMISHttpRequestMethod;
 
-@class CMISBindingSession, CMISRequest, CMISHttpResponse;
+@class CMISBindingSession, CMISRequest, CMISHttpResponse, CMISProperties;
 
 
 @protocol CMISNetworkProvider <NSObject>
+
 
 - (void)invoke:(NSURL *)url
 withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
@@ -31,6 +32,7 @@ withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
           body:(NSData *)body
        headers:(NSDictionary *)additionalHeaders
 completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
+
 
 - (void)invoke:(NSURL *)url
 withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
@@ -81,6 +83,15 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
          withSession:(CMISBindingSession *)session
      completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
 
+@optional
+- (void)invoke:(NSURL *)url withHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
+   withSession:(CMISBindingSession *)session
+      filePath:(NSString *)encodedFilePath
+       headers:(NSDictionary *)additionalHeaders
+ bytesExpected:(unsigned long long)bytesExpected
+completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
+ progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock
+ requestObject:(CMISRequest *)requestObject;
 
 
 @end

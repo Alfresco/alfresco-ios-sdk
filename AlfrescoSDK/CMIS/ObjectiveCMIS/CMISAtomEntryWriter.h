@@ -14,7 +14,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import "CMISFileManager.h"
 @class CMISProperties;
 
 
@@ -24,8 +23,6 @@
 @property (nonatomic, strong) NSInputStream *inputStream;
 @property (nonatomic, strong) NSString *mimeType;
 @property (nonatomic, strong) CMISProperties *cmisProperties;
-@property (nonatomic, strong) CMISFileManager *fileManager;
-
 /**
  * If YES: the xml will be created and stored fully in-memory.
  * If NO: the xml will be streamed to a file on disk.
@@ -35,15 +32,15 @@
 @property BOOL generateXmlInMemory;
 
 /**
-* Generates the atom entry XML for the given properties on this class.
-*
-* NOTE: if <code>generateXmlInMemory</code> boolean is set to NO, a filepath pointing to a file
-* containing the generated atom entry is returned.
-* Callers are responsible to remove the file again if not needed anymore.
-*
-* If set to YES, the return value of this method is the XML is its whole.
-*
-*/
+ * Generates the atom entry XML for the given properties on this class.
+ *
+ * NOTE: if <code>generateXmlInMemory</code> boolean is set to NO, a filepath pointing to a file
+ * containing the generated atom entry is returned.
+ * Callers are responsible to remove the file again if not needed anymore.
+ *
+ * If set to YES, the return value of this method is the XML is its whole.
+ *
+ */
 - (NSString *)generateAtomEntryXml;
 
 @end

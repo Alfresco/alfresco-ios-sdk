@@ -17,8 +17,6 @@
 #import "CMISBinding.h"
 #import "CMISAuthenticationProvider.h"
 #import "CMISNetworkProvider.h"
-#import "CMISFileManager.h"
-#import "CMISDefaultFileManager.h"
 
 // Session param keys
 /**
@@ -55,8 +53,6 @@ extern NSString * const kCMISSessionParameterMode;
 // Network I/O
 @property (nonatomic, strong) id<CMISNetworkProvider> networkProvider;
 
-// File I/O
-@property (nonatomic, strong) CMISFileManager *fileManager;
 
 
 - (id)initWithBindingType:(CMISBindingType)bindingType;
