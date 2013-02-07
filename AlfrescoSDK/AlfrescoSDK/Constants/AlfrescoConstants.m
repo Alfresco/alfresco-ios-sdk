@@ -53,3 +53,25 @@ NSString * const kAlfrescoSortByDescription = @"description";
  */
 NSString * const kAlfrescoCapabilityLike = @"CapabilityLike";
 NSString * const kAlfrescoCapabilityCommentsCount = @"CapabilityCommentsCount";
+
+/**
+ File Attribute Constants
+ */
+NSString * const kAlfrescoFileSize = @"fileSize";
+NSString * const kAlfrescoFileLastModification = @"lastModificationDate";
+NSString * const kAlfrescoIsFolder = @"isFolder";
+
+/**
+ Custom File Manager
+ */
+NSString * const kAlfrescoFileManagerClass = @"AlfrescoFileManagerClassName";
+
+/**
+ Custom Network Provider
+ */
+NSString * const kAlfrescoCustomNetworkProvider = @"org.alfresco.mobile.session.networkprovider.classname";
+
+/**
+ Custom CMIS Network Provider
+ */
+NSString * const kAlfrescoCMISNetworkProvider = @"org.alfresco.mobile.internal.session.cmis.networkprovider.classname";

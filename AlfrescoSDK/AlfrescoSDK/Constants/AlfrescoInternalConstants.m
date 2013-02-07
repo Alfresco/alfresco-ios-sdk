@@ -260,5 +260,9 @@ NSString * const kAlfrescoHTTPGet = @"GET";
 NSString * const kAlfrescoHTTPPOST = @"POST";
 NSString * const kAlfrescoHTTPPut = @"PUT";
 
+/**
+ Custom CMIS File Manager
+ */
+NSString * const kAlfrescoCMISFileManager = @"CMISFileManagerClassName";
 
 @end

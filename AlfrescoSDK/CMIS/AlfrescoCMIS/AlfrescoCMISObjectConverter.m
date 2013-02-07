@@ -30,7 +30,6 @@
 #import "CMISTypeDefinition.h"
 #import "CMISPropertyDefinition.h"
 #import "AlfrescoCMISDocument.h"
-#import "CMISISO8601DateFormatter.h"
 #import "AlfrescoCMISFolder.h"
 #import "CMISDateUtil.h"
 #import "AlfrescoErrors.h"
@@ -393,7 +392,7 @@
 
 - (NSString *)stringFromDate:(NSDate *)date
 {
-    return [[CMISDateUtil defaultDateFormatter] stringFromDate:date];
+    return [CMISDateUtil stringFromDate:date];
 }
 
 
