@@ -125,9 +125,9 @@
         }
         
         self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
-        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
+        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProvider])
         {
-            id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
+            id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoCustomNetworkProvider];
             BOOL conformsToAlfrescoNetworkProvider = [customAlfrescoNetworkProvider conformsToProtocol:@protocol(AlfrescoNetworkProvider)];
             
             if (conformsToAlfrescoNetworkProvider)

@@ -580,9 +580,9 @@ This authentication method authorises the user to access the home network assign
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         
         self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
-        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
+        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProvider])
         {
-            id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
+            id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProvider];
             if ([self validateCustomNetworkProperty:networkObject])
             {
                 Class customNetworkProvider = NSClassFromString((NSString *)networkObject);
