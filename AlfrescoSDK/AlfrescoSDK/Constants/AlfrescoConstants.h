@@ -105,7 +105,7 @@ extern NSString * const kAlfrescoFileManagerClass;
 /**---------------------------------------------------------------------------------------
  * @name Custom Alfresco Network Provider
  --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoCustomNetworkProviderClass;
+extern NSString * const kAlfrescoCustomNetworkProvider;
 
 /**---------------------------------------------------------------------------------------
  * @name Custom CMIS Network Provider
