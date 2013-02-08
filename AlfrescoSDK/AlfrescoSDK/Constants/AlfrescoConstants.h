@@ -98,16 +98,7 @@ extern NSString * const kAlfrescoFileLastModification;
 extern NSString * const kAlfrescoIsFolder;
 
 /**---------------------------------------------------------------------------------------
- * @name Custom Alfresco File Manager
- --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoFileManagerClass;
-
-/**---------------------------------------------------------------------------------------
  * @name Custom Alfresco Network Provider
  --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoCustomNetworkProvider;
+extern NSString * const kAlfrescoNetworkProvider;
 
-/**---------------------------------------------------------------------------------------
- * @name Custom CMIS Network Provider
- --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoCMISNetworkProvider;

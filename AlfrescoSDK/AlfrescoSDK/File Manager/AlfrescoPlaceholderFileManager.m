@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -19,7 +19,7 @@
  */
 
 #import "AlfrescoPlaceholderFileManager.h"
-#import "AlfrescoConstants.h"
+#import "AlfrescoInternalConstants.h"
 #import "AlfrescoDefaultFileManager.h"
 
 @implementation AlfrescoPlaceholderFileManager

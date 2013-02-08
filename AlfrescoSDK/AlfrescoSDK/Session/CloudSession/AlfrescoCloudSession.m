@@ -63,8 +63,6 @@
 
 - (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
-- (BOOL)validateCustomNetworkProperty:(id)objectFromParameters;
-
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
 @property (nonatomic, strong, readwrite) NSURL *baseURLWithoutNetwork;
 @property (nonatomic, strong) NSURL *cmisUrl;
@@ -580,18 +578,19 @@ This authentication method authorises the user to access the home network assign
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         
         self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
-        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProvider])
+        id networkObject = [parameters objectForKey:kAlfrescoNetworkProvider];
+        if (networkObject)
         {
-            id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProvider];
-            if ([self validateCustomNetworkProperty:networkObject])
+            BOOL conformsToAlfrescoNetworkProvider = [networkObject conformsToProtocol:@protocol(AlfrescoNetworkProvider)];
+            
+            if (conformsToAlfrescoNetworkProvider)
             {
-                Class customNetworkProvider = NSClassFromString((NSString *)networkObject);
-                self.networkProvider = [[customNetworkProvider alloc] init];
+                self.networkProvider = (id<AlfrescoNetworkProvider>)networkObject;
             }
             else
             {
                 @throw([NSException exceptionWithName:@"Error with custom network provider"
-                                               reason:@"The custom network provider must be a string representation of the network class and must conform to the AlfrescoHTTPRequest protocol"
+                                               reason:@"The custom network provider must be an object that conforms to the AlfrescoNetworkProvider protocol"
                                              userInfo:nil]);
             }
         }
@@ -730,29 +729,6 @@ This authentication method authorises the user to access the home network assign
     }
     return resultsArray;
     
-}
-
-- (BOOL)validateCustomNetworkProperty:(id)objectFromParameters
-{
-    BOOL customClassIsValid = NO;
-    if (![objectFromParameters isKindOfClass:[NSString class]])
-    {
-        return customClassIsValid;
-    }
-    
-    Class networkProviderClass = NSClassFromString((NSString *)objectFromParameters);
-    
-    if (!networkProviderClass)
-    {
-        return customClassIsValid;
-    }
-    
-    if (![networkProviderClass conformsToProtocol:@protocol(AlfrescoNetworkProvider)])
-    {
-        return customClassIsValid;
-    }
-    
-    return customClassIsValid = YES;
 }
 
 @end

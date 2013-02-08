@@ -43,7 +43,6 @@
                      andPassword:(NSString *)password
                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 - (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password;
-- (BOOL)validateCustomNetworkProperty:(id)objectFromParameters;
 
 + (NSNumber *)majorVersionFromString:(NSString *)versionString;
 @end
@@ -125,9 +124,9 @@
         }
         
         self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
-        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProvider])
+        id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoNetworkProvider];
+        if (customAlfrescoNetworkProvider)
         {
-            id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoCustomNetworkProvider];
             BOOL conformsToAlfrescoNetworkProvider = [customAlfrescoNetworkProvider conformsToProtocol:@protocol(AlfrescoNetworkProvider)];
             
             if (conformsToAlfrescoNetworkProvider)
@@ -141,23 +140,6 @@
                                              userInfo:nil]);
             }
         }
-        
-//        self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
-//        if ([[parameters allKeys] containsObject:kAlfrescoCustomNetworkProviderClass])
-//        {
-//            id networkObject = [parameters objectForKey:kAlfrescoCustomNetworkProviderClass];
-//            if ([self validateCustomNetworkProperty:networkObject])
-//            {
-//                Class customNetworkProvider = NSClassFromString((NSString *)networkObject);
-//                self.networkProvider = [[customNetworkProvider alloc] init];
-//            }
-//            else
-//            {
-//                @throw([NSException exceptionWithName:@"Error with custom network provider"
-//                                               reason:@"The custom network provider must be a string representation of the network class and must conform to the AlfrescoHTTPRequest protocol"
-//                                             userInfo:nil]);
-//            }
-//        }
         
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];        
@@ -199,27 +181,6 @@
                                          userInfo:nil]);
         }
     }
-    
-//    NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-//    id customNetworkProviderObject = [infoPlist objectForKey:kAlfrescoCMISNetworkProvider];
-//    
-//    Class customNetworkProviderClass = NSClassFromString((NSString *)customNetworkProviderObject);
-//    if (customNetworkProviderClass)
-//    {
-//        if ([customNetworkProviderClass conformsToProtocol:@protocol(CMISNetworkProvider)])
-//        {
-//            id<CMISNetworkProvider> customNetworkInstance = [[customNetworkProviderClass alloc] init];
-//            v3params.networkProvider = customNetworkInstance;
-//            v4params.networkProvider = customNetworkInstance;
-//        }
-//        else
-//        {
-//            @throw ([NSException exceptionWithName:@"Instantiation error"
-//                                            reason:@"Error in instantiating the CMIS custom network provider. The class must implement CMISNetworkProvider."
-//                                          userInfo:nil]);
-//        }
-//        
-//    }
     
     log(@"**** authenticateWithUsername OnPremise ****");
 
@@ -345,29 +306,6 @@
 - (void)removeParameter:(id)key
 {
     [self.sessionData removeObjectForKey:key];
-}
-
-- (BOOL)validateCustomNetworkProperty:(id)objectFromParameters
-{
-    BOOL customClassIsValid = NO;
-    if (![objectFromParameters isKindOfClass:[NSString class]])
-    {
-        return customClassIsValid;
-    }
-    
-    Class networkProviderClass = NSClassFromString((NSString *)objectFromParameters);
-    
-    if (!networkProviderClass)
-    {
-        return customClassIsValid;
-    }
-    
-    if (![networkProviderClass conformsToProtocol:@protocol(AlfrescoNetworkProvider)])
-    {
-        return customClassIsValid;
-    }
-    
-    return customClassIsValid = YES;
 }
 
 + (NSNumber *)majorVersionFromString:(NSString *)versionString
