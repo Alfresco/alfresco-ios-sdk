@@ -80,6 +80,25 @@
                  progressBlock:(AlfrescoProgressBlock)progressBlock;
 
 
+/** Creates a new document using the input stream provided. The new document is created within the given folder.
+ 
+ @param documentName The name of the document to be created in the repository
+ @param folder The parent folder to create the document in.
+ @param file The local file to be uploaded.
+ @param properties Additional properties that are used to create the document.
+ @param inputStream The input stream to the file to be uploaded.
+ @param completionBlock The block that's called with the created document in case the operation succeeds.
+ @param progressBlock The block that's called with the upload progress.
+ */
+- (void)createDocumentWithName:(NSString *)documentName
+                inParentFolder:(AlfrescoFolder *)folder
+                   contentFile:(AlfrescoContentFile *)file
+                    properties:(NSDictionary *)properties
+                   inputStream:(NSInputStream *)inputStream
+               completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                 progressBlock:(AlfrescoProgressBlock)progressBlock;
+
+
 
 /**---------------------------------------------------------------------------------------
  * @name Retrieval methods.
@@ -231,6 +250,22 @@
  */
 // 
 - (void)retrieveContentOfDocument:(AlfrescoDocument *)document
+                  completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+                    progressBlock:(AlfrescoProgressBlock)progressBlock;
+
+
+/** Downloads the content of the given document and writes it using the provided outputstream. The delegate object
+ will be informed when the content is downloaded.
+ 
+ @param document The document that needs to be downloaded.
+ @param outputStream The stream used to write the contents to disk.
+ @param completionBlock The block containing an AlfrescoContentFile and NSError object. error will be nil if successful. Otherwise, AlfrescoContentFile will be nil.
+ @param progressBlock The block that's called with the download progress.
+ */
+//
+- (void)retrieveContentOfDocument:(AlfrescoDocument *)document
+                       toFilePath:(NSString *)filePath
+                     outputStream:(NSOutputStream *)outputStream
                   completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
                     progressBlock:(AlfrescoProgressBlock)progressBlock;
 

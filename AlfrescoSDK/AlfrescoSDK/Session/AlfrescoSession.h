@@ -21,6 +21,7 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoConstants.h"
 #import "AlfrescoRepositoryInfo.h"
+#import "AlfrescoNetworkProvider.h"
 
 /** The AlfrescoSession category defines the properties made available for a session to an Alfresco repository.
  
@@ -50,6 +51,9 @@
 
 /// a default listing context for the session
 @property (nonatomic, strong, readonly) AlfrescoListingContext *defaultListingContext;
+
+/// The network provider, if this is not provided, a default implementation is set
+@property (nonatomic, strong, readonly) id<AlfrescoNetworkProvider> networkProvider;
 
 
 /**---------------------------------------------------------------------------------------
