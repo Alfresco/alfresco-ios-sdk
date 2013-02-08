@@ -20,12 +20,13 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoErrors.h"
-#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoSortingUtils.h"
+#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremiseSiteService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -72,8 +73,8 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
 //    __weak AlfrescoOnPremiseSiteService *weakSelf = self;
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseSiteAPI];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseSiteAPI];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -99,8 +100,8 @@
     
     
 //    __weak AlfrescoOnPremiseSiteService *weakSelf = self;
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseSiteAPI];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseSiteAPI];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -122,8 +123,8 @@
     
 //    __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     NSString *siteString = [kAlfrescoOnPremiseSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:siteString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:siteString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -149,8 +150,8 @@
     
 //    __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     NSString *personString = [kAlfrescoOnPremiseSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:personString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:personString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -177,14 +178,14 @@
 
     NSURL *allSitesURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.baseApiUrl, allRequestString]];
     NSURL *favouriteSitesURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", self.baseApiUrl, favRequestString]];
-    [AlfrescoHTTPUtils executeRequestWithURL:allSitesURL session:self.session completionBlock:^(NSData *data, NSError *allSitesError){
+    [self.session.networkProvider executeRequestWithURL:allSitesURL session:self.session completionBlock:^(NSData *data, NSError *allSitesError){
         if (nil == data)
         {
             completionBlock(nil, allSitesError);
         }
         else
         {
-            [AlfrescoHTTPUtils executeRequestWithURL:favouriteSitesURL session:self.session completionBlock:^(NSData *favData, NSError *favError){
+            [self.session.networkProvider executeRequestWithURL:favouriteSitesURL session:self.session completionBlock:^(NSData *favData, NSError *favError){
                 if (nil == favData)
                 {
                     completionBlock(nil, favError);
@@ -229,17 +230,17 @@
 //    __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     NSString *favRequestString = [kAlfrescoOnPremiseFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSString *allRequestString = [kAlfrescoOnPremiseSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    NSURL *allSitesURL = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:allRequestString];
-    NSURL *favouriteSitesURL = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:favRequestString];
+    NSURL *allSitesURL = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:allRequestString];
+    NSURL *favouriteSitesURL = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:favRequestString];
     
-    [AlfrescoHTTPUtils executeRequestWithURL:allSitesURL session:self.session completionBlock:^(NSData *data, NSError *allSitesError){
+    [self.session.networkProvider executeRequestWithURL:allSitesURL session:self.session completionBlock:^(NSData *data, NSError *allSitesError){
         if (nil == data)
         {
             completionBlock(nil, allSitesError);
         }
         else
         {
-            [AlfrescoHTTPUtils executeRequestWithURL:favouriteSitesURL session:self.session completionBlock:^(NSData *favData, NSError *favError){
+            [self.session.networkProvider executeRequestWithURL:favouriteSitesURL session:self.session completionBlock:^(NSData *favData, NSError *favError){
                 if (nil == favData)
                 {
                     completionBlock(nil, favError);
@@ -282,8 +283,8 @@
     
 //    __weak AlfrescoOnPremiseSiteService *weakSelf = self;
     NSString *requestString = [kAlfrescoOnPremiseSitesShortnameAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:siteShortName];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -306,10 +307,10 @@
     
     __block AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
     NSString *requestString = [kAlfrescoOnPremiseSiteDoclibAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:siteShortName];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
 //    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",
 //                                       self.session.baseUrl, requestString]];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);

@@ -27,7 +27,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import <objc/runtime.h>
-
+#import "AlfrescoDefaultNetworkProvider.h"
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -37,6 +37,7 @@
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
+@property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 - (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
 - (void)authenticateWithUsername:(NSString *)username
                      andPassword:(NSString *)password
@@ -54,6 +55,7 @@
 @synthesize sessionData = _sessionData;
 @synthesize rootFolder = _rootFolder;
 @synthesize defaultListingContext = _defaultListingContext;
+@synthesize networkProvider = _networkProvider;
 
 + (void)connectWithUrl:(NSURL *)url
               username:(NSString *)username
@@ -114,6 +116,31 @@
         {
             [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         }
+        
+        if ([[parameters allKeys] containsObject:kAlfrescoCMISNetworkProvider])
+        {
+            id customCMISNetworkProvider = [parameters objectForKey:kAlfrescoCMISNetworkProvider];
+            [self setObject:customCMISNetworkProvider forParameter:kAlfrescoCMISNetworkProvider];
+        }
+        
+        self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
+        id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoNetworkProvider];
+        if (customAlfrescoNetworkProvider)
+        {
+            BOOL conformsToAlfrescoNetworkProvider = [customAlfrescoNetworkProvider conformsToProtocol:@protocol(AlfrescoNetworkProvider)];
+            
+            if (conformsToAlfrescoNetworkProvider)
+            {
+                self.networkProvider = (id<AlfrescoNetworkProvider>)customAlfrescoNetworkProvider;
+            }
+            else
+            {
+                @throw([NSException exceptionWithName:@"Error with custom network provider"
+                                               reason:@"The custom network provider must be an object that conforms to the AlfrescoNetworkProvider protocol"
+                                             userInfo:nil]);
+            }
+        }
+        
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];        
     }
@@ -136,6 +163,24 @@
     v4params.username = username;
     v4params.password = password;
     v4params.atomPubUrl = [NSURL URLWithString:v4cmisUrl];
+    
+    if ([self.sessionData objectForKey:kAlfrescoCMISNetworkProvider])
+    {
+        id customCMISNetworkProvider = [self.sessionData objectForKey:kAlfrescoCMISNetworkProvider];
+        BOOL conformsToCMISNetworkProvider = [customCMISNetworkProvider conformsToProtocol:@protocol(CMISNetworkProvider)];
+        
+        if (conformsToCMISNetworkProvider)
+        {
+            v3params.networkProvider = (id<CMISNetworkProvider>)customCMISNetworkProvider;
+            v4params.networkProvider = (id<CMISNetworkProvider>)customCMISNetworkProvider;
+        }
+        else
+        {
+            @throw([NSException exceptionWithName:@"Error with custom CMIS network provider"
+                                           reason:@"The custom network provider must be an object that conforms to the CMISNetworkProvider protocol"
+                                         userInfo:nil]);
+        }
+    }
     
     log(@"**** authenticateWithUsername OnPremise ****");
 

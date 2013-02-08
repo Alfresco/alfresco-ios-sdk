@@ -20,6 +20,8 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "AlfrescoErrors.h"
 #import <math.h>
+#import "AlfrescoFileManager.h"
+#import "AlfrescoConstants.h"
 
 @interface AlfrescoContentFile ()
 + (NSString *) mimeTypeFromFilename:(NSString *)filename;
@@ -67,16 +69,16 @@
         }
         else
         {
-            NSString *pathname = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",filename];
-            NSData *fileContent = [NSData dataWithContentsOfURL:url];
+            NSString *pathname = [[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingPathComponent:filename];
+            NSData *fileContent = [[AlfrescoFileManager sharedManager] dataWithContentsOfURL:url];
             
             NSURL *fileURL = [NSURL fileURLWithPath:pathname];
-            [fileContent writeToURL:fileURL atomically:YES];
+            [[AlfrescoFileManager sharedManager] createFileAtPath:[fileURL path] contents:fileContent error:nil];
             self.fileUrl = fileURL;
         }
         NSError *fileError = nil;
-        NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:[self.fileUrl path] error:&fileError];
-        self.length = [[fileDictionary valueForKey:NSFileSize] unsignedLongLongValue];
+        NSDictionary *fileDictionary =  [[AlfrescoFileManager sharedManager] attributesOfItemAtPath:[self.fileUrl path] error:&fileError];
+        self.length = [[fileDictionary valueForKey:kAlfrescoFileSize] unsignedLongLongValue];
     }
     return self;    
 }
@@ -91,8 +93,8 @@
         self.mimeType = mimeType;
         if (nil != tmpName) 
         {
-            NSURL *pathURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingFormat:@"%@",tmpName]];
-            [data writeToURL:pathURL atomically:YES];
+            NSURL *pathURL = [NSURL fileURLWithPath:[[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingPathComponent:tmpName]];
+            [[AlfrescoFileManager sharedManager] createFileAtPath:[pathURL path] contents:data error:nil];
             self.fileUrl = pathURL;
             self.length = data.length;
         }

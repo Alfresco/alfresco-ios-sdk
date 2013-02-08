@@ -254,11 +254,12 @@ NSString * const kAlfrescoPropertyType = @"type";
 NSString * const kAlfrescoPropertyValue = @"value";
 NSString * const kAlfrescoPropertyIsMultiValued = @"isMultiValued";
 
-
 NSString * const kAlfrescoHTTPDelete = @"DELETE";
 NSString * const kAlfrescoHTTPGet = @"GET";
 NSString * const kAlfrescoHTTPPOST = @"POST";
 NSString * const kAlfrescoHTTPPut = @"PUT";
 
+NSString * const kAlfrescoFileManagerClass = @"AlfrescoFileManagerClassName";
+NSString * const kAlfrescoCMISNetworkProvider = @"org.alfresco.mobile.internal.session.cmis.networkprovider";
 
 @end

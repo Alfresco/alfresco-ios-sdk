@@ -25,7 +25,7 @@
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoCloudNetwork.h"
-#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoURLUtils.h"
 #import "AlfrescoISO8601DateFormatter.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoOAuthData.h"
@@ -33,7 +33,7 @@
 #import "CMISPassThroughAuthenticationProvider.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import <objc/runtime.h>
-
+#import "AlfrescoDefaultNetworkProvider.h"
 
 @interface AlfrescoCloudSession ()
 
@@ -75,6 +75,7 @@
 @property (nonatomic, strong)           AlfrescoISO8601DateFormatter *dateFormatter;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) NSString * apiKey;
+@property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property BOOL isUsingBaseAuthenticationProvider;
 @end
 
@@ -94,6 +95,7 @@
 @synthesize oauthData = _oauthData;
 @synthesize apiKey = _apiKey;
 @synthesize isUsingBaseAuthenticationProvider = _isUsingBaseAuthenticationProvider;
+@synthesize networkProvider = _networkProvider;
 
 #pragma mark - Public methods
 
@@ -201,7 +203,7 @@
 //    __weak AlfrescoCloudSession *weakSelf = self;
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-    [AlfrescoHTTPUtils executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
+    [self.networkProvider executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -212,9 +214,7 @@
             NSArray *networks = [self networkArrayFromJSONData:data error:&conversionError];
             completionBlock(networks, conversionError);
         }
-        
     }];
-
 }
 
 /**
@@ -577,6 +577,24 @@ This authentication method authorises the user to access the home network assign
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         
+        self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
+        id networkObject = [parameters objectForKey:kAlfrescoNetworkProvider];
+        if (networkObject)
+        {
+            BOOL conformsToAlfrescoNetworkProvider = [networkObject conformsToProtocol:@protocol(AlfrescoNetworkProvider)];
+            
+            if (conformsToAlfrescoNetworkProvider)
+            {
+                self.networkProvider = (id<AlfrescoNetworkProvider>)networkObject;
+            }
+            else
+            {
+                @throw([NSException exceptionWithName:@"Error with custom network provider"
+                                               reason:@"The custom network provider must be an object that conforms to the AlfrescoNetworkProvider protocol"
+                                             userInfo:nil]);
+            }
+        }
+                
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
     }
