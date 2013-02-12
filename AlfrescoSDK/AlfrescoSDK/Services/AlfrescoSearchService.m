@@ -76,7 +76,7 @@
         [self.cmisSession.binding.discoveryService
          query:statement
          searchAllVersions:NO
-         includeRelationShips:CMISIncludeRelationshipBoth
+         relationShips:CMISIncludeRelationshipBoth
          renditionFilter:nil
          includeAllowableActions:YES
          maxItems:[NSNumber numberWithInt:self.session.defaultListingContext.maxItems]
@@ -122,7 +122,7 @@
         [self.cmisSession.binding.discoveryService
          query:statement
          searchAllVersions:NO
-         includeRelationShips:CMISIncludeRelationshipBoth
+         relationShips:CMISIncludeRelationshipBoth
          renditionFilter:nil
          includeAllowableActions:YES
          maxItems:[NSNumber numberWithInt:listingContext.maxItems]

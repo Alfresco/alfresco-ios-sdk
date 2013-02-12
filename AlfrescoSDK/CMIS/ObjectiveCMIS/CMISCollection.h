@@ -18,6 +18,9 @@
 
 @property (nonatomic, strong, readonly)NSArray *items;
 
+/*
+ initialises CMISCollection with an array
+ */
 - (id)initWithItems:(NSArray *)items;
 
 @end

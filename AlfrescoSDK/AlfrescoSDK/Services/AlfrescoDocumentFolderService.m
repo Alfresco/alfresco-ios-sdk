@@ -165,7 +165,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     
         
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession createDocumentFromFilePath:[file.fileUrl path] withMimeType:file.mimeType withProperties:properties inFolder:folder.identifier completionBlock:^(NSString *identifier, NSError *error){
+    [self.cmisSession createDocumentFromFilePath:[file.fileUrl path] mimeType:file.mimeType properties:properties inFolder:folder.identifier completionBlock:^(NSString *identifier, NSError *error){
         if (nil == identifier)
         {
             NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
@@ -227,7 +227,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     }
     
     
-    [self.cmisSession createDocumentFromInputStream:inputStream withMimeType:file.mimeType withProperties:properties inFolder:folder.identifier bytesExpected:expectedBytes completionBlock:^(NSString *objectId, NSError *error) {
+    [self.cmisSession createDocumentFromInputStream:inputStream mimeType:file.mimeType properties:properties inFolder:folder.identifier bytesExpected:expectedBytes completionBlock:^(NSString *objectId, NSError *error) {
         if (nil == objectId)
         {
             NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
@@ -704,11 +704,11 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.cmisSession.binding.navigationService
      retrieveParentsForObject:node.identifier
-     withFilter:nil
-     withIncludeRelationships:CMISIncludeRelationshipBoth
-     withRenditionFilter:nil
-     withIncludeAllowableActions:YES
-     withIncludeRelativePathSegment:YES
+     filter:nil
+     relationships:CMISIncludeRelationshipBoth
+     renditionFilter:nil
+     includeAllowableActions:YES
+     includeRelativePathSegment:YES
      completionBlock:^(NSArray *parents, NSError *error){
          
          log(@"retrieveParentFolderOfNode::in completionBlock");
@@ -752,7 +752,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 
     CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
     operationContext.renditionFilterString = @"cmis:thumbnail";
-    [self.cmisSession retrieveObject:node.identifier withOperationContext:operationContext completionBlock:^(CMISObject *cmisObject, NSError *error){
+    [self.cmisSession retrieveObject:node.identifier operationContext:operationContext completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -881,7 +881,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISDocument *document = (CMISDocument *)cmisObject;
-            [document changeContentToContentOfFile:[file.fileUrl path] withOverwriteExisting:YES completionBlock:^(NSError *error){
+            [document changeContentToContentOfFile:[file.fileUrl path] overwrite:YES completionBlock:^(NSError *error){
                 if (error)
                 {
                     completionBlock(nil, error);
@@ -994,8 +994,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                      CMISStringInOutParameter *inOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:cmisObject.identifier];
                      [self.cmisSession.binding.objectService
                       updatePropertiesForObject:inOutParam
-                      withProperties:updatedProperties
-                      withChangeToken:nil
+                      properties:updatedProperties
+                      changeToken:nil
                       completionBlock:^(NSError *updateError){
                           if (nil != error)
                           {
