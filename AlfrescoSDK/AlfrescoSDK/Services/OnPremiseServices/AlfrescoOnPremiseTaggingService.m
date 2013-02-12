@@ -21,10 +21,11 @@
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
-#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoTag.h"
 #import "AlfrescoObjectConverter.h"
+#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremiseTaggingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -65,8 +66,8 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 //    __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -90,8 +91,8 @@
     }
     
 //    __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -118,8 +119,8 @@
     NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                           withString:cleanId];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if(nil == data)
         {
             completionBlock(nil, error);
@@ -148,8 +149,8 @@
     NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                           withString:cleanId];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if(nil == data)
         {
             completionBlock(nil, error);
@@ -177,9 +178,9 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
                                                                                           withString:cleanId];
     NSError *jsonError = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tags options:kNilOptions error:&jsonError];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
         if (nil != error)
         {
             completionBlock(NO, error);
@@ -189,7 +190,6 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
             completionBlock(YES, nil);
         }
     }];
-        
 }
 
 #pragma mark Site service internal methods

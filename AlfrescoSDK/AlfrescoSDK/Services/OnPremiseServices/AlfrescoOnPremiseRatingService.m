@@ -22,9 +22,10 @@
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoRepositoryInfo.h"
 #import "AlfrescoErrors.h"
-#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoURLUtils.h"
 #import "AlfrescoObjectConverter.h"
 #import <objc/runtime.h>
+#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremiseRatingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -70,8 +71,8 @@
     NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
     NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -102,9 +103,9 @@
     NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:likeDict options:kNilOptions error:&error];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
         if (nil != error)
         {
             completionBlock(NO, error);
@@ -126,8 +127,8 @@
     NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
     NSString *requestString = [kAlfrescoOnPremiseRatingsLikingSchemeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session method:kAlfrescoHTTPDelete completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPDelete completionBlock:^(NSData *data, NSError *error){
         if (nil != error)
         {
             completionBlock(NO, error);
@@ -148,8 +149,8 @@
     NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
     NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanId];
-    NSURL *url = [AlfrescoHTTPUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [AlfrescoHTTPUtils executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(NO, NO, error);

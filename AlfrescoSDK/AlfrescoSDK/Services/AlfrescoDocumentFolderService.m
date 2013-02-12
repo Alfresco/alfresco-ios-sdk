@@ -38,11 +38,13 @@
 #import <objc/runtime.h>
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoPagingUtils.h"
-#import "AlfrescoHTTPUtils.h"
+#import "AlfrescoURLUtils.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoCloudSession.h"
+#import "AlfrescoFileManager.h"
+#import "AlfrescoNetworkProvider.h"
 
 
 typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error);
@@ -69,7 +71,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 @synthesize authenticationProvider = _authenticationProvider;
 @synthesize supportedSortKeys = _supportedSortKeys;
 @synthesize defaultSortKey = _defaultSortKey;
-
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -192,6 +193,67 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             
         }
     } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
+        if (progressBlock)
+        {
+            progressBlock(bytesUploaded, bytesTotal);
+        }
+    }];
+}
+
+- (void)createDocumentWithName:(NSString *)documentName
+                inParentFolder:(AlfrescoFolder *)folder
+                   contentFile:(AlfrescoContentFile *)file
+                    properties:(NSDictionary *)properties
+                   inputStream:(NSInputStream *)inputStream
+               completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                 progressBlock:(AlfrescoProgressBlock)progressBlock
+{
+    NSDictionary *fileAttributes = [[AlfrescoFileManager sharedManager] attributesOfItemAtPath:[file.fileUrl path] error:nil];
+    unsigned long long expectedBytes = [[fileAttributes objectForKey:kAlfrescoFileSize] unsignedLongLongValue];
+    
+    if(properties == nil)
+    {
+        properties = [NSMutableDictionary dictionaryWithCapacity:2];
+    }
+    [properties setValue:documentName forKey:kCMISPropertyName];
+    
+    // check for a user supplied objectTypeId and use if present.
+    NSString *objectTypeId = [properties objectForKey:kCMISPropertyObjectTypeId];
+    if (objectTypeId == nil)
+    {
+        // Add the titled aspect by default when creating a document.
+        objectTypeId = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@", P:cm:titled"];
+        [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
+    }
+    
+    
+    [self.cmisSession createDocumentFromInputStream:inputStream withMimeType:file.mimeType withProperties:properties inFolder:folder.identifier bytesExpected:expectedBytes completionBlock:^(NSString *objectId, NSError *error) {
+        if (nil == objectId)
+        {
+            NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            completionBlock(nil, alfrescoError);
+        }
+        else
+        {
+            [self retrieveNodeWithIdentifier:objectId completionBlock:^(AlfrescoNode *node, NSError *error) {
+                
+                completionBlock((AlfrescoDocument *)node, error);
+                if (nil != node)
+                {
+                    BOOL isExtractMetadata = [[self.session objectForParameter:kAlfrescoMetadataExtraction] boolValue];
+                    if (isExtractMetadata)
+                    {
+                        [self extractMetadataForNode:node];
+                    }
+                    BOOL isGenerateThumbnails = [[self.session objectForParameter:kAlfrescoThumbnailCreation] boolValue];
+                    if (isGenerateThumbnails)
+                    {
+                        [self generateThumbnailForNode:node];
+                    }
+                }
+            }];
+        }
+    } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
         if (progressBlock)
         {
             progressBlock(bytesUploaded, bytesTotal);
@@ -769,6 +831,34 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     
 }
 
+- (void)retrieveContentOfDocument:(AlfrescoDocument *)document
+                       toFilePath:(NSString *)filePath
+                     outputStream:(NSOutputStream *)outputStream
+                  completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+                    progressBlock:(AlfrescoProgressBlock)progressBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    [self.cmisSession downloadContentOfCMISObject:document.identifier toOutputStream:outputStream completionBlock:^(NSError *error) {
+        if (error)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            AlfrescoContentFile *downloadedFile = [[AlfrescoContentFile alloc] initWithUrl:[NSURL fileURLWithPath:filePath]];
+            completionBlock(downloadedFile, nil);
+        }
+    } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
+        if (progressBlock)
+        {
+            progressBlock(bytesDownloaded, bytesTotal);
+        }
+    }];
+}
+
 #pragma mark - Modification methods
 
 - (void)updateContentOfDocument:(AlfrescoDocument *)document
@@ -1026,7 +1116,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [jsonDictionary setValue:identifier forKey:kAlfrescoJSONActionedUponNode];
     [jsonDictionary setValue:kAlfrescoJSONExtractMetadata forKey:kAlfrescoJSONActionDefinitionName];
     NSError *postError = nil;
-    NSURL *apiUrl = [AlfrescoHTTPUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:kAlfrescoOnPremiseMetadataExtractionAPI];
+    NSURL *apiUrl = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:kAlfrescoOnPremiseMetadataExtractionAPI];
     NSData *jsonData = [NSJSONSerialization
                         dataWithJSONObject:jsonDictionary
                         options:kNilOptions
@@ -1035,11 +1125,12 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding];
     log(@"jsonstring %@", jsonString);
     
-    [AlfrescoHTTPUtils executeRequestWithURL:apiUrl
+    [self.session.networkProvider executeRequestWithURL:apiUrl
                                      session:self.session
                                  requestBody:jsonData
                                       method:kAlfrescoHTTPPOST
-                             completionBlock:^(NSData *data, NSError *error){}];
+                             completionBlock:^(NSData *data, NSError *error){
+                             }];
 }
 
 - (void)generateThumbnailForNode:(AlfrescoNode *)node
@@ -1050,18 +1141,18 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     NSString *requestString = [kAlfrescoOnPremiseThumbnailCreationAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                                 withString:[node.identifier stringByReplacingOccurrencesOfString:@"://"
                                                                                                                                                       withString:@"/"]];
-    NSURL *apiUrl = [AlfrescoHTTPUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
+    NSURL *apiUrl = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
     
     NSData *jsonData = [NSJSONSerialization
                         dataWithJSONObject:jsonDictionary
                         options:kNilOptions
                         error:&postError];
-    [AlfrescoHTTPUtils executeRequestWithURL:apiUrl
+    [self.session.networkProvider executeRequestWithURL:apiUrl
                                      session:self.session
                                  requestBody:jsonData
                                       method:kAlfrescoHTTPPOST
-                             completionBlock:^(NSData *data, NSError *error){}];
-    
+                             completionBlock:^(NSData *data, NSError *error){
+                             }];
 }
 
 
