@@ -21,9 +21,9 @@
 
 
 @interface FileUtil : NSObject
-
+/// appends data to a file with given path
 + (void)appendToFileAtPath:(NSString *)filePath data:(NSData *)data;
-
+/// returns the size of a file at path filePath
 + (unsigned long long)fileSizeForFileAtPath:(NSString *)filePath error:(NSError * *)outError;
 
 @end

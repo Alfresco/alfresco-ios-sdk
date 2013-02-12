@@ -52,7 +52,7 @@
         [documentProperties setObject:documentDescription forKey:@"cm:description"];
 
         // Create document with description
-        [self.cmisRootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain" withProperties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
+        [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
             if (nil == objectId)
             {
                 self.lastTestSuccessful = NO;
@@ -383,7 +383,7 @@
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         [documentProperties setObject:@"UberCam" forKey:@"exif:model"];
 
-        [self.cmisRootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain" withProperties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
+        [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
             if (nil == objectId)
             {
                 self.lastTestSuccessful = NO;
@@ -438,7 +438,7 @@
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
         
-        [self.cmisRootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain" withProperties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
+        [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
             if (nil == objectId)
             {
                 self.lastTestSuccessful = NO;
@@ -507,7 +507,7 @@
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         [documentProperties setObject:@"cmis:document, P:cm:titled, P:cm:author" forKey:kCMISPropertyObjectTypeId];
         
-        [self.cmisRootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain" withProperties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
+        [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
             if (nil == objectId)
             {
                 self.lastTestSuccessful = NO;
