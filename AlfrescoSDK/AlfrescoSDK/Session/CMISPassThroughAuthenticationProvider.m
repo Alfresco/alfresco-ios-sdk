@@ -37,4 +37,24 @@
     return self;
 }
 
+- (void)updateWithHttpURLResponse:(NSHTTPURLResponse *)httpUrlResponse
+{
+    
+}
+
+- (BOOL)canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
+{
+    return YES;
+}
+
+- (void)didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+    
+}
+
+- (void)didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+    
+}
+
 @end
