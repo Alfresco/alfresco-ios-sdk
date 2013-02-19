@@ -31,7 +31,7 @@
 
 - (void)connectWithURL:(NSURL*)requestURL
                 method:(NSString *)method
-                header:(NSDictionary *)header
+                headers:(NSDictionary *)headers
            requestBody:(NSData *)requestBody
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 

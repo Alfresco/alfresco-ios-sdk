@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -20,6 +20,7 @@
 #import "AlfrescoProperty.h"
 #import "AlfrescoListingContext.h"
 #import "AlfrescoPermissions.h"
+#import "AlfrescoLog.h"
 #import "CMISConstants.h"
 
 @implementation AlfrescoDocumentFolderServiceTest
@@ -133,8 +134,6 @@
                               if (nil == nonFolder)
                               {
                                   self.lastTestSuccessful = YES;
-                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                  log(@"Expected failure. Message = %@",errorMessage);
                               }
                               else
                               {
@@ -205,8 +204,6 @@
                               if (nil == array)
                               {
                                   self.lastTestSuccessful = YES;
-                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [accessError localizedDescription], [accessError localizedFailureReason]];
-                                  log(@"We expected this to fail with %@",errorMessage);
                               }
                               else
                               {
@@ -280,8 +277,6 @@
                               if (nil == array)
                               {
                                   self.lastTestSuccessful = YES;
-                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                  log(@"We expected this to fail with %@",errorMessage);
                               }
                               else
                               {
@@ -355,8 +350,6 @@
                               if (nil == array)
                               {
                                   self.lastTestSuccessful = YES;
-                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                  log(@"We expected this to fail with %@",errorMessage);
                               }
                               else
                               {
@@ -525,7 +518,6 @@
              if (nil == folder)
              {
                  super.lastTestSuccessful = YES;
-                 log(@"%@",[NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]]);
                  super.callbackCompleted = YES;
              }
              else
@@ -579,7 +571,6 @@
              if (nil == folder)
              {
                  super.lastTestSuccessful = YES;
-                 log(@"%@",[NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]]);
                  super.callbackCompleted = YES;
              }
              else
@@ -729,7 +720,6 @@
                     else
                     {
                         STAssertTrue(pagingResult.totalItems == 0, @"Expected 0 folder children, got back %i", pagingResult.totalItems);
-                        NSLog(@"total items %i", pagingResult.objects.count);
                         
                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
                          {
@@ -775,7 +765,6 @@
             else
             {
                 STAssertTrue(pagingResult.totalItems > 0, @"Expected children to be returned");
-                NSLog(@"Total Items: %i", pagingResult.objects.count);
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;
@@ -818,8 +807,8 @@
                     return [node2.modifiedAt compare:node1.modifiedAt];
                 }];
                 
-                NSLog(@"Paging Array: %@", pagingResult.objects);
-                NSLog(@"Sorted Array: %@", sortedArray);
+                AlfrescoLogDebug(@"Paging Array: %@", pagingResult.objects);
+                AlfrescoLogDebug(@"Sorted Array: %@", sortedArray);
                 
                 BOOL isResultSortedAccordingToModifiedDate = [pagingResult.objects isEqualToArray:sortedArray];
                 
@@ -865,7 +854,7 @@
             }
             else
             {
-                NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                 STAssertFalse(document != nil, @"Expected the document not to be created");
                 
                 // check document with " in the file name
@@ -878,7 +867,7 @@
                     }
                     else
                     {
-                        NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                        AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                         STAssertFalse(document != nil, @"Expected the document not to be created");
                         
                         // check document with / and \ in the file name
@@ -891,7 +880,7 @@
                             }
                             else
                             {
-                                NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                                AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                                 STAssertFalse(document != nil, @"Expected the document not to be created");
                                 
                                 // check document with empty name
@@ -904,7 +893,7 @@
                                     }
                                     else
                                     {
-                                        NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                                        AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                                         STAssertFalse(document != nil, @"Expected the document not to be created");
                                         
                                         // check document with empty name
@@ -916,7 +905,7 @@
                                             }
                                             else
                                             {
-                                                NSLog(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                                                AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                                                 STAssertFalse(document != nil, @"Expected the document not to be created");
                                                 if (!document)
                                                 {
@@ -1200,7 +1189,6 @@
             else
             {
                 __block int numberOfChildren = array.count;
-                log(@"<<<<< The total number of children found in the folder is %d >>>>>>>>>>>>", numberOfChildren);
                 STAssertFalse(0 == numberOfChildren, @"There should be at least 1 child element in the folder");
                 [self.dfService retrieveChildrenInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                  {
@@ -1223,9 +1211,6 @@
                          {
                              STAssertFalse(pagingResult.hasMoreItems, @"the folder has exactly 1 item, so we would not expect to get more back");
                          }
-                         
-                         
-                         log(@"total items %i", pagingResult.objects.count);
                          
                          super.lastTestSuccessful = YES;
                      }
@@ -1271,7 +1256,6 @@
                  {
                      STAssertFalse(pagingResult.hasMoreItems, @"We should not have more than 50 items in total, but instead we have %d",pagingResult.totalItems);
                  }
-                 log(@"total items %i", pagingResult.objects.count);
                  
                  super.lastTestSuccessful = YES;
              }
@@ -1384,7 +1368,6 @@
                              STAssertTrue(document.contentLength > 0, @"contentLength should be filled");
                              STAssertTrue(document.isLatestVersion, @"isLatestVersion should be filled");
                              STAssertTrue([document.contentMimeType isEqualToString:@"text/plain"], @"Expected text mimetype");
-                             log(@"document title is %@ and the description is %@",document.title, document.summary);
                              STAssertNotNil(document.title, @"At least the document title should NOT be nil");
                              STAssertFalse([document.title isEqualToString:@""], @"title should NOT be an empty string");
                              STAssertFalse([document.title isEqualToString:@"(null)"], @"title should return string (null)");
@@ -1431,7 +1414,6 @@
             else
             {
                 __block int numberOfDocs = foundDocuments.count;
-                log(@"<<<<< The total number of docs found in the folder is %d >>>>>>>>>>>>", numberOfDocs);
                 STAssertFalse(0 == numberOfDocs, @"We should have at least 1 document in the folder. Instead we got none");
                 [self.dfService retrieveDocumentsInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                  {
@@ -1720,8 +1702,6 @@
                               if (nil == node)
                               {
                                   self.lastTestSuccessful = YES;
-                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                  log(@"We expected this to fail with %@",errorMessage);
                               }
                               else
                               {
@@ -1755,7 +1735,6 @@
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         NSString *folderPath = [NSString stringWithFormat:@"%@%@",super.testFolderPathName, super.fixedFileName];
-        log(@"testRetrieveNodeWithFolderPath folderPath variable  is %@",folderPath);
         [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error)
         {
             if (nil == node) 
@@ -1827,8 +1806,6 @@
                               if (nil == node)
                               {
                                   self.lastTestSuccessful = YES;
-                                  NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                  log(@"We expected this to fail with %@",errorMessage);
                               }
                               else
                               {
@@ -1936,7 +1913,7 @@
                           super.callbackCompleted = YES;
                           
                       } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                          log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                          AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                       }];
                  }
                  else
@@ -2015,8 +1992,6 @@
                                                     if (nil == contentFile)
                                                     {
                                                         super.lastTestSuccessful = YES;
-                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                                        log(@"Expected failure %@",errorMsg);
                                                     }
                                                     else
                                                     {
@@ -2135,12 +2110,10 @@
                 NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
                 STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
                 unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
-                log(@"created content file: url=%@ mimetype = %@ data length = %llu",[contentFile.fileUrl path], contentFile.mimeType, size);
                 NSError *readError = nil;
                 __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
                 if (nil == stringContent)
                 {
-                    log(@"stringContent::we got nil as content from %@",[contentFile.fileUrl path]);
                     super.lastTestSuccessful = NO;
                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
                     super.callbackCompleted = YES;
@@ -2184,13 +2157,11 @@
                                                                                                  error:&checkError];
                                      if (nil == checkContentString)
                                      {
-                                         log(@"checkContentString::we got nil as content from %@",[contentFile.fileUrl path]);
                                          super.lastTestSuccessful = NO;
                                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [checkError localizedDescription], [checkError localizedFailureReason]];
                                      }
                                      else
                                      {
-                                         log(@"we got the following text back %@",checkContentString);
                                          STAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content, instead we get %@",updatedContent);
                                          super.lastTestSuccessful = YES;                                         
                                      }
@@ -2200,13 +2171,13 @@
                              } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
                          }
                      } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                         log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                         AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                      }];
                 }
             }
             
         } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-            log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+            AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
         }];
         
         
@@ -2280,8 +2251,6 @@
                                                     if (nil == updatedDoc)
                                                     {
                                                         super.lastTestSuccessful = YES;
-                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                                        log(@"Expected failure %@",errorMsg);
                                                     }
                                                     else
                                                     {
@@ -2346,7 +2315,6 @@
                      }
                      else
                      {
-                         log(@"node identifier is %@", node.identifier);
                          STAssertTrue([node isKindOfClass:[AlfrescoDocument class]], @"the node should be of type AlfrescoDocument");
                          AlfrescoDocument *updatedDoc = (AlfrescoDocument *)node;
                          STAssertTrue([updatedDoc.name isEqualToString:updatedName], @"The name of the document should be %@, but instead we got %@", updatedName, updatedDoc.name);
@@ -2362,7 +2330,6 @@
                              }
                              else
                              {
-                                 log(@"WE SUCCESSFULLY DELETED THE FILE WITH NAME %@",updatedName);
                                  super.lastTestSuccessful = YES;
                              }
                              super.callbackCompleted = YES;
@@ -2585,8 +2552,6 @@
                                                     if (nil == updatedNode)
                                                     {
                                                         super.lastTestSuccessful = YES;
-                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                                        log(@"Expected failure %@",errorMsg);
                                                     }
                                                     else
                                                     {
@@ -2763,8 +2728,6 @@
                                if (!success)
                                {
                                    super.lastTestSuccessful = YES;
-                                   NSString *errorMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                   log(@"expected error: %@",errorMessage);
                                }
                                else
                                {
@@ -2811,7 +2774,6 @@
                  STAssertTrue(array.count > 0, [NSString stringWithFormat:@"Expected folder children but got %i", array.count]);
                  if (super.isCloud)
                  {
-                     log(@"*************** testThumbnailRenditionImage ISCLOUD");
                      STAssertTrue([self nodeArray:array containsName:@"Sample Filesrr"], @"Folder children should contain Sample Filesrr");
                  }
                  else
@@ -2826,7 +2788,6 @@
                          NSString *name = node.name;
                          if ([name isEqualToString:@"versioned-quote.txt"])
                          {
-                             log(@"*************** WE FOUND versioned-quote.txt");
                              testVersionedDoc = (AlfrescoDocument *)node;
                          }
 
@@ -2834,9 +2795,7 @@
                  }
                  if (nil != testVersionedDoc)
                  {
-                     log(@"*************** BEFORE CALLING retrieveRenditionOfNode");
                      [self.dfService retrieveRenditionOfNode:testVersionedDoc renditionName:kAlfrescoThumbnailRendition completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
-                         log(@"*************** IN COMPLETIONBLOCK OF retrieveRenditionOfNode");
                          if (nil == contentFile)
                          {
                              super.lastTestSuccessful = NO;
@@ -2929,35 +2888,35 @@
                           STAssertNotNil(permissions,@"AlfrescoPermissions should not be nil");
                           if(permissions.canAddChildren)
                           {
-                              log(@"Can add children");
+                              AlfrescoLogDebug(@"Can add children");
                           }
                           else
                           {
-                              log(@"Cannot add children");
+                              AlfrescoLogDebug(@"Cannot add children");
                           }
                           if(permissions.canDelete)
                           {
-                              log(@"Can delete");
+                              AlfrescoLogDebug(@"Can delete");
                           }
                           else
                           {
-                              log(@"Cannot delete");
+                              AlfrescoLogDebug(@"Cannot delete");
                           }
                           if(permissions.canEdit)
                           {
-                              log(@"Can edit");
+                              AlfrescoLogDebug(@"Can edit");
                           }
                           else
                           {
-                              log(@"Cannot edit");
+                              AlfrescoLogDebug(@"Cannot edit");
                           }
                           if (permissions.canComment)
                           {
-                              log(@"Can comment");
+                              AlfrescoLogDebug(@"Can comment");
                           }
                           else
                           {
-                              log(@"Cannot comment");
+                              AlfrescoLogDebug(@"Cannot comment");
                           }
                           
                           super.lastTestSuccessful = YES;                          
@@ -3026,8 +2985,6 @@
                                                                            if (nil == perms)
                                                                            {
                                                                                super.lastTestSuccessful = YES;
-                                                                               NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                                                               log(@"Expected failure %@",errorMsg);
                                                                            }
                                                                            else
                                                                            {
@@ -3438,8 +3395,6 @@
                 
                 NSArray *subsetOfEntireArray = [entireArray subarrayWithRange:NSMakeRange(2, 3)];
                 
-                NSLog(@"Subset Array is: %@", subsetOfEntireArray);
-                
                 AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:3 skipCount:2];
                 
                 [weakDfService retrieveChildrenInFolder:self.testDocFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
@@ -3453,7 +3408,6 @@
                     {
                         STAssertNotNil(pagingResult.objects, @"Expecting the objects array not to be nil");
                         STAssertTrue([pagingResult.objects count] == 3, @"Expected the results of the objects array to contain 3 items, instead got back %i", [pagingResult.objects count]);
-                        NSLog(@"Paging Array is: %@", pagingResult.objects);
                         
                         BOOL matchingArrays = NO;
                         
@@ -3550,14 +3504,12 @@
                 NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
                 STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
                 unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
-                log(@"created content file: url=%@ mimetype = %@ data length = %llu",[contentFile.fileUrl path], contentFile.mimeType, size);
                 NSError *readError = nil;
                 
                 __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
                 
                 if (stringContent == nil)
                 {
-                    log(@"stringContent::we got nil as content from %@",[contentFile.fileUrl path]);
                     super.lastTestSuccessful = NO;
                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
                     super.callbackCompleted = YES;
@@ -3597,13 +3549,11 @@
                                      NSString *checkContentString = [NSString stringWithContentsOfFile:[checkContentFile.fileUrl path] encoding:NSUTF8StringEncoding error:&checkError];
                                      if (checkContentString == nil)
                                      {
-                                         log(@"checkContentString::we got nil as content from %@",[contentFile.fileUrl path]);
                                          super.lastTestSuccessful = NO;
                                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [checkError localizedDescription], [checkError localizedFailureReason]];
                                      }
                                      else
                                      {
-                                         log(@"we got the following text back %@",checkContentString);
                                          STAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content, instead we get %@",updatedContent);
                                          super.lastTestSuccessful = YES;
                                      }
@@ -3613,7 +3563,7 @@
                              } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
                          }
                      } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                         log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                         AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                      }];
                 }
             }
@@ -3739,13 +3689,11 @@
         [self.dfService retrieveNodeWithFolderPath:super.fixedFileName relativeToFolder:super.currentRootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
             if (nil == node)
             {
-                log(@"we could not find the node at path %@", super.fixedFileName);
                 super.lastTestSuccessful = NO;
                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else
             {
-                log(@"we DID find the node at path %@ and the node identifier is %@ and name is %@", super.fixedFileName, node.identifier, node.name);
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;
@@ -4217,10 +4165,7 @@
                     
                     return [node2.name compare:node1.name options:NSCaseInsensitiveSearch];
                 }];
-                
-                NSLog(@"Paging Array: %@", pagingResult.objects);
-                NSLog(@"Sorted Array: %@", sortedArray);
-                
+
                 BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
                 
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
@@ -4279,19 +4224,9 @@
                     return [node2.name compare:node1.name options:NSCaseInsensitiveSearch];
                 }];
                 
-                NSLog(@"Paging Array: %@", pagingResult.objects);
-                NSLog(@"Sorted Array: %@", sortedArray);
-                
                 BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
                 
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
-                
-//                // check properties
-//                // Currently, the test does not specify the details to check
-//                [pagingResult.objects enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
-//                    AlfrescoFolder *folder = (AlfrescoFolder *)object;
-//                    NSLog(@"%@", folder.name);
-//                }];
                 
                 super.lastTestSuccessful = YES;
             }
@@ -4618,9 +4553,6 @@
                     return [node2.title compare:node1.title options:NSCaseInsensitiveSearch];
                 }];
                 
-                NSLog(@"Paging Array: %@", pagingResult.objects);
-                NSLog(@"Sorted Array: %@", sortedArray);
-                
                 BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
                 
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
@@ -4661,14 +4593,12 @@
                 NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
                 STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
                 unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
-                log(@"created content file: url=%@ mimetype = %@ data length = %llu",[contentFile.fileUrl path], contentFile.mimeType, size);
                 NSError *readError = nil;
                 
                 __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
                 
                 if (stringContent == nil)
                 {
-                    log(@"stringContent::we got nil as content from %@",[contentFile.fileUrl path]);
                     super.lastTestSuccessful = NO;
                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
                     super.callbackCompleted = YES;
@@ -4704,7 +4634,6 @@
                                 {
                                     STAssertNotNil(checkContentFile, @"Should have returned a content file object");
                                     // document content size should be the same as that of the updated content (empty document)
-                                    NSLog(@"Updated Document Content Size: %llu ... Retrieved Content Size: %llu", updatedDocument.contentLength, checkContentFile.length);
                                     STAssertTrue(checkContentFile.length == updatedDocument.contentLength, @"Expected the length of the content file to be %f, but instead got back %f", updatedDocument.contentLength, checkContentFile.length);
                                     STAssertTrue([checkContentFile.mimeType isEqualToString:@"text/plain"], @"Expected the mime type to be %@, but instead got back %@", @"text/plain", contentFile.mimeType);
                                     
@@ -4716,7 +4645,7 @@
                             }];
                         }
                     } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                        log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                        AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                     }];
                 }
             }

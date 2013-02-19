@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -26,8 +26,9 @@
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoCMISObjectConverter.h"
-#import <objc/runtime.h>
 #import "AlfrescoDefaultNetworkProvider.h"
+#import "AlfrescoLog.h"
+#import <objc/runtime.h>
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -181,8 +182,6 @@
                                          userInfo:nil]);
         }
     }
-    
-    log(@"**** authenticateWithUsername OnPremise ****");
 
     [CMISSession arrayOfRepositories:v3params completionBlock:^(NSArray *repositories, NSError *error){
         if (nil == repositories)
@@ -197,7 +196,7 @@
         else
         {
             CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
-            log(@"**** authenticateWithUsername OnPremise we got ONE repository back ****");
+            AlfrescoLogDebug(@"found repository with ID: %@", repoInfo.identifier);
             
             v3params.repositoryId = repoInfo.identifier;
             [v3params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
@@ -206,15 +205,13 @@
             [v4params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
             
             void (^rootFolderCompletionBlock)(CMISFolder *folder, NSError *error) = ^void(CMISFolder *rootFolder, NSError *error){
-                log(@"**** authenticateWithUsername OnPremise rootFolderCompletionBlock ****");
                 if (nil == rootFolder)
                 {
-                    log(@"**** authenticateWithUsername OnPremise rootFolderCompletionBlock ROOT FOLDER IS NIL ****");
+                    AlfrescoLogError(@"repository root folder is nil");
                     completionBlock(nil, error);
                 }
                 else
                 {
-                    log(@"**** authenticateWithUsername OnPremise rootFolderCompletionBlock ROOT FOLDER IS NOT!!!! NIL ****");
                     AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                     self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
                     completionBlock(self, error);
@@ -222,9 +219,9 @@
             };
             
             void (^sessionv4CompletionBlock)(CMISSession *session, NSError *error) = ^void( CMISSession *v4Session, NSError *error ){
-                log(@"**** authenticateWithUsername OnPremise sessionv4CompletionBlock ****");
                 if (nil == v4Session)
                 {
+                    AlfrescoLogError(@"failed to create v4 session");
                     completionBlock(nil, error);
                 }
                 else
@@ -235,10 +232,9 @@
             };
             
             void (^sessionv3CompletionBlock)(CMISSession *session, NSError *error) = ^void( CMISSession *v3Session, NSError *error){
-                log(@"**** authenticateWithUsername OnPremise sessionv3CompletionBlock ****");
                 if (nil == v3Session)
                 {
-                    log(@"**** authenticateWithUsername OnPremise sessionv3CompletionBlock SESSION IS NIL. We failed ****");
+                    AlfrescoLogError(@"failed to create v3 session");
                     completionBlock(nil, error);
                 }
                 else
@@ -251,7 +247,7 @@
                     NSArray *versionArray = [version componentsSeparatedByString:@"."];
                     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
                     NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
-                    log(@"**** authenticateWithUsername OnPremise sessionv3CompletionBlock SESSION IS NOT !! NIL User name is %@ and version is %@ ****", username, version);
+                    AlfrescoLogDebug(@"session connected with user %@, repo version is %@", username, version);
                     if ([majorVersionNumber intValue] >= 4)
                     {
                         [CMISSession connectWithSessionParameters:v4params completionBlock:sessionv4CompletionBlock];

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -18,6 +18,7 @@
 
 #import "AlfrescoCommentServiceTest.h"
 #import "AlfrescoDocumentFolderService.h"
+#import "AlfrescoLog.h"
 
 @implementation AlfrescoCommentServiceTest
 
@@ -31,8 +32,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testRetrieveAllComments Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
-        
         
         // get all comments
         [self.commentService retrieveCommentsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error)
@@ -79,7 +78,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testRetrieveAllCommentsForNonExistingDocuments Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
 //        __weak AlfrescoCommentService *weakService = self.commentService;
@@ -115,8 +113,6 @@
                                                     if (nil == comments)
                                                     {
                                                         super.lastTestSuccessful = YES;
-                                                        NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [commentError localizedDescription], [commentError localizedFailureReason]];
-                                                        log(@"**** Expected error when adding a comment to a non-existing node %@",errorMsg);
                                                     }
                                                     else
                                                     {
@@ -147,7 +143,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testRetrieveAllCommentsWithPaging Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
@@ -186,8 +181,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testAddAndDeleteComment Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
-        
         
         // add a comment
 //        __weak AlfrescoCommentService *weakCommentService = self.commentService;
@@ -201,7 +194,6 @@
             }
             else 
             {
-                log(@"the comment author is %@",comment.createdBy);
                 STAssertTrue([comment.content isEqualToString:@"<p>test</p>"], @"content should equal the test comment message");
                 STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                 
@@ -220,7 +212,6 @@
                         {
                             STAssertTrue([comment.content isEqualToString:@"<p>test</p>"], @"content should equal the test comment message");
                             STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
-                            log(@"Comment dates are createdAt %@ modifiedAt %@", comment.createdAt, comment.modifiedAt);
                             STAssertNotNil(comment.createdAt, @"creationDate should not be nil");
                             STAssertNotNil(comment.modifiedAt, @"modificationDate should not be nil");
                             STAssertFalse(comment.isEdited, @"isEdited should return false");
@@ -263,7 +254,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testAddAndUpdateCommentNonExisting Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // add a comment
@@ -279,7 +269,6 @@
              else
              {
                  __block AlfrescoComment *strongComment = comment;
-                 log(@"the comment author is %@",comment.createdBy);
                  STAssertTrue([comment.content isEqualToString:@"<p>test</p>"], @"content should equal the test comment message");
                  STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                  
@@ -315,8 +304,6 @@
                                       if (nil == updatedComment)
                                       {
                                           super.lastTestSuccessful = YES;
-                                          NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                          log(@"Expected error %@", errorMsg);
                                       }
                                       else
                                       {
@@ -352,7 +339,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testAddAndDeleteForNonExistingDocument Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
 //        __weak AlfrescoCommentService *weakService = self.commentService;
@@ -388,8 +374,6 @@
                                                if (nil == comment)
                                                {
                                                    super.lastTestSuccessful = YES;
-                                                   NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [commentError localizedDescription], [commentError localizedFailureReason]];
-                                                   log(@"Expected error %@",errorMsg);
                                                }
                                                else
                                                {
@@ -423,7 +407,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testAddAndDeleteCommentEULanguages Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"Übersicht Ändern Östrogen und das mit ß";
         __block NSString *title = @"Änderungswünsche";
         
@@ -439,7 +422,6 @@
              }
              else
              {
-                 log(@"the comment author is %@",comment.createdBy);
                  STAssertTrue([comment.content isEqualToString:content], @"content should equal the test comment message, which is %@. But instead we got %@",content, comment.content);
                  STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                  if (!self.isCloud)
@@ -506,7 +488,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testAddAndDeleteCommentJPLanguages Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"ありがと　にほんご";
         __block NSString *title = @"わさび";
         
@@ -522,7 +503,6 @@
              }
              else
              {
-                 log(@"the comment author is %@",comment.createdBy);
                  STAssertTrue([comment.content isEqualToString:content], @"content should equal the test comment message, which is %@. But instead we got %@",content, comment.content);
                  STAssertTrue([comment.createdBy isEqualToString:super.userName], @"comment.createdBy should be  %@",super.userName);
                  if (!self.isCloud)
@@ -590,7 +570,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testAddUpdateAndDeleteComment Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         
         
         // add a comment
@@ -657,7 +636,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testAddUpdateAndDeleteCommentEULanguages Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"Übersicht Ändern Östrogen und das mit ß";
         
         
@@ -725,7 +703,6 @@
     [super runAllSitesTest:^{
         
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:super.currentSession];
-        log(@"<<< testAddUpdateAndDeleteCommentJPLanguage Session with base URL %@", [super.currentSession.baseUrl absoluteString]);
         __block NSString *content = @"ありがと　にほんご";
         
         

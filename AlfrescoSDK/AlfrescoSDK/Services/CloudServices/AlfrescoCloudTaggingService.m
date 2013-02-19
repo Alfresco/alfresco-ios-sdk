@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -25,6 +25,7 @@
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoTag.h"
 #import "AlfrescoNetworkProvider.h"
+#import "AlfrescoLog.h"
 
 @interface AlfrescoCloudTaggingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -203,7 +204,6 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
         [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *error){
             if (nil != error)
             {
-                log(@"addTags::error with data %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
                 completionBlock(NO, error);
             }
             else
@@ -224,7 +224,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 
 - (NSArray *) tagArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {    
-    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -23,8 +23,9 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
-#import <objc/runtime.h>
 #import "AlfrescoNetworkProvider.h"
+#import "AlfrescoLog.h"
+#import <objc/runtime.h>
 
 @interface AlfrescoCloudRatingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -200,7 +201,7 @@
 - (NSDictionary *) dictionaryFromJSONData:(NSData *)data error:(NSError **)outError
 {
     
-    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {

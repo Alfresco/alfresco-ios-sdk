@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -19,6 +19,7 @@
 #import "AlfrescoSearchServiceTest.h"
 #import "AlfrescoKeywordSearchOptions.h"
 #import "AlfrescoSearchLanguage.h"
+#import "AlfrescoLog.h"
 
 @interface AlfrescoSearchServiceTest ()
 + (BOOL)containsTestFile:(NSString *)name array:(NSArray *)array;
@@ -80,8 +81,8 @@
                      else
                      {
                          BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:super.testSearchFileName array:array];
-                         NSLog(@"Search Term: %@", abbreviatedSearchTerm);
-                         NSLog(@"Results array size is: %i, and the first object is: %@", [array count], [[array objectAtIndex:0] name]);
+                         AlfrescoLogDebug(@"Search Term: %@", abbreviatedSearchTerm);
+                         AlfrescoLogDebug(@"Results array size is: %i, and the first object is: %@", [array count], [[array objectAtIndex:0] name]);
                          STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
                          super.lastTestSuccessful = arrayContainsTestFile;
                      }
@@ -184,7 +185,7 @@
                  }
                  else
                  {
-                     log(@"search result array contains %d entries", array.count);
+                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
                      STAssertNotNil(array, @"array should not be nil");
                      STAssertTrue(array.count >= 1, @"expected at least 1 search results but got %d",array.count);
                      if(array.count == 0)
@@ -240,7 +241,7 @@
                  }
                  else
                  {
-                     log(@"search result array contains %d entries", array.count);
+                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
                      STAssertNotNil(array, @"array should not be nil");
                      STAssertTrue(array.count > 0, @"expected >0 search results for OnPremise but got back %d",array.count);
                      super.lastTestSuccessful = YES;
@@ -283,7 +284,7 @@
                  }
                  else
                  {
-                     log(@"search result array contains %d entries", array.count);
+                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
                      STAssertNotNil(array, @"array should not be nil");
                      STAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d",array.count);
                      if(array.count == 0)
@@ -351,7 +352,7 @@
                  }
                  else
                  {
-                     log(@"search result array contains %d entries", array.count);
+                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
                      STAssertNotNil(array, @"array should not be nil");
                      STAssertTrue(array.count >= 1, @"expected at least 1 search result but got back %d", array.count);
                      if(array.count == 0)
@@ -424,7 +425,7 @@
                  }
                  else
                  {
-                     log(@"search result array contains %d entries", pagingResult.objects.count);
+                     AlfrescoLogDebug(@"search result array contains %d entries", pagingResult.objects.count);
                      STAssertNotNil(pagingResult, @"pagingResult should not be nil");
                      STAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result");
                      super.lastTestSuccessful = YES;
@@ -569,7 +570,6 @@
     for (AlfrescoNode *node in array)
     {
         NSString *nodeName = node.name;
-        log(@"AlfrescoSearchServiceTest::containsTestFile the name in folder is %@",nodeName);
         if ([name isEqualToString:nodeName])
         {
             return YES;

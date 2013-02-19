@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -20,6 +20,7 @@
 #import "AlfrescoContentFile.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoCMISObjectConverter.h"
+#import "AlfrescoLog.h"
 #import "CMISConstants.h"
 #import "CMISDocument.h"
 
@@ -66,7 +67,8 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 - (void)setUp
 {
-
+    // uncomment the line below to get full HTTP response body output
+//    [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
 }
 
 - (void)tearDown
@@ -99,7 +101,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     [props setObject:@"test file description" forKey:@"cm:description"];
     [props setObject:@"test file title" forKey:@"cm:title"];
     [props setObject:@"test author" forKey:@"cm:author"];
-    log(@"***************** uploadTestDocument Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
 
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
     [docFolderService createDocumentWithName:newName
@@ -109,7 +110,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                              completionBlock:^(AlfrescoDocument *document, NSError *error){
                                  if (nil == document)
                                  {
-                                     log(@"We failed uploading the document with name %@",newName);
                                      self.lastTestSuccessful = NO;
                                      self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not upload test document. Error %@",[error localizedDescription]];
                                      self.callbackCompleted = YES;
@@ -119,7 +119,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                                      STAssertNotNil(document, @"document should not be nil");
                                      self.lastTestSuccessful = YES;
                                      self.testAlfrescoDocument = document;
-                                     log(@"<<<<< Test Document with name %@ has nodeID %@ >>>>>>",document.name, document.identifier);
                                      if (!self.isCloud)
                                      {
                                          self.testSearchFileName = self.testAlfrescoDocument.name;
@@ -145,16 +144,13 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     if (nil == self.testAlfrescoDocument)
     {
         self.lastTestSuccessful = YES;
-        log(@"It turns out the self.testAlfrescoDocument is NIL already");
     }
     else
     {
-        log(@"***************** removeTestDocument Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
         AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         [docFolderService deleteNode:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, NSError *error){
             if (!succeeded)
             {
-                log(@"We failed to delete the document on the server");
                 self.testAlfrescoDocument = nil;
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete test document. Error message %@ and code %d",[error localizedDescription], [error code]];
@@ -162,7 +158,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             }
             else
             {
-                log(@"We succeeded to delete the document %@ on the server with base URL %@", self.testAlfrescoDocument.name, [self.currentSession.baseUrl absoluteString]);
                 self.lastTestSuccessful = YES;
                 self.testAlfrescoDocument = nil;
                 self.callbackCompleted = YES;
@@ -200,7 +195,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                                       STAssertNotNil(session,@"Session should not be nil");
                                       self.lastTestSuccessful = YES;
                                       self.currentSession = session;
-                                      log(@"***************** authenticateOnPremiseServer Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
                                       self.callbackCompleted = YES;
                                       self.currentRootFolder = self.currentSession.rootFolder;
                                   }
@@ -217,7 +211,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
  */
 - (void)authenticateCloudServer
 {
-    log(@"In authenticateCloudServer");
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:self.server forKey:@"org.alfresco.mobile.internal.session.cloud.url"];
     [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
@@ -227,7 +220,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     [AlfrescoCloudSession connectWithOAuthData:nil parameters:parameters completionBlock:^(id<AlfrescoSession> cloudSession, NSError *error){
         if (nil == cloudSession)
         {
-            log(@"AlfrescoBaseTest::authenticateCloudServer - cloudSession returns NIL");
             self.lastTestSuccessful = NO;
             self.lastTestFailureMessage = [NSString stringWithFormat:@"Cloud session could not be authenticated. Error %@",[error localizedDescription]];
             self.callbackCompleted = YES;
@@ -239,7 +231,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                 self.currentSession = nil;
             }
             STAssertNotNil(cloudSession, @"Cloud session should not be nil");
-            log(@"AlfrescoBaseTest::authenticateCloudServer - cloudSession returns **NOT** NIL");
             self.lastTestSuccessful = YES;
             self.currentSession = cloudSession;
             self.callbackCompleted = YES;
@@ -264,12 +255,10 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     if (self.isCloud)
     {
         STAssertTrue([self.currentSession isKindOfClass:[AlfrescoCloudSession class]], @"expected cloud session");
-        log(@"***************** retrieveAlfrescoTestFolder Session with base URL %@", [self.currentSession.baseUrl absoluteString]);
         AlfrescoSiteService *siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         [siteService retrieveDocumentLibraryFolderForSite:self.testSiteName completionBlock:^(AlfrescoFolder *folder, NSError *error){
             if (nil == folder)
             {
-                log(@"AlfrescoBaseTest::retrieveAlfrescoTestFolder - documentLibrary folder for cloud returns nil");
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not get the root folder in the DocLib for site %@. Error %@",self.testSiteName, [error localizedDescription]];
                 self.callbackCompleted = YES;
@@ -288,7 +277,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     }
     else
     {
-        log(@"***************** retrieveAlfrescoTestFolder Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
         STAssertTrue([self.currentSession isKindOfClass:[AlfrescoRepositorySession class]], @"expected OnPremise session");
         self.testDocFolder = self.currentSession.rootFolder;
         self.currentRootFolder = self.currentSession.rootFolder;
@@ -302,13 +290,11 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 {
     if (self.isCloud)
     {
-        log(@"***************** setUpTestChildFolder Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
         AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         NSString *folderPath = [NSString stringWithFormat:@"%@%@",self.testFolderPathName, self.testChildFolderName];
         [docService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error){
             if (nil == node)
             {
-                log(@"AlfrescoBaseTest::retrieveAlfrescoTestFolder - couldn't find node in path %@",folderPath);
                 self.lastTestSuccessful = NO;
                 self.callbackCompleted = YES;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
@@ -327,7 +313,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     }
     else
     {
-        log(@"***************** setUpTestChildFolder Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
         self.testChildFolder = self.currentSession.rootFolder;
     }
 }
@@ -351,7 +336,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     if (nil == plistDictionary)
     {
         self.server = @"http://localhost:8080/alfresco";
-        log(@"***************** We set the server to localhost %@ *****************", self.server);
         self.isCloud = NO;
         self.userName = @"admin";
         self.firstName = @"Administrator";
@@ -367,11 +351,9 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     else
     {
         self.server = [plistDictionary valueForKey:@"server"];
-        log(@"***************** We set the server to a real value %@ *****************", self.server);
         if ([[plistDictionary allKeys] containsObject:@"isCloud"])
         {
             self.isCloud = [[plistDictionary valueForKey:@"isCloud"] boolValue];
-            log(@"***************** ISCLOUD value %@ *****************", self.server);
         }
         else
         {
@@ -410,7 +392,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         }
         else
         {
-            log(@"We were not able to run the tests as either the CMIS session or the CMIS root folder are NIL");
+            AlfrescoLogError(@"We were not able to run the tests as either the CMIS session or the CMIS root folder are NIL");
         }
     }
     else
@@ -431,7 +413,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             }
             else
             {
-                log(@"We were not able to run the tests as either the CMIS session or the CMIS root folder are NIL");
+                AlfrescoLogError(@"We were not able to run the tests as either the CMIS session or the CMIS root folder are NIL");
             }
             
         }        
@@ -532,7 +514,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock
 {
-    
     NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
     NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
     
@@ -542,9 +523,10 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
     if (nil == environmentsDict)
     {
-        log(@"!!!!! We are not having a test-servers.plist file and are running tests from hardcoded values !!!!!");
         [self resetTestVariables];
         [self parseEnvironmentDictionary:nil];
+        
+        AlfrescoLogInfo(@"Running test against local server");
         
         [self authenticateOnPremiseServer];
         [self resetTestVariables];
@@ -564,7 +546,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         [self removePreExistingUnitTestFolder];
         [self resetTestVariables];
         
-        log(@"***************** About to start test run for server: %@ *****************", self.server);
         sessionTestBlock();
         [self resetTestVariables];
         
@@ -578,18 +559,17 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         [self resetTestVariables];
         for (NSDictionary *environment in environmentArray)
         {
-            log(@"!!!!! WE ARE RUNNING THE TEST FROM test-servers.plist !!!!!");
             [self parseEnvironmentDictionary:environment];
             
             if (self.isCloud)
             {
-                log(@"***************** Running test against Cloud server: %@ with username: %@ *****************", self.server, self.userName);
+                AlfrescoLogInfo(@"Running test against Cloud server: %@ with username: %@", self.server, self.userName);
                 [self authenticateCloudServer];
                 [self resetTestVariables];
             }
             else
             {
-                log(@"***************** Running test against OnPremise server: %@ with username: %@ *****************", self.server, self.userName);
+                AlfrescoLogInfo(@"Running test against OnPremise server: %@ with username: %@", self.server, self.userName);
                 [self authenticateOnPremiseServer];
                 [self resetTestVariables];
             }
@@ -610,18 +590,13 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             [self removePreExistingUnitTestFolder];
             [self resetTestVariables];
             
-            log(@"***************** About to start test run for server: %@ *****************", self.server);
             sessionTestBlock();
             [self resetTestVariables];
             
             [self removeTestDocument];
             [self resetTestVariables];
         }
-        
     }
-    
-    
-    
 }
 
 - (void) resetTestVariables
@@ -634,7 +609,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 - (void)setUpTestImageFile:(NSString *)filePath
 {
-    log(@"***************** setUpTestImageFile Session with base URL %@ *****************", [self.currentSession.baseUrl absoluteString]);
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"image/jpeg"];
     self.testImageFile = textContentFile;
@@ -661,7 +635,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
     } while (!self.callbackCompleted && [timeoutDate timeIntervalSinceNow] > 0 );
     STAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEINTERVAL);
-    log(@"<<<<<<<<< waitUntilCompleteWithFixedTimeInterval >>>>>>>>>>>>");
 }
 
 - (void)removePreExistingUnitTestFolder
@@ -672,19 +645,8 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     [dfService retrieveNodeWithFolderPath:self.unitTestFolder relativeToFolder:self.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
         if (node)
         {
-            NSLog(@"********** Unit test folder exists **********");
-            NSLog(@"********** Attempting to remove **********");
-            
             [weakDocumentService deleteNode:node completionBlock:^(BOOL succeeded, NSError *error) {
-                
-                if (succeeded)
-                {
-                    NSLog(@"********** Unit test folder removed **********");
-                }
-                else
-                {
-                    NSLog(@"********** Error occured in removePreExistingUnitTestFolder **********");
-                }
+                // intentionally do nothing
             }];
         }
     }];

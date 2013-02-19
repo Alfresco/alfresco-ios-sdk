@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -20,6 +20,7 @@
 #import "AlfrescoOAuthHelper.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoLog.h"
 
 @interface AlfrescoOAuthHelper ()
 @property (nonatomic, strong, readwrite) NSURLConnection    * connection;
@@ -77,7 +78,7 @@
     self.completionBlock = completionBlock;
     self.oauthData = oauthData;
     self.receivedData = nil;
-    log(@"URL used is %@",self.baseURL);
+    AlfrescoLogDebug(@"URL used is %@", self.baseURL);
     NSURL *url = [NSURL URLWithString:self.baseURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: url
                                                            cachePolicy: NSURLRequestReloadIgnoringCacheData
@@ -100,7 +101,7 @@
     [contentString appendString:kAlfrescoOAuthGrantType];
     [contentString appendString:@"&"];
     [contentString appendString:redirect];
-    log(@"body is %@", contentString);
+    AlfrescoLogDebug(@"body is %@", contentString);
     
     NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:data];
@@ -124,7 +125,7 @@
     
     // add the access token header
     NSString *authHeader = [NSString stringWithFormat:@"%@ %@",self.oauthData.tokenType, self.oauthData.accessToken];
-    log(@"URL is: %@ auth header is %@", self.baseURL, authHeader);
+    AlfrescoLogDebug(@"URL is: %@ auth header is %@", self.baseURL, authHeader);
     [request addValue:authHeader forHTTPHeaderField:@"Authorization"];
     
     NSMutableString *contentString = [NSMutableString string];
@@ -139,7 +140,7 @@
     [contentString appendString:secretID];
     [contentString appendString:@"&"];
     [contentString appendString:kAlfrescoOAuthGrantTypeRefresh];
-    log(@"body is %@", contentString);
+    AlfrescoLogDebug(@"body is %@", contentString);
     
     NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:data];
@@ -186,7 +187,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    log(@"Error is %@ and code is %d", [error localizedDescription], [error code]);
+    AlfrescoLogError(@"Error is %@ and code is %d", [error localizedDescription], [error code]);
     
     if (nil != self.oauthDelegate)
     {
@@ -246,7 +247,7 @@
         return nil;
     }
     
-    log(@"response body: %@", [[NSMutableString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+    AlfrescoLogDebug(@"response body: %@", [[NSMutableString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
     
     NSError *jsonError = nil;
     id jsonDictionary = [NSJSONSerialization JSONObjectWithData:self.receivedData options:kNilOptions error:&jsonError];

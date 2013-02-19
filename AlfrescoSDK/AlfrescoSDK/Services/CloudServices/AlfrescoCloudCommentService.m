@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -24,8 +24,10 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
-#import <objc/runtime.h>
 #import "AlfrescoNetworkProvider.h"
+#import "AlfrescoLog.h"
+#import <objc/runtime.h>
+
 
 @interface AlfrescoCloudCommentService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -218,7 +220,7 @@
 #pragma private methods
 - (NSArray *) commentArrayFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
-    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
@@ -259,7 +261,7 @@
 
 - (AlfrescoComment *) alfrescoCommentFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
-    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     if (nil == data)
     {
         if (nil == *outError)

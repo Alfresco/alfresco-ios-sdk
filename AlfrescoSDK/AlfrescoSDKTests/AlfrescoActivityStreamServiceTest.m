@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -19,6 +19,7 @@
 #import "AlfrescoActivityStreamServiceTest.h"
 #import "AlfrescoActivityEntry.h"
 #import "AlfrescoSiteService.h"
+#import "AlfrescoLog.h"
 
 @implementation AlfrescoActivityStreamServiceTest
 
@@ -211,7 +212,7 @@
                      else 
                      {
                          STAssertNotNil(array, @"array should not be nil");
-                         log(@"activity stream for site returns array count = %d",array.count);
+                         AlfrescoLogDebug(@"activity stream for site returns array count = %d",array.count);
                          STAssertTrue(array.count >= 0, @"site may have more than 0 entries");
                          
                          for (AlfrescoActivityEntry *entry in array) {
@@ -244,7 +245,7 @@
 - (void)testRetrieveActivityStreamForSiteWithPaging
 {
     [super runAllSitesTest:^{
-        
+
         self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
         __block AlfrescoSiteService *siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
         
@@ -270,7 +271,7 @@
                      }
                      else 
                      {
-                         log(@"activity stream for site returns paging results count = %d",pagingResult.objects.count);
+                         AlfrescoLogDebug(@"activity stream for site returns paging results count = %d",pagingResult.objects.count);
                          STAssertNotNil(pagingResult, @"pagingResult should not be nil");
                          STAssertTrue(pagingResult.objects.count <= 5, @"the returned objects count should be up to 5");
                          

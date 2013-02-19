@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -30,18 +30,15 @@
     [super runAllSitesTest:^{
         self.personService = [[AlfrescoPersonService alloc] initWithSession:super.currentSession];
         NSString *identifier = super.userName;
-        log(@"we are testing the Repo service for user %@",identifier);
         [self.personService retrievePersonWithIdentifier:identifier completionBlock:^(AlfrescoPerson *person, NSError *error)
          {
              if (nil == person) 
              {
-                 log(@"person returned nil");
                  super.lastTestSuccessful = NO;
                  super.lastTestFailureMessage = @"Failed to retrieve person.";
              }
              else 
              {
-                 log(@"person returned is %@ and first name is %@",person.identifier, person.firstName);
                  STAssertNotNil(person,@"Person should not be nil");
                  STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, super.userName]);
                  STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, super.firstName]);
@@ -73,15 +70,11 @@
         {
             identifier = @"peter.schmidt2@alfresco.com";
         }
-        log(@"we are testing the Repo service for user %@",identifier);
         [self.personService retrievePersonWithIdentifier:identifier completionBlock:^(AlfrescoPerson *person, NSError *error)
          {
              if (nil == person)
              {
-                 log(@"person returned nil");
                  super.lastTestSuccessful = YES;
-                 NSString *errorMsg = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 log(@"Expected error %@",errorMsg);
              }
              else
              {
@@ -113,14 +106,12 @@
          {
              if (nil == person)
              {
-                 log(@"person returned nil");
                  super.lastTestSuccessful = NO;
                  super.lastTestFailureMessage = @"Failed to retrieve person.";
                  super.callbackCompleted = YES;
              }
              else
              {
-                 log(@"person returned is %@ and first name is %@",person.identifier, person.firstName);
                  STAssertNotNil(person,@"Person should not be nil");
                  STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, super.userName]);
                  STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, super.firstName]);
