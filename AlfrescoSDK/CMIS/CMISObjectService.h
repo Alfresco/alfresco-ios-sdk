@@ -85,6 +85,8 @@ andIncludeAllowableActions:(BOOL)includeAllowableActions
 /**
  * Changes the content of the given document to the content of a given file.
  *
+ * The mime type for the content should be provided, if it isn't it defaults to application/octet-stream.
+ *
  * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
  * object (if any) with the input contentStream. If FALSE, then the Repository MUST only set the input
  * contentStream for the object if the object currently does not have a content-stream.
@@ -94,6 +96,7 @@ andIncludeAllowableActions:(BOOL)includeAllowableActions
  */
 - (CMISRequest*)changeContentOfObject:(CMISStringInOutParameter *)objectIdParam
                       toContentOfFile:(NSString *)filePath
+                             mimeType:(NSString *)mimeType
                 withOverwriteExisting:(BOOL)overwrite
                       withChangeToken:(CMISStringInOutParameter *)changeTokenParam
                       completionBlock:(void (^)(NSError *error))completionBlock
@@ -101,6 +104,8 @@ andIncludeAllowableActions:(BOOL)includeAllowableActions
 
 /**
  * Changes the content of the given document to the content from a give input stream.
+ *
+ * The mime type for the content should be provided, if it isn't it defaults to application/octet-stream.
  *
  * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
  * object (if any) with the input contentStream. If FALSE, then the Repository MUST only set the input
@@ -111,6 +116,7 @@ andIncludeAllowableActions:(BOOL)includeAllowableActions
  */
 - (CMISRequest*)changeContentOfObject:(CMISStringInOutParameter *)objectId
                toContentOfInputStream:(NSInputStream *)inputStream
+                             mimeType:(NSString *)mimeType
                         bytesExpected:(unsigned long long)bytesExpected
                          withFilename:(NSString *)filename
                 withOverwriteExisting:(BOOL)overwrite

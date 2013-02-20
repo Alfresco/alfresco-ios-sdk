@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -2136,6 +2136,8 @@
                 STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
                 unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
                 log(@"created content file: url=%@ mimetype = %@ data length = %llu",[contentFile.fileUrl path], contentFile.mimeType, size);
+                STAssertTrue([super.testAlfrescoDocument.contentMimeType isEqualToString:@"text/plain"],
+                             @"mime type should be text/plain but it is %@", super.testAlfrescoDocument.contentMimeType);
                 NSError *readError = nil;
                 __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
                 if (nil == stringContent)
@@ -2164,6 +2166,8 @@
                          {
                              STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
                              STAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
+                             STAssertTrue([updatedDocument.contentMimeType isEqualToString:@"text/plain"],
+                                          @"mime type should be text/plain but it is %@", updatedDocument.contentMimeType);
                              
                              [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *error){
                                  if (nil == checkContentFile)

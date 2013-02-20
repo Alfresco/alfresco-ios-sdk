@@ -75,6 +75,10 @@ extern NSString * const kCMISParameterContinueOnFailure;
 extern NSString * const kCMISParameterUnfileObjects;
 extern NSString * const kCMISParameterRelativePathSegment;
 
+// HTTP Headers
+extern NSString * const kCMISHTTPHeaderContentType;
+extern NSString * const kCMISHTTPHeaderContentDisposition;
+extern NSString * const kCMISHTTPHeaderContentDispositionAttachment;
 
 // Namespaces
 extern NSString * const kCMISNamespaceCmis;
