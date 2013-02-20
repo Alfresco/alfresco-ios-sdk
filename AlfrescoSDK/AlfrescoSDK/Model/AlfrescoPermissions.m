@@ -28,10 +28,6 @@
 @end
 
 @implementation AlfrescoPermissions
-@synthesize canEdit = _canEdit;
-@synthesize canDelete = _canDelete;
-@synthesize canAddChildren = _canAddChildren;
-@synthesize canComment = _canComment;
 
 - (id)init
 {

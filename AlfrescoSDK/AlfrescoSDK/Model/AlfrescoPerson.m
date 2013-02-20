@@ -30,11 +30,6 @@
 
 @implementation AlfrescoPerson
 
-@synthesize identifier = _identifier;
-@synthesize firstName = _firstName;
-@synthesize lastName = _lastName;
-@synthesize fullName = _fullName;
-@synthesize avatarIdentifier = _avatarIdentifier;
 
 ///Cloud
 /*

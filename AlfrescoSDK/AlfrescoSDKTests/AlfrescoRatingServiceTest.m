@@ -20,7 +20,6 @@
 #import "AlfrescoRepositoryCapabilities.h"
 
 @implementation AlfrescoRatingServiceTest
-@synthesize ratingService = _ratingService;
 /*
  */
 /*

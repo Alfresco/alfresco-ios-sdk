@@ -36,16 +36,6 @@
 
 @implementation AlfrescoRepositoryInfo
 
-@synthesize name = _name;
-@synthesize identifier = _identifier;
-@synthesize summary = _summary;
-@synthesize edition = _edition;
-@synthesize majorVersion = _majorVersion;
-@synthesize minorVersion = _minorVersion;
-@synthesize maintenanceVersion = _maintenanceVersion;
-@synthesize buildNumber = _buildNumber;
-@synthesize version = _version;
-@synthesize capabilities = _capabilities;
 
 - (id)initWithProperties:(NSDictionary *)properties
 {

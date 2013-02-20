@@ -30,10 +30,6 @@
 
 @implementation AlfrescoSite
 
-@synthesize shortName = _shortName;
-@synthesize title = _title;
-@synthesize summary = _summary;
-@synthesize visibility = _visibility;
 
 
 - (id)initWithProperties:(NSDictionary *)properties

@@ -27,6 +27,7 @@
 
 /// converts a NSDate object into an ISO compliant date string
 + (NSString*)stringFromDate:(NSDate*)date;
+
 /// parses an ISO compliant string and returns the date
 + (NSDate *)dateFromString:(NSString *)string;
 

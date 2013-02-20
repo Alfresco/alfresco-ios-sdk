@@ -42,11 +42,6 @@
 @end
 
 @implementation AlfrescoCloudSiteService
-@synthesize baseApiUrl = _baseApiUrl;
-@synthesize session = _session;
-@synthesize authenticationProvider = _authenticationProvider;
-@synthesize supportedSortKeys = _supportedSortKeys;
-@synthesize defaultSortKey = _defaultSortKey;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {

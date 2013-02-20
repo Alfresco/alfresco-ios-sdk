@@ -35,8 +35,6 @@
 		4E4E37B115DD07820064F2DE /* AlfrescoCloudPersonService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4E37AF15DD07820064F2DE /* AlfrescoCloudPersonService.m */; };
 		4E4E37B415DD079A0064F2DE /* AlfrescoOnPremisePersonService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E4E37B215DD079A0064F2DE /* AlfrescoOnPremisePersonService.h */; };
 		4E4E37B515DD079A0064F2DE /* AlfrescoOnPremisePersonService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4E37B315DD079A0064F2DE /* AlfrescoOnPremisePersonService.m */; };
-		4E6380CD15B976200010E05F /* AlfrescoISO8601DateFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E6380CB15B976200010E05F /* AlfrescoISO8601DateFormatter.h */; settings = {ATTRIBUTES = (); }; };
-		4E6380CE15B976200010E05F /* AlfrescoISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E6380CC15B976200010E05F /* AlfrescoISO8601DateFormatter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4E80E8E81614438800922D5D /* AlfrescoOAuthHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80E8E61614438700922D5D /* AlfrescoOAuthHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E80E8E91614438800922D5D /* AlfrescoOAuthHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E80E8E71614438700922D5D /* AlfrescoOAuthHelper.m */; };
 		4E8DF05F15DB8163000D14D3 /* AlfrescoInternalConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E8DF05D15DB8163000D14D3 /* AlfrescoInternalConstants.h */; };
@@ -297,8 +295,6 @@
 		4E4E37AF15DD07820064F2DE /* AlfrescoCloudPersonService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AlfrescoCloudPersonService.m; path = CloudServices/AlfrescoCloudPersonService.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4E4E37B215DD079A0064F2DE /* AlfrescoOnPremisePersonService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOnPremisePersonService.h; path = OnPremiseServices/AlfrescoOnPremisePersonService.h; sourceTree = "<group>"; };
 		4E4E37B315DD079A0064F2DE /* AlfrescoOnPremisePersonService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AlfrescoOnPremisePersonService.m; path = OnPremiseServices/AlfrescoOnPremisePersonService.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		4E6380CB15B976200010E05F /* AlfrescoISO8601DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoISO8601DateFormatter.h; sourceTree = "<group>"; };
-		4E6380CC15B976200010E05F /* AlfrescoISO8601DateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AlfrescoISO8601DateFormatter.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4E80E8E61614438700922D5D /* AlfrescoOAuthHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthHelper.h; path = OAuth/AlfrescoOAuthHelper.h; sourceTree = "<group>"; };
 		4E80E8E71614438700922D5D /* AlfrescoOAuthHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AlfrescoOAuthHelper.m; path = OAuth/AlfrescoOAuthHelper.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4E8DF05D15DB8163000D14D3 /* AlfrescoInternalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoInternalConstants.h; sourceTree = "<group>"; };
@@ -877,8 +873,6 @@
 		4EB0775315B00EE700DF7DED /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				4E6380CB15B976200010E05F /* AlfrescoISO8601DateFormatter.h */,
-				4E6380CC15B976200010E05F /* AlfrescoISO8601DateFormatter.m */,
 				4EBF68F7164D1C4900D6F06C /* AlfrescoNetworkProvider.h */,
 				73971A9C16AD65F30056031F /* AlfrescoDefaultNetworkProvider.h */,
 				73971A9D16AD65F30056031F /* AlfrescoDefaultNetworkProvider.m */,
@@ -1045,7 +1039,6 @@
 				4E80E8E81614438800922D5D /* AlfrescoOAuthHelper.h in Headers */,
 				4E90EE7C15D25F9200302F5D /* AlfrescoConstants.h in Headers */,
 				4EB077DA15B00EE800DF7DED /* AlfrescoAuthenticationProvider.h in Headers */,
-				4E6380CD15B976200010E05F /* AlfrescoISO8601DateFormatter.h in Headers */,
 				4EB077E015B00EE800DF7DED /* AlfrescoObjectConverter.h in Headers */,
 				4EA6D4E915D2B444004059AF /* AlfrescoSortingUtils.h in Headers */,
 				4E90EE7515D25C3600302F5D /* AlfrescoPagingUtils.h in Headers */,
@@ -1305,7 +1298,6 @@
 				4EB077D915B00EE800DF7DED /* AlfrescoVersionService.m in Sources */,
 				4EB077DC15B00EE800DF7DED /* AlfrescoBasicAuthenticationProvider.m in Sources */,
 				4EB077E115B00EE800DF7DED /* AlfrescoObjectConverter.m in Sources */,
-				4E6380CE15B976200010E05F /* AlfrescoISO8601DateFormatter.m in Sources */,
 				4E90EE7615D25C3600302F5D /* AlfrescoPagingUtils.m in Sources */,
 				4E90EE7D15D25F9200302F5D /* AlfrescoConstants.m in Sources */,
 				4E90EE8815D2735000302F5D /* AlfrescoCloudSiteService.m in Sources */,

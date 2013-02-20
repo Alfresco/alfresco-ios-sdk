@@ -36,10 +36,6 @@
 @end
 
 @implementation AlfrescoCloudTaggingService
-@synthesize baseApiUrl = _baseApiUrl;
-@synthesize session = _session;
-@synthesize objectConverter = _objectConverter;
-@synthesize authenticationProvider = _authenticationProvider;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {

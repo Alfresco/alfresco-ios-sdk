@@ -53,8 +53,6 @@
 
 @implementation AlfrescoObjectConverter
 
-@synthesize session = _session;
-@synthesize isCloud = _isCloud;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {

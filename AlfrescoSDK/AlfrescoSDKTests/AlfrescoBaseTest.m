@@ -37,30 +37,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 @implementation AlfrescoBaseTest
 
-@synthesize isCloud = _isCloud;
-@synthesize callbackCompleted = _callbackCompleted;
-@synthesize lastTestSuccessful = _lastTestSuccessful;
-@synthesize lastTestFailureMessage = _lastTestFailureMessage;
-@synthesize testAlfrescoDocument = _testAlfrescoDocument;
-@synthesize alfrescoDocumentFolderService = _alfrescoDocumentFolderService;
-@synthesize currentRootFolder = _currentRootFolder;
-@synthesize testDocFolder = _testDocFolder;
-@synthesize currentSession = _currentSession;
-@synthesize userName = _userName; 
-@synthesize firstName = _firstName;
-@synthesize testSiteName = _testSiteName;
-@synthesize server = _server;
-@synthesize testPassword = _testPassword;
-@synthesize testSearchFileName = _testSearchFileName;
-@synthesize textKeyWord = _textKeyWord;
-@synthesize unitTestFolder = _unitTestFolder;
-@synthesize testChildFolder = _testChildFolder;
-@synthesize testChildFolderName = _testChildFolderName;
-@synthesize testFolderPathName = _testFolderPathName;
-@synthesize fixedFileName = _fixedFileName;
-@synthesize testImageFile = _testImageFile;
-@synthesize cmisSession = _cmisSession;
-@synthesize cmisRootFolder = _cmisRootFolder;
 #pragma mark unit test internal methods
 
 

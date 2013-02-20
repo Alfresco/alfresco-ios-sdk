@@ -19,11 +19,6 @@
 #import "AlfrescoCloudNetwork.h"
 
 @implementation AlfrescoCloudNetwork
-@synthesize identifier = _identifier;
-@synthesize isHomeNetwork = _isHomeNetwork;
-@synthesize isPaidNetwork = _isPaidNetwork;
-@synthesize subscriptionLevel = _subscriptionLevel;
-@synthesize createdAt = _createdAt;
 
 - (id)init
 {

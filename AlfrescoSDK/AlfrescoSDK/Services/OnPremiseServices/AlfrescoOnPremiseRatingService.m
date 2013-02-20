@@ -35,9 +35,6 @@
 @end
 
 @implementation AlfrescoOnPremiseRatingService
-@synthesize baseApiUrl = _baseApiUrl;
-@synthesize session = _session;
-@synthesize authenticationProvider = _authenticationProvider;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {

@@ -18,7 +18,7 @@
 
 #import "AlfrescoComment.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoISO8601DateFormatter.h"
+#import "CMISDateUtil.h"
 
 @interface AlfrescoComment ()
 @property (nonatomic, strong, readwrite) NSString *identifier;
@@ -31,7 +31,6 @@
 @property (nonatomic, readwrite) BOOL isEdited;
 @property (nonatomic, readwrite) BOOL canEdit;
 @property (nonatomic, readwrite) BOOL canDelete;
-@property (nonatomic, strong) AlfrescoISO8601DateFormatter * dateFormatter;
 @property (nonatomic, strong) NSDateFormatter * standardDateFormatter;
 - (void)setOnPremiseProperties:(NSDictionary *)properties;
 - (void)setCloudProperties:(NSDictionary *)properties;
@@ -39,17 +38,6 @@
 
 
 @implementation AlfrescoComment
-@synthesize dateFormatter = _dateFormatter;
-@synthesize identifier = _identifier;
-@synthesize name = _name;
-@synthesize title = _title;
-@synthesize createdAt = _createdAt;
-@synthesize modifiedAt = _modifiedAt;
-@synthesize content = _content;
-@synthesize createdBy = _createdBy;
-@synthesize isEdited = _isEdited;
-@synthesize canEdit = _canEdit;
-@synthesize canDelete = _canDelete;
 
 
 - (id)initWithProperties:(NSDictionary *)properties
@@ -59,7 +47,6 @@
     {
         self.standardDateFormatter = [[NSDateFormatter alloc] init];
         [self.standardDateFormatter setDateFormat:@"MMM' 'dd' 'yyyy' 'HH:mm:ss' 'zzz"];
-        self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
         if ([[properties allKeys] containsObject:kAlfrescoJSONTitle])
         {
             self.title = [properties valueForKey:kAlfrescoJSONTitle];
@@ -115,7 +102,7 @@
             NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOnISO];
             if (nil != created)
             {
-                self.createdAt = [self.dateFormatter dateFromString:created];
+                self.createdAt = [CMISDateUtil dateFromString:created];
             }
         }
         else
@@ -137,7 +124,7 @@
             NSString *modified = [properties valueForKey:kAlfrescoJSONModifiedOnISO];
             if (nil != modified)
             {
-                self.modifiedAt = [self.dateFormatter dateFromString:modified];
+                self.modifiedAt = [CMISDateUtil dateFromString:modified];
             }
         }
         else
@@ -165,7 +152,7 @@
         NSString *createdDateString = [properties valueForKey:kAlfrescoJSONCreatedAt];
         if (nil != createdDateString)
         {
-            self.createdAt = [self.dateFormatter dateFromString:createdDateString];
+            self.createdAt = [CMISDateUtil dateFromString:createdDateString];
         }
         
     }
@@ -179,7 +166,7 @@
         NSString *modifiedDateString = [properties valueForKey:kAlfrescoJSONModifedAt];
         if (nil != modifiedDateString)
         {
-            self.modifiedAt = [self.dateFormatter dateFromString:modifiedDateString];
+            self.modifiedAt = [CMISDateUtil dateFromString:modifiedDateString];
         }
     }
     if ([[properties allKeys] containsObject:kAlfrescoJSONCanEdit])

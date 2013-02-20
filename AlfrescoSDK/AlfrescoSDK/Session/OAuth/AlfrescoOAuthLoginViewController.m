@@ -39,16 +39,6 @@
 
 @implementation AlfrescoOAuthLoginViewController
 
-@synthesize webView = _webView;
-@synthesize isLoginScreenLoad = _isLoginScreenLoad;
-@synthesize connection = _connection;
-@synthesize receivedData = _receivedData;
-@synthesize completionBlock = _completionBlock;
-@synthesize oauthData = _oauthData;
-@synthesize baseURL = _baseURL;
-@synthesize parameters = _parameters;
-@synthesize activityIndicator = _activityIndicator;
-@synthesize hasValidAuthenticationCode = _hasValidAuthenticationCode;
 
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey

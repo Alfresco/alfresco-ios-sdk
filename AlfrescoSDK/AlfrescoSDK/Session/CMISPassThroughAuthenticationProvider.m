@@ -23,8 +23,6 @@
 @end
 
 @implementation CMISPassThroughAuthenticationProvider
-@synthesize authProvider = _authProvider;
-@synthesize httpHeadersToApply = _httpHeadersToApply;
 
 - (id)initWithAlfrescoAuthenticationProvider:(id<AlfrescoAuthenticationProvider>)authProvider
 {
@@ -37,24 +35,26 @@
     return self;
 }
 
+
 - (void)updateWithHttpURLResponse:(NSHTTPURLResponse *)httpUrlResponse
 {
-    
+    /// TODO: new method. Impact on AlfrescoSDK unknown at this stage
 }
 
 - (BOOL)canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
 {
+    /// TODO: new method. Impact on AlfrescoSDK unknown at this stage
     return YES;
 }
 
 - (void)didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    
+    /// TODO: new method. Impact on AlfrescoSDK unknown at this stage
 }
 
 - (void)didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    
+    /// TODO: new method. Impact on AlfrescoSDK unknown at this stage
 }
 
 @end

@@ -41,12 +41,6 @@
 @end
 
 @implementation AlfrescoOnPremiseSiteService
-@synthesize baseApiUrl = _baseApiUrl;
-@synthesize session = _session;
-@synthesize objectConverter = _objectConverter;
-@synthesize authenticationProvider = _authenticationProvider;
-@synthesize defaultSortKey = _defaultSortKey;
-@synthesize supportedSortKeys = _supportedSortKeys;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {

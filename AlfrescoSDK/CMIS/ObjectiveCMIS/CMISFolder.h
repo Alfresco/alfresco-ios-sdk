@@ -34,7 +34,7 @@
  *
  * The completionBlock will return paged results with instances of CMISObject or nil if unsuccessful.
  */
-- (void)retrieveChildrenWithCompletionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
+- (CMISRequest*)retrieveChildrenWithCompletionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
 /**
  * Checks if this folder is the root folder.
@@ -45,36 +45,36 @@
  * Gets the parent folder object.
  * The completionBlock will return CMISFolder object or nil if unsuccessful.
  */
-- (void)retrieveFolderParentWithCompletionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
+- (CMISRequest*)retrieveFolderParentWithCompletionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
 
 /**
  * Retrieves the children of this folder as a paged result using the provided operation context.
  *
  * The completionBlock will return paged results with instances of CMISObject or nil if unsuccessful.
  */
-- (void)retrieveChildrenWithOperationContext:(CMISOperationContext *)operationContext completionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
+- (CMISRequest*)retrieveChildrenWithOperationContext:(CMISOperationContext *)operationContext completionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
 /**
- * creates a folder with sepcified properties
+ * creates a folder with specified properties
  * completionBlock returns object Id of newly created folder or nil if not successful
  */
-- (void)createFolder:(NSDictionary *)properties completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock;
+- (CMISRequest*)createFolder:(NSDictionary *)properties completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock;
 
 /**
- * creates a document with sepcified properties, mime Type
+ * creates a document with specified properties, mime Type
  * completionBlock returns object Id of newly created document or nil if not successful
  */
-- (void)createDocumentFromFilePath:(NSString *)filePath
+- (CMISRequest*)createDocumentFromFilePath:(NSString *)filePath
                           mimeType:(NSString *)mimeType
                         properties:(NSDictionary *)properties
                    completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock
                      progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
 /**
- * creates a document with sepcified properties, mime Type
+ * creates a document with specified properties, mime Type
  * completionBlock returns object Id of newly created document or nil if not successful
  */
-- (void)createDocumentFromInputStream:(NSInputStream *)inputStream
+- (CMISRequest*)createDocumentFromInputStream:(NSInputStream *)inputStream
                              mimeType:(NSString *)mimeType
                            properties:(NSDictionary *)properties
                         bytesExpected:(unsigned long long)bytesExpected
@@ -83,10 +83,10 @@
 
 
 /**
- * creates a document with sepcified properties, mime Type
+ * creates a document with specified properties, mime Type
  * completionBlock returns list of failed objects (if any) 
  */
-- (void)deleteTreeWithDeleteAllVersions:(BOOL)deleteAllversions
+- (CMISRequest*)deleteTreeWithDeleteAllVersions:(BOOL)deleteAllversions
                           unfileObjects:(CMISUnfileObject)unfileObjects
                       continueOnFailure:(BOOL)continueOnFailure
                         completionBlock:(void (^)(NSArray *failedObjects, NSError *error))completionBlock;

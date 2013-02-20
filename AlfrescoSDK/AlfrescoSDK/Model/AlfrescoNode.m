@@ -51,19 +51,6 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 
 @implementation AlfrescoNode
 
-@synthesize identifier = _identifier;
-@synthesize name = _name;
-@synthesize title = _title;
-@synthesize summary = _summary;
-@synthesize type = _type;
-@synthesize createdBy = _createdBy;
-@synthesize createdAt = _createdAt;
-@synthesize modifiedBy = _modifiedBy;
-@synthesize modifiedAt = _modifiedAt;
-@synthesize properties = _properties;
-@synthesize aspects = _aspects;
-@synthesize isFolder = _isFolder;
-@synthesize isDocument = _isDocument;
 
 - (id)initWithProperties:(NSDictionary *)properties
 {
