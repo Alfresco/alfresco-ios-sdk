@@ -26,7 +26,7 @@
 @property (nonatomic, strong) NSString *filterString;
 @property (nonatomic, assign) BOOL includeAllowableActions;
 @property (nonatomic, assign) BOOL includeACLs;
-@property (nonatomic, assign) CMISIncludeRelationship includeRelationShips;
+@property (nonatomic, assign) CMISIncludeRelationship relationships;
 @property (nonatomic, assign) BOOL includePolicies;
 @property (nonatomic, strong) NSString *renditionFilterString;
 @property (nonatomic, strong) NSString *orderBy;

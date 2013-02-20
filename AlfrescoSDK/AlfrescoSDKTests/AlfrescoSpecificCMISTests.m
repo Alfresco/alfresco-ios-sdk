@@ -23,7 +23,7 @@
 #import "CMISSession.h"
 #import "CMISProperties.h"
 #import "AlfrescoCMISObjectConverter.h"
-#import "AlfrescoISO8601DateFormatter.h"
+#import "CMISDateUtil.h"
 #import "AlfrescoCMISDocument.h"
 #import "CMISDateUtil.h"
 #import "CMISStringInOutParameter.h"
@@ -276,7 +276,7 @@
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:model"], @"E950", nil);
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:flash"], [NSNumber numberWithBool:NO], nil);
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:pixelXDimension"], [NSNumber numberWithInt:800], nil);
-                STAssertEqualObjects([document.properties propertyValueForId:@"exif:exposureTime"], [NSNumber numberWithFloat:0.012987012987013f], nil);
+                STAssertEqualObjects([document.properties propertyValueForId:@"exif:exposureTime"], [NSNumber numberWithDouble:0.012987012987013], nil);
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:dateTimeOriginal"], [CMISDateUtil dateFromString:@"2012-10-19T00:00:00.000Z"], nil);
                 self.callbackCompleted = YES;
             }

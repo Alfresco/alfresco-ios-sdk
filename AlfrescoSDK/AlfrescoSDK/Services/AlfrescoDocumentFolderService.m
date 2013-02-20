@@ -65,12 +65,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 @end
 
 @implementation AlfrescoDocumentFolderService
-@synthesize session = _session;
-@synthesize cmisSession = _cmisSession;
-@synthesize objectConverter = _objectConverter;
-@synthesize authenticationProvider = _authenticationProvider;
-@synthesize supportedSortKeys = _supportedSortKeys;
-@synthesize defaultSortKey = _defaultSortKey;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -870,7 +864,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
     [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-
     
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
     [self.cmisSession retrieveObject:document.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
@@ -881,7 +874,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISDocument *document = (CMISDocument *)cmisObject;
-            [document changeContentToContentOfFile:[file.fileUrl path] overwrite:YES completionBlock:^(NSError *error){
+            [document changeContentToContentOfFile:[file.fileUrl path] mimeType:file.mimeType overwrite:YES completionBlock:^(NSError *error){
                 if (error)
                 {
                     completionBlock(nil, error);

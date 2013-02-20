@@ -22,8 +22,6 @@
 
 @implementation AlfrescoActivityStreamServiceTest
 
-@synthesize activityStreamService = _activityStreamService;
-
 #pragma On Premise tests
 /*
  @Unique_TCRef 2S0
@@ -165,7 +163,7 @@
             else 
             {
                 STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                STAssertTrue(pagingResult.objects.count == 5, @"expected 1 activity entries");
+                STAssertTrue(pagingResult.objects.count > 0, @"expected at least 1 activity entries");
                 STAssertTrue(pagingResult.totalItems > 0, @"expected activity entries");
                 
                 super.lastTestSuccessful = YES;

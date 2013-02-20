@@ -18,7 +18,7 @@
 
 #import "AlfrescoActivityEntry.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoISO8601DateFormatter.h"
+#import "CMISDateUtil.h"
 
 @interface AlfrescoActivityEntry ()
 @property (nonatomic, strong, readwrite) NSString *identifier;
@@ -27,20 +27,11 @@
 @property (nonatomic, strong, readwrite) NSString *siteShortName;
 @property (nonatomic, strong, readwrite) NSString *type;
 @property (nonatomic, strong, readwrite) NSDictionary *data;
-@property (nonatomic, strong) AlfrescoISO8601DateFormatter * dateFormatter;
 - (void)setOnPremiseProperties:(NSDictionary *)properties;
 - (void)setCloudProperties:(NSDictionary *)properties;
 @end
 
 @implementation AlfrescoActivityEntry
-@synthesize dateFormatter = _dateFormatter;
-
-@synthesize identifier = _identifier;
-@synthesize createdAt = _createdAt;
-@synthesize createdBy = _createdBy;
-@synthesize siteShortName = _siteShortName;
-@synthesize type = _type;
-@synthesize data = _data;
 
 /**
  Cloud and OnPremise sessions have slightly different JSON response types
@@ -54,7 +45,6 @@
     self = [super init];
     if (nil != self && nil != properties)
     {
-        self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
         if ([[properties allKeys] containsObject:kAlfrescoJSONIdentifier])
         {
             self.identifier = [properties valueForKey:kAlfrescoJSONIdentifier];
@@ -98,7 +88,7 @@
         NSString *rawDateString = [properties valueForKey:kAlfrescoJSONActivityPostDate];
         if (nil != rawDateString)
         {
-            self.createdAt = [self.dateFormatter dateFromString:rawDateString];
+            self.createdAt = [CMISDateUtil dateFromString:rawDateString];
         }
     }
     //On Premise Response
@@ -122,7 +112,7 @@
         NSString *rawDateString = [properties valueForKey:kAlfrescoJSONPostedAt];
         if (nil != rawDateString)
         {
-            self.createdAt = [self.dateFormatter dateFromString:rawDateString];
+            self.createdAt = [CMISDateUtil dateFromString:rawDateString];
         }
     }
     //Cloud Response - Activity Network/Site Id

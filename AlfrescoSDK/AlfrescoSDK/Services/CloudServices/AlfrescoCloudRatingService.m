@@ -35,9 +35,6 @@
 @end
 
 @implementation AlfrescoCloudRatingService
-@synthesize baseApiUrl = _baseApiUrl;
-@synthesize session = _session;
-@synthesize authenticationProvider = _authenticationProvider;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {

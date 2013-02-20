@@ -20,7 +20,6 @@
 #import "AlfrescoContentFile.h"
 
 @implementation AlfrescoPersonServiceTest
-@synthesize personService = _personService;
 
 /*
  @Unique_TCRef 34S1

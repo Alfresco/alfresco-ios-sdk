@@ -32,14 +32,6 @@
 @end
 
 @implementation AlfrescoOAuthData
-@synthesize accessToken = _accessToken;
-@synthesize refreshToken = _refreshToken;
-@synthesize expiresIn = _expiresIn;
-@synthesize tokenType = _tokenType;
-@synthesize scope = _scope;
-@synthesize apiKey = _apiKey;
-@synthesize secretKey = _secretKey;
-@synthesize redirectURI = _redirectURI;
 
 - (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey
 {

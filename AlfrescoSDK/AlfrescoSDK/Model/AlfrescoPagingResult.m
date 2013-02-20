@@ -29,9 +29,6 @@
 
 @implementation AlfrescoPagingResult
 
-@synthesize objects = _objects;
-@synthesize hasMoreItems = _hasMoreItems;
-@synthesize totalItems = _totalItems;
 
 - (id)initWithArray:(NSArray *)objects hasMoreItems:(BOOL)hasMoreItems totalItems:(int)totalItems
 {

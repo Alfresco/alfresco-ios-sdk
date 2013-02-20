@@ -67,27 +67,27 @@
  * Retrieves the root folder for the repository.
  * completionBlock returns the root folder of the repo or nil if unsuccessful
  */
-- (void)retrieveRootFolderWithCompletionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
+- (CMISRequest*)retrieveRootFolderWithCompletionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
 
 /**
  * Retrieves the root folder for the repository using the provided operation context.
  * completionBlock returns a folder of the repo or nil if unsuccessful
  */
-- (void)retrieveFolderWithOperationContext:(CMISOperationContext *)operationContext
+- (CMISRequest*)retrieveFolderWithOperationContext:(CMISOperationContext *)operationContext
                            completionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
  
 /**
  * Retrieves the object with the given identifier.
  * completionBlock returns the CMIS object or nil if unsuccessful
   */
-- (void)retrieveObject:(NSString *)objectId
+- (CMISRequest*)retrieveObject:(NSString *)objectId
        completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
 
 /**
   * Retrieves the object with the given identifier, using the provided operation context.
   * completionBlock returns the CMIS object or nil if unsuccessful
   */
-- (void)retrieveObject:(NSString *)objectId
+- (CMISRequest*)retrieveObject:(NSString *)objectId
       operationContext:(CMISOperationContext *)operationContext
        completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
 
@@ -95,7 +95,7 @@
  * Retrieves the object for the given path.
  * completionBlock returns the CMIS object or nil if unsuccessful
  */
-- (void)retrieveObjectByPath:(NSString *)path
+- (CMISRequest*)retrieveObjectByPath:(NSString *)path
              completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
 
  
@@ -103,7 +103,7 @@
  * Retrieves the object for the given path, using the provided operation context.
  * completionBlock returns the CMIS object or nil if unsuccessful
  */
-- (void)retrieveObjectByPath:(NSString *)path
+- (CMISRequest*)retrieveObjectByPath:(NSString *)path
             operationContext:(CMISOperationContext *)operationContext
              completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
 
@@ -111,13 +111,13 @@
  * Retrieves the definition for the given type.
  * completionBlock returns the CMIS type definition or nil if unsuccessful
  */
-- (void)retrieveTypeDefinition:(NSString *)typeId 
+- (CMISRequest*)retrieveTypeDefinition:(NSString *)typeId 
                completionBlock:(void (^)(CMISTypeDefinition *typeDefinition, NSError *error))completionBlock;
 /**
  * Retrieves all objects matching the given cmis query.
  * completionBlock returns the search results as a paged results object or nil if unsuccessful.
  */
-- (void)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
+- (CMISRequest*)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
                                       completionBlock:(void (^)(CMISPagedResult *pagedResult, NSError *error))completionBlock;
 
 /**
@@ -125,7 +125,7 @@
  * and using the parameters provided in the operation context.
  * completionBlock returns the search results as a paged results object or nil if unsuccessful.
  */
-- (void)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
+- (CMISRequest*)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
                                      operationContext:(CMISOperationContext *)operationContext
                                       completionBlock:(void (^)(CMISPagedResult *pagedResult, NSError *error))completionBlock;
 
@@ -134,7 +134,7 @@
  * Returns a paged result set, containing CMISObject instances.
  * completionBlock returns the search results as a paged results object or nil if unsuccessful.
  */
-- (void)queryObjectsWithTypeid:(NSString *)typeId
+- (CMISRequest*)queryObjectsWithTypeid:(NSString *)typeId
                    whereClause:(NSString *)whereClause
              searchAllVersions:(BOOL)searchAllVersion
               operationContext:(CMISOperationContext *)operationContext
@@ -145,7 +145,7 @@
  * Creates a folder in the provided folder.
  * completionBlock returns the object Id of the newly created folder or nil if unsuccessful
  */
-- (void)createFolder:(NSDictionary *)properties
+- (CMISRequest*)createFolder:(NSDictionary *)properties
             inFolder:(NSString *)folderObjectId
      completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock;
 
@@ -172,7 +172,7 @@
  * Creates a cmis document using the content from the file path.
  * completionBlock returns object Id of newly created object or nil if unsuccessful
  */
-- (void)createDocumentFromFilePath:(NSString *)filePath
+- (CMISRequest*)createDocumentFromFilePath:(NSString *)filePath
                           mimeType:(NSString *)mimeType
                         properties:(NSDictionary *)properties
                           inFolder:(NSString *)folderObjectId
@@ -183,7 +183,7 @@
  * Creates a cmis document using the content from the given stream.
  * completionBlock returns object Id of newly created object or nil if unsuccessful
  */
-- (void)createDocumentFromInputStream:(NSInputStream *)inputStream
+- (CMISRequest*)createDocumentFromInputStream:(NSInputStream *)inputStream
                              mimeType:(NSString *)mimeType
                            properties:(NSDictionary *)properties
                              inFolder:(NSString *)folderObjectId

@@ -36,11 +36,6 @@
 @end
 
 @implementation AlfrescoVersionService
-@synthesize session = _session;
-@synthesize cmisSession = _cmisSession;
-@synthesize objectConverter = _objectConverter;
-@synthesize supportedSortKeys = _supportedSortKeys;
-@synthesize defaultSortKey = _defaultSortKey;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
