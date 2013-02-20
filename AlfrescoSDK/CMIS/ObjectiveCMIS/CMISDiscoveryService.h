@@ -21,6 +21,7 @@
 #import "CMISEnums.h"
 
 @class CMISObjectList;
+@class CMISRequest;
 
 @protocol CMISDiscoveryService <NSObject>
 
@@ -33,12 +34,12 @@
 /** launches a query on the server with the parameters specified
  * completionBlock returns the found object list or nil if unsuccessful
  */
-- (void)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersions
-                                        relationShips:(CMISIncludeRelationship)includeRelationships
-                                      renditionFilter:(NSString *)renditionFilter
-                              includeAllowableActions:(BOOL)includeAllowableActions
-                                             maxItems:(NSNumber *)maxItems
-                                            skipCount:(NSNumber *)skipCount
-                                      completionBlock:(void (^)(CMISObjectList *objectList, NSError *error))completionBlock;
+- (CMISRequest*)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersions
+                                                relationships:(CMISIncludeRelationship)relationships
+                                              renditionFilter:(NSString *)renditionFilter
+                                      includeAllowableActions:(BOOL)includeAllowableActions
+                                                     maxItems:(NSNumber *)maxItems
+                                                    skipCount:(NSNumber *)skipCount
+                                              completionBlock:(void (^)(CMISObjectList *objectList, NSError *error))completionBlock;
 
 @end

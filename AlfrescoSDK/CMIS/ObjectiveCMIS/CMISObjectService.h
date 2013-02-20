@@ -30,9 +30,9 @@
  * Retrieves the object with the given object identifier.
  * completionBlock returns objectData for object or nil if unsuccessful
  */
-- (void)retrieveObject:(NSString *)objectId
+- (CMISRequest*)retrieveObject:(NSString *)objectId
                 filter:(NSString *)filter
-         relationShips:(CMISIncludeRelationship)includeRelationship
+         relationships:(CMISIncludeRelationship)relationships
       includePolicyIds:(BOOL)includePolicyIds
        renditionFilder:(NSString *)renditionFilter
             includeACL:(BOOL)includeACL
@@ -43,9 +43,9 @@
  * Retrieves an object using its path.
  * completionBlock returns objectData for object or nil if unsuccessful
  */
-- (void)retrieveObjectByPath:(NSString *)path
+- (CMISRequest*)retrieveObjectByPath:(NSString *)path
                       filter:(NSString *)filter
-               relationShips:(CMISIncludeRelationship)includeRelationship
+               relationships:(CMISIncludeRelationship)relationships
             includePolicyIds:(BOOL)includePolicyIds
              renditionFilder:(NSString *)renditionFilter
                   includeACL:(BOOL)includeACL
@@ -86,13 +86,14 @@
  * This is not possible without introducing a new HTTP header.
  * completionBlock - returns NSError nil if successful
  */
-- (void)deleteContentOfObject:(CMISStringInOutParameter *)objectIdParam
+- (CMISRequest*)deleteContentOfObject:(CMISStringInOutParameter *)objectIdParam
                   changeToken:(CMISStringInOutParameter *)changeTokenParam
               completionBlock:(void (^)(NSError *error))completionBlock;
 
 /**
  * Changes the content of the given document to the content of a given file.
  *
+ * It is recommended that a mime type is provided. In case no value is given - the mime type defaults to application/octet-stream.
  * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
  * object (if any) with the input contentStream. If FALSE, then the Repository MUST only set the input
  * contentStream for the object if the object currently does not have a content-stream.
@@ -103,6 +104,7 @@
  */
 - (CMISRequest*)changeContentOfObject:(CMISStringInOutParameter *)objectIdParam
                       toContentOfFile:(NSString *)filePath
+                             mimeType:(NSString *)mimeType
                     overwriteExisting:(BOOL)overwrite
                           changeToken:(CMISStringInOutParameter *)changeTokenParam
                       completionBlock:(void (^)(NSError *error))completionBlock
@@ -111,6 +113,7 @@
 /**
  * Changes the content of the given document to the content from a give input stream.
  *
+ * It is recommended that a mime type is provided. In case no value is given - the mime type defaults to application/octet-stream.
  * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
  * object (if any) with the input contentStream. If FALSE, then the Repository MUST only set the input
  * contentStream for the object if the object currently does not have a content-stream.
@@ -123,6 +126,7 @@
                toContentOfInputStream:(NSInputStream *)inputStream
                         bytesExpected:(unsigned long long)bytesExpected
                              filename:(NSString *)filename
+                             mimeType:(NSString *)mimeType
                     overwriteExisting:(BOOL)overwrite
                           changeToken:(CMISStringInOutParameter *)changeToken
                       completionBlock:(void (^)(NSError *error))completionBlock
@@ -159,7 +163,7 @@
  * The allVersions parameter is currently ignored.
  * completionBlock returns true if successful
  */
-- (void)deleteObject:(NSString *)objectId
+- (CMISRequest*)deleteObject:(NSString *)objectId
          allVersions:(BOOL)allVersions
      completionBlock:(void (^)(BOOL objectDeleted, NSError *error))completionBlock;
 
@@ -167,9 +171,9 @@
  * Creates a new folder with given properties under the provided parent folder.
  * completionBlock returns objectId for the newly created folder or nil if unsuccessful
  */
-- (void)createFolderInParentFolder:(NSString *)folderObjectId
-                        properties:(CMISProperties *)properties
-                   completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock;
+- (CMISRequest*)createFolderInParentFolder:(NSString *)folderObjectId
+                                properties:(CMISProperties *)properties
+                           completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock;
 
 /**
  * Deletes the given folder and all of its subfolder and files
@@ -178,20 +182,20 @@
  * completionBlock returns array of failed objects if any. NSError will be nil if successful
  *
  */
-- (void)deleteTree:(NSString *)folderObjectId
-        allVersion:(BOOL)allVersions
-     unfileObjects:(CMISUnfileObject)unfileObjects
- continueOnFailure:(BOOL)continueOnFailure
-   completionBlock:(void (^)(NSArray *failedObjects, NSError *error))completionBlock;
+- (CMISRequest*)deleteTree:(NSString *)folderObjectId
+                allVersion:(BOOL)allVersions
+             unfileObjects:(CMISUnfileObject)unfileObjects
+         continueOnFailure:(BOOL)continueOnFailure
+           completionBlock:(void (^)(NSArray *failedObjects, NSError *error))completionBlock;
 
 /**
  * Updates the properties of the given object.
  * completionBlock returns NSError nil if successful
  */
-- (void)updatePropertiesForObject:(CMISStringInOutParameter *)objectIdParam
-                       properties:(CMISProperties *)properties
-                      changeToken:(CMISStringInOutParameter *)changeTokenParam
-                  completionBlock:(void (^)(NSError *error))completionBlock;
+- (CMISRequest*)updatePropertiesForObject:(CMISStringInOutParameter *)objectIdParam
+                               properties:(CMISProperties *)properties
+                              changeToken:(CMISStringInOutParameter *)changeTokenParam
+                          completionBlock:(void (^)(NSError *error))completionBlock;
 
 /**
  * Gets the list of associated Renditions for the specified object.
@@ -201,10 +205,10 @@
  *       Ie. the whole set is <b>always</b> returned.
  * completionBlock returns array of associated renditions or nil if unsuccessful
  */
-- (void)retrieveRenditions:(NSString *)objectId
-                renditionFilter:(NSString *)renditionFilter
-                    maxItems:(NSNumber *)maxItems
-                    skipCount:(NSNumber *)skipCount
-           completionBlock:(void (^)(NSArray *renditions, NSError *error))completionBlock;
+- (CMISRequest*)retrieveRenditions:(NSString *)objectId
+                   renditionFilter:(NSString *)renditionFilter
+                          maxItems:(NSNumber *)maxItems
+                         skipCount:(NSNumber *)skipCount
+                   completionBlock:(void (^)(NSArray *renditions, NSError *error))completionBlock;
 
 @end

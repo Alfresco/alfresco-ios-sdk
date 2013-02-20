@@ -41,12 +41,14 @@ typedef enum {
  * @param body the data for the upload (maybe nil)
  * @param headers any additional headers to be used in the request (maybe nil)
  * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
+ * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled
  */
 - (void)invoke:(NSURL *)url
     httpMethod:(CMISHttpRequestMethod)httpRequestMethod
        session:(CMISBindingSession *)session
           body:(NSData *)body
        headers:(NSDictionary *)additionalHeaders
+   cmisRequest:(CMISRequest *)cmisRequest
 completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
 
 /**
@@ -57,12 +59,14 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
  * @param inputStream the stream pointing to the source to be uploaded. Must be an instance or extension of NSInputStream
  * @param headers any additional headers to be used in the request (maybe nil)
  * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
+ * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled
  */
 - (void)invoke:(NSURL *)url
     httpMethod:(CMISHttpRequestMethod)httpRequestMethod
        session:(CMISBindingSession *)session
    inputStream:(NSInputStream *)inputStream
        headers:(NSDictionary *)additionalHeaders
+   cmisRequest:(CMISRequest *)cmisRequest
 completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
 
 
@@ -84,9 +88,9 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
    inputStream:(NSInputStream *)inputStream
        headers:(NSDictionary *)additionalHeaders
  bytesExpected:(unsigned long long)bytesExpected
+   cmisRequest:(CMISRequest *)cmisRequest
 completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
- progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock
- requestObject:(CMISRequest *)requestObject;
+ progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
 /**
  * Invoke method used for downloads, 
@@ -104,10 +108,9 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
        session:(CMISBindingSession *)session
   outputStream:(NSOutputStream *)outputStream
  bytesExpected:(unsigned long long)bytesExpected
+   cmisRequest:(CMISRequest *)cmisRequest
 completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
- progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock
- requestObject:(CMISRequest*)requestObject;
-
+ progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
 
 /**
@@ -115,10 +118,13 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
  * @param url the RESTful API URL to be used
  * @param session
  * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
+ * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled
  */
 - (void)invokeGET:(NSURL *)url
           session:(CMISBindingSession *)session
+      cmisRequest:(CMISRequest *)cmisRequest
   completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
+
 
 
 /**
@@ -128,12 +134,15 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
  * @param body the data to be posted
  * @param additionalHeaders any additional headers to be used in the request (optional)
  * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
+ * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled
  */
 - (void)invokePOST:(NSURL *)url
            session:(CMISBindingSession *)session
               body:(NSData *)body
            headers:(NSDictionary *)additionalHeaders
+       cmisRequest:(CMISRequest *)cmisRequest
    completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
+
 
 /**
  * Convenience PUT invoke method. Use for updating existing content
@@ -142,22 +151,28 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
  * @param body the data to be uploaded
  * @param additionalHeaders any additional headers to be used in the request (optional)
  * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
+ * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled
  */
 - (void)invokePUT:(NSURL *)url
           session:(CMISBindingSession *)session
              body:(NSData *)body
           headers:(NSDictionary *)additionalHeaders
+      cmisRequest:(CMISRequest *)cmisRequest
   completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
+
 
 /**
  * Convenience DELETE invoke method
  * @param url the RESTful API URL to be used
  * @param session
  * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
+ * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled
  */
 - (void)invokeDELETE:(NSURL *)url
              session:(CMISBindingSession *)session
+         cmisRequest:(CMISRequest *)cmisRequest
      completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
+
 
 
 

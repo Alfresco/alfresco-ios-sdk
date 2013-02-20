@@ -49,13 +49,6 @@
 
 @implementation AlfrescoRepositorySession
 
-@synthesize personIdentifier = _personIdentifier;
-@synthesize repositoryInfo = _repositoryInfo;
-@synthesize baseUrl = _baseUrl;
-@synthesize sessionData = _sessionData;
-@synthesize rootFolder = _rootFolder;
-@synthesize defaultListingContext = _defaultListingContext;
-@synthesize networkProvider = _networkProvider;
 
 + (void)connectWithUrl:(NSURL *)url
               username:(NSString *)username

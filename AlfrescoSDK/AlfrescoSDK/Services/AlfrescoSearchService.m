@@ -41,11 +41,6 @@
 @end
 
 @implementation AlfrescoSearchService
-@synthesize session = _session;
-@synthesize cmisSession = _cmisSession;
-@synthesize objectConverter = _objectConverter;
-@synthesize supportedSortKeys = _supportedSortKeys;
-@synthesize defaultSortKey = _defaultSortKey;
 
 
 - (id)initWithSession:(id<AlfrescoSession>)session
@@ -76,7 +71,7 @@
         [self.cmisSession.binding.discoveryService
          query:statement
          searchAllVersions:NO
-         relationShips:CMISIncludeRelationshipBoth
+         relationships:CMISIncludeRelationshipBoth
          renditionFilter:nil
          includeAllowableActions:YES
          maxItems:[NSNumber numberWithInt:self.session.defaultListingContext.maxItems]
@@ -122,7 +117,7 @@
         [self.cmisSession.binding.discoveryService
          query:statement
          searchAllVersions:NO
-         relationShips:CMISIncludeRelationshipBoth
+         relationships:CMISIncludeRelationshipBoth
          renditionFilter:nil
          includeAllowableActions:YES
          maxItems:[NSNumber numberWithInt:listingContext.maxItems]

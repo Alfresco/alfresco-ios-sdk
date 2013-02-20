@@ -19,7 +19,7 @@
 
 #import "CMISHttpRequest.h"
 
-@interface CMISHttpDownloadRequest : CMISHttpRequest
+@interface CMISHttpDownloadRequest : CMISHttpRequest 
 
 // the outputStream should be unopened but if it is already open it will not be reset but used as is;
 // it is closed on completion; if no outputStream is provided, download goes to httpResponse.data
@@ -33,16 +33,12 @@
 /** starts a URL request for download. Data are written to the provided output stream
  * completionBlock returns a CMISHttpResponse object or nil if unsuccessful
  */
-+ (CMISHttpDownloadRequest*)startRequest:(NSMutableURLRequest*)urlRequest
++ (id)startRequest:(NSMutableURLRequest*)urlRequest
                               httpMethod:(CMISHttpRequestMethod)httpRequestMethod
                             outputStream:(NSOutputStream*)outputStream
                            bytesExpected:(unsigned long long)bytesExpected
                   authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
                          completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
                            progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
-/// designated initialiser. Do not use directly, instead call the startRequest class method above
-- (id)initWithHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
-         completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
-           progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
 @end

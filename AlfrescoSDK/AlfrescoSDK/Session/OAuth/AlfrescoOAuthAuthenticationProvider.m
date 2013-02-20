@@ -28,10 +28,6 @@
 @end
 
 @implementation AlfrescoOAuthAuthenticationProvider
-@synthesize httpHeaders = _httpHeaders;
-@synthesize oauthData = _oauthData;
-@synthesize connection = _connection;
-@synthesize receivedData = _receivedData;
 
 
 - (id)initWithOAuthData:(AlfrescoOAuthData *)oauthData

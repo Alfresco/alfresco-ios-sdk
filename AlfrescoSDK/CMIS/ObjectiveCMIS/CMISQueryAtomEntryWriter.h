@@ -25,7 +25,7 @@
 
 @property (nonatomic, strong) NSString *statement;
 @property BOOL searchAllVersions;
-@property CMISIncludeRelationship includeRelationships;
+@property CMISIncludeRelationship relationships;
 @property (nonatomic, strong) NSString *renditionFilter;
 @property BOOL includeAllowableActions;
 @property (nonatomic, strong) NSNumber * skipCount;

@@ -27,8 +27,6 @@
 @end
 
 @implementation AlfrescoTag
-@synthesize identifier = _identifier;
-@synthesize value = _value;
 
 /* OnPremise
  - (AlfrescoTag *)tagFromJSON:(NSString *)jsonString

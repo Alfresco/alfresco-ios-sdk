@@ -39,25 +39,25 @@
  * Retrieves a collection of all versions of this document. 
  * The completionBlock returns collection of all documents or nil if unsuccessful
  */
-- (void)retrieveAllVersionsWithCompletionBlock:(void (^)(CMISCollection *allVersionsOfDocument, NSError *error))completionBlock;
+- (CMISRequest*)retrieveAllVersionsWithCompletionBlock:(void (^)(CMISCollection *allVersionsOfDocument, NSError *error))completionBlock;
 
 /**
  * Retrieves a collection of all versions of this document with paging options.
  * The completionBlock returns collection of all documents or nil if unsuccessful
  */
-- (void)retrieveAllVersionsWithOperationContext:(CMISOperationContext *)operationContext completionBlock:(void (^)(CMISCollection *collection, NSError *error))completionBlock;
+- (CMISRequest*)retrieveAllVersionsWithOperationContext:(CMISOperationContext *)operationContext completionBlock:(void (^)(CMISCollection *collection, NSError *error))completionBlock;
 
 /**
  * Retrieves the lastest version of this document.
  * The completionBlock returns the CMIS document or nil if unsuccessful
  */
-- (void)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
+- (CMISRequest*)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
 
 /**
  * Retrieves the lastest version of this document with paging options.
  * The completionBlock returns the CMIS document or nil if unsuccessful
  */
-- (void)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major
+- (CMISRequest*)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major
                                      operationContext:(CMISOperationContext *)operationContext
                                       completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
 
@@ -87,6 +87,7 @@
  * completionBlock will return NSError nil if successful
  */
 - (CMISRequest*)changeContentToContentOfFile:(NSString *)filePath
+                                    mimeType:(NSString *)mimeType
                                    overwrite:(BOOL)overwrite
                              completionBlock:(void (^)(NSError *error))completionBlock
                                progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
@@ -102,6 +103,7 @@
 - (CMISRequest*)changeContentToContentOfInputStream:(NSInputStream *)inputStream
                                       bytesExpected:(unsigned long long)bytesExpected
                                            fileName:(NSString *)fileName
+                                           mimeType:(NSString *)mimeType
                                           overwrite:(BOOL)overwrite
                                     completionBlock:(void (^)(NSError *error))completionBlock
                                       progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
@@ -110,12 +112,12 @@
  * Deletes the content of this document.
  * completionBlock will return NSError nil if successful
  */
-- (void)deleteContentWithCompletionBlock:(void (^)(NSError *error))completionBlock;
+- (CMISRequest*)deleteContentWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 
 /**
  * Deletes the document from the document store.
  * completionBlock return true if successful
  */
-- (void)deleteAllVersionsWithCompletionBlock:(void (^)(BOOL documentDeleted, NSError *error))completionBlock;
+- (CMISRequest*)deleteAllVersionsWithCompletionBlock:(void (^)(BOOL documentDeleted, NSError *error))completionBlock;
 
 @end

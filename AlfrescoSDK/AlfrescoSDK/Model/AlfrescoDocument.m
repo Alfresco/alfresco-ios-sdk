@@ -33,11 +33,6 @@
 
 @implementation AlfrescoDocument
 
-@synthesize contentMimeType = _contentMimeType;
-@synthesize contentLength = _contentLength;
-@synthesize versionLabel = _versionLabel;
-@synthesize versionComment = _versionComment;
-@synthesize isLatestVersion = _isLatestVersion;
 
 - (id)initWithProperties:(NSDictionary *)properties
 {

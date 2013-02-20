@@ -21,7 +21,6 @@
 
 @implementation AlfrescoTaggingServiceTest
 
-@synthesize taggingService = _taggingService;
 
 /*
  */

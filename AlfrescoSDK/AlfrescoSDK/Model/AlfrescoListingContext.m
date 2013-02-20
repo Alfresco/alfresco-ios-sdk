@@ -30,10 +30,6 @@
 
 @implementation AlfrescoListingContext
 
-@synthesize sortProperty = _sortProperty;
-@synthesize sortAscending = _sortAscending;
-@synthesize maxItems = _maxItems;
-@synthesize skipCount = _skipCount;
 
 - (id)init
 {

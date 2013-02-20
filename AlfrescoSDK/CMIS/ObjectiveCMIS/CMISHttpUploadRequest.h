@@ -19,7 +19,7 @@
 
 #import "CMISHttpRequest.h"
 
-@interface CMISHttpUploadRequest : CMISHttpRequest
+@interface CMISHttpUploadRequest : CMISHttpRequest 
 
 @property (nonatomic, strong) NSInputStream *inputStream;
 @property (nonatomic, assign) unsigned long long bytesExpected; // optional; if not set, expected content length from HTTP header is used
@@ -30,7 +30,7 @@
  * setHTTPBodyStream method
  * completionBlock returns CMISHttpResponse instance or nil if unsuccessful
  */
-+ (CMISHttpUploadRequest*)startRequest:(NSMutableURLRequest *)urlRequest
++ (id)startRequest:(NSMutableURLRequest *)urlRequest
                             httpMethod:(CMISHttpRequestMethod)httpRequestMethod
                            inputStream:(NSInputStream*)inputStream
                                headers:(NSDictionary*)addionalHeaders
@@ -39,9 +39,5 @@
                        completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
                          progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
-/// designated initialiser. Do not call this method directly. Use the class method startRequest:withHttpMethod:inputStream:headers:bytesExpected:authenticationProvider:completionBlock:progressBlock instead
-- (id)initWithHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
-         completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
-           progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
 @end

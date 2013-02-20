@@ -20,13 +20,13 @@
 #import "CMISSession.h"
 #import "CMISRepositoryService.h"
 #import "CMISRepositoryInfo.h"
+#import "CMISDateUtil.h"
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoCloudNetwork.h"
 #import "AlfrescoURLUtils.h"
-#import "AlfrescoISO8601DateFormatter.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoOAuthAuthenticationProvider.h"
@@ -72,7 +72,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) NSString *emailAddress;
 @property (nonatomic, strong, readwrite) NSString *password;
-@property (nonatomic, strong)           AlfrescoISO8601DateFormatter *dateFormatter;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) NSString * apiKey;
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
@@ -81,21 +80,6 @@
 
 
 @implementation AlfrescoCloudSession
-@synthesize baseUrl = _baseUrl;
-@synthesize baseURLWithoutNetwork = _baseURLWithoutNetwork;
-@synthesize cmisUrl = _cmisUrl;
-@synthesize sessionData = _sessionData;
-@synthesize personIdentifier = _personIdentifier;
-@synthesize repositoryInfo = _repositoryInfo;
-@synthesize rootFolder = _rootFolder;
-@synthesize emailAddress = _emailAddress;
-@synthesize password = _password;
-@synthesize dateFormatter = _dateFormatter;
-@synthesize defaultListingContext = _defaultListingContext;
-@synthesize oauthData = _oauthData;
-@synthesize apiKey = _apiKey;
-@synthesize isUsingBaseAuthenticationProvider = _isUsingBaseAuthenticationProvider;
-@synthesize networkProvider = _networkProvider;
 
 #pragma mark - Public methods
 
@@ -483,7 +467,6 @@ This authentication method authorises the user to access the home network assign
     self.emailAddress = emailAddress;
     self.password = password;
     self.personIdentifier = emailAddress;
-    self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
     [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
         {
@@ -542,7 +525,6 @@ This authentication method authorises the user to access the home network assign
     self.personIdentifier = emailAddress;
     
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
-    self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
 
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     params.username = emailAddress;
@@ -627,7 +609,7 @@ This authentication method authorises the user to access the home network assign
         NSString *dateString = (NSString *)createdAtObject;
         if (nil != dateString)
         {
-            network.createdAt = [self.dateFormatter dateFromString:dateString];
+            network.createdAt = [CMISDateUtil dateFromString:dateString];
         }
     }
                 
