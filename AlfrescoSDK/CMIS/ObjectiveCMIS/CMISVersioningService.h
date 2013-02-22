@@ -38,6 +38,7 @@
  * @param includeACL
  * @param includeAllowableActions
  * @param completionBlock returns object data if found or nil otherwise
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveObjectOfLatestVersion:(NSString *)objectId
                                 major:(BOOL)major
@@ -49,12 +50,13 @@
               includeAllowableActions:(BOOL)includeAllowableActions
                       completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
 
-/*
+/**
  * Returns the list of all Document Object in the given version series, sorted by creationDate descending (ie youngest first)
  * @param objectId
  * @param filter
  * @param includeAllowableActions
  * @param completionBlock returns array of all versioned objects or nil otherwise
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveAllVersions:(NSString *)objectId
                              filter:(NSString *)filter

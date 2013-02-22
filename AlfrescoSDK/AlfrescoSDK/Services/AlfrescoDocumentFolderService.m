@@ -756,8 +756,9 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     return request;
 }
 
-- (AlfrescoRequest *)retrieveRenditionOfNode:(AlfrescoNode *)node renditionName:(NSString *)renditionName
-                completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveRenditionOfNode:(AlfrescoNode *)node
+                               renditionName:(NSString *)renditionName
+                             completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"folder"];
@@ -798,7 +799,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                 log(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@",renditions.count, thumbnailRendition.renditionDocumentId);
                 NSString *tmpFileName = [NSTemporaryDirectory() stringByAppendingFormat:@"%@.png",node.name];
                 log(@"************* DOWNLOADING TO FILE %@",tmpFileName);
-                [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^(NSError *downloadError){
+                request.httpRequest = [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^(NSError *downloadError){
                     if (downloadError)
                     {
                         completionBlock(nil, downloadError);
