@@ -35,8 +35,8 @@
 /**
  fetches the repo info
  */
-- (void)fetchRepositoryInfoWithCancellableRequest:(CMISRequest *)cmisRequest
-                                  completionBlock:(void (^)(NSError *error))completionBlock;
+- (void)fetchRepositoryInfoWithCMISRequest:(CMISRequest *)cmisRequest
+                           completionBlock:(void (^)(NSError *error))completionBlock;
 
 /**
  retrieves the CMIS workspace

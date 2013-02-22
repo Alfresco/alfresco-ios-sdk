@@ -40,30 +40,34 @@
     return nil;
 }
 
-- (void)retrieveLikeCountForNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)retrieveLikeCountForNode:(AlfrescoNode *)node
                  completionBlock:(AlfrescoNumberCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];    
+    return nil;
 }
 
 
-- (void)isNodeLiked:(AlfrescoNode *)node
+- (AlfrescoRequest *)isNodeLiked:(AlfrescoNode *)node
     completionBlock:(AlfrescoLikedCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];    
+    return nil;
 }
 
-- (void)likeNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)likeNode:(AlfrescoNode *)node
  completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];    
+    return nil;
 }
 
 
-- (void)unlikeNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)unlikeNode:(AlfrescoNode *)node
    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];    
+    return nil;
 }
 
 @end

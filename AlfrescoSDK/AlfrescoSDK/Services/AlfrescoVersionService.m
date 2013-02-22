@@ -52,7 +52,7 @@
 }
 
 
-- (void)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
                       completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
@@ -60,11 +60,12 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
 //    __weak AlfrescoVersionService *weakSelf = self;
-    [self.cmisSession.binding.versioningService
-     retrieveAllVersions:document.identifier
-     filter:nil
-     includeAllowableActions:YES
-     completionBlock:^(NSArray *allVersions, NSError *error){
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession.binding.versioningService
+                           retrieveAllVersions:document.identifier
+                           filter:nil
+                           includeAllowableActions:YES
+                           completionBlock:^(NSArray *allVersions, NSError *error){
          if (nil == allVersions)
          {
              completionBlock(nil, error);
@@ -82,9 +83,10 @@
              
          }
      }];
+    return request;
 }
 
-- (void)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
@@ -97,11 +99,12 @@
     }
     
 //    __weak AlfrescoVersionService *weakSelf = self;
-    [self.cmisSession.binding.versioningService
-     retrieveAllVersions:document.identifier
-     filter:nil
-     includeAllowableActions:YES
-     completionBlock:^(NSArray *allVersions, NSError *error){
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession.binding.versioningService
+                           retrieveAllVersions:document.identifier
+                           filter:nil
+                           includeAllowableActions:YES
+                           completionBlock:^(NSArray *allVersions, NSError *error){
          if (nil == allVersions)
          {
              completionBlock(nil, error);
@@ -124,6 +127,7 @@
              
          }
      }];
+    return request;
 }
 
 @end

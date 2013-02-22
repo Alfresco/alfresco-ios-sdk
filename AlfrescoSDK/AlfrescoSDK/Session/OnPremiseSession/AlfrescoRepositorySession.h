@@ -21,6 +21,7 @@
 #import "AlfrescoSession.h"
 #import "AlfrescoFolder.h"
 #import "AlfrescoRepositoryInfo.h"
+#import "AlfrescoRequest.h"
 
 /** The AlfrescoRepositorySession manages the session with an Alfresco Repository.
  
@@ -40,10 +41,10 @@
  @param completionBlock (AlfrescoSessionCompletionBlock). The block that's called with the session in case the operation succeeds. - required
  @return an instance of the repository session
  */
-+ (void)connectWithUrl:(NSURL *)url
-              username:(NSString *)username
-              password:(NSString *)password
-       completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
++ (AlfrescoRequest *)connectWithUrl:(NSURL *)url
+                           username:(NSString *)username
+                           password:(NSString *)password
+                    completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
  * @name creates an authenticated instance of the AlfrescoRepositorySession
@@ -57,11 +58,11 @@
  @param completionBlock (AlfrescoSessionCompletionBlock). The block that's called with the session in case the operation succeeds. - required
  @return an instance of the repository session
  */
-+ (void)connectWithUrl:(NSURL *)url
-              username:(NSString *)username
-              password:(NSString *)password
-            parameters:(NSDictionary *)parameters
-       completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
++ (AlfrescoRequest *)connectWithUrl:(NSURL *)url
+                           username:(NSString *)username
+                           password:(NSString *)password
+                         parameters:(NSDictionary *)parameters
+                    completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 
 

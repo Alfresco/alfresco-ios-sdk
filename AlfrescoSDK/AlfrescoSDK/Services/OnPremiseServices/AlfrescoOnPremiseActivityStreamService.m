@@ -56,24 +56,25 @@
 }
 
 
- - (void)retrieveActivityStreamWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+ - (AlfrescoRequest *)retrieveActivityStreamWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
  {
-     [self retrieveActivityStreamForPerson:self.session.personIdentifier completionBlock:completionBlock];
+     return [self retrieveActivityStreamForPerson:self.session.personIdentifier completionBlock:completionBlock];
  }
  
-- (void)retrieveActivityStreamWithListingContext:(AlfrescoListingContext *)listingContext
+- (AlfrescoRequest *)retrieveActivityStreamWithListingContext:(AlfrescoListingContext *)listingContext
                                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [self retrieveActivityStreamForPerson:self.session.personIdentifier listingContext:listingContext completionBlock:completionBlock];
+    return [self retrieveActivityStreamForPerson:self.session.personIdentifier listingContext:listingContext completionBlock:completionBlock];
 }
  
- - (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+ - (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
  {
      [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
      [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
      NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseActivityAPI];
 //     __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
-     [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
          if (nil == responseData)
          {
              completionBlock(nil, error);
@@ -85,9 +86,10 @@
              completionBlock(activityStreamArray, conversionError);
          }
      }];
+     return alfrescoRequest;
  }
  
- - (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext
+ - (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext
  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
  {
      [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
@@ -98,7 +100,8 @@
      }
      NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseActivityAPI];
 //     __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
-     [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
          if (nil == responseData)
          {
              completionBlock(nil, error);
@@ -111,9 +114,10 @@
              completionBlock(pagingResult, conversionError);
          }
      }];
+     return alfrescoRequest;
  }
  
- - (void)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+ - (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
  {
      [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
      [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -121,7 +125,8 @@
      NSString *requestString = [kAlfrescoOnPremiseActivityForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
      NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
 //     __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
-     [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
          if (nil == responseData)
          {
              completionBlock(nil, error);
@@ -133,9 +138,10 @@
              completionBlock(activityStreamArray, conversionError);
          }
      }];
+     return alfrescoRequest;
  }
  
-- (void)retrieveActivityStreamForSite:(AlfrescoSite *)site
+- (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site
                    listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
@@ -148,7 +154,8 @@
     NSString *requestString = [kAlfrescoOnPremiseActivityForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
 //    __weak AlfrescoOnPremiseActivityStreamService *weakSelf = self;
-    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -161,6 +168,7 @@
             completionBlock(pagingResult, conversionError);
         }
     }];
+    return alfrescoRequest;
 }
  
  #pragma mark Activity stream service internal methods

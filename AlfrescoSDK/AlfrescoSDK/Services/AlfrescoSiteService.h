@@ -22,6 +22,7 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoSite.h"
+#import "AlfrescoRequest.h"
 
 /** The AlfrescoSiteService provides various ways to retrieve sites from an Alfresco repository.
  
@@ -52,7 +53,7 @@
  
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
-- (void)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
 /** Retrieves sites in the repository with listing context.
@@ -60,21 +61,21 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the nodes.
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
-- (void)retrieveAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
+- (AlfrescoRequest *)retrieveAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
                            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /** Retrieves all the sites for the current user of the session.
  
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
-- (void)retrieveSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Retrieves the sites for the current session user with listing context.
  
  @param listingContext The listing context with a paging definition that's used to retrieve the nodes.
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
-- (void)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
+- (AlfrescoRequest *)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 
@@ -82,14 +83,14 @@
  
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
-- (void)retrieveFavoriteSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveFavoriteSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Retrieves the favorite sites for the current session user with listing context.
  
  @param listingContext The listing context with a paging definition that's used to retrieve the nodes.
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
-- (void)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
+- (AlfrescoRequest *)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
                                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /** Retrieves a site with the given short name, if the site doesn’t exist nil is returned.
@@ -100,7 +101,7 @@
  @warning the method can return both a nil error object and a nil site object. This is the case when a valid
  request has been made to the server to retrieve the site, but the site has not been found. 
  */
-- (void)retrieveSiteWithShortName:(NSString *)siteShortName
+- (AlfrescoRequest *)retrieveSiteWithShortName:(NSString *)siteShortName
                   completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
 
 /** Retrieves the folder that represents the root of the Document Library for the site with the given short name.
@@ -108,7 +109,7 @@
  @param siteShortName The short name of the site for which the document library needs to be retrieved.
  @param completionBlock The block that's called with the retrieved document library folder in case the operation succeeds.
  */
-- (void)retrieveDocumentLibraryFolderForSite:(NSString *)siteShortName
+- (AlfrescoRequest *)retrieveDocumentLibraryFolderForSite:(NSString *)siteShortName
                              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 
 

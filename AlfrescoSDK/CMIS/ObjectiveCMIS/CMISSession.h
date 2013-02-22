@@ -50,15 +50,17 @@
 // returns an array of CMISRepositoryInfo objects representing the repositories available at the endpoint.
 /**
  * completionBlock returns a list of repositories or nil if unsuccessful
+ * @return cancellable request if CMISSession can be created successfully, or nil otherwise.
  */
-+ (void)arrayOfRepositories:(CMISSessionParameters *)sessionParameters
++ (CMISRequest*)arrayOfRepositories:(CMISSessionParameters *)sessionParameters
             completionBlock:(void (^)(NSArray *repositories, NSError *error))completionBlock;
 
 
 /**
  * completionBlock returns a CMIS session or nil if unsuccessful
+ * @return cancellable request if CMISSession can be created successfully, or nil otherwise.
  */
-+ (void)connectWithSessionParameters:(CMISSessionParameters *)sessionParameters
++ (CMISRequest*)connectWithSessionParameters:(CMISSessionParameters *)sessionParameters
                      completionBlock:(void (^)(CMISSession *session, NSError * error))completionBlock;
 
 // *** CMIS operations ***

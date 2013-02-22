@@ -26,8 +26,9 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoConstants.h"
+#import "AlfrescoRequest.h"
 
-@interface AlfrescoDefaultHTTPRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+@interface AlfrescoDefaultHTTPRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate, AlfrescoCancellableRequest>
 
 - (void)connectWithURL:(NSURL*)requestURL
                 method:(NSString *)method
