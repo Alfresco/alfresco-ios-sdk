@@ -50,15 +50,17 @@
 // returns an array of CMISRepositoryInfo objects representing the repositories available at the endpoint.
 /**
  * completionBlock returns a list of repositories or nil if unsuccessful
+ * @return cancellable request if CMISSession can be created successfully, or nil otherwise.
  */
-+ (void)arrayOfRepositories:(CMISSessionParameters *)sessionParameters
++ (CMISRequest*)arrayOfRepositories:(CMISSessionParameters *)sessionParameters
             completionBlock:(void (^)(NSArray *repositories, NSError *error))completionBlock;
 
 
 /**
  * completionBlock returns a CMIS session or nil if unsuccessful
+ * @return cancellable request if CMISSession can be created successfully, or nil otherwise.
  */
-+ (void)connectWithSessionParameters:(CMISSessionParameters *)sessionParameters
++ (CMISRequest*)connectWithSessionParameters:(CMISSessionParameters *)sessionParameters
                      completionBlock:(void (^)(CMISSession *session, NSError * error))completionBlock;
 
 // *** CMIS operations ***
@@ -66,12 +68,14 @@
 /**
  * Retrieves the root folder for the repository.
  * completionBlock returns the root folder of the repo or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveRootFolderWithCompletionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
 
 /**
  * Retrieves the root folder for the repository using the provided operation context.
  * completionBlock returns a folder of the repo or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveFolderWithOperationContext:(CMISOperationContext *)operationContext
                            completionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
@@ -79,13 +83,15 @@
 /**
  * Retrieves the object with the given identifier.
  * completionBlock returns the CMIS object or nil if unsuccessful
-  */
+ * @return cancellable request.
+ */
 - (CMISRequest*)retrieveObject:(NSString *)objectId
        completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
 
 /**
   * Retrieves the object with the given identifier, using the provided operation context.
   * completionBlock returns the CMIS object or nil if unsuccessful
+ * @return cancellable request.
   */
 - (CMISRequest*)retrieveObject:(NSString *)objectId
       operationContext:(CMISOperationContext *)operationContext
@@ -94,6 +100,7 @@
 /**
  * Retrieves the object for the given path.
  * completionBlock returns the CMIS object or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveObjectByPath:(NSString *)path
              completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
@@ -102,6 +109,7 @@
 /**
  * Retrieves the object for the given path, using the provided operation context.
  * completionBlock returns the CMIS object or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveObjectByPath:(NSString *)path
             operationContext:(CMISOperationContext *)operationContext
@@ -110,12 +118,14 @@
 /**
  * Retrieves the definition for the given type.
  * completionBlock returns the CMIS type definition or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveTypeDefinition:(NSString *)typeId 
                completionBlock:(void (^)(CMISTypeDefinition *typeDefinition, NSError *error))completionBlock;
 /**
  * Retrieves all objects matching the given cmis query.
  * completionBlock returns the search results as a paged results object or nil if unsuccessful.
+ * @return cancellable request.
  */
 - (CMISRequest*)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
                                       completionBlock:(void (^)(CMISPagedResult *pagedResult, NSError *error))completionBlock;
@@ -124,6 +134,7 @@
  * Retrieves all objects matching the given cmis query, as CMISQueryResult objects.
  * and using the parameters provided in the operation context.
  * completionBlock returns the search results as a paged results object or nil if unsuccessful.
+ * @return cancellable request.
  */
 - (CMISRequest*)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
                                      operationContext:(CMISOperationContext *)operationContext
@@ -133,6 +144,7 @@
  * Queries for a specific type of objects.
  * Returns a paged result set, containing CMISObject instances.
  * completionBlock returns the search results as a paged results object or nil if unsuccessful.
+ * @return cancellable request.
  */
 - (CMISRequest*)queryObjectsWithTypeid:(NSString *)typeId
                    whereClause:(NSString *)whereClause
@@ -144,6 +156,7 @@
 /**
  * Creates a folder in the provided folder.
  * completionBlock returns the object Id of the newly created folder or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)createFolder:(NSDictionary *)properties
             inFolder:(NSString *)folderObjectId
@@ -153,6 +166,7 @@
 /**
  * Downloads the content of object with the provided object id to the given path.
  * completionBlock NSError will be nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)downloadContentOfCMISObject:(NSString *)objectId
                                      toFile:(NSString *)filePath
@@ -162,6 +176,7 @@
 /**
  * Downloads the content of object with the provided object id to the given stream.
  * completionBlock NSError will be nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)downloadContentOfCMISObject:(NSString *)objectId
                              toOutputStream:(NSOutputStream*)outputStream
@@ -171,6 +186,7 @@
 /**
  * Creates a cmis document using the content from the file path.
  * completionBlock returns object Id of newly created object or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)createDocumentFromFilePath:(NSString *)filePath
                           mimeType:(NSString *)mimeType
@@ -182,6 +198,7 @@
 /**
  * Creates a cmis document using the content from the given stream.
  * completionBlock returns object Id of newly created object or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)createDocumentFromInputStream:(NSInputStream *)inputStream
                              mimeType:(NSString *)mimeType

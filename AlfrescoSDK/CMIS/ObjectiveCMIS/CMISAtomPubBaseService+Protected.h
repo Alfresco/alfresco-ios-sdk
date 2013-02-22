@@ -35,14 +35,14 @@
 /**
  fetches the repo info
  */
-- (void)fetchRepositoryInfoWithCancellableRequest:(CMISRequest *)cmisRequest
-                                  completionBlock:(void (^)(NSError *error))completionBlock;
+- (void)fetchRepositoryInfoWithCMISRequest:(CMISRequest *)cmisRequest
+                           completionBlock:(void (^)(NSError *error))completionBlock;
 
 /**
  retrieves the CMIS workspace
  */
-- (void)retrieveCMISWorkspacesWithCancellableRequest:(CMISRequest *)cmisRequest
-                                     completionBlock:(void (^)(NSArray *workspaces, NSError *error))completionBlock;
+- (void)retrieveCMISWorkspacesWithCMISRequest:(CMISRequest *)cmisRequest
+                              completionBlock:(void (^)(NSArray *workspaces, NSError *error))completionBlock;
 
 
 /** Convenience method with all the defaults for the retrieval parameters */

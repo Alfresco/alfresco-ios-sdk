@@ -41,42 +41,48 @@
 }
 
 
-- (void)retrieveActivityStreamWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveActivityStreamWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 
-- (void)retrieveActivityStreamWithListingContext:(AlfrescoListingContext *)listingContext
+- (AlfrescoRequest *)retrieveActivityStreamWithListingContext:(AlfrescoListingContext *)listingContext
                                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier
+- (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier
                         completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier
+- (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier
                          listingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveActivityStreamForSite:(AlfrescoSite *)site
+- (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site
                       completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveActivityStreamForSite:(AlfrescoSite *)site
+- (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 @end

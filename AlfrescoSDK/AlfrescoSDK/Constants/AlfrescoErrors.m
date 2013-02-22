@@ -32,6 +32,7 @@ NSString * const kAlfrescoErrorDescriptionAPIKeyOrSecretKeyUnrecognised = @"The 
 NSString * const kAlfrescoErrorDescriptionAuthorizationCodeInvalid = @"The authentication code is invalid";
 NSString * const kAlfrescoErrorDescriptionAccessTokenExpired = @"The access token has expired";
 NSString * const kAlfrescoErrorDescriptionRefreshTokenExpired = @"The refresh token has expired";
+NSString * const kAlfrescoErrorDescriptionNetworkRequestCancelled = @"The network request was cancelled";
 
 NSString * const kAlfrescoErrorDescriptionJSONParsing = @"JSON Data parsing Error";
 NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON Data are nil/empty";
@@ -171,6 +172,9 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
             
         case kAlfrescoErrorCodeNoNetworkFound:
             return kAlfrescoErrorDescriptionNoNetworkFound;
+            break;
+        case kAlfrescoErrorCodeNetworkRequestCancelled:
+            return kAlfrescoErrorDescriptionNetworkRequestCancelled;
             break;
         case kAlfrescoErrorCodeJSONParsing:
             return kAlfrescoErrorDescriptionJSONParsing;

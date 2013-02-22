@@ -29,6 +29,7 @@
 /**
  * Retrieves the children for the given object identifier.
  * completionBlock returns object list or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveChildren:(NSString *)objectId
                  orderBy:(NSString *)orderBy
@@ -47,6 +48,7 @@
  *
  * TODO: OpenCMIS returns an ObjectParentData object .... is this necessary?
  * completionBlock returns array of parents or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveParentsForObject:(NSString *)objectId
                           filter:(NSString *)filter

@@ -59,16 +59,16 @@
 
 
 
-- (void)searchWithStatement:(NSString *)statement
-                   language:(AlfrescoSearchLanguage)language
-            completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithStatement:(NSString *)statement
+                                language:(AlfrescoSearchLanguage)language
+                         completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:statement argumentName:@"statement"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];    
-    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     if (AlfrescoSearchLanguageCMIS == language)
     {
-        [self.cmisSession.binding.discoveryService
+        request.httpRequest = [self.cmisSession.binding.discoveryService
          query:statement
          searchAllVersions:NO
          relationships:CMISIncludeRelationshipBoth
@@ -94,14 +94,15 @@
              
         }];
     }
+    return request;
     
 }
 
 
-- (void)searchWithStatement:(NSString *)statement
-                   language:(AlfrescoSearchLanguage)language
-             listingContext:(AlfrescoListingContext *)listingContext
-            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithStatement:(NSString *)statement
+                                language:(AlfrescoSearchLanguage)language
+                          listingContext:(AlfrescoListingContext *)listingContext
+                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:statement argumentName:@"statement"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -111,10 +112,11 @@
     }
     
     
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
 
     if (AlfrescoSearchLanguageCMIS == language)
     {
-        [self.cmisSession.binding.discoveryService
+        request.httpRequest = [self.cmisSession.binding.discoveryService
          query:statement
          searchAllVersions:NO
          relationships:CMISIncludeRelationshipBoth
@@ -145,19 +147,21 @@
              
          }];
     }
+    return request;
     
 }
 
-- (void)searchWithKeywords:(NSString *)keywords
-                   options:(AlfrescoKeywordSearchOptions *)options
-           completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                                options:(AlfrescoKeywordSearchOptions *)options
+                        completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:keywords argumentName:@"keywords"];
     [AlfrescoErrors assertArgumentNotNil:options argumentName:@"options"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     NSString *query = [self createSearchQuery:keywords options:options];
-    [self.cmisSession query:query searchAllVersions:NO completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession query:query searchAllVersions:NO completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
         if (nil == pagedResult)
         {
             completionBlock(nil, error);
@@ -173,13 +177,13 @@
             completionBlock(sortedArray, nil);
         }
     }];
-    
+    return request;
 }
 
-- (void)searchWithKeywords:(NSString *)keywords
-                   options:(AlfrescoKeywordSearchOptions *)options
-            listingContext:(AlfrescoListingContext *)listingContext
-           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                                options:(AlfrescoKeywordSearchOptions *)options
+                         listingContext:(AlfrescoListingContext *)listingContext
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:keywords argumentName:@"keywords"];
     [AlfrescoErrors assertArgumentNotNil:options argumentName:@"options"];
@@ -189,9 +193,10 @@
         listingContext = self.session.defaultListingContext;
     }
 
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     NSString *query = [self createSearchQuery:keywords options:options];
     CMISOperationContext *operationContext = [AlfrescoPagingUtils operationContextFromListingContext:listingContext];
-    [self.cmisSession query:query searchAllVersions:NO operationContext:operationContext completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+    request.httpRequest = [self.cmisSession query:query searchAllVersions:NO operationContext:operationContext completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
         if (nil == pagedResult)
         {
             completionBlock(nil, error);
@@ -208,6 +213,7 @@
             completionBlock(pagingResult, nil);            
         }        
     }];    
+    return request;
 }
 
 

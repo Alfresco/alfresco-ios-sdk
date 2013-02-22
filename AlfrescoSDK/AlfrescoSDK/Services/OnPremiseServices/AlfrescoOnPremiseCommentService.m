@@ -57,7 +57,7 @@
     return self;
 }
 
-- (void)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
@@ -69,7 +69,8 @@
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                        withString:cleanNodeId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -86,9 +87,10 @@
             completionBlock(sortedCommentArray, conversionError);
         }
     }];
+    return alfrescoRequest;
 }
 
-- (void)retrieveCommentsForNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
@@ -107,7 +109,8 @@
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                        withString:cleanNodeId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -120,9 +123,10 @@
             completionBlock(pagingResult, conversionError);
         }
     }];
+    return alfrescoRequest;
 }
 
-- (void)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content
+- (AlfrescoRequest *)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content
                    title:(NSString *)title completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
@@ -141,9 +145,15 @@
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                        withString:[nodeString stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     
 //    __weak AlfrescoOnPremiseCommentService *weakSelf = self;
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST completionBlock:^(NSData *data, NSError *responseError){
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                            requestBody:jsonData
+                                                 method:kAlfrescoHTTPPOST
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *data, NSError *responseError){
         if (nil == data)
         {
             completionBlock(nil, responseError);
@@ -155,9 +165,10 @@
             completionBlock(comment, conversionError);
         }
     }];
+    return alfrescoRequest;
 }
 
-- (void)updateCommentOnNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)updateCommentOnNode:(AlfrescoNode *)node
                     comment:(AlfrescoComment *)comment
                     content:(NSString *)content
             completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
@@ -179,8 +190,14 @@
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
 //    __weak AlfrescoOnPremiseCommentService *weakSelf = self;
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPut completionBlock:^(NSData *data, NSError *responseError){
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                            requestBody:jsonData
+                                                 method:kAlfrescoHTTPPut
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *data, NSError *responseError){
         if (nil == data)
         {
             completionBlock(nil, responseError);
@@ -192,9 +209,10 @@
             completionBlock(comment, conversionError);
         }
     }];
+    return alfrescoRequest;
 }
 
-- (void)deleteCommentFromNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)deleteCommentFromNode:(AlfrescoNode *)node
                       comment:(AlfrescoComment *)comment
               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
@@ -211,7 +229,13 @@
     NSString *requestString = [kAlfrescoOnPremiseCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
                                                                                              withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPDelete completionBlock:^(NSData *data, NSError *responseError){
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                            requestBody:jsonData
+                                                 method:kAlfrescoHTTPDelete
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *data, NSError *responseError){
         if (nil == data)
         {
             completionBlock(NO, responseError);
@@ -221,6 +245,7 @@
             completionBlock(YES, nil);
         }
     }];
+    return alfrescoRequest;
 }
 
 
