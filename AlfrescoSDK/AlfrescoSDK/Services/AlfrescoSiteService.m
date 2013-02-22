@@ -39,50 +39,58 @@
     return nil;
 }
 
-- (void)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
+- (AlfrescoRequest *)retrieveAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
                            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
+- (AlfrescoRequest *)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 
-- (void)retrieveFavoriteSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveFavoriteSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
+- (AlfrescoRequest *)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
                                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveSiteWithShortName:(NSString *)siteShortName
+- (AlfrescoRequest *)retrieveSiteWithShortName:(NSString *)siteShortName
                   completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveDocumentLibraryFolderForSite:(NSString *)siteShortName
+- (AlfrescoRequest *)retrieveDocumentLibraryFolderForSite:(NSString *)siteShortName
                              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 

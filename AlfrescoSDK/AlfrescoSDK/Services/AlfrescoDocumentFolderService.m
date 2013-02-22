@@ -60,8 +60,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 // filter the provided array with items that match the provided class type
 - (NSArray *)retrieveItemsWithClassFilter:(Class) typeClass withArray:(NSArray *)itemArray;
 
-- (void)extractMetadataForNode:(AlfrescoNode *)node;
-- (void)generateThumbnailForNode:(AlfrescoNode *)node;
+- (void)extractMetadataForNode:(AlfrescoNode *)node alfrescoRequest:(AlfrescoRequest *)alfrescoRequest;
+- (void)generateThumbnailForNode:(AlfrescoNode *)node alfrescoRequest:(AlfrescoRequest *)alfrescoRequest;
 @end
 
 @implementation AlfrescoDocumentFolderService
@@ -88,7 +88,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 
 #pragma mark - Create methods
 
-- (void)createFolderWithName:(NSString *)folderName inParentFolder:(AlfrescoFolder *)folder properties:(NSDictionary *)properties 
+- (AlfrescoRequest *)createFolderWithName:(NSString *)folderName inParentFolder:(AlfrescoFolder *)folder properties:(NSDictionary *)properties 
              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 {
     [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
@@ -110,12 +110,12 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         objectTypeId = [kCMISPropertyObjectTypeIdValueFolder stringByAppendingString:@",P:cm:titled"];
         [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
     }
-    
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession createFolder:properties inFolder:folder.identifier completionBlock:^(NSString *folderRef, NSError *error){
+    request.httpRequest = [self.cmisSession createFolder:properties inFolder:folder.identifier completionBlock:^(NSString *folderRef, NSError *error){
         if (nil != folderRef)
         {
-            [self retrieveNodeWithIdentifier:folderRef completionBlock:^(AlfrescoNode *node, NSError *error) {
+            request = [self retrieveNodeWithIdentifier:folderRef completionBlock:^(AlfrescoNode *node, NSError *error) {
                 
                 completionBlock((AlfrescoFolder *)node, error);
                 
@@ -127,10 +127,11 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         }
         
     }];
+    return request;
 }
 
 
-- (void)createDocumentWithName:(NSString *)documentName inParentFolder:(AlfrescoFolder *)folder contentFile:(AlfrescoContentFile *)file 
+- (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName inParentFolder:(AlfrescoFolder *)folder contentFile:(AlfrescoContentFile *)file 
                     properties:(NSDictionary *)properties 
                     completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                     progressBlock:(AlfrescoProgressBlock)progressBlock
@@ -159,7 +160,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     
         
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession createDocumentFromFilePath:[file.fileUrl path] mimeType:file.mimeType properties:properties inFolder:folder.identifier completionBlock:^(NSString *identifier, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession createDocumentFromFilePath:[file.fileUrl path] mimeType:file.mimeType properties:properties inFolder:folder.identifier completionBlock:^(NSString *identifier, NSError *error){
         if (nil == identifier)
         {
             NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
@@ -167,7 +169,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         }
         else
         {
-            [self retrieveNodeWithIdentifier:identifier completionBlock:^(AlfrescoNode *node, NSError *error) {
+            request = [self retrieveNodeWithIdentifier:identifier completionBlock:^(AlfrescoNode *node, NSError *error) {
                 
                 completionBlock((AlfrescoDocument *)node, error);
                 if (nil != node)
@@ -175,12 +177,12 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     BOOL isExtractMetadata = [[self.session objectForParameter:kAlfrescoMetadataExtraction] boolValue];
                     if (isExtractMetadata)
                     {
-                        [self extractMetadataForNode:node];
+                        [self extractMetadataForNode:node alfrescoRequest:request];
                     }
                     BOOL isGenerateThumbnails = [[self.session objectForParameter:kAlfrescoThumbnailCreation] boolValue];
                     if (isGenerateThumbnails)
                     {
-                        [self generateThumbnailForNode:node];
+                        [self generateThumbnailForNode:node alfrescoRequest:request];
                     }
                 }
             }];
@@ -192,9 +194,10 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             progressBlock(bytesUploaded, bytesTotal);
         }
     }];
+    return request;
 }
 
-- (void)createDocumentWithName:(NSString *)documentName
+- (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                 inParentFolder:(AlfrescoFolder *)folder
                    contentFile:(AlfrescoContentFile *)file
                     properties:(NSDictionary *)properties
@@ -219,9 +222,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         objectTypeId = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@", P:cm:titled"];
         [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
     }
-    
-    
-    [self.cmisSession createDocumentFromInputStream:inputStream mimeType:file.mimeType properties:properties inFolder:folder.identifier bytesExpected:expectedBytes completionBlock:^(NSString *objectId, NSError *error) {
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession createDocumentFromInputStream:inputStream mimeType:file.mimeType properties:properties inFolder:folder.identifier bytesExpected:expectedBytes completionBlock:^(NSString *objectId, NSError *error) {
         if (nil == objectId)
         {
             NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
@@ -229,7 +231,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         }
         else
         {
-            [self retrieveNodeWithIdentifier:objectId completionBlock:^(AlfrescoNode *node, NSError *error) {
+            request = [self retrieveNodeWithIdentifier:objectId completionBlock:^(AlfrescoNode *node, NSError *error) {
                 
                 completionBlock((AlfrescoDocument *)node, error);
                 if (nil != node)
@@ -237,12 +239,12 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     BOOL isExtractMetadata = [[self.session objectForParameter:kAlfrescoMetadataExtraction] boolValue];
                     if (isExtractMetadata)
                     {
-                        [self extractMetadataForNode:node];
+                        [self extractMetadataForNode:node alfrescoRequest:request];
                     }
                     BOOL isGenerateThumbnails = [[self.session objectForParameter:kAlfrescoThumbnailCreation] boolValue];
                     if (isGenerateThumbnails)
                     {
-                        [self generateThumbnailForNode:node];
+                        [self generateThumbnailForNode:node alfrescoRequest:request];
                     }
                 }
             }];
@@ -253,15 +255,16 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             progressBlock(bytesUploaded, bytesTotal);
         }
     }];
+    return request;
 }
 
 
 #pragma mark - Retrieval methods
-- (void)retrieveRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-
-    [self.cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *cmisFolder, NSError *error){
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *cmisFolder, NSError *error){
         AlfrescoFolder *rootFolder = nil;
         if (nil != cmisFolder)
         {
@@ -269,17 +272,17 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         }
         completionBlock(rootFolder, error);
     }];
-    
+    return request;    
 }
 
-- (void)retrievePermissionsOfNode:(AlfrescoNode *)node 
+- (AlfrescoRequest *)retrievePermissionsOfNode:(AlfrescoNode *)node 
                   completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    [self retrieveNodeWithIdentifier:node.identifier completionBlock:^(AlfrescoNode *retrievedNode, NSError *error){
+    return [self retrieveNodeWithIdentifier:node.identifier completionBlock:^(AlfrescoNode *retrievedNode, NSError *error){
         if (nil == retrievedNode)
         {
             completionBlock(nil, error);
@@ -301,14 +304,14 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 }
 
 
-- (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder 
+- (AlfrescoRequest *)retrieveChildrenInFolder:(AlfrescoFolder *)folder 
                  completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
     [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -321,7 +324,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISFolder *folder = (CMISFolder *)cmisObject;
-            [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+            request.httpRequest = [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
                 if (nil == pagedResult)
                 {
                     completionBlock(nil, error);
@@ -339,13 +342,14 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }];
         }
     }];
+    return request;
 }
 
 
 
 
 
-- (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder
+- (AlfrescoRequest *)retrieveChildrenInFolder:(AlfrescoFolder *)folder
                   listingContext:(AlfrescoListingContext *)listingContext
                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
 {
@@ -357,7 +361,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         listingContext = self.session.defaultListingContext;
     }
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -370,7 +375,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISFolder *folder = (CMISFolder *)cmisObject;
-            [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+            request.httpRequest = [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
                 if (nil == pagedResult)
                 {
                     completionBlock(nil, error);
@@ -402,12 +407,12 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }];
         }
     }];
-    
+    return request;
 }
 
 
 
-- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder 
+- (AlfrescoRequest *)retrieveDocumentsInFolder:(AlfrescoFolder *)folder 
                   completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
@@ -415,7 +420,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -428,7 +434,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISFolder *folder = (CMISFolder *)cmisObject;
-            [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+            request.httpRequest = [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
                 if (nil == pagedResult)
                 {
                     completionBlock(nil, error);
@@ -450,9 +456,10 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }];
         }
     }];
+    return request;
 }
 
-- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder
+- (AlfrescoRequest *)retrieveDocumentsInFolder:(AlfrescoFolder *)folder
                    listingContext:(AlfrescoListingContext *)listingContext
                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
@@ -465,7 +472,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     }
     
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -478,7 +486,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISFolder *folder = (CMISFolder *)cmisObject;
-            [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+            request.httpRequest = [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
                 if (nil == pagedResult)
                 {
                     completionBlock(nil, error);
@@ -505,9 +513,10 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }];
         }
     }];
+    return request;
 }
 
-- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder 
+- (AlfrescoRequest *)retrieveFoldersInFolder:(AlfrescoFolder *)folder 
                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
@@ -515,7 +524,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -528,7 +538,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISFolder *folder = (CMISFolder *)cmisObject;
-            [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+            request.httpRequest = [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
                 if (nil == pagedResult)
                 {
                     completionBlock(nil, error);
@@ -550,9 +560,10 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }];
         }
     }];
+    return request;
 }
 
-- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder
+- (AlfrescoRequest *)retrieveFoldersInFolder:(AlfrescoFolder *)folder
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
 {
@@ -565,7 +576,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     }
     
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -578,7 +590,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISFolder *folder = (CMISFolder *)cmisObject;
-            [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
+            request.httpRequest = [folder retrieveChildrenWithCompletionBlock:^(CMISPagedResult *pagedResult, NSError *error){
                 if (nil == pagedResult)
                 {
                     completionBlock(nil, error);
@@ -605,16 +617,18 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }];
         }
     }];
+    return request;
 }
 
-- (void)retrieveNodeWithIdentifier:(NSString *)identifier
+- (AlfrescoRequest *)retrieveNodeWithIdentifier:(NSString *)identifier
                 completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
+
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObject:identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    request.httpRequest = [self.cmisSession retrieveObject:identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -631,18 +645,20 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             
         }
     }];
+    return request;
 }
 
 
 
-- (void)retrieveNodeWithFolderPath:(NSString *)path 
+- (AlfrescoRequest *)retrieveNodeWithFolderPath:(NSString *)path 
                    completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:path argumentName:@"path"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObjectByPath:path completionBlock:^(CMISObject *cmisObject, NSError *error){
+    request.httpRequest = [self.cmisSession retrieveObjectByPath:path completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -658,10 +674,11 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             completionBlock(node, conversionError);
         }
     }];
+    return request;
 }
 
 
-- (void)retrieveNodeWithFolderPath:(NSString *)path relativeToFolder:(AlfrescoFolder *)folder 
+- (AlfrescoRequest *)retrieveNodeWithFolderPath:(NSString *)path relativeToFolder:(AlfrescoFolder *)folder 
                    completionBlock:(AlfrescoNodeCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:path argumentName:@"path"];
@@ -670,7 +687,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -683,12 +701,13 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             {
                 searchPath = [NSString stringWithFormat:@"%@/%@", folder.path, path];
             }
-            [self retrieveNodeWithFolderPath:searchPath completionBlock:completionBlock];
+            request = [self retrieveNodeWithFolderPath:searchPath completionBlock:completionBlock];
         }
-    }];    
+    }];
+    return request;
 }
 
-- (void)retrieveParentFolderOfNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)retrieveParentFolderOfNode:(AlfrescoNode *)node
              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
@@ -696,7 +715,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession.binding.navigationService
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession.binding.navigationService
      retrieveParentsForObject:node.identifier
      filter:nil
      relationships:CMISIncludeRelationshipBoth
@@ -733,20 +753,22 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
              
          }
     }];
-    
+    return request;
 }
 
-- (void)retrieveRenditionOfNode:(AlfrescoNode *)node renditionName:(NSString *)renditionName
-                completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveRenditionOfNode:(AlfrescoNode *)node
+                               renditionName:(NSString *)renditionName
+                             completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"folder"];
     [AlfrescoErrors assertArgumentNotNil:renditionName argumentName:@"renditionName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
     operationContext.renditionFilterString = @"cmis:thumbnail";
-    [self.cmisSession retrieveObject:node.identifier operationContext:operationContext completionBlock:^(CMISObject *cmisObject, NSError *error){
+    request.httpRequest = [self.cmisSession retrieveObject:node.identifier operationContext:operationContext completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -777,7 +799,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                 log(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@",renditions.count, thumbnailRendition.renditionDocumentId);
                 NSString *tmpFileName = [NSTemporaryDirectory() stringByAppendingFormat:@"%@.png",node.name];
                 log(@"************* DOWNLOADING TO FILE %@",tmpFileName);
-                [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^(NSError *downloadError){
+                request.httpRequest = [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^(NSError *downloadError){
                     if (downloadError)
                     {
                         completionBlock(nil, downloadError);
@@ -793,11 +815,11 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }
         }
     }];
-    
+    return request;
 }
 
 
-- (void)retrieveContentOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)retrieveContentOfDocument:(AlfrescoDocument *)document
                   completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
                     progressBlock:(AlfrescoProgressBlock)progressBlock
 {
@@ -806,7 +828,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     NSString *tmpFile = [NSTemporaryDirectory() stringByAppendingFormat:@"%@",document.name];
-    [self.cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^(NSError *error){
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^(NSError *error){
         if (error)
         {
             completionBlock(nil, error);
@@ -822,10 +845,10 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             progressBlock(bytesDownloaded, bytesTotal);
         }
     }];
-    
+    return request;
 }
 
-- (void)retrieveContentOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)retrieveContentOfDocument:(AlfrescoDocument *)document
                        toFilePath:(NSString *)filePath
                      outputStream:(NSOutputStream *)outputStream
                   completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
@@ -835,7 +858,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    [self.cmisSession downloadContentOfCMISObject:document.identifier toOutputStream:outputStream completionBlock:^(NSError *error) {
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession downloadContentOfCMISObject:document.identifier toOutputStream:outputStream completionBlock:^(NSError *error) {
         if (error)
         {
             completionBlock(nil, error);
@@ -851,11 +875,12 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             progressBlock(bytesDownloaded, bytesTotal);
         }
     }];
+    return request;
 }
 
 #pragma mark - Modification methods
 
-- (void)updateContentOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)updateContentOfDocument:(AlfrescoDocument *)document
                     contentFile:(AlfrescoContentFile *)file
                 completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                   progressBlock:(AlfrescoProgressBlock)progressBlock
@@ -866,7 +891,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObject:document.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveObject:document.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -874,14 +900,14 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISDocument *document = (CMISDocument *)cmisObject;
-            [document changeContentToContentOfFile:[file.fileUrl path] mimeType:file.mimeType overwrite:YES completionBlock:^(NSError *error){
+            request.httpRequest = [document changeContentToContentOfFile:[file.fileUrl path] mimeType:file.mimeType overwrite:YES completionBlock:^(NSError *error){
                 if (error)
                 {
                     completionBlock(nil, error);
                 }
                 else
                 {
-                    [self.cmisSession retrieveObject:document.identifier completionBlock:^(CMISObject *updatedObject, NSError *updatedError){
+                    request.httpRequest = [self.cmisSession retrieveObject:document.identifier completionBlock:^(CMISObject *updatedObject, NSError *updatedError){
                         if (nil == updatedObject)
                         {
                             completionBlock(nil, updatedError);
@@ -906,11 +932,11 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }];
         }
     }];
-        
+    return request;    
 }
 
 
-- (void)updatePropertiesOfNode:(AlfrescoNode *)node 
+- (AlfrescoRequest *)updatePropertiesOfNode:(AlfrescoNode *)node 
                 properties:(NSDictionary *)properties
                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
 {
@@ -955,7 +981,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     }
     
 //    __weak AlfrescoDocumentFolderService *weakSelf = self;
-    [self.cmisSession retrieveObject:node.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [self.cmisSession retrieveObject:node.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)
         {
             completionBlock(nil, error);
@@ -985,7 +1012,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                      updatedProperties.extensions = convertedProperties.extensions;
 
                      CMISStringInOutParameter *inOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:cmisObject.identifier];
-                     [self.cmisSession.binding.objectService
+                     request.httpRequest = [self.cmisSession.binding.objectService
                       updatePropertiesForObject:inOutParam
                       properties:updatedProperties
                       changeToken:nil
@@ -996,7 +1023,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                           }
                           else
                           {
-                              [self.cmisSession retrieveObject:node.identifier completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError){
+                              request.httpRequest = [self.cmisSession retrieveObject:node.identifier completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError){
                                   if (nil == updatedCMISObject)
                                   {
                                       completionBlock(nil, retrievalError);
@@ -1019,17 +1046,19 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             
         }
     }];
+    return request;
 }
 
-- (void)deleteNode:(AlfrescoNode *)node completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock 
+- (AlfrescoRequest *)deleteNode:(AlfrescoNode *)node completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     log(@"-------- deleteNode %@ --------", node.name);
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     if ([node isKindOfClass:[AlfrescoDocument class]])
     {
-        [self.cmisSession.binding.objectService deleteObject:node.identifier allVersions:YES completionBlock:^(BOOL objectDeleted, NSError *error){
+        request.httpRequest = [self.cmisSession.binding.objectService deleteObject:node.identifier allVersions:YES completionBlock:^(BOOL objectDeleted, NSError *error){
             if (!objectDeleted)
             {
                 log(@"-------- deleteObject %@ FAILED --------", node.name);
@@ -1044,7 +1073,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     }
     else
     {
-        [self.cmisSession.binding.objectService deleteTree:node.identifier allVersion:YES unfileObjects:CMISDelete continueOnFailure:YES completionBlock:^(NSArray *failedObjects, NSError *error){
+        request.httpRequest = [self.cmisSession.binding.objectService deleteTree:node.identifier allVersion:YES unfileObjects:CMISDelete continueOnFailure:YES completionBlock:^(NSArray *failedObjects, NSError *error){
             if(nil == failedObjects)
             {
                 log(@"-------- deleteTree %@ failedObjects returns with nil --------", node.name);
@@ -1073,6 +1102,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }
         }];
     }
+    return request;
         
 }
 
@@ -1095,7 +1125,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     return filteredArray;
 }
 
-- (void)extractMetadataForNode:(AlfrescoNode *)node
+- (void)extractMetadataForNode:(AlfrescoNode *)node alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
 {
     NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
     
@@ -1121,12 +1151,12 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [self.session.networkProvider executeRequestWithURL:apiUrl
                                      session:self.session
                                  requestBody:jsonData
-                                      method:kAlfrescoHTTPPOST
-                             completionBlock:^(NSData *data, NSError *error){
-                             }];
+                                                 method:kAlfrescoHTTPPOST
+                                        alfrescoRequest:alfrescoRequest
+                             completionBlock:^(NSData *data, NSError *error){}];
 }
 
-- (void)generateThumbnailForNode:(AlfrescoNode *)node
+- (void)generateThumbnailForNode:(AlfrescoNode *)node alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
 {
     NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
     [jsonDictionary setValue:kAlfrescoJSONThumbnailName forKey:kAlfrescoThumbnailRendition];
@@ -1141,11 +1171,11 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                         options:kNilOptions
                         error:&postError];
     [self.session.networkProvider executeRequestWithURL:apiUrl
-                                     session:self.session
-                                 requestBody:jsonData
-                                      method:kAlfrescoHTTPPOST
-                             completionBlock:^(NSData *data, NSError *error){
-                             }];
+                                                session:self.session
+                                            requestBody:jsonData
+                                                 method:kAlfrescoHTTPPOST
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *data, NSError *error){}];
 }
 
 

@@ -29,6 +29,7 @@
 /**
  * Retrieves the object with the given object identifier.
  * completionBlock returns objectData for object or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveObject:(NSString *)objectId
                 filter:(NSString *)filter
@@ -42,6 +43,7 @@
 /**
  * Retrieves an object using its path.
  * completionBlock returns objectData for object or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveObjectByPath:(NSString *)path
                       filter:(NSString *)filter
@@ -56,6 +58,7 @@
  * Gets the content stream for the specified Document object, or gets a rendition stream for a specified
  * rendition of a document or folder object. Downloads the content to a local file.
  * completionBlock returns objectData for object or nil if unsuccessful
+ * @return cancellable request.
  *
  */
 - (CMISRequest*)downloadContentOfObject:(NSString *)objectId
@@ -68,6 +71,7 @@
  * Gets the content stream for the specified Document object, or gets a rendition stream for a specified
  * rendition of a document or folder object. Downloads the content to an output stream.
  * completionBlock returns objectData for object or nil if unsuccessful
+ * @return cancellable request.
  *
  */
 - (CMISRequest*)downloadContentOfObject:(NSString *)objectId
@@ -85,6 +89,7 @@
  * NOTE for atom pub binding: deleteContentStream: This does not return the new object id and change token as specified by the domain model.
  * This is not possible without introducing a new HTTP header.
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)deleteContentOfObject:(CMISStringInOutParameter *)objectIdParam
                   changeToken:(CMISStringInOutParameter *)changeTokenParam
@@ -101,6 +106,7 @@
  * NOTE for atom pub binding: This does not return the new object id and change token as specified by the domain model.
  * (This is not possible without introducing a new HTTP header).
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)changeContentOfObject:(CMISStringInOutParameter *)objectIdParam
                       toContentOfFile:(NSString *)filePath
@@ -121,6 +127,7 @@
  * NOTE for atom pub binding: This does not return the new object id and change token as specified by the domain model.
  * (This is not possible without introducing a new HTTP header).
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)changeContentOfObject:(CMISStringInOutParameter *)objectId
                toContentOfInputStream:(NSInputStream *)inputStream
@@ -136,6 +143,7 @@
  * uploads the file from the given path to the given folder.
  *
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
 */
 - (CMISRequest*)createDocumentFromFilePath:(NSString *)filePath
                                   mimeType:(NSString *)mimeType
@@ -148,6 +156,7 @@
  * uploads the file from the given input stream to the given folder.
  *
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)createDocumentFromInputStream:(NSInputStream *)inputStream
                                      mimeType:(NSString *)mimeType
@@ -162,6 +171,7 @@
  *
  * The allVersions parameter is currently ignored.
  * completionBlock returns true if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)deleteObject:(NSString *)objectId
          allVersions:(BOOL)allVersions
@@ -180,6 +190,7 @@
  *
  * Returns a list of objects which failed to be deleted.
  * completionBlock returns array of failed objects if any. NSError will be nil if successful
+ * @return cancellable request.
  *
  */
 - (CMISRequest*)deleteTree:(NSString *)folderObjectId
@@ -191,6 +202,7 @@
 /**
  * Updates the properties of the given object.
  * completionBlock returns NSError nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)updatePropertiesForObject:(CMISStringInOutParameter *)objectIdParam
                                properties:(CMISProperties *)properties
@@ -204,6 +216,7 @@
  * Note: the paging parameters (maxItems and skipCount) are not used in the atom pub binding.
  *       Ie. the whole set is <b>always</b> returned.
  * completionBlock returns array of associated renditions or nil if unsuccessful
+ * @return cancellable request.
  */
 - (CMISRequest*)retrieveRenditions:(NSString *)objectId
                    renditionFilter:(NSString *)renditionFilter
