@@ -28,6 +28,10 @@
 		4E3FE8B0165F87BC00BDAB31 /* AlfrescoOAuthLoginDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthLoginDelegate.h; sourceTree = "<group>"; };
 		4E80E8EA1614540100922D5D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		4EDBAD3C160B251C00D6305F /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthData.h; sourceTree = "<group>"; };
+		8218AF5316DEAB7D001CE051 /* AlfrescoFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoFileManager.h; sourceTree = "<group>"; };
+		8218AF5416DEAB7D001CE051 /* AlfrescoLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoLog.h; sourceTree = "<group>"; };
+		8218AF5516DEAB7D001CE051 /* AlfrescoNetworkProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoNetworkProvider.h; sourceTree = "<group>"; };
+		8218AF5616DEAB7D001CE051 /* AlfrescoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRequest.h; sourceTree = "<group>"; };
 		8219448B161B9E3A00D07520 /* app_icon_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_large.png; sourceTree = "<group>"; };
 		8219448C161B9E3A00D07520 /* app_icon_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app_icon_large@2x.png"; sourceTree = "<group>"; };
 		8219448D161B9E3A00D07520 /* app_icon_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_small.png; sourceTree = "<group>"; };
@@ -157,6 +161,10 @@
 		82FC413A15E7B3E30081888D /* AlfrescoSDK */ = {
 			isa = PBXGroup;
 			children = (
+				8218AF5316DEAB7D001CE051 /* AlfrescoFileManager.h */,
+				8218AF5416DEAB7D001CE051 /* AlfrescoLog.h */,
+				8218AF5516DEAB7D001CE051 /* AlfrescoNetworkProvider.h */,
+				8218AF5616DEAB7D001CE051 /* AlfrescoRequest.h */,
 				4E3FE8B0165F87BC00BDAB31 /* AlfrescoOAuthLoginDelegate.h */,
 				8244E9DC165F8D6700F4BF6C /* libAlfrescoSDKv1.0.2.a */,
 				82FC413B15E7B3E30081888D /* AlfrescoActivityEntry.h */,

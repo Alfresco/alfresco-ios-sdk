@@ -24,6 +24,7 @@
 #import "AlfrescoSite.h"
 #import "AlfrescoListingContext.h"
 #import "AlfrescoActivityEntry.h"
+#import "AlfrescoRequest.h"
 
 /** The AlfrescoActivityStreamService provides various ways to retrieve an activity stream.
  
@@ -52,7 +53,7 @@
  
  @param completionBlock The block that's called with the activity stream in case the operation succeeds.
  */
-- (void)retrieveActivityStreamWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveActivityStreamWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
 /** Retrieves all activities for the logged-in user with a listing context.
@@ -60,7 +61,7 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the activity stream.
  @param completionBlock The block that's called with the activity stream in case the operation succeeds.
  */
-- (void)retrieveActivityStreamWithListingContext:(AlfrescoListingContext *)listingContext
+- (AlfrescoRequest *)retrieveActivityStreamWithListingContext:(AlfrescoListingContext *)listingContext
                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /** Retrieves all activities for the given user.
@@ -68,7 +69,7 @@
  @param personIdentifier The user name to be used to retrieve the user's activity stream.
  @param completionBlock The block that's called with the activity stream in case the operation succeeds.
  */ 
-- (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier 
+- (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier 
                       completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Retrieves all activities for the given user with a listing context.
@@ -77,7 +78,7 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the activity stream.
  @param completionBlock The block that's called with the activity stream in case the operation succeeds.
  */
-- (void)retrieveActivityStreamForPerson:(NSString *)personIdentifier 
+- (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier 
                          listingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
@@ -86,7 +87,7 @@
  @param site The site to be used to retrieve the site's activity stream.
  @param completionBlock The block that's called with the activity stream in case the operation succeeds.
  */ 
-- (void)retrieveActivityStreamForSite:(AlfrescoSite *)site 
+- (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site 
                       completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Retrieves all activities for the given site with a listing context.
@@ -95,7 +96,7 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the activity stream.
  @param completionBlock The block that's called with the activity stream in case the operation succeeds.
  */
-- (void)retrieveActivityStreamForSite:(AlfrescoSite *)site
+- (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 

@@ -23,6 +23,7 @@
 #import "AlfrescoSession.h"
 #import "AlfrescoListingContext.h"
 #import "AlfrescoNode.h"
+#import "AlfrescoRequest.h"
 
 /** The AlfrescoTaggingService provides various ways to retrieve tags and can add tags to a node
  in a Alfresco repository.
@@ -52,23 +53,23 @@
  
  @param completionBlock The block that's called with the retrieved tags in case the operation succeeds.
  */
-- (void)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Retrieves all tags available in the repository with a listing context.
  
  @param listingContext The listing context with a paging definition that's used to retrieve the tags.
  @param completionBlock The block that's called with the retrieved tags in case the operation succeeds.
  */
-- (void)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext
-                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext
+                                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /** Retrieves all tags applied to a given node.
  
  @param node The node for which the tags should be retrieved.
  @param completionBlock The block that's called with the retrieved tags in case the operation succeeds.
  */
-- (void)retrieveTagsForNode:(AlfrescoNode *)node
-            completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveTagsForNode:(AlfrescoNode *)node
+                         completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Retrieves all tags applied to a given node with a listing context.
  
@@ -76,9 +77,9 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the tags.
  @param completionBlock The block that's called with the retrieved tags in case the operation succeeds.
  */
-- (void)retrieveTagsForNode:(AlfrescoNode *)node
-             listingContext:(AlfrescoListingContext *)listingContext
-            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveTagsForNode:(AlfrescoNode *)node
+                          listingContext:(AlfrescoListingContext *)listingContext
+                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
  * @name Adds the given tags to the given node.
@@ -91,8 +92,8 @@
  @param node The node to which the tags should be added.
  @param completionBlock The block that's called with the retrieved tags in case the operation succeeds.
  */
-- (void)addTags:(NSArray *)tags
-         toNode:(AlfrescoNode *)node
-completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+- (AlfrescoRequest *)addTags:(NSArray *)tags
+                      toNode:(AlfrescoNode *)node
+             completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 @end

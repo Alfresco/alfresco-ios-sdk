@@ -628,7 +628,7 @@
                           super.callbackCompleted = YES;
                           
                       } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                          log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                          AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                           if (0 < bytesDownloaded && request)
                           {
                               [request cancel];

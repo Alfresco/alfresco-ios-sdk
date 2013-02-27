@@ -28,6 +28,7 @@
 #import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
+#import "CMISLog.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoRepositorySession ()
@@ -138,7 +139,11 @@
         }
         
         // setup defaults
-        self.defaultListingContext = [[AlfrescoListingContext alloc] init];        
+        self.defaultListingContext = [[AlfrescoListingContext alloc] init];
+        
+        // TODO: revisit this, seek opinion from team as best way to do this...
+        // setup CMISLog to match log level of AlfrescoLog
+        [CMISLog sharedInstance].logLevel = [AlfrescoLog sharedInstance].logLevel;
     }
     
     return self;

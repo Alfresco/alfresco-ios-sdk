@@ -21,14 +21,15 @@
 
 @implementation AlfrescoLogTest
 
-/*
-AlfrescoLogLevelOff,
-AlfrescoLogLevelError,
-AlfrescoLogLevelWarning,
-AlfrescoLogLevelInfo,
-AlfrescoLogLevelDebug,
-AlfrescoLogLevelTrace
-*/
+- (void)setUp
+{
+    self.initialLogLevel = [AlfrescoLog sharedInstance].logLevel;
+}
+
+- (void)tearDown
+{
+    [AlfrescoLog sharedInstance].logLevel = self.initialLogLevel;
+}
 
 - (void)testLevels
 {

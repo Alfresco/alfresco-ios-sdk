@@ -24,6 +24,7 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoCloudNetwork.h"
 #import "AlfrescoOAuthData.h"
+#import "AlfrescoRequest.h"
 /** The AlfrescoCloudSession manages the session on Alfresco Cloud.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
@@ -48,8 +49,8 @@
  @param oauthData
  @param completionBlock
  */
-+ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
++ (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+                          completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 
 /**
@@ -60,9 +61,9 @@
  @param parameters - optional, may be nil
  @param completionBlock
  */
-+ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-                  parameters:(NSDictionary *)parameters
-             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
++ (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+                               parameters:(NSDictionary *)parameters
+                          completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 /**
  This initialiser uses OAuth authentication processes. It will only be successful if the AlfrescoOAuthData contain a valid access and refresh token.
@@ -72,9 +73,9 @@
  @param networkIdentifer - also known as tenent ID
  @param completionBlock
  */
-+ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-            networkIdentifer:(NSString *)networkIdentifer
-             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
++ (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+                         networkIdentifer:(NSString *)networkIdentifer
+                          completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 /**
  This initialiser uses OAuth authentication processes. It will only be successful if the AlfrescoOAuthData contain a valid access and refresh token.
@@ -85,17 +86,17 @@
  @param parameters - optional, may be nil
  @param completionBlock
  */
-+ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-            networkIdentifer:(NSString *)networkIdentifer
-                  parameters:(NSDictionary *)parameters
-             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
++ (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+                         networkIdentifer:(NSString *)networkIdentifer
+                               parameters:(NSDictionary *)parameters
+                          completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 
 /**
  This method obtains a list of available Cloud networks (or domains/tenants) for the registered user.
  @param completionBlock (AlfrescoArrayCompletionBlock). If successful, the block returns an NSArray object with a list of available networks - or nil if error occurs.
  */
-- (void)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
 @end

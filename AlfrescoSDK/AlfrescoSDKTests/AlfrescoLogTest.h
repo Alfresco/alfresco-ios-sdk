@@ -17,7 +17,10 @@
  ******************************************************************************/
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "AlfrescoLog.h"
 
 @interface AlfrescoLogTest : SenTestCase
+
+@property (nonatomic, assign) AlfrescoLogLevel initialLogLevel;
 
 @end
