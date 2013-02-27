@@ -1440,7 +1440,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Debug;
 		};
@@ -1463,7 +1463,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1488,7 +1488,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = /AlfrescoSDK;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Debug;
 		};
@@ -1512,7 +1512,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = /AlfrescoSDK;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Release;
 		};
@@ -1527,7 +1527,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -1543,7 +1543,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
