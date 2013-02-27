@@ -33,7 +33,6 @@
 */
 /** launches a query on the server with the parameters specified
  * completionBlock returns the found object list or nil if unsuccessful
- * @return cancellable request.
  */
 - (CMISRequest*)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersions
                                                 relationships:(CMISIncludeRelationship)relationships

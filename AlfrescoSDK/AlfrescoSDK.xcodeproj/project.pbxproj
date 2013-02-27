@@ -68,6 +68,8 @@
 		4E9CE53316D511CF004C7934 /* AlfrescoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E9CE53116D511CF004C7934 /* AlfrescoRequest.m */; };
 		4EA177EB15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA177E915E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4EA177EC15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA177EA15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.m */; };
+		4EA2AE4716DE25DE0053D05D /* CMISBase64InputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA2AE4516DE25DE0053D05D /* CMISBase64InputStream.h */; };
+		4EA2AE4816DE25DE0053D05D /* CMISLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA2AE4616DE25DE0053D05D /* CMISLog.h */; };
 		4EA6D4E915D2B444004059AF /* AlfrescoSortingUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA6D4E715D2B444004059AF /* AlfrescoSortingUtils.h */; settings = {ATTRIBUTES = (); }; };
 		4EA6D4EA15D2B444004059AF /* AlfrescoSortingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA6D4E815D2B444004059AF /* AlfrescoSortingUtils.m */; };
 		4EB0769B15B00D8E00DF7DED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0769A15B00D8E00DF7DED /* Foundation.framework */; };
@@ -330,6 +332,8 @@
 		4E9CE53116D511CF004C7934 /* AlfrescoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoRequest.m; sourceTree = "<group>"; };
 		4EA177E915E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRepositoryCapabilities.h; sourceTree = "<group>"; };
 		4EA177EA15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoRepositoryCapabilities.m; sourceTree = "<group>"; };
+		4EA2AE4516DE25DE0053D05D /* CMISBase64InputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISBase64InputStream.h; sourceTree = "<group>"; };
+		4EA2AE4616DE25DE0053D05D /* CMISLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISLog.h; sourceTree = "<group>"; };
 		4EA6D4E715D2B444004059AF /* AlfrescoSortingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSortingUtils.h; sourceTree = "<group>"; };
 		4EA6D4E815D2B444004059AF /* AlfrescoSortingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSortingUtils.m; sourceTree = "<group>"; };
 		4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.0.2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAlfrescoSDKv1.0.2.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -912,6 +916,8 @@
 		73CB831816C4187500B780A6 /* ObjectiveCMIS */ = {
 			isa = PBXGroup;
 			children = (
+				4EA2AE4516DE25DE0053D05D /* CMISBase64InputStream.h */,
+				4EA2AE4616DE25DE0053D05D /* CMISLog.h */,
 				73CB831916C4187500B780A6 /* CMISAclService.h */,
 				73CB831A16C4187500B780A6 /* CMISAllowableActions.h */,
 				73CB831B16C4187500B780A6 /* CMISAllowableActionsParser.h */,
@@ -1162,6 +1168,8 @@
 				73CB83BC16C4187500B780A6 /* CMISVersioningService.h in Headers */,
 				73CB83BD16C4187500B780A6 /* CMISWorkspace.h in Headers */,
 				4E9CE53216D511CF004C7934 /* AlfrescoRequest.h in Headers */,
+				4EA2AE4716DE25DE0053D05D /* CMISBase64InputStream.h in Headers */,
+				4EA2AE4816DE25DE0053D05D /* CMISLog.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1418,7 +1426,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Debug;
 		};
@@ -1441,7 +1449,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1466,7 +1474,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = /AlfrescoSDK;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Debug;
 		};
@@ -1490,7 +1498,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = /AlfrescoSDK;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 			};
 			name = Release;
 		};
@@ -1505,7 +1513,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -1521,7 +1529,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
+				TEST_AFTER_BUILD = YES;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
