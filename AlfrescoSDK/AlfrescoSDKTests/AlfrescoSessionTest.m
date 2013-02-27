@@ -20,7 +20,11 @@
 #import "AlfrescoListingContext.h"
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoDocumentFolderService.h"
+#import "AlfrescoRequest.h"
 #import "AlfrescoLog.h"
+#import "CMISErrors.h"
+
 
 @implementation AlfrescoSessionTest
 
@@ -573,6 +577,76 @@
         {
             [super waitForCompletion];
         }
+        
+    }];
+}
+
+- (void)testCancelDownloadRequest
+{
+    [self runAllSitesTest:^{
+        __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        __weak AlfrescoDocumentFolderService *weakDfService = dfService;
+        __block AlfrescoRequest *request = [dfService retrieveDocumentsInFolder:super.testDocFolder
+                                                                completionBlock:^(NSArray *array, NSError *error)
+         {
+             if (nil == array)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertTrue(array.count > 0, @"Expected more than 0 documents");
+                 if (array.count > 0)
+                 {
+                     request = [weakDfService retrieveContentOfDocument:[array objectAtIndex:0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
+                      {
+                          if (nil == contentFile)
+                          {
+                              super.lastTestSuccessful = YES;
+                              /// The CMIS error code for cancelled requests is kCMISErrorCodeCancelled = 6
+                              STAssertEquals([error code], kCMISErrorCodeCancelled, @"The expected error code is %d, but instead we get %d", kCMISErrorCodeCancelled, [error code]);
+                          }
+                          else
+                          {
+                              super.lastTestSuccessful = NO;
+                              super.lastTestFailureMessage = @"Request should have been cancelled. Instead we get a valid content file back";
+                              // Assert File exists and check file length
+                              NSString *filePath = [contentFile.fileUrl path];
+                              STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
+                              NSError *error;
+                              NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
+                              STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
+                              STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %d kb", [fileAttributes fileSize]/1024.0);
+                              
+                              // Nice boys clean up after themselves
+                              [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+                              STAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
+                          }
+                          
+                          super.callbackCompleted = YES;
+                          
+                      } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                          log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                          if (0 < bytesDownloaded && request)
+                          {
+                              [request cancel];
+                          }
+                      }];
+                 }
+                 else
+                 {
+                     super.lastTestSuccessful = NO;
+                     super.lastTestFailureMessage = @"Failed to download document.";
+                     super.callbackCompleted = YES;
+                 }
+                 
+             }
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
         
     }];
 }

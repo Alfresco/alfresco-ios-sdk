@@ -40,33 +40,39 @@
     return nil;
 }
 
-- (void)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext
-                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext
+                                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveTagsForNode:(AlfrescoNode *)node
-            completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveTagsForNode:(AlfrescoNode *)node
+                         completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
-- (void)retrieveTagsForNode:(AlfrescoNode *)node
-             listingContext:(AlfrescoListingContext *)listingContext
-            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveTagsForNode:(AlfrescoNode *)node
+                          listingContext:(AlfrescoListingContext *)listingContext
+                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)addTags:(NSArray *)tags toNode:(AlfrescoNode *)node
-completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)addTags:(NSArray *)tags
+                      toNode:(AlfrescoNode *)node
+             completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 @end

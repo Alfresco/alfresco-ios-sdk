@@ -36,6 +36,7 @@
                                 responseData:(NSData *)data;
 
 - (NSString*)exception;
+
 - (NSString*)errorMessage;
 
 @end

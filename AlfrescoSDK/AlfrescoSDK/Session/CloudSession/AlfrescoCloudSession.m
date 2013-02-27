@@ -20,13 +20,13 @@
 #import "CMISSession.h"
 #import "CMISRepositoryService.h"
 #import "CMISRepositoryInfo.h"
+#import "CMISDateUtil.h"
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoCloudNetwork.h"
 #import "AlfrescoURLUtils.h"
-#import "AlfrescoISO8601DateFormatter.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoOAuthAuthenticationProvider.h"
@@ -40,21 +40,21 @@
 
 - (id)initWithParameters:(NSDictionary *)parameters;
 
-- (void)authenticateWithEmailAddress:(NSString *)emailAddress
-                            password:(NSString *)password
-                     completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+- (AlfrescoRequest *)authenticateWithEmailAddress:(NSString *)emailAddress
+                                         password:(NSString *)password
+                                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
-- (void)authenticateWithEmailAddress:(NSString *)emailAddress
-                            password:(NSString *)password
-                             network:(NSString *)network
-                     completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+- (AlfrescoRequest *)authenticateWithEmailAddress:(NSString *)emailAddress
+                                         password:(NSString *)password
+                                          network:(NSString *)network
+                                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
-- (void)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
-                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+- (AlfrescoRequest *)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
+                               completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
-- (void)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
-                          network:(NSString *)network
-                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+- (AlfrescoRequest *)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
+                                       network:(NSString *)network
+                               completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 - (NSArray *)networkArrayFromJSONData:(NSData *)data error:(NSError **)outError;
 
@@ -62,7 +62,9 @@
 
 - (id)authProviderToBeUsed;
 
-- (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+- (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters
+                                           alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+                                           completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
 @property (nonatomic, strong, readwrite) NSURL *baseURLWithoutNetwork;
@@ -73,7 +75,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) NSString *emailAddress;
 @property (nonatomic, strong, readwrite) NSString *password;
-@property (nonatomic, strong)           AlfrescoISO8601DateFormatter *dateFormatter;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) NSString * apiKey;
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
@@ -82,36 +83,22 @@
 
 
 @implementation AlfrescoCloudSession
-@synthesize baseUrl = _baseUrl;
-@synthesize baseURLWithoutNetwork = _baseURLWithoutNetwork;
-@synthesize cmisUrl = _cmisUrl;
-@synthesize sessionData = _sessionData;
-@synthesize personIdentifier = _personIdentifier;
-@synthesize repositoryInfo = _repositoryInfo;
-@synthesize rootFolder = _rootFolder;
-@synthesize emailAddress = _emailAddress;
-@synthesize password = _password;
-@synthesize dateFormatter = _dateFormatter;
-@synthesize defaultListingContext = _defaultListingContext;
-@synthesize oauthData = _oauthData;
-@synthesize apiKey = _apiKey;
-@synthesize isUsingBaseAuthenticationProvider = _isUsingBaseAuthenticationProvider;
-@synthesize networkProvider = _networkProvider;
 
 #pragma mark - Public methods
 
-+ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
++ (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:nil];
     if (nil != sessionInstance)
     {
-        [sessionInstance authenticateWithOAuthData:oauthData
-                                   completionBlock:completionBlock];
+        return [sessionInstance authenticateWithOAuthData:oauthData
+                                          completionBlock:completionBlock];
     }
+    return nil;
 }
 
-+ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
++ (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
                   parameters:(NSDictionary *)parameters
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
@@ -135,76 +122,82 @@
         }
         if (useBasicConnect)
         {
-            [sessionInstance authenticateWithEmailAddress:username
-                                                 password:password
-                                          completionBlock:completionBlock];
+            return [sessionInstance authenticateWithEmailAddress:username
+                                                        password:password
+                                                 completionBlock:completionBlock];
         }
         else
         {
-            [sessionInstance authenticateWithOAuthData:oauthData
-                                       completionBlock:completionBlock];
+            return [sessionInstance authenticateWithOAuthData:oauthData
+                                              completionBlock:completionBlock];
         }
     }
+    return nil;
 }
 
-+ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
++ (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
             networkIdentifer:(NSString *)networkIdentifer
              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:nil];
     if (nil != sessionInstance)
     {
-        [sessionInstance authenticateWithOAuthData:oauthData
-                                           network:networkIdentifer
-                                   completionBlock:completionBlock];
-    }
-}
-
-+ (void)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-            networkIdentifer:(NSString *)networkIdentifer
-                  parameters:(NSDictionary *)parameters
-             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
-{
-    AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:parameters];
-    if (nil != sessionInstance)
-    {
-        BOOL useBasicConnect = NO;
-        NSString * username = nil;
-        NSString * password = nil;
-        if (nil != parameters)
-        {
-            if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudBasicAuth])
-            {
-                useBasicConnect = [[parameters valueForKey:kAlfrescoSessionCloudBasicAuth] boolValue];
-            }
-            if (useBasicConnect)
-            {
-                username = [parameters valueForKey:kAlfrescoSessionUsername];
-                password = [parameters valueForKey:kAlfrescoSessionPassword];
-            }
-        }
-        if (useBasicConnect)
-        {
-            [sessionInstance authenticateWithEmailAddress:username
-                                                 password:password
+        return [sessionInstance authenticateWithOAuthData:oauthData
                                                   network:networkIdentifer
                                           completionBlock:completionBlock];
+    }
+    return nil;
+}
+
++ (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
+            networkIdentifer:(NSString *)networkIdentifer
+                  parameters:(NSDictionary *)parameters
+             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+{
+    AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:parameters];
+    if (nil != sessionInstance)
+    {
+        BOOL useBasicConnect = NO;
+        NSString * username = nil;
+        NSString * password = nil;
+        if (nil != parameters)
+        {
+            if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudBasicAuth])
+            {
+                useBasicConnect = [[parameters valueForKey:kAlfrescoSessionCloudBasicAuth] boolValue];
+            }
+            if (useBasicConnect)
+            {
+                username = [parameters valueForKey:kAlfrescoSessionUsername];
+                password = [parameters valueForKey:kAlfrescoSessionPassword];
+            }
+        }
+        if (useBasicConnect)
+        {
+            return [sessionInstance authenticateWithEmailAddress:username
+                                                        password:password
+                                                         network:networkIdentifer
+                                                 completionBlock:completionBlock];
         }
         else
         {
-            [sessionInstance authenticateWithOAuthData:oauthData
-                                               network:networkIdentifer
-                                       completionBlock:completionBlock];
+            return [sessionInstance authenticateWithOAuthData:oauthData
+                                                      network:networkIdentifer
+                                              completionBlock:completionBlock];
         }
     }
+    return nil;
 }
 
-- (void)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
 //    __weak AlfrescoCloudSession *weakSelf = self;
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-    [self.networkProvider executeRequestWithURL:self.baseURLWithoutNetwork session:self completionBlock:^(NSData *data, NSError *error){
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.networkProvider executeRequestWithURL:self.baseURLWithoutNetwork
+                                        session:self alfrescoRequest:request
+                                completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -216,6 +209,7 @@
             completionBlock(networks, conversionError);
         }
     }];
+    return request;
 }
 
 /**
@@ -313,7 +307,7 @@
     }
 }
 
-- (void)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
+- (AlfrescoRequest *)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
                   completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     self.isUsingBaseAuthenticationProvider = NO;
@@ -326,7 +320,8 @@
     self.baseUrl = [NSURL URLWithString:baseURL];
     self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
     _oauthData = oauthData; ///setting oauthData only via instance variable. The setter method recreates a CMIS session and this shouldn't be used here.
-    [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
         {
             completionBlock(nil, error);
@@ -350,20 +345,20 @@
             }
             else
             {
-                [self authenticateWithOAuthData:oauthData
-                                        network:homeNetwork.identifier
-                                completionBlock:completionBlock];
+                request = [self authenticateWithOAuthData:oauthData
+                                                  network:homeNetwork.identifier
+                                          completionBlock:completionBlock];
             }
             
         }
     }];
-    
+    return request;
 }
 
 
-- (void)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
-                          network:(NSString *)network
-                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+- (AlfrescoRequest *)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
+                                       network:(NSString *)network
+                               completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     self.isUsingBaseAuthenticationProvider = NO;
     NSString *baseURL = kAlfrescoCloudURL;
@@ -386,12 +381,18 @@
     params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     params.authenticationProvider = passthroughAuthProvider;
     
-    AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params completionBlock:completionBlock];
-    [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
+                                                                              alfrescoRequest:request
+                                                                              completionBlock:completionBlock];
+    request.httpRequest = [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
+    return request;
     
 }
 
-- (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+- (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters
+                                           alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+                                           completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     AlfrescoArrayCompletionBlock arrayCompletionBlock = ^void(NSArray *repositories, NSError *error){
         if (nil == repositories)
@@ -418,7 +419,8 @@
 
             AlfrescoLogDebug(@"URL is %@ and the repo ID is %@ ****", [parameters.atomPubUrl absoluteString], repoInfo.identifier);
 
-            [CMISSession connectWithSessionParameters:parameters completionBlock:^(CMISSession *cmisSession, NSError *error){
+            alfrescoRequest.httpRequest = [CMISSession connectWithSessionParameters:parameters
+                                                                    completionBlock:^(CMISSession *cmisSession, NSError *error){
                 if (nil == cmisSession)
                 {
                     if(completionBlock)
@@ -431,7 +433,7 @@
                     [self setObject:cmisSession forParameter:kAlfrescoSessionKeyCmisSession];
                     AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
-                    [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
+                    alfrescoRequest.httpRequest = [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
                         if (nil == rootFolder)
                         {
                             if(completionBlock)
@@ -463,9 +465,9 @@
 This authentication method authorises the user to access the home network assigned to the account. It first searches the available networks for the user
  (using retrieveNetworksWithCompletionBlock) and from within that block proceeds to full authentication for a specific network.
  */
-- (void)authenticateWithEmailAddress:(NSString *)emailAddress
-                            password:(NSString *)password
-                     completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+- (AlfrescoRequest *)authenticateWithEmailAddress:(NSString *)emailAddress
+                                         password:(NSString *)password
+                                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     self.isUsingBaseAuthenticationProvider = YES;
     NSString *baseURL = kAlfrescoCloudURL;
@@ -480,8 +482,8 @@ This authentication method authorises the user to access the home network assign
     self.emailAddress = emailAddress;
     self.password = password;
     self.personIdentifier = emailAddress;
-    self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
-    [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
         {
             completionBlock(nil, error);
@@ -505,24 +507,24 @@ This authentication method authorises the user to access the home network assign
             }
             else
             {
-                [self authenticateWithEmailAddress:emailAddress
-                                              password:password
-                                               network:homeNetwork.identifier
-                                       completionBlock:completionBlock];
+                request = [self authenticateWithEmailAddress:emailAddress
+                                                    password:password
+                                                     network:homeNetwork.identifier
+                                             completionBlock:completionBlock];
             }
         }
     }];
-    
+    return request;
 }
 
 /**
  This method is the full authentication implementation for a specific network, including the home network. It sets up the (CMIS) session, repository info and
  other basic parameters required in the API.
  */
-- (void)authenticateWithEmailAddress:(NSString *)emailAddress
-                            password:(NSString *)password
-                             network:(NSString *)network
-                     completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+- (AlfrescoRequest *)authenticateWithEmailAddress:(NSString *)emailAddress
+                                         password:(NSString *)password
+                                          network:(NSString *)network
+                                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     self.isUsingBaseAuthenticationProvider = YES;
     NSString *baseURL = kAlfrescoCloudURL;
@@ -538,7 +540,6 @@ This authentication method authorises the user to access the home network assign
     self.personIdentifier = emailAddress;
     
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
-    self.dateFormatter = [[AlfrescoISO8601DateFormatter alloc] init];
 
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     params.username = emailAddress;
@@ -548,8 +549,12 @@ This authentication method authorises the user to access the home network assign
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
 
-    AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params completionBlock:completionBlock];
-    [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
+                                                                              alfrescoRequest:request
+                                                                              completionBlock:completionBlock];
+    request.httpRequest = [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
+    return request;
 }
 
 /**
@@ -623,7 +628,7 @@ This authentication method authorises the user to access the home network assign
         NSString *dateString = (NSString *)createdAtObject;
         if (nil != dateString)
         {
-            network.createdAt = [self.dateFormatter dateFromString:dateString];
+            network.createdAt = [CMISDateUtil dateFromString:dateString];
         }
     }
                 

@@ -38,10 +38,6 @@
 
 
 @implementation AlfrescoCloudPersonService
-@synthesize baseApiUrl = _baseApiUrl;
-@synthesize session = _session;
-@synthesize objectConverter = _objectConverter;
-@synthesize authenticationProvider = _authenticationProvider;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -59,7 +55,7 @@
     }
     return self;
 }
-- (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -67,7 +63,11 @@
 //    __weak AlfrescoCloudPersonService *weakSelf = self;
     NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -79,9 +79,10 @@
             completionBlock(person, conversionError);
         }
     }];
+    return alfrescoRequest;
 }
 
-- (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:person argumentName:@"person"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -89,12 +90,11 @@
     if (nil == person.avatarIdentifier)
     {
         completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePerson]);
-        return;
+        return nil;
     }
     AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-    [docService
-     retrieveNodeWithIdentifier:person.avatarIdentifier
-     completionBlock:^(AlfrescoNode *node, NSError *error){
+    return [docService retrieveNodeWithIdentifier:person.avatarIdentifier
+                                  completionBlock:^(AlfrescoNode *node, NSError *error){
          
         [docService
          retrieveContentOfDocument:(AlfrescoDocument *)node

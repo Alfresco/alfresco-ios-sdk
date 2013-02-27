@@ -28,7 +28,6 @@
 
 @implementation AlfrescoSearchServiceTest
 
-@synthesize searchService = _searchService;
 /*
  */
 /*

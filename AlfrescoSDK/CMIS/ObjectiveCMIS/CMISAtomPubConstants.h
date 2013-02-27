@@ -186,3 +186,9 @@ extern NSString * const kCMISUriTemplateQuery;
 extern NSString * const kCMISAtomLinkAttrHref;
 extern NSString * const kCMISAtomLinkAttrType;
 extern NSString * const kCMISAtomLinkAttrRel;
+
+// Constants for HTTP request headers
+extern NSString * const kCMISHTTPHeaderContentType;
+extern NSString * const kCMISHTTPHeaderContentDisposition;
+extern NSString * const kCMISHTTPHeaderContentDispositionAttachment;
+

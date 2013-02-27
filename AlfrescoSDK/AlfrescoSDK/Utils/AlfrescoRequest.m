@@ -18,22 +18,35 @@
  *****************************************************************************
  */
 
-/**
- The AlfrescoDefaultHTTPRequest class utilizes NSURLConnection to make requests.
- 
- Author: Tauseef Mughal (Alfresco)
- */
-
-#import <Foundation/Foundation.h>
-#import "AlfrescoConstants.h"
 #import "AlfrescoRequest.h"
 
-@interface AlfrescoDefaultHTTPRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate, AlfrescoCancellableRequest>
+@implementation AlfrescoRequest
+- (id)init
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.isCancelled = NO;
+    }
+    return self;
+}
 
-- (void)connectWithURL:(NSURL*)requestURL
-                method:(NSString *)method
-                headers:(NSDictionary *)headers
-           requestBody:(NSData *)requestBody
-       completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+- (void)cancel
+{
+    self.isCancelled = YES;
+    if ([self.httpRequest respondsToSelector:@selector(cancel)]){
+        [self.httpRequest cancel];
+    }
+}
 
+
+- (void)setHttpRequest:(id)httpRequest
+{
+    _httpRequest = httpRequest;
+    if (self.isCancelled){
+        if ([httpRequest respondsToSelector:@selector(cancel)]) {
+            [httpRequest cancel];
+        }
+    }
+}
 @end

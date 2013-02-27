@@ -37,14 +37,16 @@
     return nil;
 }
 
-- (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 @end

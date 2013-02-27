@@ -21,27 +21,31 @@
 #import "CMISRepositoryInfo.h"
 
 @class CMISTypeDefinition;
+@class CMISRequest;
 
 @protocol CMISRepositoryService <NSObject>
 
 /**
  * Returns an array of CMISRepositoryInfo objects representing the repositories available at the endpoint.
  * completionBlock returns array of repositories or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveRepositoriesWithCompletionBlock:(void (^)(NSArray *repositories, NSError *error))completionBlock;
+- (CMISRequest*)retrieveRepositoriesWithCompletionBlock:(void (^)(NSArray *repositories, NSError *error))completionBlock;
 
 /**
  * Returns the repository info for the repository with the given id
  * completionBlock returns repository or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveRepositoryInfoForId:(NSString *)repositoryId
+- (CMISRequest*)retrieveRepositoryInfoForId:(NSString *)repositoryId
                     completionBlock:(void (^)(CMISRepositoryInfo *repositoryInfo, NSError *error))completionBlock;
 
 /**
  * Returns the type definitions
  * completionBlock returns type definition or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveTypeDefinition:(NSString *)typeId
+- (CMISRequest*)retrieveTypeDefinition:(NSString *)typeId
                completionBlock:(void (^)(CMISTypeDefinition *typeDefinition, NSError *error))completionBlock;
 
 @end

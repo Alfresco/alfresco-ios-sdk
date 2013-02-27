@@ -32,9 +32,6 @@
 @end
 
 @implementation AlfrescoContentFile
-@synthesize fileUrl = _fileUrl;
-@synthesize mimeType = _mimeType;
-@synthesize length = _length;
 
 - (id)init
 {

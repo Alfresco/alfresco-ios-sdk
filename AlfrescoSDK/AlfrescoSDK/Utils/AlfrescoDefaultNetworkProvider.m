@@ -31,6 +31,7 @@
                 method:(NSString *)method
                headers:(NSDictionary *)headers
            requestBody:(NSData *)data
+       alfrescoRequest:alfrescoRequest
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 @end
 
@@ -38,17 +39,19 @@
 
 - (void)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
+              alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
-    [self executeRequestWithURL:url session:session requestBody:nil method:kAlfrescoHTTPGet completionBlock:completionBlock];
+    [self executeRequestWithURL:url session:session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:completionBlock];
 }
 
 - (void)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
                        method:(NSString *)method
+              alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
-    [self executeRequestWithURL:url session:session requestBody:nil method:method completionBlock:completionBlock];
+    [self executeRequestWithURL:url session:session requestBody:nil method:method alfrescoRequest:alfrescoRequest completionBlock:completionBlock];
 }
 
 
@@ -56,29 +59,42 @@
                       session:(id<AlfrescoSession>)session
                   requestBody:(NSData *)requestBody
                        method:(NSString *)method
+              alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
     id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
     NSDictionary *httpHeaders = [authenticationProvider willApplyHTTPHeadersForSession:nil];
-    [self requestWithURL:url method:method headers:httpHeaders requestBody:requestBody completionBlock:completionBlock];
+    [self requestWithURL:url method:method headers:httpHeaders requestBody:requestBody alfrescoRequest:alfrescoRequest completionBlock:completionBlock];
 }
 
 - (void)requestWithURL:(NSURL *)requestURL
                 method:(NSString *)method
                headers:(NSDictionary *)headers
            requestBody:(NSData *)data
+       alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 {
+    
     AlfrescoDefaultHTTPRequest *alfrescoDefaultRequest = [[AlfrescoDefaultHTTPRequest alloc] init];
-    if (alfrescoDefaultRequest)
+    if (alfrescoDefaultRequest && !alfrescoRequest.isCancelled)
     {
         [alfrescoDefaultRequest connectWithURL:requestURL method:method headers:headers requestBody:data completionBlock:completionBlock];
+        alfrescoRequest.httpRequest = alfrescoDefaultRequest;
     }
     else
     {
+        NSError *error = nil;
+        if (alfrescoRequest.isCancelled)
+        {
+            error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
+        }
+        else
+        {
+            error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
+        }
         if (completionBlock != NULL)
         {
-            completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnknown]);
+            completionBlock(nil, error);
         }
     }
 }

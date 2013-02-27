@@ -132,4 +132,20 @@
     self.connection = nil;
 }
 
+#pragma Cancellation
+- (void)cancel
+{
+    if (self.connection)
+    {
+        AlfrescoDataCompletionBlock dataCompletionBlock = self.completionBlock;
+        self.completionBlock = nil;
+
+        [self.connection cancel];
+        self.connection = nil;
+
+        NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
+        dataCompletionBlock(nil, alfrescoError);
+    }
+}
+
 @end

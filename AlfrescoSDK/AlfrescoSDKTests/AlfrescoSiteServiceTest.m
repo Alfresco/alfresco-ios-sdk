@@ -21,7 +21,6 @@
 
 @implementation AlfrescoSiteServiceTest
 
-@synthesize siteService = _siteService;
 /*
  @Unique_TCRef 45S1
  */

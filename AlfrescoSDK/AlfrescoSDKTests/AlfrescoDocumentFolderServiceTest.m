@@ -27,7 +27,6 @@
 /*
  */
 
-@synthesize dfService = _dfService;
 /**
  @Unique_TCRef 32S0 - 32S2
  @Unique_TCRef 24S0

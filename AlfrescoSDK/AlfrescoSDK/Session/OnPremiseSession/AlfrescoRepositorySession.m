@@ -40,9 +40,9 @@
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 - (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
-- (void)authenticateWithUsername:(NSString *)username
-                     andPassword:(NSString *)password
-                 completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+- (AlfrescoRequest *)authenticateWithUsername:(NSString *)username
+                                  andPassword:(NSString *)password
+                              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 - (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password;
 
 + (NSNumber *)majorVersionFromString:(NSString *)versionString;
@@ -50,37 +50,32 @@
 
 @implementation AlfrescoRepositorySession
 
-@synthesize personIdentifier = _personIdentifier;
-@synthesize repositoryInfo = _repositoryInfo;
-@synthesize baseUrl = _baseUrl;
-@synthesize sessionData = _sessionData;
-@synthesize rootFolder = _rootFolder;
-@synthesize defaultListingContext = _defaultListingContext;
-@synthesize networkProvider = _networkProvider;
 
-+ (void)connectWithUrl:(NSURL *)url
-              username:(NSString *)username
-              password:(NSString *)password
-       completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
++ (AlfrescoRequest *)connectWithUrl:(NSURL *)url
+                           username:(NSString *)username
+                           password:(NSString *)password
+                    completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     AlfrescoRepositorySession *sessionInstance = [[AlfrescoRepositorySession alloc] initWithUrl:url parameters:nil];
     if (sessionInstance)
     {
-        [sessionInstance authenticateWithUsername:username andPassword:password completionBlock:completionBlock];
+        return [sessionInstance authenticateWithUsername:username andPassword:password completionBlock:completionBlock];
     }
+    return nil;
 }
 
-+ (void)connectWithUrl:(NSURL *)url
-              username:(NSString *)username
-              password:(NSString *)password
-            parameters:(NSDictionary *)parameters
-       completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
++ (AlfrescoRequest *)connectWithUrl:(NSURL *)url
+                           username:(NSString *)username
+                           password:(NSString *)password
+                         parameters:(NSDictionary *)parameters
+                    completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     AlfrescoRepositorySession *sessionInstance = [[AlfrescoRepositorySession alloc] initWithUrl:url parameters:parameters];
     if (sessionInstance) 
     {
-        [sessionInstance authenticateWithUsername:username andPassword:password completionBlock:completionBlock];
+        return [sessionInstance authenticateWithUsername:username andPassword:password completionBlock:completionBlock];
     }
+    return nil;
 }
 
 /**
@@ -149,9 +144,9 @@
     return self;
 }
 
-- (void)authenticateWithUsername:(NSString *)username
-                     andPassword:(NSString *)password
-                 completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+- (AlfrescoRequest *)authenticateWithUsername:(NSString *)username
+                                  andPassword:(NSString *)password
+                              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseCMISPath];
     __block CMISSessionParameters *v3params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
@@ -164,7 +159,6 @@
     v4params.username = username;
     v4params.password = password;
     v4params.atomPubUrl = [NSURL URLWithString:v4cmisUrl];
-    
     if ([self.sessionData objectForKey:kAlfrescoCMISNetworkProvider])
     {
         id customCMISNetworkProvider = [self.sessionData objectForKey:kAlfrescoCMISNetworkProvider];
@@ -183,7 +177,8 @@
         }
     }
 
-    [CMISSession arrayOfRepositories:v3params completionBlock:^(NSArray *repositories, NSError *error){
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request.httpRequest = [CMISSession arrayOfRepositories:v3params completionBlock:^(NSArray *repositories, NSError *error){
         if (nil == repositories)
         {
             completionBlock(nil, error);
@@ -227,7 +222,7 @@
                 else
                 {
                     [self establishCMISSession:v4Session username:username password:password];
-                    [v4Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
+                    request.httpRequest = [v4Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
                 }
             };
             
@@ -250,21 +245,21 @@
                     AlfrescoLogDebug(@"session connected with user %@, repo version is %@", username, version);
                     if ([majorVersionNumber intValue] >= 4)
                     {
-                        [CMISSession connectWithSessionParameters:v4params completionBlock:sessionv4CompletionBlock];
+                        request.httpRequest = [CMISSession connectWithSessionParameters:v4params completionBlock:sessionv4CompletionBlock];
                     }
                     else
                     {
                         [self establishCMISSession:v3Session username:username password:password];
-                        [v3Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
+                        request.httpRequest = [v3Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
                     }
                     
                 }
             };
             
-            [CMISSession connectWithSessionParameters:v3params completionBlock:sessionv3CompletionBlock];
+            request.httpRequest = [CMISSession connectWithSessionParameters:v3params completionBlock:sessionv3CompletionBlock];
         }
     }];
-    
+    return request;
 }
 
 - (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password

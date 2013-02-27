@@ -20,10 +20,10 @@
 #import <Foundation/Foundation.h>
 #import "CMISBindingSession.h"
 #import "CMISNetworkProvider.h"
-
+#import "CMISRequest.h"
 @class CMISAuthenticationProvider;
 
-@interface CMISHttpRequest : NSObject <NSURLConnectionDataDelegate>
+@interface CMISHttpRequest : NSObject <NSURLConnectionDataDelegate, CMISCancellableRequest>
 
 @property (nonatomic, assign) CMISHttpRequestMethod requestMethod;
 @property (nonatomic, strong) NSURLConnection *connection;
@@ -41,7 +41,7 @@
  * @param authenticationProvider (required)
  * completionBlock returns a CMISHTTPResponse object or nil if unsuccessful
  */
-+ (CMISHttpRequest*)startRequest:(NSMutableURLRequest *)urlRequest
++ (id)startRequest:(NSMutableURLRequest *)urlRequest
                       httpMethod:(CMISHttpRequestMethod)httpRequestMethod
                      requestBody:(NSData*)requestBody
                          headers:(NSDictionary*)additionalHeaders
@@ -49,16 +49,12 @@
                  completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
 
 /**
- * designated initialiser. Do not use this initialiser directly. Instead use the
- * class method startRequest:withHttpMethod:requestBody:headers:authenticationProvider:completionBlock
+ * initialises with a specified HTTP method
  */
 - (id)initWithHttpMethod:(CMISHttpRequestMethod)httpRequestMethod
          completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
 
 /// starts the URL request
 - (BOOL)startRequest:(NSMutableURLRequest*)urlRequest;
-
-/// cancel method. This may be called from a CMISRequest object
-- (void)cancel;
 
 @end

@@ -23,7 +23,7 @@
 @class CMISDocument;
 @class CMISOperationContext;
 @class CMISSession;
-
+@class CMISRequest;
 
 @interface CMISRendition : CMISRenditionData
 
@@ -35,29 +35,33 @@
 /**
  * retrieves the rendition, e.g. thumbnail of a document
  * completionBlock returns the rendition object as CMIS document or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveRenditionDocumentWithCompletionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
+- (CMISRequest*)retrieveRenditionDocumentWithCompletionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
 
 /**
  * retrieves the rendition, e.g. thumbnail of a document
  * completionBlock returns the rendition object as CMIS document or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveRenditionDocumentWithOperationContext:(CMISOperationContext *)operationContext
+- (CMISRequest*)retrieveRenditionDocumentWithOperationContext:(CMISOperationContext *)operationContext
                                       completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
 
 /**
  * downloads the rendition of a document e.g. thumbnail of a document to a file
  * completionBlock returns the rendition object as CMIS document or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)downloadRenditionContentToFile:(NSString *)filePath
+- (CMISRequest*)downloadRenditionContentToFile:(NSString *)filePath
                        completionBlock:(void (^)(NSError *error))completionBlock
                          progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
 /**
  * downloads the rendition of a document e.g. thumbnail of a document to a file
  * completionBlock returns the rendition object as CMIS document or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)downloadRenditionContentToOutputStream:(NSOutputStream *)outputStream
+- (CMISRequest*)downloadRenditionContentToOutputStream:(NSOutputStream *)outputStream
                                completionBlock:(void (^)(NSError *error))completionBlock
                                  progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 

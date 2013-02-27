@@ -21,7 +21,6 @@
 
 @implementation AlfrescoVersionServiceTest
 
-@synthesize versionService = _versionService;
 /*
  */
 

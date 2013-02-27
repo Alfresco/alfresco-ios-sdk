@@ -25,8 +25,6 @@
 @end
 
 @implementation AlfrescoRepositoryCapabilities
-@synthesize doesSupportLikingNodes = _doesSupportLikingNodes;
-@synthesize doesSupportCommentCounts = _doesSupportCommentCounts;
 
 - (id)initWithProperties:(NSDictionary *)properties
 {

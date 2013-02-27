@@ -22,7 +22,6 @@
 
 @implementation AlfrescoCommentServiceTest
 
-@synthesize commentService = _commentService;
 
 /*
  @Unique_TCRef 7S1

@@ -39,37 +39,42 @@
     return nil;
 }
 
-- (void)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)retrieveCommentsForNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content title:(NSString *)title
+- (AlfrescoRequest *)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content title:(NSString *)title
          completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)updateCommentOnNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)updateCommentOnNode:(AlfrescoNode *)node
                     comment:(AlfrescoComment *)comment
                     content:(NSString *)content
             completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-- (void)deleteCommentFromNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)deleteCommentFromNode:(AlfrescoNode *)node
                       comment:(AlfrescoComment *)comment
               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 

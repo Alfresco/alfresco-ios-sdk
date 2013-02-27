@@ -31,16 +31,12 @@
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (AlfrescoPerson *) alfrescoPersonFromJSONData:(NSData *)data error:(NSError **)outError;
-- (void)retrieveAvatarForPersonV4x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
-- (void)retrieveAvatarForPersonV3x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveAvatarForPersonV4x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveAvatarForPersonV3x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
 @end
 
 
 @implementation AlfrescoOnPremisePersonService
-@synthesize baseApiUrl = _baseApiUrl;
-@synthesize session = _session;
-@synthesize objectConverter = _objectConverter;
-@synthesize authenticationProvider = _authenticationProvider;
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -58,15 +54,18 @@
     }
     return self;
 }
-- (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
 //    __weak AlfrescoOnPremisePersonService *weakSelf = self;
-    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -78,9 +77,10 @@
             completionBlock(person, conversionError);
         }
     }];
+    return alfrescoRequest;
 }
 
-- (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:person argumentName:@"person"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -88,20 +88,24 @@
     NSNumber *majorVersion = repoInfo.majorVersion;
     if ([majorVersion intValue] < 4)
     {
-        [self retrieveAvatarForPersonV3x:person completionBlock:completionBlock];
+        return [self retrieveAvatarForPersonV3x:person completionBlock:completionBlock];
     }
     else
     {
-        [self retrieveAvatarForPersonV4x:person completionBlock:completionBlock];
+        return [self retrieveAvatarForPersonV4x:person completionBlock:completionBlock];
     }
 
 }
 
-- (void)retrieveAvatarForPersonV4x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAvatarForPersonV4x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     NSString *requestString = [kAlfrescoOnPremiseAvatarForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -112,19 +116,24 @@
             completionBlock(avatarFile, nil);
         }
     }];
+    return alfrescoRequest;
 }
 
-- (void)retrieveAvatarForPersonV3x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAvatarForPersonV3x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     NSString *avatarId = person.avatarIdentifier;
     if (nil == avatarId)
     {
         completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodePersonNoAvatarFound]);
-        return;
+        return nil;
     }
     NSString *requestString = [NSString stringWithFormat:@"%@/service/%@",[self.session.baseUrl absoluteString],avatarId];
     NSURL *url = [NSURL URLWithString:requestString];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session completionBlock:^(NSData *responseData, NSError *error){
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
         {
             completionBlock(nil, error);
@@ -135,6 +144,7 @@
             completionBlock(avatarFile, nil);
         }
     }];
+    return alfrescoRequest;
 }
 
 

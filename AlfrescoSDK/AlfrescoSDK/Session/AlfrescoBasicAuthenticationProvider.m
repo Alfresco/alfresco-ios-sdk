@@ -29,9 +29,6 @@
 
 @implementation AlfrescoBasicAuthenticationProvider
 
-@synthesize username = _username;
-@synthesize password = _password;
-@synthesize httpHeaders = _httpHeaders;
 
 - (id)initWithUsername:(NSString *)username andPassword:(NSString *)password
 {

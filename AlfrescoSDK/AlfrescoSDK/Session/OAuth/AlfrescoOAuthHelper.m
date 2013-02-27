@@ -33,12 +33,6 @@
 @end
 
 @implementation AlfrescoOAuthHelper
-@synthesize connection = _connection;
-@synthesize receivedData = _receivedData;
-@synthesize completionBlock = _completionBlock;
-@synthesize oauthData = _oauthData;
-@synthesize baseURL = _baseURL;
-@synthesize oauthDelegate = _oauthDelegate;
 
 - (id)init
 {

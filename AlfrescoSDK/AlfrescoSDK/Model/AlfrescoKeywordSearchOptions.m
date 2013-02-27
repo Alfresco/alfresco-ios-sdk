@@ -26,10 +26,6 @@
 @end
 
 @implementation AlfrescoKeywordSearchOptions
-@synthesize exactMatch = _exactMatch;
-@synthesize includeContent = _includeContent;
-@synthesize includeDescendants = _includeDescendants;
-@synthesize folder = _folder;
 
 - (id)init
 {

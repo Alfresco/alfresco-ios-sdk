@@ -24,6 +24,7 @@
 #import "AlfrescoFolder.h"
 #import "AlfrescoDocument.h"
 #import "AlfrescoListingContext.h"
+#import "AlfrescoRequest.h"
 
 
 /** The AlfrescoDocumentFolderService manages folders and documents of an Alfresco 
@@ -57,7 +58,7 @@
  @param properties Additional properties that are used to create the folder.
  @param completionBlock The block that's called with the created folder in case the operation succeeds.
  */
-- (void)createFolderWithName:(NSString *)folderName
+- (AlfrescoRequest *)createFolderWithName:(NSString *)folderName
               inParentFolder:(AlfrescoFolder *)folder
                   properties:(NSDictionary *)properties
              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
@@ -72,7 +73,7 @@
  @param completionBlock The block that's called with the created document in case the operation succeeds.
  @param progressBlock The block that's called with the upload progress.
  */
-- (void)createDocumentWithName:(NSString *)documentName
+- (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                 inParentFolder:(AlfrescoFolder *)folder
                    contentFile:(AlfrescoContentFile *)file
                     properties:(NSDictionary *)properties
@@ -90,7 +91,7 @@
  @param completionBlock The block that's called with the created document in case the operation succeeds.
  @param progressBlock The block that's called with the upload progress.
  */
-- (void)createDocumentWithName:(NSString *)documentName
+- (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                 inParentFolder:(AlfrescoFolder *)folder
                    contentFile:(AlfrescoContentFile *)file
                     properties:(NSDictionary *)properties
@@ -107,14 +108,14 @@
 /**
  @param completionBlock Called when the call completes
  */
-- (void)retrieveRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 
 
 /**
  @param node the node for which permissions are being queried
  @param completionBlock the block returns an AlfrescoPermissions and NSError object)
  */
-- (void)retrievePermissionsOfNode:(AlfrescoNode *)node 
+- (AlfrescoRequest *)retrievePermissionsOfNode:(AlfrescoNode *)node 
                   completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock;
 
 
@@ -123,7 +124,7 @@
  @param folder The folder for which the children are retrieved.
  @param completionBlock The block that's called with the retrieved children in case the operation succeeds.
  */
-- (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder
+- (AlfrescoRequest *)retrieveChildrenInFolder:(AlfrescoFolder *)folder
                  completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
@@ -133,7 +134,7 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the children.
  @param completionBlock The block that's called with the retrieved children in case the operation succeeds.
  */
-- (void)retrieveChildrenInFolder:(AlfrescoFolder *)folder
+- (AlfrescoRequest *)retrieveChildrenInFolder:(AlfrescoFolder *)folder
                   listingContext:(AlfrescoListingContext *)listingContext
                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
@@ -143,7 +144,7 @@
  @param folder The folder for which the documents are retrieved.
  @param completionBlock The block that's called with the retrieved documents in case the operation succeeds.
  */
-- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder
+- (AlfrescoRequest *)retrieveDocumentsInFolder:(AlfrescoFolder *)folder
                   completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
@@ -153,7 +154,7 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the documents.
  @param completionBlock The block that's called with the retrieved documents in case the operation succeeds.
  */
-- (void)retrieveDocumentsInFolder:(AlfrescoFolder *)folder
+- (AlfrescoRequest *)retrieveDocumentsInFolder:(AlfrescoFolder *)folder
                    listingContext:(AlfrescoListingContext *)listingContext
                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
@@ -163,7 +164,7 @@
  @param folder The folder for which the sub folders are retrieved.
  @param completionBlock The block that's called with the retrieved sub folders in case the operation succeeds.
  */
-- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder
+- (AlfrescoRequest *)retrieveFoldersInFolder:(AlfrescoFolder *)folder
                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
@@ -173,7 +174,7 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the sub folders.
  @param completionBlock The block that's called with the retrieved sub folders in case the operation succeeds.
  */
-- (void)retrieveFoldersInFolder:(AlfrescoFolder *)folder
+- (AlfrescoRequest *)retrieveFoldersInFolder:(AlfrescoFolder *)folder
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
@@ -183,7 +184,7 @@
  @param identifier The node identifier that's used to query for a specific node.
  @param completionBlock The block that's called with the retrieved node in case the operation succeeds.
  */
-- (void)retrieveNodeWithIdentifier:(NSString *)identifier
+- (AlfrescoRequest *)retrieveNodeWithIdentifier:(NSString *)identifier
                 completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
 
@@ -197,7 +198,7 @@
  @param path The folder path that's used to query for a specific node.
  @param completionBlock The block that's called with the retrieved node in case the operation succeeds.
  */ 
-- (void)retrieveNodeWithFolderPath:(NSString *)path 
+- (AlfrescoRequest *)retrieveNodeWithFolderPath:(NSString *)path 
                    completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
 
@@ -207,7 +208,7 @@
  @param folder The root folder that's used to query for a specific node.
  @param completionBlock The block that's called with the retrieved node in case the operation succeeds.
  */
-- (void)retrieveNodeWithFolderPath:(NSString *)path
+- (AlfrescoRequest *)retrieveNodeWithFolderPath:(NSString *)path
                   relativeToFolder:(AlfrescoFolder *)folder
                    completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
@@ -217,7 +218,7 @@
  @param node The node for which the parent folder is retrieved.
  @param completionBlock The block that's called with the retrieved parent folder in case the operation succeeds.
  */
-- (void)retrieveParentFolderOfNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)retrieveParentFolderOfNode:(AlfrescoNode *)node
                    completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 
 
@@ -229,7 +230,7 @@
  @param renditionName The type of thumbnail to be retrieved. For example 'doclib' can be used (defined as _AlfrescoThumbnailRendition_ )
  @param completionBlock The block that's called with the local AlfrescoContentFile containing the thumbnail URL/data.
  */
-- (void)retrieveRenditionOfNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)retrieveRenditionOfNode:(AlfrescoNode *)node
                   renditionName:(NSString *)renditionName
                 completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
 
@@ -249,7 +250,7 @@
  @param progressBlock The block that's called with the download progress.
  */
 // 
-- (void)retrieveContentOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)retrieveContentOfDocument:(AlfrescoDocument *)document
                   completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
                     progressBlock:(AlfrescoProgressBlock)progressBlock;
 
@@ -263,7 +264,7 @@
  @param progressBlock The block that's called with the download progress.
  */
 //
-- (void)retrieveContentOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)retrieveContentOfDocument:(AlfrescoDocument *)document
                        toFilePath:(NSString *)filePath
                      outputStream:(NSOutputStream *)outputStream
                   completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
@@ -278,7 +279,7 @@
  @param progressBlock The block that's called with the upload progress.
  */
 
-- (void)updateContentOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)updateContentOfDocument:(AlfrescoDocument *)document
                     contentFile:(AlfrescoContentFile *)file
                 completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                   progressBlock:(AlfrescoProgressBlock)progressBlock;
@@ -290,7 +291,7 @@
  @param properties The properties that need to be updated for the given node.
  @param completionBlock The block that's called with the updated node in case the operation succeeds.
  */
-- (void)updatePropertiesOfNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)updatePropertiesOfNode:(AlfrescoNode *)node
                     properties:(NSDictionary *)properties
                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
@@ -304,7 +305,7 @@
  @param node The node that needs to be deleted.
  @param completionBlock The block that's called in case the operation succeeds.
  */
-- (void)deleteNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)deleteNode:(AlfrescoNode *)node
    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 @end

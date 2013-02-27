@@ -29,10 +29,11 @@
 /**
  * Retrieves the object with the given object identifier.
  * completionBlock returns objectData for object or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveObject:(NSString *)objectId
+- (CMISRequest*)retrieveObject:(NSString *)objectId
                 filter:(NSString *)filter
-         relationShips:(CMISIncludeRelationship)includeRelationship
+         relationships:(CMISIncludeRelationship)relationships
       includePolicyIds:(BOOL)includePolicyIds
        renditionFilder:(NSString *)renditionFilter
             includeACL:(BOOL)includeACL
@@ -42,10 +43,11 @@
 /**
  * Retrieves an object using its path.
  * completionBlock returns objectData for object or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveObjectByPath:(NSString *)path
+- (CMISRequest*)retrieveObjectByPath:(NSString *)path
                       filter:(NSString *)filter
-               relationShips:(CMISIncludeRelationship)includeRelationship
+               relationships:(CMISIncludeRelationship)relationships
             includePolicyIds:(BOOL)includePolicyIds
              renditionFilder:(NSString *)renditionFilter
                   includeACL:(BOOL)includeACL
@@ -56,6 +58,7 @@
  * Gets the content stream for the specified Document object, or gets a rendition stream for a specified
  * rendition of a document or folder object. Downloads the content to a local file.
  * completionBlock returns objectData for object or nil if unsuccessful
+ * @return cancellable request.
  *
  */
 - (CMISRequest*)downloadContentOfObject:(NSString *)objectId
@@ -68,6 +71,7 @@
  * Gets the content stream for the specified Document object, or gets a rendition stream for a specified
  * rendition of a document or folder object. Downloads the content to an output stream.
  * completionBlock returns objectData for object or nil if unsuccessful
+ * @return cancellable request.
  *
  */
 - (CMISRequest*)downloadContentOfObject:(NSString *)objectId
@@ -85,14 +89,16 @@
  * NOTE for atom pub binding: deleteContentStream: This does not return the new object id and change token as specified by the domain model.
  * This is not possible without introducing a new HTTP header.
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
  */
-- (void)deleteContentOfObject:(CMISStringInOutParameter *)objectIdParam
+- (CMISRequest*)deleteContentOfObject:(CMISStringInOutParameter *)objectIdParam
                   changeToken:(CMISStringInOutParameter *)changeTokenParam
               completionBlock:(void (^)(NSError *error))completionBlock;
 
 /**
  * Changes the content of the given document to the content of a given file.
  *
+ * It is recommended that a mime type is provided. In case no value is given - the mime type defaults to application/octet-stream.
  * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
  * object (if any) with the input contentStream. If FALSE, then the Repository MUST only set the input
  * contentStream for the object if the object currently does not have a content-stream.
@@ -100,9 +106,11 @@
  * NOTE for atom pub binding: This does not return the new object id and change token as specified by the domain model.
  * (This is not possible without introducing a new HTTP header).
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)changeContentOfObject:(CMISStringInOutParameter *)objectIdParam
                       toContentOfFile:(NSString *)filePath
+                             mimeType:(NSString *)mimeType
                     overwriteExisting:(BOOL)overwrite
                           changeToken:(CMISStringInOutParameter *)changeTokenParam
                       completionBlock:(void (^)(NSError *error))completionBlock
@@ -111,6 +119,7 @@
 /**
  * Changes the content of the given document to the content from a give input stream.
  *
+ * It is recommended that a mime type is provided. In case no value is given - the mime type defaults to application/octet-stream.
  * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
  * object (if any) with the input contentStream. If FALSE, then the Repository MUST only set the input
  * contentStream for the object if the object currently does not have a content-stream.
@@ -118,11 +127,13 @@
  * NOTE for atom pub binding: This does not return the new object id and change token as specified by the domain model.
  * (This is not possible without introducing a new HTTP header).
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)changeContentOfObject:(CMISStringInOutParameter *)objectId
                toContentOfInputStream:(NSInputStream *)inputStream
                         bytesExpected:(unsigned long long)bytesExpected
                              filename:(NSString *)filename
+                             mimeType:(NSString *)mimeType
                     overwriteExisting:(BOOL)overwrite
                           changeToken:(CMISStringInOutParameter *)changeToken
                       completionBlock:(void (^)(NSError *error))completionBlock
@@ -132,6 +143,7 @@
  * uploads the file from the given path to the given folder.
  *
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
 */
 - (CMISRequest*)createDocumentFromFilePath:(NSString *)filePath
                                   mimeType:(NSString *)mimeType
@@ -144,6 +156,7 @@
  * uploads the file from the given input stream to the given folder.
  *
  * completionBlock - returns NSError nil if successful
+ * @return cancellable request.
  */
 - (CMISRequest*)createDocumentFromInputStream:(NSInputStream *)inputStream
                                      mimeType:(NSString *)mimeType
@@ -158,8 +171,9 @@
  *
  * The allVersions parameter is currently ignored.
  * completionBlock returns true if successful
+ * @return cancellable request.
  */
-- (void)deleteObject:(NSString *)objectId
+- (CMISRequest*)deleteObject:(NSString *)objectId
          allVersions:(BOOL)allVersions
      completionBlock:(void (^)(BOOL objectDeleted, NSError *error))completionBlock;
 
@@ -167,31 +181,33 @@
  * Creates a new folder with given properties under the provided parent folder.
  * completionBlock returns objectId for the newly created folder or nil if unsuccessful
  */
-- (void)createFolderInParentFolder:(NSString *)folderObjectId
-                        properties:(CMISProperties *)properties
-                   completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock;
+- (CMISRequest*)createFolderInParentFolder:(NSString *)folderObjectId
+                                properties:(CMISProperties *)properties
+                           completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock;
 
 /**
  * Deletes the given folder and all of its subfolder and files
  *
  * Returns a list of objects which failed to be deleted.
  * completionBlock returns array of failed objects if any. NSError will be nil if successful
+ * @return cancellable request.
  *
  */
-- (void)deleteTree:(NSString *)folderObjectId
-        allVersion:(BOOL)allVersions
-     unfileObjects:(CMISUnfileObject)unfileObjects
- continueOnFailure:(BOOL)continueOnFailure
-   completionBlock:(void (^)(NSArray *failedObjects, NSError *error))completionBlock;
+- (CMISRequest*)deleteTree:(NSString *)folderObjectId
+                allVersion:(BOOL)allVersions
+             unfileObjects:(CMISUnfileObject)unfileObjects
+         continueOnFailure:(BOOL)continueOnFailure
+           completionBlock:(void (^)(NSArray *failedObjects, NSError *error))completionBlock;
 
 /**
  * Updates the properties of the given object.
  * completionBlock returns NSError nil if successful
+ * @return cancellable request.
  */
-- (void)updatePropertiesForObject:(CMISStringInOutParameter *)objectIdParam
-                       properties:(CMISProperties *)properties
-                      changeToken:(CMISStringInOutParameter *)changeTokenParam
-                  completionBlock:(void (^)(NSError *error))completionBlock;
+- (CMISRequest*)updatePropertiesForObject:(CMISStringInOutParameter *)objectIdParam
+                               properties:(CMISProperties *)properties
+                              changeToken:(CMISStringInOutParameter *)changeTokenParam
+                          completionBlock:(void (^)(NSError *error))completionBlock;
 
 /**
  * Gets the list of associated Renditions for the specified object.
@@ -200,11 +216,12 @@
  * Note: the paging parameters (maxItems and skipCount) are not used in the atom pub binding.
  *       Ie. the whole set is <b>always</b> returned.
  * completionBlock returns array of associated renditions or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveRenditions:(NSString *)objectId
-                renditionFilter:(NSString *)renditionFilter
-                    maxItems:(NSNumber *)maxItems
-                    skipCount:(NSNumber *)skipCount
-           completionBlock:(void (^)(NSArray *renditions, NSError *error))completionBlock;
+- (CMISRequest*)retrieveRenditions:(NSString *)objectId
+                   renditionFilter:(NSString *)renditionFilter
+                          maxItems:(NSNumber *)maxItems
+                         skipCount:(NSNumber *)skipCount
+                   completionBlock:(void (^)(NSArray *renditions, NSError *error))completionBlock;
 
 @end

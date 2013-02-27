@@ -22,17 +22,19 @@
 
 @class CMISFolder;
 @class CMISObjectList;
+@class CMISRequest;
 
 @protocol CMISNavigationService <NSObject>
 
 /**
  * Retrieves the children for the given object identifier.
  * completionBlock returns object list or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveChildren:(NSString *)objectId
+- (CMISRequest*)retrieveChildren:(NSString *)objectId
                  orderBy:(NSString *)orderBy
                   filter:(NSString *)filter
-           relationShips:(CMISIncludeRelationship)includeRelationship
+           relationships:(CMISIncludeRelationship)relationships
          renditionFilter:(NSString *)renditionFilter
  includeAllowableActions:(BOOL)includeAllowableActions
       includePathSegment:(BOOL)includePathSegment
@@ -46,10 +48,11 @@
  *
  * TODO: OpenCMIS returns an ObjectParentData object .... is this necessary?
  * completionBlock returns array of parents or nil if unsuccessful
+ * @return cancellable request.
  */
-- (void)retrieveParentsForObject:(NSString *)objectId
+- (CMISRequest*)retrieveParentsForObject:(NSString *)objectId
                           filter:(NSString *)filter
-                   relationships:(CMISIncludeRelationship)includeRelationship
+                   relationships:(CMISIncludeRelationship)relationships
                  renditionFilter:(NSString *)renditionFilter
          includeAllowableActions:(BOOL)includeAllowableActions
       includeRelativePathSegment:(BOOL)includeRelativePathSegment

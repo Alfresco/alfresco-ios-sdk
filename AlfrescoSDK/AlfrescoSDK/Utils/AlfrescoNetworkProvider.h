@@ -25,6 +25,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoConstants.h"
+#import "AlfrescoRequest.h"
 
 @protocol AlfrescoSession;
 
@@ -32,17 +33,20 @@
 
 - (void)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
+              alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 - (void)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
                        method:(NSString *)method
+              alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 - (void)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
                   requestBody:(NSData *)requestBody
                        method:(NSString *)method
+              alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 @end
