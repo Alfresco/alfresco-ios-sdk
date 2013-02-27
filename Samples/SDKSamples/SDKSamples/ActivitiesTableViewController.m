@@ -20,6 +20,7 @@
 #import "AlfrescoActivityEntry.h"
 #import "AlfrescoContentFile.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoLog.h"
 
 @interface ActivitiesTableViewController ()
 @property (nonatomic, strong) AlfrescoActivityStreamService *activityStreamService;
@@ -100,7 +101,7 @@
                 }
                 else
                 {
-                    log(@"Failed to load avatar, error message is %@ and code is %d", [error localizedDescription], [error code]);
+                    AlfrescoLogDebug(@"Failed to load avatar, error message is %@ and code is %d", [error localizedDescription], [error code]);
                 }
             }];
         }

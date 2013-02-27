@@ -21,6 +21,7 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoPerson.h"
+#import "AlfrescoRequest.h"
 /** The AlfrescoPersonService to obtain details about registered users.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
@@ -47,12 +48,12 @@
  @param identifier - The person identifier to be looked up.
  @param completionBlock - contains the AlfrescoPerson object if successful, or nil if not.
  */
-- (void)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrievePersonWithIdentifier:(NSString *)identifier completionBlock:(AlfrescoPersonCompletionBlock)completionBlock;
 
 /** Gets the person with given identifier
  
  @param person - AlfrescoPerson object for which the avatar is being retrieved.
  @param completionBlock - contains the AlfrescoContentFile object with a pointer to the avatar image if successful, or nil if not.
  */
-- (void)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
 @end
