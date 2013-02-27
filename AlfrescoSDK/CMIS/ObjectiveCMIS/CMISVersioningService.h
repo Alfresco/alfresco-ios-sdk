@@ -38,7 +38,6 @@
  * @param includeACL
  * @param includeAllowableActions
  * @param completionBlock returns object data if found or nil otherwise
- * @return cancellable request.
  */
 - (CMISRequest*)retrieveObjectOfLatestVersion:(NSString *)objectId
                                 major:(BOOL)major
@@ -56,7 +55,6 @@
  * @param filter
  * @param includeAllowableActions
  * @param completionBlock returns array of all versioned objects or nil otherwise
- * @return cancellable request.
  */
 - (CMISRequest*)retrieveAllVersions:(NSString *)objectId
                              filter:(NSString *)filter

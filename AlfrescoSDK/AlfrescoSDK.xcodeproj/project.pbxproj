@@ -248,6 +248,8 @@
 		73CB83BB16C4187500B780A6 /* CMISURLUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 73CB836816C4187500B780A6 /* CMISURLUtil.h */; };
 		73CB83BC16C4187500B780A6 /* CMISVersioningService.h in Headers */ = {isa = PBXBuildFile; fileRef = 73CB836916C4187500B780A6 /* CMISVersioningService.h */; };
 		73CB83BD16C4187500B780A6 /* CMISWorkspace.h in Headers */ = {isa = PBXBuildFile; fileRef = 73CB836A16C4187500B780A6 /* CMISWorkspace.h */; };
+		8218AF5116DE69DE001CE051 /* CMISBase64InputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 8218AF4F16DE69DE001CE051 /* CMISBase64InputStream.h */; };
+		8218AF5216DE69DE001CE051 /* CMISLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 8218AF5016DE69DE001CE051 /* CMISLog.h */; };
 		8233930116DE33360031CF7B /* AlfrescoRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 823392FF16DE33360031CF7B /* AlfrescoRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8233930216DE33360031CF7B /* AlfrescoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8233930016DE33360031CF7B /* AlfrescoRequest.m */; };
 		82737B7D16D1922F00FDB53E /* AlfrescoLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 82737B7B16D1922F00FDB53E /* AlfrescoLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -529,6 +531,8 @@
 		73CB836816C4187500B780A6 /* CMISURLUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISURLUtil.h; sourceTree = "<group>"; };
 		73CB836916C4187500B780A6 /* CMISVersioningService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISVersioningService.h; sourceTree = "<group>"; };
 		73CB836A16C4187500B780A6 /* CMISWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISWorkspace.h; sourceTree = "<group>"; };
+		8218AF4F16DE69DE001CE051 /* CMISBase64InputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISBase64InputStream.h; sourceTree = "<group>"; };
+		8218AF5016DE69DE001CE051 /* CMISLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISLog.h; sourceTree = "<group>"; };
 		823392FF16DE33360031CF7B /* AlfrescoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRequest.h; sourceTree = "<group>"; };
 		8233930016DE33360031CF7B /* AlfrescoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoRequest.m; sourceTree = "<group>"; };
 		82737B7B16D1922F00FDB53E /* AlfrescoLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoLog.h; sourceTree = "<group>"; };
@@ -923,6 +927,8 @@
 		73CB831816C4187500B780A6 /* ObjectiveCMIS */ = {
 			isa = PBXGroup;
 			children = (
+				8218AF4F16DE69DE001CE051 /* CMISBase64InputStream.h */,
+				8218AF5016DE69DE001CE051 /* CMISLog.h */,
 				73CB831916C4187500B780A6 /* CMISAclService.h */,
 				73CB831A16C4187500B780A6 /* CMISAllowableActions.h */,
 				73CB831B16C4187500B780A6 /* CMISAllowableActionsParser.h */,
@@ -1174,6 +1180,8 @@
 				73CB83BB16C4187500B780A6 /* CMISURLUtil.h in Headers */,
 				73CB83BC16C4187500B780A6 /* CMISVersioningService.h in Headers */,
 				73CB83BD16C4187500B780A6 /* CMISWorkspace.h in Headers */,
+				8218AF5116DE69DE001CE051 /* CMISBase64InputStream.h in Headers */,
+				8218AF5216DE69DE001CE051 /* CMISLog.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
