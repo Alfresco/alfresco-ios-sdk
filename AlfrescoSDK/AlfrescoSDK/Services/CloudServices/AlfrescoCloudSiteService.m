@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -25,8 +25,10 @@
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoDocumentFolderService.h"
-#import <objc/runtime.h>
 #import "AlfrescoNetworkProvider.h"
+#import "AlfrescoLog.h"
+#import <objc/runtime.h>
+
 
 @interface AlfrescoCloudSiteService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -344,7 +346,7 @@
 #pragma mark Site service internal methods
 - (NSArray *) siteArrayWithData:(NSData *)data error:(NSError **)outError
 {
-    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil != entriesArray)
     {
@@ -364,7 +366,7 @@
 
 - (NSArray *) specifiedSiteArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil != entriesArray)
     {
@@ -422,14 +424,14 @@
 
 - (AlfrescoSite *) alfrescoSiteFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSDictionary *entryDictionary = [AlfrescoObjectConverter dictionaryJSONEntryFromListData:data error:outError];
     return [[AlfrescoSite alloc] initWithProperties:entryDictionary];
 }
 
 - (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    log(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {

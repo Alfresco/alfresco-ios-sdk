@@ -20,6 +20,7 @@
 
 #import "AlfrescoDefaultFileManager.h"
 #import "AlfrescoConstants.h"
+#import "AlfrescoLog.h"
 
 @implementation AlfrescoDefaultFileManager
 
@@ -115,7 +116,7 @@
                                                         includingPropertiesForKeys:[NSArray arrayWithObjects:NSURLNameKey, NSURLPathKey,nil]
                                                                            options:options
                                                                       errorHandler:^BOOL(NSURL *url, NSError *fileError) {
-                                                                          NSLog(@"Error retrieving contents of the URL: %@ with the error: %@", [url absoluteString], [fileError localizedDescription]);
+                                                                          AlfrescoLogDebug(@"Error retrieving contents of the URL: %@ with the error: %@", [url absoluteString], [fileError localizedDescription]);
                                                                           *error = fileError;
                                                                           return YES;
                                                                       }];

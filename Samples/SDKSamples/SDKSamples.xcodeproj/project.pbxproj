@@ -114,6 +114,10 @@
 		8219446D161B980E00D07520 /* cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud@2x.png"; sourceTree = "<group>"; };
 		8219446E161B980E00D07520 /* repository.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = repository.png; sourceTree = "<group>"; };
 		8219446F161B980E00D07520 /* repository@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "repository@2x.png"; sourceTree = "<group>"; };
+		8233930316DE34EE0031CF7B /* AlfrescoFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoFileManager.h; path = AlfrescoSDK/AlfrescoFileManager.h; sourceTree = SOURCE_ROOT; };
+		8233930416DE34EE0031CF7B /* AlfrescoNetworkProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoNetworkProvider.h; path = AlfrescoSDK/AlfrescoNetworkProvider.h; sourceTree = SOURCE_ROOT; };
+		8233930516DE35C60031CF7B /* AlfrescoLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoLog.h; path = AlfrescoSDK/AlfrescoLog.h; sourceTree = SOURCE_ROOT; };
+		8233930616DE35C60031CF7B /* AlfrescoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoRequest.h; path = AlfrescoSDK/AlfrescoRequest.h; sourceTree = SOURCE_ROOT; };
 		8244E9E3165F8DAB00F4BF6C /* libAlfrescoSDKv1.0.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAlfrescoSDKv1.0.2.a; path = AlfrescoSDK/libAlfrescoSDKv1.0.2.a; sourceTree = SOURCE_ROOT; };
 		8276E172155EF9CA00344A29 /* DocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentViewController.h; sourceTree = "<group>"; };
 		8276E173155EF9CA00344A29 /* DocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentViewController.m; sourceTree = "<group>"; };
@@ -236,6 +240,10 @@
 		4E34A45E15B01E490075B46E /* AlfrescoSDK */ = {
 			isa = PBXGroup;
 			children = (
+				8233930516DE35C60031CF7B /* AlfrescoLog.h */,
+				8233930616DE35C60031CF7B /* AlfrescoRequest.h */,
+				8233930316DE34EE0031CF7B /* AlfrescoFileManager.h */,
+				8233930416DE34EE0031CF7B /* AlfrescoNetworkProvider.h */,
 				4E3FE8AA165F879B00BDAB31 /* AlfrescoOAuthLoginDelegate.h */,
 				8244E9E3165F8DAB00F4BF6C /* libAlfrescoSDKv1.0.2.a */,
 				82D760F915F0227E007712DE /* AlfrescoActivityEntry.h */,

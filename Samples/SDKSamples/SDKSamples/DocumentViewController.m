@@ -23,6 +23,7 @@
 #import "BasicPreviewItem.h"
 #import "AlfrescoPerson.h"
 #import "AlfrescoTag.h"
+#import "AlfrescoLog.h"
 
 @interface DocumentViewController ()
 
@@ -184,14 +185,14 @@
                 if (nil != contentFile)
                 {
                     NSData *data = [[NSFileManager defaultManager] contentsAtPath:[contentFile.fileUrl path]];
-                    log(@"the avatar file is at location %@ and the lenght of the image data is %d",[contentFile.fileUrl path], data.length);
+                    AlfrescoLogDebug(@"the avatar file is at location %@ and the length of the image data is %d",[contentFile.fileUrl path], data.length);
                     [self.avatarDictionary setObject:data forKey:userId];
                     avatarImageView.image = [UIImage imageWithData:data];
                     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
                 }
                 else
                 {
-                    log(@"Failed to load avatar, error message is %@ and code is %d", [error localizedDescription], [error code]);
+                    AlfrescoLogDebug(@"Failed to load avatar, error message is %@ and code is %d", [error localizedDescription], [error code]);
                 }
             }];
         }

@@ -1,24 +1,20 @@
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1
+/*******************************************************************************
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
+ * This file is part of the Alfresco Mobile SDK.
  *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * The Original Code is the Alfresco Mobile App.
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011-2012
- * the Initial Developer. All Rights Reserved.
- *
- *
- * ***** END LICENSE BLOCK ***** */
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ******************************************************************************/
 
 //
 // AlfrescoCMISObjectConverter 
@@ -77,7 +73,6 @@
 
 - (void)convertProperties:(NSDictionary *)properties forObjectTypeId:(NSString *)objectTypeId completionBlock:(void (^)(CMISProperties *, NSError *))completionBlock
 {
-//    log(@"<<<<<< convertProperties forObjectTypeId %@ >>>>>>>>>>>>> ", objectTypeId);
     [AlfrescoErrors assertArgumentNotNil:properties argumentName:@"properties"];
     NSObject *objectTypeIdValue = [properties objectForKey:kCMISPropertyObjectTypeId];
     NSString *objectTypeIdString = nil;
@@ -100,7 +95,6 @@
         completionBlock( nil, [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument detailedDescription:@"Type property must be set"]);
         return;
     }
-//    log(@"<<<<<< convertProperties forObjectTypeId %@  and objectTypeIdString %@ >>>>>>>>>>>>> ", objectTypeId, objectTypeIdString);
     
     [self retrieveAspectTypeDefinitionsFromObjectID:objectTypeIdString completionBlock:^(NSArray *returnedTypes, NSError *error){
         if (0 == returnedTypes.count)
@@ -121,11 +115,9 @@
             for (NSString *propertyId in properties)
             {
                 id propertyValue = [properties objectForKey:propertyId];
-//                log(@"<<<<<< convertProperties PropertyId %@ and property value is %@ >>>>>>>>>>>>> ", propertyId, propertyValue);
                 
                 if ([propertyId isEqualToString:kCMISPropertyObjectTypeId])
                 {
-//                    log(@"<<<<<< convertProperties PropertyId '%@' is of type ObjectTypeId and we should be setting it to the value objectTypeId='%@' property value='%@' >>>>>>>>>>>>> ", propertyId, objectTypeId, propertyValue);
                     [typeProperties setValue:propertyValue forKey:kCMISPropertyObjectTypeId];
                 }
                 else if ([mainTypeDefinition propertyDefinitionForId:propertyId])
@@ -173,7 +165,7 @@
                                                                                            namespaceUri:@"http://www.alfresco.org" attributes:nil value:aspectType.id];
                 [alfrescoExtensions addObject:extensionElement];
             }
-//            log(@"<<<<< we have %d aspect properties >>>>>>", aspectProperties.count);
+
             // Convert the aspect properties
             if (aspectProperties.count > 0)
             {
@@ -275,13 +267,9 @@
             // Cmis doesn't understand aspects, so we must replace the objectTypeId if needed
             if ([typeProperties objectForKey:kCMISPropertyObjectTypeId] != nil)
             {
-//                log(@"<<<<<< the mainTypeDefinition is %@  and we are setting it for key: %@  >>>>>>>>>>>>> ", mainTypeDefinition.id, kCMISPropertyObjectTypeId);
                 [typeProperties setValue:mainTypeDefinition.id forKey:kCMISPropertyObjectTypeId];
             }
-            else
-            {
-//                log(@"<<<<<<   we couldn't find the type definition %@ in the dictionary >>>>>>>>>>>>> ",kCMISPropertyObjectTypeId);
-            }
+
             [super convertProperties:typeProperties forObjectTypeId:mainTypeDefinition.id completionBlock:^(CMISProperties *result, NSError *error){
                 if (nil == result)
                 {
@@ -340,7 +328,6 @@
 - (void)retrieveAspectTypeDefinitionsFromObjectID:(NSString *)objectID completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     NSArray *components = [objectID componentsSeparatedByString:@","];
-//    log(@"<<<<<< retrieveAspectTypeDefinitionsFromObjectID objectID is %@", objectID);
     __block NSMutableArray *aspects = [NSMutableArray array];
     
     if (1 == components.count)
@@ -353,7 +340,6 @@
             }
             else
             {
-//                log(@"<<<<<< retrieveAspectTypeDefinitionsFromObjectID objectID is %@ and returned type definition is %@", objectID, typeDefinition.id);
                 [aspects addObject:typeDefinition];
                 completionBlock(aspects, nil);
             }
@@ -370,7 +356,6 @@
                 [self.session.binding.repositoryService retrieveTypeDefinition:trimmedString completionBlock:^(CMISTypeDefinition *typeDefinition, NSError *error){
                     if (nil != typeDefinition)
                     {
-//                        log(@"<<<<<< retrieveAspectTypeDefinitionsFromObjectID objectID is %@ and returned type definition is %@", objectID, typeDefinition.id);
                         [aspects addObject:typeDefinition];
                     }
                     if (index == components.count)

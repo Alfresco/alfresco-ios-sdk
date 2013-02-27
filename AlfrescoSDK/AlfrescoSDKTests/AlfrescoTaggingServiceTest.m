@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -226,12 +226,10 @@
                              int count = tags.count;
                              STAssertNotNil(tags, @"tags should not be nil");
                              STAssertTrue(count > 0, @"Count should be > 0, and is in fact %d",count);
-                             log(@"the number of tags is %d", tags.count);
                              NSString *testTag = [testtags objectAtIndex:0];
                              BOOL found = NO;
                              for (AlfrescoTag *tag in tags)
                              {
-                                 log(@"the tag value returned is %@", tag.value);
                                  if ([testTag isEqualToString:tag.value])
                                  {
                                      found = YES;

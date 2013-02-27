@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -24,11 +24,5 @@
 #import <Availability.h>
 #import <AvailabilityMacros.h>
 #import <Foundation/Foundation.h>
-
-#ifdef DEBUG
-#   define log(fmt, ...) NSLog((@"%s " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__);
-#else
-#   define log(...)
-#endif
 
 #endif

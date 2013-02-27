@@ -21,6 +21,7 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoSession.h"
 #import "AlfrescoComment.h"
+#import "AlfrescoRequest.h"
 
 /** The AlfrescoCommentService manages comments on nodes in an Alfresco 
  repository. The service provides CRUD methods to work with comments.
@@ -51,7 +52,7 @@
  @param node The node for which the comments are retrieved.
  @param completionBlock The block that's called with the retrieved comments in case the operation succeeds.
  */
-- (void)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Retrieves the comments for the given node with a listing context.
  
@@ -59,9 +60,9 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the comments.
  @param completionBlock The block that's called with the retrieved comments in case the operation succeeds.
  */
-- (void)retrieveCommentsForNode:(AlfrescoNode *)node
-                 listingContext:(AlfrescoListingContext *)listingContext
-                completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
+                              listingContext:(AlfrescoListingContext *)listingContext
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
  * @name Editing comment methods.
@@ -75,10 +76,10 @@
  @param title The comment title.
  @param completionBlock The block that's called with the new comment in case the operation succeeds.
  */
-- (void)addCommentToNode:(AlfrescoNode *)node
-                 content:(NSString *)content
-                   title:(NSString *)title
-         completionBlock:(AlfrescoCommentCompletionBlock)completionBlock;
+- (AlfrescoRequest *)addCommentToNode:(AlfrescoNode *)node
+                              content:(NSString *)content
+                                title:(NSString *)title
+                      completionBlock:(AlfrescoCommentCompletionBlock)completionBlock;
 
 /** Updates a comment.
  
@@ -87,10 +88,10 @@
  @param content The new comment content.
  @param completionBlock The block that's called with the updated comment in case the operation succeeds.
  */
-- (void)updateCommentOnNode:(AlfrescoNode *)node
-                    comment:(AlfrescoComment *)comment
-                    content:(NSString *)content
-            completionBlock:(AlfrescoCommentCompletionBlock)completionBlock;
+- (AlfrescoRequest *)updateCommentOnNode:(AlfrescoNode *)node
+                                 comment:(AlfrescoComment *)comment
+                                 content:(NSString *)content
+                         completionBlock:(AlfrescoCommentCompletionBlock)completionBlock;
 
 /** Deletes a comment.
  
@@ -98,8 +99,8 @@
  @param comment The comment that needs to be deleted.
  @param completionBlock The block that's called in case the operation succeeds.
  */
-- (void)deleteCommentFromNode:(AlfrescoNode *)node
-                      comment:(AlfrescoComment *)comment
-              completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+- (AlfrescoRequest *)deleteCommentFromNode:(AlfrescoNode *)node
+                                   comment:(AlfrescoComment *)comment
+                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 @end

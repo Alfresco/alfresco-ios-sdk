@@ -19,6 +19,7 @@
 #import "MobileSDKTableViewController.h"
 #import "MobileSDKWebViewController.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoLog.h"
 
 @interface MobileSDKTableViewController ()
 @end
@@ -37,7 +38,10 @@
     self.referenceLabel.text = localized(@"api_reference_option");
     self.learnMoreLabel.text = localized(@"learn_more_option");
     
-    log(@"SDKSamples is using v%@ of the Alfresco SDK.", kAlfrescoSDKVersion);
+    // set log level for the app
+    [self setupLogLevel];
+    
+    AlfrescoLogInfo(@"SDKSamples is using v%@ of the Alfresco SDK.", kAlfrescoSDKVersion);
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
@@ -58,6 +62,54 @@
     {
         [[segue destinationViewController] setNavTitle:localized(@"learn_more_option")];
         [[segue destinationViewController] setUrlToLoad:[NSURL URLWithString:localized(@"learn_more_url")]];
+    }
+}
+
+- (void)setupLogLevel
+{
+    // get the configured log level
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *logLevel = [defaults objectForKey:@"logLevel"];
+    AlfrescoLog *logger = [AlfrescoLog sharedInstance];
+    
+    if (logLevel == nil)
+    {
+        // log level has not been set by the user, use current logger log level
+        [defaults setObject:[logger stringForLogLevel:logger.logLevel] forKey:@"logLevel"];
+        [defaults synchronize];
+    }
+    else
+    {
+        // set the logger to the configured log level
+        if ([logLevel isEqualToString:@"INFO"])
+        {
+            logger.logLevel = AlfrescoLogLevelInfo;
+        }
+        else if ([logLevel isEqualToString:@"DEBUG"])
+        {
+            logger.logLevel = AlfrescoLogLevelDebug;
+        }
+        else if ([logLevel isEqualToString:@"TRACE"])
+        {
+            logger.logLevel = AlfrescoLogLevelTrace;
+        }
+        else if ([logLevel isEqualToString:@"WARNING"])
+        {
+            logger.logLevel = AlfrescoLogLevelWarning;
+        }
+        else if ([logLevel isEqualToString:@"ERROR"])
+        {
+            logger.logLevel = AlfrescoLogLevelError;
+        }
+        else if ([logLevel isEqualToString:@"OFF"])
+        {
+            logger.logLevel = AlfrescoLogLevelOff;
+        }
+        else
+        {
+            // default to Info
+            logger.logLevel = AlfrescoLogLevelInfo;
+        }
     }
 }
 
