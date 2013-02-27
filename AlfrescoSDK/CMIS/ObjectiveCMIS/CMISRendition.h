@@ -35,14 +35,12 @@
 /**
  * retrieves the rendition, e.g. thumbnail of a document
  * completionBlock returns the rendition object as CMIS document or nil if unsuccessful
- * @return cancellable request.
  */
 - (CMISRequest*)retrieveRenditionDocumentWithCompletionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
 
 /**
  * retrieves the rendition, e.g. thumbnail of a document
  * completionBlock returns the rendition object as CMIS document or nil if unsuccessful
- * @return cancellable request.
  */
 - (CMISRequest*)retrieveRenditionDocumentWithOperationContext:(CMISOperationContext *)operationContext
                                       completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
@@ -50,7 +48,6 @@
 /**
  * downloads the rendition of a document e.g. thumbnail of a document to a file
  * completionBlock returns the rendition object as CMIS document or nil if unsuccessful
- * @return cancellable request.
  */
 - (CMISRequest*)downloadRenditionContentToFile:(NSString *)filePath
                        completionBlock:(void (^)(NSError *error))completionBlock
@@ -59,7 +56,6 @@
 /**
  * downloads the rendition of a document e.g. thumbnail of a document to a file
  * completionBlock returns the rendition object as CMIS document or nil if unsuccessful
- * @return cancellable request.
  */
 - (CMISRequest*)downloadRenditionContentToOutputStream:(NSOutputStream *)outputStream
                                completionBlock:(void (^)(NSError *error))completionBlock

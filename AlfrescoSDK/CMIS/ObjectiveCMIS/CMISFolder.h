@@ -33,7 +33,6 @@
  * Retrieves the children of this folder as a paged result.
  *
  * The completionBlock will return paged results with instances of CMISObject or nil if unsuccessful.
- * @return cancellable request.
  */
 - (CMISRequest*)retrieveChildrenWithCompletionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
@@ -45,7 +44,6 @@
 /**
  * Gets the parent folder object.
  * The completionBlock will return CMISFolder object or nil if unsuccessful.
- * @return cancellable request.
  */
 - (CMISRequest*)retrieveFolderParentWithCompletionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
 
@@ -53,21 +51,18 @@
  * Retrieves the children of this folder as a paged result using the provided operation context.
  *
  * The completionBlock will return paged results with instances of CMISObject or nil if unsuccessful.
- * @return cancellable request.
  */
 - (CMISRequest*)retrieveChildrenWithOperationContext:(CMISOperationContext *)operationContext completionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
 /**
  * creates a folder with specified properties
  * completionBlock returns object Id of newly created folder or nil if not successful
- * @return cancellable request.
  */
 - (CMISRequest*)createFolder:(NSDictionary *)properties completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock;
 
 /**
  * creates a document with specified properties, mime Type
  * completionBlock returns object Id of newly created document or nil if not successful
- * @return cancellable request.
  */
 - (CMISRequest*)createDocumentFromFilePath:(NSString *)filePath
                           mimeType:(NSString *)mimeType
@@ -78,7 +73,6 @@
 /**
  * creates a document with specified properties, mime Type
  * completionBlock returns object Id of newly created document or nil if not successful
- * @return cancellable request.
  */
 - (CMISRequest*)createDocumentFromInputStream:(NSInputStream *)inputStream
                              mimeType:(NSString *)mimeType
@@ -91,7 +85,6 @@
 /**
  * creates a document with specified properties, mime Type
  * completionBlock returns list of failed objects (if any) 
- * @return cancellable request.
  */
 - (CMISRequest*)deleteTreeWithDeleteAllVersions:(BOOL)deleteAllversions
                           unfileObjects:(CMISUnfileObject)unfileObjects

@@ -18,7 +18,6 @@
  */
 
 #import "CMISHttpRequest.h"
-
 @interface CMISHttpUploadRequest : CMISHttpRequest 
 
 @property (nonatomic, strong) NSInputStream *inputStream;

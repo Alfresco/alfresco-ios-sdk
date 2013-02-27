@@ -50,4 +50,12 @@
 */
 - (NSString *)generateAtomEntryXml;
 
+- (NSString *)xmlStartElement;
+
+- (NSString *)xmlContentStartElement;
+
+- (NSString *)xmlContentEndElement;
+
+- (NSString *)xmlPropertiesElements;
+
 @end
