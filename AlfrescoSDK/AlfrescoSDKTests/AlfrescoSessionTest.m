@@ -22,7 +22,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoRequest.h"
-#import "CMISErrors.h"
+#import "AlfrescoErrors.h"
 @implementation AlfrescoSessionTest
 
 #pragma mark - AlfrescoRepository Specific Tests
@@ -607,7 +607,7 @@
                           {
                               super.lastTestSuccessful = YES;
                               /// The CMIS error code for cancelled requests is kCMISErrorCodeCancelled = 6
-                              STAssertEquals([error code], kCMISErrorCodeCancelled, @"The expected error code is %d, but instead we get %d", kCMISErrorCodeCancelled, [error code]);
+                              STAssertEquals([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %d", kAlfrescoErrorCodeNetworkRequestCancelled, [error code]);
                           }
                           else
                           {

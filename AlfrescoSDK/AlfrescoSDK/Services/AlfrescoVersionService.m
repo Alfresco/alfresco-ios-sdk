@@ -68,7 +68,8 @@
                            completionBlock:^(NSArray *allVersions, NSError *error){
          if (nil == allVersions)
          {
-             completionBlock(nil, error);
+             NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+             completionBlock(nil, alfrescoError);
          }
          else
          {
@@ -107,7 +108,8 @@
                            completionBlock:^(NSArray *allVersions, NSError *error){
          if (nil == allVersions)
          {
-             completionBlock(nil, error);
+             NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+             completionBlock(nil, alfrescoError);
          }
          else
          {
