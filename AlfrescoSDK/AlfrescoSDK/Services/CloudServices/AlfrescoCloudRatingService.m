@@ -220,8 +220,6 @@
 
 - (NSDictionary *) dictionaryFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    
-    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
     {

@@ -471,7 +471,7 @@
         }
         return nil;
     }
-    AlfrescoLogDebug(@"JSON data: %@",[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+
     NSError *error = nil;
     id favoriteSitesObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if(error)
