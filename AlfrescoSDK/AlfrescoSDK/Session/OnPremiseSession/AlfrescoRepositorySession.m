@@ -140,10 +140,6 @@
         
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
-        
-        // TODO: revisit this, seek opinion from team as best way to do this...
-        // setup CMISLog to match log level of AlfrescoLog
-        [CMISLog sharedInstance].logLevel = [AlfrescoLog sharedInstance].logLevel;
     }
     
     return self;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -123,9 +123,14 @@ NSString * const kAlfrescoSDKSamplesPassword = @"password";
         }
     };
     
+    // enable metadata extraction
+    NSDictionary *parameters = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+                                                           forKey:kAlfrescoMetadataExtraction];
+    
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.urlField.text]
                                      username:self.usernameField.text
                                      password:self.passwordField.text
+                                   parameters:parameters
                               completionBlock:completionBlock];
 }
 

@@ -21,6 +21,8 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoLog.h"
 
+NSString * const kAlfrescoSDKSamplesLogLevel = @"logLevel";
+
 @interface MobileSDKTableViewController ()
 @end
 
@@ -69,13 +71,13 @@
 {
     // get the configured log level
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *logLevel = [defaults objectForKey:@"logLevel"];
+    NSString *logLevel = [defaults objectForKey:kAlfrescoSDKSamplesLogLevel];
     AlfrescoLog *logger = [AlfrescoLog sharedInstance];
     
     if (logLevel == nil)
     {
         // log level has not been set by the user, use current logger log level
-        [defaults setObject:[logger stringForLogLevel:logger.logLevel] forKey:@"logLevel"];
+        [defaults setObject:[logger stringForLogLevel:logger.logLevel] forKey:kAlfrescoSDKSamplesLogLevel];
         [defaults synchronize];
     }
     else

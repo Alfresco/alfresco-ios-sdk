@@ -59,9 +59,39 @@
  @param completionBlock The block that's called with the created folder in case the operation succeeds.
  */
 - (AlfrescoRequest *)createFolderWithName:(NSString *)folderName
-              inParentFolder:(AlfrescoFolder *)folder
-                  properties:(NSDictionary *)properties
-             completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+                           inParentFolder:(AlfrescoFolder *)folder
+                               properties:(NSDictionary *)properties
+                          completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+
+/** Creates a new folder using the given properties in the given folder.
+ 
+ @param folderName The name of the folder to be created.
+ @param folder The parent folder of the new folder.
+ @param properties Additional properties that are used to create the folder.
+ @param aspects additional aspects for this folder
+ @param completionBlock The block that's called with the created folder in case the operation succeeds.
+ */
+- (AlfrescoRequest *)createFolderWithName:(NSString *)folderName
+                           inParentFolder:(AlfrescoFolder *)folder
+                               properties:(NSDictionary *)properties
+                                  aspects:(NSArray *)aspects
+                          completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+
+/** Creates a new folder using the given properties in the given folder.
+ 
+ @param folderName The name of the folder to be created.
+ @param folder The parent folder of the new folder.
+ @param properties Additional properties that are used to create the folder.
+ @param aspects additional aspects for this folder
+ @param custom type of properties/aspects to be added/set to the new folder
+ @param completionBlock The block that's called with the created folder in case the operation succeeds.
+ */
+- (AlfrescoRequest *)createFolderWithName:(NSString *)folderName
+                           inParentFolder:(AlfrescoFolder *)folder
+                               properties:(NSDictionary *)properties
+                                  aspects:(NSArray *)aspects
+                                     type:(NSString *)type
+                          completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 
 
 /** Creates a new document using the contents of a local file. The new document is created within the given folder.
@@ -74,11 +104,51 @@
  @param progressBlock The block that's called with the upload progress.
  */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
-                inParentFolder:(AlfrescoFolder *)folder
-                   contentFile:(AlfrescoContentFile *)file
-                    properties:(NSDictionary *)properties
-               completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
-                 progressBlock:(AlfrescoProgressBlock)progressBlock;
+                             inParentFolder:(AlfrescoFolder *)folder
+                                contentFile:(AlfrescoContentFile *)file
+                                 properties:(NSDictionary *)properties
+                            completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                              progressBlock:(AlfrescoProgressBlock)progressBlock;
+
+
+/** Creates a new document using the contents of a local file. The new document is created within the given folder.
+ 
+ @param documentName The name of the document to be created in the repository
+ @param folder The parent folder to create the document in.
+ @param file The local file to be uploaded.
+ @param properties Additional properties that are used to create the document.
+ @param aspects array of additional aspects to be added
+ @param completionBlock The block that's called with the created document in case the operation succeeds.
+ @param progressBlock The block that's called with the upload progress.
+ */
+- (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
+                             inParentFolder:(AlfrescoFolder *)folder
+                                contentFile:(AlfrescoContentFile *)file
+                                 properties:(NSDictionary *)properties
+                                    aspects:(NSArray *)aspects
+                            completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                              progressBlock:(AlfrescoProgressBlock)progressBlock;
+
+/** Creates a new document using the contents of a local file. The new document is created within the given folder.
+ 
+ @param documentName The name of the document to be created in the repository
+ @param folder The parent folder to create the document in.
+ @param file The local file to be uploaded.
+ @param properties Additional properties that are used to create the document.
+ @param aspects array of additional aspects to be added
+ @param type a custom property type to be added
+ @param completionBlock The block that's called with the created document in case the operation succeeds.
+ @param progressBlock The block that's called with the upload progress.
+ */
+- (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
+                             inParentFolder:(AlfrescoFolder *)folder
+                                contentFile:(AlfrescoContentFile *)file
+                                 properties:(NSDictionary *)properties
+                                    aspects:(NSArray *)aspects
+                                       type:(NSString *)type
+                            completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                              progressBlock:(AlfrescoProgressBlock)progressBlock;
+
 
 
 /** Creates a new document using the input stream provided. The new document is created within the given folder.
@@ -86,18 +156,70 @@
  @param documentName The name of the document to be created in the repository
  @param folder The parent folder to create the document in.
  @param file The local file to be uploaded.
- @param properties Additional properties that are used to create the document.
  @param inputStream The input stream to the file to be uploaded.
+ @param fileSize the size of the original data source to be uploaded. This is optional, if unknown set to 0. 
+ @param mimeType the mime type of the content
+ @param properties Additional properties that are used to create the document.
  @param completionBlock The block that's called with the created document in case the operation succeeds.
- @param progressBlock The block that's called with the upload progress.
+ @param progressBlock The block that's called with the upload progress. This can only be used if the fileSize parameter is > 0.
  */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
-                inParentFolder:(AlfrescoFolder *)folder
-                   contentFile:(AlfrescoContentFile *)file
-                    properties:(NSDictionary *)properties
-                   inputStream:(NSInputStream *)inputStream
-               completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
-                 progressBlock:(AlfrescoProgressBlock)progressBlock;
+                             inParentFolder:(AlfrescoFolder *)folder
+                                inputStream:(NSInputStream *)inputStream
+                                   fileSize:(unsigned long long)fileSize
+                                   mimeType:(NSString *)mimeType
+                                 properties:(NSDictionary *)properties
+                            completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                              progressBlock:(AlfrescoProgressBlock)progressBlock;
+
+
+/** Creates a new document using the input stream provided. The new document is created within the given folder.
+ 
+ @param documentName The name of the document to be created in the repository
+ @param folder The parent folder to create the document in.
+ @param file The local file to be uploaded.
+ @param inputStream The input stream to the file to be uploaded.
+ @param fileSize the size of the original data source to be uploaded. This is optional, if unknown set to 0.
+ @param mimeType the mime type of the content
+ @param properties Additional properties that are used to create the document.
+ @param aspects array of extra aspects to be added
+ @param completionBlock The block that's called with the created document in case the operation succeeds.
+ @param progressBlock The block that's called with the upload progress. This can only be used if the fileSize parameter is > 0.
+ */
+- (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
+                             inParentFolder:(AlfrescoFolder *)folder
+                                inputStream:(NSInputStream *)inputStream
+                                   fileSize:(unsigned long long)fileSize
+                                   mimeType:(NSString *)mimeType
+                                 properties:(NSDictionary *)properties
+                                    aspects:(NSArray *)array
+                            completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                              progressBlock:(AlfrescoProgressBlock)progressBlock;
+
+/** Creates a new document using the input stream provided. The new document is created within the given folder.
+ 
+ @param documentName The name of the document to be created in the repository
+ @param folder The parent folder to create the document in.
+ @param file The local file to be uploaded.
+ @param inputStream The input stream to the file to be uploaded.
+ @param fileSize the size of the original data source to be uploaded. This is optional, if unknown set to 0.
+ @param mimeType the mime type of the content
+ @param properties Additional properties that are used to create the document.
+ @param aspects array of extra aspects to be added
+ @param type a custom property type to be added
+ @param completionBlock The block that's called with the created document in case the operation succeeds.
+ @param progressBlock The block that's called with the upload progress. This can only be used if the fileSize parameter is > 0.
+ */
+- (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
+                             inParentFolder:(AlfrescoFolder *)folder
+                                inputStream:(NSInputStream *)inputStream
+                                   fileSize:(unsigned long long)fileSize
+                                   mimeType:(NSString *)mimeType
+                                 properties:(NSDictionary *)properties
+                                    aspects:(NSArray *)array
+                                       type:(NSString *)type
+                            completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                              progressBlock:(AlfrescoProgressBlock)progressBlock;
 
 
 
@@ -116,7 +238,7 @@
  @param completionBlock the block returns an AlfrescoPermissions and NSError object)
  */
 - (AlfrescoRequest *)retrievePermissionsOfNode:(AlfrescoNode *)node 
-                  completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock;
+                               completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock;
 
 
 /** Retrieves all the children of the given folder.
@@ -125,7 +247,7 @@
  @param completionBlock The block that's called with the retrieved children in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveChildrenInFolder:(AlfrescoFolder *)folder
-                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
 /** Retrieves all the children of the given folder with a listing context.
@@ -135,8 +257,8 @@
  @param completionBlock The block that's called with the retrieved children in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveChildrenInFolder:(AlfrescoFolder *)folder
-                  listingContext:(AlfrescoListingContext *)listingContext
-                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+                               listingContext:(AlfrescoListingContext *)listingContext
+                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 
 /** Retrieves all the documents in the given folder.
@@ -145,7 +267,7 @@
  @param completionBlock The block that's called with the retrieved documents in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveDocumentsInFolder:(AlfrescoFolder *)folder
-                  completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+                               completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
 /** Retrieves all the documents in the given folder with a listing context.
@@ -155,8 +277,8 @@
  @param completionBlock The block that's called with the retrieved documents in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveDocumentsInFolder:(AlfrescoFolder *)folder
-                   listingContext:(AlfrescoListingContext *)listingContext
-                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+                                listingContext:(AlfrescoListingContext *)listingContext
+                               completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 
 /** Retrieves all the sub folders in the given folder.
@@ -165,7 +287,7 @@
  @param completionBlock The block that's called with the retrieved sub folders in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveFoldersInFolder:(AlfrescoFolder *)folder
-                completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
 /** Retrieves all the sub folders in the given folder with a listing context
@@ -175,8 +297,8 @@
  @param completionBlock The block that's called with the retrieved sub folders in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveFoldersInFolder:(AlfrescoFolder *)folder
-                 listingContext:(AlfrescoListingContext *)listingContext
-                completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+                              listingContext:(AlfrescoListingContext *)listingContext
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 
 /** Retrieves a document or folder with the given node identifier.
@@ -185,7 +307,7 @@
  @param completionBlock The block that's called with the retrieved node in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveNodeWithIdentifier:(NSString *)identifier
-                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
+                                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
 
 /** Retrieves a node from the repository with the given folder path.
@@ -199,7 +321,7 @@
  @param completionBlock The block that's called with the retrieved node in case the operation succeeds.
  */ 
 - (AlfrescoRequest *)retrieveNodeWithFolderPath:(NSString *)path 
-                   completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
+                                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
 
 /** Retrieves a node from the repository with the given folder path relative to the given folder.
@@ -209,8 +331,8 @@
  @param completionBlock The block that's called with the retrieved node in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveNodeWithFolderPath:(NSString *)path
-                  relativeToFolder:(AlfrescoFolder *)folder
-                   completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
+                               relativeToFolder:(AlfrescoFolder *)folder
+                                completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
 
 /** Retrieves the parent folder of the given node.
@@ -219,7 +341,7 @@
  @param completionBlock The block that's called with the retrieved parent folder in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveParentFolderOfNode:(AlfrescoNode *)node
-                   completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+                                completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 
 
 
@@ -231,8 +353,8 @@
  @param completionBlock The block that's called with the local AlfrescoContentFile containing the thumbnail URL/data.
  */
 - (AlfrescoRequest *)retrieveRenditionOfNode:(AlfrescoNode *)node
-                  renditionName:(NSString *)renditionName
-                completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
+                               renditionName:(NSString *)renditionName
+                             completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
 
 
 
@@ -251,8 +373,8 @@
  */
 // 
 - (AlfrescoRequest *)retrieveContentOfDocument:(AlfrescoDocument *)document
-                  completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
-                    progressBlock:(AlfrescoProgressBlock)progressBlock;
+                               completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+                                 progressBlock:(AlfrescoProgressBlock)progressBlock;
 
 
 /** Downloads the content of the given document and writes it using the provided outputstream. The delegate object
@@ -265,11 +387,10 @@
  */
 //
 - (AlfrescoRequest *)retrieveContentOfDocument:(AlfrescoDocument *)document
-                       toFilePath:(NSString *)filePath
-                     outputStream:(NSOutputStream *)outputStream
-                  completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+                                  outputStream:(NSOutputStream *)outputStream
+                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
                     progressBlock:(AlfrescoProgressBlock)progressBlock;
-
+    
 
 /** Updates a document with the contents of a local file.
  
@@ -280,9 +401,25 @@
  */
 
 - (AlfrescoRequest *)updateContentOfDocument:(AlfrescoDocument *)document
-                    contentFile:(AlfrescoContentFile *)file
-                completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
-                  progressBlock:(AlfrescoProgressBlock)progressBlock;
+                                 contentFile:(AlfrescoContentFile *)file
+                             completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                               progressBlock:(AlfrescoProgressBlock)progressBlock;
+
+/** Updates a document with the contents of a local file.
+ 
+ @param document The document that needs to be updated.
+ @param inputStream The source input stream to be updated.
+ @param fileSize the data size used to update the content on the server. If unknown set to 0
+ @param completionBlock The block that's called with the updated document in case the operation succeeds.
+ @param progressBlock The block that's called with the upload progress. This can only be used if the fileSize parameter is > 0.
+ */
+
+- (AlfrescoRequest *)updateContentOfDocument:(AlfrescoDocument *)document
+                                 inputStream:(NSInputStream *)inputStream
+                                    fileSize:(unsigned long long)fileSize
+                                    mimeType:(NSString *)mimeType
+                             completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                               progressBlock:(AlfrescoProgressBlock)progressBlock;
 
 
 /** Updates the properties of a specific node.
@@ -292,8 +429,8 @@
  @param completionBlock The block that's called with the updated node in case the operation succeeds.
  */
 - (AlfrescoRequest *)updatePropertiesOfNode:(AlfrescoNode *)node
-                    properties:(NSDictionary *)properties
-               completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
+                                 properties:(NSDictionary *)properties
+                            completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
  * @name Deletes a node.
@@ -306,6 +443,6 @@
  @param completionBlock The block that's called in case the operation succeeds.
  */
 - (AlfrescoRequest *)deleteNode:(AlfrescoNode *)node
-   completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+                completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 @end
