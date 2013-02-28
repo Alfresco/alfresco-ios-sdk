@@ -40,7 +40,7 @@ typedef enum
     kAlfrescoErrorCodeRefreshTokenExpired = 105,
     kAlfrescoErrorCodeNoRepositoryFound = 106,
     kAlfrescoErrorCodeNoNetworkFound = 107,
-    kAlfrescoErrorCodeNetworkRequestCancelled = 108,
+    kAlfrescoErrorCodeNetworkRequestCancelled = 110,
 
     kAlfrescoErrorCodeJSONParsing = 200,
     kAlfrescoErrorCodeJSONParsingNilData = 201,
@@ -153,6 +153,13 @@ extern NSString * const kAlfrescoErrorDescriptionRatingsNoRatings;
  */
 + (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
+
+/** Creates an error object based on another NSError instance.
+ 
+ @param error an error created in the CMIS lib
+ @return The newly created error.
+ */
++ (NSError *)alfrescoErrorWithCMISError:(NSError *)cmisError;
 
 /** Creates an error object based on an error code and a description.
  

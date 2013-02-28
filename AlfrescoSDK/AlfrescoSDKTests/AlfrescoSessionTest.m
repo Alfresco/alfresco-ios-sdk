@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2012 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -22,10 +22,8 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoRequest.h"
+#import "AlfrescoErrors.h"
 #import "AlfrescoLog.h"
-#import "CMISErrors.h"
-
-
 @implementation AlfrescoSessionTest
 
 #pragma mark - AlfrescoRepository Specific Tests
@@ -49,6 +47,7 @@
                                           {
                                               STAssertNotNil(error, @"Expected an invalid credentials error to be thrown");
                                               STAssertNil(session, @"Expected a session not to be created");
+                                              NSLog(@"Desc: %@, Reason: %@", [error localizedDescription], [error localizedFailureReason]);
                                               super.lastTestSuccessful = YES;
                                           }
                                           else
@@ -88,6 +87,8 @@
                 else
                 {
                     super.lastTestSuccessful = YES;
+                    NSLog(@"testRetrieveNetworksTest");
+                    NSLog(@"%@", array);
                     for (AlfrescoCloudNetwork *network in array)
                     {
                         AlfrescoLogDebug(@"identifier: %@", network.identifier);
@@ -159,6 +160,7 @@
         NSURL *sessionBaseURL = [super.currentSession baseUrl];
         STAssertNotNil(sessionBaseURL, @"Expected the base url in the session not to be nil");
         STAssertNotNil(self.server, @"The server base url is nil");
+        NSLog(@"Session Base URL is: %@ \nServer is: %@", sessionBaseURL, self.server);
         
         NSString *urlToTest = nil;
         if (!super.isCloud)
@@ -606,7 +608,7 @@
                           {
                               super.lastTestSuccessful = YES;
                               /// The CMIS error code for cancelled requests is kCMISErrorCodeCancelled = 6
-                              STAssertEquals([error code], kCMISErrorCodeCancelled, @"The expected error code is %d, but instead we get %d", kCMISErrorCodeCancelled, [error code]);
+                              STAssertEquals([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %d", kAlfrescoErrorCodeNetworkRequestCancelled, [error code]);
                           }
                           else
                           {
