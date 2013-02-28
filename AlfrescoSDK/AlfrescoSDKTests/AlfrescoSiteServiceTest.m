@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -37,14 +37,12 @@
             if (nil == array) 
             {
                 STAssertNil(array,@"if failure, the array should be nil");
-                log(@"The array of all sites returns nil. ERROR");
                 super.lastTestSuccessful = NO;
                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
                 STAssertNotNil(array,@"the array should not be nil");
-                log(@"The array of all sites is not nil. OK");
                 STAssertTrue(array.count > 1, [NSString stringWithFormat:@"Site count should be greater than 1 not %i", array.count]);
                 super.lastTestSuccessful = YES;
             }
@@ -82,7 +80,6 @@
             else
             {
                 STAssertNotNil(pagingResult, @"paged result should not be nil");
-                log(@"getting back %d sites",pagingResult.objects.count);
                 super.lastTestSuccessful = YES;
             }
             
@@ -152,7 +149,6 @@
             else 
             {
                 STAssertNotNil(pagingResult, @"paged result should not be nil");
-                log(@"getting back %d sites",pagingResult.objects.count);
                 super.lastTestSuccessful = YES;
             }
             super.callbackCompleted = YES;
@@ -220,7 +216,6 @@
             else 
             {
                 STAssertNotNil(pagingResult, @"paged result should not be nil");
-                log(@"Objects found is %d",pagingResult.objects.count);
                 STAssertTrue(pagingResult.totalItems >= 1, @"Total favorite site count should be at least 1, but we got %d", pagingResult.totalItems);
                 if (pagingResult.totalItems > 1)
                 {
@@ -260,7 +255,6 @@
             }
             else 
             {
-                log(@"testRetrieveSiteWithShortName returns the following site=%@ ",super.testSiteName);
                 STAssertTrue([site.shortName isEqualToString:super.testSiteName], [NSString stringWithFormat:@"Expected %@ site but got back %@",super.testSiteName, site.shortName]);
                 STAssertNotNil(site.title, @"site title should not be nil");
                 STAssertNotNil(site.summary, @"site summary should not be nil");

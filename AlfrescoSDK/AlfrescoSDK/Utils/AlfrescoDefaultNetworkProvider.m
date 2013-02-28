@@ -29,7 +29,7 @@
 
 - (void)requestWithURL:(NSURL *)requestURL
                 method:(NSString *)method
-               headers:(NSDictionary *)header
+               headers:(NSDictionary *)headers
            requestBody:(NSData *)data
        alfrescoRequest:alfrescoRequest
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
@@ -69,7 +69,7 @@
 
 - (void)requestWithURL:(NSURL *)requestURL
                 method:(NSString *)method
-               headers:(NSDictionary *)header
+               headers:(NSDictionary *)headers
            requestBody:(NSData *)data
        alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
@@ -78,7 +78,7 @@
     AlfrescoDefaultHTTPRequest *alfrescoDefaultRequest = [[AlfrescoDefaultHTTPRequest alloc] init];
     if (alfrescoDefaultRequest && !alfrescoRequest.isCancelled)
     {
-        [alfrescoDefaultRequest connectWithURL:requestURL method:method header:header requestBody:data completionBlock:completionBlock];
+        [alfrescoDefaultRequest connectWithURL:requestURL method:method headers:headers requestBody:data completionBlock:completionBlock];
         alfrescoRequest.httpRequest = alfrescoDefaultRequest;
     }
     else

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -20,6 +20,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoOAuthHelper.h"
+#import "AlfrescoLog.h"
 #import <Availability.h>
 
 @interface AlfrescoOAuthLoginViewController ()
@@ -195,7 +196,7 @@
     
     // load the authorization URL in the web view
     NSURL *authURL = [NSURL URLWithString:authURLString];
-    log(@"UIWebviewDelegate loadWebView: just before loading request with %@",authURLString);
+    AlfrescoLogDebug(@"UIWebviewDelegate loadWebView: just before loading request with %@",authURLString);
     [self.webView loadRequest:[NSURLRequest requestWithURL:authURL]];
 }
 
@@ -299,13 +300,13 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-    log(@"UIWebviewDelegate webViewDidStartLoad");
+    AlfrescoLogDebug(@"UIWebviewDelegate webViewDidStartLoad");
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    log(@"UIWebviewDelegate didFailLoadWithError");
-    log(@"Error occurred while loading page: %@ with code %d and reason %@", [error localizedDescription], [error code], [error localizedFailureReason]);
+    AlfrescoLogError(@"UIWebviewDelegate didFailLoadWithError");
+    AlfrescoLogError(@"Error occurred while loading page: %@ with code %d and reason %@", [error localizedDescription], [error code], [error localizedFailureReason]);
     if (nil != self.oauthDelegate)
     {
         if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
@@ -331,9 +332,9 @@
  */
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    log(@"LoginViewController:didReceiveResponse");
+    AlfrescoLogDebug(@"LoginViewController:didReceiveResponse");
     NSString *code = [self authorizationCodeFromURL:response.URL];
-    log(@"Extracted auth code: %@", code);
+    AlfrescoLogDebug(@"Extracted auth code: %@", code);
     
     if (nil != code)
     {
@@ -351,7 +352,7 @@
     }
     else
     {
-        log(@"We don't have a valid authentication code");
+        AlfrescoLogDebug(@"We don't have a valid authentication code");
         [self.activityIndicator stopAnimating];
         self.hasValidAuthenticationCode = NO;
     }
@@ -359,7 +360,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    log(@"LoginViewController:connection error with message %@ and code %d", [error localizedDescription], [error code]);
+    AlfrescoLogDebug(@"LoginViewController:connection error with message %@ and code %d", [error localizedDescription], [error code]);
     [self.activityIndicator stopAnimating];
     if (nil != self.oauthDelegate)
     {
@@ -374,12 +375,12 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    log(@"LoginViewController:connectionDidFinishLoading");
+    AlfrescoLogDebug(@"LoginViewController:connectionDidFinishLoading");
     if (!self.hasValidAuthenticationCode)
     {
         NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
         BOOL showAlert = NO;
-        log(@"We don't have a valid authentication code");
+        AlfrescoLogDebug(@"We don't have a valid authentication code");
         if (nil != self.oauthDelegate)
         {
             if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])

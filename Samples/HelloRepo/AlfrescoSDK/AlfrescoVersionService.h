@@ -21,7 +21,7 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoConstants.h"
 #import "AlfrescoDocument.h"
-
+#import "AlfrescoRequest.h"
 /** The AlfrescoVersionService provides ways to get all versions of a specific document.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
@@ -50,7 +50,7 @@
  @param document The document for which all versions should be retrieved.
  @param completionBlock The block that's called with the retrieved versions in case the operation succeeds.
  */
-- (void)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
                       completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /** Retrieves all versions of the given document with a listing context.
@@ -59,7 +59,7 @@
  @param listingContext The listing context with a paging definition that's used to retrieve the versions.
  @param completionBlock The block that's called with the retrieved versions in case the operation succeeds.
  */
-- (void)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
+- (AlfrescoRequest *)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 

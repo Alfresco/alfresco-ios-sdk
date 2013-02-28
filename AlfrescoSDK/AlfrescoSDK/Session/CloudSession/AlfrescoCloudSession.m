@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -32,8 +32,10 @@
 #import "AlfrescoOAuthAuthenticationProvider.h"
 #import "CMISPassThroughAuthenticationProvider.h"
 #import "AlfrescoCMISObjectConverter.h"
-#import <objc/runtime.h>
 #import "AlfrescoDefaultNetworkProvider.h"
+#import "AlfrescoLog.h"
+#import "CMISLog.h"
+#import <objc/runtime.h>
 
 @interface AlfrescoCloudSession ()
 
@@ -314,7 +316,7 @@
     if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
-        log(@"overriding Cloud URL with: %@", baseURL);
+        AlfrescoLogDebug(@"overriding Cloud URL with: %@", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:baseURL];
     self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
@@ -323,18 +325,17 @@
     request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
         {
-            log(@"*** authenticateWithOAuthData returns with network array == NIL");
             completionBlock(nil, error);
         }
         else
         {
-            log(@"*** authenticateWithOAuthData we have %d networks",networks.count);
+            AlfrescoLogDebug(@"found %d networks", networks.count);
             __block AlfrescoCloudNetwork *homeNetwork = nil;
             for (AlfrescoCloudNetwork *network in networks)
             {
                 if (network.isHomeNetwork)
                 {
-                    log(@"found home network %@",network.identifier);
+                    AlfrescoLogDebug(@"found home network %@", network.identifier);
                     homeNetwork = network;
                     break;
                 }
@@ -345,7 +346,6 @@
             }
             else
             {
-                log(@"*** authenticateWithOAuthData found home network with id %@", homeNetwork.identifier);
                 request = [self authenticateWithOAuthData:oauthData
                                                   network:homeNetwork.identifier
                                           completionBlock:completionBlock];
@@ -362,12 +362,11 @@
                                completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     self.isUsingBaseAuthenticationProvider = NO;
-    log(@"*** ENTERING authenticateWithOAuthData with specified home network");
     NSString *baseURL = kAlfrescoCloudURL;
     if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
-        log(@"overriding Cloud URL with: %@", baseURL);
+        AlfrescoLogDebug(@"overriding Cloud URL with: %@", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",baseURL,network]];
     self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
@@ -419,11 +418,10 @@
             parameters.repositoryId = repoInfo.identifier;
             [parameters setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
 
-            log(@"**** repositoriesWithParameters. the URL is %@ and the repo ID is %@ ****", [parameters.atomPubUrl absoluteString], repoInfo.identifier);
+            AlfrescoLogDebug(@"URL is %@ and the repo ID is %@ ****", [parameters.atomPubUrl absoluteString], repoInfo.identifier);
 
             alfrescoRequest.httpRequest = [CMISSession connectWithSessionParameters:parameters
                                                                     completionBlock:^(CMISSession *cmisSession, NSError *error){
-                log(@"**** repositoriesWithParameters/connectWithSessionParameters. the URL is %@ ****", [cmisSession.sessionParameters.atomPubUrl absoluteString]);
                 if (nil == cmisSession)
                 {
                     if(completionBlock)
@@ -477,11 +475,11 @@ This authentication method authorises the user to access the home network assign
     if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
-        log(@"**** overriding Cloud URL with: %@ ****", baseURL);
+        AlfrescoLogDebug(@"overriding Cloud URL with: %@", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
     self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
-    log(@"**** baseURLWithoutNetwork = %@ ****", [self.baseURLWithoutNetwork absoluteString]);
+    AlfrescoLogDebug(@"baseURLWithoutNetwork = %@", [self.baseURLWithoutNetwork absoluteString]);
     self.emailAddress = emailAddress;
     self.password = password;
     self.personIdentifier = emailAddress;
@@ -489,18 +487,17 @@ This authentication method authorises the user to access the home network assign
     request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
         {
-            log(@"*** authenticateWithUsername network returns NIL");
             completionBlock(nil, error);
         }
         else
         {
-            log(@"*** authenticateWithUsername we have %d networks",networks.count);
+            AlfrescoLogDebug(@"found %d networks",networks.count);
             AlfrescoCloudNetwork *homeNetwork = nil;
             for (AlfrescoCloudNetwork *network in networks)
             {
                 if (network.isHomeNetwork)
                 {
-                    log(@"found home network %@",network.identifier);
+                    AlfrescoLogDebug(@"found home network %@",network.identifier);
                     homeNetwork = network;
                     break;
                 }
@@ -535,7 +532,7 @@ This authentication method authorises the user to access the home network assign
     if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
     {
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
-        log(@"**** overriding Cloud URL with: %@ ****", baseURL);
+        AlfrescoLogDebug(@"overriding Cloud URL with: %@", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@", baseURL, kAlfrescoCloudPrecursor, network]];
     self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
@@ -602,6 +599,10 @@ This authentication method authorises the user to access the home network assign
                 
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
+        
+        // TODO: revisit this, seek opinion from team as best way to do this...
+        // setup CMISLog to match log level of AlfrescoLog
+        [CMISLog sharedInstance].logLevel = [AlfrescoLog sharedInstance].logLevel;
     }
     return self;
 }
@@ -660,7 +661,7 @@ This authentication method authorises the user to access the home network assign
         return nil;
     }
     NSError *error = nil;
-    log(@"****** NETWORK JSON DATA RETURN: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+    AlfrescoLogDebug(@"JSON data: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if (nil == jsonDictionary)
     {

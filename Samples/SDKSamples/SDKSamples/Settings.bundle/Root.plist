@@ -5,64 +5,32 @@
 	<key>PreferenceSpecifiers</key>
 	<array>
 		<dict>
-			<key>Title</key>
-			<string>Server</string>
 			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
-			<key>AutocorrectionType</key>
-			<string>No</string>
-			<key>DefaultValue</key>
-			<string>http://localhost:8080/alfresco</string>
-			<key>IsSecure</key>
-			<false/>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Log Level</string>
 			<key>Key</key>
-			<string>host</string>
-			<key>KeyboardType</key>
-			<string>Alphabet</string>
-			<key>Title</key>
-			<string>Host</string>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-		</dict>
-		<dict>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
-			<key>AutocorrectionType</key>
-			<string>No</string>
+			<string>logLevel</string>
+			<key>Values</key>
+			<array>
+				<string>OFF</string>
+				<string>ERROR</string>
+				<string>WARNING</string>
+				<string>INFO</string>
+				<string>DEBUG</string>
+				<string>TRACE</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Off</string>
+				<string>Error</string>
+				<string>Warning</string>
+				<string>Info</string>
+				<string>Debug</string>
+				<string>Trace</string>
+			</array>
 			<key>DefaultValue</key>
-			<string>admin</string>
-			<key>IsSecure</key>
-			<false/>
-			<key>Key</key>
-			<string>username</string>
-			<key>KeyboardType</key>
-			<string>Alphabet</string>
-			<key>Title</key>
-			<string>Username</string>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-		</dict>
-		<dict>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
-			<key>AutocorrectionType</key>
-			<string>No</string>
-			<key>DefaultValue</key>
-			<string>admin</string>
-			<key>IsSecure</key>
-			<true/>
-			<key>Key</key>
-			<string>password</string>
-			<key>KeyboardType</key>
-			<string>Alphabet</string>
-			<key>Title</key>
-			<string>Password</string>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
+			<string>INFO</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>

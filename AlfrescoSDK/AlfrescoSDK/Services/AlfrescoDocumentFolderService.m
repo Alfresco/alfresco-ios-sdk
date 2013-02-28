@@ -45,7 +45,7 @@
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoFileManager.h"
 #import "AlfrescoNetworkProvider.h"
-
+#import "AlfrescoLog.h"
 
 typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error);
 
@@ -868,17 +868,14 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
      includeRelativePathSegment:YES
      completionBlock:^(NSArray *parents, NSError *error){
          
-         log(@"retrieveParentFolderOfNode::in completionBlock");
          if (nil == parents)
          {
-             log(@"retrieveParentFolderOfNode::in completionBlock --> parents array is NIL");
              NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
              completionBlock(nil, alfrescoError);
          }
          else
          {
              AlfrescoFolder *parentFolder = nil;
-             log(@"retrieveParentFolderOfNode::in completionBlock --> parents array has %d elements", parents.count);
              NSError *folderError = nil;
              for (CMISObjectData * cmisObjectData in parents)
              {
@@ -941,9 +938,9 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             else
             {
                 CMISRendition *thumbnailRendition = (CMISRendition *)[renditions objectAtIndex:0];
-                log(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@",renditions.count, thumbnailRendition.renditionDocumentId);
+                AlfrescoLogDebug(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@",renditions.count, thumbnailRendition.renditionDocumentId);
                 NSString *tmpFileName = [NSTemporaryDirectory() stringByAppendingFormat:@"%@.png",node.name];
-                log(@"************* DOWNLOADING TO FILE %@",tmpFileName);
+                AlfrescoLogDebug(@"************* DOWNLOADING TO FILE %@",tmpFileName);
                 request.httpRequest = [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^(NSError *downloadError){
                     if (downloadError)
                     {
@@ -956,7 +953,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                         completionBlock(contentFile, nil);
                     }
                 } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal){
-                    log(@"************* PROGRESS DOWNLOADING FILE with %llu bytes downloaded from %llu total ",bytesDownloaded, bytesTotal);
+                    AlfrescoLogDebug(@"************* PROGRESS DOWNLOADING FILE with %llu bytes downloaded from %llu total ",bytesDownloaded, bytesTotal);
                 }];
             }
         }
@@ -1161,14 +1158,14 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     if ([[properties allKeys] containsObject:kAlfrescoPropertyName])
     {
         NSString *name = [properties valueForKey:kAlfrescoPropertyName];
-        log(@"updatePropertiesOfNode contains key %@ with value %@",kAlfrescoPropertyName, name );
+        AlfrescoLogDebug(@"updatePropertiesOfNode contains key %@ with value %@",kAlfrescoPropertyName, name );
         [cmisProperties setValue:name forKey:@"cmis:name"];
         [cmisProperties removeObjectForKey:kAlfrescoPropertyName];
     }
     
     if (![[cmisProperties allKeys] containsObject:@"cmis:name"])
     {
-        log(@"updatePropertiesOfNode we do NOT have a cmis:name property. so let's set it now to the node name");
+        AlfrescoLogDebug(@"updatePropertiesOfNode we do NOT have a cmis:name property. so let's set it now to the node name");
         [cmisProperties setValue:node.name forKey:@"cmis:name"];
     }
     
@@ -1186,7 +1183,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }
         }
     
-        log(@"cmis:objectTypeId = %@", objectTypeId);
+        AlfrescoLogDebug(@"cmis:objectTypeId = %@", objectTypeId);
         
         // set the fully qualified objectTypeId
         [cmisProperties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
@@ -1269,7 +1266,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    log(@"-------- deleteNode %@ --------", node.name);
+    AlfrescoLogDebug(@"-------- deleteNode %@ --------", node.name);
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     if ([node isKindOfClass:[AlfrescoDocument class]])
     {
@@ -1278,11 +1275,9 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             {
                 NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
                 completionBlock(NO, alfrescoError);
-                log(@"-------- deleteObject %@ FAILED --------", node.name);
             }
             else
             {
-                log(@"-------- deleteObject %@ SUCCEEDED --------", node.name);
                 
             }
             completionBlock(objectDeleted, error);
@@ -1291,31 +1286,13 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     else
     {
         request.httpRequest = [self.cmisSession.binding.objectService deleteTree:node.identifier allVersion:YES unfileObjects:CMISDelete continueOnFailure:YES completionBlock:^(NSArray *failedObjects, NSError *error){
-            if(nil == failedObjects)
-            {
-                log(@"-------- deleteTree %@ failedObjects returns with nil --------", node.name);
-                
-            }
-            else
-            {
-                if (0 == failedObjects)
-                {
-                    log(@"-------- deleteTree %@ failedObjects returns with NO ENTRIES --------", node.name);
-                }
-                else
-                {
-                    log(@"-------- deleteTree %@ failedObjects returns with %d ENTRIES --------", node.name, failedObjects.count);
-                }
-            }
             if (error)
             {
-                log(@"-------- deleteTree %@ FAILED error message is %@ --------", node.name, [error localizedDescription]);
                 NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
                 completionBlock(NO, alfrescoError);
             }
             else
             {
-                log(@"-------- deleteTree %@ SUCCEEDED --------", node.name);
                 completionBlock(YES, nil);
             }
         }];
@@ -1364,7 +1341,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                         error:&postError];
     
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding];
-    log(@"jsonstring %@", jsonString);
+    AlfrescoLogDebug(@"jsonstring %@", jsonString);
     
     [self.session.networkProvider executeRequestWithURL:apiUrl
                                      session:self.session

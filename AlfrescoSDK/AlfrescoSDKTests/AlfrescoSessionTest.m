@@ -23,6 +23,7 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoRequest.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoLog.h"
 @implementation AlfrescoSessionTest
 
 #pragma mark - AlfrescoRepository Specific Tests
@@ -90,12 +91,12 @@
                     NSLog(@"%@", array);
                     for (AlfrescoCloudNetwork *network in array)
                     {
-                        NSLog(@"ID: %@", network.identifier);
-                        NSLog(@"ID: %i", network.isHomeNetwork);
-                        NSLog(@"ID: %i", network.isPaidNetwork);
-                        NSLog(@"ID: %@", network.subscriptionLevel);
-                        NSLog(@"ID: %@", network.createdAt);
-                        NSLog(@"\n\n");
+                        AlfrescoLogDebug(@"identifier: %@", network.identifier);
+                        AlfrescoLogDebug(@"isHomeNetwork: %i", network.isHomeNetwork);
+                        AlfrescoLogDebug(@"isPaidNetwork: %i", network.isPaidNetwork);
+                        AlfrescoLogDebug(@"subscriptionLevel: %@", network.subscriptionLevel);
+                        AlfrescoLogDebug(@"createdAt: %@", network.createdAt);
+                        AlfrescoLogDebug(@"\n\n");
                     }
                     super.callbackCompleted = YES;
                 }
@@ -629,7 +630,7 @@
                           super.callbackCompleted = YES;
                           
                       } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                          log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                          AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                           if (0 < bytesDownloaded && request)
                           {
                               [request cancel];
