@@ -79,7 +79,8 @@
          completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
-                 completionBlock(nil, error);
+                 NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+                 completionBlock(nil, alfrescoError);
              }
              else
              {
@@ -127,7 +128,8 @@
          completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
-                 completionBlock(nil, error);
+                 NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+                 completionBlock(nil, alfrescoError);
              }
              else
              {
@@ -164,7 +166,8 @@
     request.httpRequest = [self.cmisSession query:query searchAllVersions:NO completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
         if (nil == pagedResult)
         {
-            completionBlock(nil, error);
+            NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+            completionBlock(nil, alfrescoError);
         }
         else
         {
@@ -199,7 +202,8 @@
     request.httpRequest = [self.cmisSession query:query searchAllVersions:NO operationContext:operationContext completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
         if (nil == pagedResult)
         {
-            completionBlock(nil, error);
+            NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+            completionBlock(nil, alfrescoError);
         }
         else
         {
