@@ -20,6 +20,7 @@
 
 #import "AlfrescoDefaultHTTPRequest.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoLog.h"
 
 @interface AlfrescoDefaultHTTPRequest()
 
@@ -36,7 +37,7 @@
 
 - (void)connectWithURL:(NSURL*)requestURL
                 method:(NSString *)method
-                header:(NSDictionary *)header
+                headers:(NSDictionary *)headers
            requestBody:(NSData *)requestBody
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
@@ -44,14 +45,16 @@
     
     self.completionBlock = completionBlock;
     
+    AlfrescoLogDebug(@"%@ %@", method, requestURL);
+    
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:requestURL
                                                               cachePolicy:NSURLRequestReloadIgnoringCacheData
                                                           timeoutInterval:60];
     
     [urlRequest setHTTPMethod:method];
     
-    [header enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
-        log(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
+    [headers enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
+        AlfrescoLogDebug(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
         [urlRequest addValue:headerValue forHTTPHeaderField:headerKey];
     }];
     
@@ -102,6 +105,12 @@
     if (self.statusCode < 200 || self.statusCode > 299)
     {
         error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+    }
+    
+    AlfrescoLog *logger = [AlfrescoLog sharedInstance];
+    if (logger.logLevel == AlfrescoLogLevelTrace)
+    {
+        AlfrescoLogTrace(@"response body: %@", [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding]);
     }
     
     if (self.completionBlock != NULL)

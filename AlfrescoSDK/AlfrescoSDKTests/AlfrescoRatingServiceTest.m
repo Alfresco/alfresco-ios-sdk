@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -34,7 +34,6 @@
         AlfrescoRepositoryCapabilities *capabilities = super.currentSession.repositoryInfo.capabilities;
         if (capabilities.doesSupportLikingNodes)
         {
-            log(@"server does support rating");
             self.ratingService = [[AlfrescoRatingService alloc] initWithSession:super.currentSession];
             // get like count
             [self.ratingService retrieveLikeCountForNode:super.testAlfrescoDocument completionBlock:^(NSNumber *count, NSError *error)
@@ -46,7 +45,6 @@
                  }
                  else
                  {
-                     log(@"the like count is %d",[count intValue]);
                      STAssertTrue([count intValue] == 0, @"Retrieve like count: expected like count of 0 but got count %d",[count intValue]);
                      super.lastTestSuccessful = YES;
                  }
@@ -57,7 +55,6 @@
         }
         else
         {
-            log(@"server does NOT support rating");
             super.lastTestSuccessful = YES;
         }
         
@@ -75,7 +72,6 @@
         AlfrescoRepositoryCapabilities *capabilities = super.currentSession.repositoryInfo.capabilities;
         if (capabilities.doesSupportLikingNodes)
         {
-            log(@"server does support rating");
             self.ratingService = [[AlfrescoRatingService alloc] initWithSession:super.currentSession];
             
             // get like count
@@ -114,7 +110,6 @@
                                    {
                                        [self.ratingService retrieveLikeCountForNode:super.testAlfrescoDocument completionBlock:^(NSNumber *count, NSError *error)
                                         {
-                                            log(@"ENTERING retrieveLikeCountForNode TEST BLOCK");
                                             if (nil == count)
                                             {
                                                 super.lastTestSuccessful = NO;
@@ -122,7 +117,6 @@
                                             }
                                             else
                                             {
-                                                log(@"In block retrieveLikeCountForNode the like count is %d",[count intValue]);
                                                 STAssertTrue([count intValue] == 0, @"Retrieve like count: expected like count of 0 but got count %d", [count intValue]);
                                                 super.lastTestSuccessful = YES;
                                             }
@@ -144,7 +138,6 @@
         }
         else
         {
-            log(@"server does not support rating");
             super.lastTestSuccessful = YES;
         }
     }];
@@ -162,7 +155,6 @@
         AlfrescoRepositoryCapabilities *capabilities = super.currentSession.repositoryInfo.capabilities;
         if (capabilities.doesSupportLikingNodes)
         {
-            log(@"server does support rating");
             self.ratingService = [[AlfrescoRatingService alloc] initWithSession:super.currentSession];
             
             // get like count
@@ -231,7 +223,6 @@
         }
         else
         {
-            log(@"server does not support rating");
             super.lastTestSuccessful = YES;
         }
     }];

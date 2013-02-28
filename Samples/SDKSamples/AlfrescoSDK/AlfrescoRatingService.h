@@ -22,6 +22,7 @@
 #import "AlfrescoSession.h"
 #import "AlfrescoNode.h"
 #import "AlfrescoConstants.h"
+#import "AlfrescoRequest.h"
 
 /** The AlfrescoRatingService is used for rating (like/unlike) nodes on the repository.
  
@@ -56,7 +57,7 @@
  @param node The node for which the like count needs to be retrieved.
  @param completionBlock The block that's called with the like count in case the operation succeeds.
  */
-- (void)retrieveLikeCountForNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)retrieveLikeCountForNode:(AlfrescoNode *)node
                  completionBlock:(AlfrescoNumberCompletionBlock)completionBlock;
 
 
@@ -65,7 +66,7 @@
  @param node The node for which the like rating should be validated.
  @param completionBlock The block that's called in case the operation succeeds.
  */
-- (void)isNodeLiked:(AlfrescoNode *)node
+- (AlfrescoRequest *)isNodeLiked:(AlfrescoNode *)node
     completionBlock:(AlfrescoLikedCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
@@ -78,7 +79,7 @@
  @param node The node for which the like rating should be added.
  @param completionBlock The block that's called in case the operation succeeds.
  */
-- (void)likeNode:(AlfrescoNode *)node 
+- (AlfrescoRequest *)likeNode:(AlfrescoNode *)node 
  completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 
@@ -87,7 +88,7 @@
  @param node The node for which the like rating should be removed.
  @param completionBlock The block that's called in case the operation succeeds.
  */
-- (void)unlikeNode:(AlfrescoNode *)node
+- (AlfrescoRequest *)unlikeNode:(AlfrescoNode *)node
    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 

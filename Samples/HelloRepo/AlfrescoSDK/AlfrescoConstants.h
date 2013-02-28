@@ -90,4 +90,15 @@ extern NSString * const kAlfrescoSortByDescription;
 extern NSString * const kAlfrescoCapabilityLike;
 extern NSString * const kAlfrescoCapabilityCommentsCount;
 
+/**---------------------------------------------------------------------------------------
+ * @name File Attribute Constants
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoFileSize;
+extern NSString * const kAlfrescoFileLastModification;
+extern NSString * const kAlfrescoIsFolder;
+
+/**---------------------------------------------------------------------------------------
+ * @name Custom Alfresco Network Provider
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoNetworkProvider;
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -22,7 +22,10 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoRequest.h"
+#import "AlfrescoLog.h"
 #import "CMISErrors.h"
+
+
 @implementation AlfrescoSessionTest
 
 #pragma mark - AlfrescoRepository Specific Tests
@@ -46,7 +49,6 @@
                                           {
                                               STAssertNotNil(error, @"Expected an invalid credentials error to be thrown");
                                               STAssertNil(session, @"Expected a session not to be created");
-                                              NSLog(@"Desc: %@, Reason: %@", [error localizedDescription], [error localizedFailureReason]);
                                               super.lastTestSuccessful = YES;
                                           }
                                           else
@@ -86,16 +88,14 @@
                 else
                 {
                     super.lastTestSuccessful = YES;
-                    NSLog(@"testRetrieveNetworksTest");
-                    NSLog(@"%@", array);
                     for (AlfrescoCloudNetwork *network in array)
                     {
-                        NSLog(@"ID: %@", network.identifier);
-                        NSLog(@"ID: %i", network.isHomeNetwork);
-                        NSLog(@"ID: %i", network.isPaidNetwork);
-                        NSLog(@"ID: %@", network.subscriptionLevel);
-                        NSLog(@"ID: %@", network.createdAt);
-                        NSLog(@"\n\n");
+                        AlfrescoLogDebug(@"identifier: %@", network.identifier);
+                        AlfrescoLogDebug(@"isHomeNetwork: %i", network.isHomeNetwork);
+                        AlfrescoLogDebug(@"isPaidNetwork: %i", network.isPaidNetwork);
+                        AlfrescoLogDebug(@"subscriptionLevel: %@", network.subscriptionLevel);
+                        AlfrescoLogDebug(@"createdAt: %@", network.createdAt);
+                        AlfrescoLogDebug(@"\n\n");
                     }
                     super.callbackCompleted = YES;
                 }
@@ -159,7 +159,6 @@
         NSURL *sessionBaseURL = [super.currentSession baseUrl];
         STAssertNotNil(sessionBaseURL, @"Expected the base url in the session not to be nil");
         STAssertNotNil(self.server, @"The server base url is nil");
-        NSLog(@"Session Base URL is: %@ \nServer is: %@", sessionBaseURL, self.server);
         
         NSString *urlToTest = nil;
         if (!super.isCloud)
@@ -629,7 +628,7 @@
                           super.callbackCompleted = YES;
                           
                       } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                          log(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                          AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                           if (0 < bytesDownloaded && request)
                           {
                               [request cancel];

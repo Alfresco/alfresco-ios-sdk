@@ -20,6 +20,7 @@
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoOAuthLoginViewController.h"
+#import "AlfrescoLog.h"
 
 @interface ServerSelectionTableViewController ()
 @property (nonatomic, strong) AlfrescoOAuthLoginViewController *loginController;
@@ -47,7 +48,7 @@
     AlfrescoOAuthCompletionBlock completionBlock = ^void(AlfrescoOAuthData *oauthdata, NSError *error){
         if (nil == oauthdata)
         {
-            log(@"Failed to authenticate, error message is %@ and code is %d", [error localizedDescription], [error code]);
+            AlfrescoLogError(@"Failed to authenticate, error message is %@ and code is %d", [error localizedDescription], [error code]);
         }
         else
         {
