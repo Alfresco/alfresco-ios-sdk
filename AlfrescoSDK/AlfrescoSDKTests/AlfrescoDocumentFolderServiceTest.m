@@ -822,6 +822,89 @@
     }];
 }
 
+- (void)testCreateVerySmallDocument
+{
+    [super runAllSitesTest:^{
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
+        [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
+        [properties setObject:@"Test Description" forKey:@"cm:description"];
+        [properties setObject:@"Test Title" forKey:@"cm:title"];
+        [properties setObject:@"Test Author" forKey:@"cm:author"];
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *sizeError = nil;
+        NSDictionary *attributes = [fileManager attributesOfItemAtPath:self.verySmallTestFile error:&sizeError];
+        STAssertNotNil(attributes, @"should be able to get the file attributes");
+        if (!attributes)
+        {
+            super.lastTestSuccessful = NO;
+            super.callbackCompleted = YES;
+            return;
+        }
+        
+        unsigned long long fileSize = [attributes fileSize];
+        NSString *mimeType = @"text/plain";
+
+        NSInputStream *fileInputStream = [[NSInputStream alloc] initWithFileAtPath:self.verySmallTestFile];
+        STAssertNotNil(fileInputStream, @"we should have been able to create the input stream to the small file");
+        if (!fileInputStream)
+        {
+            super.lastTestSuccessful = NO;
+            super.callbackCompleted = YES;
+            return;
+        }
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat: @"yyyy-MM-dd'T'HH-mm-ss-SSS'"];
+        NSString *documentName = [NSString stringWithFormat:@"small_file_test_%@.txt",[formatter stringFromDate:[NSDate date]]];
+        __weak AlfrescoDocumentFolderService *weakFolderServer = self.dfService;
+        [self.dfService createDocumentWithName:documentName
+                                inParentFolder:super.testDocFolder
+                                   inputStream:fileInputStream
+                                      fileSize:fileSize
+                                      mimeType:mimeType
+                                    properties:properties
+                               completionBlock:^(AlfrescoDocument *document, NSError *error){
+            if (nil == document)
+            {
+                AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not upload test document. Error %@",[error localizedDescription]];
+                super.lastTestSuccessful = NO;
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(document, @"document should not be nil");
+                STAssertTrue([document.name isEqualToString:documentName], @"folder name should be %@ but instead we got %@",documentName, document.name);
+                
+                // check the properties were added at creation time
+                NSDictionary *newFolderProps = document.properties;
+                AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                STAssertTrue([newDescriptionProp.value isEqualToString:@"Test Description"], @"cm:description property value does not match - we got %@", newDescriptionProp.value);
+                STAssertTrue([newTitleProp.value isEqualToString:@"Test Title"], @"cm:title property value does not match - we got %@", newTitleProp.value);
+                [weakFolderServer deleteNode:document completionBlock:^(BOOL succeeded, NSError *error){
+                    if (succeeded)
+                    {
+                        self.lastTestSuccessful = YES;
+                    }
+                    else
+                    {
+                        AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete very small test document. Error %@",[error localizedDescription]];
+                        super.lastTestSuccessful = NO;
+                    }
+                    super.callbackCompleted = YES;
+                }];
+                
+            }
+        } progressBlock:^(NSInteger transferred, NSInteger total){}];
+        
+    }];
+}
+
 /**
  Unique_TCRef 33F3
  Unique_TCRef 33F5
