@@ -27,7 +27,8 @@
 #import "CMISObject.h"
 #import "CMISAtomPubConstants.h"
 #import "CMISAtomParserUtil.h"
-
+#import "CMISErrors.h"
+#import "AlfrescoErrors.h"
 
 #define ALFRESCO_EXTENSION_ASPECTS @"aspects"
 #define ALFRESCO_EXTENSION_APPLIED_ASPECTS @"appliedAspects"
@@ -91,6 +92,79 @@
     }
 
     return aspectTypeIds;
+}
+
++ (NSError *)alfrescoErrorWithCMISError:(NSError *)cmisError
+{
+    int cmisErrorCode = [cmisError code];
+    NSError *alfrescoError = nil;
+    switch (cmisErrorCode) {
+        case kCMISErrorCodeNoReturn:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+            break;
+        case kCMISErrorCodeConnection:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeSession];
+            break;
+        case kCMISErrorCodeProxyAuthentication:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeUnauthorisedAccess];
+            break;
+        case kCMISErrorCodeUnauthorized:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeUnauthorisedAccess];
+            break;
+        case kCMISErrorCodeNoRootFolderFound:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeRequestedNodeNotFound];
+            break;
+        case kCMISErrorCodeNoRepositoryFound:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeNoRepositoryFound];
+            break;
+        case kCMISErrorCodeCancelled:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
+            break;
+        case kCMISErrorCodeInvalidArgument:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+            break;
+        case kCMISErrorCodeObjectNotFound:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeRequestedNodeNotFound];
+            break;
+        case kCMISErrorCodeNotSupported:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+            break;
+        case kCMISErrorCodePermissionDenied:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderPermissions];
+            break;
+        case kCMISErrorCodeRuntime:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
+            break;
+        case kCMISErrorCodeConstraint:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            break;
+        case kCMISErrorCodeContentAlreadyExists:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNodeAlreadyExists];
+            break;
+        case kCMISErrorCodeFilterNotValid:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            break;
+        case kCMISErrorCodeNameConstraintViolation:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            break;
+        case kCMISErrorCodeStorage:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            break;
+        case kCMISErrorCodeStreamNotSupported:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            break;
+        case kCMISErrorCodeUpdateConflict:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolder];
+            break;
+        case kCMISErrorCodeVersioning:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+            break;
+            
+        default:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnknown];
+            break;
+    }
+    return alfrescoError;
 }
 
 

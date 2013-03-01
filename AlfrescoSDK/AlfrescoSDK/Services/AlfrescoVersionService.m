@@ -25,6 +25,7 @@
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoCMISUtil.h"
 
 @interface AlfrescoVersionService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -68,7 +69,7 @@
                            completionBlock:^(NSArray *allVersions, NSError *error){
          if (nil == allVersions)
          {
-             NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+             NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
              completionBlock(nil, alfrescoError);
          }
          else
@@ -108,7 +109,7 @@
                            completionBlock:^(NSArray *allVersions, NSError *error){
          if (nil == allVersions)
          {
-             NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+             NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
              completionBlock(nil, alfrescoError);
          }
          else
