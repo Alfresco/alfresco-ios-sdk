@@ -19,6 +19,7 @@
  */
 
 #import "AlfrescoLog.h"
+#import "CMISLog.h"
 
 @implementation AlfrescoLog
 
@@ -36,17 +37,49 @@
 
 - (id)init
 {
-    return [self initWithLogLevel:ALFRESCO_LOG_LEVEL];
-}
-
-- (id)initWithLogLevel:(AlfrescoLogLevel)logLevel
-{
     self = [super init];
     if (self)
     {
-        _logLevel = logLevel;
+        _logLevel = ALFRESCO_LOG_LEVEL;
     }
     return self;
+}
+
+- (void)setLogLevel:(AlfrescoLogLevel)logLevel
+{
+    _logLevel = logLevel;
+    
+    // we also need to ensure the CMISLog is kept in sync
+    switch (_logLevel)
+    {
+        case AlfrescoLogLevelOff:
+            [CMISLog sharedInstance].logLevel = CMISLogLevelOff;
+            break;
+            
+        case AlfrescoLogLevelError:
+            [CMISLog sharedInstance].logLevel = CMISLogLevelError;
+            break;
+            
+        case AlfrescoLogLevelWarning:
+            [CMISLog sharedInstance].logLevel = CMISLogLevelWarning;
+            break;
+            
+        case AlfrescoLogLevelInfo:
+            [CMISLog sharedInstance].logLevel = CMISLogLevelInfo;
+            break;
+            
+        case AlfrescoLogLevelDebug:
+            [CMISLog sharedInstance].logLevel = CMISLogLevelDebug;
+            break;
+            
+        case AlfrescoLogLevelTrace:
+            [CMISLog sharedInstance].logLevel = CMISLogLevelTrace;
+            break;
+            
+        default:
+            [CMISLog sharedInstance].logLevel = CMISLogLevelInfo;
+            break;
+    }
 }
 
 #pragma mark - Info methods

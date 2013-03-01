@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -1341,9 +1341,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                         dataWithJSONObject:jsonDictionary
                         options:kNilOptions
                         error:&postError];
-    
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding];
-    AlfrescoLogDebug(@"jsonstring %@", jsonString);
     
     [self.session.networkProvider executeRequestWithURL:apiUrl
                                      session:self.session

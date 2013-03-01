@@ -599,10 +599,6 @@ This authentication method authorises the user to access the home network assign
                 
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
-        
-        // TODO: revisit this, seek opinion from team as best way to do this...
-        // setup CMISLog to match log level of AlfrescoLog
-        [CMISLog sharedInstance].logLevel = [AlfrescoLog sharedInstance].logLevel;
     }
     return self;
 }
@@ -661,7 +657,6 @@ This authentication method authorises the user to access the home network assign
         return nil;
     }
     NSError *error = nil;
-    AlfrescoLogDebug(@"JSON data: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     if (nil == jsonDictionary)
     {
