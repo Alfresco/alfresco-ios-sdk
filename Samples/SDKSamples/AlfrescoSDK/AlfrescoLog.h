@@ -67,22 +67,38 @@ typedef NS_ENUM(NSUInteger, AlfrescoLogLevel)
 + (AlfrescoLog *)sharedInstance;
 
 /**
- * Designated initializer. Can be used when not instantiating this class in singleton mode.
+ * Returns the string representation of the given log level
  */
-- (id)initWithLogLevel:(AlfrescoLogLevel)logLevel;
-
 - (NSString *)stringForLogLevel:(AlfrescoLogLevel)logLevel;
 
+/**
+ * Logs an error message using the given error object
+ */
 - (void)logErrorFromError:(NSError *)error;
 
+/**
+ * Logs an error message using the given string and optional arguments
+ */
 - (void)logError:(NSString *)format, ...;
 
+/**
+ * Logs a warning message using the given string and optional arguments
+ */
 - (void)logWarning:(NSString *)format, ...;
 
+/**
+ * Logs an info message using the given string and optional arguments
+ */
 - (void)logInfo:(NSString *)format, ...;
 
+/**
+ * Logs a debug message using the given string and optional arguments
+ */
 - (void)logDebug:(NSString *)format, ...;
 
+/**
+ * Logs a trace message using the given string and optional arguments
+ */
 - (void)logTrace:(NSString *)format, ...;
 
 
