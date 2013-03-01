@@ -154,13 +154,6 @@ extern NSString * const kAlfrescoErrorDescriptionRatingsNoRatings;
 + (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
 
-/** Creates an error object based on another NSError instance.
- 
- @param error an error created in the CMIS lib
- @return The newly created error.
- */
-+ (NSError *)alfrescoErrorWithCMISError:(NSError *)cmisError;
-
 /** Creates an error object based on an error code and a description.
  
  @param code the code string that represents the error type.

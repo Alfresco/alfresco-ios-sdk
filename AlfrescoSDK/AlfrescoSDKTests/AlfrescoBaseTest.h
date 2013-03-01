@@ -55,6 +55,7 @@ extern NSString * const kAlfrescoTestNetworkID;
 @property (nonatomic, strong) NSString *testChildFolderName;
 @property (nonatomic, strong) NSString *testFolderPathName;
 @property (nonatomic, strong) NSString *fixedFileName;
+@property (nonatomic, strong) NSString *verySmallTestFile;
 @property (nonatomic, strong) AlfrescoContentFile *testImageFile;
 @property (nonatomic, strong) CMISSession *cmisSession;
 @property (nonatomic, strong) CMISFolder *cmisRootFolder;

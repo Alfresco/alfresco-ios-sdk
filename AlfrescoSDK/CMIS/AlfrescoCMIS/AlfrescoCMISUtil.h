@@ -37,4 +37,9 @@
  */
 + (NSMutableArray *)processExtensionElementsForObject:(CMISObject *)cmisObject;
 
+/**
+ maps CMIS errors to Alfresco Errors
+ */
++ (NSError *)alfrescoErrorWithCMISError:(NSError *)cmisError;
+
 @end

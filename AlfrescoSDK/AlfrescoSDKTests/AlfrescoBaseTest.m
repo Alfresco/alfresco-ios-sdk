@@ -494,6 +494,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
     
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    self.verySmallTestFile = [bundle pathForResource:@"small_test.txt" ofType:nil];
     NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
     NSString *testImagePath = [bundle pathForResource:@"millenium-dome.jpg" ofType:nil];
 

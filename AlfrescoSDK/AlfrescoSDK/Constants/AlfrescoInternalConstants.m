@@ -261,5 +261,8 @@ NSString * const kAlfrescoHTTPPut = @"PUT";
 
 NSString * const kAlfrescoFileManagerClass = @"AlfrescoFileManagerClassName";
 NSString * const kAlfrescoCMISNetworkProvider = @"org.alfresco.mobile.internal.session.cmis.networkprovider";
+NSString * const kAlfrescoPropertyTypeFolder = @"F:";
+NSString * const kAlfrescoPropertyTypeDocument = @"D:";
+NSString * const kAlfrescoPropertyAspect = @"P:";
 
 @end

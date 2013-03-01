@@ -230,4 +230,7 @@ extern NSString * const kAlfrescoHTTPPut;
 
 extern NSString * const kAlfrescoFileManagerClass;
 extern NSString * const kAlfrescoCMISNetworkProvider;
+extern NSString * const kAlfrescoPropertyTypeFolder;
+extern NSString * const kAlfrescoPropertyTypeDocument;
+extern NSString * const kAlfrescoPropertyAspect;
 @end

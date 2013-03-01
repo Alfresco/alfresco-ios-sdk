@@ -29,6 +29,7 @@
 #import "CMISQueryResult.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoSortingUtils.h"
+#import "AlfrescoCMISUtil.h"
 
 @interface AlfrescoSearchService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -79,7 +80,7 @@
          completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
-                 NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+                 NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
                  completionBlock(nil, alfrescoError);
              }
              else
@@ -128,7 +129,7 @@
          completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
-                 NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+                 NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
                  completionBlock(nil, alfrescoError);
              }
              else
@@ -166,7 +167,7 @@
     request.httpRequest = [self.cmisSession query:query searchAllVersions:NO completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
         if (nil == pagedResult)
         {
-            NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
             completionBlock(nil, alfrescoError);
         }
         else
@@ -202,7 +203,7 @@
     request.httpRequest = [self.cmisSession query:query searchAllVersions:NO operationContext:operationContext completionBlock:^(CMISPagedResult *pagedResult, NSError *error){
         if (nil == pagedResult)
         {
-            NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithCMISError:error];
+            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
             completionBlock(nil, alfrescoError);
         }
         else
