@@ -116,7 +116,7 @@
 /*
  Enumerates through a given directory either including or not including sub directories
  */
-- (void)enumerateThroughDirectory:(NSString *)directory includingSubDirectories:(BOOL)includeSubDirectories withBlock:(void (^)(NSString *fullFilePath))block error:(NSError **)error;
+- (BOOL)enumerateThroughDirectory:(NSString *)directory includingSubDirectories:(BOOL)includeSubDirectories withBlock:(void (^)(NSString *fullFilePath))block error:(NSError **)error;
 
 /*
  Returns the data representation of the file at a given URL
