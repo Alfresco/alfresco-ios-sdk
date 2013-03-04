@@ -100,8 +100,10 @@
     return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:error];
 }
 
-- (void)enumerateThroughDirectory:(NSString *)directory includingSubDirectories:(BOOL)includeSubDirectories withBlock:(void (^)(NSString *fullFilePath))block error:(NSError **)error
+- (BOOL)enumerateThroughDirectory:(NSString *)directory includingSubDirectories:(BOOL)includeSubDirectories withBlock:(void (^)(NSString *fullFilePath))block error:(NSError **)error
 {
+    __block BOOL errorOccured = NO;
+    
     NSDirectoryEnumerationOptions options;
     if (!includeSubDirectories)
     {
@@ -118,6 +120,7 @@
                                                                       errorHandler:^BOOL(NSURL *url, NSError *fileError) {
                                                                           AlfrescoLogDebug(@"Error retrieving contents of the URL: %@ with the error: %@", [url absoluteString], [fileError localizedDescription]);
                                                                           *error = fileError;
+                                                                          errorOccured = YES;
                                                                           return YES;
                                                                       }];
     
@@ -130,6 +133,8 @@
             block(fullPath);
         }
     }
+    
+    return errorOccured;
 }
 
 - (NSData *)dataWithContentsOfURL:(NSURL *)url
