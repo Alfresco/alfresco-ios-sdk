@@ -13,6 +13,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "CMISProperties.h"
 typedef enum {
     HTTP_GET,
     HTTP_POST,
@@ -91,6 +92,36 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
    cmisRequest:(CMISRequest *)cmisRequest
 completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
  progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+
+/**
+ * Invoke method used for uploads, i.e. POST/PUT requests. This method is used for encoding base64 data while streaming
+ * @param url the RESTful API URL to be used
+ * @param httpRequestMethod
+ * @param session
+ * @param inputStream the stream pointing to the source to be uploaded. Must be an instance or extension of NSInputStream
+ * @param headers any additional headers to be used in the request (maybe nil)
+ * @param bytesExpected the size of the content to be uploaded
+ * @param cmisRequest will be used to set the cancellable request to the one created by the invode method
+ * @param cmisProperties 
+ * @param mimeType
+ * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
+ * @param progressBlock
+ * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled
+ */
+- (void)invoke:(NSURL *)url
+    httpMethod:(CMISHttpRequestMethod)httpRequestMethod
+       session:(CMISBindingSession *)session
+   inputStream:(NSInputStream *)inputStream
+       headers:(NSDictionary *)additionalHeaders
+ bytesExpected:(unsigned long long)bytesExpected
+   cmisRequest:(CMISRequest *)cmisRequest
+cmisProperties:(CMISProperties *)cmisProperties
+      mimeType:(NSString *)mimeType
+completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
+ progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+
 
 /**
  * Invoke method used for downloads, 

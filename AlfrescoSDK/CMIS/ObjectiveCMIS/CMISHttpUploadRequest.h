@@ -18,15 +18,15 @@
  */
 
 #import "CMISHttpRequest.h"
-@interface CMISHttpUploadRequest : CMISHttpRequest 
+@interface CMISHttpUploadRequest : CMISHttpRequest <NSStreamDelegate>
 
 @property (nonatomic, strong) NSInputStream *inputStream;
 @property (nonatomic, assign) unsigned long long bytesExpected; // optional; if not set, expected content length from HTTP header is used
 @property (nonatomic, readonly) unsigned long long bytesUploaded;
 
 /**
- * starts a URL request with a provided input stream. The inputStream will be passed on to the NSMutableURLRequest by using its
- * setHTTPBodyStream method
+ * starts a URL request with a provided input stream. The input stream provided will be used directly to send the data upstrean.
+ * For this the class sets the HTTPBodyStream property (method) to this input stream. No base64 encoding will be done using this method.
  * completionBlock returns CMISHttpResponse instance or nil if unsuccessful
  */
 + (id)startRequest:(NSMutableURLRequest *)urlRequest
@@ -38,5 +38,22 @@
                        completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
                          progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
+/**
+ * starts a URL request with a provided input stream. The input stream has to point to the raw NON-encoded data set. This method will use the
+ * provided CMIS properties and mimeType to create the appropriate XML data. The base 64 encoding will be done while the data are being read in
+ * from the source input stream.
+ * In order to achieve this, the pairing an OutputStream (where we will write the XML and base64 data to) with a resulting fully base64 encoded
+ * input stream. This base64 encoded inputstream will be passed on to the NSMutableURLRequest via its HTTPBodyStream property/method.
+ */
++ (id)startRequest:(NSMutableURLRequest *)urlRequest
+        httpMethod:(CMISHttpRequestMethod)httpRequestMethod
+       inputStream:(NSInputStream*)sourceInputStream
+           headers:(NSDictionary*)addionalHeaders
+     bytesExpected:(unsigned long long)bytesExpected
+authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
+    cmisProperties:(CMISProperties *)cmisProperties
+          mimeType:(NSString *)mimeType
+   completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
+     progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
 @end
