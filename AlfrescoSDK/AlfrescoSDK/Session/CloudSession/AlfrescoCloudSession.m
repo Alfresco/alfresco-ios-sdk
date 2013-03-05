@@ -61,6 +61,8 @@
 
 - (AlfrescoCloudNetwork *)networkFromJSON:(NSDictionary *)networkDictionary;
 
+- (AlfrescoCloudNetwork *)homeNetworkFromArray:(NSArray *)networks;
+
 - (id)authProviderToBeUsed;
 
 - (AlfrescoArrayCompletionBlock)repositoriesWithParameters:(CMISSessionParameters *)parameters
@@ -330,16 +332,7 @@
         else
         {
             AlfrescoLogDebug(@"found %d networks", networks.count);
-            __block AlfrescoCloudNetwork *homeNetwork = nil;
-            for (AlfrescoCloudNetwork *network in networks)
-            {
-                if (network.isHomeNetwork)
-                {
-                    AlfrescoLogDebug(@"found home network %@", network.identifier);
-                    homeNetwork = network;
-                    break;
-                }
-            }
+            __block AlfrescoCloudNetwork *homeNetwork = [self homeNetworkFromArray:networks];
             if (nil == homeNetwork)
             {
                 completionBlock(nil, error);
@@ -492,16 +485,7 @@ This authentication method authorises the user to access the home network assign
         else
         {
             AlfrescoLogDebug(@"found %d networks",networks.count);
-            AlfrescoCloudNetwork *homeNetwork = nil;
-            for (AlfrescoCloudNetwork *network in networks)
-            {
-                if (network.isHomeNetwork)
-                {
-                    AlfrescoLogDebug(@"found home network %@",network.identifier);
-                    homeNetwork = network;
-                    break;
-                }
-            }
+            __block AlfrescoCloudNetwork *homeNetwork = [self homeNetworkFromArray:networks];
             if (nil == homeNetwork)
             {
                 completionBlock(nil, error);
@@ -616,6 +600,14 @@ This authentication method authorises the user to access the home network assign
         NSNumber *number = (NSNumber *)homeNetworkValidateString;
         network.isHomeNetwork = [number boolValue];
     }
+    
+    id isEnabledValidateString = [networkDictionary valueForKey:kAlfrescoJSONIsEnabled];
+    if ([isEnabledValidateString isKindOfClass:[NSNumber class]])
+    {
+        NSNumber *enabledNumber = (NSNumber *)isEnabledValidateString;
+        network.isEnabled = [enabledNumber boolValue];
+    }
+    
     id paidValidationString = [networkDictionary valueForKey:kAlfrescoJSONPaidNetwork];
     if ([paidValidationString isKindOfClass:[NSNumber class]])
     {
@@ -643,6 +635,7 @@ This authentication method authorises the user to access the home network assign
  */
 - (NSArray *) networkArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
+    AlfrescoLogDebug(@"Network JSON data: %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     if (data == nil)
     {
         if (nil == *outError)
@@ -731,5 +724,26 @@ This authentication method authorises the user to access the home network assign
     return resultsArray;
     
 }
+
+
+- (AlfrescoCloudNetwork *)homeNetworkFromArray:(NSArray *)networks
+{
+    AlfrescoCloudNetwork *homeNetwork = nil;
+    for (AlfrescoCloudNetwork *network in networks)
+    {
+        if (network.isEnabled)
+        {
+            homeNetwork = network;
+            if (network.isHomeNetwork)
+            {
+                break;
+            }
+        }
+    }
+    
+    return homeNetwork;
+}
+
+
 
 @end

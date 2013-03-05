@@ -45,4 +45,9 @@
  the date the network was created at
  */
 @property (nonatomic, strong) NSDate * createdAt;
+
+/**
+ the flag indicating whether this network is enabled
+ */
+@property (nonatomic, assign) BOOL isEnabled;
 @end

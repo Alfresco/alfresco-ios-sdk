@@ -175,6 +175,7 @@ extern NSString * const kAlfrescoJSONMyRating;
 extern NSString * const kAlfrescoJSONAggregate;
 extern NSString * const kAlfrescoJSONNumberOfRatings;
 extern NSString * const kAlfrescoJSONHomeNetwork;
+extern NSString * const kAlfrescoJSONIsEnabled;
 extern NSString * const kAlfrescoJSONNetwork;
 extern NSString * const kAlfrescoJSONPaidNetwork;
 extern NSString * const kAlfrescoJSONCreationTime;
