@@ -27,5 +27,5 @@
 @interface AlfrescoURLUtils : NSObject
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL;
-
++ (NSString *)urlCharactersFromString:(NSString *)rawString;
 @end

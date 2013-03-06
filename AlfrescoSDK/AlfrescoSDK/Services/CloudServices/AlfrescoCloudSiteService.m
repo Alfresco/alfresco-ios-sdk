@@ -126,7 +126,8 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
 //    __weak AlfrescoCloudSiteService *weakSelf = self;
-    NSString *requestString = [kAlfrescoCloudSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSString *personId = [AlfrescoURLUtils urlCharactersFromString:self.session.personIdentifier];
+    NSString *requestString = [kAlfrescoCloudSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:personId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -158,7 +159,8 @@
     }
     
 //    __weak AlfrescoCloudSiteService *weakSelf = self;
-    NSString *requestString = [kAlfrescoCloudSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSString *personId = [AlfrescoURLUtils urlCharactersFromString:self.session.personIdentifier];
+    NSString *requestString = [kAlfrescoCloudSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:personId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -190,7 +192,8 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
 //    __weak AlfrescoCloudSiteService *weakSelf = self;
-    NSString *requestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSString *personId = [AlfrescoURLUtils urlCharactersFromString:self.session.personIdentifier];
+    NSString *requestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:personId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -222,7 +225,8 @@
     }
     
 //    __weak AlfrescoCloudSiteService *weakSelf = self;
-    NSString *requestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSString *personId = [AlfrescoURLUtils urlCharactersFromString:self.session.personIdentifier];
+    NSString *requestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:personId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
