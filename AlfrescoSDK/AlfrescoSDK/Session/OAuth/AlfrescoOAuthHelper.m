@@ -170,12 +170,43 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
+    if ([response isKindOfClass:NSHTTPURLResponse.class]) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSInteger statuscode = httpResponse.statusCode;
+        if (200 > statuscode || 299 < statuscode)
+        {
+            if (self.connection)
+            {
+                [self.connection cancel];
+            }
+            NSInteger code = (statuscode == 401) ? kAlfrescoErrorCodeUnauthorisedAccess : kAlfrescoErrorCodeHTTPResponse;
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:code];
+            self.completionBlock(nil, error);
+            if (nil != self.oauthDelegate)
+            {
+                if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
+                {
+                    [self.oauthDelegate oauthLoginDidFailWithError:error];
+                }
+            }
+        }
+    }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     NSError *error = nil;
     AlfrescoOAuthData *updatedOAuthData = [self updatedOAuthDataFromJSONWithError:&error];
+    if (nil == updatedOAuthData)
+    {
+        if (nil != self.oauthDelegate)
+        {
+            if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
+            {
+                [self.oauthDelegate oauthLoginDidFailWithError:error];
+            }
+        }
+    }
     self.completionBlock(updatedOAuthData, error);
 }
 
@@ -240,9 +271,7 @@
         }
         return nil;
     }
-    
-    AlfrescoLogDebug(@"response body: %@", [[NSMutableString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
-    
+        
     NSError *jsonError = nil;
     id jsonDictionary = [NSJSONSerialization JSONObjectWithData:self.receivedData options:kNilOptions error:&jsonError];
     if (nil == jsonDictionary)
