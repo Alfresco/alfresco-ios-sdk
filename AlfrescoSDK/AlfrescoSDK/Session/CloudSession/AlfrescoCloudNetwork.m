@@ -28,6 +28,7 @@
         self.identifier = @"";
         self.isHomeNetwork = NO;
         self.isPaidNetwork = NO;
+        self.isEnabled = NO;
         self.subscriptionLevel = @"";
         self.createdAt = nil;
     }

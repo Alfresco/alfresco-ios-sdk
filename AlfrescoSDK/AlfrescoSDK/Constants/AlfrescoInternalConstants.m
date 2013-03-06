@@ -206,6 +206,7 @@ NSString * const kAlfrescoJSONMyRating = @"myRating";
 NSString * const kAlfrescoJSONAggregate = @"aggregate";
 NSString * const kAlfrescoJSONNumberOfRatings = @"numberOfRatings";
 NSString * const kAlfrescoJSONHomeNetwork = @"homeNetwork";
+NSString * const kAlfrescoJSONIsEnabled = @"isEnabled";
 NSString * const kAlfrescoJSONNetwork = @"network";
 NSString * const kAlfrescoJSONPaidNetwork = @"paidNetwork";
 NSString * const kAlfrescoJSONCreationTime = @"creationDate";
