@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 #import "CMISProperties.h"
 
+
 @interface CMISBase64InputStream : NSInputStream <NSStreamDelegate>
 @property (nonatomic, assign, readonly) NSUInteger encodedBytes;
 - (id)initWithInputStream:(NSInputStream *)nonEncodedStream

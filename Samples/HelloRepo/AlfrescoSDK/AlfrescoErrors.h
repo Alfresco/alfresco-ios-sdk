@@ -1,7 +1,7 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
- * 
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
+ *
  * This file is part of the Alfresco Mobile SDK.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -153,13 +153,6 @@ extern NSString * const kAlfrescoErrorDescriptionRatingsNoRatings;
  */
 + (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
-
-/** Creates an error object based on another NSError instance.
- 
- @param error an error created in the CMIS lib
- @return The newly created error.
- */
-+ (NSError *)alfrescoErrorWithCMISError:(NSError *)cmisError;
 
 /** Creates an error object based on an error code and a description.
  
