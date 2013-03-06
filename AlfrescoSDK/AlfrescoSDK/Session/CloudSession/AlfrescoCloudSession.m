@@ -635,7 +635,6 @@ This authentication method authorises the user to access the home network assign
  */
 - (NSArray *) networkArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    AlfrescoLogDebug(@"Network JSON data: %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     if (data == nil)
     {
         if (nil == *outError)

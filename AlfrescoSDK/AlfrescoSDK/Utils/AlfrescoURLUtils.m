@@ -40,4 +40,11 @@
     return [NSURL URLWithString:mutableRequestString];
 }
 
++ (NSString *)urlCharactersFromString:(NSString *)rawString
+{
+    NSString *cleaned = [rawString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+    return cleaned;
+}
+
+
 @end
