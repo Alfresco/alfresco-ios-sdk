@@ -19,8 +19,6 @@
 #import "AlfrescoVersionServiceTest.h"
 #import "AlfrescoDocumentFolderService.h"
 
-NSString * const kCMISPropertyCheckinComment = @"cmis:checkinComment";
-
 @implementation AlfrescoVersionServiceTest
 
 /*
@@ -122,9 +120,9 @@ NSString * const kCMISPropertyCheckinComment = @"cmis:checkinComment";
                            
                            [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
                             {
-                                AlfrescoNode *node = (AlfrescoNode *)obj;
+                                AlfrescoDocument *node = (AlfrescoDocument *)obj;
                                 
-                                if ([node.properties[kCMISPropertyCheckinComment] value] != nil)
+                                if (node.versionComment != nil)
                                 {
                                     versionCommentRetrieved = YES;
                                     *stop = YES;
@@ -137,7 +135,6 @@ NSString * const kCMISPropertyCheckinComment = @"cmis:checkinComment";
                            super.lastTestSuccessful = YES;
                        }
                        super.callbackCompleted = YES;
-                       
                    }
                    ];
                   
