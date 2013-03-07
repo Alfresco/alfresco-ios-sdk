@@ -87,6 +87,84 @@
     }];
 }
 
+- (void)testCreateFolderDuplicate
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 
+                 [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                                      completionBlock:^(AlfrescoFolder *duplicatedFolder, NSError *dupError)
+                  {
+                      if (nil == duplicatedFolder)
+                      {
+                          super.lastTestSuccessful = YES;
+                          STAssertNotNil(dupError, @"We expected a valid error object");
+                          if (nil != dupError)
+                          {
+                              AlfrescoLogDebug(@"Returned error message is %@ with error code %d",[dupError localizedDescription], [dupError code]);
+                          }
+                      }
+                      else
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = @"We should NOT be able to create a duplicate folder";
+                      }
+                      [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
+                       {
+                           if (!success)
+                           {
+                               super.lastTestSuccessful = NO;
+                               super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                           }
+                           else
+                           {
+                               super.lastTestSuccessful = YES;
+                           }
+                           
+                           super.callbackCompleted = YES;
+                       }];
+                  }];
+                 
+                 
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+
+
 /**
  @Unique_TCRef 32S0
  @Unique_TCRef 32F0
