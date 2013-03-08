@@ -90,61 +90,69 @@
 - (void)testRetrieveVersionComment
 {
     [super runAllSitesTest:^
-     {    
-         self.versionService = [[AlfrescoVersionService alloc] initWithSession:super.currentSession];
-         __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-         
-         [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
-          {
-              if (nil == node)
+     {
+         if (!super.isCloud)
+         {
+             self.versionService = [[AlfrescoVersionService alloc] initWithSession:super.currentSession];
+             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+             
+             [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
               {
-                  documentService = nil;
-                  super.lastTestSuccessful = NO;
-                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                  super.callbackCompleted = YES;
-              }
-              else
-              {
-                  [self.versionService retrieveAllVersionsOfDocument:(AlfrescoDocument *)node completionBlock:^(NSArray *array, NSError *error)
-                   {
-                       if (nil == array)
+                  if (nil == node)
+                  {
+                      documentService = nil;
+                      super.lastTestSuccessful = NO;
+                      super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      super.callbackCompleted = YES;
+                  }
+                  else
+                  {
+                      [self.versionService retrieveAllVersionsOfDocument:(AlfrescoDocument *)node completionBlock:^(NSArray *array, NSError *error)
                        {
-                           super.lastTestSuccessful = NO;
-                           super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                       }
-                       else
-                       {
-                           STAssertNotNil(array, @"array should not be nil");
-                           
-                           __block BOOL versionCommentRetrieved = NO;
-                           
-                           [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-                            {
-                                AlfrescoDocument *node = (AlfrescoDocument *)obj;
-                                
-                                if (node.versionComment != nil)
+                           if (nil == array)
+                           {
+                               super.lastTestSuccessful = NO;
+                               super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                           }
+                           else
+                           {
+                               STAssertNotNil(array, @"array should not be nil");
+                               
+                               __block BOOL versionCommentRetrieved = NO;
+                               
+                               [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
                                 {
-                                    versionCommentRetrieved = YES;
-                                    *stop = YES;
+                                    AlfrescoDocument *node = (AlfrescoDocument *)obj;
+                                    
+                                    if (node.versionComment != nil)
+                                    {
+                                        versionCommentRetrieved = YES;
+                                        *stop = YES;
+                                    }
                                 }
-                            }
-                            ];
-                           
-                           STAssertTrue(versionCommentRetrieved, @"version comment was retrieved successfully");
-                           
-                           super.lastTestSuccessful = YES;
+                                ];
+                               
+                               STAssertTrue(versionCommentRetrieved, @"version comment was retrieved successfully");
+                               
+                               super.lastTestSuccessful = YES;
+                           }
+                           super.callbackCompleted = YES;
                        }
-                       super.callbackCompleted = YES;
-                   }
-                   ];
-                  
-                  documentService = nil;
+                       ];
+                      
+                      documentService = nil;
+                  }
               }
-          }
-          ];
-         
-         [super waitUntilCompleteWithFixedTimeInterval];
-         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+              ];
+             
+             [super waitUntilCompleteWithFixedTimeInterval];
+             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);  
+         }
+         else
+         {
+             // not checking version comment in cloud for now
+             [super waitForCompletion];
+         }
      }
      ];
 }

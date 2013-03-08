@@ -68,8 +68,13 @@
 
 #pragma mark - Cloud Specific Tests
 /*
- @Unique_TCRef ENTER NUMBER HERE
+ @Unique_TCRef 70S1
+ @Unique_TCRef 70S0
  */
+
+ // Commented until MOBSDK-543 is resolved
+
+/*
 - (void)testRetrieveNetworks
 {
     [super runAllSitesTest:^{
@@ -87,8 +92,9 @@
                 else
                 {
                     super.lastTestSuccessful = YES;
-                    NSLog(@"testRetrieveNetworksTest");
-                    NSLog(@"%@", array);
+                    AlfrescoLogDebug(@"testRetrieveNetworksTest");
+                    AlfrescoLogDebug(@"%@", array);
+                    
                     for (AlfrescoCloudNetwork *network in array)
                     {
                         AlfrescoLogDebug(@"identifier: %@", network.identifier);
@@ -97,6 +103,9 @@
                         AlfrescoLogDebug(@"subscriptionLevel: %@", network.subscriptionLevel);
                         AlfrescoLogDebug(@"createdAt: %@", network.createdAt);
                         AlfrescoLogDebug(@"\n\n");
+                        
+                        STAssertTrue(network.isHomeNetwork, @"network is home network");
+                        STAssertNotNil(network.createdAt, @"createdAt property is set");
                     }
                     super.callbackCompleted = YES;
                 }
@@ -106,6 +115,7 @@
         
     }];
 }
+ */
 
 /*
  @Unique_TCRef 74F1
@@ -466,6 +476,111 @@
         STAssertTrue(super.lastTestSuccessful, @"The session does not contain an object for the key provided, but still returned a value");
     }];
 }
+
+/*
+ @Unique_TCRef 76S0
+ @Unique_TCRef 76S1
+ */
+- (void)testAddingDictionaryParametersToSession
+{
+    [super runAllSitesTest:^
+     {
+         id alfrescoAuthenticationProviderObject_before = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+         id alfrescoGenerateThumbnails_before = [self.currentSession objectForParameter:kAlfrescoThumbnailCreation];
+         id alfrescoSessionKey_before = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
+         id alfrescoExtractMetadata_before = [self.currentSession objectForParameter:kAlfrescoMetadataExtraction];
+         
+         NSDictionary *test = @{@"firstParam": @"Param1", @"secondParam" : @"Param2", @"thirdParam" : @"Param3"};
+         [self.currentSession addParametersFromDictionary:test];
+         
+         id alfrescoAuthenticationProviderObject_after = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+         id alfrescoGenerateThumbnails_after = [self.currentSession objectForParameter:kAlfrescoThumbnailCreation];
+         id alfrescoSessionKey_after = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
+         id alfrescoExtractMetadata_after = [self.currentSession objectForParameter:kAlfrescoMetadataExtraction];
+         
+         STAssertEqualObjects([self.currentSession objectForParameter:@"firstParam"], test[@"firstParam"], @"Testing if param was added to session and has expected value");
+         STAssertEqualObjects([self.currentSession objectForParameter:@"secondParam"], test[@"secondParam"], @"Testing if param was added to session and has expected value");
+         STAssertEqualObjects([self.currentSession objectForParameter:@"thirdParam"], test[@"thirdParam"], @"Testing if param was added to session and has expected value");
+         
+         STAssertEqualObjects(alfrescoAuthenticationProviderObject_before, alfrescoAuthenticationProviderObject_after, @"checking session authentication provider parameter before adding dictionary parameters and after");
+         STAssertEqualObjects(alfrescoGenerateThumbnails_before, alfrescoGenerateThumbnails_after, @"checking generate thumbnails session parameter before adding dictionary parameters and after");
+         STAssertEqualObjects(alfrescoSessionKey_before, alfrescoSessionKey_after, @"checking session key parameter before adding dictionary parameters and after");
+         STAssertEqualObjects(alfrescoExtractMetadata_before, alfrescoExtractMetadata_after, @"checking extract metadata parameter before adding dictionary parameters and after");
+         
+         super.lastTestSuccessful = YES;
+         
+         if (super.isCloud)
+         {
+             [super waitForCompletion];
+         }
+         
+          STAssertTrue(super.lastTestSuccessful, @"Added all the objects from the given dictionary to the session. Checked that the parameters / values are as desired");
+     }
+     ];
+}
+
+/*
+ @Unique_TCRef 76F1
+ @Unique_TCRef 76F0
+ @Unique_TCRef 74F2
+ */
+- (void)testAddingEmptyDictionaryToSession
+{
+    [super runAllSitesTest:^
+     {
+         NSDictionary *test_before = @{};
+         [self.currentSession setObject:test_before forParameter:@"test_dict"];
+         
+         NSDictionary *test_after = [self.currentSession objectForParameter:@"test_dict"];
+         
+         STAssertNotNil(test_after, @"checking if added dictionary exists in session parameters");
+         STAssertTrue([[test_after allKeys] count] == 0, @"dictionary count should be zero as added dictionary was empty");
+         
+         super.lastTestSuccessful = YES;
+         
+         if (super.isCloud)
+         {
+             [super waitForCompletion];
+         }
+         
+         STAssertTrue(super.lastTestSuccessful, @"Adding empty dictionary, empty list is returned");
+     }
+     ];
+}
+
+/*
+ @Unique_TCRef 74F2
+ @unique_TCRef 87F2
+ */
+/*
+ 
+ // Commented until MOBSDK-541 is resolved
+ 
+- (void)testRemovingInternalParameterFromSession
+{
+    [super runAllSitesTest:^
+     {
+         id alfrescoAuthenticationProviderObject_before = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+         
+         [self.currentSession removeParameter:kAlfrescoAuthenticationProviderObjectKey];
+         
+         id alfrescoAuthenticationProviderObject_after = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+         
+         STAssertNotNil(alfrescoAuthenticationProviderObject_after, @"check aflresco authentication paramter is not nil after removing the parameter from session");
+         STAssertEqualObjects(alfrescoAuthenticationProviderObject_before, alfrescoAuthenticationProviderObject_after, @"check authentication parameter is same before and after removing session auth param from session");
+         
+         super.lastTestSuccessful = YES;
+         
+         if (super.isCloud)
+         {
+             [super waitForCompletion];
+         }
+         
+         STAssertTrue(super.lastTestSuccessful, @"Internal Parameter is not removed, Returns previous value");
+     }
+     ];
+}
+ */
 
 /*
  @Unique_TCRef 78S2
