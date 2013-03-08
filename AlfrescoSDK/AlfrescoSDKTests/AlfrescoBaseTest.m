@@ -187,7 +187,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
  */
 - (void)authenticateCloudServer
 {
-    [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:self.server forKey:@"org.alfresco.mobile.internal.session.cloud.url"];
     [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
@@ -212,7 +211,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             self.currentSession = cloudSession;
             self.callbackCompleted = YES;
         }
-        [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelDebug;
     }];
     
 
@@ -543,12 +541,14 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             if (self.isCloud)
             {
                 AlfrescoLogInfo(@"Running test against Cloud server: %@ with username: %@", self.server, self.userName);
+                [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
                 [self authenticateCloudServer];
                 [self resetTestVariables];
             }
             else
             {
                 AlfrescoLogInfo(@"Running test against OnPremise server: %@ with username: %@", self.server, self.userName);
+                [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelDebug;
                 [self authenticateOnPremiseServer];
                 [self resetTestVariables];
             }
