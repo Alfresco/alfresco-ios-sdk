@@ -541,12 +541,14 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             if (self.isCloud)
             {
                 AlfrescoLogInfo(@"Running test against Cloud server: %@ with username: %@", self.server, self.userName);
+                [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
                 [self authenticateCloudServer];
                 [self resetTestVariables];
             }
             else
             {
                 AlfrescoLogInfo(@"Running test against OnPremise server: %@ with username: %@", self.server, self.userName);
+                [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelDebug;
                 [self authenticateOnPremiseServer];
                 [self resetTestVariables];
             }
