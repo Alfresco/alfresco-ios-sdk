@@ -26,7 +26,7 @@
 #import "CMISFolder.h"
 
 #define TIMEINTERVAL 120
-
+#define TIMEGAP 5
 typedef void (^AlfrescoTestBlock)(void);
 typedef void (^CMISTestBlock)(void);
 typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
