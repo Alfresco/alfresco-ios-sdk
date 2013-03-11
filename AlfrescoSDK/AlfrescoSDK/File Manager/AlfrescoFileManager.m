@@ -158,4 +158,18 @@
                                  userInfo:nil];
 }
 
+- (NSInputStream *)inputStreamWithFilePath:(NSString *)filePath
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass of %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]
+                                 userInfo:nil];
+}
+
+- (NSOutputStream *)outputStreamToFileAtPath:(NSString *)filePath append:(BOOL)shouldAppend
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass of %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]
+                                 userInfo:nil];
+}
+
 @end

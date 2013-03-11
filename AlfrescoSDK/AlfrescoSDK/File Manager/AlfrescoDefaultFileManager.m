@@ -168,4 +168,18 @@
     return isStreamOpen;
 }
 
+- (NSInputStream *)inputStreamWithFilePath:(NSString *)filePath
+{
+    NSInputStream *inputStream = [NSInputStream inputStreamWithFileAtPath:filePath];
+    [inputStream open];
+    return inputStream;
+}
+
+- (NSOutputStream *)outputStreamToFileAtPath:(NSString *)filePath append:(BOOL)shouldAppend
+{
+    NSOutputStream *outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:shouldAppend];
+    [outputStream open];
+    return outputStream;
+}
+
 @end
