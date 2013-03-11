@@ -30,6 +30,7 @@
 @property (nonatomic, strong, readwrite) NSString * baseURL;
 @property (nonatomic, weak, readwrite) id<AlfrescoOAuthLoginDelegate> oauthDelegate;
 - (AlfrescoOAuthData *)updatedOAuthDataFromJSONWithError:(NSError **)error;
+- (NSError *)errorFromJSONDictionary:(NSDictionary *)jsonDictionary;
 @end
 
 @implementation AlfrescoOAuthHelper
@@ -170,27 +171,6 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    if ([response isKindOfClass:NSHTTPURLResponse.class]) {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        NSInteger statuscode = httpResponse.statusCode;
-        if (200 > statuscode || 299 < statuscode)
-        {
-            if (self.connection)
-            {
-                [self.connection cancel];
-            }
-            NSInteger code = (statuscode == 401) ? kAlfrescoErrorCodeUnauthorisedAccess : kAlfrescoErrorCodeHTTPResponse;
-            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:code];
-            self.completionBlock(nil, error);
-            if (nil != self.oauthDelegate)
-            {
-                if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
-                {
-                    [self.oauthDelegate oauthLoginDidFailWithError:error];
-                }
-            }
-        }
-    }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -298,11 +278,11 @@
     {
         if (nil == *error)
         {
-            *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *error = [self errorFromJSONDictionary:(NSDictionary *)jsonDictionary];
         }
         else
         {
-            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            NSError *underlyingError = [self errorFromJSONDictionary:(NSDictionary *)jsonDictionary];
             *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
@@ -316,6 +296,31 @@
     return updatedOAuthData;
 }
 
+- (NSError *)errorFromJSONDictionary:(NSDictionary *)jsonDictionary
+{
+    id descriptionObject = [jsonDictionary objectForKey:kAlfrescoJSONErrorDescription];
+    if (nil == descriptionObject)
+    {
+        return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+    }
+    if (![descriptionObject isKindOfClass:[NSString class]])
+    {
+        return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+    }
+    NSString *description = (NSString *)descriptionObject;
+    NSRange messageRange = [description rangeOfString:@"refresh_token"];
+    if (messageRange.location != NSNotFound)
+    {
+        return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeRefreshTokenInvalid];
+    }
+    
+    messageRange = [description rangeOfString:@"expired"];
+    if (messageRange.location != NSNotFound)
+    {
+        return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeAccessTokenExpired];
+    }
+    return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+}
 
 
 @end

@@ -151,6 +151,10 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
  */
 - (void)authenticateOnPremiseServer
 {
+    if (self.currentSession)
+    {
+        self.currentSession = nil;
+    }
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.server]
                                      username:self.userName
                                      password:self.testPassword
@@ -164,10 +168,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                                   }
                                   else
                                   {
-                                      if (self.currentSession)
-                                      {
-                                          self.currentSession = nil;
-                                      }
                                       STAssertNotNil(session,@"Session should not be nil");
                                       self.lastTestSuccessful = YES;
                                       self.currentSession = session;
@@ -187,6 +187,10 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
  */
 - (void)authenticateCloudServer
 {
+    if (self.currentSession)
+    {
+        self.currentSession = nil;
+    }
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:self.server forKey:@"org.alfresco.mobile.internal.session.cloud.url"];
     [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
@@ -202,10 +206,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         }
         else
         {
-            if (self.currentSession)
-            {
-                self.currentSession = nil;
-            }
             STAssertNotNil(cloudSession, @"Cloud session should not be nil");
             self.lastTestSuccessful = YES;
             self.currentSession = cloudSession;
@@ -541,14 +541,14 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             if (self.isCloud)
             {
                 AlfrescoLogInfo(@"Running test against Cloud server: %@ with username: %@", self.server, self.userName);
-                [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
+//                [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
                 [self authenticateCloudServer];
                 [self resetTestVariables];
             }
             else
             {
                 AlfrescoLogInfo(@"Running test against OnPremise server: %@ with username: %@", self.server, self.userName);
-                [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelDebug;
+//                [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelDebug;
                 [self authenticateOnPremiseServer];
                 [self resetTestVariables];
             }
@@ -574,6 +574,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             
             [self removeTestDocument];
             [self resetTestVariables];
+            [self waitAtTheEnd];
         }
     }
 }
@@ -605,6 +606,15 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     } while ([timeoutDate timeIntervalSinceNow] > 0);
      */
     
+}
+
+- (void)waitAtTheEnd
+{
+    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:TIMEGAP];
+    do {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
+    } while ([timeoutDate timeIntervalSinceNow] > 0 );
+//    STAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEGAP);
 }
 
 - (void)waitUntilCompleteWithFixedTimeInterval
