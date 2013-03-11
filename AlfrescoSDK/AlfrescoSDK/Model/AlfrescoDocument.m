@@ -19,6 +19,7 @@
 #import "AlfrescoDocument.h"
 #import "CMISEnums.h"
 #import "CMISConstants.h"
+#import "AlfrescoInternalConstants.h"
 
 @interface AlfrescoDocument ()
 @property (nonatomic, strong, readwrite) NSString *contentMimeType;
@@ -51,22 +52,11 @@
 
 - (void)setUpDocumentProperties:(NSDictionary *)properties
 {
-    if ([[properties allKeys] containsObject:kCMISPropertyIsLatestVersion])
-    {
-        self.isLatestVersion = [[properties valueForKey:kCMISPropertyIsLatestVersion] boolValue];
-    }    
-    if ([[properties allKeys] containsObject:kCMISPropertyContentStreamLength])
-    {
-        self.contentLength = [[properties valueForKey:kCMISPropertyContentStreamLength] intValue];
-    }
-    if ([[properties allKeys] containsObject:kCMISPropertyContentStreamMediaType])
-    {
-        self.contentMimeType = [properties valueForKey:kCMISPropertyContentStreamMediaType];
-    }
-    if ([[properties allKeys] containsObject:kCMISPropertyVersionLabel])
-    {
-        self.versionLabel = [properties valueForKey:kCMISPropertyVersionLabel];
-    }    
+    self.isLatestVersion = [[properties valueForKey:kCMISPropertyIsLatestVersion] boolValue];
+    self.contentLength = [[properties valueForKey:kCMISPropertyContentStreamLength] intValue];
+    self.contentMimeType = [properties valueForKey:kCMISPropertyContentStreamMediaType];
+    self.versionLabel = [properties valueForKey:kCMISPropertyVersionLabel];
+    self.versionComment = [[[properties objectForKey:kAlfrescoNodeProperties] valueForKey:kCMISPropertyCheckinComment] value];
 }
 
 @end
