@@ -37,14 +37,10 @@
         [mutableRequestString appendString:separator];
         [mutableRequestString appendString:extensionURL];
     }
-    return [NSURL URLWithString:mutableRequestString];
+    NSString *requestString = [mutableRequestString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return [NSURL URLWithString:requestString];
 }
 
-+ (NSString *)urlCharactersFromString:(NSString *)rawString
-{
-    NSString *cleaned = [rawString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-    return cleaned;
-}
 
 
 @end
