@@ -137,4 +137,18 @@
  */
 - (NSString *)internalFilePathFromName:(NSString *)fileName;
 
+/*
+ Call this to return an input stream to the requested file path.
+ 
+ @returns inputStream - an open input stream to the requested file path
+ */
+- (NSInputStream *)inputStreamWithFilePath:(NSString *)filePath;
+
+/*
+ Call this to return an output stream to the requested file path.
+ 
+ @returns outputStream - an open output stream to the requested file path
+ */
+- (NSOutputStream *)outputStreamToFileAtPath:(NSString *)filePath append:(BOOL)shouldAppend;
+
 @end
