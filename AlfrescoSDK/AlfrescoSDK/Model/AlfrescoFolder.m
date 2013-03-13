@@ -17,10 +17,13 @@
  ******************************************************************************/
 
 #import "AlfrescoFolder.h"
+#import "AlfrescoInternalConstants.h"
+
 @interface AlfrescoFolder ()
 @property (nonatomic, assign, readwrite) BOOL isFolder;
 @property (nonatomic, assign, readwrite) BOOL isDocument;
 @end
+
 @implementation AlfrescoFolder
 - (id)initWithProperties:(NSDictionary *)properties
 {
@@ -32,5 +35,26 @@
     }
     return self;
 }
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+
+    [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
+    [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeFolder];
+        self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeDocument];
+    }
+    return self;
+}
+
 
 @end

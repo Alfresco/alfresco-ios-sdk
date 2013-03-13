@@ -59,4 +59,48 @@
     self.versionComment = [[[properties objectForKey:kAlfrescoNodeProperties] valueForKey:kCMISPropertyCheckinComment] value];
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
+    [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
+    [aCoder encodeBool:self.isLatestVersion forKey:kCMISPropertyIsLatestVersion];
+
+    if (self.contentLength)
+    {
+        [aCoder encodeInt64:self.contentLength forKey:kCMISPropertyContentStreamLength];
+    }
+    if (nil != self.contentMimeType)
+    {
+        [aCoder encodeObject:self.contentMimeType forKey:kCMISPropertyContentStreamMediaType];
+    }
+    if (nil != self.versionLabel)
+    {
+        [aCoder encodeObject:self.versionLabel forKey:kCMISPropertyVersionLabel];
+    }
+    if (nil != self.versionComment)
+    {
+        [aCoder encodeObject:self.versionComment forKey:kCMISPropertyCheckinComment];
+    }
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeFolder];
+        self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeDocument];
+        self.isLatestVersion = [aDecoder decodeBoolForKey:kCMISPropertyIsLatestVersion];
+        self.contentLength = [aDecoder decodeInt64ForKey:kCMISPropertyContentStreamLength];
+        self.contentMimeType = [aDecoder decodeObjectForKey:kCMISPropertyContentStreamMediaType];
+        self.versionLabel = [aDecoder decodeObjectForKey:kCMISPropertyVersionLabel];
+        self.versionComment = [aDecoder decodeObjectForKey:kCMISPropertyCheckinComment];
+    }
+    return self;
+}
+
+
 @end
