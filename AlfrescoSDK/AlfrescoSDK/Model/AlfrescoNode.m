@@ -1,14 +1,14 @@
 /*******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
- * 
+ *
  * This file is part of the Alfresco Mobile SDK.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -95,7 +95,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     {
         self.createdAt = [properties valueForKey:kCMISPropertyCreationDate];
     }
-
+    
     if ([[properties allKeys] containsObject:kCMISPropertyModifiedBy])
     {
         self.modifiedBy = [properties valueForKey:kCMISPropertyModifiedBy];
@@ -127,6 +127,73 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     }
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    if (nil != self.identifier)
+    {
+        [aCoder encodeObject:self.identifier forKey:kCMISPropertyObjectId];
+    }
+    if (nil != self.name)
+    {
+        [aCoder encodeObject:self.name forKey:kCMISPropertyName];
+    }
+    if (nil != self.title)
+    {
+        [aCoder encodeObject:self.title forKey:kAlfrescoPropertyTitle];
+    }
+    if (nil != self.summary)
+    {
+        [aCoder encodeObject:self.summary forKey:kAlfrescoPropertyDescription];
+    }
+    if (nil != self.type)
+    {
+        [aCoder encodeObject:self.type forKey:kCMISPropertyObjectTypeId];
+    }
+    if (nil != self.createdAt)
+    {
+        [aCoder encodeObject:self.createdAt forKey:kCMISPropertyCreationDate];
+    }
+    if (nil != self.createdBy)
+    {
+        [aCoder encodeObject:self.createdBy forKey:kCMISPropertyCreatedBy];
+    }
+    if (nil != self.modifiedBy)
+    {
+        [aCoder encodeObject:self.modifiedBy forKey:kCMISPropertyModifiedBy];
+    }
+    if (nil != self.modifiedAt)
+    {
+        [aCoder encodeObject:self.modifiedAt forKey:kCMISPropertyModificationDate];
+    }
+    if (nil != self.properties)
+    {
+        [aCoder encodeObject:self.properties forKey:kAlfrescoNodeProperties];
+    }
+    if (nil != self.aspects)
+    {
+        [aCoder encodeObject:self.aspects forKey:kAlfrescoNodeAspects];
+    }
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self)
+    {
+        self.identifier = [aDecoder decodeObjectForKey:kCMISPropertyObjectId];
+        self.name = [aDecoder decodeObjectForKey:kCMISPropertyName];
+        self.title = [aDecoder decodeObjectForKey:kAlfrescoPropertyTitle];
+        self.summary = [aDecoder decodeObjectForKey:kAlfrescoPropertyDescription];
+        self.type = [aDecoder decodeObjectForKey:kCMISPropertyObjectTypeId];
+        self.createdAt = [aDecoder decodeObjectForKey:kCMISPropertyCreationDate];
+        self.createdBy = [aDecoder decodeObjectForKey:kCMISPropertyCreatedBy];
+        self.modifiedBy = [aDecoder decodeObjectForKey:kCMISPropertyModifiedBy];
+        self.modifiedAt = [aDecoder decodeObjectForKey:kCMISPropertyModificationDate];
+        self.properties = [aDecoder decodeObjectForKey:kAlfrescoNodeProperties];
+        self.aspects = [aDecoder decodeObjectForKey:kAlfrescoNodeAspects];
+    }
+    return self;
+}
 
 - (id)propertyValueWithName:(NSString *)propertyName
 {
@@ -140,7 +207,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 }
 
 - (BOOL)hasAspectWithName:(NSString *)aspectName
-{ 
+{
     return [self.aspects containsObject:aspectName];
 }
 

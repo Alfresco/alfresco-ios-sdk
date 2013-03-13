@@ -49,4 +49,24 @@
     return self;
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeInt:self.type forKey:kAlfrescoPropertyType];
+    [aCoder encodeObject:self.value forKey:kAlfrescoPropertyValue];
+    [aCoder encodeBool:self.isMultiValued forKey:kAlfrescoPropertyIsMultiValued];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.type = [aDecoder decodeIntForKey:kAlfrescoPropertyType];
+        self.value = [aDecoder decodeObjectForKey:kAlfrescoPropertyValue];
+        self.isMultiValued = [aDecoder decodeBoolForKey:kAlfrescoPropertyIsMultiValued];
+    }
+    return self;
+}
+
 @end

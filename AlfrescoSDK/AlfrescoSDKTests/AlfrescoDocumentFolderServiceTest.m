@@ -1552,6 +1552,80 @@
 }
 
 /**
+ * TEST Alfresco Node SERIALIZATION
+ */
+- (void)testAlfrescoNodeSerialization
+{
+    [super runAllSitesTest:^
+     {
+         if (!super.isCloud)
+         {
+             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+             
+             [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
+              {
+                  if (nil == node)
+                  {
+                      documentService = nil;
+                      super.lastTestSuccessful = NO;
+                      super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      super.callbackCompleted = YES;
+                  }
+                  else
+                  {
+                      self.lastTestSuccessful = YES;
+                      
+                      AlfrescoDocument *doc = (AlfrescoDocument *)node;
+                      AlfrescoProperty *docProperty = [doc.properties valueForKey:kCMISPropertyName];
+                    
+                      NSString *docName = doc.name;
+                      NSString *docCreatedBy = doc.createdBy;
+                      BOOL isDocDocument = node.isDocument;
+                      NSString *docMimeType = doc.contentMimeType;
+                      NSString *docVersion = doc.versionLabel;
+                 
+                      NSMutableArray *myObject=[NSMutableArray array];
+                      [myObject addObject:doc];
+                      
+                      NSString *filePath = [NSString stringWithFormat:@"/Users/%@/serialized-object.txt", NSUserName()];
+                      [NSKeyedArchiver archiveRootObject:myObject toFile:filePath];
+                      
+                      NSMutableArray* myArray = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
+                      
+                      if ([myArray count] > 0)
+                      {
+                          AlfrescoDocument *serializedDoc = [myArray objectAtIndex:0];
+                          AlfrescoProperty *serializedDocProperty = [doc.properties valueForKey:kCMISPropertyName];
+                          
+                          STAssertEqualObjects(docName, serializedDoc.name, @"name should match");
+                          STAssertEqualObjects(docCreatedBy, serializedDoc.createdBy, @"createdBy should match");
+                          STAssertNotNil(serializedDoc.properties, @"properties should not be nil");
+                          STAssertEqualObjects(docProperty.value, serializedDocProperty.value, @"checking AlfrescoProperty Serialization. values should match");
+                          STAssertEquals(isDocDocument, serializedDoc.isDocument, @"isDocument should match");
+                          STAssertEqualObjects(docMimeType, serializedDoc.contentMimeType, @"docMimeType should match");
+                          STAssertEqualObjects(docVersion, serializedDoc.versionLabel, @"docVersion should match");
+                      }
+                      
+                      documentService = nil;
+                  }
+                  
+                  super.callbackCompleted = YES;
+              }
+              ];
+             
+             [super waitUntilCompleteWithFixedTimeInterval];
+             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+         }
+         else
+         {
+             // not checking version comment in cloud for now
+             [super waitForCompletion];
+         }
+     }
+     ];
+}
+
+/**
  @Unique_TCRef 19S0
  */
 - (void)testRetrieveDocumentsInFolderWithPaging
