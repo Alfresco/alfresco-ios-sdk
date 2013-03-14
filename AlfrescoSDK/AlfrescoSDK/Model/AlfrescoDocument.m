@@ -20,8 +20,9 @@
 #import "CMISEnums.h"
 #import "CMISConstants.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoProperty.h"
 
-NSInteger const kClassVersion = 1;
+NSInteger const kAlfrescoDocumentClassVersion = 1;
 
 @interface AlfrescoDocument ()
 @property (nonatomic, strong, readwrite) NSString *contentMimeType;
@@ -58,14 +59,16 @@ NSInteger const kClassVersion = 1;
     self.contentLength = [[properties valueForKey:kCMISPropertyContentStreamLength] intValue];
     self.contentMimeType = [properties valueForKey:kCMISPropertyContentStreamMediaType];
     self.versionLabel = [properties valueForKey:kCMISPropertyVersionLabel];
-    self.versionComment = [[[properties objectForKey:kAlfrescoNodeProperties] valueForKey:kCMISPropertyCheckinComment] value];
+    
+    AlfrescoProperty *comment = [[properties objectForKey:kAlfrescoNodeProperties] valueForKey:kCMISPropertyCheckinComment];
+    self.versionComment = comment.value;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     [super encodeWithCoder:aCoder];
     
-    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeInt:kAlfrescoDocumentClassVersion forKey:kAlfrescoClassVersion];
     [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
     [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
     [aCoder encodeBool:self.isLatestVersion forKey:kCMISPropertyIsLatestVersion];
