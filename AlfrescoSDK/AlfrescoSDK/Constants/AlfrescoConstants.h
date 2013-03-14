@@ -42,6 +42,11 @@
 extern NSString * const kAlfrescoSDKVersion;
 
 /**---------------------------------------------------------------------------------------
+ * @name Class Version constants
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoClassVersion;
+
+/**---------------------------------------------------------------------------------------
  * @name Block definitions
  --------------------------------------------------------------------------------------- */
 typedef void (^AlfrescoArrayCompletionBlock)(NSArray *array, NSError *error);
@@ -101,4 +106,3 @@ extern NSString * const kAlfrescoIsFolder;
  * @name Custom Alfresco Network Provider
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoNetworkProvider;
-

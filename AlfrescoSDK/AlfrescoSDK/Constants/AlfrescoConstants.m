@@ -28,6 +28,11 @@
 NSString * const kAlfrescoSDKVersion = @"1.1.0";
 
 /**
+ Class Version constants
+ */
+NSString * const kAlfrescoClassVersion = @"alfresco.classVersion";
+
+/**
  Session parameter constants
  */
 NSString * const kAlfrescoMetadataExtraction = @"org.alfresco.mobile.features.extractmetadata";
