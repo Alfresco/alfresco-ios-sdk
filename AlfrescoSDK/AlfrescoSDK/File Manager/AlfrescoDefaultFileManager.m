@@ -100,8 +100,10 @@
     return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:error];
 }
 
-- (void)enumerateThroughDirectory:(NSString *)directory includingSubDirectories:(BOOL)includeSubDirectories withBlock:(void (^)(NSString *fullFilePath))block error:(NSError **)error
+- (BOOL)enumerateThroughDirectory:(NSString *)directory includingSubDirectories:(BOOL)includeSubDirectories withBlock:(void (^)(NSString *fullFilePath))block error:(NSError **)error
 {
+    __block BOOL completedWithoutError = YES;
+    
     NSDirectoryEnumerationOptions options;
     if (!includeSubDirectories)
     {
@@ -118,6 +120,7 @@
                                                                       errorHandler:^BOOL(NSURL *url, NSError *fileError) {
                                                                           AlfrescoLogDebug(@"Error retrieving contents of the URL: %@ with the error: %@", [url absoluteString], [fileError localizedDescription]);
                                                                           *error = fileError;
+                                                                          completedWithoutError = NO;
                                                                           return YES;
                                                                       }];
     
@@ -130,6 +133,8 @@
             block(fullPath);
         }
     }
+    
+    return completedWithoutError;
 }
 
 - (NSData *)dataWithContentsOfURL:(NSURL *)url
@@ -161,6 +166,20 @@
     NSOutputStream *outputStream = (NSOutputStream *)stream;
     isStreamOpen = (outputStream.streamStatus == NSStreamStatusOpen);
     return isStreamOpen;
+}
+
+- (NSInputStream *)inputStreamWithFilePath:(NSString *)filePath
+{
+    NSInputStream *inputStream = [NSInputStream inputStreamWithFileAtPath:filePath];
+    [inputStream open];
+    return inputStream;
+}
+
+- (NSOutputStream *)outputStreamToFileAtPath:(NSString *)filePath append:(BOOL)shouldAppend
+{
+    NSOutputStream *outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:shouldAppend];
+    [outputStream open];
+    return outputStream;
 }
 
 @end

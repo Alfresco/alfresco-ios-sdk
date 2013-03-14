@@ -20,6 +20,11 @@
 
 @implementation AlfrescoInternalConstants
 
+/**
+ Class Version constants
+ */
+NSString * const kAlfrescoClassVersion = @"alfresco.classVersion";
+
 NSString * const kAlfrescoISO8601DateStringFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZ";
 /**
  CMIS constants

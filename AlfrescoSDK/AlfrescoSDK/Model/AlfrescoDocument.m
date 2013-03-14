@@ -19,6 +19,9 @@
 #import "AlfrescoDocument.h"
 #import "CMISEnums.h"
 #import "CMISConstants.h"
+#import "AlfrescoInternalConstants.h"
+
+NSInteger const kClassVersion = 1;
 
 @interface AlfrescoDocument ()
 @property (nonatomic, strong, readwrite) NSString *contentMimeType;
@@ -51,22 +54,43 @@
 
 - (void)setUpDocumentProperties:(NSDictionary *)properties
 {
-    if ([[properties allKeys] containsObject:kCMISPropertyIsLatestVersion])
-    {
-        self.isLatestVersion = [[properties valueForKey:kCMISPropertyIsLatestVersion] boolValue];
-    }    
-    if ([[properties allKeys] containsObject:kCMISPropertyContentStreamLength])
-    {
-        self.contentLength = [[properties valueForKey:kCMISPropertyContentStreamLength] intValue];
-    }
-    if ([[properties allKeys] containsObject:kCMISPropertyContentStreamMediaType])
-    {
-        self.contentMimeType = [properties valueForKey:kCMISPropertyContentStreamMediaType];
-    }
-    if ([[properties allKeys] containsObject:kCMISPropertyVersionLabel])
-    {
-        self.versionLabel = [properties valueForKey:kCMISPropertyVersionLabel];
-    }    
+    self.isLatestVersion = [[properties valueForKey:kCMISPropertyIsLatestVersion] boolValue];
+    self.contentLength = [[properties valueForKey:kCMISPropertyContentStreamLength] intValue];
+    self.contentMimeType = [properties valueForKey:kCMISPropertyContentStreamMediaType];
+    self.versionLabel = [properties valueForKey:kCMISPropertyVersionLabel];
+    self.versionComment = [[[properties objectForKey:kAlfrescoNodeProperties] valueForKey:kCMISPropertyCheckinComment] value];
 }
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
+    [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
+    [aCoder encodeBool:self.isLatestVersion forKey:kCMISPropertyIsLatestVersion];
+    [aCoder encodeInt64:self.contentLength forKey:kCMISPropertyContentStreamLength];
+    [aCoder encodeObject:self.contentMimeType forKey:kCMISPropertyContentStreamMediaType];
+    [aCoder encodeObject:self.versionLabel forKey:kCMISPropertyVersionLabel];
+    [aCoder encodeObject:self.versionComment forKey:kCMISPropertyCheckinComment];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeFolder];
+        self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeDocument];
+        self.isLatestVersion = [aDecoder decodeBoolForKey:kCMISPropertyIsLatestVersion];
+        self.contentLength = [aDecoder decodeInt64ForKey:kCMISPropertyContentStreamLength];
+        self.contentMimeType = [aDecoder decodeObjectForKey:kCMISPropertyContentStreamMediaType];
+        self.versionLabel = [aDecoder decodeObjectForKey:kCMISPropertyVersionLabel];
+        self.versionComment = [aDecoder decodeObjectForKey:kCMISPropertyCheckinComment];
+    }
+    return self;
+}
+
 
 @end

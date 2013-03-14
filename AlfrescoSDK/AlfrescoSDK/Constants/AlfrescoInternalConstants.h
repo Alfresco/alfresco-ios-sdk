@@ -22,6 +22,8 @@
 
 @interface AlfrescoInternalConstants : NSObject
 
+extern NSString * const kAlfrescoClassVersion;
+
 extern NSString * const kAlfrescoISO8601DateStringFormat;
 extern NSString * const kAlfrescoCMISPropertyTypeInt;
 extern NSString * const kAlfrescoCMISPropertyTypeBoolean;
