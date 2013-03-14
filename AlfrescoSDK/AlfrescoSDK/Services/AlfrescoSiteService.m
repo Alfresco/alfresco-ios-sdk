@@ -94,4 +94,51 @@
 }
 
 
+- (AlfrescoRequest *)addFavoriteSite:(AlfrescoSite *)site
+                     completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;    
+}
+
+- (AlfrescoRequest *)removeFavoriteSite:(AlfrescoSite *)site
+                        completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)joinSite:(AlfrescoSite *)site
+                      message:(NSString *)message
+              completionBlock:(AlfrescoJoinSiteRequestCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveJoinSiteRequestsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)cancelJoinSiteRequest:(AlfrescoJoinSiteRequest *)joinSiteRequest
+                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;    
+}
+
+- (AlfrescoRequest *)leaveSite:(AlfrescoSite *)site
+               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;    
+}
+
+- (void)clear
+{
+    [self doesNotRecognizeSelector:_cmd];
+}
+
 @end

@@ -125,6 +125,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+    AlfrescoLogDebug(@"Connection did fail. Error code %d error message %@",[error code], [error localizedDescription]);
     if (self.completionBlock != NULL)
     {
         self.completionBlock(nil, error);

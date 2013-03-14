@@ -27,6 +27,7 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoNetworkProvider.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoSiteCache.h"
 #import <objc/runtime.h>
 
 
@@ -36,7 +37,8 @@
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
-- (NSArray *) siteArrayWithData:(NSData *)data error:(NSError **)outError;
+@property (nonatomic, strong, readwrite) AlfrescoSiteCache *siteCache;
+- (NSArray *) siteArrayWithData:(NSData *)data isFavorite:(BOOL)isFavorite error:(NSError **)outError;
 - (NSArray *) specifiedSiteArrayFromJSONData:(NSData *)data error:(NSError **)outError;
 - (AlfrescoSite *) alfrescoSiteFromJSONData:(NSData *)data error:(NSError **)outError;
 - (NSDictionary *) dictionaryFromJSONData:(NSData *)data error:(NSError **)outError;
@@ -59,6 +61,7 @@
         }
         self.defaultSortKey = kAlfrescoSortByTitle;
         self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByTitle, kAlfrescoSortByShortname, nil];
+        self.siteCache = [AlfrescoSiteCache siteCacheForSession:session];
     }
     return self;
 }
@@ -81,7 +84,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *sites = [self siteArrayWithData:data error:&conversionError];
+            NSArray *sites = [self siteArrayWithData:data isFavorite:NO error:&conversionError];
             NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
             completionBlock(sortedSites, conversionError);
         }
@@ -112,7 +115,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *sites = [self siteArrayWithData:data error:&conversionError];
+            NSArray *sites = [self siteArrayWithData:data isFavorite:NO error:&conversionError];
             NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedSites listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
@@ -124,6 +127,14 @@
 - (AlfrescoRequest *)retrieveSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSArray *memberSites = [self.siteCache memberSites];
+    if (0 < memberSites.count)
+    {
+        NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:memberSites sortKey:self.defaultSortKey ascending:YES];
+        completionBlock(sortedSites, nil);
+        return nil;
+    }
     
 //    __weak AlfrescoCloudSiteService *weakSelf = self;
     NSString *requestString = [kAlfrescoCloudSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
@@ -150,12 +161,20 @@
 }
 
 - (AlfrescoRequest *)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
-                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+                                     completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
+    }
+    NSArray *memberSites = [self.siteCache memberSites];
+    if (0 < memberSites.count)
+    {
+        NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:memberSites sortKey:self.defaultSortKey ascending:YES];
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedSites listingContext:listingContext];
+        completionBlock(pagingResult, nil);
+        return nil;
     }
     
 //    __weak AlfrescoCloudSiteService *weakSelf = self;
@@ -191,37 +210,12 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-//    __weak AlfrescoCloudSiteService *weakSelf = self;
-    NSString *requestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
-                                                                                                withString:self.session.personIdentifier];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url
-                                                session:self.session
-                                        alfrescoRequest:request
-                                        completionBlock:^(NSData *data, NSError *error){
-        if (nil == data)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *sites = [self siteArrayWithData:data error:&conversionError];
-            NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
-            completionBlock(sortedSites, conversionError);
-        }
-    }];
-    return request;
-}
-
-- (AlfrescoRequest *)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
-                                completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    if (nil == listingContext)
+    NSArray *favoriteSites = [self.siteCache favoriteSites];
+    if (0 < favoriteSites.count)
     {
-        listingContext = self.session.defaultListingContext;
+        NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:favoriteSites sortKey:self.defaultSortKey ascending:YES];
+        completionBlock(sortedSites, nil);
+        return nil;
     }
     
 //    __weak AlfrescoCloudSiteService *weakSelf = self;
@@ -240,7 +234,48 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *sites = [self siteArrayWithData:data error:&conversionError];
+            NSArray *sites = [self siteArrayWithData:data isFavorite:YES error:&conversionError];
+            NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
+            completionBlock(sortedSites, conversionError);
+        }
+    }];
+    return request;
+}
+
+- (AlfrescoRequest *)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
+                                completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = self.session.defaultListingContext;
+    }
+    NSArray *favoriteSites = [self.siteCache favoriteSites];
+    if (0 < favoriteSites.count)
+    {
+        NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:favoriteSites sortKey:self.defaultSortKey ascending:YES];
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedSites listingContext:listingContext];
+        completionBlock(pagingResult, nil);
+        return nil;
+    }
+    
+//    __weak AlfrescoCloudSiteService *weakSelf = self;
+    NSString *requestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+                                                                                                withString:self.session.personIdentifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                        alfrescoRequest:request
+                                        completionBlock:^(NSData *data, NSError *error){
+        if (nil == data)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *sites = [self siteArrayWithData:data isFavorite:YES error:&conversionError];
             NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedSites listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
@@ -346,9 +381,57 @@
     return request;
 }
 
+- (AlfrescoRequest *)addFavoriteSite:(AlfrescoSite *)site
+                     completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    return nil;
+}
+
+- (AlfrescoRequest *)removeFavoriteSite:(AlfrescoSite *)site
+                        completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    return nil;
+}
+
+- (AlfrescoRequest *)joinSite:(AlfrescoSite *)site
+                      message:(NSString *)message
+              completionBlock:(AlfrescoJoinSiteRequestCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveJoinSiteRequestsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    return nil;
+}
+
+- (AlfrescoRequest *)cancelJoinSiteRequest:(AlfrescoJoinSiteRequest *)joinSiteRequest
+                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:joinSiteRequest argumentName:@"joinSiteRequest"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    return nil;
+}
+
+- (AlfrescoRequest *)leaveSite:(AlfrescoSite *)site
+               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    return nil;
+}
+
+
 
 #pragma mark Site service internal methods
-- (NSArray *) siteArrayWithData:(NSData *)data error:(NSError **)outError
+- (NSArray *) siteArrayWithData:(NSData *)data isFavorite:(BOOL)isFavorite error:(NSError **)outError
 {
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil != entriesArray)
@@ -357,8 +440,19 @@
         
         for (NSDictionary *entryDict in entriesArray)
         {
-            NSDictionary *individualEntry = [entryDict valueForKey:kAlfrescoCloudJSONEntry];
-            [resultsArray addObject:[[AlfrescoSite alloc] initWithProperties:individualEntry]];
+            NSMutableDictionary *individualEntry = [NSMutableDictionary dictionaryWithDictionary:[entryDict valueForKey:kAlfrescoCloudJSONEntry]];
+            AlfrescoSite *site = nil;
+            if (isFavorite)
+            {
+                [individualEntry setObject:[NSNumber numberWithBool:YES] forKey:kAlfrescoSiteIsFavorite];
+                site = [[AlfrescoSite alloc] initWithProperties:individualEntry];
+                [self.siteCache addToCache:site];
+            }
+            else
+            {
+                site = [[AlfrescoSite alloc] initWithProperties:individualEntry];
+            }
+            [resultsArray addObject:site];
         }
         return resultsArray;
     }
@@ -410,8 +504,11 @@
                 }
                 else
                 {
-                    NSDictionary *siteDict = (NSDictionary *)siteObj;
-                    [resultsArray addObject:[[AlfrescoSite alloc] initWithProperties:siteDict]];
+                    NSMutableDictionary *siteDict = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary *)siteObj];
+                    [siteDict setObject:[NSNumber numberWithBool:YES] forKey:kAlfrescoSiteIsMember];
+                    AlfrescoSite *site = [[AlfrescoSite alloc] initWithProperties:siteDict];
+                    [self.siteCache addToCache:site];
+                    [resultsArray addObject:site];
                 }
                 
             }
@@ -467,7 +564,20 @@
 }
 
 
+- (NSData *)jsonDataForAddingFavoriteSite:(NSString *)siteGUID
+{
+    NSDictionary *siteId = [NSDictionary dictionaryWithObject:siteGUID forKey:kAlfrescoJSONGUID];
+    NSDictionary *site = [NSDictionary dictionaryWithObject:siteId forKey:kAlfrescoJSONSite];
+    NSDictionary *jsonDict = [NSDictionary dictionaryWithObject:site forKey:kAlfrescoJSONTarget];
+    NSError *error = nil;
+    return [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&error];
+}
 
-
+- (NSData *)jsonDataForJoiningSite:(NSString *)site comment:(NSString *)comment
+{
+    NSDictionary *jsonDict =  [NSDictionary dictionaryWithObjects:@[site, comment] forKeys:@[kAlfrescoJSONIdentifier, kAlfrescoJSONMessage]];
+    NSError *error = nil;
+    return [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&error];
+}
 
 @end

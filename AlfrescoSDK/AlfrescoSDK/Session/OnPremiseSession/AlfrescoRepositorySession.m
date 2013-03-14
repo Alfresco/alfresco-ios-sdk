@@ -29,11 +29,13 @@
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import "CMISLog.h"
+#import "AlfrescoCache.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;
+@property (nonatomic, strong, readwrite) NSMutableDictionary *sessionCache;
 @property (nonatomic, strong, readwrite) NSString *personIdentifier;
 
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
@@ -299,6 +301,45 @@
 {
     [self.sessionData removeObjectForKey:key];
 }
+
+- (void)setObject:(id)object forCacheKey:(id)cacheKey
+{
+    if ([object conformsToProtocol:@protocol(AlfrescoCache)] && [cacheKey hasPrefix:kAlfrescoSessionInternalCache])
+    {
+        [self.sessionCache setObject:object forKey:cacheKey];
+    }
+}
+
+- (void)removeFromCache:(id)cacheKey
+{
+    id cacheObject = [self.sessionCache objectForKey:cacheKey];
+    if ([cacheObject respondsToSelector:@selector(clear)])
+    {
+        [cacheObject clear];
+    }
+    [self.sessionCache removeObjectForKey:cacheKey];
+}
+
+
+- (void)clear
+{
+    NSArray *allCaches = [self.sessionCache allKeys];
+    if (0 == allCaches.count)
+    {
+        return;
+    }
+    for (NSString *key in allCaches)
+    {
+        id cacheObj = [self.sessionCache objectForKey:key];
+        if ([cacheObj respondsToSelector:@selector(clear)])
+        {
+            [cacheObj clear];
+        }
+    }
+    [self.sessionCache removeAllObjects];
+}
+
+
 
 + (NSNumber *)majorVersionFromString:(NSString *)versionString
 {

@@ -47,6 +47,7 @@ NSString * const kAlfrescoErrorDescriptionCommentNoCommentFound = @"Comment Serv
 NSString * const kAlfrescoErrorDescriptionSites = @"Sites Service Error";
 NSString * const kAlfrescoErrorDescriptionSitesNoDocLib = @"Sites Service Error: No Document Library was found";
 NSString * const kAlfrescoErrorDescriptionSitesNoSites = @"Sites Service Error: No Sites were found.";
+NSString * const kAlfrescoErrorDescriptionSitesIsPrivateSite = @"Site Service Error: Attempt to join a private site.";
 
 NSString * const kAlfrescoErrorDescriptionActivityStream =@"Activity Stream Service Error";
 NSString * const kAlfrescoErrorDescriptionActivityStreamNoActivities =@"Activity Stream Service Error: No Activities were found.";
@@ -208,7 +209,10 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
             break;
         case kAlfrescoErrorCodeSitesNoSites:
             return kAlfrescoErrorDescriptionSitesNoSites;
-            break;            
+            break;
+        case kAlfrescoErrorCodeSitesIsPrivateSite:
+            return kAlfrescoErrorDescriptionSitesIsPrivateSite;
+            break;
         case kAlfrescoErrorCodeActivityStream:
             return kAlfrescoErrorDescriptionActivityStream;
             break;

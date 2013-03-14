@@ -94,6 +94,20 @@
  */
 - (void)removeParameter:(id)key;
 
+/**
+ adds an object to the cache dictionary. The object will be a class implementing the
+ AlfrescoCache protocol
+ */
+- (void)setObject:(id)object forCacheKey:(id)cacheKey;
 
+/**
+ removes the object from the Cache and removes all cached data therein
+ */
+- (void)removeFromCache:(id)cacheKey;
+
+/**
+ clears all caches associacted with this session
+ */
+- (void)clear;
 
 @end

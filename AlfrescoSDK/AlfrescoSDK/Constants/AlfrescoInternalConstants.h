@@ -49,6 +49,8 @@ extern NSString * const kAlfrescoRepositoryBuildNumber;
 extern NSString * const kAlfrescoRepositoryCapabilities;
 
 extern NSString * const kAlfrescoSiteId;
+extern NSString * const kAlfrescoSiteGUID;
+extern NSString * const kAlfrescoInviteId;
 extern NSString * const kAlfrescoNodeRef;
 extern NSString * const kAlfrescoPersonId;
 extern NSString * const kAlfrescoCommentId;
@@ -69,12 +71,19 @@ extern NSString * const kAlfrescoCode;
 extern NSString * const kAlfrescoRedirectURI;
 extern NSString * const kAlfrescoRefreshID;
 extern NSString * const kAlfrescoMe;
+extern NSString * const kAlfrescoModerated;
+extern NSString * const kAlfrescoSiteConsumer;
 
 extern NSString * const kAlfrescoSessionKeyCmisSession;
 extern NSString * const kAlfrescoSessionCloudURL;
 extern NSString * const kAlfrescoSessionCloudBasicAuth;
 extern NSString * const kAlfrescoSessionUsername;
 extern NSString * const kAlfrescoSessionPassword;
+extern NSString * const kAlfrescoSessionInternalCache;
+
+extern NSString * const kAlfrescoSiteIsFavorite;
+extern NSString * const kAlfrescoSiteIsMember;
+extern NSString * const kAlfrescoSiteIsPendingMember;
 
 extern NSString * const kAlfrescoAuthenticationProviderObjectKey;
 
@@ -122,6 +131,14 @@ extern NSString * const kAlfrescoOnPremiseAvatarForPersonAPI;
 extern NSString * const kAlfrescoOnPremiseMetadataExtractionAPI;
 extern NSString * const kAlfrescoOnPremiseThumbnailCreationAPI;
 extern NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI;
+extern NSString * const kAlfrescoOnPremiseAddOrRemoveFavoriteSiteAPI;
+extern NSString * const kAlfrescoOnPremiseJoinPublicSiteAPI;
+extern NSString * const kAlfrescoOnPremiseJoinModeratedSiteAPI;
+extern NSString * const kAlfrescoOnPremisePendingJoinRequestsAPI;
+extern NSString * const kAlfrescoOnPremiseCancelJoinRequestsAPI;
+extern NSString * const kAlfrescoOnPremiseLeaveSiteAPI;
+
+
 
 extern NSString * const kAlfrescoCloudURL;
 extern NSString * const kAlfrescoCloudBindingService;
@@ -145,6 +162,11 @@ extern NSString * const kAlfrescoCloudTagsAPI;
 extern NSString * const kAlfrescoCloudTagsForNodeAPI;
 extern NSString * const kAlfrescoCloudPersonAPI;
 extern NSString * const kAlfrescoCloudDefaultRedirectURI;
+extern NSString * const kAlfrescoCloudAddFavoriteSiteAPI;
+extern NSString * const kAlfrescoCloudRemoveFavoriteSiteAPI;
+extern NSString * const kAlfrescoCloudJoinSiteAPI;
+extern NSString * const kAlfrescoCloudCancelJoinRequestsAPI;
+extern NSString * const kAlfrescoCloudLeaveSiteAPI;
 
 extern NSString * const kAlfrescoCloudJSONList;
 extern NSString * const kAlfrescoCloudJSONEntries;
@@ -217,6 +239,25 @@ extern NSString * const kAlfrescoJSONThumbnailName;
 extern NSString * const kAlfrescoJSONSite;
 extern NSString * const kAlfrescoJSONPostedAt;
 extern NSString * const kAlfrescoJSONAvatarId;
+
+extern NSString * const kAlfrescoJSONOrg;
+extern NSString * const kAlfrescoJSONAlfresco;
+extern NSString * const kAlfrescoJSONShare;
+extern NSString * const kAlfrescoJSONSites;
+extern NSString * const kAlfrescoJSONFavorites;
+extern NSString * const kAlfrescoJSONGUID;
+extern NSString * const kAlfrescoJSONTarget;
+extern NSString * const kAlfrescoJSONPerson;
+extern NSString * const kAlfrescoJSONRole;
+extern NSString * const kAlfrescoJSONInvitationType;
+extern NSString * const kAlfrescoJSONInviteeUsername;
+extern NSString * const kAlfrescoJSONInviteeComments;
+extern NSString * const kAlfrescoJSONInviteeRolename;
+extern NSString * const kAlfrescoJSONInviteId;
+extern NSString * const kAlfrescoJSONData;
+extern NSString * const kAlfrescoJSONResourceName;
+extern NSString * const kAlfrescoJSONMessage;
+
 
 extern NSString * const kAlfrescoNodeAspects;
 extern NSString * const kAlfrescoNodeProperties;

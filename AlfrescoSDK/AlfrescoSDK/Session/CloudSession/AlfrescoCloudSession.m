@@ -35,6 +35,7 @@
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import "CMISLog.h"
+#import "AlfrescoCache.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoCloudSession ()
@@ -73,6 +74,7 @@
 @property (nonatomic, strong, readwrite) NSURL *baseURLWithoutNetwork;
 @property (nonatomic, strong) NSURL *cmisUrl;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;
+@property (nonatomic, strong, readwrite) NSMutableDictionary *sessionCache;
 @property (nonatomic, strong, readwrite) NSString *personIdentifier;
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
@@ -294,6 +296,44 @@
 {
     [self.sessionData removeObjectForKey:key];
 }
+
+- (void)setObject:(id)object forCacheKey:(id)cacheKey
+{
+    if ([object conformsToProtocol:@protocol(AlfrescoCache)] && [cacheKey hasPrefix:kAlfrescoSessionInternalCache])
+    {
+        [self.sessionCache setObject:object forKey:cacheKey];
+    }
+}
+
+- (void)removeFromCache:(id)cacheKey
+{
+    id cacheObject = [self.sessionCache objectForKey:cacheKey];
+    if ([cacheObject respondsToSelector:@selector(clear)])
+    {
+        [cacheObject clear];
+    }
+    [self.sessionCache removeObjectForKey:cacheKey];
+}
+
+
+- (void)clear
+{
+    NSArray *allCaches = [self.sessionCache allKeys];
+    if (0 == allCaches.count)
+    {
+        return;
+    }
+    for (NSString *key in allCaches)
+    {
+        id cacheObj = [self.sessionCache objectForKey:key];
+        if ([cacheObj respondsToSelector:@selector(clear)])
+        {
+            [cacheObj clear];
+        }
+    }
+    [self.sessionCache removeAllObjects];
+}
+
 
 #pragma mark - Private methods
 - (id)authProviderToBeUsed
@@ -560,6 +600,7 @@ This authentication method authorises the user to access the home network assign
         {
             self.sessionData = [NSMutableDictionary dictionaryWithCapacity:8];
         }
+        self.sessionCache = [NSMutableDictionary dictionary];
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
         [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
         

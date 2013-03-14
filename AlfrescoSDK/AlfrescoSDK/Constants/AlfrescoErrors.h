@@ -54,6 +54,7 @@ typedef enum
     kAlfrescoErrorCodeSites = 400,
     kAlfrescoErrorCodeSitesNoDocLib = 401,
     kAlfrescoErrorCodeSitesNoSites = 402,
+    kAlfrescoErrorCodeSitesIsPrivateSite = 403,
 
     kAlfrescoErrorCodeActivityStream = 500,
     kAlfrescoErrorCodeActivityStreamNoActivities = 501,
@@ -108,6 +109,7 @@ extern NSString * const kAlfrescoErrorDescriptionCommentNoCommentFound;
 extern NSString * const kAlfrescoErrorDescriptionSites;
 extern NSString * const kAlfrescoErrorDescriptionSitesNoDocLib;
 extern NSString * const kAlfrescoErrorDescriptionSitesNoSites;
+extern NSString * const kAlfrescoErrorDescriptionSitesIsPrivateSite;
 
 extern NSString * const kAlfrescoErrorDescriptionActivityStream;
 extern NSString * const kAlfrescoErrorDescriptionActivityStreamNoActivities;
