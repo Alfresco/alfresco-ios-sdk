@@ -28,7 +28,7 @@
 #import "CMISConstants.h"
 #import "CMISQueryResult.h"
 
-NSInteger const kClassVersion = 1.0;
+NSInteger const kClassVersion = 1;
 NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey";
 
 @interface AlfrescoNode ()

@@ -21,7 +21,7 @@
 #import "CMISConstants.h"
 #import "AlfrescoInternalConstants.h"
 
-NSInteger const kClassVersion = 1.0;
+NSInteger const kClassVersion = 1;
 
 @interface AlfrescoDocument ()
 @property (nonatomic, strong, readwrite) NSString *contentMimeType;
