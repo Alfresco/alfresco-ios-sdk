@@ -20,7 +20,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoConstants.h"
 
-NSString * const kClassVersion = @"1.0";
+NSInteger const kClassVersion = 1.0;
 
 @interface AlfrescoProperty ()
 @property (nonatomic, assign, readwrite) AlfrescoPropertyType type;
@@ -54,7 +54,7 @@ NSString * const kClassVersion = @"1.0";
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeObject:kClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
     [aCoder encodeInt:self.type forKey:kAlfrescoPropertyType];
     [aCoder encodeObject:self.value forKey:kAlfrescoPropertyValue];
     [aCoder encodeBool:self.isMultiValued forKey:kAlfrescoPropertyIsMultiValued];

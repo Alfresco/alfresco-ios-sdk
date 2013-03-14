@@ -19,7 +19,6 @@
 #import "AlfrescoNode.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoConstants.h"
 #import "CMISObject.h"
 #import "CMISDocument.h"
 #import "CMISSession.h"
@@ -29,7 +28,7 @@
 #import "CMISConstants.h"
 #import "CMISQueryResult.h"
 
-NSString * const kClassVersion = @"1.0";
+NSInteger const kClassVersion = 1.0;
 NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey";
 
 @interface AlfrescoNode ()
@@ -131,7 +130,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeObject:kClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
     [aCoder encodeObject:self.identifier forKey:kCMISPropertyObjectId];
     [aCoder encodeObject:self.name forKey:kCMISPropertyName];
     [aCoder encodeObject:self.title forKey:kAlfrescoPropertyTitle];
