@@ -22,7 +22,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoProperty.h"
 
-//NSInteger const kClassVersion = 1;
+static NSInteger const kClassVersion = 1;
 
 @interface AlfrescoDocument ()
 @property (nonatomic, strong, readwrite) NSString *contentMimeType;
@@ -68,7 +68,7 @@
 {
     [super encodeWithCoder:aCoder];
     
-//    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
     [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
     [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
     [aCoder encodeBool:self.isLatestVersion forKey:kCMISPropertyIsLatestVersion];

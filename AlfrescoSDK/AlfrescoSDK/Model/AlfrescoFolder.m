@@ -19,7 +19,7 @@
 #import "AlfrescoFolder.h"
 #import "AlfrescoInternalConstants.h"
 
-//NSInteger const kClassVersion = 1;
+static NSInteger const kClassVersion = 1;
 
 @interface AlfrescoFolder ()
 @property (nonatomic, assign, readwrite) BOOL isFolder;
@@ -42,7 +42,7 @@
 {
     [super encodeWithCoder:aCoder];
 
-//    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
     [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
     [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
 }
