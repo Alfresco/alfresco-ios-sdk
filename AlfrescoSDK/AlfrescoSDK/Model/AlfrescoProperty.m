@@ -20,7 +20,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoConstants.h"
 
-static NSInteger const kClassVersion = 1;
+static NSInteger kClassVersion = 1;
 
 @interface AlfrescoProperty ()
 @property (nonatomic, assign, readwrite) AlfrescoPropertyType type;

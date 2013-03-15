@@ -19,7 +19,7 @@
 #import "AlfrescoFolder.h"
 #import "AlfrescoInternalConstants.h"
 
-static NSInteger const kClassVersion = 1;
+static NSInteger kClassVersion = 1;
 
 @interface AlfrescoFolder ()
 @property (nonatomic, assign, readwrite) BOOL isFolder;

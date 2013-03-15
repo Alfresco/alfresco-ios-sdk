@@ -22,7 +22,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoProperty.h"
 
-static NSInteger const kClassVersion = 1;
+static NSInteger kClassVersion = 1;
 
 @interface AlfrescoDocument ()
 @property (nonatomic, strong, readwrite) NSString *contentMimeType;
@@ -59,9 +59,7 @@ static NSInteger const kClassVersion = 1;
     self.contentLength = [[properties valueForKey:kCMISPropertyContentStreamLength] intValue];
     self.contentMimeType = [properties valueForKey:kCMISPropertyContentStreamMediaType];
     self.versionLabel = [properties valueForKey:kCMISPropertyVersionLabel];
-    
-    AlfrescoProperty *comment = [[properties objectForKey:kAlfrescoNodeProperties] valueForKey:kCMISPropertyCheckinComment];
-    self.versionComment = comment.value;
+    self.versionComment = [(AlfrescoProperty *)[[properties objectForKey:kAlfrescoNodeProperties] valueForKey:kCMISPropertyCheckinComment] value];
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
