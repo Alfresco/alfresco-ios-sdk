@@ -95,42 +95,42 @@
 
 
 - (AlfrescoRequest *)addFavoriteSite:(AlfrescoSite *)site
-                     completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+                     completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;    
 }
 
 - (AlfrescoRequest *)removeFavoriteSite:(AlfrescoSite *)site
-                        completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+                        completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
 - (AlfrescoRequest *)joinSite:(AlfrescoSite *)site
-                      message:(NSString *)message
-              completionBlock:(AlfrescoJoinSiteRequestCompletionBlock)completionBlock
+              completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveJoinSiteRequestsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrievePendingSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (AlfrescoRequest *)cancelJoinSiteRequest:(AlfrescoJoinSiteRequest *)joinSiteRequest
-                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)cancelPendingJoinRequestForSite:(AlfrescoSite *)site
+                                     completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;    
 }
 
+
 - (AlfrescoRequest *)leaveSite:(AlfrescoSite *)site
-               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+               completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;    

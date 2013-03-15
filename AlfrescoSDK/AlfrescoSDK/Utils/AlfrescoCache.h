@@ -21,9 +21,28 @@
 #import <Foundation/Foundation.h>
 
 @protocol AlfrescoCache <NSObject>
+/**
+ add an array of objects to the cache
+ */
+- (void)addObjectsToCache:(NSArray *)objectsArray;
+/**
+ add a single object to the cache
+ */
 - (void)addToCache:(id)cacheObject;
+/**
+ remove a single object from the cache
+ */
 - (void)removeFromCache:(id)cacheObject;
+/**
+ empty the entire cache
+ */
 - (void)clear;
+/**
+ @return found object for identifier or nil otherwise
+ */
 - (id)objectWithIdentifier:(NSString *)identifier;
+/**
+ checks if an object is in the cache
+ */
 - (BOOL)isInCache:(id)object;
 @end

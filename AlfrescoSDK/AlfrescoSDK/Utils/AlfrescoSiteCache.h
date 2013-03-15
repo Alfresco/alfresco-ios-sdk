@@ -25,10 +25,37 @@
 
 @interface AlfrescoSiteCache : NSObject <AlfrescoCache>
 
+/**
+ initialiser
+ */
 + (id)siteCacheForSession:(id<AlfrescoSession>)session;
 
+/**
+ returns my sites
+ */
 - (NSArray *)memberSites;
+
+/**
+ returns favourite sites
+ */
 - (NSArray *)favoriteSites;
+
+/**
+ returns sites for which a join request is pending (this would only be MODERATED sites)
+ */
 - (NSArray *)pendingMemberSites;
+
+/**
+ returns the entire site cache
+ */
 - (NSArray *)allSites;
+
+- (void)addMemberSites:(NSArray *)memberSites;
+
+- (void)addFavoriteSites:(NSArray *)favoriteSites;
+
+- (void)addPendingSites:(NSArray *)pendingSites;
+
+- (AlfrescoSite *)alfrescoSiteFromSite:(AlfrescoSite *)site siteFlag:(AlfrescoSiteFlags)siteFlag boolValue:(BOOL)boolValue;
+
 @end
