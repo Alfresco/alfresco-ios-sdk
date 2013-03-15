@@ -14,7 +14,7 @@ BUILD_CMD="xcodebuild -sdk iphonesimulator -project AlfrescoSDK.xcodeproj -targe
 # determine whether to pipe the unit tests results or not
 if [[ "$1" == "-output-junit-results" ]] ; then
    echo "Tests are running, output is being piped to ocunit2junit, results will appear soon..."
-   $BUILD_CMD | ocunit2junit
+   $BUILD_CMD 2>&1 | ocunit2junit
 else
    $BUILD_CMD
 fi
