@@ -68,5 +68,16 @@
     
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    return self;
+}
+
 
 @end

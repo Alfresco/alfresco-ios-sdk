@@ -569,7 +569,9 @@
         }
         else
         {
-            completionBlock(site, nil);
+            AlfrescoSite *memberSite = [self.siteCache alfrescoSiteFromSite:site siteFlag:AlfrescoSiteMember boolValue:YES];
+            [self.siteCache addToCache:memberSite];
+            completionBlock(memberSite, nil);
         }
     }];
     
@@ -596,10 +598,10 @@
         else
         {
             NSError *jsonError = nil;
-            AlfrescoJoinSiteRequest *request = [self singleJoinRequestFromJSONData:data error:&jsonError];
-            if (request)
+            AlfrescoJoinSiteRequest *joinRequest = [self singleJoinRequestFromJSONData:data error:&jsonError];
+            if (joinRequest)
             {
-                [self.joinRequests addObject:request];
+                [self.joinRequests addObject:joinRequest];
                 AlfrescoSite *pendingSite = [self.siteCache alfrescoSiteFromSite:site siteFlag:AlfrescoSitePendingMember boolValue:YES];
                 [self.siteCache addToCache:pendingSite];
                 completionBlock(pendingSite, nil);
@@ -1031,6 +1033,10 @@
 
 - (NSData *)jsonDataForJoiningModeratedSite:(NSString *)personId comment:(NSString *)comment
 {
+    if (nil == comment)
+    {
+        comment = @"";
+    }
     NSDictionary *jsonDict = [NSDictionary dictionaryWithObjects:@[kAlfrescoModerated, personId, comment, kAlfrescoSiteConsumer ]
                                                          forKeys:@[kAlfrescoJSONInvitationType, kAlfrescoJSONInviteeUsername, kAlfrescoJSONInviteeComments, kAlfrescoJSONInviteeRolename]];
     NSError *error = nil;

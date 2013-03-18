@@ -489,6 +489,57 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     
 }
 
+- (void)runSiteTestsForSecondaryUser:(AlfrescoTestBlock)sessionTestBlock
+{
+    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];    
+    if (nil != environmentsDict)
+    {
+        NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
+        for (NSDictionary *envDict in environmentArray)
+        {
+            self.server = [envDict valueForKey:@"server"];
+            if ([[envDict allKeys] containsObject:@"isCloud"])
+            {
+                self.server = @"https://gcpublicapiapi.alfresco.me";//this is only until we got the DP environment migrated to the new public API
+                self.isCloud = [[envDict valueForKey:@"isCloud"] boolValue];
+            }
+            else
+            {
+                self.isCloud = NO;
+            }
+            NSString *user = [envDict valueForKey:@"secondUsername"];
+            NSString *pass = [envDict valueForKey:@"secondPassword"];
+            NSString *site = [envDict valueForKey:@"moderatedSite"];
+            if (nil != user || nil != pass || nil != site)
+            {
+                self.userName = user;
+                self.testPassword = pass;
+                self.testModeratedSiteName = site;
+                
+                if (self.isCloud)
+                {
+                    AlfrescoLogInfo(@"Running site test against Cloud server: %@ with username: %@", self.server, self.userName);
+                    [self authenticateCloudServer];
+                    [self resetTestVariables];
+                }
+                else
+                {
+                    AlfrescoLogInfo(@"Running test against OnPremise server: %@ with username: %@", self.server, self.userName);
+                    [self authenticateOnPremiseServer];
+                    [self resetTestVariables];
+                }
+                
+                sessionTestBlock();
+                [self resetTestVariables];            
+            }
+        }
+        
+        
+    }
+    
+}
+
 
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock
 {

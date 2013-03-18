@@ -25,7 +25,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoPagingResult : NSObject
+@interface AlfrescoPagingResult : NSObject <NSCoding>
 
 
 /// Returns a list of all objects present in the page.

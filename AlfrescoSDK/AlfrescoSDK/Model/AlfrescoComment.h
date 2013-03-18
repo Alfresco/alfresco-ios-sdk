@@ -24,7 +24,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoComment : NSObject
+@interface AlfrescoComment : NSObject <NSCoding>
 
 /// @name Properties.
 

@@ -114,6 +114,7 @@
         if ([siteObj isKindOfClass:[NSString class]])
         {
             self.shortName = [properties valueForKey:kAlfrescoJSONIdentifier];
+            self.identifier = self.shortName;
         }
         else if([siteObj isKindOfClass:[NSDictionary class]])
         {
@@ -132,23 +133,11 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    if (nil != self.summary)
-    {
-        [aCoder encodeObject:self.summary forKey:kAlfrescoJSONDescription];
-    }
-    if (nil != self.title)
-    {
-        [aCoder encodeObject:self.title forKey:kAlfrescoJSONTitle];
-    }
+    [aCoder encodeObject:self.summary forKey:kAlfrescoJSONDescription];
+    [aCoder encodeObject:self.title forKey:kAlfrescoJSONTitle];
     [aCoder encodeInt:self.visibility forKey:kAlfrescoJSONVisibility];
-    if (nil != self.shortName)
-    {
-        [aCoder encodeObject:self.shortName forKey:kAlfrescoJSONShortname];
-    }
-    if (nil != self.GUID)
-    {
-        [aCoder encodeObject:self.GUID forKey:kAlfrescoJSONGUID];
-    }
+    [aCoder encodeObject:self.shortName forKey:kAlfrescoJSONShortname];
+    [aCoder encodeObject:self.GUID forKey:kAlfrescoJSONGUID];
     [aCoder encodeBool:self.isFavorite forKey:kAlfrescoSiteIsFavorite];
     [aCoder encodeBool:self.isMember forKey:kAlfrescoSiteIsMember];
     [aCoder encodeBool:self.isPendingMember forKey:kAlfrescoSiteIsPendingMember];
@@ -156,47 +145,18 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    NSString *summary       = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
-    NSString *title         = [aDecoder decodeObjectForKey:kAlfrescoJSONTitle];
-    int visibility          = [aDecoder decodeIntForKey:kAlfrescoJSONVisibility];
-    BOOL isFavorite         = [aDecoder decodeBoolForKey:kAlfrescoSiteIsFavorite];
-    BOOL isMember           = [aDecoder decodeBoolForKey:kAlfrescoSiteIsMember];
-    BOOL isPendingMember    = [aDecoder decodeBoolForKey:kAlfrescoSiteIsPendingMember];
-    NSString *shortName     = [aDecoder decodeObjectForKey:kAlfrescoJSONShortname];
-    NSString *guid          = [aDecoder decodeObjectForKey:kAlfrescoJSONGUID];
-    NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-    if (summary)
+    self = [super init];
+    if (nil != self)
     {
-        [properties setValue:summary forKey:kAlfrescoJSONDescription];
-    }
-    if (title)
-    {
-        [properties setValue:title forKey:kAlfrescoJSONTitle];
-    }
-    switch (visibility)
-    {
-        case AlfrescoSiteVisibilityPublic:
-            [properties setValue:kAlfrescoJSONVisibilityPUBLIC forKey:kAlfrescoJSONVisibility];
-            break;
-        case AlfrescoSiteVisibilityPrivate:
-            [properties setValue:kAlfrescoJSONVisibilityPRIVATE forKey:kAlfrescoJSONVisibility];
-            break;
-        case AlfrescoSiteVisibilityModerated:
-            [properties setValue:kAlfrescoJSONVisibilityMODERATED forKey:kAlfrescoJSONVisibility];
-            break;
-    }
-    if (shortName)
-    {
-        [properties setValue:shortName forKey:kAlfrescoJSONShortname];
-    }
-    if (guid)
-    {
-        [properties setValue:guid forKey:kAlfrescoJSONGUID];
-    }
-    [properties setValue:[NSNumber numberWithBool:isFavorite] forKey:kAlfrescoSiteIsFavorite];
-    [properties setValue:[NSNumber numberWithBool:isMember] forKey:kAlfrescoSiteIsMember];
-    [properties setValue:[NSNumber numberWithBool:isPendingMember] forKey:kAlfrescoSiteIsPendingMember];
-    
-    return [self initWithProperties:properties];
+        self.summary = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
+        self.title         = [aDecoder decodeObjectForKey:kAlfrescoJSONTitle];
+        self.isFavorite         = [aDecoder decodeBoolForKey:kAlfrescoSiteIsFavorite];
+        self.isMember           = [aDecoder decodeBoolForKey:kAlfrescoSiteIsMember];
+        self.isPendingMember    = [aDecoder decodeBoolForKey:kAlfrescoSiteIsPendingMember];
+        self.shortName     = [aDecoder decodeObjectForKey:kAlfrescoJSONShortname];
+        self.GUID          = [aDecoder decodeObjectForKey:kAlfrescoJSONGUID];
+        self.visibility          = [aDecoder decodeIntForKey:kAlfrescoJSONVisibility];
+    }    
+    return self;
 }
 @end

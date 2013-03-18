@@ -99,6 +99,18 @@
     return self;
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    return self;
+}
+
+
 
 #pragma mark - private methods
 + (NSString *)mimeTypeFromFilename:(NSString *)filename
