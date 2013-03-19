@@ -28,6 +28,8 @@
 /// message for the join request.
 @property (nonatomic, strong, readonly) NSString *message;
 
+@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
+
 - (id)initWithIdentifier:(NSString *)identifier message:(NSString *)message;
 
 - (id)initWithProperties:(NSDictionary *)properties;

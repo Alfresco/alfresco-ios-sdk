@@ -31,6 +31,7 @@
 @property (nonatomic, assign, readwrite) BOOL isLatestVersion;
 @property (nonatomic, assign, readwrite) BOOL isFolder;
 @property (nonatomic, assign, readwrite) BOOL isDocument;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 - (void)setUpDocumentProperties:(NSDictionary *)properties;
 @end
 
@@ -42,6 +43,7 @@
     self = [super initWithProperties:properties];
     if (nil != self)
     {
+        self.modelClassVersion = kAlfrescoDocumentModelVersion;
         self.isDocument = YES;
         self.isFolder = NO;
         self.contentMimeType = nil;
@@ -73,6 +75,7 @@
     [aCoder encodeObject:self.contentMimeType forKey:kCMISPropertyContentStreamMediaType];
     [aCoder encodeObject:self.versionLabel forKey:kCMISPropertyVersionLabel];
     [aCoder encodeObject:self.versionComment forKey:kCMISPropertyCheckinComment];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -88,6 +91,7 @@
         self.contentMimeType = [aDecoder decodeObjectForKey:kCMISPropertyContentStreamMediaType];
         self.versionLabel = [aDecoder decodeObjectForKey:kCMISPropertyVersionLabel];
         self.versionComment = [aDecoder decodeObjectForKey:kCMISPropertyCheckinComment];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

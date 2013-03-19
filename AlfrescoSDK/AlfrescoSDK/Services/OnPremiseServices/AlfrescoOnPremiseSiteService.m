@@ -407,10 +407,6 @@
         {
             NSError *conversionError = nil;
             AlfrescoSite *site = [self alfrescoSiteFromJSONData:data error:&conversionError];
-            if (site)
-            {
-                [self.siteCache addToCache:site];
-            }
             completionBlock(site, conversionError);
         }
     }];
@@ -708,8 +704,8 @@
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
         
-    NSString *requestString = [kAlfrescoCloudLeaveSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
-                                                                                    withString:self.session.personIdentifier];
+    NSString *requestString = [kAlfrescoOnPremiseLeaveSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+                                                                                        withString:self.session.personIdentifier];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];

@@ -27,6 +27,7 @@
 @property (nonatomic, strong, readwrite) NSString *siteShortName;
 @property (nonatomic, strong, readwrite) NSString *type;
 @property (nonatomic, strong, readwrite) NSDictionary *data;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 - (void)setOnPremiseProperties:(NSDictionary *)properties;
 - (void)setCloudProperties:(NSDictionary *)properties;
 @end
@@ -45,6 +46,7 @@
     self = [super init];
     if (nil != self && nil != properties)
     {
+        self.modelClassVersion = kAlfrescoActivityModelVersion;
         if ([[properties allKeys] containsObject:kAlfrescoJSONIdentifier])
         {
             self.identifier = [properties valueForKey:kAlfrescoJSONIdentifier];
@@ -125,12 +127,28 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    
+    [aCoder encodeObject:self.createdAt forKey:kAlfrescoJSONActivityPostDate];
+    [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
+    [aCoder encodeObject:self.type forKey:kAlfrescoJSONActivityType];
+    [aCoder encodeObject:self.data forKey:kAlfrescoJSONActivitySummary];
+    [aCoder encodeObject:self.createdBy forKey:kAlfrescoJSONActivityPostPersonID];
+    [aCoder encodeObject:self.siteShortName forKey:kAlfrescoJSONSiteID];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
+    if (nil != self)
+    {
+        self.createdBy = [aDecoder decodeObjectForKey:kAlfrescoJSONActivityPostPersonID];
+        self.createdAt = [aDecoder decodeObjectForKey:kAlfrescoJSONActivityPostDate];
+        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
+        self.type = [aDecoder decodeObjectForKey:kAlfrescoJSONActivityType];
+        self.data = [aDecoder decodeObjectForKey:kAlfrescoJSONActivitySummary];
+        self.siteShortName = [aDecoder decodeObjectForKey:kAlfrescoJSONSiteID];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
+    }
     return self;
 }
 

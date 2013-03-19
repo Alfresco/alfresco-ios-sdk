@@ -24,6 +24,7 @@
 @interface AlfrescoFolder ()
 @property (nonatomic, assign, readwrite) BOOL isFolder;
 @property (nonatomic, assign, readwrite) BOOL isDocument;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 @end
 
 @implementation AlfrescoFolder
@@ -32,6 +33,7 @@
     self = [super initWithProperties:properties];
     if (nil != self)
     {
+        self.modelClassVersion = kAlfrescoFolderModelVersion;
         self.isFolder = YES;
         self.isDocument = NO;
     }
@@ -45,6 +47,7 @@
 //    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
     [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
     [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -55,6 +58,7 @@
     {
         self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeFolder];
         self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeDocument];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

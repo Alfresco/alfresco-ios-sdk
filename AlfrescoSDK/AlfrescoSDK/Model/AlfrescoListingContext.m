@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoListingContext.h"
-
+#import "AlfrescoInternalConstants.h"
 #define DEFAULTMAXITEMS 50
 #define DEFAULTSKIPCOUNT 0
 
@@ -26,6 +26,7 @@
 @property (nonatomic, assign, readwrite) BOOL sortAscending;
 @property (nonatomic, assign, readwrite) int maxItems;
 @property (nonatomic, assign, readwrite) int skipCount;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 @end
 
 @implementation AlfrescoListingContext
@@ -51,6 +52,7 @@
     self = [super init];
     if (self)
     {
+        self.modelClassVersion = kAlfrescoListingContextModelVersion;
         self.sortProperty = sortProperty;
         self.maxItems = DEFAULTMAXITEMS;
         self.skipCount = DEFAULTSKIPCOUNT;
@@ -70,12 +72,24 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    
+    [aCoder encodeObject:self.sortProperty forKey:@"sortProperty"];
+    [aCoder encodeInt:self.maxItems forKey:@"maxItems"];
+    [aCoder encodeInt:self.skipCount forKey:@"skipCount"];
+    [aCoder encodeBool:self.sortAscending forKey:@"sortAscending"];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
+    if (nil != self)
+    {
+        self.sortAscending = [aDecoder decodeBoolForKey:@"sortAscending"];
+        self.sortProperty = [aDecoder decodeObjectForKey:@"sortProperty"];
+        self.maxItems = [aDecoder decodeIntForKey:@"maxItems"];
+        self.skipCount = [aDecoder decodeIntForKey:@"skipCount"];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
+    }
     return self;
 }
 

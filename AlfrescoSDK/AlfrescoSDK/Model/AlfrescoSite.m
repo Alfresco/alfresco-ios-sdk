@@ -29,6 +29,7 @@
 @property (nonatomic, assign, readwrite) BOOL isMember;
 @property (nonatomic, assign, readwrite) BOOL isPendingMember;
 @property (nonatomic, assign, readwrite) BOOL isFavorite;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 - (void)setUpOnPremiseProperties:(NSDictionary *)properties keys:(NSArray *)keys;
 - (void)setUpCloudProperties:(NSDictionary *)properties keys:(NSArray *)keys;
 @end
@@ -44,6 +45,7 @@
         self.isFavorite = NO;
         self.isMember = NO;
         self.isPendingMember = NO;
+        self.modelClassVersion = kAlfrescoSiteModelVersion;
 
         NSArray *allKeys = [properties allKeys];
         [self setUpOnPremiseProperties:properties keys:allKeys];
@@ -141,6 +143,7 @@
     [aCoder encodeBool:self.isFavorite forKey:kAlfrescoSiteIsFavorite];
     [aCoder encodeBool:self.isMember forKey:kAlfrescoSiteIsMember];
     [aCoder encodeBool:self.isPendingMember forKey:kAlfrescoSiteIsPendingMember];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -156,6 +159,7 @@
         self.shortName     = [aDecoder decodeObjectForKey:kAlfrescoJSONShortname];
         self.GUID          = [aDecoder decodeObjectForKey:kAlfrescoJSONGUID];
         self.visibility          = [aDecoder decodeIntForKey:kAlfrescoJSONVisibility];
+        self.modelClassVersion   = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }    
     return self;
 }

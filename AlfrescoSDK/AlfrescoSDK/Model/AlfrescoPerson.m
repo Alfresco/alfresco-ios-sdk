@@ -24,6 +24,7 @@
 @property (nonatomic, strong, readwrite) NSString *lastName;
 @property (nonatomic, strong, readwrite) NSString *fullName;
 @property (nonatomic, strong, readwrite) NSString *avatarIdentifier;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 - (void)setOnPremiseProperties:(NSDictionary *)properties;
 - (void)setCloudProperties:(NSDictionary *)properties;
 @end
@@ -95,7 +96,8 @@
 {
     self = [super init];
     if (nil != self)
-    {        
+    {
+        self.modelClassVersion = kAlfrescoPersonModelVersion;
         [self setOnPremiseProperties:properties];
         [self setCloudProperties:properties];
         
@@ -172,12 +174,26 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    
+    [aCoder encodeObject:self.avatarIdentifier forKey:kAlfrescoJSONAvatarId];
+    [aCoder encodeObject:self.firstName forKey:kAlfrescoJSONFirstName];
+    [aCoder encodeObject:self.lastName forKey:kAlfrescoJSONLastName];
+    [aCoder encodeObject:self.fullName forKey:@"fullName"];
+    [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
+    if (nil != self)
+    {
+        self.avatarIdentifier = [aDecoder decodeObjectForKey:kAlfrescoJSONAvatarId];
+        self.firstName = [aDecoder decodeObjectForKey:kAlfrescoJSONFirstName];
+        self.lastName = [aDecoder decodeObjectForKey:kAlfrescoJSONLastName];
+        self.fullName = [aDecoder decodeObjectForKey:@"fullName"];
+        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
+    }
     return self;
 }
 

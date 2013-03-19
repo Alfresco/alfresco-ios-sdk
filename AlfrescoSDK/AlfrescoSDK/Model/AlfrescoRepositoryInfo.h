@@ -71,5 +71,7 @@
 /// Stores the Like/Comment Count capabilities.
 @property (nonatomic, strong, readonly) AlfrescoRepositoryCapabilities *capabilities;
 
+@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
+
 - (id)initWithProperties:(NSDictionary *)properties;
 @end

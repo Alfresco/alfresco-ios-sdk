@@ -32,6 +32,7 @@
 @property (nonatomic, readwrite) BOOL canEdit;
 @property (nonatomic, readwrite) BOOL canDelete;
 @property (nonatomic, strong) NSDateFormatter * standardDateFormatter;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 - (void)setOnPremiseProperties:(NSDictionary *)properties;
 - (void)setCloudProperties:(NSDictionary *)properties;
 @end
@@ -46,6 +47,7 @@
     if (nil != self)
     {
         self.standardDateFormatter = [[NSDateFormatter alloc] init];
+        self.modelClassVersion = kAlfrescoCommentModelVersion;
         [self.standardDateFormatter setDateFormat:@"MMM' 'dd' 'yyyy' 'HH:mm:ss' 'zzz"];
         if ([[properties allKeys] containsObject:kAlfrescoJSONTitle])
         {
@@ -186,12 +188,34 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    
+    [aCoder encodeObject:self.title forKey:kAlfrescoJSONTitle];
+    [aCoder encodeObject:self.content forKey:kAlfrescoJSONContent];
+    [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
+    [aCoder encodeObject:self.createdAt forKey:kAlfrescoJSONCreatedAt];
+    [aCoder encodeObject:self.createdBy forKey:kAlfrescoJSONCreatedBy];
+    [aCoder encodeObject:self.modifiedAt forKey:kAlfrescoJSONModifedAt];
+    [aCoder encodeBool:self.canDelete forKey:kAlfrescoJSONCanDelete];
+    [aCoder encodeBool:self.canEdit forKey:kAlfrescoJSONCanEdit];
+    [aCoder encodeBool:self.isEdited forKey:kAlfrescoJSONEdited];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
+    if (nil != self)
+    {
+        self.title = [aDecoder decodeObjectForKey:kAlfrescoJSONTitle];
+        self.content = [aDecoder decodeObjectForKey:kAlfrescoJSONContent];
+        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
+        self.createdBy = [aDecoder decodeObjectForKey:kAlfrescoJSONCreatedBy];
+        self.createdAt = [aDecoder decodeObjectForKey:kAlfrescoJSONCreatedAt];
+        self.modifiedAt = [aDecoder decodeObjectForKey:kAlfrescoJSONModifedAt];
+        self.isEdited = [aDecoder decodeBoolForKey:kAlfrescoJSONEdited];
+        self.canEdit = [aDecoder decodeBoolForKey:kAlfrescoJSONCanEdit];
+        self.canDelete = [aDecoder decodeBoolForKey:kAlfrescoJSONCanDelete];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
+    }
     return self;
 }
 

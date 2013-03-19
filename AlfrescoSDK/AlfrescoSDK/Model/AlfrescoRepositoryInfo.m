@@ -31,6 +31,7 @@
 @property (nonatomic, strong, readwrite) NSString *buildNumber;
 @property (nonatomic, strong, readwrite) NSString *version;
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryCapabilities *capabilities;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 
 @end
 
@@ -42,6 +43,7 @@
     self = [super init];
     if (self) 
     {
+        self.modelClassVersion  = kAlfrescoRepositoryInfoModelVersion;
         self.name               = (NSString *)[properties objectForKey:kAlfrescoRepositoryName];
         self.identifier         = (NSString *)[properties objectForKey:kAlfrescoRepositoryIdentifier];
         self.summary            = (NSString *)[properties objectForKey:kAlfrescoRepositorySummary];
@@ -58,12 +60,36 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    
+    [aCoder encodeObject:self.name forKey:kAlfrescoRepositoryName];
+    [aCoder encodeObject:self.identifier forKey:kAlfrescoRepositoryIdentifier];
+    [aCoder encodeObject:self.summary forKey:kAlfrescoRepositorySummary];
+    [aCoder encodeObject:self.edition forKey:kAlfrescoRepositoryEdition];
+    [aCoder encodeObject:self.majorVersion forKey:kAlfrescoRepositoryMajorVersion];
+    [aCoder encodeObject:self.minorVersion forKey:kAlfrescoRepositoryMinorVersion];
+    [aCoder encodeObject:self.maintenanceVersion forKey:kAlfrescoRepositoryMaintenanceVersion];
+    [aCoder encodeObject:self.buildNumber forKey:kAlfrescoRepositoryBuildNumber];
+    [aCoder encodeObject:self.version forKey:kAlfrescoRepositoryVersion];
+    [aCoder encodeObject:self.capabilities forKey:kAlfrescoRepositoryCapabilities];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
+    if(nil != self)
+    {
+        self.name = [aDecoder decodeObjectForKey:kAlfrescoRepositoryName];
+        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoRepositoryIdentifier];
+        self.summary = [aDecoder decodeObjectForKey:kAlfrescoRepositorySummary];
+        self.edition = [aDecoder decodeObjectForKey:kAlfrescoRepositoryEdition];
+        self.majorVersion = [aDecoder decodeObjectForKey:kAlfrescoRepositoryMajorVersion];
+        self.minorVersion = [aDecoder decodeObjectForKey:kAlfrescoRepositoryMinorVersion];
+        self.maintenanceVersion = [aDecoder decodeObjectForKey:kAlfrescoRepositoryMaintenanceVersion];
+        self.buildNumber = [aDecoder decodeObjectForKey:kAlfrescoRepositoryBuildNumber];
+        self.version = [aDecoder decodeObjectForKey:kAlfrescoRepositoryVersion];
+        self.capabilities = [aDecoder decodeObjectForKey:kAlfrescoRepositoryCapabilities];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
+    }
     return self;
 }
 

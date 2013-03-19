@@ -17,10 +17,11 @@
  ******************************************************************************/
 
 #import "AlfrescoRepositoryCapabilities.h"
-
+#import "AlfrescoInternalConstants.h"
 @interface AlfrescoRepositoryCapabilities ()
 @property (nonatomic, assign, readwrite) BOOL doesSupportLikingNodes;
 @property (nonatomic, assign, readwrite) BOOL doesSupportCommentCounts;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 
 @end
 
@@ -31,6 +32,7 @@
     self = [super init];
     if (nil != self)
     {
+        self.modelClassVersion = kAlfrescoRepositoryCapabilitiesModelVersion;
         if (nil != properties)
         {
             self.doesSupportCommentCounts = [[properties valueForKey:kAlfrescoCapabilityCommentsCount] boolValue];
@@ -61,12 +63,20 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    
+    [aCoder encodeBool:self.doesSupportCommentCounts forKey:kAlfrescoCapabilityCommentsCount];
+    [aCoder encodeBool:self.doesSupportLikingNodes forKey:kAlfrescoCapabilityLike];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
+    if (nil != self)
+    {
+        self.doesSupportLikingNodes = [aDecoder decodeBoolForKey:kAlfrescoCapabilityCommentsCount];
+        self.doesSupportCommentCounts = [aDecoder decodeBoolForKey:kAlfrescoCapabilityLike];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
+    }
     return self;
 }
 

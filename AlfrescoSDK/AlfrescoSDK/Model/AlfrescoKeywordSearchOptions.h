@@ -30,6 +30,7 @@
 @property (nonatomic, assign, readonly) BOOL includeContent;
 @property (nonatomic, assign, readonly) BOOL includeDescendants;
 @property (nonatomic, strong, readonly) AlfrescoFolder *folder;
+@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
 
 /**
  @param exactMatch

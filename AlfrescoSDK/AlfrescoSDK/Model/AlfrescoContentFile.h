@@ -25,7 +25,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoContentFile : NSObject <NSCoding>
+@interface AlfrescoContentFile : NSObject
 
 /// @name Properties
 /// @param the file based URL

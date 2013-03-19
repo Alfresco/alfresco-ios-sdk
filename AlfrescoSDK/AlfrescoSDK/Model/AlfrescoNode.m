@@ -28,7 +28,6 @@
 #import "CMISConstants.h"
 #import "CMISQueryResult.h"
 
-//NSInteger const kClassVersion = 1;
 
 NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey";
 
@@ -46,6 +45,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 @property (nonatomic, strong, readwrite) NSArray *aspects;
 @property (nonatomic, assign, readwrite) BOOL isFolder;
 @property (nonatomic, assign, readwrite) BOOL isDocument;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 
 - (void)setUpProperties:(NSDictionary *)properties;
 @end
@@ -59,6 +59,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     self = [super init];
     if (nil != self)
     {
+        self.modelClassVersion = kAlfrescoNodeModelVersion;
         self.identifier = nil;
         self.name = nil;
         self.title = nil;
@@ -143,6 +144,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     [aCoder encodeObject:self.modifiedAt forKey:kCMISPropertyModificationDate];
     [aCoder encodeObject:self.properties forKey:kAlfrescoNodeProperties];
     [aCoder encodeObject:self.aspects forKey:kAlfrescoNodeAspects];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -161,6 +163,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
         self.modifiedAt = [aDecoder decodeObjectForKey:kCMISPropertyModificationDate];
         self.properties = [aDecoder decodeObjectForKey:kAlfrescoNodeProperties];
         self.aspects = [aDecoder decodeObjectForKey:kAlfrescoNodeAspects];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

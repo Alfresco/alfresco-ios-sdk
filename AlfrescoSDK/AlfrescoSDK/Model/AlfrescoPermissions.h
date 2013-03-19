@@ -34,5 +34,7 @@
 /// add comment flag
 @property (nonatomic, assign, readonly) BOOL canComment;
 
+@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
+
 - (id)initWithPermissions:(NSSet *)permissionsSet;
 @end

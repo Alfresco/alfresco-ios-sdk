@@ -310,4 +310,24 @@ NSString * const kAlfrescoPropertyTypeFolder = @"F:";
 NSString * const kAlfrescoPropertyTypeDocument = @"D:";
 NSString * const kAlfrescoPropertyAspect = @"P:";
 
+//model class versions
+NSString * const kAlfrescoModelClassVersion = @"modelClassVersion";
+NSUInteger const kAlfrescoActivityModelVersion = 1;
+NSUInteger const kAlfrescoCommentModelVersion = 1;
+NSUInteger const kAlfrescoDocumentModelVersion = 1;
+NSUInteger const kAlfrescoFolderModelVersion = 1;
+NSUInteger const kAlfrescoJoinSiteRequestModelVersion = 1;
+NSUInteger const kAlfrescoKeywordSearchOptionsModelVersion = 1;
+NSUInteger const kAlfrescoListingContextModelVersion = 1;
+NSUInteger const kAlfrescoNodeModelVersion = 1;
+NSUInteger const kAlfrescoPagingResultModelVersion = 1;
+NSUInteger const kAlfrescoPermissionsModelVersion = 1;
+NSUInteger const kAlfrescoPersonModelVersion = 1;
+NSUInteger const kAlfrescoPropertyModelVersion = 1;
+NSUInteger const kAlfrescoRepositoryCapabilitiesModelVersion = 1;
+NSUInteger const kAlfrescoRepositoryInfoModelVersion = 1;
+NSUInteger const kAlfrescoSiteModelVersion = 1;
+NSUInteger const kAlfrescoTagModelVersion = 1;
+
+
 @end

@@ -368,10 +368,6 @@
         {
             NSError *conversionError = nil;
             AlfrescoSite *site = [self alfrescoSiteFromJSONData:data error:&conversionError];
-            if (site)
-            {
-                [self.siteCache addToCache:site];
-            }
             completionBlock(site, conversionError);
             
         }

@@ -39,4 +39,7 @@
  @param capability - the defined capability to check.  
  */
 - (BOOL)doesSupportCapability:(NSString *)capability;
+
+@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
+
 @end

@@ -47,6 +47,8 @@
 /// Returns the unique identifier to the content of the avatar rendition.
 @property (nonatomic, strong, readonly) NSString *avatarIdentifier;
 
+@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
+
 - (id)initWithProperties:(NSDictionary *)properties;
 
 

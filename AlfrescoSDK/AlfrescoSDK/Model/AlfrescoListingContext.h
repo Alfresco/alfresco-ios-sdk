@@ -43,6 +43,8 @@
 /// Returns current skip count.
 @property (nonatomic, assign, readonly) int skipCount;
 
+@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
+
 /**
  In the context of this SDK, maxItems is the maximum number to be used in one listing. The skipCount is a multiple of
  maxItems. Hence skipCount 0 will return all items from 0 to maxItems - 1. skipCount 1 will return all items between

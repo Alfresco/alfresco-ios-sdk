@@ -980,6 +980,8 @@
             }
         } progressBlock:^(NSInteger transferred, NSInteger total){}];
         
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
 
@@ -2339,9 +2341,9 @@
             {
                 STAssertNotNil(contentFile,@"created content file should not be nil");
                 NSError *fileError = nil;
-                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
+//                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
                 STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
-                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
+//                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
                 NSError *readError = nil;
                 __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
                 if (nil == stringContent)
@@ -3733,9 +3735,9 @@
             {
                 STAssertNotNil(contentFile,@"created content file should not be nil");
                 NSError *fileError = nil;
-                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
+//                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
                 STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
-                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
+//                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
                 NSError *readError = nil;
                 
                 __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
@@ -4822,9 +4824,9 @@
             {
                 STAssertNotNil(contentFile,@"created content file should not be nil");
                 NSError *fileError = nil;
-                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
+//                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
                 STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
-                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
+//                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
                 NSError *readError = nil;
                 
                 __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];

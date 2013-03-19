@@ -20,12 +20,12 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoConstants.h"
 
-//NSInteger const kClassVersion = 1;
 
 @interface AlfrescoProperty ()
 @property (nonatomic, assign, readwrite) AlfrescoPropertyType type;
 @property (nonatomic, assign, readwrite) BOOL isMultiValued;
 @property (nonatomic, strong, readwrite) id value;
+@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 @end
 
 @implementation AlfrescoProperty
@@ -36,6 +36,7 @@
     self = [super init];
     if (nil != self)
     {
+        self.modelClassVersion = kAlfrescoPropertyModelVersion;
         if ([[properties allKeys] containsObject:kAlfrescoPropertyType])
         {
             self.type = [[properties valueForKey:kAlfrescoPropertyType] intValue];
@@ -54,10 +55,10 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-//    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
     [aCoder encodeInt:self.type forKey:kAlfrescoPropertyType];
     [aCoder encodeObject:self.value forKey:kAlfrescoPropertyValue];
     [aCoder encodeBool:self.isMultiValued forKey:kAlfrescoPropertyIsMultiValued];
+    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -69,6 +70,7 @@
         self.type = [aDecoder decodeIntForKey:kAlfrescoPropertyType];
         self.value = [aDecoder decodeObjectForKey:kAlfrescoPropertyValue];
         self.isMultiValued = [aDecoder decodeBoolForKey:kAlfrescoPropertyIsMultiValued];
+        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

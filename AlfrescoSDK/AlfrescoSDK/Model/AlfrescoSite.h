@@ -68,6 +68,7 @@ typedef enum
 /// The visibility of the site.
 @property (nonatomic, assign, readonly) AlfrescoSiteVisibility visibility;
 
+@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
 
 - (id)initWithProperties:(NSDictionary *)properties;
 
