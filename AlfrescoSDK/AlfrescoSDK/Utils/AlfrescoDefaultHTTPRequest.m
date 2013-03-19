@@ -112,7 +112,14 @@
     NSError *error = nil;
     if (self.statusCode < 200 || self.statusCode > 299)
     {
-        error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+        if (self.statusCode == 401)
+        {
+            error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnauthorisedAccess];
+        }
+        else
+        {
+            error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+        }
     }
     
     if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
@@ -122,7 +129,14 @@
     
     if (self.completionBlock != NULL)
     {
-        self.completionBlock(self.responseData, error);
+        if (error)
+        {
+            self.completionBlock(nil, error);
+        }
+        else
+        {
+            self.completionBlock(self.responseData, nil);
+        }
     }
     
     self.completionBlock = nil;
