@@ -38,7 +38,7 @@
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
 @property (nonatomic, strong, readwrite) AlfrescoSiteCache *siteCache;
-- (NSArray *) siteArrayWithData:(NSData *)data isFavorite:(BOOL)isFavorite error:(NSError **)outError;
+- (NSArray *) siteArrayWithData:(NSData *)data error:(NSError **)outError;
 - (NSArray *) specifiedSiteArrayFromJSONData:(NSData *)data error:(NSError **)outError;
 - (AlfrescoSite *) alfrescoSiteFromJSONData:(NSData *)data error:(NSError **)outError;
 - (NSDictionary *) dictionaryFromJSONData:(NSData *)data error:(NSError **)outError;
@@ -90,7 +90,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *sites = [self siteArrayWithData:data isFavorite:NO error:&conversionError];
+            NSArray *sites = [self siteArrayWithData:data error:&conversionError];
             if (sites)
             {
                 NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
@@ -139,7 +139,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *sites = [self siteArrayWithData:data isFavorite:NO error:&conversionError];
+            NSArray *sites = [self siteArrayWithData:data error:&conversionError];
             if (sites)
             {
                 NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
@@ -282,7 +282,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *sites = [self siteArrayWithData:data isFavorite:YES error:&conversionError];
+            NSArray *sites = [self siteArrayWithData:data error:&conversionError];
             if (sites)
             {
                 [self.siteCache addFavoriteSites:sites];
@@ -330,7 +330,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *sites = [self siteArrayWithData:data isFavorite:YES error:&conversionError];
+            NSArray *sites = [self siteArrayWithData:data error:&conversionError];
             if (sites)
             {
                 [self.siteCache addFavoriteSites:sites];
@@ -553,6 +553,12 @@
 - (AlfrescoRequest *)retrievePendingSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    NSArray *pendingSiteRequests = [self.siteCache pendingMemberSites];
+    if (0 < pendingSiteRequests.count)
+    {
+        completionBlock(pendingSiteRequests, nil);
+        return nil;
+    }
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudJoinSiteAPI];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
@@ -563,7 +569,7 @@
         else
         {
             NSError *jsonError = nil;
-            NSArray *requests = [self joinRequestArrayFromJSONData:data error:&jsonError];
+            NSArray *requests = [self joinRequestSitesArrayFromJSONData:data error:&jsonError];
             [self.siteCache addPendingSites:requests];
             NSArray *pendingSites = [self.siteCache pendingMemberSites];
             completionBlock(pendingSites, jsonError);
@@ -717,7 +723,7 @@
     return requestedSite;
 }
 
-- (NSArray *)joinRequestArrayFromJSONData:(NSData *)data error:(NSError **)outError
+- (NSArray *)joinRequestSitesArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil == entriesArray)
@@ -757,7 +763,7 @@
     return requestedSites;
 }
 
-- (NSArray *) siteArrayWithData:(NSData *)data isFavorite:(BOOL)isFavorite error:(NSError **)outError
+- (NSArray *) siteArrayWithData:(NSData *)data error:(NSError **)outError
 {
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
     if (nil != entriesArray)
@@ -767,17 +773,7 @@
         for (NSDictionary *entryDict in entriesArray)
         {
             NSMutableDictionary *individualEntry = [NSMutableDictionary dictionaryWithDictionary:[entryDict valueForKey:kAlfrescoCloudJSONEntry]];
-            AlfrescoSite *site = nil;
-            if (isFavorite)
-            {
-                [individualEntry setObject:[NSNumber numberWithBool:YES] forKey:kAlfrescoSiteIsFavorite];
-                site = [[AlfrescoSite alloc] initWithProperties:individualEntry];
-                [self.siteCache addToCache:site];
-            }
-            else
-            {
-                site = [[AlfrescoSite alloc] initWithProperties:individualEntry];
-            }
+            AlfrescoSite *site = [[AlfrescoSite alloc] initWithProperties:individualEntry];
             [resultsArray addObject:site];
         }
         return resultsArray;
@@ -830,10 +826,7 @@
                 }
                 else
                 {
-                    NSMutableDictionary *siteDict = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary *)siteObj];
-                    [siteDict setObject:[NSNumber numberWithBool:YES] forKey:kAlfrescoSiteIsMember];
-                    AlfrescoSite *site = [[AlfrescoSite alloc] initWithProperties:siteDict];
-                    [self.siteCache addToCache:site];
+                    AlfrescoSite *site = [[AlfrescoSite alloc] initWithProperties:(NSDictionary *)siteObj];
                     [resultsArray addObject:site];
                 }
                 

@@ -56,6 +56,8 @@
 
 - (void)addPendingSites:(NSArray *)pendingSites;
 
+- (void)addPendingRequests:(NSArray *)pendingRequests;
+
 - (AlfrescoSite *)alfrescoSiteFromSite:(AlfrescoSite *)site siteFlag:(AlfrescoSiteFlags)siteFlag boolValue:(BOOL)boolValue;
 
 @end

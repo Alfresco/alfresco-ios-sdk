@@ -23,7 +23,8 @@
 #import "AlfrescoInternalConstants.h"
 
 @interface AlfrescoSiteCache ()
-@property (nonatomic, strong) NSMutableArray * siteCache;
+@property (nonatomic, strong) NSMutableArray * allSitesCache;
+@property (nonatomic, strong) NSMutableArray * specialSiteCache;
 @end
 
 @implementation AlfrescoSiteCache
@@ -33,7 +34,8 @@
     self = [super init];
     if (nil != self)
     {
-        _siteCache = [NSMutableArray arrayWithCapacity:0];
+        _specialSiteCache = [NSMutableArray arrayWithCapacity:0];
+        _allSitesCache = [NSMutableArray arrayWithCapacity:0];
     }
     return self;
 }
@@ -55,29 +57,33 @@
 
 - (NSArray *)allSites
 {
-    return self.siteCache;
+    return self.allSitesCache;
 }
 
 - (NSArray *)memberSites
 {
     NSPredicate *memberPredicate = [NSPredicate predicateWithFormat:@"isMember == YES"];
-    return [self.siteCache filteredArrayUsingPredicate:memberPredicate];
+    return [self.specialSiteCache filteredArrayUsingPredicate:memberPredicate];
 }
 
 - (NSArray *)favoriteSites
 {
     NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"isFavorite == YES"];
-    return [self.siteCache filteredArrayUsingPredicate:favoritePredicate];
+    return [self.specialSiteCache filteredArrayUsingPredicate:favoritePredicate];
 }
 
 - (NSArray *)pendingMemberSites
 {
     NSPredicate *pendingMemberPredicate = [NSPredicate predicateWithFormat:@"isPendingMember == YES"];
-    return [self.siteCache filteredArrayUsingPredicate:pendingMemberPredicate];
+    return [self.specialSiteCache filteredArrayUsingPredicate:pendingMemberPredicate];
 }
 
 - (void)addMemberSites:(NSArray *)memberSites
 {
+    if (nil == memberSites)
+    {
+        return;
+    }
     for (AlfrescoSite *site in memberSites)
     {
         AlfrescoSite *memberSite = [self alfrescoSiteFromSite:site siteFlag:AlfrescoSiteMember boolValue:YES];
@@ -87,6 +93,10 @@
 
 - (void)addFavoriteSites:(NSArray *)favoriteSites
 {
+    if (nil == favoriteSites)
+    {
+        return;
+    }
     for (AlfrescoSite *site in favoriteSites)
     {
         AlfrescoSite *favoriteSite = [self alfrescoSiteFromSite:site siteFlag:AlfrescoSiteFavorite boolValue:YES];
@@ -94,9 +104,35 @@
     }    
 }
 
+/**
+ this is used for cloud service.
+ */
 - (void)addPendingSites:(NSArray *)pendingSites
 {
-    for (AlfrescoJoinSiteRequest *pendingRequest in pendingSites)
+    if (nil == pendingSites)
+    {
+        return;
+    }
+    for (AlfrescoSite *site in pendingSites)
+    {
+        AlfrescoSite *pendingSite = [self alfrescoSiteFromSite:site siteFlag:AlfrescoSitePendingMember boolValue:YES];
+        [self addToCache:pendingSite];
+    }
+}
+
+/**
+ this method is for On Premise only. Here we get Join Requests objects back. 
+ If we have the site in the cache already, we replace it with the flag pending set to true.
+ We then add it to the cache.
+ If we cannot find an existing item in the special, we construct a  site based on the shortname and flag alone.
+ */
+- (void)addPendingRequests:(NSArray *)pendingRequests
+{
+    if (nil == pendingRequests)
+    {
+        return;
+    }
+    for (AlfrescoJoinSiteRequest *pendingRequest in pendingRequests)
     {
         AlfrescoSite *site = [self objectWithIdentifier:pendingRequest.shortName];
         if (site)
@@ -104,31 +140,44 @@
             AlfrescoSite *pendingSite = [self alfrescoSiteFromSite:site siteFlag:AlfrescoSitePendingMember boolValue:YES];
             [self addToCache:pendingSite];
         }
+        else
+        {
+            NSMutableDictionary *siteProperties = [NSMutableDictionary dictionary];
+            [siteProperties setValue:pendingRequest.shortName forKey:kAlfrescoJSONShortname];
+            [siteProperties setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoSiteIsPendingMember];
+            site = [[AlfrescoSite alloc] initWithProperties:siteProperties];
+            [self addToCache:site];
+        }
     }
+    
 }
 
 
 
 #pragma methods each implementor of AlfrescoCache must implement
 /**
- adds an entire Site array to the cache
+ adds an array from All sites into the cache
  */
 - (void)addObjectsToCache:(NSArray *)objectsArray
 {
-    for (AlfrescoSite *site in objectsArray)
+    if (nil == objectsArray)
     {
-        [self addToCache:site];
+        return;
     }
+    if (0 == objectsArray.count)
+    {
+        return;
+    }
+    [self.allSitesCache addObjectsFromArray:objectsArray];
 }
 
 /**
- adds a single site to the cache. If a site with an identifer already exists in the cache, then
- we replace the cache entry with the site passed into this method. Most likely, the new site object will have
- some parameter flags set differently compared with the existing cache entry.
+ adds a single site to the cache. In the code we use this only for adding individual sites from either favourites, members or pending methods.
+ Therefore, we add this site to the special cache - instead of the general one.
  */
 - (void)addToCache:(AlfrescoSite *)site
 {
-    if ([self.siteCache containsObject:site])
+    if ([self.specialSiteCache containsObject:site])
     {
         return;
     }
@@ -137,32 +186,35 @@
     {
         [self removeFromCache:siteInCache];
     }
-    [self.siteCache addObject:site];
+    [self.specialSiteCache addObject:site];
 }
 
 /**
- removes a single site from the cache. However, we can only fully remove the site from the cache if all flags (pending, member, favorite) are
- set to Off. If on the other side, we remove only a single flag (e.g. favourite) but we still retain another (e.g. member) - then we replace
- the existing site in the cache with the object containing the new settings.
+ removes an individual site from the special cache. We need to check whether the site has any other flag set. E.g. a favourite site can be
+ also a member site. If one of the "special" flags (fav/mem/pending) is set we keep it in the cache.
  */
 - (void)removeFromCache:(AlfrescoSite *)site
 {
     AlfrescoSite *siteInCache = [self objectWithIdentifier:site.identifier];
     if (siteInCache)
     {
-        [self.siteCache removeObject:siteInCache];
+        [self.specialSiteCache removeObject:siteInCache];
         if ( (site.isFavorite && siteInCache.isFavorite) ||
             (site.isMember && siteInCache.isMember) ||
             (site.isPendingMember && siteInCache.isPendingMember) )
         {
-            [self.siteCache addObject:site];
+            [self.specialSiteCache addObject:site];
         }
     }
 }
 
+/**
+ clear both caches: general (all sites) and special (fav/mem/pending)
+ */
 - (void)clear
 {
-    [self.siteCache removeAllObjects];
+    [self.specialSiteCache removeAllObjects];
+    [self.allSitesCache removeAllObjects];
 }
 /**
  the method returns the first entry found for the identifier. Typically, a site id is unique - but this may not always be the case(?)
@@ -170,7 +222,7 @@
 - (id)objectWithIdentifier:(NSString *)identifier
 {
     NSPredicate *idPredicate = [NSPredicate predicateWithFormat:@"identifier == %@",identifier];
-    NSArray *results = [self.siteCache filteredArrayUsingPredicate:idPredicate];
+    NSArray *results = [self.specialSiteCache filteredArrayUsingPredicate:idPredicate];
     if (0 == results.count)
     {
         return nil;
@@ -184,10 +236,13 @@
 - (BOOL)isInCache:(AlfrescoSite *)object
 {
     NSPredicate *idPredicate = [NSPredicate predicateWithFormat:@"identifier == %@",object.identifier];
-    NSArray *results = [self.siteCache filteredArrayUsingPredicate:idPredicate];
+    NSArray *results = [self.specialSiteCache filteredArrayUsingPredicate:idPredicate];
     return (results.count > 0) ? YES : NO;
 }
 
+/**
+ internal method that returns a site with one of the 3 flags set (fav/mem/pending)
+ */
 - (AlfrescoSite *)alfrescoSiteFromSite:(AlfrescoSite *)site siteFlag:(AlfrescoSiteFlags)siteFlag boolValue:(BOOL)boolValue
 {
     NSMutableDictionary *properties = [self sitePropertiesFromSite:site];

@@ -511,7 +511,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             NSString *user = [envDict valueForKey:@"secondUsername"];
             NSString *pass = [envDict valueForKey:@"secondPassword"];
             NSString *site = [envDict valueForKey:@"moderatedSite"];
-            if (nil != user || nil != pass || nil != site)
+            if (nil != user && nil != pass && nil != site)
             {
                 self.userName = user;
                 self.testPassword = pass;

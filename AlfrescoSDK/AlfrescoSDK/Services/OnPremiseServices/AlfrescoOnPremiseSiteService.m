@@ -92,8 +92,8 @@
             NSArray *sortedArray = nil;
             if (siteArray)
             {
-                sortedArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray sortKey:self.defaultSortKey ascending:YES];
                 [self.siteCache addObjectsToCache:siteArray];
+                sortedArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray sortKey:self.defaultSortKey ascending:YES];
                 NSString *favRequestString = [kAlfrescoOnPremiseFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                                                    withString:self.session.personIdentifier];
                 NSURL *favouriteSitesURL = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:favRequestString];
@@ -172,7 +172,6 @@
                 [self retrievePendingSitesWithCompletionBlock:^(NSArray *pendingSites, NSError *error){}];
                 NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray sortKey:self.defaultSortKey ascending:YES];
                 AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedArray listingContext:listingContext];
-                [self.siteCache addObjectsToCache:siteArray];
                 completionBlock(pagingResult, nil);
             }
             else
@@ -314,8 +313,10 @@
                     }
                     else
                     {
+                        [self.siteCache addObjectsToCache:allSitesArray];
                         NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"shortName IN %@",favSitesArray];
                         NSArray *favoriteSites = [allSitesArray filteredArrayUsingPredicate:favoritePredicate];
+                        [self.siteCache addFavoriteSites:favoriteSites];
                         NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:favoriteSites sortKey:self.defaultSortKey ascending:YES];
                         completionBlock(sortedSites, nil);
                     }
@@ -375,8 +376,10 @@
                     }
                     else
                     {
+                        [self.siteCache addObjectsToCache:allSitesArray];
                         NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"shortName IN %@",favSitesArray];
                         NSArray *favoriteSites = [allSitesArray filteredArrayUsingPredicate:favoritePredicate];
+                        [self.siteCache addFavoriteSites:favoriteSites];
                         NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:favoriteSites sortKey:self.defaultSortKey ascending:YES];
                         AlfrescoPagingResult *pagedResults = [AlfrescoPagingUtils pagedResultFromArray:sortedSites listingContext:listingContext];
                         completionBlock(pagedResults, nil);
@@ -641,7 +644,7 @@
             NSArray *requests = [self joinRequestArrayFromJSONData:data error:&jsonError];
             if (requests)
             {
-                [self.siteCache addPendingSites:requests];
+                [self.siteCache addPendingRequests:requests];
                 NSArray *pendingSites = [self.siteCache pendingMemberSites];
                 completionBlock(pendingSites, nil);
             }
