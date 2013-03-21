@@ -27,6 +27,18 @@
 NSString * const kAlfrescoTestDataFolder = @"SDKTestDataFolder";
 NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
+// START HACK
+// Temporarily allow any SSL certificate during testing by overriding method on NSURLRequest.
+// Once MOBSDK-495 is implemented this should be removed
+@implementation NSURLRequest (IgnoreSSL)
++ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host
+{
+    return YES;
+}
+@end
+// END OF HACK
+
+
 @interface AlfrescoBaseTest ()
 @property (nonatomic, strong) NSString * testPassword;
 - (void) uploadTestDocument:(NSString *)filePath;
