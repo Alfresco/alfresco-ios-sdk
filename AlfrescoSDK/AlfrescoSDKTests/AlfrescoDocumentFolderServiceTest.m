@@ -4954,6 +4954,8 @@
     }];
 }
 
+// TODO: Re-enable this test when MOBSDK-482 is implemented.
+/*
 - (void)testUpdatePropertiesForDocumentWithCustomType
 {
     [super runAllSitesTest:^{
@@ -5020,6 +5022,7 @@
         }
     }];
 }
+*/
 
 #pragma mark unit test internal methods
 
