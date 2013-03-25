@@ -19,7 +19,7 @@
 #import "AlfrescoFolder.h"
 #import "AlfrescoInternalConstants.h"
 
-static NSInteger kClassVersion = 1;
+static NSInteger kFolderModelVersion = 1;
 
 @interface AlfrescoFolder ()
 @property (nonatomic, assign, readwrite) BOOL isFolder;
@@ -42,7 +42,7 @@ static NSInteger kClassVersion = 1;
 {
     [super encodeWithCoder:aCoder];
 
-    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeInteger:kFolderModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
     [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
 }
@@ -53,6 +53,8 @@ static NSInteger kClassVersion = 1;
     
     if (self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeFolder];
         self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeDocument];
     }

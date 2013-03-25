@@ -28,7 +28,8 @@
 #import "CMISConstants.h"
 #import "CMISQueryResult.h"
 
-static NSInteger kClassVersion = 1;
+
+static NSInteger kNodeModelVersion = 1;
 NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey";
 
 @interface AlfrescoNode ()
@@ -130,7 +131,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeInteger:kNodeModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.identifier forKey:kCMISPropertyObjectId];
     [aCoder encodeObject:self.name forKey:kCMISPropertyName];
     [aCoder encodeObject:self.title forKey:kAlfrescoPropertyTitle];
@@ -149,6 +150,8 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     self = [super init];
     if (self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.identifier = [aDecoder decodeObjectForKey:kCMISPropertyObjectId];
         self.name = [aDecoder decodeObjectForKey:kCMISPropertyName];
         self.title = [aDecoder decodeObjectForKey:kAlfrescoPropertyTitle];

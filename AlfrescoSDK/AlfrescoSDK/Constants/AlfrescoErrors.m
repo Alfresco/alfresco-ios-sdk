@@ -47,6 +47,12 @@ NSString * const kAlfrescoErrorDescriptionCommentNoCommentFound = @"Comment Serv
 NSString * const kAlfrescoErrorDescriptionSites = @"Sites Service Error";
 NSString * const kAlfrescoErrorDescriptionSitesNoDocLib = @"Sites Service Error: No Document Library was found";
 NSString * const kAlfrescoErrorDescriptionSitesNoSites = @"Sites Service Error: No Sites were found.";
+NSString * const kAlfrescoErrorDescriptionSitesFailedToAddFavoriteSite = @"Sites Service Error: Failure to add favorite site.";
+NSString * const kAlfrescoErrorDescriptionSitesFailedToRemoveFavoriteSite = @"Sites Service Error: Failure to remove favorite site.";
+NSString * const kAlfrescoErrorDescriptionSitesUserIsAlreadyMember = @"Sites Service Error: User is already member of this site.";
+NSString * const kAlfrescoErrorDescriptionSitesFailedToJoinSite = @"Sites Service Error: Failure to join site.";
+NSString * const kAlfrescoErrorDescriptionSitesFailedToCancelJoinRequest = @"Sites Service Error: Failure to cancel join site request.";
+NSString * const kAlfrescoErrorDescriptionSitesFailedToLeaveSite = @"Sites Service Error: Failure to leave member site.";
 
 NSString * const kAlfrescoErrorDescriptionActivityStream =@"Activity Stream Service Error";
 NSString * const kAlfrescoErrorDescriptionActivityStreamNoActivities =@"Activity Stream Service Error: No Activities were found.";
@@ -208,6 +214,24 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
             break;
         case kAlfrescoErrorCodeSitesNoSites:
             return kAlfrescoErrorDescriptionSitesNoSites;
+            break;
+        case kAlfrescoErrorCodeSitesFailedToAddFavoriteSite:
+            return kAlfrescoErrorDescriptionSitesFailedToAddFavoriteSite;
+            break;
+        case kAlfrescoErrorCodeSitesFailedToRemoveFavoriteSite:
+            return kAlfrescoErrorDescriptionSitesFailedToRemoveFavoriteSite;
+            break;
+        case kAlfrescoErrorCodeSitesFailedToJoinSite:
+            return kAlfrescoErrorDescriptionSitesFailedToJoinSite;
+            break;
+        case kAlfrescoErrorCodeSitesFailedToCancelJoinRequest:
+            return kAlfrescoErrorDescriptionSitesFailedToCancelJoinRequest;
+            break;
+        case kAlfrescoErrorCodeSitesFailedToLeaveSite:
+            return kAlfrescoErrorDescriptionSitesFailedToLeaveSite;
+            break;
+        case kAlfrescoErrorCodeSitesUserIsAlreadyMember:
+            return kAlfrescoErrorDescriptionSitesUserIsAlreadyMember;
             break;            
         case kAlfrescoErrorCodeActivityStream:
             return kAlfrescoErrorDescriptionActivityStream;

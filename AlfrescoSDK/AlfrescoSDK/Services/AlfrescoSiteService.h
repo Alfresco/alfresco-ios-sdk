@@ -23,6 +23,7 @@
 #import "AlfrescoSession.h"
 #import "AlfrescoSite.h"
 #import "AlfrescoRequest.h"
+#import "AlfrescoOnPremiseJoinSiteRequest.h"
 
 /** The AlfrescoSiteService provides various ways to retrieve sites from an Alfresco repository.
  
@@ -111,6 +112,59 @@
  */
 - (AlfrescoRequest *)retrieveDocumentLibraryFolderForSite:(NSString *)siteShortName
                              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+
+
+/**
+ marks a site as favorite and adds it to the favorite list
+ @param site the site to be added to favorites
+ @param completionBlock - returns the updated AlfrescoSite object (isFavorite set to YES) or nil if unsuccessful
+ */
+- (AlfrescoRequest *)addFavoriteSite:(AlfrescoSite *)site
+                     completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
+
+/**
+ unmarks a site as favorite and removes it from the favorite list
+ @param site the site to be added to favorites
+ @param completionBlock - returns the updated AlfrescoSite object (isFavorite set to NO) or nil if unsuccessful
+ */
+- (AlfrescoRequest *)removeFavoriteSite:(AlfrescoSite *)site
+                        completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
+
+/**
+ creates a request to join a site. Please, note, this method works for both joining public and joining moderated sites.
+ For public sites, the same AlfrescoSite object will be returned in the completion block.
+ For moderated sites, an updated AlfrescoSite object will be returned - with pending flag set to YES.
+ @param site - the site to join
+ @param completionBlock - returns the updated AlfrescoSite object or nil if unsuccessful
+ */
+- (AlfrescoRequest *)joinSite:(AlfrescoSite *)site
+              completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
+
+/**
+ retrieves a list of sites for which a join request is pending
+ @param completionBlock - returns an array of AlfrescoSite objects or nil if unsuccessful
+ */
+- (AlfrescoRequest *)retrievePendingSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+/**
+ cancels a join request for a specified site
+ @param site - the pending site for which the join request is to be cancelled
+ @param completionBlock - returns the updated AlfrescoSite object or nil if unsuccessful
+ */
+- (AlfrescoRequest *)cancelPendingJoinRequestForSite:(AlfrescoSite *)site
+                                     completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
+/**
+ leave a site
+ @param site 
+ @param completionBlock - returns the updated AlfrescoSite object or nil if unsuccessful
+ */
+- (AlfrescoRequest *)leaveSite:(AlfrescoSite *)site
+               completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
+
+
+/**
+ clears the sites cache
+ */
+- (void)clear;
 
 
 

@@ -94,6 +94,9 @@
  */
 - (void)removeParameter:(id)key;
 
-
+/**
+ clears all caches associacted with this session
+ */
+- (void)clear;
 
 @end

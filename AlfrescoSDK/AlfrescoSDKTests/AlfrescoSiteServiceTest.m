@@ -371,6 +371,177 @@
 }
 
 
+- (void)testAddAndRemoveFavoriteSite
+{
+    [self runSiteTestsForSecondaryUser:^{
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
+        
+        [self.siteService retrieveSiteWithShortName:@"remoteapi"
+                                    completionBlock:^(AlfrescoSite *remoteSite, NSError *error){
+            if (remoteSite == nil)
+            {
+                STAssertNil(remoteSite,@"if failure, the site remoteapi should be nil");
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                [self.siteService addFavoriteSite:remoteSite completionBlock:^(AlfrescoSite *favSite, NSError *favError){
+                    if (nil == favSite)
+                    {
+                        STAssertNil(favSite,@"could not mark the site as favorite");
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [favError localizedDescription], [favError localizedFailureReason]];
+                        super.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        STAssertTrue([favSite.identifier isEqualToString:@"remoteapi"], @"The favorite site should be remoteapi - but instead we got %@",favSite.identifier);
+                        STAssertTrue(favSite.isFavorite, @"site %@ should be set to isFavorite",favSite.identifier);
+                        [self.siteService removeFavoriteSite:favSite completionBlock:^(AlfrescoSite *unFavSite, NSError *unFavError){
+                            if (nil == unFavSite)
+                            {
+                                STAssertNil(unFavSite,@"could not unmark the site as favorite");
+                                super.lastTestSuccessful = NO;
+                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [unFavError localizedDescription], [unFavError localizedFailureReason]];
+                                super.callbackCompleted = YES;
+                            }
+                            else
+                            {
+                                STAssertTrue([unFavSite.identifier isEqualToString:@"remoteapi"], @"The favorite site should be remoteapi - but instead we got %@",favSite.identifier);
+                                STAssertFalse(unFavSite.isFavorite, @"site %@ should no longer be a favorite",unFavSite.identifier);
+                                super.lastTestSuccessful = YES;
+                                super.callbackCompleted = YES;
+                            }
+                        }];
+                    }
+                }];
+                
+            }
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+- (void)testJoinAndCancelModeratedSite
+{
+    [self runSiteTestsForSecondaryUser:^{
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
+        [self.siteService retrieveSiteWithShortName:self.testModeratedSiteName
+                                    completionBlock:^(AlfrescoSite *modSite, NSError *error){
+            if (nil == modSite)
+            {
+                STAssertNil(modSite,@"if failure, the site object should be nil");
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                BOOL isCorrectName = [modSite.identifier isEqualToString:@"iosmoderatedsite"] || [modSite.identifier isEqualToString:@"iOSModeratedSite"];
+                STAssertTrue(isCorrectName, @"the site should be equal to iosmoderatedsite/iOSModeratedSite, but instead we got %@",modSite.identifier);
+                [self.siteService joinSite:modSite completionBlock:^(AlfrescoSite *requestedSite, NSError *requestError){
+                    if (nil == requestedSite)
+                    {
+                        STAssertNil(requestedSite,@"if failure, the requestedSite object should be nil");
+                        super.lastTestSuccessful = NO;
+                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [requestError localizedDescription], [requestError localizedFailureReason]];
+                        super.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        BOOL isCorrectName = [requestedSite.identifier isEqualToString:@"iosmoderatedsite"] || [requestedSite.identifier isEqualToString:@"iOSModeratedSite"];
+                        STAssertTrue(isCorrectName, @"the site should be equal to iOSModeratedSite, but instead we got %@",requestedSite.identifier);
+                        STAssertTrue(requestedSite.isPendingMember, @"Site should be in state isPendingMember - but appears to be not");
+                        [self.siteService cancelPendingJoinRequestForSite:requestedSite completionBlock:^(AlfrescoSite *cancelledSite, NSError *cancelError){
+                            if (nil == cancelledSite)
+                            {
+                                STAssertNil(cancelledSite,@"if failure, the cancelledSite object should be nil");
+                                super.lastTestSuccessful = NO;
+                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [cancelError localizedDescription], [cancelError localizedFailureReason]];
+                                super.callbackCompleted = YES;
+                            }
+                            else
+                            {
+                                BOOL isCorrectName = [requestedSite.identifier isEqualToString:@"iosmoderatedsite"] || [requestedSite.identifier isEqualToString:@"iOSModeratedSite"];
+                                STAssertTrue(isCorrectName, @"the site should be equal to iosmoderatedsite/iOSModeratedSite, but instead we got %@",modSite.identifier);
+                                STAssertFalse(cancelledSite.isPendingMember, @"Site should NOT be in state isPendingMember - but appears to be still in this state");
+                                super.lastTestSuccessful = YES;
+                                super.callbackCompleted = YES;
+                            }
+                        }];
+                    }
+                }];
+                
+            }
+        }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
+- (void)testJoinAndLeavePublicSite
+{
+    [self runSiteTestsForSecondaryUser:^{
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
+        [self.siteService retrieveSiteWithShortName:@"remoteapi"
+                                    completionBlock:^(AlfrescoSite *modSite, NSError *error){
+                                        if (nil == modSite)
+                                        {
+                                            STAssertNil(modSite,@"if failure, the site object should be nil");
+                                            super.lastTestSuccessful = NO;
+                                            super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                            super.callbackCompleted = YES;
+                                        }
+                                        else
+                                        {
+                                            BOOL isCorrectName = [modSite.identifier isEqualToString:@"remoteapi"];
+                                            STAssertTrue(isCorrectName, @"the site should be equal to remoteapi, but instead we got %@",modSite.identifier);
+                                            [self.siteService joinSite:modSite completionBlock:^(AlfrescoSite *requestedSite, NSError *requestError){
+                                                if (nil == requestedSite)
+                                                {
+                                                    STAssertNil(requestedSite,@"if failure, the requestedSite object should be nil");
+                                                    super.lastTestSuccessful = NO;
+                                                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [requestError localizedDescription], [requestError localizedFailureReason]];
+                                                    super.callbackCompleted = YES;
+                                                }
+                                                else
+                                                {
+                                                    BOOL isCorrectName = [modSite.identifier isEqualToString:@"remoteapi"];
+                                                    STAssertTrue(isCorrectName, @"the site should be equal to remoteapi, but instead we got %@",modSite.identifier);
+                                                    STAssertTrue(requestedSite.isMember, @"Site should be in state isMember - but appears to be not");
+                                                    [self.siteService leaveSite:requestedSite completionBlock:^(AlfrescoSite *noMemberSite, NSError *noMemberError){
+                                                        if (nil == noMemberSite)
+                                                        {
+                                                            STAssertNil(noMemberSite,@"if failure, the noMemberSite object should be nil");
+                                                            super.lastTestSuccessful = NO;
+                                                            super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [noMemberError localizedDescription], [noMemberError localizedFailureReason]];
+                                                            super.callbackCompleted = YES;
+                                                        }
+                                                        else
+                                                        {
+                                                            BOOL isCorrectName = [modSite.identifier isEqualToString:@"remoteapi"];
+                                                            STAssertTrue(isCorrectName, @"the site should be equal to remoteapi, but instead we got %@",noMemberSite.identifier);
+                                                            STAssertFalse(noMemberSite.isMember, @"Site should NOT be in state isMember - but appears to be still in this state");
+                                                            super.lastTestSuccessful = YES;
+                                                            super.callbackCompleted = YES;
+                                                            
+                                                        }
+                                                    }];                        
+                                                    
+                                                }
+                                            }];
+                                            
+                                        }
+                                    }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+    
+}
+
 #pragma mark unit test internal methods
 
 - (BOOL)siteArray:(NSArray *)siteArray containsShortName:(NSString *)shortName
