@@ -70,13 +70,6 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSArray *allSites = [self.siteCache allSites];
-    if (0 < allSites.count && 100 > allSites.count)
-    {
-        NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:allSites sortKey:self.defaultSortKey ascending:YES];
-        completionBlock(sortedArray, nil);
-        return nil;
-    }
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudSiteAPI];
     [self.session.networkProvider executeRequestWithURL:url
@@ -94,7 +87,6 @@
             if (sites)
             {
                 NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
-                [self.siteCache addObjectsToCache:sites];
                 [self retrieveFavoriteSitesWithCompletionBlock:^(NSArray *favSites, NSError *favError){}];
                 [self retrieveSitesWithCompletionBlock:^(NSArray *memberSites, NSError *memberError){}];
                 [self retrievePendingSitesWithCompletionBlock:^(NSArray *pendingSites, NSError *pendingError){}];
@@ -118,14 +110,6 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    NSArray *allSites = [self.siteCache allSites];
-    if (0 < allSites.count && listingContext.maxItems > allSites.count)
-    {
-        NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:allSites sortKey:self.defaultSortKey ascending:YES];
-        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedArray listingContext:listingContext];
-        completionBlock(pagingResult, nil);
-        return nil;
-    }
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudSiteAPI];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -143,7 +127,6 @@
             if (sites)
             {
                 NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
-                [self.siteCache addObjectsToCache:sites];
                 [self retrieveFavoriteSitesWithCompletionBlock:^(NSArray *favSites, NSError *favError){}];
                 [self retrieveSitesWithCompletionBlock:^(NSArray *memberSites, NSError *memberError){}];
                 [self retrievePendingSitesWithCompletionBlock:^(NSArray *pendingSites, NSError *pendingError){}];

@@ -40,6 +40,4 @@
  */
 - (BOOL)doesSupportCapability:(NSString *)capability;
 
-@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
-
 @end

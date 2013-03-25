@@ -18,12 +18,14 @@
 
 #import "AlfrescoPagingResult.h"
 #import "AlfrescoInternalConstants.h"
+
+static NSInteger kPagingResultModelVersion = 1;
+
 @interface AlfrescoPagingResult ()
 
 @property (nonatomic, strong, readwrite) NSArray *objects;
 @property (nonatomic, assign, readwrite) BOOL hasMoreItems;
 @property (nonatomic, assign, readwrite) int totalItems;
-@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 
 
 @end
@@ -36,7 +38,6 @@
     self = [super init];
     if (self) 
     {
-        self.modelClassVersion = kAlfrescoPagingResultModelVersion;
         self.objects = objects;
         self.hasMoreItems = hasMoreItems;
         self.totalItems = totalItems;
@@ -46,10 +47,10 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
+    [aCoder encodeInteger:kPagingResultModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.objects forKey:@"pagingResultsArray"];
     [aCoder encodeBool:self.hasMoreItems forKey:@"hasMoreItems"];
     [aCoder encodeInt:self.totalItems forKey:@"totalItems"];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -57,10 +58,11 @@
     self = [super init];
     if (nil != self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.objects = [aDecoder decodeObjectForKey:@"pagingResultsArray"];
         self.hasMoreItems = [aDecoder decodeBoolForKey:@"hasMoreItems"];
         self.totalItems = [aDecoder decodeIntForKey:@"totalItems"];
-        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

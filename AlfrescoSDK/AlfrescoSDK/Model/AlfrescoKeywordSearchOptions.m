@@ -18,12 +18,14 @@
 
 #import "AlfrescoKeywordSearchOptions.h"
 #import "AlfrescoInternalConstants.h"
+
+static NSUInteger kKeywordSearchModelVersion = 1;
+
 @interface AlfrescoKeywordSearchOptions ()
 @property (nonatomic, assign, readwrite) BOOL exactMatch;
 @property (nonatomic, assign, readwrite) BOOL includeContent;
 @property (nonatomic, assign, readwrite) BOOL includeDescendants;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *folder;
-@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 @end
 
 @implementation AlfrescoKeywordSearchOptions
@@ -55,18 +57,17 @@
         self.folder = folder;
         self.includeContent = includeContent;
         self.includeDescendants = includeDescendants;
-        self.modelClassVersion = kAlfrescoKeywordSearchOptionsModelVersion;
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
+    [aCoder encodeInteger:kKeywordSearchModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeBool:self.exactMatch forKey:@"exactMatch"];
     [aCoder encodeBool:self.includeContent forKey:@"includeContent"];
     [aCoder encodeBool:self.includeDescendants forKey:@"includeDescendants"];
     [aCoder encodeObject:self.folder forKey:@"folder"];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -74,11 +75,12 @@
     self = [super init];
     if (nil != self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.folder = [aDecoder decodeObjectForKey:@"folder"];
         self.exactMatch = [aDecoder decodeBoolForKey:@"exactMatch"];
         self.includeContent = [aDecoder decodeBoolForKey:@"includeContent"];
         self.includeDescendants = [aDecoder decodeBoolForKey:@"includeDescendants"];
-        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

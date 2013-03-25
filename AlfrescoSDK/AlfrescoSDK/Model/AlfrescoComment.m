@@ -20,6 +20,8 @@
 #import "AlfrescoInternalConstants.h"
 #import "CMISDateUtil.h"
 
+static NSUInteger kCommentModelVersion = 1;
+
 @interface AlfrescoComment ()
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *name;
@@ -32,7 +34,6 @@
 @property (nonatomic, readwrite) BOOL canEdit;
 @property (nonatomic, readwrite) BOOL canDelete;
 @property (nonatomic, strong) NSDateFormatter * standardDateFormatter;
-@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 - (void)setOnPremiseProperties:(NSDictionary *)properties;
 - (void)setCloudProperties:(NSDictionary *)properties;
 @end
@@ -47,7 +48,6 @@
     if (nil != self)
     {
         self.standardDateFormatter = [[NSDateFormatter alloc] init];
-        self.modelClassVersion = kAlfrescoCommentModelVersion;
         [self.standardDateFormatter setDateFormat:@"MMM' 'dd' 'yyyy' 'HH:mm:ss' 'zzz"];
         if ([[properties allKeys] containsObject:kAlfrescoJSONTitle])
         {
@@ -188,6 +188,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
+    [aCoder encodeInteger:kCommentModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.title forKey:kAlfrescoJSONTitle];
     [aCoder encodeObject:self.content forKey:kAlfrescoJSONContent];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
@@ -197,7 +198,6 @@
     [aCoder encodeBool:self.canDelete forKey:kAlfrescoJSONCanDelete];
     [aCoder encodeBool:self.canEdit forKey:kAlfrescoJSONCanEdit];
     [aCoder encodeBool:self.isEdited forKey:kAlfrescoJSONEdited];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -205,6 +205,8 @@
     self = [super init];
     if (nil != self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.title = [aDecoder decodeObjectForKey:kAlfrescoJSONTitle];
         self.content = [aDecoder decodeObjectForKey:kAlfrescoJSONContent];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
@@ -214,7 +216,6 @@
         self.isEdited = [aDecoder decodeBoolForKey:kAlfrescoJSONEdited];
         self.canEdit = [aDecoder decodeBoolForKey:kAlfrescoJSONCanEdit];
         self.canDelete = [aDecoder decodeBoolForKey:kAlfrescoJSONCanDelete];
-        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

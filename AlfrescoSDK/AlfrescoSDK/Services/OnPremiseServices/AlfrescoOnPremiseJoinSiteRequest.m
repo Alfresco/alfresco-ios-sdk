@@ -18,17 +18,16 @@
  *****************************************************************************
  */
 
-#import "AlfrescoJoinSiteRequest.h"
+#import "AlfrescoOnPremiseJoinSiteRequest.h"
 #import "AlfrescoInternalConstants.h"
 
-@interface AlfrescoJoinSiteRequest ()
+@interface AlfrescoOnPremiseJoinSiteRequest ()
 @property (nonatomic, strong, readwrite) NSString *shortName;
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *message;
-@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 @end
 
-@implementation AlfrescoJoinSiteRequest
+@implementation AlfrescoOnPremiseJoinSiteRequest
 
 - (id)initWithIdentifier:(NSString *)identifier message:(NSString *)message
 {
@@ -38,7 +37,6 @@
         self.message = message;
         self.identifier = identifier;
         self.shortName  = identifier;
-        self.modelClassVersion = kAlfrescoJoinSiteRequestModelVersion;
     }
     return self;
 }
@@ -73,7 +71,6 @@
     [aCoder encodeObject:self.message forKey:kAlfrescoJSONMessage];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONInviteId];
     [aCoder encodeObject:self.shortName forKey:kAlfrescoJSONResourceName];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -84,7 +81,6 @@
         self.shortName = [aDecoder decodeObjectForKey:kAlfrescoJSONResourceName];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONInviteId];
         self.message = [aDecoder decodeObjectForKey:kAlfrescoJSONMessage];
-        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

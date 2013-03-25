@@ -284,12 +284,26 @@
 
 - (id)objectForParameter:(id)key
 {
-    return [self.sessionData objectForKey:key];
+    if ([key hasPrefix:kAlfrescoSessionInternalCache])
+    {
+        return [self.sessionCache objectForKey:key];
+    }
+    else
+    {
+        return [self.sessionData objectForKey:key];        
+    }
 }
 
 - (void)setObject:(id)object forParameter:(id)key
 {
-    [self.sessionData setObject:object forKey:key];
+    if ([object conformsToProtocol:@protocol(AlfrescoCache)] && [key hasPrefix:kAlfrescoSessionInternalCache])
+    {
+        [self.sessionCache setObject:object forKey:key];
+    }
+    else
+    {
+        [self.sessionData setObject:object forKey:key];
+    }
 }
 
 - (void)addParametersFromDictionary:(NSDictionary *)dictionary
@@ -299,43 +313,18 @@
 
 - (void)removeParameter:(id)key
 {
-    [self.sessionData removeObjectForKey:key];
-}
-
-- (void)setObject:(id)object forCacheKey:(id)cacheKey
-{
-    if ([object conformsToProtocol:@protocol(AlfrescoCache)] && [cacheKey hasPrefix:kAlfrescoSessionInternalCache])
+    if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
-        [self.sessionCache setObject:object forKey:cacheKey];
+        [self.sessionCache removeObjectForKey:key];
+    }
+    else
+    {
+        [self.sessionData removeObjectForKey:key];
     }
 }
-
-- (void)removeFromCache:(id)cacheKey
-{
-    id cacheObject = [self.sessionCache objectForKey:cacheKey];
-    if ([cacheObject respondsToSelector:@selector(clear)])
-    {
-        [cacheObject clear];
-    }
-    [self.sessionCache removeObjectForKey:cacheKey];
-}
-
 
 - (void)clear
 {
-    NSArray *allCaches = [self.sessionCache allKeys];
-    if (0 == allCaches.count)
-    {
-        return;
-    }
-    for (NSString *key in allCaches)
-    {
-        id cacheObj = [self.sessionCache objectForKey:key];
-        if ([cacheObj respondsToSelector:@selector(clear)])
-        {
-            [cacheObj clear];
-        }
-    }
     [self.sessionCache removeAllObjects];
 }
 

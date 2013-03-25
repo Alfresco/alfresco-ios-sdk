@@ -22,7 +22,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoProperty.h"
 
-static NSInteger kClassVersion = 1;
+static NSInteger kDocumentModelVersion = 1;
 
 @interface AlfrescoDocument ()
 @property (nonatomic, strong, readwrite) NSString *contentMimeType;
@@ -44,7 +44,6 @@ static NSInteger kClassVersion = 1;
     self = [super initWithProperties:properties];
     if (nil != self)
     {
-        self.modelClassVersion = kAlfrescoDocumentModelVersion;
         self.isDocument = YES;
         self.isFolder = NO;
         self.contentMimeType = nil;
@@ -68,7 +67,7 @@ static NSInteger kClassVersion = 1;
 {
     [super encodeWithCoder:aCoder];
     
-    [aCoder encodeInt:kClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeInt:kDocumentModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
     [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
     [aCoder encodeBool:self.isLatestVersion forKey:kCMISPropertyIsLatestVersion];
@@ -76,7 +75,6 @@ static NSInteger kClassVersion = 1;
     [aCoder encodeObject:self.contentMimeType forKey:kCMISPropertyContentStreamMediaType];
     [aCoder encodeObject:self.versionLabel forKey:kCMISPropertyVersionLabel];
     [aCoder encodeObject:self.versionComment forKey:kCMISPropertyCheckinComment];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -85,6 +83,8 @@ static NSInteger kClassVersion = 1;
     
     if (self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeFolder];
         self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeDocument];
         self.isLatestVersion = [aDecoder decodeBoolForKey:kCMISPropertyIsLatestVersion];
@@ -92,7 +92,6 @@ static NSInteger kClassVersion = 1;
         self.contentMimeType = [aDecoder decodeObjectForKey:kCMISPropertyContentStreamMediaType];
         self.versionLabel = [aDecoder decodeObjectForKey:kCMISPropertyVersionLabel];
         self.versionComment = [aDecoder decodeObjectForKey:kCMISPropertyCheckinComment];
-        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

@@ -19,12 +19,14 @@
 #import "AlfrescoPermissions.h"
 #import "CMISEnums.h"
 #import "AlfrescoInternalConstants.h"
+
+static NSInteger kPermissionsModelVersion = 1;
+
 @interface AlfrescoPermissions ()
 @property (nonatomic, assign, readwrite) BOOL canEdit;
 @property (nonatomic, assign, readwrite) BOOL canDelete;
 @property (nonatomic, assign, readwrite) BOOL canAddChildren;
 @property (nonatomic, assign, readwrite) BOOL canComment;
-@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 
 @end
 
@@ -39,7 +41,6 @@
         self.canDelete = NO;
         self.canAddChildren = NO;
         self.canComment = NO;
-        self.modelClassVersion = kAlfrescoPermissionsModelVersion;
     }
     return self;
 }
@@ -62,11 +63,11 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
+    [aCoder encodeInteger:kPermissionsModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeBool:self.canAddChildren forKey:@"canAddChildren"];
     [aCoder encodeBool:self.canComment forKey:@"canComment"];
     [aCoder encodeBool:self.canDelete forKey:@"canDelete"];
     [aCoder encodeBool:self.canEdit forKey:@"canEdit"];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -74,11 +75,12 @@
     self = [super init];
     if (nil != self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.canEdit = [aDecoder decodeBoolForKey:@"canEdit"];
         self.canDelete = [aDecoder decodeBoolForKey:@"canDelete"];
         self.canComment = [aDecoder decodeBoolForKey:@"canComment"];
         self.canAddChildren = [aDecoder decodeBoolForKey:@"canAddChildren"];
-        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

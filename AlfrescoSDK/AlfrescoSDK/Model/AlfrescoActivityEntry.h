@@ -52,7 +52,6 @@
 /// A dictionary holding the data for the activity, this will vary depending on the activity type.
 @property (nonatomic, strong, readonly) NSDictionary *data;
 
-@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
 
 - (id)initWithProperties:(NSDictionary *)properties;
 

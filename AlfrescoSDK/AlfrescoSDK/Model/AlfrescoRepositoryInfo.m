@@ -20,6 +20,8 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoRepositoryCapabilities.h"
 
+static NSInteger kRepositoryInfoModelVersion = 1;
+
 @interface AlfrescoRepositoryInfo ()
 @property (nonatomic, strong, readwrite) NSString *name;
 @property (nonatomic, strong, readwrite) NSString *identifier;
@@ -31,7 +33,6 @@
 @property (nonatomic, strong, readwrite) NSString *buildNumber;
 @property (nonatomic, strong, readwrite) NSString *version;
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryCapabilities *capabilities;
-@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 
 @end
 
@@ -43,7 +44,6 @@
     self = [super init];
     if (self) 
     {
-        self.modelClassVersion  = kAlfrescoRepositoryInfoModelVersion;
         self.name               = (NSString *)[properties objectForKey:kAlfrescoRepositoryName];
         self.identifier         = (NSString *)[properties objectForKey:kAlfrescoRepositoryIdentifier];
         self.summary            = (NSString *)[properties objectForKey:kAlfrescoRepositorySummary];
@@ -60,6 +60,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
+    [aCoder encodeInteger:kRepositoryInfoModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.name forKey:kAlfrescoRepositoryName];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoRepositoryIdentifier];
     [aCoder encodeObject:self.summary forKey:kAlfrescoRepositorySummary];
@@ -70,7 +71,6 @@
     [aCoder encodeObject:self.buildNumber forKey:kAlfrescoRepositoryBuildNumber];
     [aCoder encodeObject:self.version forKey:kAlfrescoRepositoryVersion];
     [aCoder encodeObject:self.capabilities forKey:kAlfrescoRepositoryCapabilities];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -78,6 +78,8 @@
     self = [super init];
     if(nil != self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.name = [aDecoder decodeObjectForKey:kAlfrescoRepositoryName];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoRepositoryIdentifier];
         self.summary = [aDecoder decodeObjectForKey:kAlfrescoRepositorySummary];
@@ -88,7 +90,6 @@
         self.buildNumber = [aDecoder decodeObjectForKey:kAlfrescoRepositoryBuildNumber];
         self.version = [aDecoder decodeObjectForKey:kAlfrescoRepositoryVersion];
         self.capabilities = [aDecoder decodeObjectForKey:kAlfrescoRepositoryCapabilities];
-        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

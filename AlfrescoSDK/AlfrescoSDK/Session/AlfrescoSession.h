@@ -101,11 +101,6 @@
 - (void)setObject:(id)object forCacheKey:(id)cacheKey;
 
 /**
- removes the object from the Cache and removes all cached data therein
- */
-- (void)removeFromCache:(id)cacheKey;
-
-/**
  clears all caches associacted with this session
  */
 - (void)clear;

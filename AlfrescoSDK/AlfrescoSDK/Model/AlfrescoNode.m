@@ -29,6 +29,7 @@
 #import "CMISQueryResult.h"
 
 
+static NSInteger kNodeModelVersion = 1;
 NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey";
 
 @interface AlfrescoNode ()
@@ -45,7 +46,6 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 @property (nonatomic, strong, readwrite) NSArray *aspects;
 @property (nonatomic, assign, readwrite) BOOL isFolder;
 @property (nonatomic, assign, readwrite) BOOL isDocument;
-@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 
 - (void)setUpProperties:(NSDictionary *)properties;
 @end
@@ -59,7 +59,6 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     self = [super init];
     if (nil != self)
     {
-        self.modelClassVersion = kAlfrescoNodeModelVersion;
         self.identifier = nil;
         self.name = nil;
         self.title = nil;
@@ -132,7 +131,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-//    [aCoder encodeInt:kNodeClassVersion forKey:kAlfrescoClassVersion];
+    [aCoder encodeInteger:kNodeModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.identifier forKey:kCMISPropertyObjectId];
     [aCoder encodeObject:self.name forKey:kCMISPropertyName];
     [aCoder encodeObject:self.title forKey:kAlfrescoPropertyTitle];
@@ -144,7 +143,6 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     [aCoder encodeObject:self.modifiedAt forKey:kCMISPropertyModificationDate];
     [aCoder encodeObject:self.properties forKey:kAlfrescoNodeProperties];
     [aCoder encodeObject:self.aspects forKey:kAlfrescoNodeAspects];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -152,6 +150,8 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     self = [super init];
     if (self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.identifier = [aDecoder decodeObjectForKey:kCMISPropertyObjectId];
         self.name = [aDecoder decodeObjectForKey:kCMISPropertyName];
         self.title = [aDecoder decodeObjectForKey:kAlfrescoPropertyTitle];
@@ -163,7 +163,6 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
         self.modifiedAt = [aDecoder decodeObjectForKey:kCMISPropertyModificationDate];
         self.properties = [aDecoder decodeObjectForKey:kAlfrescoNodeProperties];
         self.aspects = [aDecoder decodeObjectForKey:kAlfrescoNodeAspects];
-        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

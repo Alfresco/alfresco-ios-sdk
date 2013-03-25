@@ -83,7 +83,6 @@ extern NSString * const kAlfrescoPermissionsObjectKey;
 /// Specifies whether this node represents a document.
 @property (nonatomic, assign, readonly) BOOL isDocument;
 
-@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
 
 /**---------------------------------------------------------------------------------------
  * @name Property and Aspect Getters.

@@ -19,6 +19,8 @@
 #import "AlfrescoSite.h"
 #import "AlfrescoInternalConstants.h"
 
+static NSInteger kSiteModelVersion = 1;
+
 @interface AlfrescoSite ()
 @property (nonatomic, strong, readwrite) NSString *shortName;
 @property (nonatomic, strong, readwrite) NSString *title;
@@ -29,7 +31,6 @@
 @property (nonatomic, assign, readwrite) BOOL isMember;
 @property (nonatomic, assign, readwrite) BOOL isPendingMember;
 @property (nonatomic, assign, readwrite) BOOL isFavorite;
-@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 - (void)setUpOnPremiseProperties:(NSDictionary *)properties keys:(NSArray *)keys;
 - (void)setUpCloudProperties:(NSDictionary *)properties keys:(NSArray *)keys;
 @end
@@ -45,7 +46,6 @@
         self.isFavorite = NO;
         self.isMember = NO;
         self.isPendingMember = NO;
-        self.modelClassVersion = kAlfrescoSiteModelVersion;
 
         NSArray *allKeys = [properties allKeys];
         [self setUpOnPremiseProperties:properties keys:allKeys];
@@ -135,6 +135,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
+    [aCoder encodeInteger:kSiteModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.summary forKey:kAlfrescoJSONDescription];
     [aCoder encodeObject:self.title forKey:kAlfrescoJSONTitle];
     [aCoder encodeInt:self.visibility forKey:kAlfrescoJSONVisibility];
@@ -143,7 +144,6 @@
     [aCoder encodeBool:self.isFavorite forKey:kAlfrescoSiteIsFavorite];
     [aCoder encodeBool:self.isMember forKey:kAlfrescoSiteIsMember];
     [aCoder encodeBool:self.isPendingMember forKey:kAlfrescoSiteIsPendingMember];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -151,6 +151,8 @@
     self = [super init];
     if (nil != self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version   = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.summary = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
         self.title         = [aDecoder decodeObjectForKey:kAlfrescoJSONTitle];
         self.isFavorite         = [aDecoder decodeBoolForKey:kAlfrescoSiteIsFavorite];
@@ -159,8 +161,7 @@
         self.shortName     = [aDecoder decodeObjectForKey:kAlfrescoJSONShortname];
         self.GUID          = [aDecoder decodeObjectForKey:kAlfrescoJSONGUID];
         self.visibility          = [aDecoder decodeIntForKey:kAlfrescoJSONVisibility];
-        self.modelClassVersion   = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
-    }    
+    }
     return self;
 }
 @end

@@ -30,7 +30,6 @@
 #import "AlfrescoDocument.h"
 #import "AlfrescoComment.h"
 #import "AlfrescoOAuthData.h"
-#import "AlfrescoJoinSiteRequest.h"
 
 @protocol AlfrescoSession;
 /** The AlfrescoConstants used in the SDK.
@@ -63,7 +62,6 @@ typedef void (^AlfrescoSessionCompletionBlock)(id<AlfrescoSession> session, NSEr
 typedef void (^AlfrescoCommentCompletionBlock)(AlfrescoComment *comment, NSError *error);
 typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSError *error);
 typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
-typedef void (^AlfrescoJoinSiteRequestCompletionBlock)(AlfrescoJoinSiteRequest *joinSiteRequest, NSError *error);
 
 /**---------------------------------------------------------------------------------------
  * @name Session parameters

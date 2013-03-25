@@ -49,9 +49,6 @@ typedef enum
 /// The value of the property.
 @property (nonatomic, strong, readonly) id value;
 
-
-@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
-
 - (id)initWithProperties:(NSDictionary *)properties;
 
 @end

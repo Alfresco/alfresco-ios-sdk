@@ -67,8 +67,6 @@
 /// Returns true if the current user can delete this comment.
 @property (nonatomic, readonly) BOOL canDelete;
 
-@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
-
 
 - (id)initWithProperties:(NSDictionary *)properties;
 

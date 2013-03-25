@@ -30,7 +30,5 @@
 /// returns the tag value
 @property (nonatomic, strong, readonly) NSString * value;
 
-@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
-
 - (id)initWithProperties:(NSDictionary *)properties;
 @end

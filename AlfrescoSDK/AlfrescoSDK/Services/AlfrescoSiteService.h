@@ -23,7 +23,7 @@
 #import "AlfrescoSession.h"
 #import "AlfrescoSite.h"
 #import "AlfrescoRequest.h"
-#import "AlfrescoJoinSiteRequest.h"
+#import "AlfrescoOnPremiseJoinSiteRequest.h"
 
 /** The AlfrescoSiteService provides various ways to retrieve sites from an Alfresco repository.
  

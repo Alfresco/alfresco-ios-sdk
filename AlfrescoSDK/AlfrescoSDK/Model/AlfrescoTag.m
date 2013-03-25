@@ -19,10 +19,11 @@
 #import "AlfrescoTag.h"
 #import "AlfrescoInternalConstants.h"
 
+static NSInteger kTagModelVersion = 1;
+
 @interface AlfrescoTag ()
 @property (nonatomic, strong, readwrite) NSString * identifier;
 @property (nonatomic, strong, readwrite) NSString * value;
-@property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
 - (void)setUpOnPremiseProperties:(NSDictionary *)properties;
 - (void)setUpCloudProperties:(NSDictionary *)properties;
 @end
@@ -54,7 +55,6 @@
     self = [super init];
     if (nil != self)
     {
-        self.modelClassVersion = kAlfrescoTagModelVersion;
         [self setUpCloudProperties:properties];
         [self setUpOnPremiseProperties:properties];
     }
@@ -88,9 +88,9 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
+    [aCoder encodeInteger:kTagModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.value forKey:kAlfrescoJSONTag];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
-    [aCoder encodeInteger:self.modelClassVersion forKey:kAlfrescoModelClassVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -98,9 +98,10 @@
     self = [super init];
     if (nil != self)
     {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.value = [aDecoder decodeObjectForKey:kAlfrescoJSONTag];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
-        self.modelClassVersion = [aDecoder decodeIntForKey:kAlfrescoModelClassVersion];
     }
     return self;
 }

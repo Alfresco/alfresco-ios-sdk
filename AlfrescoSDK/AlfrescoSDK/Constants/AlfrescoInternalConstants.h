@@ -278,21 +278,4 @@ extern NSString * const kAlfrescoPropertyTypeFolder;
 extern NSString * const kAlfrescoPropertyTypeDocument;
 extern NSString * const kAlfrescoPropertyAspect;
 
-extern NSString * const kAlfrescoModelClassVersion;
-extern NSUInteger const kAlfrescoActivityModelVersion;
-extern NSUInteger const kAlfrescoCommentModelVersion;
-extern NSUInteger const kAlfrescoDocumentModelVersion;
-extern NSUInteger const kAlfrescoFolderModelVersion;
-extern NSUInteger const kAlfrescoJoinSiteRequestModelVersion;
-extern NSUInteger const kAlfrescoKeywordSearchOptionsModelVersion;
-extern NSUInteger const kAlfrescoListingContextModelVersion;
-extern NSUInteger const kAlfrescoNodeModelVersion;
-extern NSUInteger const kAlfrescoPagingResultModelVersion;
-extern NSUInteger const kAlfrescoPermissionsModelVersion;
-extern NSUInteger const kAlfrescoPersonModelVersion;
-extern NSUInteger const kAlfrescoPropertyModelVersion;
-extern NSUInteger const kAlfrescoRepositoryCapabilitiesModelVersion;
-extern NSUInteger const kAlfrescoRepositoryInfoModelVersion;
-extern NSUInteger const kAlfrescoSiteModelVersion;
-extern NSUInteger const kAlfrescoTagModelVersion;
 @end

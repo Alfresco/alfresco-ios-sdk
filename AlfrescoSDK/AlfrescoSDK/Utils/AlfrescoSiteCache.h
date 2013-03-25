@@ -23,6 +23,14 @@
 #import "AlfrescoCache.h"
 #import "AlfrescoSession.h"
 
+typedef enum
+{
+    AlfrescoSiteFavorite = 0,
+    AlfrescoSiteMember,
+    AlfrescoSitePendingMember
+} AlfrescoSiteFlags;
+
+
 @interface AlfrescoSiteCache : NSObject <AlfrescoCache>
 
 /**

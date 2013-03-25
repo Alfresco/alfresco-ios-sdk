@@ -467,7 +467,7 @@
                             {
                                 BOOL isCorrectName = [requestedSite.identifier isEqualToString:@"iosmoderatedsite"] || [requestedSite.identifier isEqualToString:@"iOSModeratedSite"];
                                 STAssertTrue(isCorrectName, @"the site should be equal to iosmoderatedsite/iOSModeratedSite, but instead we got %@",modSite.identifier);
-                                STAssertFalse(cancelledSite.isPendingMember, @"Site should NOT be in state isMember - but appears to be still in this state");
+                                STAssertFalse(cancelledSite.isPendingMember, @"Site should NOT be in state isPendingMember - but appears to be still in this state");
                                 super.lastTestSuccessful = YES;
                                 super.callbackCompleted = YES;
                             }
@@ -524,7 +524,7 @@
                                                         {
                                                             BOOL isCorrectName = [modSite.identifier isEqualToString:@"remoteapi"];
                                                             STAssertTrue(isCorrectName, @"the site should be equal to remoteapi, but instead we got %@",noMemberSite.identifier);
-                                                            STAssertFalse(noMemberSite.isMember, @"Site should NOT be in state isPendingMember - but appears to be still in this state");
+                                                            STAssertFalse(noMemberSite.isMember, @"Site should NOT be in state isMember - but appears to be still in this state");
                                                             super.lastTestSuccessful = YES;
                                                             super.callbackCompleted = YES;
                                                             

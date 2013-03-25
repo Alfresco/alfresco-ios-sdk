@@ -20,15 +20,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface AlfrescoJoinSiteRequest : NSObject <NSCoding>
+@interface AlfrescoOnPremiseJoinSiteRequest : NSObject <NSCoding>
 /// Returns the short name of the site.
 @property (nonatomic, strong, readonly) NSString *shortName;
 /// Returns the identifier of the site.
 @property (nonatomic, strong, readonly) NSString *identifier;
 /// message for the join request.
 @property (nonatomic, strong, readonly) NSString *message;
-
-@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
 
 - (id)initWithIdentifier:(NSString *)identifier message:(NSString *)message;
 

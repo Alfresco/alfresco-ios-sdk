@@ -54,7 +54,10 @@
     [urlRequest setHTTPMethod:method];
     
     [headers enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
-        AlfrescoLogDebug(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
+        if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
+        {
+             AlfrescoLogTrace(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
+        }
         [urlRequest addValue:headerValue forHTTPHeaderField:headerKey];
     }];
     
@@ -76,6 +79,9 @@
     {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         self.statusCode = httpResponse.statusCode;
+        {
+            AlfrescoLogTrace(@"response status code: %d", self.statusCode);
+        }
     }
     else
     {
@@ -114,8 +120,7 @@
         }
     }
     
-    AlfrescoLog *logger = [AlfrescoLog sharedInstance];
-    if (logger.logLevel == AlfrescoLogLevelTrace)
+    if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
     {
         AlfrescoLogTrace(@"response body: %@", [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding]);
     }
@@ -139,7 +144,8 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    AlfrescoLogDebug(@"Connection did fail. Error code %d error message %@",[error code], [error localizedDescription]);
+    [[AlfrescoLog sharedInstance] logErrorFromError:error];
+    
     if (self.completionBlock != NULL)
     {
         self.completionBlock(nil, error);

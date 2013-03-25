@@ -501,12 +501,15 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             self.server = [envDict valueForKey:@"server"];
             if ([[envDict allKeys] containsObject:@"isCloud"])
             {
-                self.server = @"https://gcpublicapiapi.alfresco.me";//this is only until we got the DP environment migrated to the new public API
                 self.isCloud = [[envDict valueForKey:@"isCloud"] boolValue];
             }
             else
             {
                 self.isCloud = NO;
+            }
+            if (self.isCloud && [[envDict allKeys] containsObject:@"secondaryServer"])
+            {
+                self.server = [envDict valueForKey:@"secondaryServer"];
             }
             NSString *user = [envDict valueForKey:@"secondUsername"];
             NSString *pass = [envDict valueForKey:@"secondPassword"];

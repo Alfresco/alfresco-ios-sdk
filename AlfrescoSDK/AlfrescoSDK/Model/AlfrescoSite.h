@@ -33,13 +33,6 @@ typedef enum
     AlfrescoSiteVisibilityPrivate
 } AlfrescoSiteVisibility;
 
-typedef enum
-{
-    AlfrescoSiteFavorite = 0,
-    AlfrescoSiteMember,
-    AlfrescoSitePendingMember
-} AlfrescoSiteFlags;
-
 
 @interface AlfrescoSite : NSObject <NSCoding>
 
@@ -67,8 +60,6 @@ typedef enum
 
 /// The visibility of the site.
 @property (nonatomic, assign, readonly) AlfrescoSiteVisibility visibility;
-
-@property (nonatomic, assign, readonly) NSUInteger modelClassVersion;
 
 - (id)initWithProperties:(NSDictionary *)properties;
 
