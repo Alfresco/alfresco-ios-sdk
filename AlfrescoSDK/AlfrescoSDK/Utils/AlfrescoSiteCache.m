@@ -24,6 +24,10 @@
 
 @interface AlfrescoSiteCache ()
 @property (nonatomic, strong) NSMutableArray * sitesCache;
+@property (nonatomic, assign, readwrite) BOOL hasMoreSites;
+@property (nonatomic, assign, readwrite) BOOL hasMoreMemberSites;
+@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteSites;
+@property (nonatomic, assign, readwrite) BOOL hasMorePendingSites;
 @end
 
 @implementation AlfrescoSiteCache
@@ -34,6 +38,10 @@
     if (nil != self)
     {
         _sitesCache = [NSMutableArray arrayWithCapacity:0];
+        _hasMoreFavoriteSites = YES;
+        _hasMoreMemberSites = YES;
+        _hasMorePendingSites = YES;
+        _hasMoreSites = YES;
     }
     return self;
 }
@@ -76,81 +84,148 @@
     return [self.sitesCache filteredArrayUsingPredicate:pendingMemberPredicate];
 }
 
-- (void)addMemberSites:(NSArray *)memberSites
+
+- (void)addMemberSite:(AlfrescoSite *)memberSite
 {
-    if (nil == memberSites)
+    if (!memberSite) return;
+    [memberSite performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:YES]];
+    if (![self.sitesCache containsObject:memberSite])
     {
-        return;
+        [self.sitesCache addObject:memberSite];
     }
+}
+
+- (void)addFavoriteSite:(AlfrescoSite *)favoriteSite
+{
+    if (!favoriteSite) return;
+    [favoriteSite performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:YES]];
+    if (![self.sitesCache containsObject:favoriteSite])
+    {
+        [self.sitesCache addObject:favoriteSite];
+    }    
+}
+
+- (void)addPendingSite:(AlfrescoSite *)pendingSite
+{
+    if (!pendingSite) return;
+    [pendingSite performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:YES]];
+    if (![self.sitesCache containsObject:pendingSite])
+    {
+        [self.sitesCache addObject:pendingSite];
+    }
+}
+
+- (AlfrescoSite *)addPendingRequest:(AlfrescoOnPremiseJoinSiteRequest *)pendingRequest
+{
+    if (!pendingRequest) return nil;
+    AlfrescoSite *site = [self objectWithIdentifier:pendingRequest.shortName];
+    if (site)
+    {
+        [self addPendingSite:site];
+    }
+    else
+    {
+        NSMutableDictionary *siteProperties = [NSMutableDictionary dictionary];
+        [siteProperties setValue:pendingRequest.shortName forKey:kAlfrescoJSONShortname];
+        [siteProperties setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoSiteIsPendingMember];
+        site = [[AlfrescoSite alloc] initWithProperties:siteProperties];
+        [self addToCache:site];
+    }
+    return site;
+}
+
+- (void)removeMemberSite:(AlfrescoSite *)memberSite
+{
+    if (!memberSite) return;
+    [memberSite performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:NO]];
+    if ([self.sitesCache containsObject:memberSite] && !memberSite.isFavorite)
+    {
+        [self.sitesCache removeObject:memberSite];
+    }
+}
+
+- (void)removeFavoriteSite:(AlfrescoSite *)favoriteSite
+{
+    if (!favoriteSite) return;
+    [favoriteSite performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:NO]];
+    if ([self.sitesCache containsObject:favoriteSite] && !favoriteSite.isMember && !favoriteSite.isPendingMember)
+    {
+        [self.sitesCache addObject:favoriteSite];
+    }
+}
+
+- (void)removePendingSite:(AlfrescoSite *)pendingSite
+{
+    if (!pendingSite) return;
+    [pendingSite performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:NO]];
+    if ([self.sitesCache containsObject:pendingSite] && !pendingSite.isFavorite)
+    {
+        [self.sitesCache removeObject:pendingSite];
+    }
+}
+
+- (void)addSites:(NSArray *)sites hasMoreSites:(BOOL)hasMoreSites
+{
+    if (nil == sites)return;
+    [self.sitesCache addObjectsFromArray:sites];
+    self.hasMoreSites = hasMoreSites;
+}
+
+- (void)addMemberSites:(NSArray *)memberSites hasMoreMemberSites:(BOOL)hasMoreMemberSites
+{
+    if (nil == memberSites)return;
     for (AlfrescoSite *site in memberSites)
     {
-        AlfrescoSite *memberSite = [self alfrescoSiteFromSite:site siteFlag:AlfrescoSiteMember boolValue:YES];
-        [self addToCache:memberSite];
-    }    
+        [self addMemberSite:site];
+    }
+    self.hasMoreMemberSites = hasMoreMemberSites;
+}
+
+- (void)addFavoriteSites:(NSArray *)favoriteSites hasMoreFavoriteSites:(BOOL)hasMoreFavoriteSites
+{
+    if (nil == favoriteSites)return;
+    for (AlfrescoSite *site in favoriteSites)
+    {
+        [self addFavoriteSite:site];
+    }
+    self.hasMoreFavoriteSites = hasMoreFavoriteSites;
+}
+
+- (void)addPendingSites:(NSArray *)pendingSites hasMorePendingSites:(BOOL)hasMorePendingSites
+{
+    if (nil == pendingSites)return;
+    for (AlfrescoSite *site in pendingSites)
+    {
+        [self addPendingSite:site];
+    }
+    self.hasMorePendingSites = hasMorePendingSites;
+}
+
+- (void)addMemberSites:(NSArray *)memberSites
+{
+    [self addMemberSites:memberSites hasMoreMemberSites:NO];
 }
 
 - (void)addFavoriteSites:(NSArray *)favoriteSites
 {
-    if (nil == favoriteSites)
-    {
-        return;
-    }
-    for (AlfrescoSite *site in favoriteSites)
-    {
-        AlfrescoSite *favoriteSite = [self alfrescoSiteFromSite:site siteFlag:AlfrescoSiteFavorite boolValue:YES];
-        [self addToCache:favoriteSite];
-    }    
+    [self addFavoriteSites:favoriteSites hasMoreFavoriteSites:NO];
 }
 
-/**
- this is used for cloud service.
- */
 - (void)addPendingSites:(NSArray *)pendingSites
 {
-    if (nil == pendingSites)
-    {
-        return;
-    }
-    for (AlfrescoSite *site in pendingSites)
-    {
-        AlfrescoSite *pendingSite = [self alfrescoSiteFromSite:site siteFlag:AlfrescoSitePendingMember boolValue:YES];
-        [self addToCache:pendingSite];
-    }
+    [self addPendingSites:pendingSites hasMorePendingSites:NO];
 }
 
-/**
- this method is for On Premise only. Here we get Join Requests objects back. 
- If we have the site in the cache already, we replace it with the flag pending set to true.
- We then add it to the cache.
- If we cannot find an existing item in the special, we construct a  site based on the shortname and flag alone.
- */
-- (void)addPendingRequests:(NSArray *)pendingRequests
+- (NSArray *)addPendingRequests:(NSArray *)pendingRequests
 {
-    if (nil == pendingRequests)
-    {
-        return;
-    }
+    if (nil == pendingRequests)return nil;
     for (AlfrescoOnPremiseJoinSiteRequest *pendingRequest in pendingRequests)
     {
-        AlfrescoSite *site = [self objectWithIdentifier:pendingRequest.shortName];
-        if (site)
-        {
-            AlfrescoSite *pendingSite = [self alfrescoSiteFromSite:site siteFlag:AlfrescoSitePendingMember boolValue:YES];
-            [self addToCache:pendingSite];
-        }
-        else
-        {
-            NSMutableDictionary *siteProperties = [NSMutableDictionary dictionary];
-            [siteProperties setValue:pendingRequest.shortName forKey:kAlfrescoJSONShortname];
-            [siteProperties setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoSiteIsPendingMember];
-            site = [[AlfrescoSite alloc] initWithProperties:siteProperties];
-            [self addToCache:site];
-        }
+        [self addPendingRequest:pendingRequest];
     }
+    return [self pendingMemberSites];
     
 }
-
-
 
 #pragma methods each implementor of AlfrescoCache must implement
 /**
@@ -158,14 +233,8 @@
  */
 - (void)addObjectsToCache:(NSArray *)objectsArray
 {
-    if (nil == objectsArray)
-    {
-        return;
-    }
-    if (0 == objectsArray.count)
-    {
-        return;
-    }
+    if (nil == objectsArray)return;
+    if (0 == objectsArray.count)return;
     [self.sitesCache addObjectsFromArray:objectsArray];
 }
 
@@ -175,10 +244,7 @@
  */
 - (void)addToCache:(AlfrescoSite *)site
 {
-    if ([self.sitesCache containsObject:site])
-    {
-        return;
-    }
+    if ([self.sitesCache containsObject:site])return;
     AlfrescoSite *siteInCache = [self objectWithIdentifier:site.identifier];
     if (nil != siteInCache)
     {
@@ -218,6 +284,7 @@
  */
 - (id)objectWithIdentifier:(NSString *)identifier
 {
+    if (!identifier)return nil;
     NSPredicate *idPredicate = [NSPredicate predicateWithFormat:@"identifier == %@",identifier];
     NSArray *results = [self.sitesCache filteredArrayUsingPredicate:idPredicate];
     return (0 == results.count) ? nil : results[0];
@@ -246,6 +313,8 @@
             break;
         case AlfrescoSitePendingMember:
             [properties setObject:[NSNumber numberWithBool:boolValue] forKey:kAlfrescoSiteIsPendingMember];
+            break;
+        case AlfrescoSiteAll:
             break;
     }
     return [[AlfrescoSite alloc] initWithProperties:properties];

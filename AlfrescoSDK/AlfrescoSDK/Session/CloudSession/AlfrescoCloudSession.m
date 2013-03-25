@@ -291,7 +291,7 @@
 
 - (void)setObject:(id)object forParameter:(id)key
 {
-    if ([object conformsToProtocol:@protocol(AlfrescoCache)] && [key hasPrefix:kAlfrescoSessionInternalCache])
+    if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
         [self.sessionCache setObject:object forKey:key];
     }
@@ -310,6 +310,11 @@
 {
     if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
+        id cached = [self.sessionCache objectForKey:key];
+        if ([cached respondsToSelector:@selector(clear)])
+        {
+            [cached clear];
+        }
         [self.sessionCache removeObjectForKey:key];
     }
     else

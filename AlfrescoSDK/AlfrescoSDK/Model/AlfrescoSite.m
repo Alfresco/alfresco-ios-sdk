@@ -131,6 +131,21 @@ static NSInteger kSiteModelVersion = 1;
     }
 }
 
+- (void)changeMemberState:(NSNumber *)state
+{
+    self.isMember = [state boolValue];
+}
+
+- (void)changeFavouriteState:(NSNumber *)state
+{
+    self.isFavorite = [state boolValue];
+}
+
+- (void)changePendingState:(NSNumber *)state
+{
+    self.isPendingMember = [state boolValue];
+}
+
 #pragma NSCoding methods
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
