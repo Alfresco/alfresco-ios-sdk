@@ -65,6 +65,11 @@
     {
         [urlRequest setHTTPBody:requestBody];
         [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        
+        if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
+        {
+            AlfrescoLogTrace(@"request body: %@", [[NSString alloc] initWithData:requestBody encoding:NSUTF8StringEncoding]);
+        }
     }
     
     self.responseData = nil;
