@@ -17,9 +17,11 @@
  ******************************************************************************/
 
 #import "AlfrescoListingContext.h"
-
+#import "AlfrescoInternalConstants.h"
 #define DEFAULTMAXITEMS 50
 #define DEFAULTSKIPCOUNT 0
+
+static NSInteger kListingContextModelVersion = 1;
 
 @interface AlfrescoListingContext ()
 @property (nonatomic, strong, readwrite) NSString *sortProperty;
@@ -66,6 +68,30 @@
     }
     return self;
     
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeInteger:kListingContextModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeObject:self.sortProperty forKey:@"sortProperty"];
+    [aCoder encodeInt:self.maxItems forKey:@"maxItems"];
+    [aCoder encodeInt:self.skipCount forKey:@"skipCount"];
+    [aCoder encodeBool:self.sortAscending forKey:@"sortAscending"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (nil != self)
+    {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+        self.sortAscending = [aDecoder decodeBoolForKey:@"sortAscending"];
+        self.sortProperty = [aDecoder decodeObjectForKey:@"sortProperty"];
+        self.maxItems = [aDecoder decodeIntForKey:@"maxItems"];
+        self.skipCount = [aDecoder decodeIntForKey:@"skipCount"];
+    }
+    return self;
 }
 
 

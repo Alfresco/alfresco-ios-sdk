@@ -18,6 +18,9 @@
 
 #import "AlfrescoPermissions.h"
 #import "CMISEnums.h"
+#import "AlfrescoInternalConstants.h"
+
+static NSInteger kPermissionsModelVersion = 1;
 
 @interface AlfrescoPermissions ()
 @property (nonatomic, assign, readwrite) BOOL canEdit;
@@ -57,6 +60,31 @@
     }
     return self;
 }
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeInteger:kPermissionsModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeBool:self.canAddChildren forKey:@"canAddChildren"];
+    [aCoder encodeBool:self.canComment forKey:@"canComment"];
+    [aCoder encodeBool:self.canDelete forKey:@"canDelete"];
+    [aCoder encodeBool:self.canEdit forKey:@"canEdit"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (nil != self)
+    {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+        self.canEdit = [aDecoder decodeBoolForKey:@"canEdit"];
+        self.canDelete = [aDecoder decodeBoolForKey:@"canDelete"];
+        self.canComment = [aDecoder decodeBoolForKey:@"canComment"];
+        self.canAddChildren = [aDecoder decodeBoolForKey:@"canAddChildren"];
+    }
+    return self;
+}
+
 
 
 @end

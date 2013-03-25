@@ -56,7 +56,7 @@
     [headers enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
         if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {
-            AlfrescoLogTrace(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
+             AlfrescoLogTrace(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
         }
         [urlRequest addValue:headerValue forHTTPHeaderField:headerKey];
     }];
@@ -79,8 +79,6 @@
     {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         self.statusCode = httpResponse.statusCode;
-        
-        if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {
             AlfrescoLogTrace(@"response status code: %d", self.statusCode);
         }
