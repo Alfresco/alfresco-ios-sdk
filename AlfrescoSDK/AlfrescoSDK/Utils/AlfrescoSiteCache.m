@@ -220,14 +220,7 @@
 {
     NSPredicate *idPredicate = [NSPredicate predicateWithFormat:@"identifier == %@",identifier];
     NSArray *results = [self.sitesCache filteredArrayUsingPredicate:idPredicate];
-    if (0 == results.count)
-    {
-        return nil;
-    }
-    else
-    {
-        return [results objectAtIndex:0];
-    }
+    return (0 == results.count) ? nil : results[0];
 }
 
 - (BOOL)isInCache:(AlfrescoSite *)object

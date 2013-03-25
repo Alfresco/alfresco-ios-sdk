@@ -519,10 +519,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             {
                 self.isCloud = NO;
             }
-            if (self.isCloud && [[envDict allKeys] containsObject:@"secondaryServer"])
-            {
-                self.server = [envDict valueForKey:@"secondaryServer"];
-            }
             NSString *user = [envDict valueForKey:@"secondUsername"];
             NSString *pass = [envDict valueForKey:@"secondPassword"];
             NSString *site = [envDict valueForKey:@"moderatedSite"];
