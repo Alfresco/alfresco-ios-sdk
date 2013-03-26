@@ -29,7 +29,6 @@
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import "CMISLog.h"
-#import "AlfrescoCache.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoRepositorySession ()
@@ -330,6 +329,12 @@
 
 - (void)clear
 {
+    [self.sessionCache enumerateKeysAndObjectsUsingBlock:^(NSString *cacheName, id cacheObj, BOOL *stop){
+        if ([cacheObj respondsToSelector:@selector(clear)])
+        {
+            [cacheObj clear];
+        }
+    }];
     [self.sessionCache removeAllObjects];
 }
 

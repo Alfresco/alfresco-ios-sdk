@@ -374,8 +374,7 @@
     return (AlfrescoDocument *)[self nodeFromCMISObject:cmisObject];
 }
 
-
-+ (NSArray *)arrayJSONEntriesFromListData:(NSData *)data error:(NSError **)outError
++ (NSDictionary *)listJSONFromData:(NSData *)data error:(NSError **)outError
 {
     if (nil == data)
     {
@@ -434,7 +433,44 @@
         }
         return nil;
     }
-    id entries = [listObject valueForKey:kAlfrescoCloudJSONEntries];
+    return (NSDictionary *)listObject;
+}
+
+
+
++ (NSDictionary *)paginationJSONFromData:(NSData *)data error:(NSError **)outError
+{
+    NSDictionary *list = [AlfrescoObjectConverter listJSONFromData:data error:outError];
+    if (nil == list)
+    {
+        return nil;
+    }
+    id paginationObj = [list valueForKey:kAlfrescoCloudJSONPagination];
+    if (![paginationObj isKindOfClass:[NSDictionary class]])
+    {
+        if (nil == *outError)
+        {
+            *outError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        else
+        {
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+            *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
+        }
+        return nil;
+    }
+    return (NSDictionary *)paginationObj;
+}
+
+
++ (NSArray *)arrayJSONEntriesFromListData:(NSData *)data error:(NSError **)outError
+{
+    NSDictionary *list = [AlfrescoObjectConverter listJSONFromData:data error:outError];
+    if (nil == list)
+    {
+        return nil;
+    }
+    id entries = [list valueForKey:kAlfrescoCloudJSONEntries];
     if (![entries isKindOfClass:[NSArray class]])
     {
         if (nil == *outError)

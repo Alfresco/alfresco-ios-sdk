@@ -116,7 +116,7 @@
 /*
  Enumerates through a given directory either including or not including sub directories
  */
-- (void)enumerateThroughDirectory:(NSString *)directory includingSubDirectories:(BOOL)includeSubDirectories withBlock:(void (^)(NSString *fullFilePath))block error:(NSError **)error;
+- (BOOL)enumerateThroughDirectory:(NSString *)directory includingSubDirectories:(BOOL)includeSubDirectories withBlock:(void (^)(NSString *fullFilePath))block error:(NSError **)error;
 
 /*
  Returns the data representation of the file at a given URL
@@ -136,5 +136,19 @@
  @returns string - the filePath in relation to a given fileName
  */
 - (NSString *)internalFilePathFromName:(NSString *)fileName;
+
+/*
+ Call this to return an input stream to the requested file path.
+ 
+ @returns inputStream - an open input stream to the requested file path
+ */
+- (NSInputStream *)inputStreamWithFilePath:(NSString *)filePath;
+
+/*
+ Call this to return an output stream to the requested file path.
+ 
+ @returns outputStream - an open output stream to the requested file path
+ */
+- (NSOutputStream *)outputStreamToFileAtPath:(NSString *)filePath append:(BOOL)shouldAppend;
 
 @end

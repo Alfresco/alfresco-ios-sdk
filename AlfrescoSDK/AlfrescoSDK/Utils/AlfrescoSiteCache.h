@@ -20,7 +20,6 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoSite.h"
-#import "AlfrescoCache.h"
 #import "AlfrescoSession.h"
 
 typedef enum
@@ -33,7 +32,7 @@ typedef enum
 
 @class AlfrescoOnPremiseJoinSiteRequest;
 
-@interface AlfrescoSiteCache : NSObject <AlfrescoCache>
+@interface AlfrescoSiteCache : NSObject
 @property (nonatomic, assign, readonly) BOOL hasMoreSites;
 @property (nonatomic, assign, readonly) BOOL hasMoreMemberSites;
 @property (nonatomic, assign, readonly) BOOL hasMoreFavoriteSites;
@@ -43,6 +42,10 @@ typedef enum
  */
 + (id)siteCacheForSession:(id<AlfrescoSession>)session;
 
+/**
+ clears all entries in the cache
+ */
+- (void)clear;
 
 /**
  returns my sites
@@ -93,7 +96,5 @@ typedef enum
 - (void)addPendingSites:(NSArray *)pendingSites;
 
 - (NSArray *)addPendingRequests:(NSArray *)pendingRequests;
-
-- (AlfrescoSite *)alfrescoSiteFromSite:(AlfrescoSite *)site siteFlag:(AlfrescoSiteFlags)siteFlag boolValue:(BOOL)boolValue;
 
 @end

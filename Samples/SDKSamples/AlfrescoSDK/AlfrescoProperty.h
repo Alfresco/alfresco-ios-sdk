@@ -35,7 +35,7 @@ typedef enum
     AlfrescoPropertyTypeBoolean,
 } AlfrescoPropertyType;
 
-@interface AlfrescoProperty : NSObject
+@interface AlfrescoProperty : NSObject <NSCoding>
 
 
 /// The data type of the property
