@@ -89,6 +89,8 @@ typedef enum
 
 - (void)addPendingSites:(NSArray *)pendingSites hasMorePendingSites:(BOOL)hasMorePendingSites;
 
+- (void)addSites:(NSArray *)sites;
+
 - (void)addMemberSites:(NSArray *)memberSites;
 
 - (void)addFavoriteSites:(NSArray *)favoriteSites;

@@ -604,6 +604,7 @@
             if (siteArray)
             {
                 NSArray *allSortedArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray sortKey:self.defaultSortKey ascending:YES];
+                [self.siteCache addSites:allSortedArray];
                 [self.session.networkProvider executeRequestWithURL:favouriteSitesURL session:self.session alfrescoRequest:request completionBlock:^(NSData *favData, NSError *favError){
                     if(favData)
                     {

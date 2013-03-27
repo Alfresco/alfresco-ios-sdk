@@ -88,45 +88,45 @@
 - (void)addMemberSite:(AlfrescoSite *)memberSite
 {
     if (!memberSite) return;
-    AlfrescoSite *siteInCache = [self objectWithIdentifier:memberSite.identifier];
-    if (![self.sitesCache containsObject:memberSite] && nil == siteInCache)
+    NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:memberSite];
+    [memberSite performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:YES]];
+    if (NSNotFound == foundSiteIndex)
     {
-        [memberSite performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:YES]];
         [self.sitesCache addObject:memberSite];
     }
-    else if(nil != siteInCache)
+    else
     {
-        [siteInCache performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:YES]];        
+        [self.sitesCache replaceObjectAtIndex:foundSiteIndex withObject:memberSite];
     }
 }
 
 - (void)addFavoriteSite:(AlfrescoSite *)favoriteSite
 {
     if (!favoriteSite) return;
-    AlfrescoSite *siteInCache = [self objectWithIdentifier:favoriteSite.identifier];
-    if (![self.sitesCache containsObject:favoriteSite] && nil == siteInCache)
+    NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:favoriteSite];
+    [favoriteSite performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:YES]];
+    if (NSNotFound == foundSiteIndex)
     {
-        [favoriteSite performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:YES]];
         [self.sitesCache addObject:favoriteSite];
     }
-    else if(nil != siteInCache)
+    else
     {
-        [siteInCache performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:YES]];
-    }    
+        [self.sitesCache replaceObjectAtIndex:foundSiteIndex withObject:favoriteSite];
+    }
 }
 
 - (void)addPendingSite:(AlfrescoSite *)pendingSite
 {
     if (!pendingSite) return;
-    AlfrescoSite *siteInCache = [self objectWithIdentifier:pendingSite.identifier];
-    if (![self.sitesCache containsObject:pendingSite] && nil == siteInCache)
+    NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:pendingSite];
+    [pendingSite performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:YES]];
+    if (NSNotFound == foundSiteIndex)
     {
-        [pendingSite performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:YES]];
         [self.sitesCache addObject:pendingSite];
     }
-    else if(nil != siteInCache)
+    else
     {
-        [siteInCache performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:YES]];
+        [self.sitesCache replaceObjectAtIndex:foundSiteIndex withObject:pendingSite];
     }
 }
 
@@ -185,8 +185,8 @@
     if (nil == sites)return;
     for (AlfrescoSite *site in sites)
     {
-        AlfrescoSite *siteInCache = [self objectWithIdentifier:site.identifier];
-        if (![self.sitesCache containsObject:site] && nil == siteInCache)
+        NSUInteger foundIndex = [self.sitesCache indexOfObject:site];
+        if (NSNotFound == foundIndex)
         {
             [self.sitesCache addObject:site];
         }
@@ -222,6 +222,12 @@
         [self addPendingSite:site];
     }
 }
+
+- (void)addSites:(NSArray *)sites
+{
+    [self addSites:sites hasMoreSites:NO];
+}
+
 
 - (void)addMemberSites:(NSArray *)memberSites
 {

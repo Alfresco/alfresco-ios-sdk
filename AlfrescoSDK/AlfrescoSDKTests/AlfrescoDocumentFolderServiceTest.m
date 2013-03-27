@@ -2703,7 +2703,7 @@
                           if ([propertyValue isKindOfClass:[NSString class]])
                           {
                               NSString *testValue = (NSString *)propertyValue;
-                              STAssertTrue([testValue isEqualToString:propertyObjectTestValue], @"we expected that the value would be %@, but we got back %@");
+                              STAssertTrue([testValue isEqualToString:propertyObjectTestValue], @"Updated name is incorrect");
                               super.lastTestSuccessful = YES;
                           }
                           else
