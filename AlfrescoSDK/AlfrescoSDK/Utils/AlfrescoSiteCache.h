@@ -20,23 +20,32 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoSite.h"
-#import "AlfrescoCache.h"
 #import "AlfrescoSession.h"
 
 typedef enum
 {
     AlfrescoSiteFavorite = 0,
     AlfrescoSiteMember,
-    AlfrescoSitePendingMember
+    AlfrescoSitePendingMember,
+    AlfrescoSiteAll    
 } AlfrescoSiteFlags;
 
+@class AlfrescoOnPremiseJoinSiteRequest;
 
-@interface AlfrescoSiteCache : NSObject <AlfrescoCache>
-
+@interface AlfrescoSiteCache : NSObject
+@property (nonatomic, assign, readonly) BOOL hasMoreSites;
+@property (nonatomic, assign, readonly) BOOL hasMoreMemberSites;
+@property (nonatomic, assign, readonly) BOOL hasMoreFavoriteSites;
+@property (nonatomic, assign, readonly) BOOL hasMorePendingSites;
 /**
  initialiser
  */
 + (id)siteCacheForSession:(id<AlfrescoSession>)session;
+
+/**
+ clears all entries in the cache
+ */
+- (void)clear;
 
 /**
  returns my sites
@@ -58,14 +67,36 @@ typedef enum
  */
 - (NSArray *)allSites;
 
+- (void)addMemberSite:(AlfrescoSite *)memberSite;
+
+- (void)addFavoriteSite:(AlfrescoSite *)favoriteSite;
+
+- (void)addPendingSite:(AlfrescoSite *)pendingSite;
+
+- (AlfrescoSite *)addPendingRequest:(AlfrescoOnPremiseJoinSiteRequest *)pendingRequest;
+
+- (void)removeMemberSite:(AlfrescoSite *)memberSite;
+
+- (void)removeFavoriteSite:(AlfrescoSite *)favoriteSite;
+
+- (void)removePendingSite:(AlfrescoSite *)pendingSite;
+
+- (void)addSites:(NSArray *)sites hasMoreSites:(BOOL)hasMoreSites;
+
+- (void)addMemberSites:(NSArray *)memberSites hasMoreMemberSites:(BOOL)hasMoreMemberSites;
+
+- (void)addFavoriteSites:(NSArray *)favoriteSites hasMoreFavoriteSites:(BOOL)hasMoreFavoriteSites;
+
+- (void)addPendingSites:(NSArray *)pendingSites hasMorePendingSites:(BOOL)hasMorePendingSites;
+
+- (void)addSites:(NSArray *)sites;
+
 - (void)addMemberSites:(NSArray *)memberSites;
 
 - (void)addFavoriteSites:(NSArray *)favoriteSites;
 
 - (void)addPendingSites:(NSArray *)pendingSites;
 
-- (void)addPendingRequests:(NSArray *)pendingRequests;
-
-- (AlfrescoSite *)alfrescoSiteFromSite:(AlfrescoSite *)site siteFlag:(AlfrescoSiteFlags)siteFlag boolValue:(BOOL)boolValue;
+- (NSArray *)addPendingRequests:(NSArray *)pendingRequests;
 
 @end

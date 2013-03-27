@@ -41,6 +41,10 @@
 
 + (NSArray *)arrayJSONEntriesFromListData:(NSData *)data error:(NSError **)outError;
 
++ (NSDictionary *)paginationJSONFromData:(NSData *)data error:(NSError **)outError;
+
++ (NSDictionary *)listJSONFromData:(NSData *)data error:(NSError **)outError;
+
 + (NSDictionary *)dictionaryJSONEntryFromListData:(NSData *)data error:(NSError **)outError;
 
 + (NSString *)nodeRefWithoutVersionID:(NSString *)originalIdentifier;

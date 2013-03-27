@@ -101,4 +101,3 @@ extern NSString * const kAlfrescoIsFolder;
  * @name Custom Alfresco Network Provider
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoNetworkProvider;
-

@@ -25,7 +25,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoRepositoryCapabilities : NSObject
+@interface AlfrescoRepositoryCapabilities : NSObject <NSCoding>
 @property (nonatomic, assign, readonly) BOOL doesSupportLikingNodes;
 @property (nonatomic, assign, readonly) BOOL doesSupportCommentCounts;
 
@@ -39,4 +39,5 @@
  @param capability - the defined capability to check.  
  */
 - (BOOL)doesSupportCapability:(NSString *)capability;
+
 @end

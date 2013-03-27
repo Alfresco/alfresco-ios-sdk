@@ -25,7 +25,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoListingContext : NSObject
+@interface AlfrescoListingContext : NSObject <NSCoding>
 
 
 /// Returns the sorting field for the list.
@@ -42,6 +42,7 @@
 
 /// Returns current skip count.
 @property (nonatomic, assign, readonly) int skipCount;
+
 
 /**
  In the context of this SDK, maxItems is the maximum number to be used in one listing. The skipCount is a multiple of

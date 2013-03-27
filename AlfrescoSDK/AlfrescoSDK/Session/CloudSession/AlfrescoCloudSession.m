@@ -35,7 +35,6 @@
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import "CMISLog.h"
-#import "AlfrescoCache.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoCloudSession ()
@@ -291,7 +290,7 @@
 
 - (void)setObject:(id)object forParameter:(id)key
 {
-    if ([object conformsToProtocol:@protocol(AlfrescoCache)] && [key hasPrefix:kAlfrescoSessionInternalCache])
+    if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
         [self.sessionCache setObject:object forKey:key];
     }
@@ -310,6 +309,11 @@
 {
     if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
+        id cached = [self.sessionCache objectForKey:key];
+        if ([cached respondsToSelector:@selector(clear)])
+        {
+            [cached clear];
+        }
         [self.sessionCache removeObjectForKey:key];
     }
     else
@@ -321,6 +325,12 @@
 
 - (void)clear
 {
+    [self.sessionCache enumerateKeysAndObjectsUsingBlock:^(NSString *cacheName, id cacheObj, BOOL *stop){
+        if ([cacheObj respondsToSelector:@selector(clear)])
+        {
+            [cacheObj clear];
+        }
+    }];
     [self.sessionCache removeAllObjects];
 }
 
