@@ -24,10 +24,11 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoTag : NSObject
+@interface AlfrescoTag : NSObject <NSCoding>
 /// returns identifier of tag as string
 @property (nonatomic, strong, readonly) NSString * identifier;
 /// returns the tag value
 @property (nonatomic, strong, readonly) NSString * value;
+
 - (id)initWithProperties:(NSDictionary *)properties;
 @end

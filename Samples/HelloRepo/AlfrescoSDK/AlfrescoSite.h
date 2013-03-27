@@ -33,10 +33,8 @@ typedef enum
     AlfrescoSiteVisibilityPrivate
 } AlfrescoSiteVisibility;
 
-@interface AlfrescoSite : NSObject
 
-
-
+@interface AlfrescoSite : NSObject <NSCoding>
 
 /// Returns the short name of the site.
 @property (nonatomic, strong, readonly) NSString *shortName;
@@ -50,11 +48,21 @@ typedef enum
 @property (nonatomic, strong, readonly) NSString *summary;
 
 
+@property (nonatomic, strong, readonly) NSString *identifier;
+
+@property (nonatomic, strong, readonly) NSString *GUID;
+
+@property (nonatomic, assign, readonly) BOOL isMember;
+
+@property (nonatomic, assign, readonly) BOOL isPendingMember;
+
+@property (nonatomic, assign, readonly) BOOL isFavorite;
+
 /// The visibility of the site.
 @property (nonatomic, assign, readonly) AlfrescoSiteVisibility visibility;
 
-
 - (id)initWithProperties:(NSDictionary *)properties;
+
 
 @end
 

@@ -17,6 +17,9 @@
  ******************************************************************************/
 
 #import "AlfrescoPagingResult.h"
+#import "AlfrescoInternalConstants.h"
+
+static NSInteger kPagingResultModelVersion = 1;
 
 @interface AlfrescoPagingResult ()
 
@@ -42,5 +45,26 @@
     return self;
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeInteger:kPagingResultModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeObject:self.objects forKey:@"pagingResultsArray"];
+    [aCoder encodeBool:self.hasMoreItems forKey:@"hasMoreItems"];
+    [aCoder encodeInt:self.totalItems forKey:@"totalItems"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (nil != self)
+    {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+        self.objects = [aDecoder decodeObjectForKey:@"pagingResultsArray"];
+        self.hasMoreItems = [aDecoder decodeBoolForKey:@"hasMoreItems"];
+        self.totalItems = [aDecoder decodeIntForKey:@"totalItems"];
+    }
+    return self;
+}
 
 @end

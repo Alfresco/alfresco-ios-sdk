@@ -24,7 +24,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoComment : NSObject
+@interface AlfrescoComment : NSObject <NSCoding>
 
 /// @name Properties.
 
@@ -66,6 +66,7 @@
 
 /// Returns true if the current user can delete this comment.
 @property (nonatomic, readonly) BOOL canDelete;
+
 
 - (id)initWithProperties:(NSDictionary *)properties;
 

@@ -30,7 +30,7 @@
 
 extern NSString * const kAlfrescoPermissionsObjectKey;
 
-@interface AlfrescoNode : NSObject
+@interface AlfrescoNode : NSObject <NSCoding>
 
 /// The unique identifier of the node.
 @property (nonatomic, strong, readonly) NSString *identifier;

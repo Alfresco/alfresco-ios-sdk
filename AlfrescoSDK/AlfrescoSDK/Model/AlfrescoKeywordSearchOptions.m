@@ -17,6 +17,9 @@
  ******************************************************************************/
 
 #import "AlfrescoKeywordSearchOptions.h"
+#import "AlfrescoInternalConstants.h"
+
+static NSUInteger kKeywordSearchModelVersion = 1;
 
 @interface AlfrescoKeywordSearchOptions ()
 @property (nonatomic, assign, readwrite) BOOL exactMatch;
@@ -54,6 +57,30 @@
         self.folder = folder;
         self.includeContent = includeContent;
         self.includeDescendants = includeDescendants;
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeInteger:kKeywordSearchModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeBool:self.exactMatch forKey:@"exactMatch"];
+    [aCoder encodeBool:self.includeContent forKey:@"includeContent"];
+    [aCoder encodeBool:self.includeDescendants forKey:@"includeDescendants"];
+    [aCoder encodeObject:self.folder forKey:@"folder"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (nil != self)
+    {
+        //uncomment this line if you need to check the model version
+//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+        self.folder = [aDecoder decodeObjectForKey:@"folder"];
+        self.exactMatch = [aDecoder decodeBoolForKey:@"exactMatch"];
+        self.includeContent = [aDecoder decodeBoolForKey:@"includeContent"];
+        self.includeDescendants = [aDecoder decodeBoolForKey:@"includeDescendants"];
     }
     return self;
 }

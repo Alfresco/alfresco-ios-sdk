@@ -34,6 +34,7 @@
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;
+@property (nonatomic, strong, readwrite) NSMutableDictionary *sessionCache;
 @property (nonatomic, strong, readwrite) NSString *personIdentifier;
 
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
@@ -282,12 +283,26 @@
 
 - (id)objectForParameter:(id)key
 {
-    return [self.sessionData objectForKey:key];
+    if ([key hasPrefix:kAlfrescoSessionInternalCache])
+    {
+        return [self.sessionCache objectForKey:key];
+    }
+    else
+    {
+        return [self.sessionData objectForKey:key];        
+    }
 }
 
 - (void)setObject:(id)object forParameter:(id)key
 {
-    [self.sessionData setObject:object forKey:key];
+    if ([key hasPrefix:kAlfrescoSessionInternalCache])
+    {
+        [self.sessionCache setObject:object forKey:key];
+    }
+    else
+    {
+        [self.sessionData setObject:object forKey:key];
+    }
 }
 
 - (void)addParametersFromDictionary:(NSDictionary *)dictionary
@@ -297,8 +312,33 @@
 
 - (void)removeParameter:(id)key
 {
-    [self.sessionData removeObjectForKey:key];
+    if ([key hasPrefix:kAlfrescoSessionInternalCache])
+    {
+        id cached = [self.sessionCache objectForKey:key];
+        if ([cached respondsToSelector:@selector(clear)])
+        {
+            [cached clear];
+        }
+        [self.sessionCache removeObjectForKey:key];
+    }
+    else
+    {
+        [self.sessionData removeObjectForKey:key];
+    }
 }
+
+- (void)clear
+{
+    [self.sessionCache enumerateKeysAndObjectsUsingBlock:^(NSString *cacheName, id cacheObj, BOOL *stop){
+        if ([cacheObj respondsToSelector:@selector(clear)])
+        {
+            [cacheObj clear];
+        }
+    }];
+    [self.sessionCache removeAllObjects];
+}
+
+
 
 + (NSNumber *)majorVersionFromString:(NSString *)versionString
 {

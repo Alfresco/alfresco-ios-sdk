@@ -56,7 +56,7 @@
     [headers enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
         if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {
-            AlfrescoLogTrace(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
+             AlfrescoLogTrace(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
         }
         [urlRequest addValue:headerValue forHTTPHeaderField:headerKey];
     }];
@@ -65,6 +65,11 @@
     {
         [urlRequest setHTTPBody:requestBody];
         [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        
+        if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
+        {
+            AlfrescoLogTrace(@"request body: %@", [[NSString alloc] initWithData:requestBody encoding:NSUTF8StringEncoding]);
+        }
     }
     
     self.responseData = nil;
@@ -79,8 +84,6 @@
     {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         self.statusCode = httpResponse.statusCode;
-        
-        if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {
             AlfrescoLogTrace(@"response status code: %d", self.statusCode);
         }

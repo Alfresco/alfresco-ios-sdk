@@ -25,7 +25,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoKeywordSearchOptions : NSObject
+@interface AlfrescoKeywordSearchOptions : NSObject <NSCoding>
 @property (nonatomic, assign, readonly) BOOL exactMatch;
 @property (nonatomic, assign, readonly) BOOL includeContent;
 @property (nonatomic, assign, readonly) BOOL includeDescendants;

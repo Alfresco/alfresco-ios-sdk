@@ -24,7 +24,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoPermissions : NSObject
+@interface AlfrescoPermissions : NSObject <NSCoding>
 /// edit flag
 @property (nonatomic, assign, readonly) BOOL canEdit;
 /// delete flag

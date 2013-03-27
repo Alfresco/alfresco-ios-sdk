@@ -47,7 +47,7 @@ extern NSString * const kAlfrescoTestNetworkID;
 @property (nonatomic, strong) id<AlfrescoSession> currentSession;
 @property (nonatomic, strong) NSString *testSearchFileName;
 @property (nonatomic, strong) NSString *textKeyWord;
-
+@property (nonatomic, strong) NSString *testModeratedSiteName;
 @property (nonatomic, strong) NSString *server;
 @property (nonatomic, strong) NSString *userName;
 @property (nonatomic, strong) NSString *firstName;
@@ -62,8 +62,9 @@ extern NSString * const kAlfrescoTestNetworkID;
 @property (nonatomic, assign) BOOL isCloud;
 
 + (NSString *)testFileNameFromFilename:(NSString *)filename;
-- (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock;
-- (void) runCMISTest:(CMISTestBlock)cmisTestBlock;
+- (void)runSiteTestsForSecondaryUser:(AlfrescoTestBlock)sessionTestBlock;
+- (void)runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock;
+- (void)runCMISTest:(CMISTestBlock)cmisTestBlock;
 - (void) setUpCMISSession;
 - (void)authenticateOnPremiseServer;
 - (void)authenticateCloudServer;
