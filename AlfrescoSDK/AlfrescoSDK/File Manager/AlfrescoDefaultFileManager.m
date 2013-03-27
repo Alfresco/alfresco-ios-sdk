@@ -115,7 +115,7 @@
     }
     
     NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[NSURL URLWithString:[directory stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
-                                                        includingPropertiesForKeys:[NSArray arrayWithObjects:NSURLNameKey, NSURLPathKey,nil]
+                                                        includingPropertiesForKeys:[NSArray arrayWithObjects:NSURLNameKey, nil]
                                                                            options:options
                                                                       errorHandler:^BOOL(NSURL *url, NSError *fileError) {
                                                                           AlfrescoLogDebug(@"Error retrieving contents of the URL: %@ with the error: %@", [url absoluteString], [fileError localizedDescription]);
@@ -126,8 +126,7 @@
     
     for (NSURL *fileURL in folderContents)
     {
-        NSString *fullPath = nil;
-        [fileURL getResourceValue:&fullPath forKey:NSURLPathKey error:nil];
+        NSString *fullPath = [fileURL path];
         if (block != NULL)
         {
             block(fullPath);
