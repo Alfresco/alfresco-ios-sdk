@@ -131,6 +131,30 @@ static NSInteger kSiteModelVersion = 1;
     }
 }
 
+- (BOOL)isEqual:(id)object
+{
+    if (self == object)
+    {
+        return YES;
+    }
+    return ([object isKindOfClass:[AlfrescoSite class]] && ([[object identifier] isEqualToString:_identifier] || [[object shortName] isEqualToString:_shortName]));
+}
+
+- (void)changeMemberState:(NSNumber *)state
+{
+    self.isMember = [state boolValue];
+}
+
+- (void)changeFavouriteState:(NSNumber *)state
+{
+    self.isFavorite = [state boolValue];
+}
+
+- (void)changePendingState:(NSNumber *)state
+{
+    self.isPendingMember = [state boolValue];
+}
+
 #pragma NSCoding methods
 
 - (void)encodeWithCoder:(NSCoder *)aCoder

@@ -171,6 +171,12 @@ extern NSString * const kAlfrescoCloudCancelJoinRequestsAPI;
 extern NSString * const kAlfrescoCloudLeaveSiteAPI;
 
 extern NSString * const kAlfrescoCloudJSONList;
+extern NSString * const kAlfrescoCloudJSONPagination;
+extern NSString * const kAlfrescoCloudJSONCount;
+extern NSString * const kAlfrescoCloudJSONHasMoreItems;
+extern NSString * const kAlfrescoCloudJSONTotalItems;
+extern NSString * const kAlfrescoCloudJSONSkipCount;
+extern NSString * const kAlfrescoCloudJSONMaxItems;
 extern NSString * const kAlfrescoCloudJSONEntries;
 extern NSString * const kAlfrescoCloudJSONEntry;
 extern NSString * const kAlfrescoJSONIdentifier;

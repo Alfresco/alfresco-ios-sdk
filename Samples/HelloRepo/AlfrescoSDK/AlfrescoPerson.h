@@ -25,7 +25,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoPerson : NSObject
+@interface AlfrescoPerson : NSObject <NSCoding>
 
 
 /// Username of the person.

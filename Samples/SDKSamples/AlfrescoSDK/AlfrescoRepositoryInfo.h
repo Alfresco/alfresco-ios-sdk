@@ -29,7 +29,7 @@
  */
 
 
-@interface AlfrescoRepositoryInfo : NSObject
+@interface AlfrescoRepositoryInfo : NSObject <NSCoding>
 
 
 /// The name of the repository connected to.

@@ -98,7 +98,7 @@ NSString * const kAlfrescoSessionCloudURL = @"org.alfresco.mobile.internal.sessi
 NSString * const kAlfrescoSessionCloudBasicAuth = @"org.alfresco.mobile.internal.session.cloud.basic";
 NSString * const kAlfrescoSessionUsername = @"org.alfresco.mobile.internal.session.username";
 NSString * const kAlfrescoSessionPassword = @"org.alfresco.mobile.internal.session.password";
-NSString * const kAlfrescoSessionInternalCache = @"org.alfresco.mobile.internal.cache";
+NSString * const kAlfrescoSessionInternalCache = @"org.alfresco.mobile.internal.cache.";
 
 NSString * const kAlfrescoSiteIsFavorite = @"isFavorite";
 NSString * const kAlfrescoSiteIsMember = @"isMember";
@@ -202,6 +202,12 @@ NSString * const kAlfrescoCloudLeaveSiteAPI = @"sites/{siteID}/members/{personID
  JSON Constants
  */
 NSString * const kAlfrescoCloudJSONList = @"list";
+NSString * const kAlfrescoCloudJSONPagination = @"pagination";
+NSString * const kAlfrescoCloudJSONCount = @"count";
+NSString * const kAlfrescoCloudJSONHasMoreItems = @"hasMoreItems";
+NSString * const kAlfrescoCloudJSONTotalItems = @"totalItems";
+NSString * const kAlfrescoCloudJSONSkipCount = @"skipCount";
+NSString * const kAlfrescoCloudJSONMaxItems = @"maxItems";
 NSString * const kAlfrescoCloudJSONEntries = @"entries";
 NSString * const kAlfrescoCloudJSONEntry = @"entry";
 NSString * const kAlfrescoJSONIdentifier = @"id";

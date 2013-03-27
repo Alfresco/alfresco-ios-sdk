@@ -25,7 +25,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoPagingResult : NSObject
+@interface AlfrescoPagingResult : NSObject <NSCoding>
 
 
 /// Returns a list of all objects present in the page.
@@ -38,6 +38,7 @@
 
 /// Returns the total number of items that could potentially be returned, -1 means the total number of items was undetermined.
 @property (nonatomic, assign, readonly) int totalItems;
+
 
 - (id)initWithArray:(NSArray *)objects hasMoreItems:(BOOL)hasMoreItems totalItems:(int)totalItems;
 
