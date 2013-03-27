@@ -91,7 +91,7 @@
         completionBlock(sortedSites, nil);
         return nil;        
     }
-    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteAll completionBlock:completionBlock];
+    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteAll listingContext:nil arrayCompletionBlock:completionBlock pagingCompletionBlock:nil];
     return request;
 }
 
@@ -111,8 +111,10 @@
         completionBlock(pagingResult, nil);
         return nil;
     }
-    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteAll listingContext:listingContext
-                                          completionBlock:completionBlock];
+    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteAll
+                                           listingContext:listingContext
+                                     arrayCompletionBlock:nil
+                                    pagingCompletionBlock:completionBlock];
     return request;
 }
 
@@ -127,7 +129,7 @@
         completionBlock(sortedSites, nil);
         return nil;
     }
-    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteMember completionBlock:completionBlock];
+    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteMember listingContext:nil arrayCompletionBlock:completionBlock pagingCompletionBlock:nil];
     return request;
 }
 
@@ -147,7 +149,10 @@
         completionBlock(pagingResult, nil);
         return nil;
     }
-    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteMember listingContext:listingContext completionBlock:completionBlock];
+    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteMember
+                                           listingContext:listingContext
+                                     arrayCompletionBlock:nil
+                                    pagingCompletionBlock:completionBlock];
     return request;
 }
 
@@ -162,7 +167,7 @@
         completionBlock(sortedSites, nil);
         return nil;
     }
-    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteFavorite completionBlock:completionBlock];
+    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteFavorite listingContext:nil arrayCompletionBlock:completionBlock pagingCompletionBlock:nil];
     return request;
 }
 
@@ -182,7 +187,7 @@
         completionBlock(pagingResult, nil);
         return nil;
     }
-    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteFavorite listingContext:listingContext completionBlock:completionBlock];
+    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSiteFavorite listingContext:listingContext arrayCompletionBlock:nil pagingCompletionBlock:completionBlock];
     return request;
 }
 
@@ -290,8 +295,29 @@
         completionBlock(pendingSiteRequests, nil);
         return nil;
     }
-    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSitePendingMember completionBlock:completionBlock];
+    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSitePendingMember listingContext:nil arrayCompletionBlock:completionBlock pagingCompletionBlock:nil];
     return request;
+}
+
+- (AlfrescoRequest *)retrievePendingSitesWithListingContext:(AlfrescoListingContext *)listingContext completionblock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = self.session.defaultListingContext;
+    }
+    NSArray *pendingSiteRequests = [self.siteCache pendingMemberSites];
+    if (0 < pendingSiteRequests.count && !self.siteCache.hasMorePendingSites)
+    {
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:pendingSiteRequests listingContext:listingContext];
+        completionBlock(pagingResult, nil);
+        return nil;
+    }
+    AlfrescoRequest *request = [self retrieveSitesForType:AlfrescoSitePendingMember
+                                           listingContext:listingContext
+                                     arrayCompletionBlock:nil
+                                    pagingCompletionBlock:completionBlock];
+    return request;    
 }
 
 
@@ -462,11 +488,14 @@
 
 #pragma mark Site service internal methods
 
-- (AlfrescoRequest *)retrieveSitesForType:(AlfrescoSiteFlags)type completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveSitesForType:(AlfrescoSiteFlags)type
+                           listingContext:(AlfrescoListingContext *)listingContext
+                     arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
+                    pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    
+    BOOL isPaging = (nil == arrayCompletionBlock);
+
     __block NSArray *resultsArray = nil;
     NSURL *allSitesAPI = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudSiteAPI];
     
@@ -482,7 +511,7 @@
     [self.session.networkProvider executeRequestWithURL:allSitesAPI session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
-            completionBlock(nil, error);
+            [self errorForCompletionBlocks:error arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
         }
         else
         {
@@ -496,7 +525,7 @@
                 [self.session.networkProvider executeRequestWithURL:memberApi session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *mySitesError){
                     if (nil == data)
                     {
-                        completionBlock(nil, mySitesError);
+                        [self errorForCompletionBlocks:mySitesError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
                     }
                     else
                     {
@@ -510,7 +539,7 @@
                             [self.session.networkProvider executeRequestWithURL:favApi session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
                                 if (nil == data)
                                 {
-                                    completionBlock(nil, error);
+                                    [self errorForCompletionBlocks:error arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
                                 }
                                 else
                                 {
@@ -524,7 +553,7 @@
                                         [self.session.networkProvider executeRequestWithURL:pendingApi session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
                                             if (nil == data)
                                             {
-                                                completionBlock(nil, error);
+                                                [self errorForCompletionBlocks:error arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
                                             }
                                             else
                                             {
@@ -549,18 +578,26 @@
                                                             resultsArray = pending;
                                                             break;
                                                     }
-                                                    completionBlock(resultsArray, nil);
+                                                    if (isPaging)
+                                                    {
+                                                        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:resultsArray listingContext:listingContext];
+                                                        pagingCompletionBlock(pagingResult, nil);
+                                                    }
+                                                    else
+                                                    {                                                        
+                                                        arrayCompletionBlock(resultsArray, nil);
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    completionBlock(nil, jsonError);
+                                                    [self errorForCompletionBlocks:jsonError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
                                                 }
                                             }
                                         }];
                                     }
                                     else
                                     {
-                                        completionBlock(nil, conversionError);
+                                        [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
                                     }
                                 }
                             }];
@@ -568,14 +605,14 @@
                         }
                         else
                         {
-                            completionBlock(nil, conversionError);
+                            [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
                         }
                     }
                 }];
             }
             else
             {
-                completionBlock(nil, conversionError);
+                [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
             }
         }
     }];
@@ -583,126 +620,18 @@
     return request;
 }
 
-- (AlfrescoRequest *)retrieveSitesForType:(AlfrescoSiteFlags)type
-                           listingContext:(AlfrescoListingContext *)listingContext
-                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (void)errorForCompletionBlocks:(NSError *)error
+            arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
+           pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    
-    __block NSArray *resultsArray = nil;
-    NSURL *allSitesAPI = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudSiteAPI];
-    NSString *requestString = [kAlfrescoCloudSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
-                                                                                        withString:self.session.personIdentifier];
-    NSURL *memberApi = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    requestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
-                                                                                                withString:self.session.personIdentifier];
-    NSURL *favApi = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    NSURL *pendingApi = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudJoinSiteAPI];
-    
-    [self.session.networkProvider executeRequestWithURL:allSitesAPI session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
-        if (nil == data)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
-            NSArray *sites = [self siteArrayWithData:data error:&conversionError];
-            if (sites && pagingInfo)
-            {
-                NSArray *allSortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
-                [self.siteCache addSites:allSortedSites hasMoreSites:[[pagingInfo valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue]];
-                [self.session.networkProvider executeRequestWithURL:memberApi session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *mySitesError){
-                    if (nil == data)
-                    {
-                        completionBlock(nil, mySitesError);
-                    }
-                    else
-                    {
-                        NSError *conversionError = nil;
-                        NSArray *sites = [self specifiedSiteArrayFromJSONData:data error:&conversionError];
-                        NSDictionary *sitesPagination = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
-                        if (sites && sitesPagination)
-                        {
-                            NSArray *mySortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
-                            [self.siteCache addMemberSites:mySortedSites hasMoreMemberSites:[[sitesPagination valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue]];
-                            [self.session.networkProvider executeRequestWithURL:favApi session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
-                                if (nil == data)
-                                {
-                                    completionBlock(nil, error);
-                                }
-                                else
-                                {
-                                    NSError *conversionError = nil;
-                                    NSArray *sites = [self siteArrayWithData:data error:&conversionError];
-                                    NSDictionary *favPagination = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
-                                    if (sites && favPagination)
-                                    {
-                                        NSArray *favSortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
-                                        [self.siteCache addFavoriteSites:favSortedSites hasMoreFavoriteSites:[[favPagination valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue]];
-                                        [self.session.networkProvider executeRequestWithURL:pendingApi session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
-                                            if (nil == data)
-                                            {
-                                                completionBlock(nil, error);
-                                            }
-                                            else
-                                            {
-                                                NSError *jsonError = nil;
-                                                NSArray *pending = [self joinRequestSitesArrayFromJSONData:data error:&jsonError];
-                                                NSDictionary *pendingPagination = [AlfrescoObjectConverter paginationJSONFromData:data error:&jsonError];
-                                                if (pending && pendingPagination)
-                                                {
-                                                    [self.siteCache addPendingSites:pending hasMorePendingSites:[[pendingPagination valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue]];
-                                                    switch (type)
-                                                    {
-                                                        case AlfrescoSiteAll:
-                                                            resultsArray = allSortedSites;
-                                                            break;
-                                                        case AlfrescoSiteFavorite:
-                                                            resultsArray = favSortedSites;
-                                                            break;
-                                                        case AlfrescoSiteMember:
-                                                            resultsArray = mySortedSites;
-                                                            break;
-                                                        case AlfrescoSitePendingMember:
-                                                            resultsArray = pending;
-                                                            break;
-                                                    }
-                                                    AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:resultsArray listingContext:listingContext];
-                                                    completionBlock(pagingResult, nil);
-                                                }
-                                                else
-                                                {
-                                                    completionBlock(nil, jsonError);
-                                                }
-                                            }
-                                        }];
-                                    }
-                                    else
-                                    {
-                                        completionBlock(nil, conversionError);
-                                    }
-                                }
-                            }];
-                            
-                        }
-                        else
-                        {
-                            completionBlock(nil, conversionError);
-                        }
-                    }
-                }];
-            }
-            else
-            {
-                completionBlock(nil, conversionError);
-            }
-        }
-    }];
-    
-    return request;
+    if (arrayCompletionBlock)
+    {
+        arrayCompletionBlock(nil, error);
+    }
+    else
+    {
+        pagingCompletionBlock(nil, error);
+    }
 }
 
 

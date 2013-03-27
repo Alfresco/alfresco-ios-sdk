@@ -655,6 +655,7 @@
     return request;
 }
 
+
 - (void)errorForCompletionBlocks:(NSError *)error
             arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
            pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock
