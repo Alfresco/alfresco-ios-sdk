@@ -54,7 +54,7 @@
         cache = [[self alloc] init];
         if (cache)
         {
-            NSString *key = [NSString stringWithFormat:@"%@.%@",kAlfrescoSessionInternalCache, [AlfrescoSiteCache class]];
+            NSString *key = [NSString stringWithFormat:@"%@%@",kAlfrescoSessionInternalCache, [AlfrescoSiteCache class]];
             [session setObject:cache forParameter:key];
         }
     });
@@ -87,7 +87,10 @@
 
 - (void)addMemberSite:(AlfrescoSite *)memberSite
 {
-    if (!memberSite) return;
+    if (nil == memberSite)
+    {
+        return;
+    }
     NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:memberSite];
     [memberSite performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:YES]];
     if (NSNotFound == foundSiteIndex)
@@ -102,7 +105,10 @@
 
 - (void)addFavoriteSite:(AlfrescoSite *)favoriteSite
 {
-    if (!favoriteSite) return;
+    if (nil == favoriteSite)
+    {
+        return;
+    }
     NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:favoriteSite];
     [favoriteSite performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:YES]];
     if (NSNotFound == foundSiteIndex)
@@ -117,7 +123,10 @@
 
 - (void)addPendingSite:(AlfrescoSite *)pendingSite
 {
-    if (!pendingSite) return;
+    if (nil == pendingSite)
+    {
+        return;
+    }
     NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:pendingSite];
     [pendingSite performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:YES]];
     if (NSNotFound == foundSiteIndex)
@@ -132,7 +141,10 @@
 
 - (AlfrescoSite *)addPendingRequest:(AlfrescoOnPremiseJoinSiteRequest *)pendingRequest
 {
-    if (!pendingRequest) return nil;
+    if (nil == pendingRequest)
+    {
+        return nil;
+    }
     AlfrescoSite *site = [self objectWithIdentifier:pendingRequest.shortName];
     if (site)
     {
@@ -151,7 +163,10 @@
 
 - (void)removeMemberSite:(AlfrescoSite *)memberSite
 {
-    if (!memberSite) return;
+    if (nil == memberSite)
+    {
+        return;
+    }
     [memberSite performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:NO]];
     if ([self.sitesCache containsObject:memberSite] && !memberSite.isFavorite)
     {
@@ -161,7 +176,10 @@
 
 - (void)removeFavoriteSite:(AlfrescoSite *)favoriteSite
 {
-    if (!favoriteSite) return;
+    if (nil == favoriteSite)
+    {
+        return;
+    }
     [favoriteSite performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:NO]];
     if ([self.sitesCache containsObject:favoriteSite] && !favoriteSite.isMember && !favoriteSite.isPendingMember)
     {
@@ -171,7 +189,10 @@
 
 - (void)removePendingSite:(AlfrescoSite *)pendingSite
 {
-    if (!pendingSite) return;
+    if (nil == pendingSite)
+    {
+        return;
+    }
     [pendingSite performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:NO]];
     if ([self.sitesCache containsObject:pendingSite] && !pendingSite.isFavorite)
     {
@@ -182,7 +203,10 @@
 - (void)addSites:(NSArray *)sites hasMoreSites:(BOOL)hasMoreSites
 {
     self.hasMoreSites = hasMoreSites;
-    if (nil == sites)return;
+    if (nil == sites)
+    {
+        return;
+    }
     for (AlfrescoSite *site in sites)
     {
         NSUInteger foundIndex = [self.sitesCache indexOfObject:site];
@@ -196,7 +220,10 @@
 - (void)addMemberSites:(NSArray *)memberSites hasMoreMemberSites:(BOOL)hasMoreMemberSites
 {
     self.hasMoreMemberSites = hasMoreMemberSites;
-    if (nil == memberSites)return;
+    if (nil == memberSites)
+    {
+        return;
+    }
     for (AlfrescoSite *site in memberSites)
     {
         [self addMemberSite:site];
@@ -206,7 +233,10 @@
 - (void)addFavoriteSites:(NSArray *)favoriteSites hasMoreFavoriteSites:(BOOL)hasMoreFavoriteSites
 {
     self.hasMoreFavoriteSites = hasMoreFavoriteSites;
-    if (nil == favoriteSites)return;
+    if (nil == favoriteSites)
+    {
+        return;
+    }
     for (AlfrescoSite *site in favoriteSites)
     {
         [self addFavoriteSite:site];
@@ -216,7 +246,10 @@
 - (void)addPendingSites:(NSArray *)pendingSites hasMorePendingSites:(BOOL)hasMorePendingSites
 {
     self.hasMorePendingSites = hasMorePendingSites;
-    if (nil == pendingSites)return;
+    if (nil == pendingSites)
+    {
+        return;
+    }
     for (AlfrescoSite *site in pendingSites)
     {
         [self addPendingSite:site];
@@ -246,7 +279,10 @@
 
 - (NSArray *)addPendingRequests:(NSArray *)pendingRequests
 {
-    if (nil == pendingRequests)return nil;
+    if (nil == pendingRequests)
+    {
+        return nil;
+    }
     for (AlfrescoOnPremiseJoinSiteRequest *pendingRequest in pendingRequests)
     {
         [self addPendingRequest:pendingRequest];
@@ -263,7 +299,7 @@
 /**
  the method returns the first entry found for the identifier. Typically, a site id is unique - but this may not always be the case(?)
  */
-- (id)objectWithIdentifier:(NSString *)identifier
+- (AlfrescoSite *)objectWithIdentifier:(NSString *)identifier
 {
     if (!identifier)return nil;
     NSPredicate *idPredicate = [NSPredicate predicateWithFormat:@"identifier == %@",identifier];

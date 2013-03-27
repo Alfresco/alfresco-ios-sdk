@@ -481,24 +481,37 @@
                         STAssertTrue(reqIsFavorite == isFavorite, @"the favourite state of requested site should not have changed");
                         STAssertTrue(isCorrectName, @"the site should be equal to iOSModeratedSite, but instead we got %@",requestedSite.identifier);
                         STAssertTrue(requestedSite.isPendingMember, @"Site should be in state isPendingMember - but appears to be not");
-                        [self.siteService cancelPendingJoinRequestForSite:requestedSite completionBlock:^(AlfrescoSite *cancelledSite, NSError *cancelError){
-                            if (nil == cancelledSite)
+                        [self.siteService retrievePendingSitesWithCompletionBlock:^(NSArray *pendingSites, NSError *retrieveError){
+                            if (nil == pendingSites)
                             {
-                                STAssertNil(cancelledSite,@"if failure, the cancelledSite object should be nil");
                                 super.lastTestSuccessful = NO;
-                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [cancelError localizedDescription], [cancelError localizedFailureReason]];
+                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveError localizedDescription], [retrieveError localizedFailureReason]];
                                 super.callbackCompleted = YES;
                             }
                             else
                             {
-                                BOOL isCorrectName = [requestedSite.identifier isEqualToString:@"iosmoderatedsite"] || [requestedSite.identifier isEqualToString:@"iOSModeratedSite"];
-                                STAssertTrue(cancelledSite.isMember == isMember, @"the membership state of cancelled site should not have changed");
-                                STAssertTrue(cancelledSite.isFavorite == isFavorite, @"the favourite state of cancelled site should not have changed");
-                                STAssertTrue(isCorrectName, @"the site should be equal to iosmoderatedsite/iOSModeratedSite, but instead we got %@",modSite.identifier);
-                                STAssertFalse(cancelledSite.isPendingMember, @"Site should NOT be in state isPendingMember - but appears to be still in this state");
-                                super.lastTestSuccessful = YES;
-                                super.callbackCompleted = YES;
+                                STAssertTrue(0 < pendingSites.count, @"We should have at least 1 requested site in the array, instead we got %d", pendingSites.count);
+                                [self.siteService cancelPendingJoinRequestForSite:requestedSite completionBlock:^(AlfrescoSite *cancelledSite, NSError *cancelError){
+                                    if (nil == cancelledSite)
+                                    {
+                                        STAssertNil(cancelledSite,@"if failure, the cancelledSite object should be nil");
+                                        super.lastTestSuccessful = NO;
+                                        super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [cancelError localizedDescription], [cancelError localizedFailureReason]];
+                                        super.callbackCompleted = YES;
+                                    }
+                                    else
+                                    {
+                                        BOOL isCorrectName = [requestedSite.identifier isEqualToString:@"iosmoderatedsite"] || [requestedSite.identifier isEqualToString:@"iOSModeratedSite"];
+                                        STAssertTrue(cancelledSite.isMember == isMember, @"the membership state of cancelled site should not have changed");
+                                        STAssertTrue(cancelledSite.isFavorite == isFavorite, @"the favourite state of cancelled site should not have changed");
+                                        STAssertTrue(isCorrectName, @"the site should be equal to iosmoderatedsite/iOSModeratedSite, but instead we got %@",modSite.identifier);
+                                        STAssertFalse(cancelledSite.isPendingMember, @"Site should NOT be in state isPendingMember - but appears to be still in this state");
+                                        super.lastTestSuccessful = YES;
+                                        super.callbackCompleted = YES;
+                                    }
+                                }];
                             }
+
                         }];
                     }
                 }];

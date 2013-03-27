@@ -70,7 +70,6 @@
         else
         {
             AlfrescoSiteCache *cache = [AlfrescoSiteCache siteCacheForSession:session];
-            [self.session setObject:cache forParameter:siteCacheKey];
             self.siteCache = cache;
         }
     }

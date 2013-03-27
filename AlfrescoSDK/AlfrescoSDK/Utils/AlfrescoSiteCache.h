@@ -97,6 +97,8 @@ typedef enum
 
 - (void)addPendingSites:(NSArray *)pendingSites;
 
+- (AlfrescoSite *)objectWithIdentifier:(NSString *)identifier;
+
 - (NSArray *)addPendingRequests:(NSArray *)pendingRequests;
 
 @end

@@ -121,6 +121,13 @@
     return nil;
 }
 
+- (AlfrescoRequest *)retrievePendingSitesWithListingContext:(AlfrescoListingContext *)listingContext
+                                            completionblock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (AlfrescoRequest *)cancelPendingJoinRequestForSite:(AlfrescoSite *)site
                                      completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {

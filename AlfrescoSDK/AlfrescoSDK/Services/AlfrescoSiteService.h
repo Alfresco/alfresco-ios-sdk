@@ -144,6 +144,14 @@
  @param completionBlock - returns an array of AlfrescoSite objects or nil if unsuccessful
  */
 - (AlfrescoRequest *)retrievePendingSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+
+/**
+ retrieves a list of pending join request sites with a specified listing context
+ */
+- (AlfrescoRequest *)retrievePendingSitesWithListingContext:(AlfrescoListingContext *)listingContext
+                                            completionblock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
 /**
  cancels a join request for a specified site
  @param site - the pending site for which the join request is to be cancelled
