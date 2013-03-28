@@ -91,8 +91,8 @@
     {
         return;
     }
-    NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:memberSite];
     [memberSite performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:YES]];
+    NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:memberSite];
     if (NSNotFound == foundSiteIndex)
     {
         [self.sitesCache addObject:memberSite];
@@ -109,8 +109,8 @@
     {
         return;
     }
-    NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:favoriteSite];
     [favoriteSite performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:YES]];
+    NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:favoriteSite];
     if (NSNotFound == foundSiteIndex)
     {
         [self.sitesCache addObject:favoriteSite];
@@ -127,8 +127,8 @@
     {
         return;
     }
-    NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:pendingSite];
     [pendingSite performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:YES]];
+    NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:pendingSite];
     if (NSNotFound == foundSiteIndex)
     {
         [self.sitesCache addObject:pendingSite];

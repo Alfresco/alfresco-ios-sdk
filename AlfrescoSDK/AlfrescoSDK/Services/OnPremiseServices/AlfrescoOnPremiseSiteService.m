@@ -567,7 +567,7 @@
                         if (nil != favSitesArray)
                         {
                             NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"shortName IN %@",favSitesArray];
-                            NSArray *favoriteSites = [siteArray filteredArrayUsingPredicate:favoritePredicate];
+                            NSArray *favoriteSites = [allSortedArray filteredArrayUsingPredicate:favoritePredicate];
                             [self.siteCache addFavoriteSites:favoriteSites];
                             [self.session.networkProvider executeRequestWithURL:mySitesAPI session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *myError){
                                 if (nil == data)
