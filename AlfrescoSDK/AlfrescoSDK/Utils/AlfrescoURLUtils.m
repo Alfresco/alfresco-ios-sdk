@@ -19,10 +19,16 @@
  */
 
 #import "AlfrescoURLUtils.h"
+#import "AlfrescoInternalConstants.h"
 
 @implementation AlfrescoURLUtils
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL
+{
+    return [AlfrescoURLUtils buildURLFromBaseURLString:baseURL extensionURL:extensionURL listingContext:nil];
+}
+
++ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL listingContext:(AlfrescoListingContext *)listingContext
 {
     NSMutableString *mutableRequestString = [NSMutableString string];
     if ([baseURL hasSuffix:@"/"] && [extensionURL hasPrefix:@"/"])
@@ -37,10 +43,18 @@
         [mutableRequestString appendString:separator];
         [mutableRequestString appendString:extensionURL];
     }
+    
+    if (nil != listingContext)
+    {
+        NSString *parameterExtension = [kAlfrescoCloudPagingAPIParameters stringByReplacingOccurrencesOfString:kAlfrescoMaxItems
+                                                                                                    withString:[NSString stringWithFormat:@"%d",listingContext.maxItems]];
+        [mutableRequestString appendString:[parameterExtension stringByReplacingOccurrencesOfString:kAlfrescoSkipCount
+                                                                                         withString:[NSString stringWithFormat:@"%d", listingContext.skipCount]]];
+    }
+        
     NSString *requestString = [mutableRequestString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    return [NSURL URLWithString:requestString];
+    return [NSURL URLWithString:requestString];    
 }
-
 
 
 @end
