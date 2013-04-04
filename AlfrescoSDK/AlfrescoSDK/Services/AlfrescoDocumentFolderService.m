@@ -798,7 +798,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                 }
                 else
                 {
-                    [self.cmisSession retrieveObject:document.identifier completionBlock:^(CMISObject *updatedObject, NSError *updatedError){
+                    NSString *versionFreeIdentifier = [AlfrescoObjectConverter nodeRefWithoutVersionID:document.identifier];
+                    [self.cmisSession retrieveObject:versionFreeIdentifier completionBlock:^(CMISObject *updatedObject, NSError *updatedError){
                         if (nil == updatedObject)
                         {
                             completionBlock(nil, updatedError);
@@ -907,13 +908,14 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                       withProperties:updatedProperties
                       withChangeToken:nil
                       completionBlock:^(NSError *updateError){
-                          if (nil != error)
+                          if (nil != updateError)
                           {
                               completionBlock(nil, updateError);
                           }
                           else
                           {
-                              [self.cmisSession retrieveObject:node.identifier completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError){
+                              NSString *versionFreeIdentifier = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+                              [self.cmisSession retrieveObject:versionFreeIdentifier completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError){
                                   if (nil == updatedCMISObject)
                                   {
                                       completionBlock(nil, retrievalError);
