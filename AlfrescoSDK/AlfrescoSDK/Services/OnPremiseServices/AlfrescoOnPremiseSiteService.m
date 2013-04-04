@@ -352,7 +352,7 @@
     }
     else
     {
-        NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSitesFailedToJoinSite];
+        NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         completionBlock(nil, error);
         return nil;
     }
@@ -598,16 +598,16 @@
                                                     switch (type)
                                                     {
                                                         case AlfrescoSiteAll:
-                                                            resultsArray = allSortedArray;
+                                                            resultsArray = [self.siteCache allSites];
                                                             break;
                                                         case AlfrescoSiteFavorite:
-                                                            resultsArray = favoriteSites;
+                                                            resultsArray = [self.siteCache favoriteSites];
                                                             break;
                                                         case AlfrescoSiteMember:
-                                                            resultsArray = mySortedSiteArray;
+                                                            resultsArray = [self.siteCache memberSites];
                                                             break;
                                                         case AlfrescoSitePendingMember:
-                                                            resultsArray = pendingSites;
+                                                            resultsArray = [self.siteCache pendingMemberSites];
                                                             break;
                                                     }
                                                     if (arrayCompletionBlock)

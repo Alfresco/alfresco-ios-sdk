@@ -99,6 +99,9 @@
     }
     else
     {
+        AlfrescoSite *existingSite = (AlfrescoSite *)[self.sitesCache objectAtIndex:foundSiteIndex];
+        [memberSite performSelector:@selector(changeFavoriteState:) withObject:[NSNumber numberWithBool:existingSite.isFavorite]];
+        [memberSite performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:existingSite.isPendingMember]];
         [self.sitesCache replaceObjectAtIndex:foundSiteIndex withObject:memberSite];
     }
 }
@@ -109,7 +112,7 @@
     {
         return;
     }
-    [favoriteSite performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:YES]];
+    [favoriteSite performSelector:@selector(changeFavoriteState:) withObject:[NSNumber numberWithBool:YES]];
     NSUInteger foundSiteIndex = [self.sitesCache indexOfObject:favoriteSite];
     if (NSNotFound == foundSiteIndex)
     {
@@ -117,6 +120,9 @@
     }
     else
     {
+        AlfrescoSite *existingSite = (AlfrescoSite *)[self.sitesCache objectAtIndex:foundSiteIndex];
+        [favoriteSite performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:existingSite.isMember]];
+        [favoriteSite performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:existingSite.isPendingMember]];
         [self.sitesCache replaceObjectAtIndex:foundSiteIndex withObject:favoriteSite];
     }
 }
@@ -135,6 +141,9 @@
     }
     else
     {
+        AlfrescoSite *existingSite = (AlfrescoSite *)[self.sitesCache objectAtIndex:foundSiteIndex];
+        [pendingSite performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:existingSite.isMember]];
+        [pendingSite performSelector:@selector(changeFavoriteState:) withObject:[NSNumber numberWithBool:existingSite.isFavorite]];
         [self.sitesCache replaceObjectAtIndex:foundSiteIndex withObject:pendingSite];
     }
 }
@@ -180,7 +189,7 @@
     {
         return;
     }
-    [favoriteSite performSelector:@selector(changeFavouriteState:) withObject:[NSNumber numberWithBool:NO]];
+    [favoriteSite performSelector:@selector(changeFavoriteState:) withObject:[NSNumber numberWithBool:NO]];
     if ([self.sitesCache containsObject:favoriteSite] && !favoriteSite.isMember && !favoriteSite.isPendingMember)
     {
         [self.sitesCache addObject:favoriteSite];

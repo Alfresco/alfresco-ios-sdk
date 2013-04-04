@@ -1389,6 +1389,7 @@
 }
 
 /**
+ maxItems == -1 is a special value indicating as many items as possible (and no server side paging for Cloud).
  @Unique_TCRef 14F5,14F6
  */
 - (void)testRetrieveChildrenInFolderWithBogusPaging
@@ -1396,7 +1397,7 @@
     [super runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:-1 skipCount:-99];
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:-4 skipCount:-99];
         
         // get the children of the repository's root folder
         [self.dfService retrieveChildrenInFolder:super.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
@@ -3788,7 +3789,7 @@
                                      }
                                      else
                                      {
-                                         STAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content, instead we get %@",updatedContent);
+                                         STAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content %@, instead we get %@",updatedContent, checkContentString);
                                          super.lastTestSuccessful = YES;
                                      }
                                      

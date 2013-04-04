@@ -525,7 +525,11 @@
             {
                 NSArray *allSortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
                 BOOL hasMoreAllSites = [[pagingInfo valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
-                int totalAllSites = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
+                int totalAllSites = -1;
+                if ([pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems])
+                {
+                    totalAllSites = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
+                }
                 [self.siteCache addSites:allSortedSites hasMoreSites:hasMoreAllSites];
                 [self.session.networkProvider executeRequestWithURL:memberApi session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *mySitesError){
                     if (nil == data)
@@ -541,7 +545,11 @@
                         {
                             NSArray *mySortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
                             BOOL hasMoreMemberSites = [[sitesPagination valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
-                            int totalMemberSites = [[sitesPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems] intValue];
+                            int totalMemberSites = -1;
+                            if ([sitesPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems])
+                            {
+                                totalMemberSites = [[sitesPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems] intValue];
+                            }
                             [self.siteCache addMemberSites:mySortedSites hasMoreMemberSites:hasMoreMemberSites];
                             [self.session.networkProvider executeRequestWithURL:favApi session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
                                 if (nil == data)
@@ -556,7 +564,12 @@
                                     if (sites && favPagination)
                                     {
                                         BOOL hasMoreFavSites = [[favPagination valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
-                                        int totalFavSites = [[favPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems] intValue];
+                                        int totalFavSites = -1;
+                                        if ([favPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems])
+                                        {
+                                            totalFavSites = [[favPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems] intValue];
+                                        }
+                                        
                                         NSArray *favSortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
                                         [self.siteCache addFavoriteSites:favSortedSites hasMoreFavoriteSites:hasMoreFavSites];
                                         [self.session.networkProvider executeRequestWithURL:pendingApi session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
@@ -572,7 +585,11 @@
                                                 if (pending && pendingPagination)
                                                 {
                                                     BOOL hasMore = [[pendingPagination valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
-                                                    int totalItems = [[pendingPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems] intValue];
+                                                    int totalItems = -1;
+                                                    if ([pendingPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems])
+                                                    {
+                                                        totalItems = [[pendingPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems] intValue];
+                                                    }
                                                     [self.siteCache addPendingSites:pending hasMorePendingSites:hasMore];
                                                     switch (type)
                                                     {
@@ -580,25 +597,25 @@
                                                         {
                                                             hasMore = hasMoreAllSites;
                                                             totalItems = totalAllSites;
-                                                            resultsArray = allSortedSites;
+                                                            resultsArray = [self.siteCache allSites];
                                                         }
                                                             break;
                                                         case AlfrescoSiteFavorite:
                                                         {
                                                             hasMore = hasMoreFavSites;
                                                             totalItems = totalFavSites;
-                                                            resultsArray = favSortedSites;
+                                                            resultsArray = [self.siteCache favoriteSites];
                                                         }
                                                             break;
                                                         case AlfrescoSiteMember:
                                                         {
                                                             hasMore = hasMoreMemberSites;
                                                             totalItems = totalMemberSites;
-                                                            resultsArray = mySortedSites;
+                                                            resultsArray = [self.siteCache memberSites];
                                                         }
                                                             break;
                                                         case AlfrescoSitePendingMember:
-                                                            resultsArray = pending;
+                                                            resultsArray = [self.siteCache pendingMemberSites];
                                                             break;
                                                     }
                                                     if (isPaging)

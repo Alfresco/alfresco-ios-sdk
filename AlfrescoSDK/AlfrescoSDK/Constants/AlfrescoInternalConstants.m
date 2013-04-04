@@ -198,7 +198,7 @@ NSString * const kAlfrescoCloudRemoveFavoriteSiteAPI = @"people/-me-/favorites/{
 NSString * const kAlfrescoCloudJoinSiteAPI = @"people/-me-/site-membership-requests";
 NSString * const kAlfrescoCloudCancelJoinRequestsAPI = @"people/-me-/site-membership-requests/{siteID}";
 NSString * const kAlfrescoCloudLeaveSiteAPI = @"sites/{siteID}/members/{personID}";
-NSString * const kAlfrescoCloudPagingAPIParameters = @"?maxItems={maxItems}&skipCount={skipCount}";
+NSString * const kAlfrescoCloudPagingAPIParameters = @"maxItems={maxItems}&skipCount={skipCount}";
 
 /**
  JSON Constants

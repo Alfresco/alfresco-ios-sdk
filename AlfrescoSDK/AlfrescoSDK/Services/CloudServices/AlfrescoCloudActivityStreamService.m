@@ -46,7 +46,6 @@
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudAPIPath];
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -64,7 +63,7 @@
 }
 
 - (AlfrescoRequest *)retrieveActivityStreamWithListingContext:(AlfrescoListingContext *)listingContext
-                                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+                                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     return [self retrieveActivityStreamForPerson:self.session.personIdentifier listingContext:listingContext completionBlock:completionBlock];
 }
@@ -73,9 +72,11 @@
 {
     [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    AlfrescoListingContext *maxListingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self requestActivityStreamWithArrayCompletionBlock:completionBlock pagingCompletionBlock:nil listingContext:maxListingContext site:nil usePaging:NO];
+    /*
     NSString *requestString = [kAlfrescoCloudActivitiesAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-//    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
@@ -90,10 +91,12 @@
         }
     }];
     return alfrescoRequest;
+     */
 }
 
-- (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext
-                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier
+                                      listingContext:(AlfrescoListingContext *)listingContext
+                                     completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -102,9 +105,10 @@
     {
         listingContext = self.session.defaultListingContext;
     }
+    return [self requestActivityStreamWithArrayCompletionBlock:nil pagingCompletionBlock:completionBlock listingContext:listingContext site:nil usePaging:YES];
+    /*
     NSString *requestString = [kAlfrescoCloudActivitiesAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-//    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
@@ -114,22 +118,34 @@
         else
         {
             NSError *conversionError = nil;
+            NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:responseData error:&conversionError];
             NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
-            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
+            AlfrescoPagingResult *pagingResult = nil;
+            if (activityStreamArray && pagingInfo)
+            {
+                BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
+                int total = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
+                pagingResult = [[AlfrescoPagingResult alloc] initWithArray:activityStreamArray hasMoreItems:hasMore totalItems:total];
+            }
             completionBlock(pagingResult, conversionError);
         }
     }];
     return alfrescoRequest;
+     */
 }
+
+
 
 - (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    AlfrescoListingContext *maxListingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self requestActivityStreamWithArrayCompletionBlock:completionBlock pagingCompletionBlock:nil listingContext:maxListingContext site:site usePaging:NO];
+    /*
     NSString *peopleRefString = [kAlfrescoCloudActivitiesForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSString *requestString = [peopleRefString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-//    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
@@ -144,6 +160,7 @@
         }
     }];
     return alfrescoRequest;
+     */
 }
 
 - (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site
@@ -158,10 +175,11 @@
         listingContext = self.session.defaultListingContext;
     }
 
+    return [self requestActivityStreamWithArrayCompletionBlock:nil pagingCompletionBlock:completionBlock listingContext:listingContext site:site usePaging:YES];
+    /*
     NSString *peopleRefString = [kAlfrescoCloudActivitiesForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSString *requestString = [peopleRefString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-//    __weak AlfrescoCloudActivityStreamService *weakSelf = self;
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
         if (nil == responseData)
@@ -171,15 +189,86 @@
         else
         {
             NSError *conversionError = nil;
+            NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:responseData error:&conversionError];
             NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
-            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
+            AlfrescoPagingResult *pagingResult = nil;
+            if (activityStreamArray && pagingInfo)
+            {                
+                BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
+                int total = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
+                pagingResult = [[AlfrescoPagingResult alloc] initWithArray:activityStreamArray hasMoreItems:hasMore totalItems:total];
+            }
             completionBlock(pagingResult, conversionError);
         }
     }];
     return alfrescoRequest;
+     */
 }
 
+
+
 #pragma mark Activity stream service internal methods
+- (AlfrescoRequest *)requestActivityStreamWithArrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
+                                             pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock
+                                                    listingContext:(AlfrescoListingContext *)listingContext
+                                                              site:(AlfrescoSite *)site
+                                                         usePaging:(BOOL)usePaging
+{
+    NSString *requestString = nil;
+    if (site)
+    {
+        NSString *peopleRefString = [kAlfrescoCloudActivitiesForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+        requestString = [peopleRefString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
+    }
+    else
+    {
+        requestString = [kAlfrescoCloudActivitiesAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    }
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
+        if (nil == responseData)
+        {
+            if (usePaging)
+            {
+                pagingCompletionBlock(nil, error);
+            }
+            else
+            {
+                arrayCompletionBlock(nil, error);
+            }
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
+            if (usePaging)
+            {
+                NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:responseData error:&conversionError];
+                AlfrescoPagingResult *pagingResult = nil;
+                if (activityStreamArray && pagingInfo)
+                {
+                    BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
+                    int total = -1;
+                    if ([pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems])
+                    {
+                        total = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
+                    }
+                    pagingResult = [[AlfrescoPagingResult alloc] initWithArray:activityStreamArray hasMoreItems:hasMore totalItems:total];
+                }
+                pagingCompletionBlock(pagingResult, conversionError);
+            }
+            else
+            {
+                NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
+                arrayCompletionBlock(activityStreamArray, conversionError);
+            }
+            
+        }
+    }];
+    
+    return alfrescoRequest;
+}
 
 - (NSArray *) activityStreamArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {

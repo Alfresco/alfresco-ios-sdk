@@ -405,7 +405,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 }
 
 - (AlfrescoRequest *)retrievePermissionsOfNode:(AlfrescoNode *)node 
-                  completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock
+                               completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
@@ -435,7 +435,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 
 
 - (AlfrescoRequest *)retrieveChildrenInFolder:(AlfrescoFolder *)folder 
-                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
     [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
@@ -482,8 +482,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 
 
 - (AlfrescoRequest *)retrieveChildrenInFolder:(AlfrescoFolder *)folder
-                  listingContext:(AlfrescoListingContext *)listingContext
-                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
+                               listingContext:(AlfrescoListingContext *)listingContext
+                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock 
 {
     [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
     [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifer"];
@@ -492,7 +492,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     {
         listingContext = self.session.defaultListingContext;
     }
-//    __weak AlfrescoDocumentFolderService *weakSelf = self;
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [self.cmisSession retrieveObject:folder.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
         if (nil == cmisObject)

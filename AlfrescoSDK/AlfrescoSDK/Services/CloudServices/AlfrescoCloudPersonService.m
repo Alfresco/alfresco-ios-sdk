@@ -33,7 +33,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 - (AlfrescoPerson *)alfrescoPersonFromJSONData:(NSData *)data error:(NSError **)outError;
-//- (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict;
 @end
 
 
@@ -60,7 +59,6 @@
     [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-//    __weak AlfrescoCloudPersonService *weakSelf = self;
     NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
