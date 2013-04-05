@@ -60,26 +60,6 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoListingContext *maxListing = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
     return [self retrieveAllTagsWithArrayCompletionBlock:completionBlock pagingCompletionBlock:nil listingContext:maxListing usePaging:NO];
-    /*
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudTagsAPI];
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url
-                                                session:self.session
-                                        alfrescoRequest:request
-                                        completionBlock:^(NSData *data, NSError *error){
-        if (nil == data)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *tagArray = [self tagArrayFromJSONData:data error:&conversionError];
-            completionBlock(tagArray, conversionError);
-        }
-    }];
-    return request;
-     */
 }
 
 - (AlfrescoRequest *)retrieveAllTagsWithListingContext:(AlfrescoListingContext *)listingContext
@@ -91,34 +71,6 @@
         listingContext = self.session.defaultListingContext;
     }
     return [self retrieveAllTagsWithArrayCompletionBlock:nil pagingCompletionBlock:completionBlock listingContext:listingContext usePaging:YES];
-    /*
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudTagsAPI listingContext:listingContext];
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url
-                                                session:self.session
-                                        alfrescoRequest:request
-                                        completionBlock:^(NSData *data, NSError *error){
-        if (nil == data)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
-            NSArray *tagArray = [self tagArrayFromJSONData:data error:&conversionError];
-            AlfrescoPagingResult *pagingResult = nil;
-            if (tagArray && pagingInfo)
-            {
-                BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
-                int total = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
-                pagingResult = [[AlfrescoPagingResult alloc] initWithArray:tagArray hasMoreItems:hasMore totalItems:total];
-            }
-            completionBlock(pagingResult, conversionError);
-        }
-    }];
-    return request;
-     */
 }
 
 - (AlfrescoRequest *)retrieveAllTagsWithArrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock listingContext:(AlfrescoListingContext *)listingContext usePaging:(BOOL)usePaging
@@ -335,21 +287,11 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
             return nil;
         }
         AlfrescoTag *tag = [[AlfrescoTag alloc] initWithProperties:individualEntry];
-//        AlfrescoTag *tag = [self tagFromJSON:individualEntry];
         [resultsArray addObject:tag];
     }
     return resultsArray;
 }
 
-/*
-- (AlfrescoTag *)tagFromJSON:(NSDictionary *)jsonDict
-{
-    AlfrescoTag *tag = [[AlfrescoTag alloc]init];
-    tag.value = [jsonDict valueForKey:kAlfrescoJSONTag];
-    tag.identifier = [jsonDict valueForKey:kAlfrescoJSONIdentifier];
-    return tag;
-}
-*/
 
 
 @end

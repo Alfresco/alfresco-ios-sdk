@@ -298,7 +298,7 @@
         }
         else
         {
-            [self.siteCache addFavoriteSite:site];
+            [self.siteCache addSite:site type:AlfrescoSiteFavorite];
             completionBlock(site, error);
         }
     }];
@@ -329,7 +329,7 @@
         }
         else
         {
-            [self.siteCache removeFavoriteSite:site];
+            [self.siteCache removeSite:site type:AlfrescoSiteFavorite];
             completionBlock(site, error);
         }
     }];
@@ -375,7 +375,7 @@
         }
         else
         {
-            [self.siteCache addMemberSite:site];
+            [self.siteCache addSite:site type:AlfrescoSiteMember];
             completionBlock(site, nil);
         }
     }];
@@ -407,7 +407,7 @@
             if (joinRequest)
             {
                 [self.joinRequests addObject:joinRequest];
-                [self.siteCache addPendingSite:site];
+                [self.siteCache addSite:site type:AlfrescoSitePendingMember];
                 completionBlock(site, nil);
             }
             else
@@ -487,7 +487,7 @@
         }
         else
         {
-            [self.siteCache removePendingSite:site];
+            [self.siteCache removeSite:site type:AlfrescoSitePendingMember];
             [self.joinRequests removeObject:foundRequest];
             completionBlock(site, nil);
         }
@@ -515,7 +515,7 @@
         }
         else
         {
-            [self.siteCache removeMemberSite:site];
+            [self.siteCache removeSite:site type:AlfrescoSiteMember];
             completionBlock(site, nil);
         }
     }];
@@ -525,7 +525,11 @@
 
 
 #pragma mark Site service internal methods
-
+/**
+ this method is the entry point for parsing sites for all different states.
+ The calls are daisy-chained:
+ *allsites -> favorite sites -> member sites -> pending sites
+ */
 - (AlfrescoRequest *)retrieveSitesForType:(AlfrescoSiteFlags)type
                            listingContext:(AlfrescoListingContext *)listingContext
                      arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
@@ -534,18 +538,7 @@
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     
-    __block NSArray *resultsArray = nil;
-    
     NSURL *allSitesAPI = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseSiteAPI];
-    NSString *favRequestString = [kAlfrescoOnPremiseFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
-                                                                                                       withString:self.session.personIdentifier];
-    NSURL *favouriteSitesURL = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:favRequestString];
-    NSString *siteString = [kAlfrescoOnPremiseSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    NSURL *mySitesAPI = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:siteString];
-    NSString *pendingString = [kAlfrescoOnPremisePendingJoinRequestsAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
-                                                                                                  withString:self.session.personIdentifier];
-    NSURL *pendingSitesAPI = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:pendingString];
-    
     [self.session.networkProvider executeRequestWithURL:allSitesAPI session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
@@ -558,92 +551,83 @@
             if (siteArray)
             {
                 NSArray *allSortedArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray sortKey:self.defaultSortKey ascending:YES];
-                [self.siteCache addSites:allSortedArray];
-                [self.session.networkProvider executeRequestWithURL:favouriteSitesURL session:self.session alfrescoRequest:request completionBlock:^(NSData *favData, NSError *favError){
-                    if(favData)
-                    {
-                        NSError *conversionError = nil;
-                        NSArray *favSitesArray = [self favoriteSitesArrayFromJSONData:favData error:&conversionError];
-                        if (nil != favSitesArray)
-                        {
-                            NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"shortName IN %@",favSitesArray];
-                            NSArray *favoriteSites = [allSortedArray filteredArrayUsingPredicate:favoritePredicate];
-                            [self.siteCache addFavoriteSites:favoriteSites];
-                            [self.session.networkProvider executeRequestWithURL:mySitesAPI session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *myError){
-                                if (nil == data)
-                                {
-                                    [self errorForCompletionBlocks:myError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
-                                }
-                                else
-                                {
-                                    NSError *conversionError = nil;
-                                    NSArray *mySiteArray = [self siteArrayFromJSONData:data error:&conversionError];
-                                    if (mySiteArray)
-                                    {
-                                        NSArray *mySortedSiteArray = [AlfrescoSortingUtils sortedArrayForArray:mySiteArray sortKey:self.defaultSortKey ascending:YES];
-                                        [self.siteCache addMemberSites:mySortedSiteArray];
-                                        [self.session.networkProvider executeRequestWithURL:pendingSitesAPI session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *pendingError){
-                                            if (nil == data)
-                                            {
-                                                [self errorForCompletionBlocks:pendingError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
-                                            }
-                                            else
-                                            {
-                                                NSError *jsonError = nil;
-                                                NSArray *requests = [self joinRequestArrayFromJSONData:data error:&jsonError];
-                                                if (requests)
-                                                {
-                                                    NSArray *pendingSites = [self sitesArrayFromJoinRequests:requests];
-                                                    [self.siteCache addPendingSites:pendingSites];
-                                                    switch (type)
-                                                    {
-                                                        case AlfrescoSiteAll:
-                                                            resultsArray = [self.siteCache allSites];
-                                                            break;
-                                                        case AlfrescoSiteFavorite:
-                                                            resultsArray = [self.siteCache favoriteSites];
-                                                            break;
-                                                        case AlfrescoSiteMember:
-                                                            resultsArray = [self.siteCache memberSites];
-                                                            break;
-                                                        case AlfrescoSitePendingMember:
-                                                            resultsArray = [self.siteCache pendingMemberSites];
-                                                            break;
-                                                    }
-                                                    if (arrayCompletionBlock)
-                                                    {
-                                                        arrayCompletionBlock(resultsArray, nil);
-                                                    }
-                                                    else
-                                                    {
-                                                        AlfrescoPagingResult *paging = [AlfrescoPagingUtils pagedResultFromArray:resultsArray listingContext:listingContext];
-                                                        pagingCompletionBlock(paging, nil);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    [self errorForCompletionBlocks:jsonError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
-                                                }
-                                            }
-                                        }];
-                                    }
-                                    else
-                                    {
-                                        [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
-                                    }
-                                }
-                            }];
-                        }
-                        else
-                        {
-                            [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
-                        }
-                    }
-                    else
-                    {
-                        [self errorForCompletionBlocks:favError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
-                    }
-                }];
+                [self.siteCache addSites:allSortedArray type:AlfrescoSiteAll];
+                [self retrieveFavouriteSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:request];
+            }
+            else
+            {
+                [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];                
+            }
+        }
+    }];
+    return request;
+}
+
+
+/**
+ This method is called from retrieving all sites and is the 2nd in the daisy chain
+ allsites -> *favorite sites -> member sites -> pending sites
+ */
+- (void)retrieveFavouriteSitesForType:(AlfrescoSiteFlags)type
+                 arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
+                pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock
+                       listingContext:(AlfrescoListingContext *)listingContext
+                      alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+{
+    NSString *favRequestString = [kAlfrescoOnPremiseFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+                                                                                                       withString:self.session.personIdentifier];
+    NSURL *favouriteSitesURL = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:favRequestString];
+    [self.session.networkProvider executeRequestWithURL:favouriteSitesURL session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error){
+        if (nil == data)
+        {
+            [self errorForCompletionBlocks:error arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *favSitesArray = [self favoriteSitesArrayFromJSONData:data error:&conversionError];
+            if (nil != favSitesArray)
+            {
+                NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"shortName IN %@",favSitesArray];
+                NSArray *favoriteSites = [self.siteCache.allSites filteredArrayUsingPredicate:favoritePredicate];
+                [self.siteCache addSites:favoriteSites type:AlfrescoSiteFavorite];
+                [self retrieveMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest];
+            }
+            else
+            {
+                [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];                
+            }
+        }
+    }];
+}
+
+
+/**
+ This method is called from retrieving all sites and is the 3rd in the daisy chain
+ allsites -> favorite sites -> *member sites -> pending sites
+ */
+- (void)retrieveMemberSitesForType:(AlfrescoSiteFlags)type
+              arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
+             pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock
+                    listingContext:(AlfrescoListingContext *)listingContext
+                   alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+{
+    NSString *siteString = [kAlfrescoOnPremiseSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSURL *mySitesAPI = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:siteString];
+    [self.session.networkProvider executeRequestWithURL:mySitesAPI session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error){
+        if (nil == data)
+        {
+            [self errorForCompletionBlocks:error arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *mySiteArray = [self siteArrayFromJSONData:data error:&conversionError];
+            if (mySiteArray)
+            {
+                NSArray *mySortedSiteArray = [AlfrescoSortingUtils sortedArrayForArray:mySiteArray sortKey:self.defaultSortKey ascending:YES];
+                [self.siteCache addSites:mySortedSiteArray type:AlfrescoSiteMember];
+                [self retrievePendingMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest];
             }
             else
             {
@@ -651,9 +635,70 @@
             }
         }
     }];
-    
-    return request;
 }
+
+/**
+ This method is called from retrieving all sites and is the last in the daisy chain
+ allsites -> favorite sites -> member sites -> *pending sites
+ Now that we have run through all different states we can resolve the resulting site arrays (or paging result)
+ */
+- (void)retrievePendingMemberSitesForType:(AlfrescoSiteFlags)type
+                     arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
+                    pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock
+                           listingContext:(AlfrescoListingContext *)listingContext
+                          alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+{
+    NSString *pendingString = [kAlfrescoOnPremisePendingJoinRequestsAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+                                                                                                  withString:self.session.personIdentifier];
+    NSURL *pendingSitesAPI = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:pendingString];
+    [self.session.networkProvider executeRequestWithURL:pendingSitesAPI session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error){
+        if (nil == data)
+        {
+            [self errorForCompletionBlocks:error arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
+        }
+        else
+        {
+            NSError *jsonError = nil;
+            NSArray *requests = [self joinRequestArrayFromJSONData:data error:&jsonError];
+            if (requests)
+            {
+                NSArray *resultsArray = nil;
+                NSArray *pendingSites = [self sitesArrayFromJoinRequests:requests];
+                [self.siteCache addSites:pendingSites type:AlfrescoSitePendingMember];
+                switch (type)
+                {
+                    case AlfrescoSiteAll:
+                        resultsArray = [self.siteCache allSites];
+                        break;
+                    case AlfrescoSiteFavorite:
+                        resultsArray = [self.siteCache favoriteSites];
+                        break;
+                    case AlfrescoSiteMember:
+                        resultsArray = [self.siteCache memberSites];
+                        break;
+                    case AlfrescoSitePendingMember:
+                        resultsArray = [self.siteCache pendingMemberSites];
+                        break;
+                }
+                if (arrayCompletionBlock)
+                {
+                    arrayCompletionBlock(resultsArray, nil);
+                }
+                else
+                {
+                    AlfrescoPagingResult *paging = [AlfrescoPagingUtils pagedResultFromArray:resultsArray listingContext:listingContext];
+                    pagingCompletionBlock(paging, nil);
+                }
+            }
+            else
+            {
+                [self errorForCompletionBlocks:jsonError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
+            }
+        }
+    }];
+    
+}
+
 
 
 - (void)errorForCompletionBlocks:(NSError *)error

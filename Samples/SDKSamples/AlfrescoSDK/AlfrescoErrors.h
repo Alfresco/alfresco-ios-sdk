@@ -54,12 +54,8 @@ typedef enum
     kAlfrescoErrorCodeSites = 400,
     kAlfrescoErrorCodeSitesNoDocLib = 401,
     kAlfrescoErrorCodeSitesNoSites = 402,
-    kAlfrescoErrorCodeSitesFailedToAddFavoriteSite = 403,
-    kAlfrescoErrorCodeSitesFailedToRemoveFavoriteSite = 404,
-    kAlfrescoErrorCodeSitesUserIsAlreadyMember = 405,
-    kAlfrescoErrorCodeSitesFailedToJoinSite = 406,
-    kAlfrescoErrorCodeSitesFailedToCancelJoinRequest = 407,
-    kAlfrescoErrorCodeSitesFailedToLeaveSite = 408,
+    kAlfrescoErrorCodeSitesUserIsAlreadyMember = 403,
+    kAlfrescoErrorCodeSitesUserCannotBeRemoved = 404,
 
     kAlfrescoErrorCodeActivityStream = 500,
     kAlfrescoErrorCodeActivityStreamNoActivities = 501,
@@ -114,13 +110,8 @@ extern NSString * const kAlfrescoErrorDescriptionCommentNoCommentFound;
 extern NSString * const kAlfrescoErrorDescriptionSites;
 extern NSString * const kAlfrescoErrorDescriptionSitesNoDocLib;
 extern NSString * const kAlfrescoErrorDescriptionSitesNoSites;
-extern NSString * const kAlfrescoErrorDescriptionSitesFailedToAddFavoriteSite;
-extern NSString * const kAlfrescoErrorDescriptionSitesFailedToRemoveFavoriteSite;
 extern NSString * const kAlfrescoErrorDescriptionSitesUserIsAlreadyMember;
-extern NSString * const kAlfrescoErrorDescriptionSitesFailedToJoinSite;
-extern NSString * const kAlfrescoErrorDescriptionSitesFailedToCancelJoinRequest;
-extern NSString * const kAlfrescoErrorDescriptionSitesFailedToLeaveSite;
-
+extern NSString * const kAlfrescoErrorDescriptionSitesUserCannotBeRemoved;
 extern NSString * const kAlfrescoErrorDescriptionActivityStream;
 extern NSString * const kAlfrescoErrorDescriptionActivityStreamNoActivities;
 

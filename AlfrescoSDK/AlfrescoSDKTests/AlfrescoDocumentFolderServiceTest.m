@@ -3627,9 +3627,7 @@
             {
                 STAssertNotNil(entireArray, @"Expetced array to not be nil");
                 STAssertTrue([entireArray count] >= 5, @"Expected the entire array to return more than or equal to 5 items, but instead got back %i", [entireArray count]);
-                
-                NSArray *subsetOfEntireArray = [entireArray subarrayWithRange:NSMakeRange(2, 3)];
-                
+                                
                 AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:3 skipCount:2];
                 
                 [weakDfService retrieveChildrenInFolder:self.testDocFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
@@ -3644,21 +3642,22 @@
                         STAssertNotNil(pagingResult.objects, @"Expecting the objects array not to be nil");
                         STAssertTrue([pagingResult.objects count] == 3, @"Expected the results of the objects array to contain 3 items, instead got back %i", [pagingResult.objects count]);
                         
-                        BOOL matchingArrays = NO;
+                        int matchedNodes = 0;
                         
                         for (int i = 0; i < [pagingResult.objects count]; i++)
                         {
-                            AlfrescoNode *pagingObject = [pagingResult.objects objectAtIndex:i];
-                            AlfrescoNode *entireObject = [subsetOfEntireArray objectAtIndex:i];
-                            
-                            if (![pagingObject.identifier isEqualToString:entireObject.identifier]) {
-                                matchingArrays = NO;
-                                break;
+                            AlfrescoNode *pagedNode = (AlfrescoNode *)[pagingResult.objects objectAtIndex:i];
+                            for (int j = 0; j < entireArray.count; j++)
+                            {
+                                AlfrescoNode *listedNode = (AlfrescoNode *)[entireArray objectAtIndex:j];
+                                if ([pagedNode.identifier isEqualToString:listedNode.identifier])
+                                {
+                                    matchedNodes++;
+                                }
                             }
-                            matchingArrays = YES;
                         }
                         
-                        STAssertTrue(matchingArrays, @"Expected the paging results to be the same as the subset of the entire array");
+                        STAssertTrue(matchedNodes == pagingResult.objects.count, @"We expected to match the number of paged nodes with the original list. Expected %d but got %d", pagingResult.objects.count, matchedNodes);
                         
                         super.lastTestSuccessful = YES;
                     }
