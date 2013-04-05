@@ -64,7 +64,6 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
-//    __weak AlfrescoOnPremiseCommentService *weakSelf = self;
     NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
@@ -103,7 +102,6 @@
         listingContext = self.session.defaultListingContext;
     }
     
-//    __weak AlfrescoOnPremiseCommentService *weakSelf = self;
     NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
     
@@ -148,7 +146,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     
-//    __weak AlfrescoOnPremiseCommentService *weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:jsonData
@@ -190,7 +187,6 @@
                                                                                              withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-//    __weak AlfrescoOnPremiseCommentService *weakSelf = self;
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     
     [self.session.networkProvider executeRequestWithURL:url

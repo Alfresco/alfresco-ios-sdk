@@ -33,10 +33,15 @@ typedef enum
 @class AlfrescoOnPremiseJoinSiteRequest;
 
 @interface AlfrescoSiteCache : NSObject
+
 @property (nonatomic, assign, readonly) BOOL hasMoreSites;
 @property (nonatomic, assign, readonly) BOOL hasMoreMemberSites;
 @property (nonatomic, assign, readonly) BOOL hasMoreFavoriteSites;
 @property (nonatomic, assign, readonly) BOOL hasMorePendingSites;
+@property (nonatomic, assign, readonly) NSInteger totalSites;
+@property (nonatomic, assign, readonly) NSInteger totalMemberSites;
+@property (nonatomic, assign, readonly) NSInteger totalFavoriteSites;
+@property (nonatomic, assign, readonly) NSInteger totalPendingSites;
 /**
  initialiser
  */
@@ -67,35 +72,15 @@ typedef enum
  */
 - (NSArray *)allSites;
 
-- (void)addMemberSite:(AlfrescoSite *)memberSite;
+- (void)addSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type;
 
-- (void)addFavoriteSite:(AlfrescoSite *)favoriteSite;
+- (void)removeSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type;
 
-- (void)addPendingSite:(AlfrescoSite *)pendingSite;
+- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type hasMoreSites:(BOOL)hasMoreSites totalSites:(NSInteger)totalSites;
 
 - (AlfrescoSite *)addPendingRequest:(AlfrescoOnPremiseJoinSiteRequest *)pendingRequest;
 
-- (void)removeMemberSite:(AlfrescoSite *)memberSite;
-
-- (void)removeFavoriteSite:(AlfrescoSite *)favoriteSite;
-
-- (void)removePendingSite:(AlfrescoSite *)pendingSite;
-
-- (void)addSites:(NSArray *)sites hasMoreSites:(BOOL)hasMoreSites;
-
-- (void)addMemberSites:(NSArray *)memberSites hasMoreMemberSites:(BOOL)hasMoreMemberSites;
-
-- (void)addFavoriteSites:(NSArray *)favoriteSites hasMoreFavoriteSites:(BOOL)hasMoreFavoriteSites;
-
-- (void)addPendingSites:(NSArray *)pendingSites hasMorePendingSites:(BOOL)hasMorePendingSites;
-
-- (void)addSites:(NSArray *)sites;
-
-- (void)addMemberSites:(NSArray *)memberSites;
-
-- (void)addFavoriteSites:(NSArray *)favoriteSites;
-
-- (void)addPendingSites:(NSArray *)pendingSites;
+- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type;
 
 - (AlfrescoSite *)objectWithIdentifier:(NSString *)identifier;
 

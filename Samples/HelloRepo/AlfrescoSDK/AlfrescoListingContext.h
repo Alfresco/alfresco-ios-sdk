@@ -43,6 +43,11 @@
 /// Returns current skip count.
 @property (nonatomic, assign, readonly) int skipCount;
 
+/**
+ for this initialiser a skipCount 0, i.e. from the very first element on the server, will be returned.
+ MaxItems may be -1 (which in general is interpreted by the server as All) or any positive number.
+ */
+- (id)initWithMaxItems:(int)maxItems;
 
 /**
  In the context of this SDK, maxItems is the maximum number to be used in one listing. The skipCount is a multiple of

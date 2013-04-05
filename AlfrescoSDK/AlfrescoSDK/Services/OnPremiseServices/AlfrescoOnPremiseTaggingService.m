@@ -47,7 +47,6 @@
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
         self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-//        id authenticationObject = objc_getAssociatedObject(self.session, &kAlfrescoAuthenticationProviderObjectKey);
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
         {
@@ -61,7 +60,6 @@
 - (AlfrescoRequest *)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-//    __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -91,7 +89,6 @@
         listingContext = self.session.defaultListingContext;
     }
     
-//    __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -120,7 +117,6 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-//    __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
     NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
     NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
@@ -156,7 +152,6 @@
         listingContext = self.session.defaultListingContext;
     }
     
-//    __weak AlfrescoOnPremiseTaggingService *weakSelf = self;
     NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
     NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef

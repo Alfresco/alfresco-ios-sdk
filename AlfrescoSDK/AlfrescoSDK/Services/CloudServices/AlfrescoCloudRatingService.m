@@ -54,7 +54,7 @@
 }
 
 - (AlfrescoRequest *)retrieveLikeCountForNode:(AlfrescoNode *)node
-                 completionBlock:(AlfrescoNumberCompletionBlock)completionBlock
+                              completionBlock:(AlfrescoNumberCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
@@ -63,7 +63,6 @@
     NSString *requestString = [kAlfrescoCloudRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                   withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-//    __weak AlfrescoCloudRatingService *weakSelf = self;
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
@@ -103,7 +102,6 @@
     NSString *requestString = [kAlfrescoCloudRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                   withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-//    __weak AlfrescoCloudRatingService *weakSelf = self;
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
@@ -151,7 +149,7 @@
 
 
 - (AlfrescoRequest *)likeNode:(AlfrescoNode *)node
- completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+              completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
@@ -189,7 +187,7 @@
 
 
 - (AlfrescoRequest *)unlikeNode:(AlfrescoNode *)node
-   completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+                completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
