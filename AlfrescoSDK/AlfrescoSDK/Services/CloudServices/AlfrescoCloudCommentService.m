@@ -64,34 +64,13 @@
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-//    __weak AlfrescoCloudCommentService *weakSelf = self;
-    NSString *requestString = [kAlfrescoCloudCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                   withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
-        if (nil == responseData)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *comments = [self commentArrayFromJSONData:responseData error:&conversionError];
-            NSArray *sortedCommentArray = nil;
-            if (nil != comments)
-            {
-                sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:comments sortKey:kAlfrescoSortByCreatedAt ascending:YES];
-            }
-            completionBlock(sortedCommentArray, conversionError);
-        }
-    }];
-    return alfrescoRequest;
+    AlfrescoListingContext *maxListing = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveCommentsForNode:node arrayCompletionBlock:completionBlock pagingCompletionBlock:nil listingContext:maxListing usePaging:NO];
 }
 
 - (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
-                 listingContext:(AlfrescoListingContext *)listingContext
-                completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+                              listingContext:(AlfrescoListingContext *)listingContext
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
@@ -101,36 +80,20 @@
     {
         listingContext = self.session.defaultListingContext;
     }
-    
-//    __weak AlfrescoCloudCommentService *weakSelf = self;
-    NSString *requestString = [kAlfrescoCloudCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                   withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
-        if (nil == responseData)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *comments = [self commentArrayFromJSONData:responseData error:&conversionError];
-            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:comments listingContext:listingContext];
-            completionBlock(pagingResult, conversionError);
-        }
-    }];
-    return alfrescoRequest;
+    return [self retrieveCommentsForNode:node arrayCompletionBlock:nil pagingCompletionBlock:completionBlock listingContext:listingContext usePaging:YES];
 }
 
-- (AlfrescoRequest *)addCommentToNode:(AlfrescoNode *)node content:(NSString *)content
-                   title:(NSString *)title completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
+
+
+- (AlfrescoRequest *)addCommentToNode:(AlfrescoNode *)node
+                              content:(NSString *)content
+                                title:(NSString *)title
+                      completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-//    __weak AlfrescoCloudCommentService *weakSelf = self;
     NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
     [commentDict setValue:content forKey:kAlfrescoJSONContent];
     NSError *error = nil;
@@ -161,9 +124,9 @@
 }
 
 - (AlfrescoRequest *)updateCommentOnNode:(AlfrescoNode *)node
-                    comment:(AlfrescoComment *)comment
-                    content:(NSString *)content
-            completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
+                                 comment:(AlfrescoComment *)comment
+                                 content:(NSString *)content
+                         completionBlock:(AlfrescoCommentCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
@@ -181,7 +144,6 @@
                                                                        withString:[comment.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-//    __weak AlfrescoCloudCommentService *weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:jsonData
@@ -203,8 +165,8 @@
 }
 
 - (AlfrescoRequest *)deleteCommentFromNode:(AlfrescoNode *)node
-                      comment:(AlfrescoComment *)comment
-              completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+                                   comment:(AlfrescoComment *)comment
+                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
@@ -239,6 +201,60 @@
 
 
 #pragma private methods
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock listingContext:(AlfrescoListingContext *)listingContext usePaging:(BOOL)usePaging
+{
+    NSString *requestString = [kAlfrescoCloudCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+                                                                                   withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
+        if (nil == responseData)
+        {
+            if (usePaging)
+            {
+                pagingCompletionBlock(nil, error);
+            }
+            else
+            {
+                arrayCompletionBlock(nil, error);
+            }
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *comments = [self commentArrayFromJSONData:responseData error:&conversionError];
+            if (usePaging)
+            {
+                NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:responseData error:&conversionError];
+                AlfrescoPagingResult *pagingResult = nil;
+                if (nil != comments && pagingInfo)
+                {
+                    BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
+                    int total = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
+                    NSArray *sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:comments sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+                    pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedCommentArray hasMoreItems:hasMore totalItems:total];
+                }
+                pagingCompletionBlock(pagingResult, conversionError);
+            }
+            else
+            {
+                if (nil != comments)
+                {
+                    NSArray *sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:comments sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+                    arrayCompletionBlock(sortedCommentArray, nil);
+                }
+                else
+                {
+                    arrayCompletionBlock(nil, conversionError);
+                }
+            }
+        }
+    }];
+    
+    return alfrescoRequest;
+}
+
+
 - (NSArray *) commentArrayFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];

@@ -19,10 +19,21 @@
  */
 
 #import "AlfrescoURLUtils.h"
+#import "AlfrescoInternalConstants.h"
+
+@interface AlfrescoURLUtils ()
++ (NSString *)buildPagingExtensionFromURL:(NSString *)extensionURL listingContext:(AlfrescoListingContext *)listingContext;
+@end
+
 
 @implementation AlfrescoURLUtils
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL
+{
+    return [AlfrescoURLUtils buildURLFromBaseURLString:baseURL extensionURL:extensionURL listingContext:nil];
+}
+
++ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL listingContext:(AlfrescoListingContext *)listingContext
 {
     NSMutableString *mutableRequestString = [NSMutableString string];
     if ([baseURL hasSuffix:@"/"] && [extensionURL hasPrefix:@"/"])
@@ -37,10 +48,44 @@
         [mutableRequestString appendString:separator];
         [mutableRequestString appendString:extensionURL];
     }
+    
+    NSString *pagingExtensionString = [AlfrescoURLUtils buildPagingExtensionFromURL:extensionURL listingContext:listingContext];
+    if (nil != pagingExtensionString)
+    {
+        [mutableRequestString appendString:pagingExtensionString];
+    }
+    
     NSString *requestString = [mutableRequestString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    return [NSURL URLWithString:requestString];
+    return [NSURL URLWithString:requestString];    
 }
 
++ (NSString *)buildPagingExtensionFromURL:(NSString *)extensionURL listingContext:(AlfrescoListingContext *)listingContext
+{
+    if (nil == listingContext)
+    {
+        return nil;
+    }
+    if (listingContext.maxItems <= 0)
+    {
+        return nil;
+    }
+    NSString *parameterString = nil;
+    if ([extensionURL rangeOfString:@"?"].location == NSNotFound)
+    {
+        parameterString = @"?";
+    }
+    else
+    {
+        parameterString = @"&";
+    }
+    NSString *parameterExtension = [kAlfrescoCloudPagingAPIParameters stringByReplacingOccurrencesOfString:kAlfrescoMaxItems
+                                                                                                withString:[NSString stringWithFormat:@"%d",listingContext.maxItems]];
+    
+    parameterExtension = [parameterExtension stringByReplacingOccurrencesOfString:kAlfrescoSkipCount
+                                                                       withString:[NSString stringWithFormat:@"%d", listingContext.skipCount]];
+    
+    return [NSString stringWithFormat:@"%@%@",parameterString, parameterExtension];    
+}
 
 
 @end

@@ -38,6 +38,12 @@ static NSInteger kListingContextModelVersion = 1;
     return [self initWithMaxItems:DEFAULTMAXITEMS skipCount:DEFAULTSKIPCOUNT sortProperty:nil sortAscending:YES];
 }
 
+- (id)initWithMaxItems:(int)maxItems
+{
+    return [self initWithMaxItems:maxItems skipCount:0 sortProperty:nil sortAscending:YES];
+}
+
+
 - (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount
 {
     return [self initWithMaxItems:maxItems skipCount:skipCount sortProperty:nil sortAscending:YES];
@@ -56,7 +62,7 @@ static NSInteger kListingContextModelVersion = 1;
         self.sortProperty = sortProperty;
         self.maxItems = DEFAULTMAXITEMS;
         self.skipCount = DEFAULTSKIPCOUNT;
-        if (maxItems > 0)
+        if (maxItems > 0 || maxItems == -1)
         {
             self.maxItems = maxItems;
         }

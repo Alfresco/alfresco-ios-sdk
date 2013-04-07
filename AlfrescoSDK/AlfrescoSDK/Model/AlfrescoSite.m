@@ -145,7 +145,7 @@ static NSInteger kSiteModelVersion = 1;
     self.isMember = [state boolValue];
 }
 
-- (void)changeFavouriteState:(NSNumber *)state
+- (void)changeFavoriteState:(NSNumber *)state
 {
     self.isFavorite = [state boolValue];
 }

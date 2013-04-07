@@ -47,7 +47,7 @@
              {
                  STAssertNotNil(pagingResult, @"pagingResult should not be nil");
                  STAssertTrue(pagingResult.objects.count > 1, @"expected more than 1 activity entries, but got %d", pagingResult.objects.count);
-                 STAssertTrue(pagingResult.totalItems > 0, @"expected activity entries");
+                 STAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
                  
                  super.lastTestSuccessful = YES;
              }
@@ -165,7 +165,7 @@
             {
                 STAssertNotNil(pagingResult, @"pagingResult should not be nil");
                 STAssertTrue(pagingResult.objects.count > 0, @"expected at least 1 activity entries");
-                STAssertTrue(pagingResult.totalItems > 0, @"expected activity entries");
+                STAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
                 
                 super.lastTestSuccessful = YES;
             }

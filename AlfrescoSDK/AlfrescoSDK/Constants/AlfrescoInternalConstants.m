@@ -18,7 +18,6 @@
 
 #import "AlfrescoInternalConstants.h"
 
-@implementation AlfrescoInternalConstants
 
 /**
  Class Version constants
@@ -88,6 +87,8 @@ NSString * const kAlfrescoRefreshID = @"{refreshID}";
 NSString * const kAlfrescoMe = @"-me-";
 NSString * const kAlfrescoModerated = @"MODERATED";
 NSString * const kAlfrescoSiteConsumer = @"SiteConsumer";
+NSString * const kAlfrescoMaxItems = @"{maxItems}";
+NSString * const kAlfrescoSkipCount = @"{skipCount}";
 
 
 /**
@@ -197,6 +198,7 @@ NSString * const kAlfrescoCloudRemoveFavoriteSiteAPI = @"people/-me-/favorites/{
 NSString * const kAlfrescoCloudJoinSiteAPI = @"people/-me-/site-membership-requests";
 NSString * const kAlfrescoCloudCancelJoinRequestsAPI = @"people/-me-/site-membership-requests/{siteID}";
 NSString * const kAlfrescoCloudLeaveSiteAPI = @"sites/{siteID}/members/{personID}";
+NSString * const kAlfrescoCloudPagingAPIParameters = @"maxItems={maxItems}&skipCount={skipCount}";
 
 /**
  JSON Constants
@@ -317,4 +319,3 @@ NSString * const kAlfrescoPropertyTypeDocument = @"D:";
 NSString * const kAlfrescoPropertyAspect = @"P:";
 
 
-@end

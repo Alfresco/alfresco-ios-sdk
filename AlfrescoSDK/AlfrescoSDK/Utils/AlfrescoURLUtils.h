@@ -23,8 +23,12 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "AlfrescoListingContext.h"
 
 @interface AlfrescoURLUtils : NSObject
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL;
+
++ (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL listingContext:(AlfrescoListingContext *)listingContext;
+
 @end

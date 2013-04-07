@@ -20,7 +20,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface AlfrescoInternalConstants : NSObject
 
 extern NSString * const kAlfrescoClassVersion;
 
@@ -75,6 +74,8 @@ extern NSString * const kAlfrescoRefreshID;
 extern NSString * const kAlfrescoMe;
 extern NSString * const kAlfrescoModerated;
 extern NSString * const kAlfrescoSiteConsumer;
+extern NSString * const kAlfrescoMaxItems;
+extern NSString * const kAlfrescoSkipCount;
 
 extern NSString * const kAlfrescoSessionKeyCmisSession;
 extern NSString * const kAlfrescoSessionCloudURL;
@@ -169,6 +170,7 @@ extern NSString * const kAlfrescoCloudRemoveFavoriteSiteAPI;
 extern NSString * const kAlfrescoCloudJoinSiteAPI;
 extern NSString * const kAlfrescoCloudCancelJoinRequestsAPI;
 extern NSString * const kAlfrescoCloudLeaveSiteAPI;
+extern NSString * const kAlfrescoCloudPagingAPIParameters;
 
 extern NSString * const kAlfrescoCloudJSONList;
 extern NSString * const kAlfrescoCloudJSONPagination;
@@ -283,5 +285,3 @@ extern NSString * const kAlfrescoCMISNetworkProvider;
 extern NSString * const kAlfrescoPropertyTypeFolder;
 extern NSString * const kAlfrescoPropertyTypeDocument;
 extern NSString * const kAlfrescoPropertyAspect;
-
-@end

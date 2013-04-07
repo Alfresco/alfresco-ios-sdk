@@ -47,12 +47,8 @@ NSString * const kAlfrescoErrorDescriptionCommentNoCommentFound = @"Comment Serv
 NSString * const kAlfrescoErrorDescriptionSites = @"Sites Service Error";
 NSString * const kAlfrescoErrorDescriptionSitesNoDocLib = @"Sites Service Error: No Document Library was found";
 NSString * const kAlfrescoErrorDescriptionSitesNoSites = @"Sites Service Error: No Sites were found.";
-NSString * const kAlfrescoErrorDescriptionSitesFailedToAddFavoriteSite = @"Sites Service Error: Failure to add favorite site.";
-NSString * const kAlfrescoErrorDescriptionSitesFailedToRemoveFavoriteSite = @"Sites Service Error: Failure to remove favorite site.";
 NSString * const kAlfrescoErrorDescriptionSitesUserIsAlreadyMember = @"Sites Service Error: User is already member of this site.";
-NSString * const kAlfrescoErrorDescriptionSitesFailedToJoinSite = @"Sites Service Error: Failure to join site.";
-NSString * const kAlfrescoErrorDescriptionSitesFailedToCancelJoinRequest = @"Sites Service Error: Failure to cancel join site request.";
-NSString * const kAlfrescoErrorDescriptionSitesFailedToLeaveSite = @"Sites Service Error: Failure to leave member site.";
+NSString * const kAlfrescoErrorDescriptionSitesUserCannotBeRemoved = @"Sites Service Error: User cannot be removed from site. Probably because he/she is the last remaining site manager.";
 
 NSString * const kAlfrescoErrorDescriptionActivityStream =@"Activity Stream Service Error";
 NSString * const kAlfrescoErrorDescriptionActivityStreamNoActivities =@"Activity Stream Service Error: No Activities were found.";
@@ -215,20 +211,8 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
         case kAlfrescoErrorCodeSitesNoSites:
             return kAlfrescoErrorDescriptionSitesNoSites;
             break;
-        case kAlfrescoErrorCodeSitesFailedToAddFavoriteSite:
-            return kAlfrescoErrorDescriptionSitesFailedToAddFavoriteSite;
-            break;
-        case kAlfrescoErrorCodeSitesFailedToRemoveFavoriteSite:
-            return kAlfrescoErrorDescriptionSitesFailedToRemoveFavoriteSite;
-            break;
-        case kAlfrescoErrorCodeSitesFailedToJoinSite:
-            return kAlfrescoErrorDescriptionSitesFailedToJoinSite;
-            break;
-        case kAlfrescoErrorCodeSitesFailedToCancelJoinRequest:
-            return kAlfrescoErrorDescriptionSitesFailedToCancelJoinRequest;
-            break;
-        case kAlfrescoErrorCodeSitesFailedToLeaveSite:
-            return kAlfrescoErrorDescriptionSitesFailedToLeaveSite;
+        case kAlfrescoErrorCodeSitesUserCannotBeRemoved:
+            return kAlfrescoErrorDescriptionSitesUserCannotBeRemoved;
             break;
         case kAlfrescoErrorCodeSitesUserIsAlreadyMember:
             return kAlfrescoErrorDescriptionSitesUserIsAlreadyMember;
