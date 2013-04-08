@@ -513,7 +513,7 @@
     
     NSPredicate *joinPredicate = [NSPredicate predicateWithFormat:@"shortName == %@", site.identifier];
     NSArray *foundRequests = [self.joinRequests filteredArrayUsingPredicate:joinPredicate];
-    if (0 == foundRequests)
+    if (0 == foundRequests.count)
     {
         NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSitesNoSites];
         completionBlock(nil, error);
