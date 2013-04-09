@@ -69,7 +69,7 @@
 		4E944B0415E3D6BA00E89D69 /* AlfrescoCloudNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E944AFE15E3D6BA00E89D69 /* AlfrescoCloudNetwork.m */; };
 		4E944B0515E3D6BA00E89D69 /* AlfrescoCloudSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E944AFF15E3D6BA00E89D69 /* AlfrescoCloudSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E944B0615E3D6BA00E89D69 /* AlfrescoCloudSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E944B0015E3D6BA00E89D69 /* AlfrescoCloudSession.m */; };
-		4E9CE53216D511CF004C7934 /* AlfrescoRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E9CE53016D511CF004C7934 /* AlfrescoRequest.h */; };
+		4E9CE53216D511CF004C7934 /* AlfrescoRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E9CE53016D511CF004C7934 /* AlfrescoRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E9CE53316D511CF004C7934 /* AlfrescoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E9CE53116D511CF004C7934 /* AlfrescoRequest.m */; };
 		4E9E21E616F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E9E21E416F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.h */; };
 		4E9E21E716F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E9E21E516F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.m */; };
@@ -1063,6 +1063,7 @@
 				4EB077C415B00EE800DF7DED /* AlfrescoSite.h in Headers */,
 				4EB077C615B00EE800DF7DED /* AlfrescoActivityStreamService.h in Headers */,
 				4EB077CA15B00EE800DF7DED /* AlfrescoCommentService.h in Headers */,
+				4E9CE53216D511CF004C7934 /* AlfrescoRequest.h in Headers */,
 				4EB077CC15B00EE800DF7DED /* AlfrescoDocumentFolderService.h in Headers */,
 				4E21EAE316DF88A800E3952C /* AlfrescoLog.h in Headers */,
 				4EB077CE15B00EE800DF7DED /* AlfrescoPersonService.h in Headers */,
@@ -1194,7 +1195,6 @@
 				73CB83BB16C4187500B780A6 /* CMISURLUtil.h in Headers */,
 				73CB83BC16C4187500B780A6 /* CMISVersioningService.h in Headers */,
 				73CB83BD16C4187500B780A6 /* CMISWorkspace.h in Headers */,
-				4E9CE53216D511CF004C7934 /* AlfrescoRequest.h in Headers */,
 				4EA2AE4716DE25DE0053D05D /* CMISBase64InputStream.h in Headers */,
 				4EA2AE4816DE25DE0053D05D /* CMISLog.h in Headers */,
 				4E43A18F16EF3F6D00A835E7 /* AlfrescoSiteCache.h in Headers */,
