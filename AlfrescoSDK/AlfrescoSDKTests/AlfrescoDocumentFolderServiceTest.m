@@ -22,6 +22,7 @@
 #import "AlfrescoPermissions.h"
 #import "AlfrescoLog.h"
 #import "CMISConstants.h"
+#import "AlfrescoContentStream.h"
 
 @implementation AlfrescoDocumentFolderServiceTest
 /*
@@ -926,6 +927,8 @@
         NSString *mimeType = @"text/plain";
 
         NSInputStream *fileInputStream = [[NSInputStream alloc] initWithFileAtPath:self.verySmallTestFile];
+        AlfrescoContentStream *contentStream = [[AlfrescoContentStream alloc] initWithStream:fileInputStream mimeType:mimeType length:fileSize];
+        
         STAssertNotNil(fileInputStream, @"we should have been able to create the input stream to the small file");
         if (!fileInputStream)
         {
@@ -940,9 +943,7 @@
         __weak AlfrescoDocumentFolderService *weakFolderServer = self.dfService;
         [self.dfService createDocumentWithName:documentName
                                 inParentFolder:super.testDocFolder
-                                   inputStream:fileInputStream
-                                      fileSize:fileSize
-                                      mimeType:mimeType
+                                 contentStream:contentStream
                                     properties:properties
                                completionBlock:^(AlfrescoDocument *document, NSError *error){
             if (nil == document)
