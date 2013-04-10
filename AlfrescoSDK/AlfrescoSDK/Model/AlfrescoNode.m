@@ -123,10 +123,6 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     {
         self.properties = [properties valueForKey:kAlfrescoNodeProperties];
     }
-    if ([[properties allKeys] containsObject:kCMISPropertyObjectId])
-    {
-        self.identifier = [properties valueForKey:kCMISPropertyObjectId];
-    }
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder

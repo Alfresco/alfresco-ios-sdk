@@ -587,6 +587,76 @@
     
 }
 
+- (void)testRetrievePendingSitesForUser
+{
+    [super runAllSitesTest:^{
+        // get all sites for user admin
+        
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
+        
+        [self.siteService retrievePendingSitesWithCompletionBlock:^(NSArray *array, NSError *error){
+            if (nil == array)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertTrue(array.count >= 0, @"Array needs to be >= 0");
+                if (0 < array.count)
+                {
+                    [array enumerateObjectsUsingBlock:^(AlfrescoSite *site, NSUInteger index, BOOL *stop){
+                        STAssertTrue(site.isPendingMember, @"The requested site should be in state isPendingMember, but appears not to be.");
+                    }];
+                }
+                super.lastTestSuccessful = YES;
+                super.callbackCompleted = YES;
+            }
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+    
+}
+
+- (void)testRetrievePendingSitesForUserWithListingContext
+{
+    [super runAllSitesTest:^{
+        // get all sites for user admin
+        
+        AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:0];
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
+        
+        [self.siteService retrievePendingSitesWithListingContext:paging completionblock:^(AlfrescoPagingResult *pagingResult, NSError *error){
+            if (nil == pagingResult)
+            {
+                super.lastTestSuccessful = NO;
+                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                super.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertTrue(pagingResult.objects.count >= 0, @"Array needs to be >= 0");
+                if (0 < pagingResult.objects.count)
+                {
+                    [pagingResult.objects enumerateObjectsUsingBlock:^(AlfrescoSite *site, NSUInteger index, BOOL *stop){
+                        STAssertTrue(site.isPendingMember, @"The requested site should be in state isPendingMember, but appears not to be.");
+                    }];
+                }
+                super.lastTestSuccessful = YES;
+                super.callbackCompleted = YES;
+                
+            }
+        }];
+        
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+    
+}
+
 #pragma mark unit test internal methods
 
 - (BOOL)siteArray:(NSArray *)siteArray containsShortName:(NSString *)shortName
