@@ -397,7 +397,7 @@
 /** Updates a document with the contents of a local file.
  
  @param document The document that needs to be updated.
- @param inputStream The source input stream to be updated.
+ @param contentStream An instance of AlfrescoContent stream to be used for data access.
  @param completionBlock The block that's called with the updated document in case the operation succeeds.
  @param progressBlock The block that's called with the upload progress. This can only be used if the fileSize parameter is > 0.
  */
