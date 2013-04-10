@@ -273,9 +273,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
-                                inputStream:(NSInputStream *)inputStream
-                                   fileSize:(unsigned long long)fileSize
-                                   mimeType:(NSString *)mimeType
+                              contentStream:(AlfrescoContentStream *)contentStream
                                  properties:(NSDictionary *)properties
                             completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                               progressBlock:(AlfrescoProgressBlock)progressBlock
@@ -296,11 +294,11 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         [properties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
     }
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    request.httpRequest = [self.cmisSession createDocumentFromInputStream:inputStream
-                                                                 mimeType:mimeType
+    request.httpRequest = [self.cmisSession createDocumentFromInputStream:contentStream.inputStream
+                                                                 mimeType:contentStream.mimeType
                                                                properties:properties
                                                                  inFolder:folder.identifier
-                                                            bytesExpected:fileSize
+                                                            bytesExpected:contentStream.length
                                                           completionBlock:^(NSString *objectId, NSError *error) {
         if (nil == objectId)
         {
@@ -328,7 +326,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             }];
         }
     } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
-        if (progressBlock && 0 < fileSize)
+        if (progressBlock && 0 < contentStream.length)
         {
             progressBlock(bytesUploaded, bytesTotal);
         }
@@ -341,9 +339,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
  */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
-                                inputStream:(NSInputStream *)inputStream
-                                   fileSize:(unsigned long long)fileSize
-                                   mimeType:(NSString *)mimeType
+                              contentStream:(AlfrescoContentStream *)contentStream
                                  properties:(NSDictionary *)properties
                                     aspects:(NSArray *)array
                             completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
@@ -351,9 +347,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 {
     return [self createDocumentWithName:documentName
                          inParentFolder:folder
-                            inputStream:inputStream
-                               fileSize:fileSize
-                               mimeType:mimeType
+                          contentStream:contentStream
                              properties:properties
                         completionBlock:completionBlock
                           progressBlock:progressBlock];
@@ -364,9 +358,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
  */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
-                                inputStream:(NSInputStream *)inputStream
-                                   fileSize:(unsigned long long)fileSize
-                                   mimeType:(NSString *)mimeType
+                              contentStream:(AlfrescoContentStream *)contentStream
                                  properties:(NSDictionary *)properties
                                     aspects:(NSArray *)array
                                        type:(NSString *)type
@@ -375,9 +367,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 {
     return [self createDocumentWithName:documentName
                          inParentFolder:folder
-                            inputStream:inputStream
-                               fileSize:fileSize
-                               mimeType:mimeType
+                          contentStream:contentStream
                              properties:properties
                         completionBlock:completionBlock
                           progressBlock:progressBlock];    
@@ -1026,13 +1016,11 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 
 #pragma mark - Modification methods
 - (AlfrescoRequest *)updateContentOfDocument:(AlfrescoDocument *)document
-                                 inputStream:(NSInputStream *)inputStream
-                                    fileSize:(unsigned long long)fileSize
-                                    mimeType:(NSString *)mimeType
+                               contentStream:(AlfrescoContentStream *)contentStream
                              completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                                progressBlock:(AlfrescoProgressBlock)progressBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:inputStream argumentName:@"inputStream"];
+    [AlfrescoErrors assertArgumentNotNil:contentStream argumentName:@"contentStream"];
     [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
     [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -1047,10 +1035,10 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         else
         {
             CMISDocument *cmisDocument = (CMISDocument *)cmisObject;
-            request.httpRequest = [cmisDocument changeContentToContentOfInputStream:inputStream
-                                                                      bytesExpected:fileSize
+            request.httpRequest = [cmisDocument changeContentToContentOfInputStream:contentStream.inputStream
+                                                                      bytesExpected:contentStream.length
                                                                            fileName:document.name
-                                                                           mimeType:mimeType
+                                                                           mimeType:contentStream.mimeType
                                                                           overwrite:YES
                                                                     completionBlock:^(NSError *error){
                 if (error)
@@ -1079,7 +1067,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     }];
                 }
             } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
-                if(progressBlock && 0 < fileSize)
+                if(progressBlock && 0 < contentStream.length)
                 {
                     progressBlock(bytesUploaded, bytesTotal);
                 }
