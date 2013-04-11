@@ -41,6 +41,8 @@ NSString * const kAlfrescoCMISSessionMode = @"alfresco";
 NSString * const kAlfrescoPropertyName = @"cm:name";
 NSString * const kAlfrescoPropertyTitle = @"cm:title";
 NSString * const kAlfrescoPropertyDescription = @"cm:description";
+NSString * const kAlfrescoPropertyContent = @"cm:content";
+NSString * const kAlfrescoPropertyFolder = @"cm:folder";
 
 /**
  Property name constants

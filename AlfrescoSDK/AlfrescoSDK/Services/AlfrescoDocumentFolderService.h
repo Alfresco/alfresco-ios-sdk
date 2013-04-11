@@ -185,7 +185,7 @@
                              inParentFolder:(AlfrescoFolder *)folder
                               contentStream:(AlfrescoContentStream *)contentStream
                                  properties:(NSDictionary *)properties
-                                    aspects:(NSArray *)array
+                                    aspects:(NSArray *)aspects
                             completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                               progressBlock:(AlfrescoProgressBlock)progressBlock;
 
@@ -205,7 +205,7 @@
                              inParentFolder:(AlfrescoFolder *)folder
                               contentStream:(AlfrescoContentStream *)contentStream
                                  properties:(NSDictionary *)properties
-                                    aspects:(NSArray *)array
+                                    aspects:(NSArray *)aspects
                                        type:(NSString *)type
                             completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                               progressBlock:(AlfrescoProgressBlock)progressBlock;
