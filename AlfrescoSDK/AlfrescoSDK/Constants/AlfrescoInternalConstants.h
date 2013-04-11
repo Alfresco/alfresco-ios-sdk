@@ -34,6 +34,8 @@ extern NSString * const kAlfrescoCMISSessionMode;
 extern NSString * const kAlfrescoPropertyName;
 extern NSString * const kAlfrescoPropertyTitle;
 extern NSString * const kAlfrescoPropertyDescription;
+extern NSString * const kAlfrescoPropertyContent;
+extern NSString * const kAlfrescoPropertyFolder;
 
 extern NSString * const kAlfrescoRepositoryName;
 extern NSString * const kAlfrescoRepositoryCommunity;

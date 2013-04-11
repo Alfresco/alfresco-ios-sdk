@@ -4899,10 +4899,14 @@
     [super runAllSitesTest:^{
         if (!super.isCloud)
         {
-            NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
-            
+//            [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
+            NSMutableDictionary *props = [NSMutableDictionary dictionary];
+            NSString *title = @"CustomType Example";
+            NSString *description = @"An example to demonstrate the creation of docs with custom types";
+            [props setObject:title forKey:@"cm:title"];
+            [props setObject:description forKey:@"cm:description"];
             // provide the objectTypeId so we can specify the custom type
-            [props setObject:@"D:fdk:everything" forKey:kCMISPropertyObjectTypeId];
+//            [props setObject:@"fdk:everything" forKey:kCMISPropertyObjectTypeId];
 
             NSString *customTypeTestFileName = [AlfrescoBaseTest testFileNameFromFilename:@"everything.txt"];
             
@@ -4912,40 +4916,37 @@
                                                                                 mimeType:@"text/plain"];
             
             self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
-            [self.dfService createDocumentWithName:customTypeTestFileName inParentFolder:super.testDocFolder
-                                       contentFile:contentFile
-                                        properties:props
-                                   completionBlock:^(AlfrescoDocument *document, NSError *blockError){
-                                       if (nil == document)
-                                       {
-                                           super.lastTestSuccessful = NO;
-                                           super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
-                                           super.callbackCompleted = YES;
-                                       }
-                                       else
-                                       {
-                                           STAssertNotNil(document.identifier, @"document identifier should be filled");
-                                           STAssertTrue([document.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect");
-                                           STAssertTrue([document.name isEqualToString:customTypeTestFileName], @"document name is incorrect");
-                                           STAssertTrue(document.contentLength > 10, @"expected content to be filled");
-                                           
-                                           // delete the test document
-                                           [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
-                                            {
-                                                if (!success)
-                                                {
-                                                    super.lastTestSuccessful = NO;
-                                                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                                }
-                                                else
-                                                {
-                                                    super.lastTestSuccessful = YES;
-                                                }
-                                                super.callbackCompleted = YES;
-                                            }];
-                                       }
-                                   } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
-                                   }];
+            
+            [self.dfService createDocumentWithName:customTypeTestFileName inParentFolder:super.testDocFolder contentFile:contentFile properties:props aspects:nil type:@"fdk:everything" completionBlock:^(AlfrescoDocument *document, NSError *error){
+                if (nil == document)
+                {
+                    super.lastTestSuccessful = NO;
+                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    super.callbackCompleted = YES;
+                }
+                else
+                {
+                    STAssertNotNil(document.identifier, @"document identifier should be filled");
+                    STAssertTrue([document.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect");
+                    STAssertTrue([document.name isEqualToString:customTypeTestFileName], @"document name is incorrect");
+                    STAssertTrue(document.contentLength > 10, @"expected content to be filled");
+                    
+                    // delete the test document
+                    [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                     {
+                         if (!success)
+                         {
+                             super.lastTestSuccessful = NO;
+                             super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         }
+                         else
+                         {
+                             super.lastTestSuccessful = YES;
+                         }
+                         super.callbackCompleted = YES;
+                     }];
+                }
+            } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
             
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
@@ -4954,16 +4955,99 @@
         {
             [super waitForCompletion];
         }
+//        [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelDebug;
     }];
 }
 
 // TODO: Re-enable this test when MOBSDK-482 is implemented.
 /*
+ */
 - (void)testUpdatePropertiesForDocumentWithCustomType
 {
     [super runAllSitesTest:^{
         if (!super.isCloud)
         {
+            NSMutableDictionary *props = [NSMutableDictionary dictionary];
+            NSString *title = @"CustomType Example";
+            NSString *description = @"An example to demonstrate the creation of docs with custom types";
+            [props setObject:title forKey:@"cm:title"];
+            [props setObject:description forKey:@"cm:description"];
+            // provide the objectTypeId so we can specify the custom type
+            //            [props setObject:@"fdk:everything" forKey:kCMISPropertyObjectTypeId];
+            
+            NSString *customTypeTestFileName = [AlfrescoBaseTest testFileNameFromFilename:@"everything.txt"];
+            
+            // create a ContentFile object file for the content
+            NSString *contentString = @"This is the content for the custom type";
+            AlfrescoContentFile *contentFile = [[AlfrescoContentFile alloc] initWithData:[contentString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                mimeType:@"text/plain"];
+            
+            self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+            
+            [self.dfService createDocumentWithName:customTypeTestFileName inParentFolder:super.testDocFolder contentFile:contentFile properties:props aspects:nil type:@"fdk:everything" completionBlock:^(AlfrescoDocument *document, NSError *error){
+                if (nil == document)
+                {
+                    super.lastTestSuccessful = NO;
+                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    super.callbackCompleted = YES;
+                }
+                else
+                {
+                    STAssertNotNil(document.identifier, @"document identifier should be filled");
+                    STAssertTrue([document.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect");
+                    STAssertTrue([document.name isEqualToString:customTypeTestFileName], @"document name is incorrect");
+                    STAssertTrue(document.contentLength > 10, @"expected content to be filled");
+                    
+                    NSString *text = [NSString stringWithFormat:@"Text %i", arc4random()%10];
+                    NSNumber *number = [NSNumber numberWithInt:arc4random()%512];
+                    
+                    NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:2];
+                    [propDict setObject:text forKey:@"fdk:text"];
+                    [propDict setObject:number forKey:@"fdk:int"];
+                    [self.dfService updatePropertiesOfNode:document properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *updateError) {
+                        
+                        if (nil == updatedNode)
+                        {
+                            super.lastTestSuccessful = NO;
+                            super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [updateError localizedDescription], [updateError localizedFailureReason]];
+                            super.callbackCompleted = YES;
+                        }
+                        else
+                        {
+                            AlfrescoDocument *updatedDocument = (AlfrescoDocument *)updatedNode;
+                            STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
+                            STAssertTrue([updatedDocument.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect. Expected fdk:everything but got back %@", updatedDocument.type);
+                            
+                            // check the updated properties
+                            NSDictionary *updatedProps = updatedDocument.properties;
+                            AlfrescoProperty *updatedText = [updatedProps objectForKey:@"fdk:text"];
+                            AlfrescoProperty *updatedNumber = [updatedProps objectForKey:@"fdk:int"];
+                            STAssertTrue([updatedText.value isEqualToString:text], @"Updated fdk:text property is incorrect");
+                            STAssertTrue([updatedNumber.value isEqualToNumber:number], @"Updated fdk:int property is incorrect");
+                            
+                            [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
+                             {
+                                 if (!success)
+                                 {
+                                     super.lastTestSuccessful = NO;
+                                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                                 }
+                                 else
+                                 {
+                                     super.lastTestSuccessful = YES;
+                                 }
+                                 super.callbackCompleted = YES;
+                             }];
+                        }
+                    }];
+                    
+                    // delete the test document
+                }
+            } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+            
+            [super waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+            /*
             self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
             __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
 
@@ -4980,7 +5064,7 @@
                  {
                      STAssertTrue(node.isDocument, @"Expecting to find a document node");
                      STAssertTrue([node.name isEqualToString:@"custom-type.txt"], @"Expecting to find a node named everything but found a node named %@", node.name);
-                     STAssertTrue([node.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect");
+                     STAssertTrue([node.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect. Expected fdk:everything but got back %@", node.type);
                      
                      NSString *text = [NSString stringWithFormat:@"Text %i", arc4random()%10];
                      NSNumber *number = [NSNumber numberWithInt:arc4random()%512];
@@ -5000,7 +5084,7 @@
                           {
                               AlfrescoDocument *updatedDocument = (AlfrescoDocument *)updatedNode;
                               STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
-                              STAssertTrue([node.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect");
+                              STAssertTrue([updatedDocument.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect. Expected fdk:everything but got back %@", updatedDocument.type);
                               
                               // check the updated properties
                               NSDictionary *updatedProps = updatedDocument.properties;
@@ -5018,6 +5102,7 @@
             
             [super waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+             */
         }
         else
         {
@@ -5025,7 +5110,6 @@
         }
     }];
 }
-*/
 
 #pragma mark unit test internal methods
 

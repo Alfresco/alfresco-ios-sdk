@@ -25,6 +25,7 @@
 #import "AlfrescoDocument.h"
 #import "AlfrescoListingContext.h"
 #import "AlfrescoRequest.h"
+#import "AlfrescoContentStream.h"
 
 
 /** The AlfrescoDocumentFolderService manages folders and documents of an Alfresco 
@@ -156,18 +157,14 @@
  @param documentName The name of the document to be created in the repository
  @param folder The parent folder to create the document in.
  @param file The local file to be uploaded.
- @param inputStream The input stream to the file to be uploaded.
- @param fileSize the size of the original data source to be uploaded. This is optional, if unknown set to 0. 
- @param mimeType the mime type of the content
+ @param contentStream An instance of AlfrescoContent stream to be used for data access.
  @param properties Additional properties that are used to create the document.
  @param completionBlock The block that's called with the created document in case the operation succeeds.
  @param progressBlock The block that's called with the upload progress. This can only be used if the fileSize parameter is > 0.
  */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
-                                inputStream:(NSInputStream *)inputStream
-                                   fileSize:(unsigned long long)fileSize
-                                   mimeType:(NSString *)mimeType
+                              contentStream:(AlfrescoContentStream *)contentStream
                                  properties:(NSDictionary *)properties
                             completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                               progressBlock:(AlfrescoProgressBlock)progressBlock;
@@ -178,9 +175,7 @@
  @param documentName The name of the document to be created in the repository
  @param folder The parent folder to create the document in.
  @param file The local file to be uploaded.
- @param inputStream The input stream to the file to be uploaded.
- @param fileSize the size of the original data source to be uploaded. This is optional, if unknown set to 0.
- @param mimeType the mime type of the content
+ @param contentStream An instance of AlfrescoContent stream to be used for data access.
  @param properties Additional properties that are used to create the document.
  @param aspects array of extra aspects to be added
  @param completionBlock The block that's called with the created document in case the operation succeeds.
@@ -188,11 +183,9 @@
  */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
-                                inputStream:(NSInputStream *)inputStream
-                                   fileSize:(unsigned long long)fileSize
-                                   mimeType:(NSString *)mimeType
+                              contentStream:(AlfrescoContentStream *)contentStream
                                  properties:(NSDictionary *)properties
-                                    aspects:(NSArray *)array
+                                    aspects:(NSArray *)aspects
                             completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                               progressBlock:(AlfrescoProgressBlock)progressBlock;
 
@@ -201,9 +194,7 @@
  @param documentName The name of the document to be created in the repository
  @param folder The parent folder to create the document in.
  @param file The local file to be uploaded.
- @param inputStream The input stream to the file to be uploaded.
- @param fileSize the size of the original data source to be uploaded. This is optional, if unknown set to 0.
- @param mimeType the mime type of the content
+ @param contentStream An instance of AlfrescoContent stream to be used for data access.
  @param properties Additional properties that are used to create the document.
  @param aspects array of extra aspects to be added
  @param type a custom property type to be added
@@ -212,11 +203,9 @@
  */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
-                                inputStream:(NSInputStream *)inputStream
-                                   fileSize:(unsigned long long)fileSize
-                                   mimeType:(NSString *)mimeType
+                              contentStream:(AlfrescoContentStream *)contentStream
                                  properties:(NSDictionary *)properties
-                                    aspects:(NSArray *)array
+                                    aspects:(NSArray *)aspects
                                        type:(NSString *)type
                             completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                               progressBlock:(AlfrescoProgressBlock)progressBlock;
@@ -408,16 +397,13 @@
 /** Updates a document with the contents of a local file.
  
  @param document The document that needs to be updated.
- @param inputStream The source input stream to be updated.
- @param fileSize the data size used to update the content on the server. If unknown set to 0
+ @param contentStream An instance of AlfrescoContent stream to be used for data access.
  @param completionBlock The block that's called with the updated document in case the operation succeeds.
  @param progressBlock The block that's called with the upload progress. This can only be used if the fileSize parameter is > 0.
  */
 
 - (AlfrescoRequest *)updateContentOfDocument:(AlfrescoDocument *)document
-                                 inputStream:(NSInputStream *)inputStream
-                                    fileSize:(unsigned long long)fileSize
-                                    mimeType:(NSString *)mimeType
+                               contentStream:(AlfrescoContentStream *)contentStream
                              completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                                progressBlock:(AlfrescoProgressBlock)progressBlock;
 
