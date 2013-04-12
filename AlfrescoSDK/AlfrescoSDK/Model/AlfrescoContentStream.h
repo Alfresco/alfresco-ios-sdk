@@ -19,11 +19,10 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "AlfrescoContent.h"
 
-@interface AlfrescoContentStream : NSObject
+@interface AlfrescoContentStream : AlfrescoContent
 @property (nonatomic, strong, readonly) NSInputStream * inputStream;
-@property (nonatomic, strong, readonly) NSString * mimeType;
-@property (nonatomic, assign, readonly) unsigned long long length;
 
 - (id)initWithStream:(NSInputStream *)inputStream mimeType:(NSString *)mimeType;
 - (id)initWithStream:(NSInputStream *)inputStream mimeType:(NSString *)mimeType length:(unsigned long long)length;

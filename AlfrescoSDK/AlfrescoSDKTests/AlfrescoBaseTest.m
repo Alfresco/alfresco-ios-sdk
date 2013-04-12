@@ -105,6 +105,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                                  else
                                  {
                                      STAssertNotNil(document, @"document should not be nil");
+                                     STAssertTrue([document.type isEqualToString:@"cm:content"], @"The test document should be of type cm:content but it is %@", document.type);
                                      self.lastTestSuccessful = YES;
                                      self.testAlfrescoDocument = document;
                                      if (!self.isCloud)
