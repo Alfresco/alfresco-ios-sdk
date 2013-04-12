@@ -18,25 +18,41 @@
  *****************************************************************************
  */
 
-#import "AlfrescoContentStream.h"
-@interface AlfrescoContentStream ()
-@property (nonatomic, strong, readwrite) NSInputStream * inputStream;
+
+#import "AlfrescoContent.h"
+@interface AlfrescoContent ()
+@property (nonatomic, strong, readwrite) NSString *mimeType;
+@property (nonatomic, assign, readwrite) unsigned long long length;
 @end
 
-@implementation AlfrescoContentStream
-
-- (id)initWithStream:(NSInputStream *)inputStream mimeType:(NSString *)mimeType
+@implementation AlfrescoContent
+- (id)initWithMimeType:(NSString *)mimeType
 {
-    return [self initWithStream:inputStream mimeType:mimeType length:0];
+    return [self initWithMimeType:mimeType length:0];
 }
-- (id)initWithStream:(NSInputStream *)inputStream mimeType:(NSString *)mimeType length:(unsigned long long)length
+
+- (id)initWithMimeType:(NSString *)mimeType length:(unsigned long long)length
 {
-    self = [super initWithMimeType:mimeType length:length];
-    if (nil != self)
+    self = [super init];
+    if ((nil != self))
     {
-        self.inputStream = inputStream;
+        self.mimeType = mimeType;
+        self.length = length;
     }
     return self;
 }
+
+#pragma private methods
+///methods are being used from the subclasses, but not exposed publicly
+- (void)updateMimeType:(NSString *)mimeType
+{
+    _mimeType = mimeType;
+}
+
+- (void)updateLength:(NSNumber *)length
+{
+    _length = [length unsignedLongLongValue];
+}
+
 
 @end

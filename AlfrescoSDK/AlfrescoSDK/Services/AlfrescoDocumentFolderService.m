@@ -1135,10 +1135,32 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         [cmisProperties setValue:node.name forKey:@"cmis:name"];
     }
     
-    NSString *objectTypeId = [properties objectForKey:kCMISPropertyObjectTypeId];
-    if (objectTypeId == nil && [node.type hasPrefix:@"cmis:"])
+    NSString *cmisNodeType = node.type;
+    if ([node.type hasPrefix:kAlfrescoTypeContent])
     {
-        objectTypeId = node.type;
+        cmisNodeType = kCMISPropertyObjectTypeIdValueDocument;
+    }
+    else if ([node.type hasPrefix:kAlfrescoTypeFolder])
+    {
+        cmisNodeType = kCMISPropertyObjectTypeIdValueFolder;
+    }
+    
+    NSString *objectTypeId = [properties objectForKey:kCMISPropertyObjectTypeId];
+    if (nil != objectTypeId)
+    {
+        if ([objectTypeId rangeOfString:kAlfrescoTypeFolder].location != NSNotFound)
+        {
+            objectTypeId = [objectTypeId stringByReplacingOccurrencesOfString:kAlfrescoTypeFolder withString:kCMISPropertyObjectTypeIdValueFolder];
+        }
+        else if ([objectTypeId rangeOfString:kAlfrescoTypeContent].location != NSNotFound)
+        {
+            objectTypeId = [objectTypeId stringByReplacingOccurrencesOfString:kAlfrescoTypeContent withString:kCMISPropertyObjectTypeIdValueDocument];            
+        }
+        [cmisProperties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
+    }
+    else if (objectTypeId == nil && [cmisNodeType hasPrefix:@"cmis:"])
+    {
+        objectTypeId = cmisNodeType;
         
         // iterate around the aspects the node has and append them (expect system aspects)
         for (NSString *aspectName in node.aspects)
@@ -1379,8 +1401,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         NSString *customType = (isFolder) ? @"F:" : @"D:";
         [objectTypeId appendString:customType];
         [objectTypeId appendString:type];
-        NSString *description = [processedProperties valueForKey:@"cm:description"];
-        NSString *title = [processedProperties valueForKey:@"cm:title"];
+        NSString *description = [processedProperties valueForKey:kAlfrescoPropertyDescription];
+        NSString *title = [processedProperties valueForKey:kAlfrescoPropertyTitle];
         if (nil != title || nil != description)
         {
             [objectTypeId appendString:@", P:cm:titled"];
@@ -1397,7 +1419,20 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         }
         else
         {
-            [objectTypeId appendString:objectTypeIdValue];
+            if ([objectTypeIdValue rangeOfString:kAlfrescoTypeContent].location != NSNotFound)
+            {
+                NSString *cmisDocumentTypeValue = [objectTypeIdValue stringByReplacingOccurrencesOfString:kAlfrescoTypeContent withString:kCMISPropertyObjectTypeIdValueDocument];
+                [objectTypeId appendString:cmisDocumentTypeValue];
+            }
+            else if ([objectTypeIdValue rangeOfString:kAlfrescoTypeFolder].location != NSNotFound)
+            {
+                NSString *cmisFolderTypeValue = [objectTypeIdValue stringByReplacingOccurrencesOfString:kAlfrescoTypeFolder withString:kCMISPropertyObjectTypeIdValueFolder];
+                [objectTypeId appendString:cmisFolderTypeValue];                
+            }
+            else
+            {
+                [objectTypeId appendString:objectTypeIdValue];                
+            }
         }
     }
     

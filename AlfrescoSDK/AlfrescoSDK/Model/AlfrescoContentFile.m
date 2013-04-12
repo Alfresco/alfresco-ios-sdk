@@ -26,8 +26,6 @@
 @interface AlfrescoContentFile ()
 + (NSString *) mimeTypeFromFilename:(NSString *)filename;
 + (NSString *) GUIDString;
-@property (nonatomic, strong, readwrite) NSString *mimeType;
-@property (nonatomic, assign, readwrite) unsigned long long length;
 @property (nonatomic, strong, readwrite) NSURL *fileUrl;
 @end
 
@@ -47,18 +45,14 @@
 
 - (id)initWithUrl:(NSURL *)url mimeType:(NSString *)mimeType
 {
-    self = [super init];
+    self = [super initWithMimeType:mimeType];
     if (nil != self && nil != url)
     {
         
         NSString *filename = [url lastPathComponent];
         if (nil == mimeType)
         {
-            self.mimeType = [AlfrescoContentFile mimeTypeFromFilename:filename];
-        }
-        else
-        {
-            self.mimeType = mimeType;
+            [super performSelector:@selector(updateMimeType:) withObject:[AlfrescoContentFile mimeTypeFromFilename:filename]];
         }
         if ([url isFileReferenceURL])
         {
@@ -75,7 +69,8 @@
         }
         NSError *fileError = nil;
         NSDictionary *fileDictionary =  [[AlfrescoFileManager sharedManager] attributesOfItemAtPath:[self.fileUrl path] error:&fileError];
-        self.length = [[fileDictionary valueForKey:kAlfrescoFileSize] unsignedLongLongValue];
+        NSNumber *length = [NSNumber numberWithUnsignedLongLong:[[fileDictionary valueForKey:kAlfrescoFileSize] unsignedLongLongValue]];
+        [super performSelector:@selector(updateLength:) withObject:length];
     }
     return self;    
 }
@@ -83,17 +78,17 @@
 
 - (id)initWithData:(NSData *)data mimeType:(NSString *)mimeType
 {
-    self = [super init];
+    self = [super initWithMimeType:mimeType];
     if (nil != self)
     {
         NSString *tmpName = [AlfrescoContentFile GUIDString];
-        self.mimeType = mimeType;
         if (nil != tmpName) 
         {
             NSURL *pathURL = [NSURL fileURLWithPath:[[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingPathComponent:tmpName]];
             [[AlfrescoFileManager sharedManager] createFileAtPath:[pathURL path] contents:data error:nil];
             self.fileUrl = pathURL;
-            self.length = data.length;
+            NSNumber *length = [NSNumber numberWithUnsignedLongLong:data.length];
+            [super performSelector:@selector(updateLength:) withObject:length];
         }
     }
     return self;
