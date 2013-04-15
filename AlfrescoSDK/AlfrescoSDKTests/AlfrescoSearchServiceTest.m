@@ -510,44 +510,6 @@
     }];
 }
 
-
-- (void)testSearchWithStatementWithoutListingContextWithObjectTypeId
-{
-    [super runAllSitesTest:^{
-        
-        if (!super.isCloud)
-        {
-            self.searchService = [[AlfrescoSearchService alloc] initWithSession:super.currentSession];
-            
-            NSString *searchStatement = [NSString stringWithFormat:@"SELECT * FROM cm:content WHERE cmis:name = '%@'", super.fixedFileName];
-            
-            [self.searchService searchWithStatement:searchStatement language:AlfrescoSearchLanguageCMIS completionBlock:^(NSArray *resultsArray, NSError *error) {
-                
-                if (resultsArray == nil)
-                {
-                    super.lastTestSuccessful = NO;
-                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                }
-                else
-                {
-                    STAssertNotNil(resultsArray, @"The results array returned was nil");
-                    STAssertTrue([resultsArray count] >= 1, @"Expected the results array to have atleast one result, instead got back %i", [resultsArray count]);
-                    
-                    super.lastTestSuccessful = YES;
-                }
-                super.callbackCompleted = YES;
-            }];
-            
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
-        }
-        else
-        {
-            [super waitForCompletion];
-        }
-    }];
-}
-
 /*
  @Unique_TCRef 40S5
  */
