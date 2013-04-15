@@ -23,6 +23,7 @@
 #import "AlfrescoLog.h"
 #import "CMISConstants.h"
 #import "AlfrescoContentStream.h"
+#import "AlfrescoInternalConstants.h"
 
 @implementation AlfrescoDocumentFolderServiceTest
 /*
@@ -39,6 +40,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
         
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
+//        [documentProperties setObject:@"cmis:document, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
         [props setObject:@"test description" forKey:@"cm:description"];
         [props setObject:@"test title" forKey:@"cm:title"];
         
@@ -87,6 +89,65 @@
         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
     }];
 }
+
+- (void)testCreateFolderWithObjectTypeId
+{
+    [super runAllSitesTest:^{
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        
+        NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:3];
+        [props setObject:@"cm:folder, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
+        [props setObject:@"test description" forKey:@"cm:description"];
+        [props setObject:@"test title" forKey:@"cm:title"];
+        
+        // create a new folder in the repository's root folder
+        [self.dfService createFolderWithName:super.unitTestFolder inParentFolder:super.testDocFolder properties:props
+                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+         {
+             if (nil == folder)
+             {
+                 super.lastTestSuccessful = NO;
+                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 super.callbackCompleted = YES;
+             }
+             else
+             {
+                 STAssertNotNil(folder, @"folder should not be nil");
+                 STAssertTrue([folder.name isEqualToString:super.unitTestFolder], @"folder name should be %@",super.unitTestFolder);
+                 STAssertTrue([folder.type isEqualToString:kAlfrescoTypeFolder], @"we expected object type cm:folder but got %@", folder.type);
+                 
+                 // check the properties were added at creation time
+                 NSDictionary *newFolderProps = folder.properties;
+                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                 
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                  {
+                      if (!success)
+                      {
+                          super.lastTestSuccessful = NO;
+                          super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      }
+                      else
+                      {
+                          super.lastTestSuccessful = YES;
+                      }
+                      
+                      super.callbackCompleted = YES;
+                  }];
+             }
+             
+             
+             
+         }];
+        [super waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+    }];
+}
+
 
 - (void)testCreateFolderDuplicate
 {
@@ -907,7 +968,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
-        [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
+        [properties setObject:[kAlfrescoTypeContent stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
         [properties setObject:@"Test Description" forKey:@"cm:description"];
         [properties setObject:@"Test Title" forKey:@"cm:title"];
         [properties setObject:@"Test Author" forKey:@"cm:author"];
@@ -957,7 +1018,7 @@
             {
                 STAssertNotNil(document, @"document should not be nil");
                 STAssertTrue([document.name isEqualToString:documentName], @"folder name should be %@ but instead we got %@",documentName, document.name);
-                
+                STAssertTrue([document.type isEqualToString:kAlfrescoTypeContent], @"object type should be cm:content but instead we got %@", document.type);
                 // check the properties were added at creation time
                 NSDictionary *newFolderProps = document.properties;
                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
@@ -2691,6 +2752,7 @@
                           STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
                           STAssertTrue([updatedDocument.name isEqualToString:@"version-download-test-updated.txt"], @"name should be updated");
                           STAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
+                          STAssertTrue([updatedDocument.type isEqualToString:@"cm:content"], @"type should be cm:content, but is %@", updatedDocument.type);
                           
                           // check the updated properties
                           NSDictionary *updatedProps = updatedDocument.properties;

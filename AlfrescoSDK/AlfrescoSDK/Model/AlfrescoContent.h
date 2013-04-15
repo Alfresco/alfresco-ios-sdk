@@ -18,25 +18,16 @@
  *****************************************************************************
  */
 
-#import "AlfrescoContentStream.h"
-@interface AlfrescoContentStream ()
-@property (nonatomic, strong, readwrite) NSInputStream * inputStream;
-@end
 
-@implementation AlfrescoContentStream
+#import <Foundation/Foundation.h>
 
-- (id)initWithStream:(NSInputStream *)inputStream mimeType:(NSString *)mimeType
-{
-    return [self initWithStream:inputStream mimeType:mimeType length:0];
-}
-- (id)initWithStream:(NSInputStream *)inputStream mimeType:(NSString *)mimeType length:(unsigned long long)length
-{
-    self = [super initWithMimeType:mimeType length:length];
-    if (nil != self)
-    {
-        self.inputStream = inputStream;
-    }
-    return self;
-}
+@interface AlfrescoContent : NSObject
+/// @param the mimeType
+@property (nonatomic, strong, readonly) NSString *mimeType;
 
+/// @param the length of the file
+@property (nonatomic, assign, readonly) unsigned long long length;
+
+- (id)initWithMimeType:(NSString *)mimeType;
+- (id)initWithMimeType:(NSString *)mimeType length:(unsigned long long)length;
 @end

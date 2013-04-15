@@ -108,6 +108,7 @@
 		4E7D97C815B8569700D6C6D5 /* avatar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar@2x.png"; sourceTree = "<group>"; };
 		4E80E8EE161459C200922D5D /* AlfrescoOAuthHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthHelper.h; path = AlfrescoSDK/AlfrescoOAuthHelper.h; sourceTree = SOURCE_ROOT; };
 		4E80E8EF16145A4D00922D5D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		4E85F3861718490B005A43E1 /* AlfrescoContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoContent.h; path = AlfrescoSDK/AlfrescoContent.h; sourceTree = SOURCE_ROOT; };
 		4EAA12651577CD6D001B073B /* MobileSDKWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobileSDKWebViewController.h; sourceTree = "<group>"; };
 		4EAA12661577CD6D001B073B /* MobileSDKWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobileSDKWebViewController.m; sourceTree = "<group>"; };
 		4EBBC4FA1585FE0B00EFDC16 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -241,6 +242,7 @@
 		4E34A45E15B01E490075B46E /* AlfrescoSDK */ = {
 			isa = PBXGroup;
 			children = (
+				4E85F3861718490B005A43E1 /* AlfrescoContent.h */,
 				4E420BE7171715BC002D75D9 /* AlfrescoContentStream.h */,
 				8218AF5C16E00ED3001CE051 /* libAlfrescoSDKv1.1.0.a */,
 				8233930516DE35C60031CF7B /* AlfrescoLog.h */,
