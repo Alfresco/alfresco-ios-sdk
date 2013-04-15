@@ -66,15 +66,6 @@
 {
     [AlfrescoErrors assertArgumentNotNil:statement argumentName:@"statement"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-
-    if ([statement rangeOfString:kAlfrescoTypeContent].location != NSNotFound)
-    {
-        statement = [statement stringByReplacingOccurrencesOfString:kAlfrescoTypeContent withString:kCMISPropertyObjectTypeIdValueDocument];
-    }
-    else if ([statement rangeOfString:kAlfrescoTypeFolder].location != NSNotFound)
-    {
-        statement = [statement stringByReplacingOccurrencesOfString:kAlfrescoTypeFolder withString:kCMISPropertyObjectTypeIdValueFolder];
-    }
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     if (AlfrescoSearchLanguageCMIS == language)
@@ -118,19 +109,11 @@
 {
     [AlfrescoErrors assertArgumentNotNil:statement argumentName:@"statement"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
-    }
-    if ([statement rangeOfString:kAlfrescoTypeContent].location != NSNotFound)
-    {
-        statement = [statement stringByReplacingOccurrencesOfString:kAlfrescoTypeContent withString:kCMISPropertyObjectTypeIdValueDocument];
-    }
-    else if ([statement rangeOfString:kAlfrescoTypeFolder].location != NSNotFound)
-    {
-        statement = [statement stringByReplacingOccurrencesOfString:kAlfrescoTypeFolder withString:kCMISPropertyObjectTypeIdValueFolder];
-    }
-    
+    }    
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
 

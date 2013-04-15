@@ -59,11 +59,4 @@
  */
 - (id)initWithData:(NSData *)data mimeType:(NSString *)mimeType;
 
-
-/** creates a new  file in the temporary folder
- This method is used when downloading a file from the server.
- @param path the full file path of the file to be used
- @param mimeType the mime type of the data
-- (id)initWithFilePath:(NSString *)path mimeType:(NSString *)mimeType;
- */
 @end

@@ -42,17 +42,4 @@
     return self;
 }
 
-#pragma private methods
-///methods are being used from the subclasses, but not exposed publicly
-- (void)updateMimeType:(NSString *)mimeType
-{
-    _mimeType = mimeType;
-}
-
-- (void)updateLength:(NSNumber *)length
-{
-    _length = [length unsignedLongLongValue];
-}
-
-
 @end
