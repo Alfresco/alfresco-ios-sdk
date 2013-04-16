@@ -26,8 +26,6 @@
 @interface AlfrescoContentFile ()
 + (NSString *) mimeTypeFromFilename:(NSString *)filename;
 + (NSString *) GUIDString;
-@property (nonatomic, strong, readwrite) NSString *mimeType;
-@property (nonatomic, assign, readwrite) unsigned long long length;
 @property (nonatomic, strong, readwrite) NSURL *fileUrl;
 @end
 
@@ -47,31 +45,38 @@
 
 - (id)initWithUrl:(NSURL *)url mimeType:(NSString *)mimeType
 {
-    self = [super initWithMimeType:mimeType];
+    NSURL *localFileUrl = nil;
+    
+    // try and get mime type from file name if not provided
+    NSString *filename = [url lastPathComponent];
+    if (nil == mimeType)
+    {
+        mimeType = [AlfrescoContentFile mimeTypeFromFilename:filename];
+    }
+    
+    if ([url isFileReferenceURL])
+    {
+        localFileUrl = url;
+    }
+    else
+    {
+        // create temporary file if URL does not point to a local file
+        NSString *pathname = [[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingPathComponent:filename];
+        NSData *fileContent = [[AlfrescoFileManager sharedManager] dataWithContentsOfURL:url];
+        
+        localFileUrl = [NSURL fileURLWithPath:pathname];
+        [[AlfrescoFileManager sharedManager] createFileAtPath:[localFileUrl path] contents:fileContent error:nil];
+    }
+    
+    // retrieve the length of the file
+    NSError *fileError = nil;
+    NSDictionary *fileDictionary =  [[AlfrescoFileManager sharedManager] attributesOfItemAtPath:[localFileUrl path] error:&fileError];
+    
+    // use super class to initialise with mime type and length
+    self = [super initWithMimeType:mimeType length:[[fileDictionary valueForKey:kAlfrescoFileSize] unsignedLongLongValue]];
     if (nil != self && nil != url)
     {
-        NSString *filename = [url lastPathComponent];
-        if (nil == mimeType)
-        {
-            self.mimeType = [AlfrescoContentFile mimeTypeFromFilename:filename];
-        }
-        
-        if ([url isFileReferenceURL])
-        {
-            self.fileUrl = url;
-        }
-        else
-        {
-            NSString *pathname = [[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingPathComponent:filename];
-            NSData *fileContent = [[AlfrescoFileManager sharedManager] dataWithContentsOfURL:url];
-            
-            NSURL *fileURL = [NSURL fileURLWithPath:pathname];
-            [[AlfrescoFileManager sharedManager] createFileAtPath:[fileURL path] contents:fileContent error:nil];
-            self.fileUrl = fileURL;
-        }
-        NSError *fileError = nil;
-        NSDictionary *fileDictionary =  [[AlfrescoFileManager sharedManager] attributesOfItemAtPath:[self.fileUrl path] error:&fileError];
-        self.length = [[fileDictionary valueForKey:kAlfrescoFileSize] unsignedLongLongValue];
+        self.fileUrl = localFileUrl;
     }
     return self;    
 }
@@ -79,17 +84,20 @@
 
 - (id)initWithData:(NSData *)data mimeType:(NSString *)mimeType
 {
-    self = [super initWithMimeType:mimeType];
+    NSURL *localFileUrl = nil;
+    
+    NSString *tmpName = [AlfrescoContentFile GUIDString];
+    if (nil != tmpName)
+    {
+        NSURL *pathURL = [NSURL fileURLWithPath:[[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingPathComponent:tmpName]];
+        [[AlfrescoFileManager sharedManager] createFileAtPath:[pathURL path] contents:data error:nil];
+        localFileUrl = pathURL;
+    }
+    
+    self = [super initWithMimeType:mimeType length:data.length];
     if (nil != self)
     {
-        NSString *tmpName = [AlfrescoContentFile GUIDString];
-        if (nil != tmpName) 
-        {
-            NSURL *pathURL = [NSURL fileURLWithPath:[[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingPathComponent:tmpName]];
-            [[AlfrescoFileManager sharedManager] createFileAtPath:[pathURL path] contents:data error:nil];
-            self.fileUrl = pathURL;
-            self.length = data.length;
-        }
+        self.fileUrl = localFileUrl;
     }
     return self;
 }
