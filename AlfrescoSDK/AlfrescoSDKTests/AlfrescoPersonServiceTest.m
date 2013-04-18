@@ -26,34 +26,34 @@
  */
 - (void)testRetrievePersonForUser
 {
-    [super runAllSitesTest:^{
-        self.personService = [[AlfrescoPersonService alloc] initWithSession:super.currentSession];
-        NSString *identifier = super.userName;
+    [self runAllSitesTest:^{
+        self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
+        NSString *identifier = self.userName;
         [self.personService retrievePersonWithIdentifier:identifier completionBlock:^(AlfrescoPerson *person, NSError *error)
          {
              if (nil == person) 
              {
-                 super.lastTestSuccessful = NO;
-                 super.lastTestFailureMessage = @"Failed to retrieve person.";
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = @"Failed to retrieve person.";
              }
              else 
              {
                  STAssertNotNil(person,@"Person should not be nil");
-                 STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, super.userName]);
-                 STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, super.firstName]);
+                 STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, self.userName]);
+                 STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, self.firstName]);
                  STAssertNotNil(person.lastName, @"Persons last name should not be nil");
                  STAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
                  if (person.avatarIdentifier)
                  {
                      STAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
                  }
-                 super.lastTestSuccessful = YES;
+                 self.lastTestSuccessful = YES;
              }
-             super.callbackCompleted = YES;
+             self.callbackCompleted = YES;
          }];
-        [super waitUntilCompleteWithFixedTimeInterval];
+        [self waitUntilCompleteWithFixedTimeInterval];
         
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 
@@ -62,8 +62,8 @@
  */
 - (void)testRetrievePersonForUserNonExisting
 {
-    [super runAllSitesTest:^{
-        self.personService = [[AlfrescoPersonService alloc] initWithSession:super.currentSession];
+    [self runAllSitesTest:^{
+        self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
         NSString *identifier = @"admin2";
         if (self.isCloud)
         {
@@ -73,18 +73,18 @@
          {
              if (nil == person)
              {
-                 super.lastTestSuccessful = YES;
+                 self.lastTestSuccessful = YES;
              }
              else
              {
-                 super.lastTestSuccessful = NO;
-                 super.lastTestFailureMessage = @"Should not get back a Person for a non existing user.";
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = @"Should not get back a Person for a non existing user.";
              }
-             super.callbackCompleted = YES;
+             self.callbackCompleted = YES;
          }];
-        [super waitUntilCompleteWithFixedTimeInterval];
+        [self waitUntilCompleteWithFixedTimeInterval];
         
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 
@@ -95,32 +95,32 @@
  */
 - (void)testRetrieveAvatarForPerson
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        self.personService = [[AlfrescoPersonService alloc] initWithSession:super.currentSession];
+        self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
 //        __weak AlfrescoPersonService *weakPersonService = self.personService;
         
         // get thumbnail
-        [self.personService retrievePersonWithIdentifier:super.userName completionBlock:^(AlfrescoPerson *person, NSError *error)
+        [self.personService retrievePersonWithIdentifier:self.userName completionBlock:^(AlfrescoPerson *person, NSError *error)
          {
              if (nil == person)
              {
-                 super.lastTestSuccessful = NO;
-                 super.lastTestFailureMessage = @"Failed to retrieve person.";
-                 super.callbackCompleted = YES;
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = @"Failed to retrieve person.";
+                 self.callbackCompleted = YES;
              }
              else
              {
                  STAssertNotNil(person,@"Person should not be nil");
-                 STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, super.userName]);
-                 STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, super.firstName]);
+                 STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, self.userName]);
+                 STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, self.firstName]);
 
                  [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
                   {
                       if (nil == contentFile)
                       {
-                          super.lastTestSuccessful = NO;
-                          super.lastTestFailureMessage = @"Failed to retrieve avatar image.";
+                          self.lastTestSuccessful = NO;
+                          self.lastTestFailureMessage = @"Failed to retrieve avatar image.";
                       }
                       else
                       {
@@ -136,17 +136,17 @@
                            STAssertFalse([contentFile.mimeType length] == 0, @"mimetype should not have a length of 0");
                            */
                           
-                          super.lastTestSuccessful = YES;
+                          self.lastTestSuccessful = YES;
                       }
-                      super.callbackCompleted = YES;
+                      self.callbackCompleted = YES;
                       
                   }];
              }
          }];
         
         
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 

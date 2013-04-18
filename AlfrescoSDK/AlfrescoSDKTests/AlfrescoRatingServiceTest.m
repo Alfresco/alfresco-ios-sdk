@@ -29,33 +29,33 @@
 - (void)testRetrieveLikeCount
 {
     
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        AlfrescoRepositoryCapabilities *capabilities = super.currentSession.repositoryInfo.capabilities;
+        AlfrescoRepositoryCapabilities *capabilities = self.currentSession.repositoryInfo.capabilities;
         if (capabilities.doesSupportLikingNodes)
         {
-            self.ratingService = [[AlfrescoRatingService alloc] initWithSession:super.currentSession];
+            self.ratingService = [[AlfrescoRatingService alloc] initWithSession:self.currentSession];
             // get like count
-            [self.ratingService retrieveLikeCountForNode:super.testAlfrescoDocument completionBlock:^(NSNumber *count, NSError *error)
+            [self.ratingService retrieveLikeCountForNode:self.testAlfrescoDocument completionBlock:^(NSNumber *count, NSError *error)
              {
                  if (nil == count)
                  {
-                     super.lastTestSuccessful = NO;
-                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                  }
                  else
                  {
                      STAssertTrue([count intValue] == 0, @"Retrieve like count: expected like count of 0 but got count %d",[count intValue]);
-                     super.lastTestSuccessful = YES;
+                     self.lastTestSuccessful = YES;
                  }
-                 super.callbackCompleted = YES;
+                 self.callbackCompleted = YES;
              }];
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
         else
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
         
     }];
@@ -68,59 +68,59 @@
  */
 - (void)testLikeAndUnlike
 {
-    [super runAllSitesTest:^{
-        AlfrescoRepositoryCapabilities *capabilities = super.currentSession.repositoryInfo.capabilities;
+    [self runAllSitesTest:^{
+        AlfrescoRepositoryCapabilities *capabilities = self.currentSession.repositoryInfo.capabilities;
         if (capabilities.doesSupportLikingNodes)
         {
-            self.ratingService = [[AlfrescoRatingService alloc] initWithSession:super.currentSession];
+            self.ratingService = [[AlfrescoRatingService alloc] initWithSession:self.currentSession];
             
             // get like count
-            [self.ratingService likeNode:super.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
+            [self.ratingService likeNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
              {
                  if (!success)
                  {
-                     super.lastTestSuccessful = NO;
-                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                     super.callbackCompleted = YES;
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.callbackCompleted = YES;
                  }
                  else
                  {
-                     [self.ratingService retrieveLikeCountForNode:super.testAlfrescoDocument completionBlock:^(NSNumber *count, NSError *error)
+                     [self.ratingService retrieveLikeCountForNode:self.testAlfrescoDocument completionBlock:^(NSNumber *count, NSError *error)
                       {
                           if (nil == count)
                           {
-                              super.lastTestSuccessful = NO;
-                              super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                              super.callbackCompleted = YES;
+                              self.lastTestSuccessful = NO;
+                              self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                              self.callbackCompleted = YES;
                           }
                           else
                           {
                               STAssertTrue([count intValue] == 1, @"Retrieve like count: expected like count of 1 but got count %d",[count intValue]);
                               
-                              [self.ratingService unlikeNode:super.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
+                              [self.ratingService unlikeNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
                                {
                                    
                                    if (!success)
                                    {
-                                       super.lastTestSuccessful = NO;
-                                       super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                       super.callbackCompleted = YES;
+                                       self.lastTestSuccessful = NO;
+                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                       self.callbackCompleted = YES;
                                    }
                                    else
                                    {
-                                       [self.ratingService retrieveLikeCountForNode:super.testAlfrescoDocument completionBlock:^(NSNumber *count, NSError *error)
+                                       [self.ratingService retrieveLikeCountForNode:self.testAlfrescoDocument completionBlock:^(NSNumber *count, NSError *error)
                                         {
                                             if (nil == count)
                                             {
-                                                super.lastTestSuccessful = NO;
-                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                self.lastTestSuccessful = NO;
+                                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                                             }
                                             else
                                             {
                                                 STAssertTrue([count intValue] == 0, @"Retrieve like count: expected like count of 0 but got count %d", [count intValue]);
-                                                super.lastTestSuccessful = YES;
+                                                self.lastTestSuccessful = YES;
                                             }
-                                            super.callbackCompleted = YES;
+                                            self.callbackCompleted = YES;
                                         }];
                                    }
                                    
@@ -133,12 +133,12 @@
                  
              }];
             
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
         else
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
     }];
 }
@@ -150,62 +150,62 @@
  */
 - (void)testIsNodeLiked
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        AlfrescoRepositoryCapabilities *capabilities = super.currentSession.repositoryInfo.capabilities;
+        AlfrescoRepositoryCapabilities *capabilities = self.currentSession.repositoryInfo.capabilities;
         if (capabilities.doesSupportLikingNodes)
         {
-            self.ratingService = [[AlfrescoRatingService alloc] initWithSession:super.currentSession];
+            self.ratingService = [[AlfrescoRatingService alloc] initWithSession:self.currentSession];
             
             // get like count
-            [self.ratingService isNodeLiked:super.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isLiked, NSError *error)
+            [self.ratingService isNodeLiked:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isLiked, NSError *error)
              {
                  if (!succeeded)
                  {
-                     super.lastTestSuccessful = NO;
-                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                     super.callbackCompleted = YES;
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.callbackCompleted = YES;
                  }
                  else
                  {
                      STAssertFalse(isLiked, @"expected false");
                      
-                     [self.ratingService likeNode:super.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
+                     [self.ratingService likeNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
                       {
                           
                           if (!success)
                           {
-                              super.lastTestSuccessful = NO;
-                              super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                              super.callbackCompleted = YES;
+                              self.lastTestSuccessful = NO;
+                              self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                              self.callbackCompleted = YES;
                           }
                           else
                           {
-                              [self.ratingService isNodeLiked:super.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isLiked, NSError *error)
+                              [self.ratingService isNodeLiked:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isLiked, NSError *error)
                                {
                                    if (!succeeded)
                                    {
-                                       super.lastTestSuccessful = NO;
-                                       super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                       super.callbackCompleted = YES;
+                                       self.lastTestSuccessful = NO;
+                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                       self.callbackCompleted = YES;
                                    }
                                    else
                                    {
                                        STAssertTrue(succeeded, @"expected true");
                                        
-                                       [self.ratingService unlikeNode:super.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
+                                       [self.ratingService unlikeNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
                                         {
                                             
                                             if (!success)
                                             {
-                                                super.lastTestSuccessful = NO;
-                                                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                self.lastTestSuccessful = NO;
+                                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                                             }
                                             else
                                             {
-                                                super.lastTestSuccessful = YES;
+                                                self.lastTestSuccessful = YES;
                                             }
-                                            super.callbackCompleted = YES;
+                                            self.callbackCompleted = YES;
                                             
                                         }];
                                    }
@@ -218,12 +218,12 @@
                  
              }];
             
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
         else
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
     }];
 }
