@@ -30,20 +30,20 @@
  */
 - (void)testRetrieveAllVersions
 {
-    [super runAllSitesTest:^
+    [self runAllSitesTest:^
      {
          
-         self.versionService = [[AlfrescoVersionService alloc] initWithSession:super.currentSession];
-         __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+         self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
+         __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
          
-         [documentService retrieveNodeWithIdentifier:super.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error)
+         [documentService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error)
           {
               if (nil == node)
               {
                   documentService = nil;
-                  super.lastTestSuccessful = NO;
-                  super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                  super.callbackCompleted = YES;
+                  self.lastTestSuccessful = NO;
+                  self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                  self.callbackCompleted = YES;
               }
               else
               {
@@ -51,8 +51,8 @@
                    {
                        if (nil == array)
                        {
-                           super.lastTestSuccessful = NO;
-                           super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                           self.lastTestSuccessful = NO;
+                           self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                        }
                        else
                        {
@@ -61,9 +61,9 @@
                            AlfrescoNode * temp = array[0];
                            
                            NSLog(@"Temp.name =  %@", temp.name);
-                           super.lastTestSuccessful = YES;
+                           self.lastTestSuccessful = YES;
                        }
-                       super.callbackCompleted = YES;
+                       self.callbackCompleted = YES;
                        
                    }];
                   
@@ -73,8 +73,8 @@
           }
           ];
          
-         [super waitUntilCompleteWithFixedTimeInterval];
-         STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+         [self waitUntilCompleteWithFixedTimeInterval];
+         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
      }
      ];
 }
@@ -89,21 +89,21 @@
  */
 - (void)testRetrieveVersionComment
 {
-    [super runAllSitesTest:^
+    [self runAllSitesTest:^
      {
-         if (!super.isCloud)
+         if (!self.isCloud)
          {
-             self.versionService = [[AlfrescoVersionService alloc] initWithSession:super.currentSession];
-             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+             self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
+             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
              
              [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
               {
                   if (nil == node)
                   {
                       documentService = nil;
-                      super.lastTestSuccessful = NO;
-                      super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                      super.callbackCompleted = YES;
+                      self.lastTestSuccessful = NO;
+                      self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      self.callbackCompleted = YES;
                   }
                   else
                   {
@@ -111,8 +111,8 @@
                        {
                            if (nil == array)
                            {
-                               super.lastTestSuccessful = NO;
-                               super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                               self.lastTestSuccessful = NO;
+                               self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                            }
                            else
                            {
@@ -134,9 +134,9 @@
                                
                                STAssertTrue(versionCommentRetrieved, @"version comment was retrieved successfully");
                                
-                               super.lastTestSuccessful = YES;
+                               self.lastTestSuccessful = YES;
                            }
-                           super.callbackCompleted = YES;
+                           self.callbackCompleted = YES;
                        }
                        ];
                       
@@ -145,13 +145,13 @@
               }
               ];
              
-             [super waitUntilCompleteWithFixedTimeInterval];
-             STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);  
+             [self waitUntilCompleteWithFixedTimeInterval];
+             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);  
          }
          else
          {
              // not checking version comment in cloud for now
-             [super waitForCompletion];
+             [self waitForCompletion];
          }
      }
      ];
@@ -163,21 +163,21 @@
  */
 - (void)testRetrieveAllVersionsWithPaging
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        self.versionService = [[AlfrescoVersionService alloc] initWithSession:super.currentSession];
-        __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:super.currentSession];
+        self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
+        __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
-        [documentService retrieveNodeWithIdentifier:super.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error) 
+        [documentService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error) 
         {
             if (nil == node)
             {
                 documentService = nil;
-                super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                super.callbackCompleted = YES;
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
             }
             else
             {                
@@ -185,8 +185,8 @@
                  {
                      if (nil == pagingResult)
                      {
-                         super.lastTestSuccessful = NO;
-                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         self.lastTestSuccessful = NO;
+                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                      }
                      else
                      {                
@@ -194,9 +194,9 @@
                          STAssertTrue(pagingResult.objects.count == 1, @"expected 1 version, but got %d",pagingResult.objects.count);
                          STAssertTrue(pagingResult.totalItems >= 1, @"expected at least 1 version in total");
                          
-                         super.lastTestSuccessful = YES;
+                         self.lastTestSuccessful = YES;
                      }
-                     super.callbackCompleted = YES;
+                     self.callbackCompleted = YES;
                      
                  }];
                 
@@ -204,10 +204,157 @@
             }
         }];
         
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 
+- (void)testUpdateContentForDocument
+{
+    [self runAllSitesTest:^{
+        if (!self.isCloud)
+        {
+            STAssertTrue(YES, @"");
+        }
+        else
+        {
+            self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];            
+            __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+            
+            [documentService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error)
+             {
+                 if (nil == node)
+                 {
+                     documentService = nil;
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.callbackCompleted = YES;
+                 }
+                 else
+                 {
+                     AlfrescoDocument *document = (AlfrescoDocument *)node;
+                     [self.versionService retrieveAllVersionsOfDocument:document completionBlock:^(NSArray *array, NSError *error)
+                      {
+                          if (nil == array)
+                          {
+                              self.lastTestSuccessful = NO;
+                              self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                              self.callbackCompleted = YES;
+                          }
+                          else
+                          {
+                              STAssertNotNil(array, @"array should not be nil");
+                              STAssertTrue(array.count == 1, @"expected 1 version");
+                              NSString *versionLabel = document.versionLabel;
+                              [documentService retrieveContentOfDocument:document completionBlock:^(AlfrescoContentFile *content, NSError *error){
+                                  if (nil == content)
+                                  {
+                                      self.lastTestSuccessful = NO;
+                                      self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                      self.callbackCompleted = YES;
+                                      
+                                  }
+                                  else
+                                  {
+                                      NSError *readError = nil;
+                                      __block NSString *stringContent = [NSString stringWithContentsOfFile:[content.fileUrl path]
+                                                                                                  encoding:NSASCIIStringEncoding error:&readError];
+                                      __block NSString *updatedContent = [NSString stringWithFormat:@"%@ - and we added some text.",stringContent];
+                                      NSData *data = [updatedContent dataUsingEncoding:NSASCIIStringEncoding];
+                                      __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:content.mimeType];
+                                      [documentService updateContentOfDocument:document contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error){
+                                          if (nil == updatedDocument)
+                                          {
+                                              self.lastTestSuccessful = NO;
+                                              self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                              self.callbackCompleted = YES;
+                                          }
+                                          else
+                                          {
+                                              [self.versionService retrieveAllVersionsOfDocument:updatedDocument completionBlock:^(NSArray *versions, NSError *error){
+                                                  if (nil == versions)
+                                                  {
+                                                      self.lastTestSuccessful = NO;
+                                                      self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                  }
+                                                  else
+                                                  {
+                                                      STAssertTrue(versions.count == 2, @"the versions count should have been incremented to 2. Instead we got %d", versions.count);
+                                                      self.lastTestSuccessful = YES;
+                                                      BOOL foundPreviousVersion = NO;
+                                                      for (AlfrescoDocument *doc in versions)
+                                                      {
+                                                          if ([doc.versionLabel isEqualToString:versionLabel])
+                                                          {
+                                                              foundPreviousVersion = YES;
+                                                          }
+                                                          if (doc.isLatestVersion)
+                                                          {
+                                                              BOOL hasHigherVersion = [AlfrescoVersionServiceTest isHigherVersionLabel:doc.versionLabel previousLabel:versionLabel];
+                                                              STAssertTrue(hasHigherVersion, @"The version label of the latest doc should be higher than the previous one");
+                                                          }
+                                                      }
+                                                      STAssertTrue(foundPreviousVersion, @"The array of document versions should still contain the previous version, but doesn't");
+                                                  }
+                                                  self.callbackCompleted = YES;
+                                              }];
+                                          }
+                                      } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+                                      
+                                  }
+                                  
+                                  
+                              } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+                              self.lastTestSuccessful = YES;
+                          }
+                          self.callbackCompleted = YES;
+                          
+                      }];
+                     
+                     documentService = nil;
+                 }
+                 
+             }
+             ];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            
+        }
+        
+    }];
+}
+
+
++ (BOOL)isHigherVersionLabel:(NSString *)lastVersionLabel previousLabel:(NSString *)previousLabel
+{
+    if (nil == lastVersionLabel || nil == previousLabel)
+    {
+        return NO;
+    }
+    if ([lastVersionLabel isEqualToString:previousLabel])
+    {
+        return NO;
+    }
+    if (lastVersionLabel.length != previousLabel.length)
+    {
+        return NO;
+    }
+    BOOL isHigherVersion = NO;
+    NSArray *firstComponents = [lastVersionLabel componentsSeparatedByString:@"."];
+    NSArray *secondComponents = [previousLabel componentsSeparatedByString:@"."];
+    for (int i = 0; i < firstComponents.count; i++)
+    {
+        int first = [[firstComponents objectAtIndex:i] intValue];
+        int second = [[secondComponents objectAtIndex:i] intValue];
+        if (first > second)
+        {
+            isHigherVersion = YES;
+            break;
+        }
+    }
+    
+    return isHigherVersion;
+}
 
 @end

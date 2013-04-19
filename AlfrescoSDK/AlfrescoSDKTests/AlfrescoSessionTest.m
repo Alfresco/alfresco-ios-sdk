@@ -32,8 +32,8 @@
  */
 - (void)testConnectWithURLWithInvalidCredentials
 {
-    [super runAllSitesTest:^{
-        if (!super.isCloud)
+    [self runAllSitesTest:^{
+        if (!self.isCloud)
         {
             NSString *invalidUserName = @"RepositorySessionTest";
             NSString *invalidPassword = @"12345";
@@ -48,20 +48,20 @@
                                               STAssertNotNil(error, @"Expected an invalid credentials error to be thrown");
                                               STAssertNil(session, @"Expected a session not to be created");
                                               NSLog(@"Desc: %@, Reason: %@", [error localizedDescription], [error localizedFailureReason]);
-                                              super.lastTestSuccessful = YES;
+                                              self.lastTestSuccessful = YES;
                                           }
                                           else
                                           {
-                                              super.lastTestSuccessful = NO;
+                                              self.lastTestSuccessful = NO;
                                           }
-                                          super.callbackCompleted = YES;
+                                          self.callbackCompleted = YES;
                                       }];
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, @"OnPremise Session authentication succeeded with invalid credentials");
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication succeeded with invalid credentials");
         }
         else
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
     }];
 }
@@ -77,21 +77,21 @@
 /*
 - (void)testRetrieveNetworks
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        if (super.isCloud)
+        if (self.isCloud)
         {
             [(AlfrescoCloudSession *)self.currentSession retrieveNetworksWithCompletionBlock:^(NSArray *array, NSError *error) {
                 
                 if (array == nil || error != nil)
                 {
-                    super.lastTestSuccessful = NO;
-                    super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                    super.callbackCompleted = YES;
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    self.callbackCompleted = YES;
                 }
                 else
                 {
-                    super.lastTestSuccessful = YES;
+                    self.lastTestSuccessful = YES;
                     AlfrescoLogDebug(@"testRetrieveNetworksTest");
                     AlfrescoLogDebug(@"%@", array);
                     
@@ -107,9 +107,9 @@
                         STAssertTrue(network.isHomeNetwork, @"network is home network");
                         STAssertNotNil(network.createdAt, @"createdAt property is set");
                     }
-                    super.callbackCompleted = YES;
+                    self.callbackCompleted = YES;
                 }
-                STAssertTrue(super.lastTestSuccessful, @"Unable to retrieve networks for the current cloud session");
+                STAssertTrue(self.lastTestSuccessful, @"Unable to retrieve networks for the current cloud session");
             }];
         }
         
@@ -123,9 +123,9 @@
  */
 - (void)testRemoveNonExistantParameter
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        if (super.isCloud)
+        if (self.isCloud)
         {
             NSString *nonExistantKeyToRemove = @"testRemoveNonExistantParameter";
             
@@ -145,15 +145,15 @@
             // if they are the same. nothing was removed
             if (originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count])
             {
-                super.lastTestSuccessful = YES;
+                self.lastTestSuccessful = YES;
             }
             else
             {
-                super.lastTestSuccessful = NO;
+                self.lastTestSuccessful = NO;
             }
             
-            [super waitForCompletion];
-            STAssertTrue(super.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
+            [self waitForCompletion];
+            STAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
         }
     }];
 }
@@ -165,15 +165,15 @@
  */
 - (void)testRetrieveBaseURL
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        NSURL *sessionBaseURL = [super.currentSession baseUrl];
+        NSURL *sessionBaseURL = [self.currentSession baseUrl];
         STAssertNotNil(sessionBaseURL, @"Expected the base url in the session not to be nil");
         STAssertNotNil(self.server, @"The server base url is nil");
         NSLog(@"Session Base URL is: %@ \nServer is: %@", sessionBaseURL, self.server);
         
         NSString *urlToTest = nil;
-        if (!super.isCloud)
+        if (!self.isCloud)
         {
             urlToTest = [sessionBaseURL absoluteString];
         }
@@ -187,17 +187,17 @@
         
         if ([self.server isEqualToString:urlToTest])
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
         else
         {
-            super.lastTestSuccessful = NO;
+            self.lastTestSuccessful = NO;
         }
-        if (super.isCloud)
+        if (self.isCloud)
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
-        STAssertTrue(super.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
+        STAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
     }];
 }
 
@@ -207,26 +207,26 @@
  */
 - (void)testRetrievePersonalIdentifier
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
 
-        NSString *sessionPersonalIdentifier = [super.currentSession personIdentifier];
+        NSString *sessionPersonalIdentifier = [self.currentSession personIdentifier];
         STAssertNotNil(sessionPersonalIdentifier, @"Personal Identifier in the session is nil");
         STAssertNotNil(self.userName, @"Username is nil");
         STAssertTrue([self.userName isEqualToString:sessionPersonalIdentifier], @"The appropriate person identifer for the logged in user was not returned");
         
         if ([self.userName isEqualToString:sessionPersonalIdentifier])
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
         else
         {
-            super.lastTestSuccessful = NO;
+            self.lastTestSuccessful = NO;
         }
-        if (super.isCloud)
+        if (self.isCloud)
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
-        STAssertTrue(super.lastTestSuccessful, @"OnPremise Session did not return the appropriate personal identifier");
+        STAssertTrue(self.lastTestSuccessful, @"OnPremise Session did not return the appropriate personal identifier");
     }];
 }
 
@@ -236,7 +236,7 @@
  */
 - (void)testRetrieveDefaultListingContext
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
 
         AlfrescoListingContext *defaultListingContext = [self.currentSession defaultListingContext];
         
@@ -251,17 +251,17 @@
         
         if (!defaultListingContext.sortProperty && defaultListingContext.sortAscending && defaultListingContext.maxItems == 50 && defaultListingContext.skipCount == 0)
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
         else
         {
-            super.lastTestSuccessful = NO;
+            self.lastTestSuccessful = NO;
         }
-        if (super.isCloud)
+        if (self.isCloud)
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
-        STAssertTrue(super.lastTestSuccessful, @"The session's default listing context state was not as expected");
+        STAssertTrue(self.lastTestSuccessful, @"The session's default listing context state was not as expected");
     }];
 }
 
@@ -271,7 +271,7 @@
  */
 - (void)testRetrieveRootFolder
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
 
         AlfrescoFolder *sessionRootFolder = [self.currentSession rootFolder];
         
@@ -287,17 +287,17 @@
             [[[sessionRootFolder properties] objectForKey:@"cmis:objectTypeId"] value] &&
             [[[[sessionRootFolder properties] objectForKey:@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"])
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
         else
         {
-            super.lastTestSuccessful = NO;
+            self.lastTestSuccessful = NO;
         }
-        if (super.isCloud)
+        if (self.isCloud)
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
-        STAssertTrue(super.lastTestSuccessful, @"The session's root folder did not return correct values");
+        STAssertTrue(self.lastTestSuccessful, @"The session's root folder did not return correct values");
     }];
 }
 
@@ -306,8 +306,8 @@
  @Unique_TCRef 67S1
 - (void)testSessionDisconnection
 {
-    [super removeTestDocument];
-    [super runAllSitesTest:^{
+    [self removeTestDocument];
+    [self runAllSitesTest:^{
 
 //        AlfrescoRepositorySession *currentSession = self.currentSession;
         
@@ -334,14 +334,14 @@
             !self.currentSession.rootFolder &&
             !self.currentSession.defaultListingContext)
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
         else
         {
-            super.lastTestSuccessful = NO;
+            self.lastTestSuccessful = NO;
         }
         
-        STAssertTrue(super.lastTestSuccessful, @"The session did not clear out the session variables after disconnection");
+        STAssertTrue(self.lastTestSuccessful, @"The session did not clear out the session variables after disconnection");
     }];
 }
  */
@@ -353,7 +353,7 @@
  */
 - (void)testAddDuplicateParameterToSession
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
 
         // add a value to the current session
         NSString *key = @"testAddParameterToSession";
@@ -373,17 +373,17 @@
         
         if ([[self.currentSession objectForParameter:key] intValue] == expectedReturnValue)
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
         else
         {
-            super.lastTestSuccessful = NO;
+            self.lastTestSuccessful = NO;
         }
-        if (super.isCloud)
+        if (self.isCloud)
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
-        STAssertTrue(super.lastTestSuccessful, @"The OnPremise Session did not overwrite the value for an existing key");
+        STAssertTrue(self.lastTestSuccessful, @"The OnPremise Session did not overwrite the value for an existing key");
     }];
 }
 
@@ -397,7 +397,7 @@
  */
 - (void)testAddAndRemoveCustomObjectParameterToSession
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
         int expectedMaxItems = 123;
         int expectedSkipCount = 3;
@@ -432,18 +432,18 @@
             
             if (!removedObject)
             {
-                super.lastTestSuccessful = YES;
+                self.lastTestSuccessful = YES;
             }
         }
         else
         {
-            super.lastTestSuccessful = NO;
+            self.lastTestSuccessful = NO;
         }
-        if (super.isCloud)
+        if (self.isCloud)
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
-        STAssertTrue(super.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
+        STAssertTrue(self.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
     }];
 }
 
@@ -453,7 +453,7 @@
  */
 - (void)testRetrieveNonExistantParameter
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
 
         NSString *key = @"testRetrieveNonExistantParameter";
             
@@ -463,17 +463,17 @@
             
         if (!returnedObject)
         {
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
         else
         {
-            super.lastTestSuccessful = NO;
+            self.lastTestSuccessful = NO;
         }
-        if (super.isCloud)
+        if (self.isCloud)
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
-        STAssertTrue(super.lastTestSuccessful, @"The session does not contain an object for the key provided, but still returned a value");
+        STAssertTrue(self.lastTestSuccessful, @"The session does not contain an object for the key provided, but still returned a value");
     }];
 }
 
@@ -483,7 +483,7 @@
  */
 - (void)testAddingDictionaryParametersToSession
 {
-    [super runAllSitesTest:^
+    [self runAllSitesTest:^
      {
          id alfrescoAuthenticationProviderObject_before = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
          id alfrescoGenerateThumbnails_before = [self.currentSession objectForParameter:kAlfrescoThumbnailCreation];
@@ -507,14 +507,14 @@
          STAssertEqualObjects(alfrescoSessionKey_before, alfrescoSessionKey_after, @"checking session key parameter before adding dictionary parameters and after");
          STAssertEqualObjects(alfrescoExtractMetadata_before, alfrescoExtractMetadata_after, @"checking extract metadata parameter before adding dictionary parameters and after");
          
-         super.lastTestSuccessful = YES;
+         self.lastTestSuccessful = YES;
          
-         if (super.isCloud)
+         if (self.isCloud)
          {
-             [super waitForCompletion];
+             [self waitForCompletion];
          }
          
-          STAssertTrue(super.lastTestSuccessful, @"Added all the objects from the given dictionary to the session. Checked that the parameters / values are as desired");
+          STAssertTrue(self.lastTestSuccessful, @"Added all the objects from the given dictionary to the session. Checked that the parameters / values are as desired");
      }
      ];
 }
@@ -526,7 +526,7 @@
  */
 - (void)testAddingEmptyDictionaryToSession
 {
-    [super runAllSitesTest:^
+    [self runAllSitesTest:^
      {
          NSDictionary *test_before = @{};
          [self.currentSession setObject:test_before forParameter:@"test_dict"];
@@ -536,14 +536,14 @@
          STAssertNotNil(test_after, @"checking if added dictionary exists in session parameters");
          STAssertTrue([[test_after allKeys] count] == 0, @"dictionary count should be zero as added dictionary was empty");
          
-         super.lastTestSuccessful = YES;
+         self.lastTestSuccessful = YES;
          
-         if (super.isCloud)
+         if (self.isCloud)
          {
-             [super waitForCompletion];
+             [self waitForCompletion];
          }
          
-         STAssertTrue(super.lastTestSuccessful, @"Adding empty dictionary, empty list is returned");
+         STAssertTrue(self.lastTestSuccessful, @"Adding empty dictionary, empty list is returned");
      }
      ];
 }
@@ -558,7 +558,7 @@
  
 - (void)testRemovingInternalParameterFromSession
 {
-    [super runAllSitesTest:^
+    [self runAllSitesTest:^
      {
          id alfrescoAuthenticationProviderObject_before = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
          
@@ -569,14 +569,14 @@
          STAssertNotNil(alfrescoAuthenticationProviderObject_after, @"check aflresco authentication paramter is not nil after removing the parameter from session");
          STAssertEqualObjects(alfrescoAuthenticationProviderObject_before, alfrescoAuthenticationProviderObject_after, @"check authentication parameter is same before and after removing session auth param from session");
          
-         super.lastTestSuccessful = YES;
+         self.lastTestSuccessful = YES;
          
-         if (super.isCloud)
+         if (self.isCloud)
          {
-             [super waitForCompletion];
+             [self waitForCompletion];
          }
          
-         STAssertTrue(super.lastTestSuccessful, @"Internal Parameter is not removed, Returns previous value");
+         STAssertTrue(self.lastTestSuccessful, @"Internal Parameter is not removed, Returns previous value");
      }
      ];
 }
@@ -588,8 +588,8 @@
  */
 - (void)testRetrieveSessionRepositoryInformation
 {
-    [super runAllSitesTest:^{
-        if (!super.isCloud)
+    [self runAllSitesTest:^{
+        if (!self.isCloud)
         {
             AlfrescoRepositoryInfo *sessionRepositoryInfo = [self.currentSession repositoryInfo];
             
@@ -628,7 +628,7 @@
                 STAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 3 of the OnPremise server should not support comments count capability");
             }
             
-            super.lastTestSuccessful = YES;
+            self.lastTestSuccessful = YES;
         }
         else
         {
@@ -648,10 +648,10 @@
             STAssertNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.maintenanceVersion);
             STAssertNil(sessionRepositoryInfo.version, @"Expected the version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.version);
             
-            [super waitForCompletion];
-            super.lastTestSuccessful = YES;
+            [self waitForCompletion];
+            self.lastTestSuccessful = YES;
         }
-        STAssertTrue(super.lastTestSuccessful, @"The session does not contain valid respository information");
+        STAssertTrue(self.lastTestSuccessful, @"The session does not contain valid respository information");
     }];
 }
 
@@ -690,9 +690,9 @@
         STAssertTrue([tokenType isEqualToString:archivedOAuthData.tokenType], @"tokenType should be the same but we got %@", archivedOAuthData.tokenType);
         STAssertTrue([scope isEqualToString:archivedOAuthData.scope], @"scope should be the same but we got %@", archivedOAuthData.scope);
         STAssertEquals(3600, [archivedOAuthData.expiresIn intValue], @"Expires in should be 3600, but instead it is %d",[archivedOAuthData.expiresIn intValue]);
-        if (super.isCloud)
+        if (self.isCloud)
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
         
     }];
@@ -703,14 +703,14 @@
     [self runAllSitesTest:^{
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakDfService = dfService;
-        __block AlfrescoRequest *request = [dfService retrieveDocumentsInFolder:super.testDocFolder
+        __block AlfrescoRequest *request = [dfService retrieveDocumentsInFolder:self.testDocFolder
                                                                 completionBlock:^(NSArray *array, NSError *error)
          {
              if (nil == array)
              {
-                 super.lastTestSuccessful = NO;
-                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 super.callbackCompleted = YES;
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.callbackCompleted = YES;
              }
              else
              {
@@ -721,14 +721,14 @@
                       {
                           if (nil == contentFile)
                           {
-                              super.lastTestSuccessful = YES;
+                              self.lastTestSuccessful = YES;
                               /// The CMIS error code for cancelled requests is kCMISErrorCodeCancelled = 6
                               STAssertEquals([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %d", kAlfrescoErrorCodeNetworkRequestCancelled, [error code]);
                           }
                           else
                           {
-                              super.lastTestSuccessful = NO;
-                              super.lastTestFailureMessage = @"Request should have been cancelled. Instead we get a valid content file back";
+                              self.lastTestSuccessful = NO;
+                              self.lastTestFailureMessage = @"Request should have been cancelled. Instead we get a valid content file back";
                               // Assert File exists and check file length
                               NSString *filePath = [contentFile.fileUrl path];
                               STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
@@ -742,7 +742,7 @@
                               STAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
                           }
                           
-                          super.callbackCompleted = YES;
+                          self.callbackCompleted = YES;
                           
                       } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
                           AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
@@ -754,16 +754,16 @@
                  }
                  else
                  {
-                     super.lastTestSuccessful = NO;
-                     super.lastTestFailureMessage = @"Failed to download document.";
-                     super.callbackCompleted = YES;
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = @"Failed to download document.";
+                     self.callbackCompleted = YES;
                  }
                  
              }
              
          }];
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         
     }];
 }
