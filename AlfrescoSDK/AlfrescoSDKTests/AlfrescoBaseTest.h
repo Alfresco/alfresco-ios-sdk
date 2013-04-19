@@ -56,12 +56,13 @@ extern NSString * const kAlfrescoTestNetworkID;
 @property (nonatomic, strong) NSString *testFolderPathName;
 @property (nonatomic, strong) NSString *fixedFileName;
 @property (nonatomic, strong) NSString *verySmallTestFile;
+@property (nonatomic, strong) NSString *testImageName;
 @property (nonatomic, strong) AlfrescoContentFile *testImageFile;
 @property (nonatomic, strong) CMISSession *cmisSession;
 @property (nonatomic, strong) CMISFolder *cmisRootFolder;
 @property (nonatomic, assign) BOOL isCloud;
 
-+ (NSString *)testFileNameFromFilename:(NSString *)filename;
++ (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename;
 - (void)runSiteTestsForSecondaryUser:(AlfrescoTestBlock)sessionTestBlock;
 - (void)runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock;
 - (void)runCMISTest:(CMISTestBlock)cmisTestBlock;

@@ -30,9 +30,9 @@
 
 - (void)testRetrieveActivityStreamForLoggedinUserWithPaging
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
+        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:10 skipCount:0];
         
         // create a new folder in the repository's root folder
@@ -40,8 +40,8 @@
          {
              if (nil == pagingResult)
              {
-                 super.lastTestSuccessful = NO;
-                 super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
              }
              else
              {
@@ -49,13 +49,13 @@
                  STAssertTrue(pagingResult.objects.count > 1, @"expected more than 1 activity entries, but got %d", pagingResult.objects.count);
                  STAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
                  
-                 super.lastTestSuccessful = YES;
+                 self.lastTestSuccessful = YES;
              }
-             super.callbackCompleted = YES;
+             self.callbackCompleted = YES;
          }];
         
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 /*
@@ -95,8 +95,8 @@
             
         }];
         
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 
@@ -106,17 +106,17 @@
  */
 - (void)testRetrieveActivityStreamForUser
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
+        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
         
         // create a new folder in the repository's root folder
-        [self.activityStreamService retrieveActivityStreamForPerson:super.userName completionBlock:^(NSArray *array, NSError *error)
+        [self.activityStreamService retrieveActivityStreamForPerson:self.userName completionBlock:^(NSArray *array, NSError *error)
         {
             if (nil == array) 
             {
-                super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -132,14 +132,14 @@
                     STAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
                 }
                 
-                super.lastTestSuccessful = YES;
+                self.lastTestSuccessful = YES;
             }
-            super.callbackCompleted = YES;
+            self.callbackCompleted = YES;
             
         }];
         
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 
@@ -148,18 +148,18 @@
  */
 - (void)testRetrieveActivityStreamForUserWithPaging
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
-        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
+        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
         
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
         
-        [self.activityStreamService retrieveActivityStreamForPerson:super.userName listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+        [self.activityStreamService retrieveActivityStreamForPerson:self.userName listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
         {
             if (nil == pagingResult) 
             {
-                super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
             }
             else 
             {
@@ -167,14 +167,14 @@
                 STAssertTrue(pagingResult.objects.count > 0, @"expected at least 1 activity entries");
                 STAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
                 
-                super.lastTestSuccessful = YES;
+                self.lastTestSuccessful = YES;
             }
-            super.callbackCompleted = YES;
+            self.callbackCompleted = YES;
             
         }];
         
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 
@@ -184,18 +184,18 @@
  */
 - (void)testRetrieveActivityStreamForSite
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
 
-        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
-        __block AlfrescoSiteService *siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
+        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
+        __block AlfrescoSiteService *siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [siteService retrieveSiteWithShortName:super.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error)
+        [siteService retrieveSiteWithShortName:self.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error)
         {
             if (nil == site || nil != error) 
             {
-                super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                super.callbackCompleted = YES;
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
             }
             else 
             {
@@ -204,8 +204,8 @@
                  {
                      if (nil == array) 
                      {
-                         super.lastTestSuccessful = NO;
-                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         self.lastTestSuccessful = NO;
+                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                      }
                      else 
                      {
@@ -222,17 +222,17 @@
                              STAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
                          }
                          
-                         super.lastTestSuccessful = YES;
+                         self.lastTestSuccessful = YES;
                      }
-                     super.callbackCompleted = YES;
+                     self.callbackCompleted = YES;
                      
                  }];
             }
             
         }];
 
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 
@@ -242,20 +242,20 @@
  */
 - (void)testRetrieveActivityStreamForSiteWithPaging
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
 
-        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:super.currentSession];
-        __block AlfrescoSiteService *siteService = [[AlfrescoSiteService alloc] initWithSession:super.currentSession];
+        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
+        __block AlfrescoSiteService *siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
         
-        [siteService retrieveSiteWithShortName:super.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error) 
+        [siteService retrieveSiteWithShortName:self.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error) 
         {
             if (nil == site || nil != error) 
             {
-                super.lastTestSuccessful = NO;
-                super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                super.callbackCompleted = YES;
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
             }
             else 
             {
@@ -264,8 +264,8 @@
                  {
                      if (nil == pagingResult) 
                      {
-                         super.lastTestSuccessful = NO;
-                         super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         self.lastTestSuccessful = NO;
+                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                      }
                      else 
                      {
@@ -273,17 +273,17 @@
                          STAssertNotNil(pagingResult, @"pagingResult should not be nil");
                          STAssertTrue(pagingResult.objects.count <= 5, @"the returned objects count should be up to 5");
                          
-                         super.lastTestSuccessful = YES;
+                         self.lastTestSuccessful = YES;
                      }
-                     super.callbackCompleted = YES;
+                     self.callbackCompleted = YES;
                      
                  }];
             }
                     
         }];
         
-        [super waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }];
 }
 
