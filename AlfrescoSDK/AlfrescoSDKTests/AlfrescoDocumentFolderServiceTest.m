@@ -4264,7 +4264,7 @@
 {
     [self runAllSitesTest:^{
         
-        NSString *duplicateFileName = [self addTimeStampToFileOrFolderName:@"Duplicate.jpg"];
+        NSString *duplicateFileName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:@"Duplicate.jpg"];
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
@@ -4389,6 +4389,18 @@
             if (folder)
             {
                 self.lastTestSuccessful = NO;
+                [self.dfService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *error){
+                    if (nil != error)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = @"Failure to delete node";
+                    }
+                    else
+                    {
+                        self.lastTestSuccessful = YES;
+                    }
+                    self.callbackCompleted = YES;
+                }];
             }
             else
             {
@@ -4396,9 +4408,9 @@
                 STAssertNotNil(error, @"Error should have occured trying to set the created date");
                 
                 self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
             }
             
-            self.callbackCompleted = YES;
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -4435,6 +4447,18 @@
             if (document)
             {
                 self.lastTestSuccessful = NO;
+                [self.dfService deleteNode:document completionBlock:^(BOOL succeeded, NSError *error){
+                    if (nil != error)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = @"Failure to delete node";
+                    }
+                    else
+                    {
+                        self.lastTestSuccessful = YES;
+                    }
+                    self.callbackCompleted = YES;
+                }];
             }
             else
             {
@@ -4442,9 +4466,9 @@
                 STAssertNotNil(error, @"Error should have occured trying to set the created date");
                 
                 self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
             }
             
-            self.callbackCompleted = YES;
         }
         progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
             
@@ -5211,23 +5235,6 @@
         }
     }
     return NO;
-}
-
-- (NSString *)addTimeStampToFileOrFolderName:(NSString *)string
-{
-    NSDate *currentDate = [NSDate date];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH-mm-ss-SSS'"];
-    
-    NSString *pathExt = [string pathExtension];
-    NSString *strippedString = [string stringByDeletingPathExtension];
-    
-    if (![pathExt isEqualToString:@""])
-    {
-        return [NSString stringWithFormat:@"%@%@.%@", strippedString, [formatter stringFromDate:currentDate], pathExt];
-    }
-    
-    return [NSString stringWithFormat:@"%@%@", strippedString, [formatter stringFromDate:currentDate]];
 }
 
 @end
