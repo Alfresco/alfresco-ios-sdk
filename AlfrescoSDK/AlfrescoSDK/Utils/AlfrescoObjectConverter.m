@@ -562,8 +562,6 @@
     return entryDict;
 }
 
-
-
 #pragma mark internal methods
 + (AlfrescoPropertyType)typeForCMISProperty:(NSString *)propertyIdentifier
 {

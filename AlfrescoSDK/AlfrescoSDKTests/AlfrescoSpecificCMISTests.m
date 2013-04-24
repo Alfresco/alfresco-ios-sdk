@@ -215,15 +215,18 @@
     [self runCMISTest:^
     {
         NSString *testFilePath = nil;
+        testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
+        /*
         if (self.isCloud)
         {
-            testFilePath = [NSString stringWithFormat:@"%@ios-test/image-with-exif.jpg", self.testFolderPathName];
+            testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
         }
         else
         {
             testFilePath = @"/ios-test/image-with-exif.jpg";
             
         }
+         */
         [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
@@ -252,15 +255,18 @@
     {
 
         NSString *testFilePath = nil;
-        if (self.isCloud)
-        {
-            testFilePath = [NSString stringWithFormat:@"%@ios-test/image-with-exif.jpg", self.testFolderPathName];
-        }
-        else
-        {
-            testFilePath = @"/ios-test/image-with-exif.jpg";
-            
-        }
+        testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
+        /*
+         if (self.isCloud)
+         {
+         testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
+         }
+         else
+         {
+         testFilePath = @"/ios-test/image-with-exif.jpg";
+         
+         }
+         */
         [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {

@@ -2043,7 +2043,7 @@
     [self runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        NSString *folderPath = [NSString stringWithFormat:@"%@%@",self.testFolderPathName, self.fixedFileName];
+        NSString *folderPath = [NSString stringWithFormat:@"%@/%@",self.testFolderPathName, self.fixedFileName];
         [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error)
         {
             if (nil == node) 
@@ -3646,7 +3646,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
-        NSString *folderPath = [NSString stringWithFormat:@"%@%@",self.testFolderPathName, self.fixedFileName];
+        NSString *folderPath = [NSString stringWithFormat:@"%@/%@",self.testFolderPathName, self.fixedFileName];
         
         // Running as admin, read and write access should be true
         [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *documentNode, NSError *error) {
@@ -3766,22 +3766,14 @@
     [self runAllSitesTest:^{
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        AlfrescoFolder *topFolder = nil;
-        if (self.isCloud)
-        {
-            topFolder = self.currentSession.rootFolder;
-        }
-        else
-        {
-            topFolder = self.testDocFolder;
-        }
+        AlfrescoFolder *topFolder = self.currentSession.rootFolder;
         
         [self.dfService retrieveParentFolderOfNode:topFolder completionBlock:^(AlfrescoFolder *parentFolder, NSError *error) {
             
             if (parentFolder != nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = @"We have a valid parent folder, where in fact we shouldn't have as we should be in Root.";
             }
             else
             {
@@ -4488,9 +4480,9 @@
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
-        AlfrescoListingContext *listingConext = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0 sortProperty:@"***" sortAscending:NO];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0 sortProperty:@"***" sortAscending:NO];
         
-        [self.dfService retrieveDocumentsInFolder:self.testDocFolder listingContext:listingConext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        [self.dfService retrieveDocumentsInFolder:self.testDocFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
             
             if (error)
             {
@@ -4503,6 +4495,12 @@
                 STAssertNotNil(pagingResult, @"Paging result should not be nil");
                 STAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %i", [pagingResult.objects count]);
                 
+                for (AlfrescoNode *node in pagingResult.objects)
+                {
+                    NSString *name = node.name;
+                    AlfrescoLogInfo(@"*** the name of the node is %@", name);
+                }
+                
                 // check if array is sorted correctly
                 NSArray *sortedArray = [pagingResult.objects sortedArrayUsingComparator:^(id a, id b) {
                     
@@ -4513,6 +4511,13 @@
                 }];
 
                 BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
+                
+                for (AlfrescoNode *node in sortedArray)
+                {
+                    NSString *name = node.name;
+                    AlfrescoLogInfo(@"*** SORTED ARRAY the name of the node is %@", name);
+                }
+                
                 
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
                 

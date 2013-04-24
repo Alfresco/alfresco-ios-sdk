@@ -104,7 +104,6 @@
     
     NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
-    
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                        withString:cleanNodeId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
@@ -133,16 +132,17 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSString *nodeString = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+    NSString *cleanNodeId = [nodeString stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     
     NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
     NSError *error = nil;
     [commentDict setValue:content forKey:kAlfrescoJSONContent];
-    [commentDict setValue:nodeString forKey:kAlfrescoJSONNodeRef];
+    [commentDict setValue:cleanNodeId forKey:kAlfrescoJSONNodeRef];
     [commentDict setValue:title forKey:kAlfrescoJSONTitle];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&error];
     
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                       withString:[nodeString stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
+                                                                                       withString:cleanNodeId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     
