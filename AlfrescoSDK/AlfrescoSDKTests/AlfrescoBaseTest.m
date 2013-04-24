@@ -64,13 +64,28 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     
 }
 
-+ (NSString *)testFileNameFromFilename:(NSString *)filename
++ (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename
 {
+    NSDate *currentDate = [NSDate date];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd'T'HH-mm-ss-SSS'"];
+    
+    NSString *pathExt = [filename pathExtension];
+    NSString *strippedString = [filename stringByDeletingPathExtension];
+    
+    if (![pathExt isEqualToString:@""])
+    {
+        return [NSString stringWithFormat:@"%@%@.%@", strippedString, [formatter stringFromDate:currentDate], pathExt];
+    }
+    
+    return [NSString stringWithFormat:@"%@%@", strippedString, [formatter stringFromDate:currentDate]];
+    /*
     NSDate *currentDate = [NSDate date];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat: @"yyyy-MM-dd'T'HH-mm-ss-SSS'"];
     NSString *newName = [filename stringByReplacingOccurrencesOfString:@".txt" withString:[formatter stringFromDate:currentDate]];
     return [NSString stringWithFormat:@"%@.txt",newName]; 
+     */
 }
 
 
@@ -81,7 +96,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 {
     NSURL *fileUrl = [NSURL URLWithString:filePath];
 
-    NSString *newName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
+    NSString *newName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"text/plain"];
     NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
@@ -105,6 +120,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                                  else
                                  {
                                      STAssertNotNil(document, @"document should not be nil");
+                                     STAssertTrue([document.type isEqualToString:@"cm:content"], @"The test document should be of type cm:content but it is %@", document.type);
                                      self.lastTestSuccessful = YES;
                                      self.testAlfrescoDocument = document;
                                      if (!self.isCloud)
@@ -561,6 +577,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     self.verySmallTestFile = [bundle pathForResource:@"small_test.txt" ofType:nil];
     NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
     NSString *testImagePath = [bundle pathForResource:@"millenium-dome.jpg" ofType:nil];
+    self.testImageName = [testImagePath lastPathComponent];
 
     if (nil == environmentsDict)
     {
@@ -628,8 +645,8 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             [self setUpTestChildFolder];
             [self resetTestVariables];
             
-            [self removePreExistingUnitTestFolder];
-            [self resetTestVariables];
+//            [self removePreExistingUnitTestFolder];
+//            [self resetTestVariables];
             
             sessionTestBlock();
             [self resetTestVariables];

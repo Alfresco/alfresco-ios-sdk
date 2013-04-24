@@ -180,7 +180,8 @@
     }
     if (![objectType isEqualToString:emptyString])
     {
-        [properties setValue:[AlfrescoObjectConverter propertyValueWithoutPrecursor:objectType] forKey:kCMISPropertyObjectTypeId];
+        NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueFolder withString:kAlfrescoTypeFolder];
+        [properties setValue:[AlfrescoObjectConverter propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
     {
@@ -222,7 +223,8 @@
     }
     if (![objectType isEqualToString:emptyString])
     {
-        [properties setValue:[AlfrescoObjectConverter propertyValueWithoutPrecursor:objectType] forKey:kCMISPropertyObjectTypeId];
+        NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueDocument withString:kAlfrescoTypeContent];
+        [properties setValue:[AlfrescoObjectConverter propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
     {

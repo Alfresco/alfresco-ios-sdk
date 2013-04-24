@@ -29,19 +29,19 @@
  */
 - (void)testRetrieveAllTags
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
         if (!self.isCloud)
         {
-            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:super.currentSession];
+            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
             
             // get tags
             [self.taggingService retrieveAllTagsWithCompletionBlock:^(NSArray *array, NSError *error)
              {
                  if (nil == array)
                  {
-                     super.lastTestSuccessful = NO;
-                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                  }
                  else
                  {
@@ -51,17 +51,17 @@
                          STAssertNotNil(tag.identifier, @"Tag identifier should not be nil");
                          STAssertNotNil(tag.value, @"Tag value should not be nil");
                      }
-                     super.lastTestSuccessful = YES;
+                     self.lastTestSuccessful = YES;
                  }
-                 super.callbackCompleted = YES;
+                 self.callbackCompleted = YES;
              }];
             
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }        
         else
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
     }];
 }
@@ -71,11 +71,11 @@
  */
 - (void)testRetrieveAllTagsWithPaging
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
         if (!self.isCloud)
         {
-            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:super.currentSession];
+            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
             
             AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:1];
             
@@ -84,25 +84,25 @@
              {
                  if (nil == pagingResult)
                  {
-                     super.lastTestSuccessful = NO;
-                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                  }
                  else
                  {
                      STAssertNotNil(pagingResult, @"pagingResult should not be nil");
                      STAssertTrue(pagingResult.objects.count == 2, @"expected 2 tag responses");
                      STAssertTrue(pagingResult.totalItems > 2, @"expected multiple tags in total");
-                     super.lastTestSuccessful = YES;
+                     self.lastTestSuccessful = YES;
                  }
-                 super.callbackCompleted = YES;
+                 self.callbackCompleted = YES;
              }];
             
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
         else
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
     }];
 }
@@ -112,35 +112,35 @@
  */
 - (void)testRetrieveEmptyTagsForNode
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
         if (!self.isCloud)
         {
-            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:super.currentSession];
+            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
             
             
             // get tags
-            [self.taggingService retrieveTagsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error)
+            [self.taggingService retrieveTagsForNode:self.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error)
              {
                  if (nil == array)
                  {
-                     super.lastTestSuccessful = NO;
-                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                  }
                  else
                  {
                      STAssertTrue(array.count == 0, @"expected no tags for the newly uploaded file, but we got %d ",array.count);
-                     super.lastTestSuccessful = YES;
+                     self.lastTestSuccessful = YES;
                  }
-                 super.callbackCompleted = YES;
+                 self.callbackCompleted = YES;
              }];
             
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
         else
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
         
     }];
@@ -152,38 +152,38 @@
  */
 - (void)testRetrieveEmptyTagsForNodeWithPaging
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
         if (!self.isCloud)
         {
-            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:super.currentSession];
+            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
             
             AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:1];
             
             
             // get tags
-            [self.taggingService retrieveTagsForNode:super.testAlfrescoDocument listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+            [self.taggingService retrieveTagsForNode:self.testAlfrescoDocument listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
              {
                  if (nil == pagingResult)
                  {
-                     super.lastTestSuccessful = NO;
-                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                  }
                  else
                  {
                      STAssertNotNil(pagingResult, @"pagingResult should not be nil");
                      STAssertTrue(pagingResult.objects.count == 0, @"expected no tag response for newly uploaded file but got %d",pagingResult.objects.count);
-                     super.lastTestSuccessful = YES;
+                     self.lastTestSuccessful = YES;
                  }
-                 super.callbackCompleted = YES;
+                 self.callbackCompleted = YES;
              }];
             
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
         else
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
     }];
 }
@@ -194,32 +194,32 @@
  */
 - (void)testAddAndRetrieveTags
 {
-    [super runAllSitesTest:^{
+    [self runAllSitesTest:^{
         
         if (!self.isCloud)
         {
-            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:super.currentSession];
+            self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
             //        __weak AlfrescoTaggingService *weakTaggingService = self.taggingService;
             
             NSArray *testtags = [NSArray arrayWithObject:@"test"];
             
-            [self.taggingService addTags:testtags toNode:super.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
+            [self.taggingService addTags:testtags toNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
              {
                  if (!success)
                  {
-                     super.lastTestSuccessful = NO;
-                     super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                     super.callbackCompleted = YES;
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.callbackCompleted = YES;
                  }
                  else
                  {
-                     super.lastTestSuccessful = YES;
+                     self.lastTestSuccessful = YES;
                      STAssertTrue(success, @"a dummy test to see if we still have the retain cycle problem");
-                     [self.taggingService retrieveTagsForNode:super.testAlfrescoDocument completionBlock:^(NSArray *tags, NSError *error){
+                     [self.taggingService retrieveTagsForNode:self.testAlfrescoDocument completionBlock:^(NSArray *tags, NSError *error){
                          if (nil == tags)
                          {
-                             super.lastTestSuccessful = NO;
-                             super.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                             self.lastTestSuccessful = NO;
+                             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                          }
                          else
                          {
@@ -237,21 +237,21 @@
                                  }
                              }
                              STAssertTrue(found, @"We should have found the tag %@", testTag);
-                             super.lastTestSuccessful = YES;
+                             self.lastTestSuccessful = YES;
                          }
-                         super.callbackCompleted = YES;
+                         self.callbackCompleted = YES;
                      }];
                  }
                  
                  
              }];
             
-            [super waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(super.lastTestSuccessful, super.lastTestFailureMessage);
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
         else
         {
-            [super waitForCompletion];
+            [self waitForCompletion];
         }
         
     }];

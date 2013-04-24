@@ -19,22 +19,17 @@
  */
 
 #import <Foundation/Foundation.h>
-
+#import "AlfrescoContent.h"
 /** The AlfrescoContentFile objects are used for download/upload content.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-@interface AlfrescoContentFile : NSObject
+@interface AlfrescoContentFile : AlfrescoContent
 
 /// @name Properties
 /// @param the file based URL
 @property (nonatomic, strong, readonly) NSURL *fileUrl;
-/// @param the mimeType
-@property (nonatomic, strong, readonly) NSString *mimeType;
-
-/// @param the length of the file
-@property (nonatomic, assign, readonly) unsigned long long length;
 
 /**---------------------------------------------------------------------------------------
  * @name initialisers.
@@ -64,11 +59,4 @@
  */
 - (id)initWithData:(NSData *)data mimeType:(NSString *)mimeType;
 
-
-/** creates a new  file in the temporary folder
- This method is used when downloading a file from the server.
- @param path the full file path of the file to be used
- @param mimeType the mime type of the data
-- (id)initWithFilePath:(NSString *)path mimeType:(NSString *)mimeType;
- */
 @end

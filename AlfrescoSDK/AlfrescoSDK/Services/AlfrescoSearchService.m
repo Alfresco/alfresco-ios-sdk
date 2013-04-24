@@ -65,7 +65,8 @@
                          completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:statement argumentName:@"statement"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];    
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     if (AlfrescoSearchLanguageCMIS == language)
     {
@@ -108,11 +109,11 @@
 {
     [AlfrescoErrors assertArgumentNotNil:statement argumentName:@"statement"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
-    }
-    
+    }    
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
 

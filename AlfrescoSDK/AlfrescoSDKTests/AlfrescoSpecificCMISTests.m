@@ -44,7 +44,7 @@
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
+        NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
         NSString *documentDescription = @"This is a test description";
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
@@ -377,7 +377,7 @@
 
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
+        NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:@"cmis:document, P:cm:titled, P:exif:exif" forKey:kCMISPropertyObjectTypeId];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
@@ -433,7 +433,7 @@
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
+        NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
@@ -502,7 +502,7 @@
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
+        NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
         __block NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         [documentProperties setObject:@"cmis:document, P:cm:titled, P:cm:author" forKey:kCMISPropertyObjectTypeId];
