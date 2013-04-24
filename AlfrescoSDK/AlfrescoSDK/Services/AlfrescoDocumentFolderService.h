@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -356,6 +356,18 @@
                                renditionName:(NSString *)renditionName
                              completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
 
+
+/** Retrieves the thumbnail rendition file for the given node.
+ 
+ @param node the AlfrescoNode for which a thumbnail rendition image is to be retrieved.
+ @param renditionName The type of thumbnail to be retrieved. For example 'doclib' can be used (defined as _AlfrescoThumbnailRendition_ )
+ @param outputStream The output stream to which the rendition image will be written to.
+ @param completionBlock The block that's called with the local AlfrescoContentFile containing the thumbnail URL/data.
+ */
+- (AlfrescoRequest *)retrieveRenditionOfNode:(AlfrescoNode *)node
+                               renditionName:(NSString *)renditionName
+                                outputStream:(NSOutputStream *)outputStream
+                             completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 
 
