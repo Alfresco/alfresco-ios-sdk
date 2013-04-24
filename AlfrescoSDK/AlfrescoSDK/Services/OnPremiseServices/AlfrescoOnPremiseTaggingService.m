@@ -118,9 +118,9 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
-    NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *cleanNodeId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                          withString:cleanId];
+                                                                                          withString:cleanNodeId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -153,9 +153,9 @@
     }
     
     NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
-    NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *cleanNodeId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                          withString:cleanId];
+                                                                                          withString:cleanNodeId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -186,9 +186,9 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
-    NSString *cleanId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
+    NSString *cleanNodeId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                          withString:cleanId];
+                                                                                          withString:cleanNodeId];
     NSError *jsonError = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tags options:kNilOptions error:&jsonError];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];

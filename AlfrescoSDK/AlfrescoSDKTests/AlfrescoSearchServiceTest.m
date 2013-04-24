@@ -521,7 +521,7 @@
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
             
-            AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:25 skipCount:0];
+            AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
             
             NSString *searchStatement = @"SELECT * FROM cmis:document";
             

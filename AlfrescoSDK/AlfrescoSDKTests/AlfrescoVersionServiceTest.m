@@ -209,7 +209,7 @@
     }];
 }
 
-- (void)testUpdateContentForDocument
+- (void)testUpdateContentWithVersioningForDocument
 {
     [self runAllSitesTest:^{
         if (!self.isCloud)
@@ -233,6 +233,9 @@
                  else
                  {
                      AlfrescoDocument *document = (AlfrescoDocument *)node;
+                     NSDate *createdAt = document.createdAt;
+                     NSDate *modifiedAt = document.modifiedAt;
+                     
                      [self.versionService retrieveAllVersionsOfDocument:document completionBlock:^(NSArray *array, NSError *error)
                       {
                           if (nil == array)
@@ -276,12 +279,14 @@
                                                   {
                                                       self.lastTestSuccessful = NO;
                                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                      self.callbackCompleted = YES;
                                                   }
                                                   else
                                                   {
                                                       STAssertTrue(versions.count == 2, @"the versions count should have been incremented to 2. Instead we got %d", versions.count);
                                                       self.lastTestSuccessful = YES;
                                                       BOOL foundPreviousVersion = NO;
+                                                      AlfrescoDocument *lastDocument = nil;
                                                       for (AlfrescoDocument *doc in versions)
                                                       {
                                                           if ([doc.versionLabel isEqualToString:versionLabel])
@@ -290,13 +295,55 @@
                                                           }
                                                           if (doc.isLatestVersion)
                                                           {
+                                                              lastDocument = doc;
                                                               BOOL hasHigherVersion = [AlfrescoVersionServiceTest isHigherVersionLabel:doc.versionLabel previousLabel:versionLabel];
                                                               STAssertTrue(hasHigherVersion, @"The version label of the latest doc should be higher than the previous one");
                                                           }
                                                       }
                                                       STAssertTrue(foundPreviousVersion, @"The array of document versions should still contain the previous version, but doesn't");
+                                                      if (nil != lastDocument)
+                                                      {
+                                                          [documentService retrieveContentOfDocument:lastDocument completionBlock:^(AlfrescoContentFile *content, NSError *contentError){
+                                                              if (nil == content)
+                                                              {
+                                                                  self.lastTestSuccessful = NO;
+                                                                  self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [contentError localizedDescription], [contentError localizedFailureReason]];
+                                                              }
+                                                              else
+                                                              {
+                                                                  NSError *fileError = nil;
+                                                                  NSDictionary *fileDict = [[NSFileManager defaultManager] attributesOfItemAtPath:[content.fileUrl path] error:&fileError];
+                                                                  STAssertNil(fileError, @"expected no error with getting file attributes for content file at path %@",[content.fileUrl path]);
+                                                                  unsigned long long size = [[fileDict valueForKey:NSFileSize] unsignedLongLongValue];
+                                                                  STAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu",size);
+                                                                  NSError *checkError = nil;
+                                                                  NSString *checkContentString = [NSString stringWithContentsOfFile:[content.fileUrl path]
+                                                                                                                           encoding:NSASCIIStringEncoding
+                                                                                                                              error:&checkError];
+                                                                  
+                                                                  NSDate *earlierDate = [createdAt earlierDate:lastDocument.modifiedAt];
+                                                                  STAssertTrue([earlierDate isEqualToDate:createdAt], @"The modified Date should come AFTER the original date");
+                                                                  if (nil == checkContentString)
+                                                                  {
+                                                                      self.lastTestSuccessful = NO;
+                                                                      self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [checkError localizedDescription], [checkError localizedFailureReason]];
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                      STAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content, instead we get %@",updatedContent);
+                                                                      self.lastTestSuccessful = YES;                                         
+                                                                  }
+                                                                  
+                                                              }
+                                                              self.callbackCompleted = YES;
+                                                          } progressBlock:^(NSInteger transferred, NSInteger total){}];
+                                                          
+                                                      }
+                                                      else
+                                                      {
+                                                          self.callbackCompleted = YES;
+                                                      }
                                                   }
-                                                  self.callbackCompleted = YES;
                                               }];
                                           }
                                       } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
@@ -324,6 +371,7 @@
         
     }];
 }
+
 
 
 + (BOOL)isHigherVersionLabel:(NSString *)lastVersionLabel previousLabel:(NSString *)previousLabel
