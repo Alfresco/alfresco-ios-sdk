@@ -82,10 +82,11 @@
         
 //        __weak AlfrescoCommentService *weakService = self.commentService;
         
-        [dfService createDocumentWithName:filename inParentFolder:self.testDocFolder
-                                   contentFile:self.testImageFile
-                                    properties:nil
-                               completionBlock:^(AlfrescoDocument *document, NSError *blockError){
+        [dfService createDocumentWithName:filename
+                           inParentFolder:self.testDocFolder
+                              contentFile:self.testImageFile
+                               properties:nil
+                          completionBlock:^(AlfrescoDocument *document, NSError *blockError){
                                    
                                    if (nil == document)
                                    {

@@ -66,12 +66,12 @@ extern NSString * const kAlfrescoTestNetworkID;
 - (void)runSiteTestsForSecondaryUser:(AlfrescoTestBlock)sessionTestBlock;
 - (void)runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock;
 - (void)runCMISTest:(CMISTestBlock)cmisTestBlock;
-- (void) setUpCMISSession;
-- (void)authenticateOnPremiseServer;
-- (void)authenticateCloudServer;
+- (BOOL) setUpCMISSession;
+- (BOOL)authenticateOnPremiseServer;
+- (BOOL)authenticateCloudServer;
 
-- (void)retrieveAlfrescoTestFolder;
+- (BOOL)retrieveAlfrescoTestFolder;
 - (void)waitForCompletion;
 - (void)waitUntilCompleteWithFixedTimeInterval;
-- (void) removeTestDocument;
+- (BOOL) removeTestDocument;
 @end
