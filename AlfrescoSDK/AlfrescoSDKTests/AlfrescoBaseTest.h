@@ -65,9 +65,10 @@ extern NSString * const kAlfrescoTestNetworkID;
 + (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename;
 - (void)runSiteTestsForSecondaryUser:(AlfrescoTestBlock)sessionTestBlock;
 - (void)runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock;
+- (void)runOnPremiseTestWithParameters:(NSDictionary *)parameters sessionTestBlock:(AlfrescoTestBlock)sessionTestBlock;
 - (void)runCMISTest:(CMISTestBlock)cmisTestBlock;
 - (BOOL) setUpCMISSession;
-- (BOOL)authenticateOnPremiseServer;
+- (BOOL)authenticateOnPremiseServer:(NSDictionary *)parameters;
 - (BOOL)authenticateCloudServer;
 
 - (BOOL)retrieveAlfrescoTestFolder;
