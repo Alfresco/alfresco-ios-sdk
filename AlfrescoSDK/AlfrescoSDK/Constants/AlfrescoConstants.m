@@ -65,3 +65,4 @@ NSString * const kAlfrescoIsFolder = @"isFolder";
  Custom Network Provider
  */
 NSString * const kAlfrescoNetworkProvider = @"org.alfresco.mobile.session.networkprovider";
+NSString * const kAlfrescoCMISBindingURL = @"org.alfresco.mobile.session.cmisbindingurl";

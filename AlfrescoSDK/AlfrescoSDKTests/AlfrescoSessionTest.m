@@ -768,4 +768,40 @@
     }];
 }
 
+/**
+ setting custom CMIS binding, addressing MOBSDK-542
+ */
+- (void)testCustomCMISBindingSession
+{
+    NSDictionary *customParameters = [NSDictionary dictionaryWithObject:@"/service/cmis" forKey:kAlfrescoCMISBindingURL];
+    [self runOnPremiseTestWithParameters:customParameters sessionTestBlock:^{
+        AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        [dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *children, NSError *error){
+            if (nil == children)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertTrue(0 < children.count, @"we should have more than one element in the children's array");
+                CMISSession *cmisSession = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
+                if (cmisSession)
+                {
+                    CMISSessionParameters *parameters = cmisSession.sessionParameters;
+                    NSString *atomPubUrl = [parameters.atomPubUrl absoluteString];
+                    STAssertFalse(NSNotFound == [atomPubUrl rangeOfString:kAlfrescoOnPremiseCMISPath].location, @"should have found the /service/cmis string in atomPubURl");
+                    
+                }
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+    }];
+    
+}
+
 @end

@@ -177,7 +177,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 /*
  @Unique_TCRef 77S1
  */
-- (BOOL)authenticateOnPremiseServer
+- (BOOL)authenticateOnPremiseServer:(NSDictionary *)parameters
 {
     __block BOOL success = NO;
     if (self.currentSession)
@@ -187,7 +187,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.server]
                                      username:self.userName
                                      password:self.testPassword
-                                     parameters:nil
+                                     parameters:parameters
                               completionBlock:^(id<AlfrescoSession> session, NSError *error){
                                   if (nil == session)
                                   {
@@ -295,40 +295,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
     return success;
 }
-
-/*
- @Unique_TCRef 15S3
-- (void) setUpTestChildFolder
-{
-    if (self.isCloud)
-    {
-        AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        NSString *folderPath = [NSString stringWithFormat:@"%@%@",self.testFolderPathName, self.testChildFolderName];
-        [docService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error){
-            if (nil == node)
-            {
-                self.lastTestSuccessful = NO;
-                self.callbackCompleted = YES;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-            }
-            else
-            {
-                STAssertNotNil(node, @"node should not be nil");
-                self.lastTestSuccessful = YES;
-                self.testChildFolder = (AlfrescoFolder *)node;
-                self.callbackCompleted = YES;
-                
-            }
-        }];
-        [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"setUpTestChildFolder failed");
-    }
-    else
-    {
-        self.testChildFolder = self.currentSession.rootFolder;
-    }
-}
- */
 
 
 - (void) parseEnvironmentDictionary:(NSDictionary *)plistDictionary
@@ -542,7 +508,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                 else
                 {
                     AlfrescoLogInfo(@"Running test against OnPremise server: %@ with username: %@", self.server, self.userName);
-                    success = [self authenticateOnPremiseServer];
+                    success = [self authenticateOnPremiseServer:nil];
                     [self resetTestVariables];
                 }
                 if (success)
@@ -563,6 +529,113 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 }
 
 
+- (void)runOnPremiseTestWithParameters:(NSDictionary *)parameters sessionTestBlock:(AlfrescoTestBlock)sessionTestBlock
+{
+    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    self.verySmallTestFile = [bundle pathForResource:@"small_test.txt" ofType:nil];
+    NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
+    NSString *testImagePath = [bundle pathForResource:@"millenium-dome.jpg" ofType:nil];
+    self.testImageName = [testImagePath lastPathComponent];
+    
+    BOOL success = NO;
+    if (nil == environmentsDict)
+    {
+        [self resetTestVariables];
+        [self parseEnvironmentDictionary:nil];
+        
+        AlfrescoLogInfo(@"Running test against local server");
+        
+        success = [self authenticateOnPremiseServer:parameters];
+        [self resetTestVariables];
+        if (success)
+        {
+            success = [self retrieveAlfrescoTestFolder];
+            [self resetTestVariables];
+            if (success)
+            {
+                success = [self uploadTestDocument:testFilePath];
+                [self resetTestVariables];
+                
+                [self setUpTestImageFile:testImagePath];
+                [self resetTestVariables];
+                
+                if (success)
+                {
+                    sessionTestBlock();
+                    [self resetTestVariables];
+                }
+                
+                [self removeTestDocument];
+                [self resetTestVariables];
+            }
+            else
+            {
+                AlfrescoLogInfo(@"Failed to retrieve the Alfresco Test folder %@",self.testFolderPathName);
+            }
+        }
+        else
+        {
+            AlfrescoLogInfo(@"Failure to authenticate - no point in running this test case");
+        }
+        
+    }
+    else
+    {
+        NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
+        
+        [self resetTestVariables];
+        for (NSDictionary *environment in environmentArray)
+        {
+            [self parseEnvironmentDictionary:environment];
+            
+            if (!self.isCloud)
+            {
+                AlfrescoLogInfo(@"Running test against OnPremise server: %@ with username: %@", self.server, self.userName);
+                success = [self authenticateOnPremiseServer:parameters];
+                [self resetTestVariables];
+                if (success)
+                {
+                    success = [self retrieveAlfrescoTestFolder];
+                    [self resetTestVariables];
+                    if (success)
+                    {
+                        success = [self uploadTestDocument:testFilePath];
+                        [self resetTestVariables];
+                        
+                        [self setUpTestImageFile:testImagePath];
+                        [self resetTestVariables];
+                        if (success)
+                        {
+                            sessionTestBlock();
+                            [self resetTestVariables];
+                            
+                            [self removeTestDocument];
+                            [self resetTestVariables];
+                        }
+                        else
+                        {
+                            AlfrescoLogInfo(@"failure to upload the test document. Test case cannot be run");
+                        }
+                    }
+                    else
+                    {
+                        AlfrescoLogInfo(@"failure to retrieve the test folder %@. test case cannot be run", self.testFolderPathName);
+                    }
+                    
+                }
+                else
+                {
+                    AlfrescoLogInfo(@"failure to authenticate. Test case cannot be run");
+                }
+            }
+            
+        }
+    }
+    
+}
+
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock
 {
 //    [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
@@ -582,7 +655,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         
         AlfrescoLogInfo(@"Running test against local server");
         
-        success = [self authenticateOnPremiseServer];
+        success = [self authenticateOnPremiseServer:nil];
         [self resetTestVariables];
         if (success)
         {
@@ -634,7 +707,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             else
             {
                 AlfrescoLogInfo(@"Running test against OnPremise server: %@ with username: %@", self.server, self.userName);
-                success = [self authenticateOnPremiseServer];
+                success = [self authenticateOnPremiseServer:nil];
                 [self resetTestVariables];
             }
             if (success)
