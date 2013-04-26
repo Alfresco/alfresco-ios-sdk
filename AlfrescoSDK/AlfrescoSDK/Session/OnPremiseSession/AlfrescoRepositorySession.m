@@ -150,7 +150,15 @@
                                   andPassword:(NSString *)password
                               completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    BOOL useCustomBinding = NO;
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseCMISPath];
+    NSString *customBindingURL = [self.sessionData objectForKey:kAlfrescoCMISBindingURL];
+    if (customBindingURL)
+    {
+        NSString *binding = ([customBindingURL hasPrefix:@"/"]) ? customBindingURL : [NSString stringWithFormat:@"/%@",customBindingURL];
+        cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:binding];
+        useCustomBinding = YES;
+    }
     __block CMISSessionParameters *v3params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     v3params.username = username;
     v3params.password = password;
@@ -245,7 +253,7 @@
                     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
                     NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
                     AlfrescoLogDebug(@"session connected with user %@, repo version is %@", username, version);
-                    if ([majorVersionNumber intValue] >= 4)
+                    if ([majorVersionNumber intValue] >= 4 && !useCustomBinding)
                     {
                         request.httpRequest = [CMISSession connectWithSessionParameters:v4params completionBlock:sessionv4CompletionBlock];
                     }
