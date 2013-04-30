@@ -7,7 +7,7 @@ if [ -d test-reports ]; then
 fi
 
 # define the main command
-BUILD_CMD="xcodebuild -sdk iphonesimulator -project AlfrescoSDK.xcodeproj -target AlfrescoSDKTests -configuration Debug TEST_AFTER_BUILD=YES build"
+BUILD_CMD="xcodebuild -sdk iphonesimulator -project AlfrescoSDK.xcodeproj -target AlfrescoSDKTests -configuration Debug TEST_AFTER_BUILD=YES clean build"
 
 # determine whether to pipe the unit tests results or not
 if [[ "$1" == "-output-junit-results" ]] ; then

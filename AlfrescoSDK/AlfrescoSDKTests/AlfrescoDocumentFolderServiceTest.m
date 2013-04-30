@@ -2423,7 +2423,7 @@
                 STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
 //                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
                 NSError *readError = nil;
-                __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
+                __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSUTF8StringEncoding error:&readError];
                 if (nil == stringContent)
                 {
                     self.lastTestSuccessful = NO;
@@ -2433,7 +2433,7 @@
                 else
                 {
                     __block NSString *updatedContent = [NSString stringWithFormat:@"%@ - and we added some text.",stringContent];
-                    NSData *data = [updatedContent dataUsingEncoding:NSASCIIStringEncoding];
+                    NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
                     __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:contentFile.mimeType];
                     [weakDfService updateContentOfDocument:self.testAlfrescoDocument contentFile:updatedContentFile
                                            completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error)
@@ -2465,7 +2465,7 @@
                                      STAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu",size);
                                      NSError *checkError = nil;
                                      NSString *checkContentString = [NSString stringWithContentsOfFile:[checkContentFile.fileUrl path]
-                                                                                              encoding:NSASCIIStringEncoding
+                                                                                              encoding:NSUTF8StringEncoding
                                                                                                  error:&checkError];
                                      if (nil == checkContentString)
                                      {
@@ -2558,7 +2558,7 @@
                                             else
                                             {
                                                 __block NSString *updatedContent = [NSString stringWithFormat:@"and we added some text."];
-                                                NSData *data = [updatedContent dataUsingEncoding:NSASCIIStringEncoding];
+                                                NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
                                                 __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"text/plain"];
                                                 [weakService updateContentOfDocument:strongDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDoc, NSError *error){
                                                     if (nil == updatedDoc)
@@ -3818,7 +3818,7 @@
 //                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
                 NSError *readError = nil;
                 
-                __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
+                __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSUTF8StringEncoding error:&readError];
                 
                 if (stringContent == nil)
                 {
@@ -4948,7 +4948,7 @@
 //                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
                 NSError *readError = nil;
                 
-                __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSASCIIStringEncoding error:&readError];
+                __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSUTF8StringEncoding error:&readError];
                 
                 if (stringContent == nil)
                 {
