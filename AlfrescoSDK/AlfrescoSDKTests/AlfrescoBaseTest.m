@@ -30,12 +30,14 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 // START HACK
 // Temporarily allow any SSL certificate during testing by overriding method on NSURLRequest.
 // Once MOBSDK-495 is implemented this should be removed
+/*
 @implementation NSURLRequest (IgnoreSSL)
 + (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host
 {
     return YES;
 }
 @end
+ */
 // END OF HACK
 
 
@@ -314,6 +316,8 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     
     if (nil == plistDictionary)
     {
+        //use the HTTPS link to test SSL certificates etc.
+        //self.server = @"https://localhost:8443/alfresco";
         self.server = @"http://localhost:8080/alfresco";
         self.isCloud = NO;
         self.userName = @"admin";

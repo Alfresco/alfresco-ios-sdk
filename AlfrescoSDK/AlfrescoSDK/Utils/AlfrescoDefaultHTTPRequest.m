@@ -158,6 +158,36 @@
     self.connection = nil;
 }
 
+/*
+ */
+- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
+{
+    if ([protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+    {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+    if (challenge.previousFailureCount == 0)
+    {
+        if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+        {
+            [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+            [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+        }
+        else
+        {
+            [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+        }
+    }
+    else
+    {
+        [challenge.sender cancelAuthenticationChallenge:challenge];
+    }
+}
 #pragma Cancellation
 - (void)cancel
 {
