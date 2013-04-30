@@ -23,7 +23,7 @@
 #import "CMISRequest.h"
 @class CMISAuthenticationProvider;
 
-@interface CMISHttpRequest : NSObject <NSURLConnectionDataDelegate, CMISCancellableRequest>
+@interface CMISHttpRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate, CMISCancellableRequest>
 
 @property (nonatomic, assign) CMISHttpRequestMethod requestMethod;
 @property (nonatomic, strong) NSURLConnection *connection;

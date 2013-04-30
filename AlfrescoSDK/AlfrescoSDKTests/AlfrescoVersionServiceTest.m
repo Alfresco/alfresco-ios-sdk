@@ -261,9 +261,9 @@
                                   {
                                       NSError *readError = nil;
                                       __block NSString *stringContent = [NSString stringWithContentsOfFile:[content.fileUrl path]
-                                                                                                  encoding:NSASCIIStringEncoding error:&readError];
+                                                                                                  encoding:NSUTF8StringEncoding error:&readError];
                                       __block NSString *updatedContent = [NSString stringWithFormat:@"%@ - and we added some text.",stringContent];
-                                      NSData *data = [updatedContent dataUsingEncoding:NSASCIIStringEncoding];
+                                      NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
                                       __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:content.mimeType];
                                       [documentService updateContentOfDocument:document contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error){
                                           if (nil == updatedDocument)
@@ -318,7 +318,7 @@
                                                                   STAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu",size);
                                                                   NSError *checkError = nil;
                                                                   NSString *checkContentString = [NSString stringWithContentsOfFile:[content.fileUrl path]
-                                                                                                                           encoding:NSASCIIStringEncoding
+                                                                                                                           encoding:NSUTF8StringEncoding
                                                                                                                               error:&checkError];
                                                                   
                                                                   NSDate *earlierDate = [createdAt earlierDate:lastDocument.modifiedAt];
