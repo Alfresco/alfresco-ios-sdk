@@ -225,6 +225,7 @@
 /**
  @param node the node for which permissions are being queried
  @param completionBlock the block returns an AlfrescoPermissions and NSError object)
+ @return the AlfrescoRequest object. If the node has an associated AlfrescoPermissions object, a network request for the node will not be necessary, and the method will return a nil AlfrescoRequest object.
  */
 - (AlfrescoRequest *)retrievePermissionsOfNode:(AlfrescoNode *)node 
                                completionBlock:(AlfrescoPermissionsCompletionBlock)completionBlock;
