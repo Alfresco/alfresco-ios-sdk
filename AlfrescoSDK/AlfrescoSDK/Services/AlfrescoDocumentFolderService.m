@@ -377,26 +377,36 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    return [self retrieveNodeWithIdentifier:node.identifier completionBlock:^(AlfrescoNode *retrievedNode, NSError *error){
-        if (nil == retrievedNode)
-        {
-            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
-            completionBlock(nil, alfrescoError);
-        }
-        else
-        {
-            id associatedObject = objc_getAssociatedObject(retrievedNode, &kAlfrescoPermissionsObjectKey);
-            if ([associatedObject isKindOfClass:[AlfrescoPermissions class]])
+    id associatedPermissionsObject = objc_getAssociatedObject(node, &kAlfrescoPermissionsObjectKey);
+    if (nil != associatedPermissionsObject && [associatedPermissionsObject isKindOfClass:[AlfrescoPermissions class]])
+    {
+        completionBlock((AlfrescoPermissions *)associatedPermissionsObject, nil);
+        return nil;
+    }
+    else
+    {
+        return [self retrieveNodeWithIdentifier:node.identifier completionBlock:^(AlfrescoNode *retrievedNode, NSError *error){
+            if (nil == retrievedNode)
             {
-                completionBlock((AlfrescoPermissions *)associatedObject, error);
+                NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+                completionBlock(nil, alfrescoError);
             }
             else
             {
-                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderPermissions];
-                completionBlock(nil, error);
+                id associatedObject = objc_getAssociatedObject(retrievedNode, &kAlfrescoPermissionsObjectKey);
+                if ([associatedObject isKindOfClass:[AlfrescoPermissions class]])
+                {
+                    completionBlock((AlfrescoPermissions *)associatedObject, error);
+                }
+                else
+                {
+                    error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderPermissions];
+                    completionBlock(nil, error);
+                }
             }
-        }
-    }];
+        }];        
+    }
+    
 }
 
 

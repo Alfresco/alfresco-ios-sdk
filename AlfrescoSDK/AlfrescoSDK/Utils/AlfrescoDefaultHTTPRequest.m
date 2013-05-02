@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSMutableData * responseData;
 @property (nonatomic, assign) NSInteger statusCode;
 @property (nonatomic, copy) AlfrescoDataCompletionBlock completionBlock;
+@property (nonatomic, assign) BOOL trustedSSLServer;
 
 @end
 
@@ -39,12 +40,13 @@
                 method:(NSString *)method
                 headers:(NSDictionary *)headers
            requestBody:(NSData *)requestBody
+      trustedSSLServer:(BOOL)trustedSSLServer
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     self.completionBlock = completionBlock;
-    
+    self.trustedSSLServer = trustedSSLServer;
     AlfrescoLogDebug(@"%@ %@", method, requestURL);
     
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:requestURL
@@ -162,7 +164,7 @@
  */
 - (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
 {
-    if ([protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+    if ([protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust] && self.trustedSSLServer)
     {
         return YES;
     }
@@ -171,7 +173,7 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    if (challenge.previousFailureCount == 0)
+    if (challenge.previousFailureCount == 0 && self.trustedSSLServer)
     {
         if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
         {

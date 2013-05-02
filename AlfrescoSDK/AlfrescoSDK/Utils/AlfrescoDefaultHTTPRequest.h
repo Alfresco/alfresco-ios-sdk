@@ -32,8 +32,9 @@
 
 - (void)connectWithURL:(NSURL*)requestURL
                 method:(NSString *)method
-                headers:(NSDictionary *)headers
+               headers:(NSDictionary *)headers
            requestBody:(NSData *)requestBody
+      trustedSSLServer:(BOOL)trustedSSLServer
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 @end

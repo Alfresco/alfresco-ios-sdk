@@ -42,6 +42,8 @@ extern NSString * const kCMISSessionParameterLinkCacheSize;
 // TODO: Temporary, must be extracted into separate project
 extern NSString * const kCMISSessionParameterMode;
 
+extern NSString * const kCMISSessionTrustedSSLServerFlag;
+
 @interface CMISSessionParameters : NSObject
 
 // Repository connection
