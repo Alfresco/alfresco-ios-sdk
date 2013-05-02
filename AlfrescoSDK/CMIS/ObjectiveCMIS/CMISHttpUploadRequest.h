@@ -35,6 +35,7 @@
                                headers:(NSDictionary*)addionalHeaders
                          bytesExpected:(unsigned long long)bytesExpected
                 authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
+                      trustedSSLServer:(BOOL)trustedSSLServer
                        completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
                          progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
@@ -53,6 +54,7 @@
 authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
     cmisProperties:(CMISProperties *)cmisProperties
           mimeType:(NSString *)mimeType
+  trustedSSLServer:(BOOL)trustedSSLServer
    completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
      progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 

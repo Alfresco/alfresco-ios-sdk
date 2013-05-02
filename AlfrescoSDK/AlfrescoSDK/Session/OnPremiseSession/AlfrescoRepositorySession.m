@@ -186,6 +186,12 @@
                                          userInfo:nil]);
         }
     }
+    NSNumber *trustedSSLServer = [self.sessionData objectForKey:kAlfrescoTrustedSSLServerFlag];
+    if (nil != trustedSSLServer)
+    {
+        [v3params setObject:trustedSSLServer forKey:kCMISSessionTrustedSSLServerFlag];
+        [v4params setObject:trustedSSLServer forKey:kCMISSessionTrustedSSLServerFlag];
+    }
 
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [CMISSession arrayOfRepositories:v3params completionBlock:^(NSArray *repositories, NSError *error){

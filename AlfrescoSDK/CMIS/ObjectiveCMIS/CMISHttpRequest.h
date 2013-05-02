@@ -32,6 +32,7 @@
 @property (nonatomic, strong) NSDictionary *additionalHeaders;
 @property (nonatomic, strong) NSHTTPURLResponse *response;
 @property (nonatomic, strong) id<CMISAuthenticationProvider> authenticationProvider;
+@property (nonatomic, assign) BOOL trustedSSLServer;
 @property (nonatomic, copy) void (^completionBlock)(CMISHttpResponse *httpResponse, NSError *error);
 
 /**
@@ -46,6 +47,7 @@
                      requestBody:(NSData*)requestBody
                          headers:(NSDictionary*)additionalHeaders
           authenticationProvider:(id<CMISAuthenticationProvider>)authenticationProvider
+                trustedSSLServer:(BOOL)trustedSSLServer
                  completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
 
 /**

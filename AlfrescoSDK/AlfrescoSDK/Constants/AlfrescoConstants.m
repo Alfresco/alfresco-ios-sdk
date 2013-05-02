@@ -32,6 +32,7 @@ NSString * const kAlfrescoSDKVersion = @"1.1.0";
  */
 NSString * const kAlfrescoMetadataExtraction = @"org.alfresco.mobile.features.extractmetadata";
 NSString * const kAlfrescoThumbnailCreation = @"org.alfresco.mobile.features.generatethumbnails";
+NSString * const kAlfrescoTrustedSSLServerFlag = @"org.alfresco.mobile.features.trustedSSLServerFlag";
 
 /**
  Thumbnail constants
