@@ -127,21 +127,15 @@
     return mimeType;
 }
 
-+ (NSString *) GUIDString
++ (NSString *)GUIDString
 {
     CFUUIDRef CFGUID = CFUUIDCreate(NULL);
     CFStringRef guidString = CFUUIDCreateString(NULL, CFGUID);
-    if (NULL != CFGUID) 
+    if (NULL != CFGUID)
     {
         CFRelease(CFGUID);
     }
-    NSString *returnString = (__bridge NSString *)guidString;
-    if (NULL != guidString)
-    {
-        CFRelease(guidString);
-    }
-    return returnString;
+    return (__bridge_transfer NSString *)guidString;
 }
-
 
 @end
