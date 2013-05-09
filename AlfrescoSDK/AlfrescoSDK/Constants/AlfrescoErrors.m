@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoErrors.h"
+#import "AlfrescoInternalConstants.h"
 
 NSString * const kAlfrescoErrorDomainName = @"AlfrescoErrorDomain";
 
@@ -104,9 +105,51 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
     [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
     NSString *standardDescription = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
-    [errorInfo setValue:standardDescription forKey:NSLocalizedFailureReasonErrorKey];    
+    [errorInfo setValue:standardDescription forKey:NSLocalizedFailureReasonErrorKey];
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];    
 }
+
++ (NSError *)alfrescoErrorFromJSONParameters:(NSDictionary *)parameters
+{
+    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+    id errorObj = [parameters valueForKey:kAlfrescoJSONError];
+    int code = kAlfrescoErrorCodeJSONParsing;
+    if (nil != errorObj && [errorObj isKindOfClass:[NSString class]])
+    {
+        NSString *errorCode = (NSString *)errorObj;
+        if ([errorCode hasPrefix:@"invalid_request"])
+        {
+            code = kAlfrescoErrorCodeInvalidRequest;
+        }
+        else if([errorCode hasPrefix:@"invalid_grant"])
+        {
+            code = kAlfrescoErrorCodeInvalidGrant;
+        }
+        else if ([errorCode hasPrefix:@"invalid_client"])
+        {
+            code = kAlfrescoErrorCodeInvalidClient;
+        }
+        else if ([errorCode hasPrefix:@"invalid_token_type"])
+        {
+            code = kAlfrescoErrorCodeRefreshTokenInvalid;
+        }
+    }
+    id descriptionObj = [parameters valueForKey:kAlfrescoJSONErrorDescription];
+    if (nil != descriptionObj && [descriptionObj isKindOfClass:[NSString class]])
+    {
+        NSString *description = (NSString *)descriptionObj;
+        [errorInfo setValue:description forKey:NSLocalizedDescriptionKey];
+        [errorInfo setValue:description forKey:NSLocalizedFailureReasonErrorKey];
+    }
+    else
+    {
+        [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing] forKey:NSLocalizedDescriptionKey];
+        [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing] forKey:NSLocalizedFailureReasonErrorKey];
+    }
+    return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
+}
+
+
 
 + (void)assertArgumentNotNil:(id)argument argumentName:(NSString *)argumentName
 {

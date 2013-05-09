@@ -42,28 +42,111 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 
 @interface AlfrescoBaseTest ()
-@property (nonatomic, strong) NSString * testPassword;
-- (BOOL) uploadTestDocument:(NSString *)filePath;
-- (void) parseEnvironmentDictionary:(NSDictionary *)plistDictionary;
-- (void) setUpTestImageFile:(NSString *)filePath;
-//- (void) setUpTestChildFolder;
-- (void) resetTestVariables;
 @end
 
 @implementation AlfrescoBaseTest
 
 #pragma mark unit test internal methods
 
+- (NSDictionary *)testEnvironmentDictionary
+{
+    NSDictionary *environmentVariables = [[NSProcessInfo processInfo] environment];
+    NSString *plistFileFromEnvironment = [environmentVariables valueForKey:@"TEST_SERVER_PLIST"];
+    NSArray *environmentArray = nil;
+    if (plistFileFromEnvironment)
+    {
+        NSString *folderNameString = [NSString stringWithFormat:@"/Users/%@", NSUserName()];
+        if ([plistFileFromEnvironment hasPrefix:folderNameString])
+        {
+            NSDictionary *listOfEnvironments = [NSDictionary dictionaryWithContentsOfFile:plistFileFromEnvironment];
+            environmentArray = [listOfEnvironments objectForKey:@"environments"];
+        }
+        else
+        {
+            NSString *pathName = [NSString stringWithFormat:@"%@/%@",folderNameString, plistFileFromEnvironment];
+            NSDictionary *listOfEnvironments =  [NSDictionary dictionaryWithContentsOfFile:pathName];
+            environmentArray = [listOfEnvironments objectForKey:@"environments"];
+        }
+    }
+    else
+    {
+        NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+        NSDictionary *listOfEnvironments =  [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+        environmentArray = [listOfEnvironments objectForKey:@"environments"];
+    }
+    if (nil == environmentArray)
+    {
+        return nil;
+    }
+    else
+    {
+        return (NSDictionary *)[environmentArray objectAtIndex:0];
+    }
+}
 
 - (void)setUp
 {
-    // uncomment the line below to get full HTTP response body output
-//    [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    self.verySmallTestFile = [bundle pathForResource:@"small_test.txt" ofType:nil];
+    NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
+    NSString *testImagePath = [bundle pathForResource:@"millenium-dome.jpg" ofType:nil];
+    self.testImageName = [testImagePath lastPathComponent];
+    NSDictionary *environment = [self testEnvironmentDictionary];
+    [self parseEnvironmentDictionary:environment];
+    [self resetTestVariables];
+    BOOL success = NO;
+    if (self.isCloud)
+    {
+        success = [self authenticateCloudServer];
+        [self resetTestVariables];
+    }
+    else
+    {
+        success = [self authenticateOnPremiseServer:nil];
+        [self resetTestVariables];
+    }
+    if (success)
+    {
+        success = [self retrieveAlfrescoTestFolder];
+        [self resetTestVariables];
+        if (success)
+        {
+            success = [self uploadTestDocument:testFilePath];
+            [self resetTestVariables];
+            
+            [self setUpTestImageFile:testImagePath];
+        }
+    }
+    self.setUpSuccess = success;
 }
 
 - (void)tearDown
 {
-    
+    if (nil == self.testAlfrescoDocument || nil == self.currentSession)
+    {
+        self.lastTestSuccessful = YES;
+    }
+    else
+    {
+        self.docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        [self.docFolderService deleteNode:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, NSError *error){
+            if (!succeeded)
+            {
+                self.testAlfrescoDocument = nil;
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete test document. Error message %@ and code %d",[error localizedDescription], [error code]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                self.lastTestSuccessful = YES;
+                self.testAlfrescoDocument = nil;
+                self.callbackCompleted = YES;
+            }
+        }];
+    }
+    [self waitUntilCompleteWithFixedTimeInterval];
+    STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");    
 }
 
 + (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename
@@ -101,8 +184,8 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     [props setObject:@"test author" forKey:@"cm:author"];
 
     __block BOOL success = NO;
-    AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-    [docFolderService createDocumentWithName:newName
+    self.docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+    [self.docFolderService createDocumentWithName:newName
                               inParentFolder:self.testDocFolder
                                  contentFile:textContentFile
                                   properties:props
@@ -272,7 +355,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         if (nil == node)
         {
             self.lastTestSuccessful = NO;
-            self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not get the root folder in the DocLib for site %@. Error %@",self.testSiteName, [error localizedDescription]];
+            self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not get the folder %@ in the DocLib . Error %@",self.testFolderPathName, [error localizedDescription]];
             self.callbackCompleted = YES;
         }
         else
@@ -294,7 +377,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         }
     }];
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
+    STAssertTrue(self.lastTestSuccessful, @"Failure to retrieve test folder");
     return success;
 }
 
@@ -358,8 +441,8 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 - (void) runCMISTest:(CMISTestBlock)cmisTestBlock
 {
-    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
-    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+//    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+    NSDictionary *environmentsDict = [self testEnvironmentDictionary];
     if (nil == environmentsDict)
     {
         [self resetTestVariables];
@@ -478,8 +561,9 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 - (void)runSiteTestsForSecondaryUser:(AlfrescoTestBlock)sessionTestBlock
 {
-    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
-    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];    
+//    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+//    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+    NSDictionary *environmentsDict = [self testEnvironmentDictionary];
     if (nil != environmentsDict)
     {
         NSArray *environmentArray = [environmentsDict objectForKey:@"environments"];
@@ -535,8 +619,9 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 - (void)runOnPremiseTestWithParameters:(NSDictionary *)parameters sessionTestBlock:(AlfrescoTestBlock)sessionTestBlock
 {
-    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
-    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+//    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+//    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+    NSDictionary *environmentsDict = [self testEnvironmentDictionary];
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     self.verySmallTestFile = [bundle pathForResource:@"small_test.txt" ofType:nil];
     NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
@@ -643,8 +728,9 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 - (void) runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock
 {
 //    [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
-    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
-    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+//    NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+//    NSDictionary *environmentsDict = [NSDictionary dictionaryWithContentsOfFile:environmentPath];
+    NSDictionary *environmentsDict = [self testEnvironmentDictionary];
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     self.verySmallTestFile = [bundle pathForResource:@"small_test.txt" ofType:nil];
     NSString *testFilePath = [bundle pathForResource:@"test_file.txt" ofType:nil];
