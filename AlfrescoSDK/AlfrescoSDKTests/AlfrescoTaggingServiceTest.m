@@ -211,13 +211,6 @@
 {
     if (self.setUpSuccess)
     {
-    }
-    else
-    {
-        STFail(@"We could not run this test case");
-    }
-    [self runAllSitesTest:^{
-        
         if (!self.isCloud)
         {
             self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
@@ -275,8 +268,11 @@
         {
             [self waitForCompletion];
         }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 

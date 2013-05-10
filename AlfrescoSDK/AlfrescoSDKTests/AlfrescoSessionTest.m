@@ -821,9 +821,6 @@
     {
         STFail(@"We could not run this test case");
     }
-    [self runAllSitesTest:^{
-        
-    }];
 }
 
 
