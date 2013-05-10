@@ -29,8 +29,8 @@
 - (void)testRetrieveLikeCount
 {
     
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         AlfrescoRepositoryCapabilities *capabilities = self.currentSession.repositoryInfo.capabilities;
         if (capabilities.doesSupportLikingNodes)
         {
@@ -57,8 +57,11 @@
         {
             self.lastTestSuccessful = YES;
         }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -68,7 +71,8 @@
  */
 - (void)testLikeAndUnlike
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         AlfrescoRepositoryCapabilities *capabilities = self.currentSession.repositoryInfo.capabilities;
         if (capabilities.doesSupportLikingNodes)
         {
@@ -140,7 +144,11 @@
         {
             self.lastTestSuccessful = YES;
         }
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -150,7 +158,8 @@
  */
 - (void)testIsNodeLiked
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         
         AlfrescoRepositoryCapabilities *capabilities = self.currentSession.repositoryInfo.capabilities;
         if (capabilities.doesSupportLikingNodes)
@@ -225,7 +234,11 @@
         {
             self.lastTestSuccessful = YES;
         }
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 

@@ -61,18 +61,21 @@ extern NSString * const kAlfrescoTestNetworkID;
 @property (nonatomic, strong) CMISSession *cmisSession;
 @property (nonatomic, strong) CMISFolder *cmisRootFolder;
 @property (nonatomic, assign) BOOL isCloud;
+@property (nonatomic, assign) BOOL setUpSuccess;
+@property (nonatomic, strong) NSString * testPassword;
+@property (nonatomic, strong) AlfrescoDocumentFolderService * docFolderService;
 
 + (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename;
-- (void)runSiteTestsForSecondaryUser:(AlfrescoTestBlock)sessionTestBlock;
-- (void)runAllSitesTest:(AlfrescoTestBlock)sessionTestBlock;
-- (void)runOnPremiseTestWithParameters:(NSDictionary *)parameters sessionTestBlock:(AlfrescoTestBlock)sessionTestBlock;
-- (void)runCMISTest:(CMISTestBlock)cmisTestBlock;
-- (BOOL) setUpCMISSession;
 - (BOOL)authenticateOnPremiseServer:(NSDictionary *)parameters;
 - (BOOL)authenticateCloudServer;
 
 - (BOOL)retrieveAlfrescoTestFolder;
-- (void)waitForCompletion;
 - (void)waitUntilCompleteWithFixedTimeInterval;
 - (BOOL) removeTestDocument;
+- (BOOL) uploadTestDocument:(NSString *)filePath;
+- (void) parseEnvironmentDictionary:(NSDictionary *)plistDictionary;
+- (void) setUpTestImageFile:(NSString *)filePath;
+//- (void) setUpTestChildFolder;
+- (void) resetTestVariables;
+- (NSDictionary *)testEnvironmentDictionary;
 @end

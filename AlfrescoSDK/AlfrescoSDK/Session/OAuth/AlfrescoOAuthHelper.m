@@ -278,11 +278,13 @@
     {
         if (nil == *error)
         {
-            *error = [self errorFromJSONDictionary:(NSDictionary *)jsonDictionary];
+//            *error = [self errorFromJSONDictionary:(NSDictionary *)jsonDictionary];
+            *error = [AlfrescoErrors alfrescoErrorFromJSONParameters:jsonDictionary];
         }
         else
         {
-            NSError *underlyingError = [self errorFromJSONDictionary:(NSDictionary *)jsonDictionary];
+            NSError *underlyingError = [AlfrescoErrors alfrescoErrorFromJSONParameters:jsonDictionary];
+//            NSError *underlyingError = [self errorFromJSONDictionary:(NSDictionary *)jsonDictionary];
             *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;

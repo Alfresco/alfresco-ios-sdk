@@ -37,7 +37,8 @@
 - (void)testQueryWithKeywords
 {
     
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
@@ -92,12 +93,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -105,7 +105,8 @@
  */
 - (void)testQueryWithKeywordsWithPaging
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
@@ -155,12 +156,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -168,7 +168,8 @@
  */
 - (void)testQueryWithKeywordsExact
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
@@ -207,12 +208,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -220,7 +220,8 @@
  */
 - (void)testQueryWithKeywordsExactWithinFolder
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:YES
@@ -251,12 +252,12 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
         
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -264,7 +265,8 @@
  */
 - (void)testQueryWithKeywordsFullText
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:NO includeContent:YES];
@@ -305,12 +307,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -318,7 +319,8 @@
  */
 - (void)testQueryWithPlainKeywords
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
@@ -374,12 +376,12 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
         
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -387,7 +389,8 @@
  */
 - (void)testQueryWithPlainKeywordsWithPaging
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
@@ -436,20 +439,19 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 - (void)testKeywordSearchOptionsPropertiesAfterInstantiation
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         AlfrescoKeywordSearchOptions *searchOptions = nil;
-
+        
         searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:YES includeContent:YES];
         STAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
         STAssertTrue(searchOptions.exactMatch, @"Expected the exact match to be true");
@@ -466,8 +468,11 @@
         STAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
         STAssertTrue([searchOptions.folder isEqual:self.currentSession.rootFolder], @"Expected the folder to be that of the the sessions root folder");
         STAssertFalse(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -475,8 +480,8 @@
  */
 - (void)testSearchWithStatementWithoutListingContext
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
@@ -503,11 +508,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -515,8 +520,8 @@
  */
 - (void)testSearchWithStatementWithListingContext
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
@@ -554,12 +559,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 #pragma private methods

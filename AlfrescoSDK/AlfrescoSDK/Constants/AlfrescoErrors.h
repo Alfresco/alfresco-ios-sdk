@@ -42,6 +42,9 @@ typedef enum
     kAlfrescoErrorCodeNoNetworkFound = 107,
     kAlfrescoErrorCodeNetworkRequestCancelled = 110,
     kAlfrescoErrorCodeRefreshTokenInvalid = 111,
+    kAlfrescoErrorCodeInvalidRequest = 112,
+    kAlfrescoErrorCodeInvalidClient = 113,
+    kAlfrescoErrorCodeInvalidGrant = 114,
 
     kAlfrescoErrorCodeJSONParsing = 200,
     kAlfrescoErrorCodeJSONParsingNilData = 201,
@@ -165,6 +168,8 @@ extern NSString * const kAlfrescoErrorDescriptionRatingsNoRatings;
  */
 + (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
+
++ (NSError *)alfrescoErrorFromJSONParameters:(NSDictionary *)parameters;
 
 /**
  asserts that an argument is not nil. If a required argument is nil, this is considered a fatal error, and the SDK will throw an exception.

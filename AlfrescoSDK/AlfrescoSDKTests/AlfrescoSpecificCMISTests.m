@@ -27,10 +27,96 @@
 #import "AlfrescoCMISDocument.h"
 #import "CMISDateUtil.h"
 #import "CMISStringInOutParameter.h"
+#import "AlfrescoInternalConstants.h"
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
 
 @implementation AlfrescoSpecificCMISTests
+
+- (void)setUp
+{
+    NSDictionary *environmentsDict = [self testEnvironmentDictionary];
+    [self parseEnvironmentDictionary:environmentsDict];
+    [self resetTestVariables];
+    BOOL success = [self setUpCMISSession];
+    [self resetTestVariables];
+    self.setUpSuccess = success;
+}
+
+- (void)tearDown
+{
+    
+}
+- (BOOL) setUpCMISSession
+{
+    __block BOOL success = NO;
+    NSString *urlString = nil;
+    if (self.isCloud)
+    {
+        urlString = [self.server stringByAppendingString:[NSString stringWithFormat:@"%@%@%@",kAlfrescoCloudPrecursor, kAlfrescoTestNetworkID, kAlfrescoCloudCMISPath]];
+    }
+    else
+    {
+        urlString = [self.server stringByAppendingString:kAlfrescoOnPremiseCMISPath];
+    }
+    __block CMISSessionParameters *params = [[CMISSessionParameters alloc]
+                                             initWithBindingType:CMISBindingTypeAtomPub];
+    params.username = self.userName;
+    params.password = self.testPassword;
+    params.atomPubUrl = [NSURL URLWithString:urlString];
+    [CMISSession arrayOfRepositories:params completionBlock:^(NSArray *repositories, NSError *error){
+        if (nil == repositories)
+        {
+            self.lastTestSuccessful = NO;
+            self.callbackCompleted = YES;
+            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+        }
+        else if( 0 == repositories.count)
+        {
+            self.lastTestSuccessful = NO;
+            self.callbackCompleted = YES;
+            self.lastTestFailureMessage = @"!!! NO VALID REPO FOUND !!!";
+        }
+        else
+        {
+            CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
+            params.repositoryId = repoInfo.identifier;
+            [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+            [CMISSession connectWithSessionParameters:params completionBlock:^(CMISSession *cmisSession, NSError *cmisError){
+                if (nil == cmisSession)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.callbackCompleted = YES;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [cmisError localizedDescription], [cmisError localizedFailureReason]];
+                }
+                else
+                {
+                    self.cmisSession = cmisSession;
+                    [cmisSession retrieveObjectByPath:self.testFolderPathName completionBlock:^(CMISObject *object, NSError *folderError){
+                        if (nil == object)
+                        {
+                            self.lastTestSuccessful = NO;
+                            self.callbackCompleted = YES;
+                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [folderError localizedDescription], [folderError localizedFailureReason]];
+                        }
+                        else
+                        {
+                            CMISFolder *rootFolder = (CMISFolder *)object;
+                            self.lastTestSuccessful = YES;
+                            self.callbackCompleted = YES;
+                            self.cmisRootFolder = rootFolder;
+                            success = YES;
+                        }
+                    }];
+                }
+            }];
+        }
+    }];
+    [self waitUntilCompleteWithFixedTimeInterval];
+    STAssertTrue(self.lastTestSuccessful, @"setUpCMISSession failed");
+    return success;
+}
+
 
 - (NSDictionary *)customCmisParameters
 {
@@ -40,7 +126,7 @@
 
 - (void)testCreateDocumentWithDescription
 {
-    [self runCMISTest:^
+    if(self.setUpSuccess)
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
@@ -50,7 +136,7 @@
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         [documentProperties setObject:@"cmis:document, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
         [documentProperties setObject:documentDescription forKey:@"cm:description"];
-
+        
         // Create document with description
         [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
             if (nil == objectId)
@@ -93,9 +179,12 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"testCreateDocumentWithDescription failed");
-
-        }];
+        STAssertTrue(self.lastTestSuccessful, @"testCreateDocumentWithDescription failed");        
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -212,21 +301,10 @@
 */
 - (void)testRetrieveExifDataUsingExtensions
 {
-    [self runCMISTest:^
+    if (self.setUpSuccess)
     {
         NSString *testFilePath = nil;
         testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
-        /*
-        if (self.isCloud)
-        {
-            testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
-        }
-        else
-        {
-            testFilePath = @"/ios-test/image-with-exif.jpg";
-            
-        }
-         */
         [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
@@ -241,32 +319,24 @@
                 [self verifyDocument:document hasExtensionProperty:@"exif:manufacturer" withValue:@"NIKON"];
                 [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"E950"];
                 [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
-                self.callbackCompleted = YES;                
+                self.callbackCompleted = YES;
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"testRetrieveExifDataUsingExtensions failed");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 - (void)testRetrieveExifDataUsingProperties
 {
-    [self runCMISTest:^
+    if (self.setUpSuccess)
     {
-
         NSString *testFilePath = nil;
         testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
-        /*
-         if (self.isCloud)
-         {
-         testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
-         }
-         else
-         {
-         testFilePath = @"/ios-test/image-with-exif.jpg";
-         
-         }
-         */
         [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
@@ -289,7 +359,11 @@
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"testRetrieveExifDataUsingProperties failed");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -378,9 +452,8 @@
  
 - (void)testCreateDocumentWithExif
 {
-    [self runCMISTest:^
+    if (self.setUpSuccess)
     {
-
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
         NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
@@ -388,7 +461,7 @@
         [documentProperties setObject:@"cmis:document, P:cm:titled, P:exif:exif" forKey:kCMISPropertyObjectTypeId];
         [documentProperties setObject:documentName forKey:kCMISPropertyName];
         [documentProperties setObject:@"UberCam" forKey:@"exif:model"];
-
+        
         [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
             if (nil == objectId)
             {
@@ -428,14 +501,16 @@
         } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){}];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"testCreateDocumentWithExif failed");
-
-    }];
-
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 - (void)testAddAspectToDocument
 {
-    [self runCMISTest:^
+    if (self.setUpSuccess)
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
@@ -464,7 +539,7 @@
                     else
                     {
                         AlfrescoCMISDocument *cmisDocument = (AlfrescoCMISDocument *)cmisObject;
-                        STAssertFalse([cmisDocument hasAspect:@"P:exif:exif"], nil);
+                        STAssertFalse([cmisDocument hasAspect:@"P:exif:exif"], @"We should not be able to find P:exif:exif aspect - but we do");
                         [cmisDocument.aspectTypes addObject:@"P:exif:exif"];
                         [cmisDocument updateProperties:[NSDictionary dictionary] completionBlock:^(CMISObject *updatedObj, NSError *updError){
                             if (nil == updatedObj)
@@ -476,7 +551,7 @@
                             else
                             {
                                 AlfrescoCMISDocument *updatedDoc = (AlfrescoCMISDocument *)updatedObj;
-                                STAssertTrue([updatedDoc hasAspect:@"P:exif:exif"], nil);
+                                STAssertTrue([updatedDoc hasAspect:@"P:exif:exif"], @"We should be able to find P:exif:exif aspect - but we don't");
                                 [updatedDoc deleteAllVersionsWithCompletionBlock:^(BOOL docDeleted, NSError *deleteError){
                                     if (deleteError)
                                     {
@@ -487,7 +562,7 @@
                                     else
                                     {
                                         self.lastTestSuccessful = YES;
-                                        self.callbackCompleted = YES;                                        
+                                        self.callbackCompleted = YES;
                                     }
                                 }];
                             }
@@ -498,13 +573,16 @@
         } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){}];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"testAddAspectToDocument failed");
-
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 - (void)testApostropheInDescription
 {
-    [self runCMISTest:^
+    if (self.setUpSuccess)
     {
         NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
         NSURL *fileUrl = [NSURL URLWithString:filePath];
@@ -545,7 +623,7 @@
                             else
                             {
                                 AlfrescoCMISDocument *updatedDoc = (AlfrescoCMISDocument *)updObj;
-                                STAssertEqualObjects([updatedDoc.properties propertyValueForId:@"cm:description"], description, nil);
+                                STAssertEqualObjects([updatedDoc.properties propertyValueForId:@"cm:description"], description, @"We expected the description on properties %@ to be equal to description %@, but got differences",[updatedDoc.properties propertyValueForId:@"cm:description"], description );
                                 STAssertEqualObjects([updatedDoc.properties propertyValueForId:@"cm:title"], description, nil);
                                 [updatedDoc deleteAllVersionsWithCompletionBlock:^(BOOL deleted, NSError *deleteError){
                                     if (deleteError)
@@ -568,8 +646,11 @@
         } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){}];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"testApostropheInDescription failed");
-
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 //- (void)testCreateDocumentWithJapaneseProperties

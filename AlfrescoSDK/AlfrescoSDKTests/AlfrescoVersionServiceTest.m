@@ -30,53 +30,55 @@
  */
 - (void)testRetrieveAllVersions
 {
-    [self runAllSitesTest:^
-     {
-         
-         self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
-         __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-         
-         [documentService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error)
-          {
-              if (nil == node)
-              {
-                  documentService = nil;
-                  self.lastTestSuccessful = NO;
-                  self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                  self.callbackCompleted = YES;
-              }
-              else
-              {
-                  [self.versionService retrieveAllVersionsOfDocument:(AlfrescoDocument *)node completionBlock:^(NSArray *array, NSError *error)
-                   {
-                       if (nil == array)
-                       {
-                           self.lastTestSuccessful = NO;
-                           self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                       }
-                       else
-                       {
-                           STAssertNotNil(array, @"array should not be nil");
-                           STAssertTrue(array.count == 1, @"expected 1 version");
-                           AlfrescoNode * temp = array[0];
-                           
-                           NSLog(@"Temp.name =  %@", temp.name);
-                           self.lastTestSuccessful = YES;
-                       }
-                       self.callbackCompleted = YES;
-                       
-                   }];
-                  
-                  documentService = nil;
-              }
-              
-          }
-          ];
-         
-         [self waitUntilCompleteWithFixedTimeInterval];
-         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-     }
-     ];
+    if (self.setUpSuccess)
+    {
+        self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
+        __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        [documentService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error)
+         {
+             if (nil == node)
+             {
+                 documentService = nil;
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.callbackCompleted = YES;
+             }
+             else
+             {
+                 [self.versionService retrieveAllVersionsOfDocument:(AlfrescoDocument *)node completionBlock:^(NSArray *array, NSError *error)
+                  {
+                      if (nil == array)
+                      {
+                          self.lastTestSuccessful = NO;
+                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      }
+                      else
+                      {
+                          STAssertNotNil(array, @"array should not be nil");
+                          STAssertTrue(array.count == 1, @"expected 1 version");
+                          AlfrescoNode * temp = array[0];
+                          
+                          NSLog(@"Temp.name =  %@", temp.name);
+                          self.lastTestSuccessful = YES;
+                      }
+                      self.callbackCompleted = YES;
+                      
+                  }];
+                 
+                 documentService = nil;
+             }
+             
+         }
+         ];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -89,72 +91,70 @@
  */
 - (void)testRetrieveVersionComment
 {
-    [self runAllSitesTest:^
-     {
-         if (!self.isCloud)
-         {
-             self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
-             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-             
-             [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
-              {
-                  if (nil == node)
-                  {
-                      documentService = nil;
-                      self.lastTestSuccessful = NO;
-                      self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                      self.callbackCompleted = YES;
-                  }
-                  else
-                  {
-                      [self.versionService retrieveAllVersionsOfDocument:(AlfrescoDocument *)node completionBlock:^(NSArray *array, NSError *error)
-                       {
-                           if (nil == array)
-                           {
-                               self.lastTestSuccessful = NO;
-                               self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                           }
-                           else
-                           {
-                               STAssertNotNil(array, @"array should not be nil");
-                               
-                               __block BOOL versionCommentRetrieved = NO;
-                               
-                               [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-                                {
-                                    AlfrescoDocument *node = (AlfrescoDocument *)obj;
-                                    
-                                    if (node.versionComment != nil)
-                                    {
-                                        versionCommentRetrieved = YES;
-                                        *stop = YES;
-                                    }
-                                }
-                                ];
-                               
-                               STAssertTrue(versionCommentRetrieved, @"version comment was retrieved successfully");
-                               
-                               self.lastTestSuccessful = YES;
-                           }
-                           self.callbackCompleted = YES;
-                       }
-                       ];
-                      
-                      documentService = nil;
-                  }
-              }
-              ];
-             
-             [self waitUntilCompleteWithFixedTimeInterval];
-             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);  
-         }
-         else
-         {
-             // not checking version comment in cloud for now
-             [self waitForCompletion];
-         }
-     }
-     ];
+    if (self.setUpSuccess)
+    {
+        if (!self.isCloud)
+        {
+            self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
+            __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+            
+            [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
+             {
+                 if (nil == node)
+                 {
+                     documentService = nil;
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.callbackCompleted = YES;
+                 }
+                 else
+                 {
+                     [self.versionService retrieveAllVersionsOfDocument:(AlfrescoDocument *)node completionBlock:^(NSArray *array, NSError *error)
+                      {
+                          if (nil == array)
+                          {
+                              self.lastTestSuccessful = NO;
+                              self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          }
+                          else
+                          {
+                              STAssertNotNil(array, @"array should not be nil");
+                              
+                              __block BOOL versionCommentRetrieved = NO;
+                              
+                              [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+                               {
+                                   AlfrescoDocument *node = (AlfrescoDocument *)obj;
+                                   
+                                   if (node.versionComment != nil)
+                                   {
+                                       versionCommentRetrieved = YES;
+                                       *stop = YES;
+                                   }
+                               }
+                               ];
+                              
+                              STAssertTrue(versionCommentRetrieved, @"version comment was retrieved successfully");
+                              
+                              self.lastTestSuccessful = YES;
+                          }
+                          self.callbackCompleted = YES;
+                      }
+                      ];
+                     
+                     documentService = nil;
+                 }
+             }
+             ];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        }
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -163,62 +163,67 @@
  */
 - (void)testRetrieveAllVersionsWithPaging
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
         __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
-        [documentService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error) 
-        {
-            if (nil == node)
-            {
-                documentService = nil;
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                self.callbackCompleted = YES;
-            }
-            else
-            {                
-                [self.versionService retrieveAllVersionsOfDocument:(AlfrescoDocument *)node listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) 
-                 {
-                     if (nil == pagingResult)
-                     {
-                         self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                     }
-                     else
-                     {                
-                         STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                         STAssertTrue(pagingResult.objects.count == 1, @"expected 1 version, but got %d",pagingResult.objects.count);
-                         STAssertTrue(pagingResult.totalItems >= 1, @"expected at least 1 version in total");
-                         
-                         self.lastTestSuccessful = YES;
-                     }
-                     self.callbackCompleted = YES;
-                     
-                 }];
-                
-                documentService = nil;
-            }
-        }];
+        [documentService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error)
+         {
+             if (nil == node)
+             {
+                 documentService = nil;
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.callbackCompleted = YES;
+             }
+             else
+             {
+                 [self.versionService retrieveAllVersionsOfDocument:(AlfrescoDocument *)node listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                  {
+                      if (nil == pagingResult)
+                      {
+                          self.lastTestSuccessful = NO;
+                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                      }
+                      else
+                      {
+                          STAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                          STAssertTrue(pagingResult.objects.count == 1, @"expected 1 version, but got %d",pagingResult.objects.count);
+                          STAssertTrue(pagingResult.totalItems >= 1, @"expected at least 1 version in total");
+                          
+                          self.lastTestSuccessful = YES;
+                      }
+                      self.callbackCompleted = YES;
+                      
+                  }];
+                 
+                 documentService = nil;
+             }
+         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 - (void)testUpdateContentWithVersioningForDocument
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             STAssertTrue(YES, @"");
         }
         else
         {
-            self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];            
+            self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
             
             [documentService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *error)
@@ -331,7 +336,7 @@
                                                                   else
                                                                   {
                                                                       STAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content, instead we get %@",updatedContent);
-                                                                      self.lastTestSuccessful = YES;                                         
+                                                                      self.lastTestSuccessful = YES;
                                                                   }
                                                                   
                                                               }
@@ -368,8 +373,11 @@
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
             
         }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 
