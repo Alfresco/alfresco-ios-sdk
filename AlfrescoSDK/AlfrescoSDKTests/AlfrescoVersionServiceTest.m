@@ -150,11 +150,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            // not checking version comment in cloud for now
-            [self waitForCompletion];
-        }
     }
     else
     {

@@ -455,20 +455,6 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     self.testImageFile = textContentFile;
 }
 
-
-- (void)waitForCompletion
-{
-    return;
-    /*
-    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:10];
-    
-    do {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
-    } while ([timeoutDate timeIntervalSinceNow] > 0);
-     */
-    
-}
-
 - (void)waitAtTheEnd
 {
     NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:TIMEGAP];

@@ -60,10 +60,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication succeeded with invalid credentials");
         }
-        else
-        {
-            [self waitForCompletion];
-        }
     }
     else
     {
@@ -157,7 +153,6 @@
                 self.lastTestSuccessful = NO;
             }
             
-            [self waitForCompletion];
             STAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
         }
     }
@@ -202,10 +197,6 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
     }
     else
@@ -234,10 +225,6 @@
         else
         {
             self.lastTestSuccessful = NO;
-        }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
         }
         STAssertTrue(self.lastTestSuccessful, @"OnPremise Session did not return the appropriate personal identifier");
     }
@@ -274,10 +261,6 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"The session's default listing context state was not as expected");
     }
     else
@@ -313,10 +296,6 @@
         else
         {
             self.lastTestSuccessful = NO;
-        }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
         }
         STAssertTrue(self.lastTestSuccessful, @"The session's root folder did not return correct values");
     }
@@ -404,10 +383,6 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"The OnPremise Session did not overwrite the value for an existing key");
     }
     else
@@ -468,10 +443,6 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
     }
     else
@@ -501,10 +472,6 @@
         else
         {
             self.lastTestSuccessful = NO;
-        }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
         }
         STAssertTrue(self.lastTestSuccessful, @"The session does not contain an object for the key provided, but still returned a value");
     }
@@ -546,10 +513,6 @@
         
         self.lastTestSuccessful = YES;
         
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         
         STAssertTrue(self.lastTestSuccessful, @"Added all the objects from the given dictionary to the session. Checked that the parameters / values are as desired");
     }
@@ -578,10 +541,6 @@
         
         self.lastTestSuccessful = YES;
         
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         
         STAssertTrue(self.lastTestSuccessful, @"Adding empty dictionary, empty list is returned");
     }
@@ -614,11 +573,7 @@
          
          self.lastTestSuccessful = YES;
          
-         if (self.isCloud)
-         {
-             [self waitForCompletion];
-         }
-         
+ 
          STAssertTrue(self.lastTestSuccessful, @"Internal Parameter is not removed, Returns previous value");
      }
      ];
@@ -692,7 +647,6 @@
             STAssertNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.maintenanceVersion);
             STAssertNil(sessionRepositoryInfo.version, @"Expected the version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.version);
             
-            [self waitForCompletion];
             self.lastTestSuccessful = YES;
         }
         STAssertTrue(self.lastTestSuccessful, @"The session does not contain valid respository information");
@@ -738,11 +692,7 @@
         STAssertTrue([tokenType isEqualToString:archivedOAuthData.tokenType], @"tokenType should be the same but we got %@", archivedOAuthData.tokenType);
         STAssertTrue([scope isEqualToString:archivedOAuthData.scope], @"scope should be the same but we got %@", archivedOAuthData.scope);
         STAssertEquals(3600, [archivedOAuthData.expiresIn intValue], @"Expires in should be 3600, but instead it is %d",[archivedOAuthData.expiresIn intValue]);
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
-    }
+     }
     else
     {
         STFail(@"We could not run this test case");

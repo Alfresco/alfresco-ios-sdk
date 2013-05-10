@@ -93,10 +93,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
     }
     else
     {
@@ -160,10 +156,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
     }
     else
     {
@@ -216,10 +208,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
     }
     else
     {
@@ -263,10 +251,6 @@
              }];
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-        }
-        else
-        {
-            [self waitForCompletion];
         }
         
     }
@@ -322,10 +306,6 @@
              }];
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-        }
-        else
-        {
-            [self waitForCompletion];
         }
     }
     else
@@ -396,10 +376,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
         
     }
     else
@@ -462,10 +438,6 @@
             
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-        }
-        else
-        {
-            [self waitForCompletion];
         }
     }
     else
@@ -536,10 +508,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
     }
     else
     {
@@ -590,10 +558,6 @@
             
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-        }
-        else
-        {
-            [self waitForCompletion];
         }
     }
     else

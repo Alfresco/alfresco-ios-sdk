@@ -1801,11 +1801,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            // not checking version comment in cloud for now
-            [self waitForCompletion];
-        }
     }
     else
     {
@@ -3692,10 +3687,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
     }
     else
     {
@@ -5373,10 +5364,6 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
         //        [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelDebug;
     }
     else
@@ -5530,10 +5517,6 @@
              [self waitUntilCompleteWithFixedTimeInterval];
              STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
              */
-        }
-        else
-        {
-            [self waitForCompletion];
         }
     }
     else

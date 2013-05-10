@@ -70,7 +70,6 @@ extern NSString * const kAlfrescoTestNetworkID;
 - (BOOL)authenticateCloudServer;
 
 - (BOOL)retrieveAlfrescoTestFolder;
-- (void)waitForCompletion;
 - (void)waitUntilCompleteWithFixedTimeInterval;
 - (BOOL) removeTestDocument;
 - (BOOL) uploadTestDocument:(NSString *)filePath;
