@@ -32,7 +32,8 @@
  */
 - (void)testConnectWithURLWithInvalidCredentials
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             NSString *invalidUserName = @"RepositorySessionTest";
@@ -59,11 +60,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication succeeded with invalid credentials");
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 #pragma mark - Cloud Specific Tests
@@ -123,8 +124,8 @@
  */
 - (void)testRemoveNonExistantParameter
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         if (self.isCloud)
         {
             NSString *nonExistantKeyToRemove = @"testRemoveNonExistantParameter";
@@ -152,10 +153,13 @@
                 self.lastTestSuccessful = NO;
             }
             
-            [self waitForCompletion];
             STAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
         }
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 #pragma mark - Generic Tests
@@ -165,8 +169,8 @@
  */
 - (void)testRetrieveBaseURL
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         NSURL *sessionBaseURL = [self.currentSession baseUrl];
         STAssertNotNil(sessionBaseURL, @"Expected the base url in the session not to be nil");
         STAssertNotNil(self.server, @"The server base url is nil");
@@ -181,7 +185,7 @@
         {
             urlToTest = [NSString stringWithFormat:@"%@://%@", [sessionBaseURL scheme], [sessionBaseURL host]];
         }
-    
+        
         STAssertNotNil(urlToTest, @"The url to test is nil");
         STAssertTrue([self.server isEqualToString:urlToTest], @"Expected the baseURL in the session to be the same as that used to create the session");
         
@@ -193,12 +197,12 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -207,8 +211,8 @@
  */
 - (void)testRetrievePersonalIdentifier
 {
-    [self runAllSitesTest:^{
-
+    if (self.setUpSuccess)
+    {
         NSString *sessionPersonalIdentifier = [self.currentSession personIdentifier];
         STAssertNotNil(sessionPersonalIdentifier, @"Personal Identifier in the session is nil");
         STAssertNotNil(self.userName, @"Username is nil");
@@ -222,12 +226,12 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"OnPremise Session did not return the appropriate personal identifier");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -236,8 +240,8 @@
  */
 - (void)testRetrieveDefaultListingContext
 {
-    [self runAllSitesTest:^{
-
+    if (self.setUpSuccess)
+    {
         AlfrescoListingContext *defaultListingContext = [self.currentSession defaultListingContext];
         
         NSInteger expectedMaxItems = 50;
@@ -257,12 +261,12 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"The session's default listing context state was not as expected");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -271,8 +275,8 @@
  */
 - (void)testRetrieveRootFolder
 {
-    [self runAllSitesTest:^{
-
+    if (self.setUpSuccess)
+    {
         AlfrescoFolder *sessionRootFolder = [self.currentSession rootFolder];
         
         STAssertNotNil(sessionRootFolder, @"Expected the root folder in the session not to be nil");
@@ -293,12 +297,12 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"The session's root folder did not return correct values");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -353,8 +357,8 @@
  */
 - (void)testAddDuplicateParameterToSession
 {
-    [self runAllSitesTest:^{
-
+    if (self.setUpSuccess)
+    {
         // add a value to the current session
         NSString *key = @"testAddParameterToSession";
         NSNumber *firstValue = [NSNumber numberWithInt:100];
@@ -379,12 +383,12 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"The OnPremise Session did not overwrite the value for an existing key");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -397,8 +401,8 @@
  */
 - (void)testAddAndRemoveCustomObjectParameterToSession
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         int expectedMaxItems = 123;
         int expectedSkipCount = 3;
         
@@ -439,12 +443,12 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -453,14 +457,14 @@
  */
 - (void)testRetrieveNonExistantParameter
 {
-    [self runAllSitesTest:^{
-
+    if (self.setUpSuccess)
+    {
         NSString *key = @"testRetrieveNonExistantParameter";
-            
+        
         id returnedObject = [self.currentSession objectForParameter:key];
-            
+        
         STAssertNil(returnedObject, @"There is no key value pair in the parameters for the current session with the key %@, however, an object was returned from objectForParameter:", key);
-            
+        
         if (!returnedObject)
         {
             self.lastTestSuccessful = YES;
@@ -469,12 +473,12 @@
         {
             self.lastTestSuccessful = NO;
         }
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
         STAssertTrue(self.lastTestSuccessful, @"The session does not contain an object for the key provided, but still returned a value");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -483,40 +487,39 @@
  */
 - (void)testAddingDictionaryParametersToSession
 {
-    [self runAllSitesTest:^
-     {
-         id alfrescoAuthenticationProviderObject_before = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-         id alfrescoGenerateThumbnails_before = [self.currentSession objectForParameter:kAlfrescoThumbnailCreation];
-         id alfrescoSessionKey_before = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
-         id alfrescoExtractMetadata_before = [self.currentSession objectForParameter:kAlfrescoMetadataExtraction];
-         
-         NSDictionary *test = @{@"firstParam": @"Param1", @"secondParam" : @"Param2", @"thirdParam" : @"Param3"};
-         [self.currentSession addParametersFromDictionary:test];
-         
-         id alfrescoAuthenticationProviderObject_after = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-         id alfrescoGenerateThumbnails_after = [self.currentSession objectForParameter:kAlfrescoThumbnailCreation];
-         id alfrescoSessionKey_after = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
-         id alfrescoExtractMetadata_after = [self.currentSession objectForParameter:kAlfrescoMetadataExtraction];
-         
-         STAssertEqualObjects([self.currentSession objectForParameter:@"firstParam"], test[@"firstParam"], @"Testing if param was added to session and has expected value");
-         STAssertEqualObjects([self.currentSession objectForParameter:@"secondParam"], test[@"secondParam"], @"Testing if param was added to session and has expected value");
-         STAssertEqualObjects([self.currentSession objectForParameter:@"thirdParam"], test[@"thirdParam"], @"Testing if param was added to session and has expected value");
-         
-         STAssertEqualObjects(alfrescoAuthenticationProviderObject_before, alfrescoAuthenticationProviderObject_after, @"checking session authentication provider parameter before adding dictionary parameters and after");
-         STAssertEqualObjects(alfrescoGenerateThumbnails_before, alfrescoGenerateThumbnails_after, @"checking generate thumbnails session parameter before adding dictionary parameters and after");
-         STAssertEqualObjects(alfrescoSessionKey_before, alfrescoSessionKey_after, @"checking session key parameter before adding dictionary parameters and after");
-         STAssertEqualObjects(alfrescoExtractMetadata_before, alfrescoExtractMetadata_after, @"checking extract metadata parameter before adding dictionary parameters and after");
-         
-         self.lastTestSuccessful = YES;
-         
-         if (self.isCloud)
-         {
-             [self waitForCompletion];
-         }
-         
-          STAssertTrue(self.lastTestSuccessful, @"Added all the objects from the given dictionary to the session. Checked that the parameters / values are as desired");
-     }
-     ];
+    if (self.setUpSuccess)
+    {
+        id alfrescoAuthenticationProviderObject_before = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+        id alfrescoGenerateThumbnails_before = [self.currentSession objectForParameter:kAlfrescoThumbnailCreation];
+        id alfrescoSessionKey_before = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
+        id alfrescoExtractMetadata_before = [self.currentSession objectForParameter:kAlfrescoMetadataExtraction];
+        
+        NSDictionary *test = @{@"firstParam": @"Param1", @"secondParam" : @"Param2", @"thirdParam" : @"Param3"};
+        [self.currentSession addParametersFromDictionary:test];
+        
+        id alfrescoAuthenticationProviderObject_after = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+        id alfrescoGenerateThumbnails_after = [self.currentSession objectForParameter:kAlfrescoThumbnailCreation];
+        id alfrescoSessionKey_after = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
+        id alfrescoExtractMetadata_after = [self.currentSession objectForParameter:kAlfrescoMetadataExtraction];
+        
+        STAssertEqualObjects([self.currentSession objectForParameter:@"firstParam"], test[@"firstParam"], @"Testing if param was added to session and has expected value");
+        STAssertEqualObjects([self.currentSession objectForParameter:@"secondParam"], test[@"secondParam"], @"Testing if param was added to session and has expected value");
+        STAssertEqualObjects([self.currentSession objectForParameter:@"thirdParam"], test[@"thirdParam"], @"Testing if param was added to session and has expected value");
+        
+        STAssertEqualObjects(alfrescoAuthenticationProviderObject_before, alfrescoAuthenticationProviderObject_after, @"checking session authentication provider parameter before adding dictionary parameters and after");
+        STAssertEqualObjects(alfrescoGenerateThumbnails_before, alfrescoGenerateThumbnails_after, @"checking generate thumbnails session parameter before adding dictionary parameters and after");
+        STAssertEqualObjects(alfrescoSessionKey_before, alfrescoSessionKey_after, @"checking session key parameter before adding dictionary parameters and after");
+        STAssertEqualObjects(alfrescoExtractMetadata_before, alfrescoExtractMetadata_after, @"checking extract metadata parameter before adding dictionary parameters and after");
+        
+        self.lastTestSuccessful = YES;
+        
+        
+        STAssertTrue(self.lastTestSuccessful, @"Added all the objects from the given dictionary to the session. Checked that the parameters / values are as desired");
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -526,26 +529,25 @@
  */
 - (void)testAddingEmptyDictionaryToSession
 {
-    [self runAllSitesTest:^
-     {
-         NSDictionary *test_before = @{};
-         [self.currentSession setObject:test_before forParameter:@"test_dict"];
-         
-         NSDictionary *test_after = [self.currentSession objectForParameter:@"test_dict"];
-         
-         STAssertNotNil(test_after, @"checking if added dictionary exists in session parameters");
-         STAssertTrue([[test_after allKeys] count] == 0, @"dictionary count should be zero as added dictionary was empty");
-         
-         self.lastTestSuccessful = YES;
-         
-         if (self.isCloud)
-         {
-             [self waitForCompletion];
-         }
-         
-         STAssertTrue(self.lastTestSuccessful, @"Adding empty dictionary, empty list is returned");
-     }
-     ];
+    if (self.setUpSuccess)
+    {
+        NSDictionary *test_before = @{};
+        [self.currentSession setObject:test_before forParameter:@"test_dict"];
+        
+        NSDictionary *test_after = [self.currentSession objectForParameter:@"test_dict"];
+        
+        STAssertNotNil(test_after, @"checking if added dictionary exists in session parameters");
+        STAssertTrue([[test_after allKeys] count] == 0, @"dictionary count should be zero as added dictionary was empty");
+        
+        self.lastTestSuccessful = YES;
+        
+        
+        STAssertTrue(self.lastTestSuccessful, @"Adding empty dictionary, empty list is returned");
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -571,11 +573,7 @@
          
          self.lastTestSuccessful = YES;
          
-         if (self.isCloud)
-         {
-             [self waitForCompletion];
-         }
-         
+ 
          STAssertTrue(self.lastTestSuccessful, @"Internal Parameter is not removed, Returns previous value");
      }
      ];
@@ -588,7 +586,8 @@
  */
 - (void)testRetrieveSessionRepositoryInformation
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             AlfrescoRepositoryInfo *sessionRepositoryInfo = [self.currentSession repositoryInfo];
@@ -608,7 +607,7 @@
             BOOL isRunningOnVersion4 = [sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike];
             
             STAssertTrue([sessionRepositoryInfo.edition isEqualToString:@"Enterprise"], @"Expected the edition to be Enterprise edition");
-                      
+            
             if (isRunningOnVersion4)
             {
                 STAssertTrue([sessionRepositoryInfo.majorVersion intValue] == 4, @"Expected the major version to be 4");
@@ -648,19 +647,22 @@
             STAssertNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.maintenanceVersion);
             STAssertNil(sessionRepositoryInfo.version, @"Expected the version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.version);
             
-            [self waitForCompletion];
             self.lastTestSuccessful = YES;
         }
         STAssertTrue(self.lastTestSuccessful, @"The session does not contain valid respository information");
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 - (void)testOAuthSerialization
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-
+        
         NSString *apiKey = @"ThisIsMyAPIKey-For-Alfresco-In-The-Cloud";
         NSString *secretKey = @"ThisIsMySecretKey-For-Alfresco-In-The-Cloud";
         NSString *redirect = @"http://www.alfresco.com";
@@ -690,118 +692,86 @@
         STAssertTrue([tokenType isEqualToString:archivedOAuthData.tokenType], @"tokenType should be the same but we got %@", archivedOAuthData.tokenType);
         STAssertTrue([scope isEqualToString:archivedOAuthData.scope], @"scope should be the same but we got %@", archivedOAuthData.scope);
         STAssertEquals(3600, [archivedOAuthData.expiresIn intValue], @"Expires in should be 3600, but instead it is %d",[archivedOAuthData.expiresIn intValue]);
-        if (self.isCloud)
-        {
-            [self waitForCompletion];
-        }
-        
-    }];
+     }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 - (void)testCancelDownloadRequest
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         __block AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakDfService = dfService;
         __block AlfrescoRequest *request = [dfService retrieveDocumentsInFolder:self.testDocFolder
                                                                 completionBlock:^(NSArray *array, NSError *error)
-         {
-             if (nil == array)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 self.callbackCompleted = YES;
-             }
-             else
-             {
-                 STAssertTrue(array.count > 0, @"Expected more than 0 documents");
-                 if (array.count > 0)
-                 {
-                     request = [weakDfService retrieveContentOfDocument:[array objectAtIndex:0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
-                      {
-                          if (nil == contentFile)
-                          {
-                              self.lastTestSuccessful = YES;
-                              /// The CMIS error code for cancelled requests is kCMISErrorCodeCancelled = 6
-                              STAssertEquals([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %d", kAlfrescoErrorCodeNetworkRequestCancelled, [error code]);
-                          }
-                          else
-                          {
-                              self.lastTestSuccessful = NO;
-                              self.lastTestFailureMessage = @"Request should have been cancelled. Instead we get a valid content file back";
-                              // Assert File exists and check file length
-                              NSString *filePath = [contentFile.fileUrl path];
-                              STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
-                              NSError *error;
-                              NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
-                              STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
-                              STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %d kb", [fileAttributes fileSize]/1024.0);
-                              
-                              // Nice boys clean up after themselves
-                              [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
-                              STAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
-                          }
-                          
-                          self.callbackCompleted = YES;
-                          
-                      } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
-                          AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
-                          if (0 < bytesDownloaded && request)
-                          {
-                              [request cancel];
-                          }
-                      }];
-                 }
-                 else
-                 {
-                     self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = @"Failed to download document.";
-                     self.callbackCompleted = YES;
-                 }
-                 
-             }
-             
-         }];
+                                            {
+                                                if (nil == array)
+                                                {
+                                                    self.lastTestSuccessful = NO;
+                                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                    self.callbackCompleted = YES;
+                                                }
+                                                else
+                                                {
+                                                    STAssertTrue(array.count > 0, @"Expected more than 0 documents");
+                                                    if (array.count > 0)
+                                                    {
+                                                        request = [weakDfService retrieveContentOfDocument:[array objectAtIndex:0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
+                                                                   {
+                                                                       if (nil == contentFile)
+                                                                       {
+                                                                           self.lastTestSuccessful = YES;
+                                                                           /// The CMIS error code for cancelled requests is kCMISErrorCodeCancelled = 6
+                                                                           STAssertEquals([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %d", kAlfrescoErrorCodeNetworkRequestCancelled, [error code]);
+                                                                       }
+                                                                       else
+                                                                       {
+                                                                           self.lastTestSuccessful = NO;
+                                                                           self.lastTestFailureMessage = @"Request should have been cancelled. Instead we get a valid content file back";
+                                                                           // Assert File exists and check file length
+                                                                           NSString *filePath = [contentFile.fileUrl path];
+                                                                           STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
+                                                                           NSError *error;
+                                                                           NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
+                                                                           STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
+                                                                           STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %d kb", [fileAttributes fileSize]/1024.0);
+                                                                           
+                                                                           // Nice boys clean up after themselves
+                                                                           [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+                                                                           STAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
+                                                                       }
+                                                                       
+                                                                       self.callbackCompleted = YES;
+                                                                       
+                                                                   } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                                                                       AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                                                                       if (0 < bytesDownloaded && request)
+                                                                       {
+                                                                           [request cancel];
+                                                                       }
+                                                                   }];
+                                                    }
+                                                    else
+                                                    {
+                                                        self.lastTestSuccessful = NO;
+                                                        self.lastTestFailureMessage = @"Failed to download document.";
+                                                        self.callbackCompleted = YES;
+                                                    }
+                                                    
+                                                }
+                                                
+                                            }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
-/**
- setting custom CMIS binding, addressing MOBSDK-542
- */
-- (void)testCustomCMISBindingSession
-{
-    NSDictionary *customParameters = [NSDictionary dictionaryWithObject:@"/service/cmis" forKey:kAlfrescoCMISBindingURL];
-    [self runOnPremiseTestWithParameters:customParameters sessionTestBlock:^{
-        AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        [dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *children, NSError *error){
-            if (nil == children)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                STAssertTrue(0 < children.count, @"we should have more than one element in the children's array");
-                CMISSession *cmisSession = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
-                if (cmisSession)
-                {
-                    CMISSessionParameters *parameters = cmisSession.sessionParameters;
-                    NSString *atomPubUrl = [parameters.atomPubUrl absoluteString];
-                    STAssertFalse(NSNotFound == [atomPubUrl rangeOfString:kAlfrescoOnPremiseCMISPath].location, @"should have found the /service/cmis string in atomPubURl");
-                    
-                }
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
-        }];
-        [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-    }];
-    
-}
 
 @end

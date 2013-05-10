@@ -29,8 +29,8 @@
  */
 - (void)testRetrieveAllTags
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
@@ -58,12 +58,12 @@
             
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-        }        
-        else
-        {
-            [self waitForCompletion];
         }
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -71,8 +71,8 @@
  */
 - (void)testRetrieveAllTagsWithPaging
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
@@ -100,11 +100,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -112,8 +112,8 @@
  */
 - (void)testRetrieveEmptyTagsForNode
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
@@ -138,12 +138,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 
@@ -152,8 +151,8 @@
  */
 - (void)testRetrieveEmptyTagsForNodeWithPaging
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
@@ -181,11 +180,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -194,8 +193,8 @@
  */
 - (void)testAddAndRetrieveTags
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         if (!self.isCloud)
         {
             self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
@@ -249,12 +248,11 @@
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
         }
-        else
-        {
-            [self waitForCompletion];
-        }
-        
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 

@@ -26,17 +26,18 @@
  */
 - (void)testRetrievePersonForUser
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
         NSString *identifier = self.userName;
         [self.personService retrievePersonWithIdentifier:identifier completionBlock:^(AlfrescoPerson *person, NSError *error)
          {
-             if (nil == person) 
+             if (nil == person)
              {
                  self.lastTestSuccessful = NO;
                  self.lastTestFailureMessage = @"Failed to retrieve person.";
              }
-             else 
+             else
              {
                  STAssertNotNil(person,@"Person should not be nil");
                  STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, self.userName]);
@@ -54,7 +55,11 @@
         [self waitUntilCompleteWithFixedTimeInterval];
         
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 /*
@@ -62,7 +67,8 @@
  */
 - (void)testRetrievePersonForUserNonExisting
 {
-    [self runAllSitesTest:^{
+    if (self.setUpSuccess)
+    {
         self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
         NSString *identifier = @"admin2";
         if (self.isCloud)
@@ -85,7 +91,11 @@
         [self waitUntilCompleteWithFixedTimeInterval];
         
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 
@@ -95,10 +105,10 @@
  */
 - (void)testRetrieveAvatarForPerson
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
-//        __weak AlfrescoPersonService *weakPersonService = self.personService;
+        //        __weak AlfrescoPersonService *weakPersonService = self.personService;
         
         // get thumbnail
         [self.personService retrievePersonWithIdentifier:self.userName completionBlock:^(AlfrescoPerson *person, NSError *error)
@@ -114,7 +124,7 @@
                  STAssertNotNil(person,@"Person should not be nil");
                  STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, self.userName]);
                  STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, self.firstName]);
-
+                 
                  [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
                   {
                       if (nil == contentFile)
@@ -147,7 +157,11 @@
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
-    }];
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
 
 
