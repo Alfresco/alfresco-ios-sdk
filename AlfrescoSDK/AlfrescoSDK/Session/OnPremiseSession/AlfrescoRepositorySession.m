@@ -120,6 +120,11 @@
             id customCMISNetworkProvider = [parameters objectForKey:kAlfrescoCMISNetworkProvider];
             [self setObject:customCMISNetworkProvider forParameter:kAlfrescoCMISNetworkProvider];
         }
+        //enforce a default setting of NO in case the allow untrusted SSL certificate flag isn't set
+        if (![[parameters allKeys] containsObject:kAlfrescoAllowUntrustedSSLCertificate])
+        {
+            [self.sessionData setObject:[NSNumber numberWithBool:NO] forKey:kAlfrescoAllowUntrustedSSLCertificate];
+        }
         
         self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
         id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoNetworkProvider];
@@ -186,11 +191,12 @@
                                          userInfo:nil]);
         }
     }
-    NSNumber *trustedSSLServer = [self.sessionData objectForKey:kAlfrescoTrustedSSLServerFlag];
-    if (nil != trustedSSLServer)
+    //set the flag for trusted SSL server if provided
+    NSNumber *allowUntrustedServerFlag = [self.sessionData objectForKey:kAlfrescoAllowUntrustedSSLCertificate];
+    if (nil != allowUntrustedServerFlag)
     {
-        [v3params setObject:trustedSSLServer forKey:kCMISSessionTrustedSSLServerFlag];
-        [v4params setObject:trustedSSLServer forKey:kCMISSessionTrustedSSLServerFlag];
+        [v3params setObject:allowUntrustedServerFlag forKey:kCMISSessionAllowUntrustedSSLCertificate];
+        [v4params setObject:allowUntrustedServerFlag forKey:kCMISSessionAllowUntrustedSSLCertificate];
     }
 
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
