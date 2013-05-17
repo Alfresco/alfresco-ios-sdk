@@ -29,7 +29,7 @@
 @property (nonatomic, assign) NSInteger statusCode;
 @property (nonatomic, copy) AlfrescoDataCompletionBlock completionBlock;
 @property (nonatomic, assign) BOOL trustedSSLServer;
-
+@property (nonatomic, strong) NSURL *requestURL;
 @end
 
 @implementation AlfrescoDefaultHTTPRequest
@@ -40,13 +40,14 @@
                 method:(NSString *)method
                 headers:(NSDictionary *)headers
            requestBody:(NSData *)requestBody
-      trustedSSLServer:(BOOL)trustedSSLServer
+   useTrustedSSLServer:(BOOL)trustedSSLServer
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     self.completionBlock = completionBlock;
     self.trustedSSLServer = trustedSSLServer;
+    self.requestURL = requestURL;
     AlfrescoLogDebug(@"%@ %@", method, requestURL);
     
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:requestURL
@@ -161,34 +162,41 @@
 }
 
 /*
+ this method has been added to handle SSL server self certification. Per default, these are not trusted on iOS. Hence, we need to
+ manually say, that they can be trusted.
+ However, before doing that we need to ensure that
+ a.) the authentication method is indeed relating to a server SSL certificate (NSURLAuthenticationMethodServerTrust)
+ b.) verify that the AlfrescoRepositorySession has been flagged as trusting this server - trustedSSLServer flag
+ c.) the request URL provided starts with the host name returned by the protectionSpace
+ Only then do we return YES.
+ Otherwise, NO is returned.
  */
 - (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
 {
-    if ([protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust] && self.trustedSSLServer)
+    BOOL isTrusted = (self.trustedSSLServer && [[self.requestURL host] isEqualToString:protectionSpace.host]);
+    if ([protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust] && isTrusted)
     {
         return YES;
     }
     return NO;
 }
-
+/**
+ This method only gets called when canAuthenticateAgainstProtectionSpace above returns 0. However, we want to provide the same checks before manually trusting the SSL
+ certificate. The checks are the same as in the method above.
+ */
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    if (challenge.previousFailureCount == 0 && self.trustedSSLServer)
+    if (challenge.previousFailureCount == 0 && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
     {
-        if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+        BOOL isTrusted = (self.trustedSSLServer && [[self.requestURL host] isEqualToString:challenge.protectionSpace.host]);
+        if (isTrusted)
         {
             [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
             [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
-        }
-        else
-        {
-            [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+            return;
         }
     }
-    else
-    {
-        [challenge.sender cancelAuthenticationChallenge:challenge];
-    }
+    [challenge.sender cancelAuthenticationChallenge:challenge];
 }
 #pragma Cancellation
 - (void)cancel

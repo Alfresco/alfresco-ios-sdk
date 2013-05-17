@@ -34,7 +34,7 @@
                 method:(NSString *)method
                headers:(NSDictionary *)headers
            requestBody:(NSData *)requestBody
-      trustedSSLServer:(BOOL)trustedSSLServer
+   useTrustedSSLServer:(BOOL)trustedSSLServer
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 @end
