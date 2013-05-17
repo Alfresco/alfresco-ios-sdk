@@ -102,4 +102,4 @@ extern NSString * const kAlfrescoIsFolder;
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoNetworkProvider;
 extern NSString * const kAlfrescoCMISBindingURL;
-extern NSString * const kAlfrescoTrustedSSLServerFlag;
+extern NSString * const kAlfrescoAllowUntrustedSSLCertificate;
