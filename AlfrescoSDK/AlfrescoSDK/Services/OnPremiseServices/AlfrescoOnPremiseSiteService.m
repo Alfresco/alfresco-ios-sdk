@@ -101,7 +101,7 @@
 }
 
 - (AlfrescoRequest *)retrieveAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
-                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+                                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     if (nil == listingContext)
@@ -202,7 +202,7 @@
 }
 
 - (AlfrescoRequest *)retrieveSiteWithShortName:(NSString *)siteShortName
-                  completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
+                               completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:siteShortName argumentName:@"siteShortName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -227,7 +227,7 @@
 
 
 - (AlfrescoRequest *)retrieveDocumentLibraryFolderForSite:(NSString *)siteShortName
-                             completionBlock:(AlfrescoFolderCompletionBlock)completionBlock
+                                          completionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:siteShortName argumentName:@"siteShortName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -459,7 +459,7 @@
 - (AlfrescoRequest *)cancelPendingJoinRequestForSite:(AlfrescoSite *)site
                                      completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"joinSiteRequest"];
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSPredicate *joinPredicate = [NSPredicate predicateWithFormat:@"shortName == %@", site.identifier];

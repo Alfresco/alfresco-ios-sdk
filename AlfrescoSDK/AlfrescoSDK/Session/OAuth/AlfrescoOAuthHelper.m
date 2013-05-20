@@ -70,6 +70,9 @@
                                     oauthData:(AlfrescoOAuthData *)oauthData
                               completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:authorizationCode argumentName:@"authorizationCode"];
+    [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     self.completionBlock = completionBlock;
     self.oauthData = oauthData;
     self.receivedData = nil;
@@ -109,6 +112,8 @@
 - (void)refreshAccessToken:(AlfrescoOAuthData *)oauthData
            completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     self.completionBlock = completionBlock;
     self.oauthData = oauthData;
     NSURL *url = [NSURL URLWithString:self.baseURL];

@@ -58,6 +58,10 @@
                            password:(NSString *)password
                     completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:url argumentName:@"url"];
+    [AlfrescoErrors assertArgumentNotNil:username argumentName:@"username"];
+    [AlfrescoErrors assertArgumentNotNil:password argumentName:@"password"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoRepositorySession *sessionInstance = [[AlfrescoRepositorySession alloc] initWithUrl:url parameters:nil];
     if (sessionInstance)
     {
@@ -72,6 +76,10 @@
                          parameters:(NSDictionary *)parameters
                     completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:url argumentName:@"url"];
+    [AlfrescoErrors assertArgumentNotNil:username argumentName:@"username"];
+    [AlfrescoErrors assertArgumentNotNil:password argumentName:@"password"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoRepositorySession *sessionInstance = [[AlfrescoRepositorySession alloc] initWithUrl:url parameters:parameters];
     if (sessionInstance) 
     {
