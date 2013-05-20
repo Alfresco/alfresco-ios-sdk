@@ -45,6 +45,9 @@
            secretKey:(NSString *)secretKey
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
+    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:kAlfrescoCloudDefaultRedirectURI
@@ -52,11 +55,17 @@
                 completionBlock:completionBlock];
 }
 
+/**
+ apiKey, secretKey and completionBlock are mandatory. redirectURI isn't. Hence we do the assertArgument check only on 3 parameters
+ */
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
          redirectURI:(NSString *)redirectURI
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
+    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:redirectURI
@@ -64,11 +73,17 @@
                 completionBlock:completionBlock];
 }
 
+/**
+ apiKey, secretKey and completionBlock are mandatory. parameters isn't. Hence we do the assertArgument check only on 3 parameters
+ */
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
           parameters:(NSDictionary *)parameters
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
+    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:kAlfrescoCloudDefaultRedirectURI
@@ -76,12 +91,18 @@
                 completionBlock:completionBlock];
 }
 
+/**
+ apiKey, secretKey and completionBlock are mandatory. redirectURI and/or parameters aren't. Hence we do the assertArgument check only on 3 parameters
+ */
 - (id)initWithAPIKey:(NSString *)apiKey
            secretKey:(NSString *)secretKey
          redirectURI:(NSString *)redirectURI
           parameters:(NSDictionary *)parameters
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
+    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     self = [super init];
     if (nil != self)
     {

@@ -91,8 +91,10 @@
 #pragma mark - Public methods
 
 + (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+                          completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:nil];
     if (nil != sessionInstance)
     {
@@ -103,9 +105,11 @@
 }
 
 + (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-                  parameters:(NSDictionary *)parameters
-             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+                               parameters:(NSDictionary *)parameters
+                          completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:parameters];
     if (nil != sessionInstance)
     {
@@ -140,9 +144,12 @@
 }
 
 + (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-            networkIdentifer:(NSString *)networkIdentifer
-             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+                         networkIdentifer:(NSString *)networkIdentifer
+                          completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
+    [AlfrescoErrors assertArgumentNotNil:networkIdentifer argumentName:@"networkIdentifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:nil];
     if (nil != sessionInstance)
     {
@@ -154,10 +161,13 @@
 }
 
 + (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-            networkIdentifer:(NSString *)networkIdentifer
-                  parameters:(NSDictionary *)parameters
-             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+                         networkIdentifer:(NSString *)networkIdentifer
+                               parameters:(NSDictionary *)parameters
+                          completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
+    [AlfrescoErrors assertArgumentNotNil:networkIdentifer argumentName:@"networkIdentifer"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:parameters];
     if (nil != sessionInstance)
     {
@@ -351,7 +361,7 @@
 }
 
 - (AlfrescoRequest *)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
-                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+                               completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     self.isUsingBaseAuthenticationProvider = NO;
     NSString *baseURL = kAlfrescoCloudURL;
