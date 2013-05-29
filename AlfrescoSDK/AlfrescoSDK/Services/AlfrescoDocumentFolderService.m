@@ -18,6 +18,7 @@
 
 #import "AlfrescoDocumentFolderService.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "AlfrescoPlaceholderDocumentFolderService.h"
 #import "CMISDocument.h"
 #import "CMISSession.h"
 #import "CMISQueryResult.h"
@@ -67,6 +68,18 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 @end
 
 @implementation AlfrescoDocumentFolderService
+
++ (id)alloc
+{
+    if (self == [AlfrescoDocumentFolderService self])
+    {
+        return [AlfrescoPlaceholderDocumentFolderService alloc];
+    }
+    else
+    {
+        return [super alloc];
+    }
+}
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -879,64 +892,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                                renditionName:(NSString *)renditionName
                              completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"folder"];
-    [AlfrescoErrors assertArgumentNotNil:renditionName argumentName:@"renditionName"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
-    operationContext.renditionFilterString = @"cmis:thumbnail";
-    request.httpRequest = [self.cmisSession retrieveObject:node.identifier operationContext:operationContext completionBlock:^(CMISObject *cmisObject, NSError *error){
-        if (nil == cmisObject)
-        {
-            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
-            completionBlock(nil, alfrescoError);
-        }
-        else if([cmisObject isKindOfClass:[CMISFolder class]])
-        {
-            NSError *wrongTypeError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
-            completionBlock(nil, wrongTypeError);
-        }
-        else
-        {
-            NSError *renditionsError = nil;
-            CMISDocument *document = (CMISDocument *)cmisObject;
-            NSArray *renditions = document.renditions;
-            if (nil == renditions)
-            {
-                renditionsError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
-                completionBlock(nil, renditionsError);
-            }
-            else if(0 == renditions.count)
-            {
-                renditionsError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
-                completionBlock(nil, renditionsError);
-            }
-            else
-            {
-                CMISRendition *thumbnailRendition = (CMISRendition *)[renditions objectAtIndex:0];
-                AlfrescoLogDebug(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@",renditions.count, thumbnailRendition.renditionDocumentId);
-                NSString *tmpFileName = [[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingFormat:@"%@.png",node.name];
-                AlfrescoLogDebug(@"************* DOWNLOADING TO FILE %@",tmpFileName);
-                request.httpRequest = [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^(NSError *downloadError){
-                    if (downloadError)
-                    {
-                        NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:downloadError];
-                        completionBlock(nil, alfrescoError);
-                    }
-                    else
-                    {
-                        AlfrescoContentFile *contentFile = [[AlfrescoContentFile alloc] initWithUrl:[NSURL fileURLWithPath:tmpFileName] mimeType:@"image/png"];
-                        completionBlock(contentFile, nil);
-                    }
-                } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal){
-                    AlfrescoLogDebug(@"************* PROGRESS DOWNLOADING FILE with %llu bytes downloaded from %llu total ",bytesDownloaded, bytesTotal);
-                }];
-            }
-        }
-    }];
-    return request;
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 - (AlfrescoRequest *)retrieveRenditionOfNode:(AlfrescoNode *)node
@@ -944,61 +901,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                                 outputStream:(NSOutputStream *)outputStream
                              completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:renditionName argumentName:@"renditionName"];
-    [AlfrescoErrors assertArgumentNotNil:outputStream argumentName:@"outputStream"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
-    operationContext.renditionFilterString = @"cmis:thumbnail";
-    request.httpRequest = [self.cmisSession retrieveObject:node.identifier operationContext:operationContext completionBlock:^(CMISObject *cmisObject, NSError *error) {
-        if (nil == cmisObject)
-        {
-            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
-            completionBlock(NO, alfrescoError);
-        }
-        else if([cmisObject isKindOfClass:[CMISFolder class]])
-        {
-            NSError *wrongTypeError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
-            completionBlock(NO, wrongTypeError);
-        }
-        else
-        {
-            NSError *renditionsError = nil;
-            CMISDocument *document = (CMISDocument *)cmisObject;
-            NSArray *renditions = document.renditions;
-            if (nil == renditions)
-            {
-                renditionsError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
-                completionBlock(NO, renditionsError);
-            }
-            else if (0 == renditions.count)
-            {
-                renditionsError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderNoThumbnail];
-                completionBlock(NO, renditionsError);
-            }
-            else
-            {
-                CMISRendition *thumbnailRendition = (CMISRendition *)[renditions objectAtIndex:0];
-                AlfrescoLogDebug(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@", renditions.count, thumbnailRendition.renditionDocumentId);
-                request.httpRequest = [thumbnailRendition downloadRenditionContentToOutputStream:outputStream completionBlock:^(NSError *downloadError) {
-                    if (downloadError)
-                    {
-                        NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:downloadError];
-                        completionBlock(NO, alfrescoError);
-                    }
-                    else
-                    {
-                        completionBlock(YES, nil);
-                    }
-                } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
-                    AlfrescoLogDebug(@"************* PROGRESS DOWNLOADING FILE with %llu bytes downloaded from %llu total ",bytesDownloaded, bytesTotal);
-                }];
-            }
-        }
-    }];
-    return request;
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 - (AlfrescoRequest *)retrieveContentOfDocument:(AlfrescoDocument *)document
