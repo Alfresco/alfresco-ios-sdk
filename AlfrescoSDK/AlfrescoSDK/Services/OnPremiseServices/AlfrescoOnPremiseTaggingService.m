@@ -190,7 +190,7 @@
     NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                           withString:cleanNodeId];
     NSError *jsonError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tags options:kNilOptions error:&jsonError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tags options:0 error:&jsonError];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -231,7 +231,7 @@
         return nil;
     }
     NSError *error = nil;
-    id jsonTagArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonTagArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (nil != error)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeTagging];

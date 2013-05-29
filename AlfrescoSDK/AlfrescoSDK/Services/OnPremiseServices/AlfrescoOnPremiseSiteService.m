@@ -245,7 +245,7 @@
         {
             NSString *folderId = nil;
             NSError *conversionError = nil;
-            id jsonContainer = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&conversionError];
+            id jsonContainer = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
             if (nil != jsonContainer)
             {
                 NSArray *containerArray = [jsonContainer valueForKey:kAlfrescoJSONContainers];
@@ -732,7 +732,7 @@
         return nil;
     }
     NSError *error = nil;
-    id jsonRequestObj = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonRequestObj = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(error)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
@@ -788,7 +788,7 @@
         return nil;
     }
     NSError *error = nil;
-    id jsonRequestObj = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonRequestObj = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(error)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
@@ -847,7 +847,7 @@
         return nil;
     }
     NSError *error = nil;
-    id jsonSiteArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonSiteArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(error)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
@@ -899,7 +899,7 @@
         return nil;
     }
     NSError *error = nil;
-    id jsonSite = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonSite = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(error)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
@@ -943,7 +943,7 @@
     }
 
     NSError *error = nil;
-    id favoriteSitesObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id favoriteSitesObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(error)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];

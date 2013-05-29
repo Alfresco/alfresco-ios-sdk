@@ -700,7 +700,7 @@ This authentication method authorises the user to access the home network assign
         return nil;
     }
     NSError *error = nil;
-    id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (nil == jsonDictionary)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];

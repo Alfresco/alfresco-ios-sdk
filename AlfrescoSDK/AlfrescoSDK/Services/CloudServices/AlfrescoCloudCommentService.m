@@ -97,7 +97,7 @@
     NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
     [commentDict setValue:content forKey:kAlfrescoJSONContent];
     NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:0 error:&error];
     
     NSString *requestString = [kAlfrescoCloudCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                    withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
@@ -137,7 +137,7 @@
     NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
     [commentDict setValue:content forKey:kAlfrescoJSONContent];
     NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:0 error:&error];
     NSString *nodeRefString = [kAlfrescoCloudCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                          withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSString *requestString = [nodeRefString stringByReplacingOccurrencesOfString:kAlfrescoCommentId
@@ -312,7 +312,7 @@
     }
     
     NSError *error = nil;
-    id jsonCommentDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonCommentDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(nil == jsonCommentDict)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeComment];
