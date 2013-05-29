@@ -1297,7 +1297,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     NSURL *apiUrl = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:kAlfrescoOnPremiseMetadataExtractionAPI];
     NSData *jsonData = [NSJSONSerialization
                         dataWithJSONObject:jsonDictionary
-                        options:kNilOptions
+                        options:0
                         error:&postError];
     
     [self.session.networkProvider executeRequestWithURL:apiUrl
@@ -1320,7 +1320,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     
     NSData *jsonData = [NSJSONSerialization
                         dataWithJSONObject:jsonDictionary
-                        options:kNilOptions
+                        options:0
                         error:&postError];
     [self.session.networkProvider executeRequestWithURL:apiUrl
                                                 session:self.session

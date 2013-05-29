@@ -139,7 +139,7 @@
     [commentDict setValue:content forKey:kAlfrescoJSONContent];
     [commentDict setValue:cleanNodeId forKey:kAlfrescoJSONNodeRef];
     [commentDict setValue:title forKey:kAlfrescoJSONTitle];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:0 error:&error];
     
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                        withString:cleanNodeId];
@@ -182,7 +182,7 @@
     [commentDict setValue:content forKey:kAlfrescoJSONContent];
     [commentDict setValue:commentId forKey:kAlfrescoJSONNodeRef];
     NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:0 error:&error];
     NSString *requestString = [kAlfrescoOnPremiseCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
                                                                                              withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     
@@ -222,7 +222,7 @@
     NSMutableDictionary *commentDict = [NSMutableDictionary dictionary];
     [commentDict setValue:commentId forKey:kAlfrescoJSONNodeRef];
     NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:kNilOptions error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:0 error:&error];
     NSString *requestString = [kAlfrescoOnPremiseCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
                                                                                              withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
@@ -264,7 +264,7 @@
     }
     
     NSError *error = nil;
-    id jsonCommentDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonCommentDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(error)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeCommentNoCommentFound];
@@ -301,7 +301,7 @@
     }
     
     NSError *error = nil;
-    id jsonCommentDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonCommentDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(error)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeComment];

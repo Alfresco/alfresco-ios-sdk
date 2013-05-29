@@ -166,7 +166,7 @@
     }
     
     NSError *error = nil;
-    id jsonPersonDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonPersonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(nil == jsonPersonDict)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodePerson];

@@ -392,7 +392,7 @@
         return nil;
     }
     NSError *error = nil;
-    id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (nil == jsonDictionary)
     {
         if (nil == *outError)
@@ -507,7 +507,7 @@
         return nil;
     }
     NSError *error = nil;
-    id jsonSite = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonSite = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(nil == jsonSite)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];

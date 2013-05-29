@@ -216,7 +216,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
         NSMutableDictionary *tagDictionary = [NSMutableDictionary dictionary];
         [tagDictionary setValue:[tags objectAtIndex:0] forKey:kAlfrescoJSONTag];
         
-        jsonData = [NSJSONSerialization dataWithJSONObject:tagDictionary options:kNilOptions error:&jsonError];
+        jsonData = [NSJSONSerialization dataWithJSONObject:tagDictionary options:0 error:&jsonError];
     }
     else
     {
@@ -227,7 +227,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
             [tagDictionary setValue:tagValue forKey:kAlfrescoJSONTag];
             [tagJSONArray addObject:tagDictionary];
         }
-        jsonData = [NSJSONSerialization dataWithJSONObject:tagJSONArray options:kNilOptions error:&jsonError];
+        jsonData = [NSJSONSerialization dataWithJSONObject:tagJSONArray options:0 error:&jsonError];
     }
     if (nil != jsonData)
     {
