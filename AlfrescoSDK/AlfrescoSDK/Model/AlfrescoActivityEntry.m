@@ -67,7 +67,7 @@ static NSUInteger kActivityModelVersion = 1;
                 NSError *error = nil;
                 self.data = [NSJSONSerialization JSONObjectWithData:[[properties valueForKey:kAlfrescoJSONActivitySummary]
                                                                      dataUsingEncoding:NSUTF8StringEncoding]
-                                                            options:kNilOptions error:&error];                
+                                                            options:0 error:&error];
             }
         }
 
