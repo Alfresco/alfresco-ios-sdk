@@ -80,7 +80,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSDictionary *ratingsDict = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&conversionError];
+            NSDictionary *ratingsDict = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&conversionError];
             NSNumber *count = [ratingsDict valueForKeyPath:kAlfrescoOnPremiseRatingsCount];
             completionBlock(count, conversionError);
         }
@@ -103,7 +103,7 @@
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeIdentifier];
     NSString *requestString = [kAlfrescoOnPremiseRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
     NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:likeDict options:kNilOptions error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:likeDict options:0 error:&error];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -176,7 +176,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSDictionary *ratingsDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&conversionError];
+            NSDictionary *ratingsDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
             BOOL isLiked = [[ratingsDict valueForKeyPath:kAlfrescoOnPremiseLikesSchemeRatings] boolValue];
             completionBlock(YES, isLiked, nil);
         }

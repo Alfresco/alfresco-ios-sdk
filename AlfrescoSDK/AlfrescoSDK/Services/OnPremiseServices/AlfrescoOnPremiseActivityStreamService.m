@@ -185,7 +185,7 @@
         return nil;
     }
     NSError *error = nil;
-    id jsonActivityStreamArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    id jsonActivityStreamArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(nil == jsonActivityStreamArray)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
