@@ -33,6 +33,7 @@
            requestBody:(NSData *)data
        alfrescoRequest:alfrescoRequest
    useTrustedSSLServer:(BOOL)trustedSSLServer
+          outputStream:(NSOutputStream *)outputStream
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 @end
 
@@ -44,6 +45,15 @@
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
     [self executeRequestWithURL:url session:session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:completionBlock];
+}
+
+- (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+              alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+                 outputStream:(NSOutputStream *)outputStream
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock
+{
+    [self executeRequestWithURL:url session:session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest outputStream:outputStream completionBlock:completionBlock];
 }
 
 - (void)executeRequestWithURL:(NSURL *)url
@@ -66,6 +76,17 @@
               alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
+    [self executeRequestWithURL:url session:session requestBody:requestBody method:method alfrescoRequest:alfrescoRequest outputStream:nil completionBlock:completionBlock];
+}
+
+- (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
+                  requestBody:(NSData *)requestBody
+                       method:(NSString *)method
+              alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+                 outputStream:(NSOutputStream *)outputStream
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock
+{
     id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
     NSNumber *trustedServerFlag = [session objectForParameter:kAlfrescoAllowUntrustedSSLCertificate];
     BOOL isTrusted = NO;
@@ -74,7 +95,7 @@
         isTrusted = [trustedServerFlag boolValue];
     }
     NSDictionary *httpHeaders = [authenticationProvider willApplyHTTPHeadersForSession:nil];
-    [self requestWithURL:url method:method headers:httpHeaders requestBody:requestBody alfrescoRequest:alfrescoRequest useTrustedSSLServer:isTrusted completionBlock:completionBlock];
+    [self requestWithURL:url method:method headers:httpHeaders requestBody:requestBody alfrescoRequest:alfrescoRequest useTrustedSSLServer:isTrusted outputStream:outputStream completionBlock:completionBlock];
 }
 
 - (void)requestWithURL:(NSURL *)requestURL
@@ -83,13 +104,32 @@
            requestBody:(NSData *)data
        alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
    useTrustedSSLServer:(BOOL)trustedSSLServer
+          outputStream:(NSOutputStream *)outputStream
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 {
     
     AlfrescoDefaultHTTPRequest *alfrescoDefaultRequest = [[AlfrescoDefaultHTTPRequest alloc] init];
     if (alfrescoDefaultRequest && !alfrescoRequest.isCancelled)
     {
-        [alfrescoDefaultRequest connectWithURL:requestURL method:method headers:headers requestBody:data useTrustedSSLServer:trustedSSLServer completionBlock:completionBlock];
+        if (outputStream)
+        {
+            [alfrescoDefaultRequest connectWithURL:requestURL
+                                            method:method
+                                           headers:headers
+                                       requestBody:data
+                               useTrustedSSLServer:trustedSSLServer
+                                      outputStream:outputStream
+                                   completionBlock:completionBlock];
+        }
+        else
+        {
+            [alfrescoDefaultRequest connectWithURL:requestURL
+                                            method:method
+                                           headers:headers
+                                       requestBody:data
+                               useTrustedSSLServer:trustedSSLServer
+                                   completionBlock:completionBlock];
+        }
         alfrescoRequest.httpRequest = alfrescoDefaultRequest;
     }
     else
