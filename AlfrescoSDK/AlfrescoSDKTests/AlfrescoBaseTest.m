@@ -210,7 +210,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                                      success = YES;
                                  }
                              }
-                               progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){
+                               progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){
     }];
     
     [self waitUntilCompleteWithFixedTimeInterval];

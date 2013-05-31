@@ -131,7 +131,7 @@
                                    }];
                               }
                           }
-                            progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                            progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
                             }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -409,7 +409,7 @@
                                    }];
                               }
                           }
-                            progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                            progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
                             }];
         
         [self waitUntilCompleteWithFixedTimeInterval];

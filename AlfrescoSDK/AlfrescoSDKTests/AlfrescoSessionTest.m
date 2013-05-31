@@ -746,7 +746,7 @@
                                                                        
                                                                        self.callbackCompleted = YES;
                                                                        
-                                                                   } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                                                                   } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
                                                                        AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                                                                        if (0 < bytesDownloaded && request)
                                                                        {

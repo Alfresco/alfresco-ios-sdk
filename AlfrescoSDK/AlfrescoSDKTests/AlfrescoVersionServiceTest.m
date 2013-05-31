@@ -341,7 +341,7 @@
                                                                   
                                                               }
                                                               self.callbackCompleted = YES;
-                                                          } progressBlock:^(NSInteger transferred, NSInteger total){}];
+                                                          } progressBlock:^(unsigned long long transferred, unsigned long long total){}];
                                                           
                                                       }
                                                       else
@@ -351,12 +351,12 @@
                                                   }
                                               }];
                                           }
-                                      } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+                                      } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
                                       
                                   }
                                   
                                   
-                              } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+                              } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
                               self.lastTestSuccessful = YES;
                           }
                           self.callbackCompleted = YES;
