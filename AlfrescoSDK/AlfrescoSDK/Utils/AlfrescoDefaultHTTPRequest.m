@@ -30,6 +30,8 @@
 @property (nonatomic, copy) AlfrescoDataCompletionBlock completionBlock;
 @property (nonatomic, assign) BOOL trustedSSLServer;
 @property (nonatomic, strong) NSURL *requestURL;
+@property (nonatomic, strong) NSOutputStream *outputStream;
+
 @end
 
 @implementation AlfrescoDefaultHTTPRequest
@@ -38,9 +40,20 @@
 
 - (void)connectWithURL:(NSURL*)requestURL
                 method:(NSString *)method
-                headers:(NSDictionary *)headers
+               headers:(NSDictionary *)headers
            requestBody:(NSData *)requestBody
    useTrustedSSLServer:(BOOL)trustedSSLServer
+       completionBlock:(AlfrescoDataCompletionBlock)completionBlock
+{
+    [self connectWithURL:requestURL method:method headers:headers requestBody:requestBody useTrustedSSLServer:trustedSSLServer outputStream:nil completionBlock:completionBlock];
+}
+
+- (void)connectWithURL:(NSURL*)requestURL
+                method:(NSString *)method
+               headers:(NSDictionary *)headers
+           requestBody:(NSData *)requestBody
+   useTrustedSSLServer:(BOOL)trustedSSLServer
+          outputStream:(NSOutputStream *)outputStream
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -59,7 +72,7 @@
     [headers enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
         if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {
-             AlfrescoLogTrace(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
+            AlfrescoLogTrace(@"headerKey = %@, headerValue = %@", headerKey, headerValue);
         }
         [urlRequest addValue:headerValue forHTTPHeaderField:headerKey];
     }];
@@ -75,6 +88,11 @@
         }
     }
     
+    self.outputStream = outputStream;
+    if (self.outputStream)
+    {
+        [self.outputStream open];
+    }
     self.responseData = nil;
     self.connection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
 }
@@ -109,7 +127,18 @@
     }
     if (nil != self.responseData)
     {
-        [self.responseData appendData:data];
+        if (self.outputStream)
+        {
+            uint8_t *readBytes = (uint8_t *)[data bytes];
+            int data_length = [data length];
+            uint8_t buffer[data_length];
+            (void)memcpy(buffer, readBytes, data_length);
+            [self.outputStream write:(const uint8_t *)buffer maxLength:data_length];
+        }
+        else
+        {
+            [self.responseData appendData:data];
+        }
     }
 }
 
@@ -133,6 +162,9 @@
         AlfrescoLogTrace(@"response body: %@", [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding]);
     }
     
+    [self.outputStream close];
+    self.outputStream = nil;
+    
     if (self.completionBlock != NULL)
     {
         if (error)
@@ -152,6 +184,9 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+    [self.outputStream close];
+    self.outputStream = nil;
+    
     [[AlfrescoLog sharedInstance] logErrorFromError:error];
     
     if (self.completionBlock != NULL)
@@ -205,10 +240,12 @@
     {
         AlfrescoDataCompletionBlock dataCompletionBlock = self.completionBlock;
         self.completionBlock = nil;
-
+        
         [self.connection cancel];
         self.connection = nil;
-
+        [self.outputStream close];
+        self.outputStream = nil;
+        
         NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
         dataCompletionBlock(nil, alfrescoError);
     }

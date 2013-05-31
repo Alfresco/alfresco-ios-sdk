@@ -37,4 +37,12 @@
    useTrustedSSLServer:(BOOL)trustedSSLServer
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
+- (void)connectWithURL:(NSURL*)requestURL
+                method:(NSString *)method
+               headers:(NSDictionary *)headers
+           requestBody:(NSData *)requestBody
+   useTrustedSSLServer:(BOOL)trustedSSLServer
+          outputStream:(NSOutputStream *)outputStream
+       completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+
 @end

@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08FC13F91754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FC13F71754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h */; };
+		08FC13FA1754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13F81754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m */; };
+		08FC13FB1754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13F81754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m */; };
+		08FC13FE1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FC13FC1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.h */; };
+		08FC13FF1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13FD1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m */; };
+		08FC14001754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13FD1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m */; };
+		08FC14031754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FC14011754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.h */; };
+		08FC14041754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */; };
+		08FC14051754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */; };
 		4E0457C21608C124005A6C76 /* AlfrescoOAuthData.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E0457C01608C124005A6C76 /* AlfrescoOAuthData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E0457C31608C124005A6C76 /* AlfrescoOAuthData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */; };
 		4E0C866C1612EB32008B71DB /* AlfrescoOAuthLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E0C866A1612EB32008B71DB /* AlfrescoOAuthLoginViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -283,6 +292,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		08FC13F71754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoPlaceholderDocumentFolderService.h; path = PlaceholderServices/AlfrescoPlaceholderDocumentFolderService.h; sourceTree = "<group>"; };
+		08FC13F81754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoPlaceholderDocumentFolderService.m; path = PlaceholderServices/AlfrescoPlaceholderDocumentFolderService.m; sourceTree = "<group>"; };
+		08FC13FC1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOnPremiseDocumentFolderService.h; path = OnPremiseServices/AlfrescoOnPremiseDocumentFolderService.h; sourceTree = "<group>"; };
+		08FC13FD1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoOnPremiseDocumentFolderService.m; path = OnPremiseServices/AlfrescoOnPremiseDocumentFolderService.m; sourceTree = "<group>"; };
+		08FC14011754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudDocumentFolderService.h; path = CloudServices/AlfrescoCloudDocumentFolderService.h; sourceTree = "<group>"; };
+		08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCloudDocumentFolderService.m; path = CloudServices/AlfrescoCloudDocumentFolderService.m; sourceTree = "<group>"; };
 		4E0457C01608C124005A6C76 /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthData.h; path = OAuth/AlfrescoOAuthData.h; sourceTree = "<group>"; };
 		4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoOAuthData.m; path = OAuth/AlfrescoOAuthData.m; sourceTree = "<group>"; };
 		4E0C866A1612EB32008B71DB /* AlfrescoOAuthLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthLoginViewController.h; path = OAuth/AlfrescoOAuthLoginViewController.h; sourceTree = "<group>"; };
@@ -630,6 +645,8 @@
 				4EF1B71415D8F5E90038AB3F /* AlfrescoPlaceholderActivityStreamService.m */,
 				4E8DF06A15DBB233000D14D3 /* AlfrescoPlaceholderCommentService.h */,
 				4E8DF06B15DBB233000D14D3 /* AlfrescoPlaceholderCommentService.m */,
+				08FC13F71754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h */,
+				08FC13F81754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m */,
 				4E4E37AA15DD07670064F2DE /* AlfrescoPlaceholderPersonService.h */,
 				4E4E37AB15DD07670064F2DE /* AlfrescoPlaceholderPersonService.m */,
 				4EF1B72015D944A10038AB3F /* AlfrescoPlaceholderRatingService.h */,
@@ -649,6 +666,8 @@
 				4EF1B71915D8F6080038AB3F /* AlfrescoCloudActivityStreamService.m */,
 				4E8DF06E15DBB24D000D14D3 /* AlfrescoCloudCommentService.h */,
 				4E8DF06F15DBB24D000D14D3 /* AlfrescoCloudCommentService.m */,
+				08FC14011754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.h */,
+				08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */,
 				4E4E37AE15DD07820064F2DE /* AlfrescoCloudPersonService.h */,
 				4E4E37AF15DD07820064F2DE /* AlfrescoCloudPersonService.m */,
 				4EF1B72415D944BB0038AB3F /* AlfrescoCloudRatingService.h */,
@@ -670,6 +689,8 @@
 				4E8DF07315DBB263000D14D3 /* AlfrescoOnPremiseCommentService.m */,
 				4E9E21E416F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.h */,
 				4E9E21E516F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.m */,
+				08FC13FC1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.h */,
+				08FC13FD1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m */,
 				4E4E37B215DD079A0064F2DE /* AlfrescoOnPremisePersonService.h */,
 				4E4E37B315DD079A0064F2DE /* AlfrescoOnPremisePersonService.m */,
 				4EF1B72815D944D20038AB3F /* AlfrescoOnPremiseRatingService.h */,
@@ -1219,6 +1240,9 @@
 				4EA2AE4816DE25DE0053D05D /* CMISLog.h in Headers */,
 				4E43A18F16EF3F6D00A835E7 /* AlfrescoSiteCache.h in Headers */,
 				4E9E21E616F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.h in Headers */,
+				08FC13F91754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h in Headers */,
+				08FC13FE1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.h in Headers */,
+				08FC14031754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1411,6 +1435,9 @@
 				4E9E21E716F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.m in Sources */,
 				4E420BB2171578E5002D75D9 /* AlfrescoContentStream.m in Sources */,
 				4E85F3851717DD8F005A43E1 /* AlfrescoContent.m in Sources */,
+				08FC13FA1754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m in Sources */,
+				08FC13FF1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m in Sources */,
+				08FC14041754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1433,6 +1460,9 @@
 				8218AF5916DFCC6D001CE051 /* AlfrescoLogTest.m in Sources */,
 				4E685AD3173BB64700BB7CCC /* AlfrescoSiteServiceForSecondaryUserTests.m in Sources */,
 				4E685AD6173BDB9700BB7CCC /* AlfrescoSessionCustomCMISTests.m in Sources */,
+				08FC13FB1754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m in Sources */,
+				08FC14001754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m in Sources */,
+				08FC14051754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
