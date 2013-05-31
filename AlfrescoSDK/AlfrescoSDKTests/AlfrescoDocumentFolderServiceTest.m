@@ -1114,7 +1114,7 @@
                                        }];
                                        
                                    }
-                               } progressBlock:^(NSInteger transferred, NSInteger total){}];
+                               } progressBlock:^(unsigned long long transferred, unsigned long long total){}];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
@@ -1217,27 +1217,27 @@
                                             }
                                             self.callbackCompleted = YES;
                                         }
-                                                                   progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                                                                   progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
                                                                        
                                                                    }];
                                     }
                                 }
-                                                           progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                                                           progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
                                                                
                                                            }];
                             }
                         }
-                                                   progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                                                   progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
                                                        
                                                    }];
                     }
                 }
-                                           progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                                           progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
                                                
                                            }];
             }
         }
-                                 progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                                 progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
                                      
                                  }];
         
@@ -2368,7 +2368,7 @@
                           
                           self.callbackCompleted = YES;
                           
-                      } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                      } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
                           AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                       }];
                  }
@@ -2461,11 +2461,11 @@
                                                         
                                                     }
                                                     self.callbackCompleted = YES;
-                                                } progressBlock:^(NSInteger down, NSInteger total){}];
+                                                } progressBlock:^(unsigned long long down, unsigned long long total){}];
                                             }
                                         }];
                                    }
-                               } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                               } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -2544,7 +2544,7 @@
                                             self.callbackCompleted = YES;
                                         }];
                                    }
-                               } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                               } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -2638,15 +2638,15 @@
                                      
                                  }
                                  self.callbackCompleted = YES;
-                             } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+                             } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
                          }
-                     } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                     } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
                          AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                      }];
                 }
             }
             
-        } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+        } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
             AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
         }];
         
@@ -2734,12 +2734,12 @@
                                                         
                                                     }
                                                     self.callbackCompleted = YES;
-                                                } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+                                                } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
                                                 //                                                self.lastTestSuccessful = YES;
                                             }
                                         }];
                                    }
-                               } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                               } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -2819,7 +2819,7 @@
              }
              
              
-         } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){
+         } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){
          }];
         
         
@@ -2886,7 +2886,7 @@
                  
              }
          }
-         progressBlock:^(NSInteger bytesTransferred, NSInteger total){}];
+         progressBlock:^(unsigned long long bytesTransferred, unsigned long long total){}];
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -2973,7 +2973,7 @@
                   }];
              }
              
-         } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+         } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -3059,7 +3059,7 @@
                                             }
                                         }];
                                    }
-                               } progressBlock:^(NSInteger bytesUploaded, NSInteger bytesTotal){
+                               } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -3774,10 +3774,9 @@
                 }];
             }
             
-        }
-                                 progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+        } progressBlock:^(unsigned long long bytesTransferred, unsigned long long totalBytes) {
                                      
-                                 }];
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
@@ -4105,15 +4104,15 @@
                                     
                                 }
                                 self.callbackCompleted = YES;
-                            } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+                            } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
                         }
-                    } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                    } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
                         AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                     }];
                 }
             }
             
-        } progressBlock:^(NSInteger bytesDownloaded, NSInteger totalBytes) {
+        } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long totalBytes) {
             
         }];
         
@@ -4552,14 +4551,12 @@
                             self.callbackCompleted = YES;
                         }];
                     }
-                }
-                 
-                                            progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
-                                                
-                                            }];
+                } progressBlock:^(unsigned long long bytesTransferred, unsigned long long totalBytes) {
+                
+                }];
             }
             
-        } progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
+        } progressBlock:^(unsigned long long bytesTransferred, unsigned long long totalBytes) {
             
         }];
         
@@ -4723,10 +4720,9 @@
                 self.callbackCompleted = YES;
             }
             
-        }
-                                 progressBlock:^(NSInteger bytesTransferred, NSInteger totalBytes) {
-                                     
-                                 }];
+        } progressBlock:^(unsigned long long bytesTransferred, unsigned long long totalBytes) {
+        
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
@@ -5055,7 +5051,7 @@
                             }];
                         }];
                     }
-                } progressBlock:^(NSInteger bytesTransfered, NSInteger totalBytes) {
+                } progressBlock:^(unsigned long long bytesTransfered, unsigned long long totalBytes) {
                     
                 }];
             }
@@ -5283,17 +5279,17 @@
                                     self.lastTestSuccessful = YES;
                                 }
                                 self.callbackCompleted = YES;
-                            } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal) {
+                            } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
                                 
                             }];
                         }
-                    } progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal) {
+                    } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
                         AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
                     }];
                 }
             }
             
-        } progressBlock:^(NSInteger bytesDownloaded, NSInteger totalBytes) {
+        } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long totalBytes) {
             
         }];
         
@@ -5359,7 +5355,7 @@
                          self.callbackCompleted = YES;
                      }];
                 }
-            } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+            } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
             
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
@@ -5457,7 +5453,7 @@
                     
                     // delete the test document
                 }
-            } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+            } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
             
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
