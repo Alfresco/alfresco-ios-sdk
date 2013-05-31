@@ -98,7 +98,7 @@
          retrieveContentOfDocument:(AlfrescoDocument *)node
          completionBlock:^(AlfrescoContentFile *avatarFile, NSError *avatarError){
              completionBlock(avatarFile, avatarError);
-         } progressBlock:^(NSInteger bytesTransferred, NSInteger bytesTotal){}];
+         } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
          
     }];    
 }
