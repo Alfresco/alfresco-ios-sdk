@@ -41,18 +41,9 @@
 @interface AlfrescoObjectConverter ()
 @property (nonatomic, assign) BOOL isCloud;
 @property (nonatomic, strong)id<AlfrescoSession>session;
-- (AlfrescoFolder *)folderFromCMISFolder:(CMISFolder *)cmisFolder
-                              properties:(NSDictionary *)properties;
-- (AlfrescoDocument *)documentFromCMISDocument:(CMISDocument *)cmisDocument
-                                    properties:(NSDictionary *)properties;
-
-+ (AlfrescoPropertyType)typeForCMISProperty:(NSString *)propertyIdentifier;
-
-+ (NSString *)propertyValueWithoutPrecursor:(NSString *)value;
 @end
 
 @implementation AlfrescoObjectConverter
-
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {

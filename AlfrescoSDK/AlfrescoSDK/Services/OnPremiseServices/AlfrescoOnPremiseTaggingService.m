@@ -32,9 +32,6 @@
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
-- (NSArray *) tagArrayFromJSONData:(NSData *)data error:(NSError **)outError;
-- (NSArray *) customTagArrayFromJSONData:(NSData *) data;
-
 @end
 
 @implementation AlfrescoOnPremiseTaggingService

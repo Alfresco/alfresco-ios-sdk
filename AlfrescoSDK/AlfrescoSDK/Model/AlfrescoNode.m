@@ -46,8 +46,6 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 @property (nonatomic, strong, readwrite) NSArray *aspects;
 @property (nonatomic, assign, readwrite) BOOL isFolder;
 @property (nonatomic, assign, readwrite) BOOL isDocument;
-
-- (void)setUpProperties:(NSDictionary *)properties;
 @end
 
 

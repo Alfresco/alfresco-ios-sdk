@@ -27,7 +27,6 @@ static NSInteger kPermissionsModelVersion = 1;
 @property (nonatomic, assign, readwrite) BOOL canDelete;
 @property (nonatomic, assign, readwrite) BOOL canAddChildren;
 @property (nonatomic, assign, readwrite) BOOL canComment;
-
 @end
 
 @implementation AlfrescoPermissions

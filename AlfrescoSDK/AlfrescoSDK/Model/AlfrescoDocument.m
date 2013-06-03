@@ -33,7 +33,6 @@ static NSInteger kDocumentModelVersion = 1;
 @property (nonatomic, assign, readwrite) BOOL isFolder;
 @property (nonatomic, assign, readwrite) BOOL isDocument;
 @property (nonatomic, assign, readwrite) NSUInteger modelClassVersion;
-- (void)setUpDocumentProperties:(NSDictionary *)properties;
 @end
 
 @implementation AlfrescoDocument

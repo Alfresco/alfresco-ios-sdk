@@ -23,7 +23,6 @@
 #import "AlfrescoLog.h"
 
 @interface AlfrescoDefaultHTTPRequest()
-
 @property (nonatomic, strong) NSURLConnection * connection;
 @property (nonatomic, strong) NSMutableData * responseData;
 @property (nonatomic, assign) NSInteger statusCode;
@@ -31,7 +30,6 @@
 @property (nonatomic, assign) BOOL trustedSSLServer;
 @property (nonatomic, strong) NSURL *requestURL;
 @property (nonatomic, strong) NSOutputStream *outputStream;
-
 @end
 
 @implementation AlfrescoDefaultHTTPRequest

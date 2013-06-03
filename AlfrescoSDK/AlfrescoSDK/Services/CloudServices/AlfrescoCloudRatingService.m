@@ -31,8 +31,6 @@
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
-- (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError;
-
 @end
 
 @implementation AlfrescoCloudRatingService
