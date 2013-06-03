@@ -33,7 +33,6 @@ static NSInteger kRepositoryInfoModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSString *buildNumber;
 @property (nonatomic, strong, readwrite) NSString *version;
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryCapabilities *capabilities;
-
 @end
 
 @implementation AlfrescoRepositoryInfo

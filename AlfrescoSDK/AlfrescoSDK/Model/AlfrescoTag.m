@@ -24,8 +24,6 @@ static NSInteger kTagModelVersion = 1;
 @interface AlfrescoTag ()
 @property (nonatomic, strong, readwrite) NSString * identifier;
 @property (nonatomic, strong, readwrite) NSString * value;
-- (void)setUpOnPremiseProperties:(NSDictionary *)properties;
-- (void)setUpCloudProperties:(NSDictionary *)properties;
 @end
 
 @implementation AlfrescoTag

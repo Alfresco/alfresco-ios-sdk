@@ -78,12 +78,6 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
 NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found";
 
 
-
-
-@interface AlfrescoErrors ()
-+ (NSString *)descriptionForAlfrescoErrorCode:(AlfrescoErrorCodes)code;
-@end
-
 @implementation AlfrescoErrors
 
 + (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code

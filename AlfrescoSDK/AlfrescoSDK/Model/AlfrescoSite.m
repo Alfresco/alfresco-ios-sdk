@@ -31,8 +31,6 @@ static NSInteger kSiteModelVersion = 1;
 @property (nonatomic, assign, readwrite) BOOL isMember;
 @property (nonatomic, assign, readwrite) BOOL isPendingMember;
 @property (nonatomic, assign, readwrite) BOOL isFavorite;
-- (void)setUpOnPremiseProperties:(NSDictionary *)properties keys:(NSArray *)keys;
-- (void)setUpCloudProperties:(NSDictionary *)properties keys:(NSArray *)keys;
 @end
 
 @implementation AlfrescoSite

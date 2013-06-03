@@ -24,7 +24,6 @@ static NSInteger kRepositoryCapabilitiesModelVersion = 1;
 @interface AlfrescoRepositoryCapabilities ()
 @property (nonatomic, assign, readwrite) BOOL doesSupportLikingNodes;
 @property (nonatomic, assign, readwrite) BOOL doesSupportCommentCounts;
-
 @end
 
 @implementation AlfrescoRepositoryCapabilities

@@ -29,8 +29,6 @@ static NSUInteger kActivityModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSString *siteShortName;
 @property (nonatomic, strong, readwrite) NSString *type;
 @property (nonatomic, strong, readwrite) NSDictionary *data;
-- (void)setOnPremiseProperties:(NSDictionary *)properties;
-- (void)setCloudProperties:(NSDictionary *)properties;
 @end
 
 @implementation AlfrescoActivityEntry

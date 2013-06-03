@@ -23,6 +23,7 @@
 #import "AlfrescoCloudSession.h"
 
 @implementation AlfrescoPlaceholderTaggingService
+
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
     if ([session isKindOfClass:[AlfrescoRepositorySession class]])
