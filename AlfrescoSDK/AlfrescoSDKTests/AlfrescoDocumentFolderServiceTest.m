@@ -2593,6 +2593,13 @@
                     __block NSString *updatedContent = [NSString stringWithFormat:@"%@ - and we added some text.",stringContent];
                     NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
                     __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:contentFile.mimeType];
+                    
+                    float previousVersionNumber = [self.testAlfrescoDocument.versionLabel floatValue];
+                    NSDate *previousLastModificationDate = self.testAlfrescoDocument.modifiedAt;
+                    
+                    // need to delay updating the content to ensure that an updated modifiedAt date is returned
+                    [NSThread sleepForTimeInterval:1];
+                    
                     [weakDfService updateContentOfDocument:self.testAlfrescoDocument contentFile:updatedContentFile
                                            completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error)
                      {
@@ -2607,6 +2614,11 @@
                          {
                              STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
                              STAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
+                             
+                             float updatedVersionNumber = [updatedDocument.versionLabel floatValue];
+                             
+                             STAssertTrue(previousVersionNumber < updatedVersionNumber, @"expected the returning AlfrescoDocument object to have a higher version number");
+                             STAssertTrue([previousLastModificationDate compare:updatedDocument.modifiedAt] == NSOrderedAscending, @"expected the returing AlfrescoDocument object to have a newer last modification date");
                              
                              [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *error){
                                  if (nil == checkContentFile)
