@@ -34,8 +34,6 @@ static NSUInteger kCommentModelVersion = 1;
 @property (nonatomic, readwrite) BOOL canEdit;
 @property (nonatomic, readwrite) BOOL canDelete;
 @property (nonatomic, strong) NSDateFormatter * standardDateFormatter;
-- (void)setOnPremiseProperties:(NSDictionary *)properties;
-- (void)setCloudProperties:(NSDictionary *)properties;
 @end
 
 

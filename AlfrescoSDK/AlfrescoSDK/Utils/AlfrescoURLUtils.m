@@ -21,11 +21,6 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoInternalConstants.h"
 
-@interface AlfrescoURLUtils ()
-+ (NSString *)buildPagingExtensionFromURL:(NSString *)extensionURL listingContext:(AlfrescoListingContext *)listingContext;
-@end
-
-
 @implementation AlfrescoURLUtils
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL

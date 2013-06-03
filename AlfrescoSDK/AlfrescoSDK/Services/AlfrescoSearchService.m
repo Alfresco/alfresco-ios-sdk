@@ -37,8 +37,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
-- (NSString *) createSearchQuery:(NSString *)keywords options:(AlfrescoKeywordSearchOptions *)options;
-
 @end
 
 @implementation AlfrescoSearchService

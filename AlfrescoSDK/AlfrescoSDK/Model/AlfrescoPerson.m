@@ -27,8 +27,6 @@ static NSInteger kPersonModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSString *lastName;
 @property (nonatomic, strong, readwrite) NSString *fullName;
 @property (nonatomic, strong, readwrite) NSString *avatarIdentifier;
-- (void)setOnPremiseProperties:(NSDictionary *)properties;
-- (void)setCloudProperties:(NSDictionary *)properties;
 @end
 
 @implementation AlfrescoPerson
