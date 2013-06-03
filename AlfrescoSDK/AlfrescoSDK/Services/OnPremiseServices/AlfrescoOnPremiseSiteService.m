@@ -42,9 +42,6 @@
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
 @property (nonatomic, strong, readwrite) AlfrescoSiteCache *siteCache;
 @property (nonatomic, strong, readwrite) NSMutableArray *joinRequests;
-- (NSArray *) siteArrayFromJSONData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoSite *) alfrescoSiteFromJSONData:(NSData *)data error:(NSError **)outError;
-- (NSArray *) favoriteSitesArrayFromJSONData:(NSData *)data error:(NSError **)outError;
 @end
 
 @implementation AlfrescoOnPremiseSiteService

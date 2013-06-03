@@ -25,18 +25,6 @@
 #import "AlfrescoDefaultHTTPRequest.h"
 #import "AlfrescoInternalConstants.h"
 
-@interface AlfrescoDefaultNetworkProvider ()
-
-- (void)requestWithURL:(NSURL *)requestURL
-                method:(NSString *)method
-               headers:(NSDictionary *)headers
-           requestBody:(NSData *)data
-       alfrescoRequest:alfrescoRequest
-   useTrustedSSLServer:(BOOL)trustedSSLServer
-          outputStream:(NSOutputStream *)outputStream
-       completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
-@end
-
 @implementation AlfrescoDefaultNetworkProvider
 
 - (void)executeRequestWithURL:(NSURL *)url

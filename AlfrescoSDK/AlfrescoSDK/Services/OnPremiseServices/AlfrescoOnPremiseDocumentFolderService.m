@@ -24,10 +24,8 @@
 #import "AlfrescoURLUtils.h"
 
 @interface AlfrescoOnPremiseDocumentFolderService ()
-
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
-
 @end
 
 @implementation AlfrescoOnPremiseDocumentFolderService

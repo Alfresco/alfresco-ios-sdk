@@ -78,25 +78,22 @@ NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
 NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found";
 
 
-
-
-@interface AlfrescoErrors ()
-+ (NSString *)descriptionForAlfrescoErrorCode:(AlfrescoErrorCodes)code;
-@end
-
 @implementation AlfrescoErrors
+
 + (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code
 {
-    if (error == nil) {//shouldn't really get there
+    if (error == nil) //shouldn't really get there
+    {
         return nil;
     }
-    if ([error.domain isEqualToString:kAlfrescoErrorDomainName]) {
+    if ([error.domain isEqualToString:kAlfrescoErrorDomainName])
+    {
         return error;
     }
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
     [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
     [errorInfo setObject:error forKey:NSUnderlyingErrorKey];
-    return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];    
+    return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
 }
 
 
@@ -106,7 +103,7 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
     [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
     NSString *standardDescription = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
     [errorInfo setValue:standardDescription forKey:NSLocalizedFailureReasonErrorKey];
-    return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];    
+    return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
 }
 
 + (NSError *)alfrescoErrorFromJSONParameters:(NSDictionary *)parameters
@@ -149,8 +146,6 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
 }
 
-
-
 + (void)assertArgumentNotNil:(id)argument argumentName:(NSString *)argumentName
 {
     if (nil == argument)
@@ -173,148 +168,149 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
     {
         NSString * message = [NSString stringWithFormat:@"%@ must not be empty",argumentName];
         NSException *exception = [NSException exceptionWithName:NSInvalidArgumentException reason:message userInfo:nil];
-        @throw exception;        
+        @throw exception;
     }
-    
 }
-
-
 
 + (NSString *)descriptionForAlfrescoErrorCode:(AlfrescoErrorCodes)code
 {
-    switch (code) {
+    NSString *alfrescoErrorDescription = nil;
+    
+    switch (code)
+    {
         case kAlfrescoErrorCodeUnknown:
-            return kAlfrescoErrorDescriptionUnknown;            
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionUnknown;
             break;
         case kAlfrescoErrorCodeHTTPResponse:
-            return kAlfrescoErrorDescriptionHTTPResponse;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionHTTPResponse;
             break;
         case kAlfrescoErrorCodeRequestedNodeNotFound:
-            return kAlfrescoErrorDescriptionRequestedNodeNotFound;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionRequestedNodeNotFound;
             break;
         case kAlfrescoErrorCodeAccessDenied:
-            return kAlfrescoErrorDescriptionAccessDenied;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionAccessDenied;
             break;
         case kAlfrescoErrorCodeSession:
-            return kAlfrescoErrorDescriptionSession;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionSession;
             break;
         case kAlfrescoErrorCodeNoRepositoryFound:
-            return kAlfrescoErrorDescriptionNoRepositoryFound;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionNoRepositoryFound;
             break;
         case kAlfrescoErrorCodeUnauthorisedAccess:
-            return kAlfrescoErrorDescriptionUnauthorisedAccess;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionUnauthorisedAccess;
             break;
             
         case kAlfrescoErrorCodeAPIKeyOrSecretKeyUnrecognised:
-            return kAlfrescoErrorDescriptionAPIKeyOrSecretKeyUnrecognised;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionAPIKeyOrSecretKeyUnrecognised;
             break;
         case kAlfrescoErrorCodeAuthorizationCodeInvalid:
-            return kAlfrescoErrorDescriptionAuthorizationCodeInvalid;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionAuthorizationCodeInvalid;
             break;
         case kAlfrescoErrorCodeAccessTokenExpired:
-            return kAlfrescoErrorDescriptionAccessTokenExpired;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionAccessTokenExpired;
             break;
         case kAlfrescoErrorCodeRefreshTokenExpired:
-            return kAlfrescoErrorDescriptionRefreshTokenExpired;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionRefreshTokenExpired;
             break;
             
         case kAlfrescoErrorCodeNoNetworkFound:
-            return kAlfrescoErrorDescriptionNoNetworkFound;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionNoNetworkFound;
             break;
         case kAlfrescoErrorCodeNetworkRequestCancelled:
-            return kAlfrescoErrorDescriptionNetworkRequestCancelled;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionNetworkRequestCancelled;
             break;
         case kAlfrescoErrorCodeRefreshTokenInvalid:
-            return kAlfrescoErrorDescriptionRefreshTokenInvalid;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionRefreshTokenInvalid;
             break;
         case kAlfrescoErrorCodeJSONParsing:
-            return kAlfrescoErrorDescriptionJSONParsing;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionJSONParsing;
             break;
         case kAlfrescoErrorCodeJSONParsingNilData:
-            return kAlfrescoErrorDescriptionJSONParsingNilData;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionJSONParsingNilData;
             break;
         case kAlfrescoErrorCodeJSONParsingNoEntries:
-            return kAlfrescoErrorDescriptionJSONParsingNoEntries;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionJSONParsingNoEntries;
             break;
         case kAlfrescoErrorCodeJSONParsingNoEntry:
-            return kAlfrescoErrorDescriptionJSONParsingNoEntry;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionJSONParsingNoEntry;
             break;
         case kAlfrescoErrorCodeComment:
-            return kAlfrescoErrorDescriptionComment;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionComment;
             break;
         case kAlfrescoErrorCodeCommentNoCommentFound:
-            return kAlfrescoErrorDescriptionCommentNoCommentFound;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionCommentNoCommentFound;
             break;
         case kAlfrescoErrorCodeSites:
-            return kAlfrescoErrorDescriptionSites;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionSites;
             break;
         case kAlfrescoErrorCodeSitesNoDocLib:
-            return kAlfrescoErrorDescriptionSitesNoDocLib;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionSitesNoDocLib;
             break;
         case kAlfrescoErrorCodeSitesNoSites:
-            return kAlfrescoErrorDescriptionSitesNoSites;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionSitesNoSites;
             break;
         case kAlfrescoErrorCodeSitesUserCannotBeRemoved:
-            return kAlfrescoErrorDescriptionSitesUserCannotBeRemoved;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionSitesUserCannotBeRemoved;
             break;
         case kAlfrescoErrorCodeSitesUserIsAlreadyMember:
-            return kAlfrescoErrorDescriptionSitesUserIsAlreadyMember;
-            break;            
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionSitesUserIsAlreadyMember;
+            break;
         case kAlfrescoErrorCodeActivityStream:
-            return kAlfrescoErrorDescriptionActivityStream;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionActivityStream;
             break;
         case kAlfrescoErrorCodeActivityStreamNoActivities:
-            return kAlfrescoErrorDescriptionActivityStreamNoActivities;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionActivityStreamNoActivities;
             break;
         case kAlfrescoErrorCodeDocumentFolder:
-            return kAlfrescoErrorDescriptionDocumentFolder;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionDocumentFolder;
             break;
         case kAlfrescoErrorCodeDocumentFolderPermissions:
-            return kAlfrescoErrorDescriptionDocumentFolderPermissions;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionDocumentFolderPermissions;
             break;
         case kAlfrescoErrorCodeDocumentFolderNodeAlreadyExists:
-            return kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists;
             break;
         case kAlfrescoErrorCodeDocumentFolderNoParent:
-            return kAlfrescoErrorDescriptionDocumentFolderNoParent;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionDocumentFolderNoParent;
             break;
         case kAlfrescoErrorCodeDocumentFolderFailedToConvertNode:
-            return kAlfrescoErrorDescriptionDocumentFolderFailedToConvertNode;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionDocumentFolderFailedToConvertNode;
             break;
         case kAlfrescoErrorCodeDocumentFolderWrongNodeType:
-            return kAlfrescoErrorDescriptionDocumentFolderWrongNodeType;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionDocumentFolderWrongNodeType;
             break;
         case kAlfrescoErrorCodeDocumentFolderNoThumbnail:
-            return kAlfrescoErrorDescriptionDocumentFolderNoThumbnail;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionDocumentFolderNoThumbnail;
             break;
         case kAlfrescoErrorCodeTagging:
-            return kAlfrescoErrorDescriptionTagging;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionTagging;
             break;
         case kAlfrescoErrorCodeTaggingNoTags:
-            return kAlfrescoErrorDescriptionTaggingNoTags;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionTaggingNoTags;
             break;
         case kAlfrescoErrorCodePerson:
-            return kAlfrescoErrorDescriptionPerson;
-            break;    
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionPerson;
+            break;
         case kAlfrescoErrorCodePersonNoAvatarFound:
-            return kAlfrescoErrorDescriptionPersonNoAvatarFound;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionPersonNoAvatarFound;
             break;
         case kAlfrescoErrorCodePersonNotFound:
-            return kAlfrescoErrorDescriptionPersonNotFound;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionPersonNotFound;
             break;
         case kAlfrescoErrorCodeSearch:
-            return kAlfrescoErrorDescriptionSearch;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionSearch;
             break;
         case kAlfrescoErrorCodeRatings:
-            return kAlfrescoErrorDescriptionRatings;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionRatings;
             break;
         case kAlfrescoErrorCodeRatingsNoRatings:
-            return kAlfrescoErrorDescriptionRatingsNoRatings;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionRatingsNoRatings;
             break;
         default:
-            return kAlfrescoErrorDescriptionUnknown;
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionUnknown;
             break;
     }
+    return alfrescoErrorDescription;
 }
 
 @end

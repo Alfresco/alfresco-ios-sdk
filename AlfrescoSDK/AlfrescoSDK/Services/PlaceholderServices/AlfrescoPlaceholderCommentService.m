@@ -23,6 +23,7 @@
 #import "AlfrescoCloudSession.h"
 
 @implementation AlfrescoPlaceholderCommentService
+
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
     if ([session isKindOfClass:[AlfrescoRepositorySession class]])

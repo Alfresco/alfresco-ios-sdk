@@ -22,12 +22,9 @@
 static NSInteger kPagingResultModelVersion = 1;
 
 @interface AlfrescoPagingResult ()
-
 @property (nonatomic, strong, readwrite) NSArray *objects;
 @property (nonatomic, assign, readwrite) BOOL hasMoreItems;
 @property (nonatomic, assign, readwrite) int totalItems;
-
-
 @end
 
 @implementation AlfrescoPagingResult

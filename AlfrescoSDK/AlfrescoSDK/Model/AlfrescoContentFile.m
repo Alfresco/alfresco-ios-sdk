@@ -24,8 +24,6 @@
 #import "AlfrescoConstants.h"
 
 @interface AlfrescoContentFile ()
-+ (NSString *) mimeTypeFromFilename:(NSString *)filename;
-+ (NSString *) GUIDString;
 @property (nonatomic, strong, readwrite) NSURL *fileUrl;
 @end
 

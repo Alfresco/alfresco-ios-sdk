@@ -38,11 +38,6 @@
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
 @property (nonatomic, strong, readwrite) AlfrescoSiteCache *siteCache;
-- (NSArray *) siteArrayWithData:(NSData *)data error:(NSError **)outError;
-- (NSArray *) specifiedSiteArrayFromJSONData:(NSData *)data error:(NSError **)outError;
-- (AlfrescoSite *) alfrescoSiteFromJSONData:(NSData *)data error:(NSError **)outError;
-- (NSDictionary *) dictionaryFromJSONData:(NSData *)data error:(NSError **)outError;
-
 @end
 
 @implementation AlfrescoCloudSiteService
