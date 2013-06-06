@@ -23,6 +23,8 @@
 #import "AlfrescoLog.h"
 #import <Availability.h>
 
+static NSString * const kOAuthRequestDenyAction = @"action=Deny";
+
 @interface AlfrescoOAuthLoginViewController ()
 @property (nonatomic, strong, readwrite) NSURLConnection    * connection;
 @property (nonatomic, strong, readwrite) NSMutableData      * receivedData;
@@ -311,13 +313,29 @@
     
     if (!self.isLoginScreenLoad)
     {
-        [self.activityIndicator startAnimating];
-        self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
+        NSArray *requestComponents = [[[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding] componentsSeparatedByString:@"&"];
+        
+        if ([requestComponents containsObject:kOAuthRequestDenyAction])
+        {
+            if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidCancel)])
+            {
+                [self.oauthDelegate oauthLoginDidCancel];
+            }
+            else if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
+            {
+                NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
+                [self.oauthDelegate oauthLoginDidFailWithError:error];
+            }
+        }
+        else
+        {
+            [self.activityIndicator startAnimating];
+            self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
+        }
         return NO;
     }
     return YES;
 }
-
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
