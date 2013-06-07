@@ -96,8 +96,11 @@
 - (NSURL *)renditionURLForNode:(AlfrescoNode *)node renditionName:(NSString *)renditionName
 {
     NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-    NSRange range = [nodeIdentifier rangeOfString:@";"];
-    nodeIdentifier = [nodeIdentifier substringToIndex:range.location];
+    NSRange versionNumberRange = [nodeIdentifier rangeOfString:@";"];
+    if (versionNumberRange.location != NSNotFound)
+    {
+        nodeIdentifier = [nodeIdentifier substringToIndex:versionNumberRange.location];
+    }
     
     NSString *requestString = [kAlfrescoOnPremiseThumbnailRenditionAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:nodeIdentifier];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoRenditionId withString:renditionName];
