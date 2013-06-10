@@ -41,6 +41,7 @@
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
+@property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
 - (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
 - (AlfrescoRequest *)authenticateWithUsername:(NSString *)username
                                   andPassword:(NSString *)password
@@ -151,6 +152,8 @@
                                              userInfo:nil]);
             }
         }
+        
+        self.unremovableSessionKeys = @[kAlfrescoSessionKeyCmisSession, kAlfrescoAuthenticationProviderObjectKey];
         
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
@@ -327,7 +330,7 @@
     {
         [self.sessionCache setObject:object forKey:key];
     }
-    else
+    else if (![[self allParameterKeys] containsObject:key])
     {
         [self.sessionData setObject:object forKey:key];
     }
@@ -335,7 +338,12 @@
 
 - (void)addParametersFromDictionary:(NSDictionary *)dictionary
 {
-    [self.sessionData addEntriesFromDictionary:dictionary];
+    [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (![[self allParameterKeys] containsObject:key])
+        {
+            [self.sessionData setObject:obj forKey:key];
+        }
+    }];
 }
 
 - (void)removeParameter:(id)key
@@ -349,7 +357,7 @@
         }
         [self.sessionCache removeObjectForKey:key];
     }
-    else
+    else if (![self.unremovableSessionKeys containsObject:key])
     {
         [self.sessionData removeObjectForKey:key];
     }
