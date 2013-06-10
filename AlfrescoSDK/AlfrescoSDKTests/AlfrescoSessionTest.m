@@ -554,31 +554,36 @@
  @Unique_TCRef 74F2
  @unique_TCRef 87F2
  */
-/*
  
  // Commented until MOBSDK-541 is resolved
  
 - (void)testRemovingInternalParameterFromSession
 {
-    [self runAllSitesTest:^
-     {
-         id alfrescoAuthenticationProviderObject_before = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-         
-         [self.currentSession removeParameter:kAlfrescoAuthenticationProviderObjectKey];
-         
-         id alfrescoAuthenticationProviderObject_after = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-         
-         STAssertNotNil(alfrescoAuthenticationProviderObject_after, @"check aflresco authentication paramter is not nil after removing the parameter from session");
-         STAssertEqualObjects(alfrescoAuthenticationProviderObject_before, alfrescoAuthenticationProviderObject_after, @"check authentication parameter is same before and after removing session auth param from session");
-         
-         self.lastTestSuccessful = YES;
-         
- 
-         STAssertTrue(self.lastTestSuccessful, @"Internal Parameter is not removed, Returns previous value");
-     }
-     ];
+    if (self.setUpSuccess)
+    {
+        id alfrescoSessionCMISSession_before = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
+        id alfrescoAuthenticationProvider_before = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+        
+        [self.currentSession removeParameter:kAlfrescoSessionKeyCmisSession];
+        [self.currentSession removeParameter:kAlfrescoAuthenticationProviderObjectKey];
+        
+        id alfrescoSessionCMISSession_after = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
+        id alfrescoAuthenticationProvider_after = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+        
+        STAssertNotNil(alfrescoSessionCMISSession_after, @"The CMIS Session should not be nil");
+        STAssertEqualObjects(alfrescoSessionCMISSession_before, alfrescoSessionCMISSession_after, @"The CMIS Session has been modified");
+        STAssertNotNil(alfrescoAuthenticationProvider_after, @"The authentication provider should not be nil");
+        STAssertEqualObjects(alfrescoAuthenticationProvider_before, alfrescoAuthenticationProvider_after, @"The authentication provider has been modified");
+        
+        self.lastTestSuccessful = YES;
+        
+        STAssertTrue(self.lastTestSuccessful, @"Internal Parameter is not removed, Returns previous value");
+    }
+    else
+    {
+        STFail(@"We could not run this test case");
+    }
 }
- */
 
 /*
  @Unique_TCRef 78S2

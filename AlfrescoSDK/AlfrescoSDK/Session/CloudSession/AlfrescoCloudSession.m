@@ -83,6 +83,7 @@
 @property (nonatomic, strong, readwrite) NSString * apiKey;
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property BOOL isUsingBaseAuthenticationProvider;
+@property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
 @end
 
 
@@ -304,15 +305,20 @@
     {
         [self.sessionCache setObject:object forKey:key];
     }
-    else
+    else if (![[self allParameterKeys] containsObject:key])
     {
-        [self.sessionData setObject:object forKey:key];        
+        [self.sessionData setObject:object forKey:key];
     }
 }
 
 - (void)addParametersFromDictionary:(NSDictionary *)dictionary
 {
-    [self.sessionData addEntriesFromDictionary:dictionary];
+    [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (![[self allParameterKeys] containsObject:key])
+        {
+            [self.sessionData setObject:obj forKey:key];
+        }
+    }];
 }
 
 - (void)removeParameter:(id)key
@@ -326,7 +332,7 @@
         }
         [self.sessionCache removeObjectForKey:key];
     }
-    else
+    else if (![self.unremovableSessionKeys containsObject:key])
     {
         [self.sessionData removeObjectForKey:key];
     }
@@ -631,6 +637,8 @@ This authentication method authorises the user to access the home network assign
                                              userInfo:nil]);
             }
         }
+        
+        self.unremovableSessionKeys = @[kAlfrescoSessionKeyCmisSession, kAlfrescoAuthenticationProviderObjectKey];
                 
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
