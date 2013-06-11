@@ -305,7 +305,11 @@
     {
         [self.sessionCache setObject:object forKey:key];
     }
-    else if (![[self allParameterKeys] containsObject:key])
+    else if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
+    {
+        [self.sessionData setObject:object forKey:key];
+    }
+    else
     {
         [self.sessionData setObject:object forKey:key];
     }
@@ -314,7 +318,11 @@
 - (void)addParametersFromDictionary:(NSDictionary *)dictionary
 {
     [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        if (![[self allParameterKeys] containsObject:key])
+        if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
+        {
+            [self.sessionData setObject:obj forKey:key];
+        }
+        else
         {
             [self.sessionData setObject:obj forKey:key];
         }
