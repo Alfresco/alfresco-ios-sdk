@@ -372,7 +372,7 @@
         
         [self.currentSession setObject:secondValue forParameter:key];
         
-        STAssertNotNil([self.currentSession objectForParameter:key], @"The The session does not contain any value for the key %@", key);
+        STAssertNotNil([self.currentSession objectForParameter:key], @"The session does not contain any value for the key %@", key);
         STAssertTrue([[self.currentSession objectForParameter:key] intValue] == expectedReturnValue, @"Expected the value for the parameter %@ to be %i, but instead got back %i", key, expectedReturnValue, [[self.currentSession objectForParameter:key] intValue]);
         
         if ([[self.currentSession objectForParameter:key] intValue] == expectedReturnValue)
@@ -383,7 +383,7 @@
         {
             self.lastTestSuccessful = NO;
         }
-        STAssertTrue(self.lastTestSuccessful, @"The OnPremise Session did not overwrite the value for an existing key");
+        STAssertTrue(self.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
     }
     else
     {
