@@ -232,6 +232,8 @@
             v4params.repositoryId = repoInfo.identifier;
             [v4params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
             
+            __block NSString *v3RepositoryProductName = nil;
+            
             void (^rootFolderCompletionBlock)(CMISFolder *folder, NSError *error) = ^void(CMISFolder *rootFolder, NSError *error){
                 if (nil == rootFolder)
                 {
@@ -254,6 +256,7 @@
                 }
                 else
                 {
+                    v4Session.repositoryInfo.productName = v3RepositoryProductName;
                     [self establishCMISSession:v4Session username:username password:password];
                     request.httpRequest = [v4Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
                 }
@@ -270,6 +273,9 @@
                     self.personIdentifier = username;
                     AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
                     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:v3Session];
+
+                    // Workaround for MNT-6405: Malformed cmis:productName in some v4 instances
+                    v3RepositoryProductName = v3Session.repositoryInfo.productName;
                     
                     NSString *version = self.repositoryInfo.version;
                     NSArray *versionArray = [version componentsSeparatedByString:@"."];
