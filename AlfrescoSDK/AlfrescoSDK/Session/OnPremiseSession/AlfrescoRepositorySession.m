@@ -232,6 +232,9 @@
             v4params.repositoryId = repoInfo.identifier;
             [v4params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
             
+            __weak AlfrescoRepositorySession *weakSelf = self;
+            __block NSString *v3RepositoryProductName = nil;
+            
             void (^rootFolderCompletionBlock)(CMISFolder *folder, NSError *error) = ^void(CMISFolder *rootFolder, NSError *error){
                 if (nil == rootFolder)
                 {
@@ -240,9 +243,9 @@
                 }
                 else
                 {
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
-                    self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
-                    completionBlock(self, error);
+                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:weakSelf];
+                    weakSelf.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
+                    completionBlock(weakSelf, error);
                 }
             };
             
@@ -254,7 +257,8 @@
                 }
                 else
                 {
-                    [self establishCMISSession:v4Session username:username password:password];
+                    v4Session.repositoryInfo.productName = v3RepositoryProductName;
+                    [weakSelf establishCMISSession:v4Session username:username password:password];
                     request.httpRequest = [v4Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
                 }
             };
@@ -267,11 +271,12 @@
                 }
                 else
                 {
-                    self.personIdentifier = username;
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
-                    self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:v3Session];
+                    weakSelf.personIdentifier = username;
+                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:weakSelf];
+                    weakSelf.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:v3Session];
+                    v3RepositoryProductName = v3Session.repositoryInfo.productName;
                     
-                    NSString *version = self.repositoryInfo.version;
+                    NSString *version = weakSelf.repositoryInfo.version;
                     NSArray *versionArray = [version componentsSeparatedByString:@"."];
                     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
                     NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
@@ -282,7 +287,7 @@
                     }
                     else
                     {
-                        [self establishCMISSession:v3Session username:username password:password];
+                        [weakSelf establishCMISSession:v3Session username:username password:password];
                         request.httpRequest = [v3Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
                     }
                     
