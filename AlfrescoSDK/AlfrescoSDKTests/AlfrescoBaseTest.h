@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "AlfrescoTestMacros.h"
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoDocument.h"

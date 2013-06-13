@@ -198,33 +198,32 @@
         if (!self.isCloud)
         {
             self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
-            //        __weak AlfrescoTaggingService *weakTaggingService = self.taggingService;
             
             NSArray *testtags = [NSArray arrayWithObject:@"test"];
             
-            [self.taggingService addTags:testtags toNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
-             {
+            __weak typeof(self) weakSelf = self;
+            [self.taggingService addTags:testtags toNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error) {
                  if (!success)
                  {
-                     self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                     self.callbackCompleted = YES;
+                     weakSelf.lastTestSuccessful = NO;
+                     weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     weakSelf.callbackCompleted = YES;
                  }
                  else
                  {
-                     self.lastTestSuccessful = YES;
-                     STAssertTrue(success, @"a dummy test to see if we still have the retain cycle problem");
-                     [self.taggingService retrieveTagsForNode:self.testAlfrescoDocument completionBlock:^(NSArray *tags, NSError *error){
+                     weakSelf.lastTestSuccessful = YES;
+                     STAssertTrueWeakSelf(success, @"a dummy test to see if we still have the retain cycle problem");
+                     [weakSelf.taggingService retrieveTagsForNode:weakSelf.testAlfrescoDocument completionBlock:^(NSArray *tags, NSError *error){
                          if (nil == tags)
                          {
-                             self.lastTestSuccessful = NO;
-                             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                             weakSelf.lastTestSuccessful = NO;
+                             weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                          }
                          else
                          {
                              int count = tags.count;
-                             STAssertNotNil(tags, @"tags should not be nil");
-                             STAssertTrue(count > 0, @"Count should be > 0, and is in fact %d",count);
+                             STAssertNotNilWeakSelf(tags, @"tags should not be nil");
+                             STAssertTrueWeakSelf(count > 0, @"Count should be > 0, and is in fact %d",count);
                              NSString *testTag = [testtags objectAtIndex:0];
                              BOOL found = NO;
                              for (AlfrescoTag *tag in tags)
@@ -235,10 +234,10 @@
                                      break;
                                  }
                              }
-                             STAssertTrue(found, @"We should have found the tag %@", testTag);
-                             self.lastTestSuccessful = YES;
+                             STAssertTrueWeakSelf(found, @"We should have found the tag %@", testTag);
+                             weakSelf.lastTestSuccessful = YES;
                          }
-                         self.callbackCompleted = YES;
+                         weakSelf.callbackCompleted = YES;
                      }];
                  }
                  

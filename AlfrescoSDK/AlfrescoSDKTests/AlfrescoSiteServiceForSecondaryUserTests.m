@@ -68,52 +68,52 @@
     {
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrieveSiteWithShortName:@"remoteapi"
-                                    completionBlock:^(AlfrescoSite *remoteSite, NSError *error){
-                                        if (remoteSite == nil)
-                                        {
-                                            STAssertNil(remoteSite,@"if failure, the site remoteapi should be nil");
-                                            self.lastTestSuccessful = NO;
-                                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                            self.callbackCompleted = YES;
-                                        }
-                                        else
-                                        {
-                                            [self.siteService addFavoriteSite:remoteSite completionBlock:^(AlfrescoSite *favSite, NSError *favError){
-                                                if (nil == favSite)
-                                                {
-                                                    self.lastTestSuccessful = NO;
-                                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [favError localizedDescription], [favError localizedFailureReason]];
-                                                    self.callbackCompleted = YES;
-                                                }
-                                                else
-                                                {
-                                                    STAssertTrue([favSite.identifier isEqualToString:@"remoteapi"], @"The favorite site should be remoteapi - but instead we got %@",favSite.identifier);
-                                                    STAssertTrue(favSite.isFavorite, @"site %@ should be set to isFavorite",favSite.identifier);
-                                                    STAssertTrue(favSite.isPendingMember == remoteSite.isPendingMember, @"pending state should be the same for favourited site");
-                                                    STAssertTrue(favSite.isMember == remoteSite.isMember, @"member state should be the same for favourited site");
-                                                    [self.siteService removeFavoriteSite:favSite completionBlock:^(AlfrescoSite *unFavSite, NSError *unFavError){
-                                                        if (nil == unFavSite)
-                                                        {
-                                                            self.lastTestSuccessful = NO;
-                                                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [unFavError localizedDescription], [unFavError localizedFailureReason]];
-                                                            self.callbackCompleted = YES;
-                                                        }
-                                                        else
-                                                        {
-                                                            STAssertTrue([unFavSite.identifier isEqualToString:@"remoteapi"], @"The favorite site should be remoteapi - but instead we got %@",favSite.identifier);
-                                                            STAssertFalse(unFavSite.isFavorite, @"site %@ should no longer be a favorite",unFavSite.identifier);
-                                                            STAssertTrue(unFavSite.isPendingMember == remoteSite.isPendingMember, @"pending state should be the same for unfavourited site");
-                                                            STAssertTrue(unFavSite.isMember == remoteSite.isMember, @"member state should be the same for unfavourited site");
-                                                            self.lastTestSuccessful = YES;
-                                                            self.callbackCompleted = YES;
-                                                        }
-                                                    }];
-                                                }
-                                            }];
-                                            
-                                        }
-                                    }];
+        [self.siteService retrieveSiteWithShortName:@"remoteapi" completionBlock:^(AlfrescoSite *remoteSite, NSError *error) {
+            if (remoteSite == nil)
+            {
+                STAssertNil(remoteSite,@"if failure, the site remoteapi should be nil");
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                __weak typeof(self) weakSelf = self;
+                [self.siteService addFavoriteSite:remoteSite completionBlock:^(AlfrescoSite *favSite, NSError *favError){
+                    if (nil == favSite)
+                    {
+                        weakSelf.lastTestSuccessful = NO;
+                        weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [favError localizedDescription], [favError localizedFailureReason]];
+                        weakSelf.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        STAssertTrueWeakSelf([favSite.identifier isEqualToString:@"remoteapi"], @"The favorite site should be remoteapi - but instead we got %@",favSite.identifier);
+                        STAssertTrueWeakSelf(favSite.isFavorite, @"site %@ should be set to isFavorite",favSite.identifier);
+                        STAssertTrueWeakSelf(favSite.isPendingMember == remoteSite.isPendingMember, @"pending state should be the same for favourited site");
+                        STAssertTrueWeakSelf(favSite.isMember == remoteSite.isMember, @"member state should be the same for favourited site");
+                        [weakSelf.siteService removeFavoriteSite:favSite completionBlock:^(AlfrescoSite *unFavSite, NSError *unFavError){
+                            if (nil == unFavSite)
+                            {
+                                weakSelf.lastTestSuccessful = NO;
+                                weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [unFavError localizedDescription], [unFavError localizedFailureReason]];
+                                weakSelf.callbackCompleted = YES;
+                            }
+                            else
+                            {
+                                STAssertTrueWeakSelf([unFavSite.identifier isEqualToString:@"remoteapi"], @"The favorite site should be remoteapi - but instead we got %@",favSite.identifier);
+                                STAssertFalseWeakSelf(unFavSite.isFavorite, @"site %@ should no longer be a favorite",unFavSite.identifier);
+                                STAssertTrueWeakSelf(unFavSite.isPendingMember == remoteSite.isPendingMember, @"pending state should be the same for unfavourited site");
+                                STAssertTrueWeakSelf(unFavSite.isMember == remoteSite.isMember, @"member state should be the same for unfavourited site");
+                                weakSelf.lastTestSuccessful = YES;
+                                weakSelf.callbackCompleted = YES;
+                            }
+                        }];
+                    }
+                }];
+                
+            }
+        }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }

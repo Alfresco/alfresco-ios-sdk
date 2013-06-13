@@ -239,7 +239,7 @@
                  {
                      AlfrescoDocument *document = (AlfrescoDocument *)node;
                      NSDate *createdAt = document.createdAt;
-                     NSDate *modifiedAt = document.modifiedAt;
+                     __unused NSDate *modifiedAt = document.modifiedAt;
                      
                      [self.versionService retrieveAllVersionsOfDocument:document completionBlock:^(NSArray *array, NSError *error)
                       {

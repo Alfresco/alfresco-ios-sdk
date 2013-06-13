@@ -302,6 +302,7 @@
 		27786B84178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoUntrustedSSLHTTPRequest.m; sourceTree = "<group>"; };
 		278B2694177BAF4D0049C229 /* AlfrescoCMISPassThroughAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCMISPassThroughAuthenticationProvider.h; path = CMIS/AlfrescoCMIS/AlfrescoCMISPassThroughAuthenticationProvider.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		278B2695177BAF4D0049C229 /* AlfrescoCMISPassThroughAuthenticationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCMISPassThroughAuthenticationProvider.m; path = CMIS/AlfrescoCMIS/AlfrescoCMISPassThroughAuthenticationProvider.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		2719ECD5176A29D200A6F3DD /* AlfrescoTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlfrescoTestMacros.h; sourceTree = "<group>"; };
 		4E0457C01608C124005A6C76 /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthData.h; path = OAuth/AlfrescoOAuthData.h; sourceTree = "<group>"; };
 		4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoOAuthData.m; path = OAuth/AlfrescoOAuthData.m; sourceTree = "<group>"; };
 		4E0C866A1612EB32008B71DB /* AlfrescoOAuthLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthLoginViewController.h; path = OAuth/AlfrescoOAuthLoginViewController.h; sourceTree = "<group>"; };
@@ -812,6 +813,7 @@
 				4E685AD2173BB64700BB7CCC /* AlfrescoSiteServiceForSecondaryUserTests.m */,
 				4EB077FE15B00F5200DF7DED /* AlfrescoTaggingServiceTest.h */,
 				4EB077FF15B00F5200DF7DED /* AlfrescoTaggingServiceTest.m */,
+				2719ECD5176A29D200A6F3DD /* AlfrescoTestMacros.h */,
 				4EB0780015B00F5200DF7DED /* AlfrescoVersionServiceTest.h */,
 				4EB0780115B00F5200DF7DED /* AlfrescoVersionServiceTest.m */,
 				4EB076B115B00D8E00DF7DED /* Supporting Files */,
