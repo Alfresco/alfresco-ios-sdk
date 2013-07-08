@@ -408,58 +408,54 @@
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
-         {
-             if (nil == folder)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 self.callbackCompleted = YES;
-             }
-             else
-             {
-                 STAssertNotNil(folder, @"folder should not be nil");
-                 STAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@",folderName);
-                 __block AlfrescoFolder *strongFolder = folder;
-                 // check the properties were added at creation time
-                 NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
-                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
-                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
-                 
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
-                  {
-                      if (!success)
-                      {
-                          self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                          self.callbackCompleted = YES;
-                      }
-                      else
-                      {
-                          [weakService retrieveDocumentsInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error){
-                              if (nil == array)
-                              {
-                                  self.lastTestSuccessful = YES;
-                              }
-                              else
-                              {
-                                  self.lastTestSuccessful = NO;
-                                  self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";
-                              }
-                              self.callbackCompleted = YES;
-                          }];
-                          
-                      }
-                      
-                  }];
-             }
-             
-             
-             
-         }];
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            if (nil == folder)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(folder, @"folder should not be nil");
+                STAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@",folderName);
+                __block AlfrescoFolder *strongFolder = folder;
+                // check the properties were added at creation time
+                NSDictionary *newFolderProps = folder.properties;
+                AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                
+                /**
+                 * FIXME: 07/Jun/2013 - Potential transaction completion race condition here..?
+                 */
+                
+                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                    if (!success)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        [weakService retrieveDocumentsInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error) {
+                            if (nil == array)
+                            {
+                                self.lastTestSuccessful = YES;
+                            }
+                            else
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";
+                            }
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+        }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }
@@ -839,7 +835,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         // get the children of the repository's root folder
-        [self.dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *array, NSError *error)
+        [self.dfService retrieveChildrenInFolder:self.currentSession.rootFolder completionBlock:^(NSArray *array, NSError *error)
          {
              if (nil == array)
              {
@@ -855,7 +851,7 @@
                  }
                  else
                  {
-                     STAssertTrue([self nodeArray:array containsName:@"Sites"], @"Folder children should contain Sites");
+                     STAssertTrue([self nodeArray:array containsName:@"Data Dictionary"], @"Folder children should contain Data Dictionary");
                  }
                  
                  self.lastTestSuccessful = YES;
@@ -2178,26 +2174,25 @@
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:self.fixedFileName];
-        [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error)
-         {
-             if (nil == node)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 STAssertNotNil(node, @"node should not be nil");
-                 STAssertNotNil(node.identifier, @"nodeRef should not be nil");
-                 STAssertTrue([node.name isEqualToString:self.fixedFileName], @"name should be equal to %@",self.fixedFileName);
-                 // REMOVED UNTIL BUG MOBSDK-462 IS RESOLVED
-                 //                STAssertTrue(node.isFolder, @"Node should be a folder");
-                 //                STAssertFalse(node.isDocument, @"Node should not be a document");
-                 
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-         }];
+        [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error) {
+            if (nil == node)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(node, @"node should not be nil");
+                STAssertNotNil(node.identifier, @"nodeRef should not be nil");
+                STAssertTrue([node.name isEqualToString:self.fixedFileName], @"name should be equal to %@",self.fixedFileName);
+                // REMOVED UNTIL BUG MOBSDK-462 IS RESOLVED
+                //                STAssertTrue(node.isFolder, @"Node should be a folder");
+                //                STAssertFalse(node.isDocument, @"Node should not be a document");
+                
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
@@ -2618,7 +2613,7 @@
                              
                              float updatedVersionNumber = [updatedDocument.versionLabel floatValue];
                              
-                             STAssertTrue(previousVersionNumber < updatedVersionNumber, @"expected the returning AlfrescoDocument object to have a higher version number");
+                             STAssertTrue(previousVersionNumber < updatedVersionNumber, @"expected the updated AlfrescoDocument object to have a higher version number, but previous %d is not less than %d", previousVersionNumber, updatedVersionNumber);
                              STAssertTrue([previousLastModificationDate compare:updatedDocument.modifiedAt] == NSOrderedAscending, @"expected the returing AlfrescoDocument object to have a newer last modification date");
                              
                              [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *error){
@@ -3301,14 +3296,7 @@
              else
              {
                  STAssertTrue(array.count > 0, [NSString stringWithFormat:@"Expected folder children but got %i", array.count]);
-                 if (self.isCloud)
-                 {
-                     STAssertTrue([self nodeArray:array containsName:@"Sample Filesrr"], @"Folder children should contain Sample Filesrr");
-                 }
-                 else
-                 {
-                     STAssertTrue([self nodeArray:array containsName:@"Sites"], @"Folder children should contain Sites");
-                 }
+                 STAssertTrue([self nodeArray:array containsName:@"Unit Test Subfolder"], @"Folder children should contain 'Unit Test Subfolder'");
                  AlfrescoDocument *testVersionedDoc = nil;
                  for (AlfrescoNode *node in array)
                  {
@@ -3318,6 +3306,7 @@
                          if ([name isEqualToString:@"versioned-quote.txt"])
                          {
                              testVersionedDoc = (AlfrescoDocument *)node;
+                             break;
                          }
                          
                      }
@@ -3560,7 +3549,7 @@
             
             __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
             
-            [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
+            [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error){
                 
                 if (node == nil)
                 {

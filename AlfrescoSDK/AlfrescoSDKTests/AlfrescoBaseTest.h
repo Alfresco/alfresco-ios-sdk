@@ -32,8 +32,6 @@ typedef void (^AlfrescoTestBlock)(void);
 typedef void (^CMISTestBlock)(void);
 typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
 
-extern NSString * const kAlfrescoTestDataFolder;
-extern NSString * const kAlfrescoTestNetworkID;
 @interface AlfrescoBaseTest : SenTestCase
 
 @property (nonatomic, assign) BOOL callbackCompleted;
@@ -44,15 +42,20 @@ extern NSString * const kAlfrescoTestNetworkID;
 @property (nonatomic, strong) AlfrescoFolder *currentRootFolder;
 @property (nonatomic, strong) AlfrescoFolder *testDocFolder;
 @property (nonatomic, strong) AlfrescoFolder *testChildFolder;
-@property (nonatomic, strong) NSString * unitTestFolder;
+@property (nonatomic, strong) NSString *unitTestFolder;
 @property (nonatomic, strong) id<AlfrescoSession> currentSession;
+// Test environment parameters
 @property (nonatomic, strong) NSString *testSearchFileName;
 @property (nonatomic, strong) NSString *textKeyWord;
 @property (nonatomic, strong) NSString *testModeratedSiteName;
 @property (nonatomic, strong) NSString *server;
 @property (nonatomic, strong) NSString *userName;
+@property (nonatomic, strong) NSString *password;
+@property (nonatomic, strong) NSString *secondUsername;
+@property (nonatomic, strong) NSString *secondPassword;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *testSiteName;
+@property (nonatomic, strong) NSString *moderatedSiteName;
 @property (nonatomic, strong) NSString *testChildFolderName;
 @property (nonatomic, strong) NSString *testFolderPathName;
 @property (nonatomic, strong) NSString *fixedFileName;
@@ -63,8 +66,7 @@ extern NSString * const kAlfrescoTestNetworkID;
 @property (nonatomic, strong) CMISFolder *cmisRootFolder;
 @property (nonatomic, assign) BOOL isCloud;
 @property (nonatomic, assign) BOOL setUpSuccess;
-@property (nonatomic, strong) NSString * testPassword;
-@property (nonatomic, strong) AlfrescoDocumentFolderService * docFolderService;
+@property (nonatomic, strong) AlfrescoDocumentFolderService *docFolderService;
 
 + (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename;
 - (BOOL)authenticateOnPremiseServer:(NSDictionary *)parameters;
@@ -72,12 +74,11 @@ extern NSString * const kAlfrescoTestNetworkID;
 
 - (BOOL)retrieveAlfrescoTestFolder;
 - (void)waitUntilCompleteWithFixedTimeInterval;
-- (BOOL) removeTestDocument;
-- (BOOL) uploadTestDocument:(NSString *)filePath;
-- (void) parseEnvironmentDictionary:(NSDictionary *)plistDictionary;
-- (void) setUpTestImageFile:(NSString *)filePath;
-//- (void) setUpTestChildFolder;
-- (void) resetTestVariables;
+- (BOOL)removeTestDocument;
+- (BOOL)uploadTestDocument:(NSString *)filePath;
+- (void)setupEnvironmentParameters;
+- (void)setUpTestImageFile:(NSString *)filePath;
+- (void)resetTestVariables;
 - (NSString *)userTestConfigFolder;
-- (NSDictionary *)testEnvironmentDictionary;
+
 @end

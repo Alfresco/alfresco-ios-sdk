@@ -31,13 +31,13 @@
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
 
+static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
+
 @implementation AlfrescoSpecificCMISTests
 
 - (void)setUp
 {
-    NSDictionary *environmentsDict = [self testEnvironmentDictionary];
-    [self parseEnvironmentDictionary:environmentsDict];
-    [self resetTestVariables];
+    [self setupEnvironmentParameters];
     BOOL success = [self setUpCMISSession];
     [self resetTestVariables];
     self.setUpSuccess = success;
@@ -53,7 +53,7 @@
     NSString *urlString = nil;
     if (self.isCloud)
     {
-        urlString = [self.server stringByAppendingString:[NSString stringWithFormat:@"%@%@%@",kAlfrescoCloudPrecursor, kAlfrescoTestNetworkID, kAlfrescoCloudCMISPath]];
+        urlString = [self.server stringByAppendingString:[NSString stringWithFormat:@"%@%@%@", kAlfrescoCloudPrecursor, kAlfrescoTestNetworkID, kAlfrescoCloudCMISPath]];
     }
     else
     {
@@ -62,7 +62,7 @@
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc]
                                              initWithBindingType:CMISBindingTypeAtomPub];
     params.username = self.userName;
-    params.password = self.testPassword;
+    params.password = self.password;
     params.atomPubUrl = [NSURL URLWithString:urlString];
     [CMISSession arrayOfRepositories:params completionBlock:^(NSArray *repositories, NSError *error){
         if (nil == repositories)

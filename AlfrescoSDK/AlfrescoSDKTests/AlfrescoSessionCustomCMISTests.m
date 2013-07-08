@@ -26,12 +26,11 @@
 #import "AlfrescoLog.h"
 
 @implementation AlfrescoSessionCustomCMISTests
+
 - (void)setUp
 {
     NSDictionary *customParameters = [NSDictionary dictionaryWithObject:@"/service/cmis" forKey:kAlfrescoCMISBindingURL];
-    NSDictionary *environment = [self testEnvironmentDictionary];
-    [self parseEnvironmentDictionary:environment];
-    [self resetTestVariables];
+    [self setupEnvironmentParameters];
     BOOL success = NO;
     if (!self.isCloud)
     {
@@ -44,19 +43,17 @@
         [self resetTestVariables];
     }
     self.setUpSuccess = success;
-    
 }
 
-
 /**
- setting custom CMIS binding, addressing MOBSDK-542
+ * Setting custom CMIS binding, addressing MOBSDK-542
  */
 - (void)testCustomCMISBindingSession
 {
     if (self.setUpSuccess)
     {
         AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        [dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *children, NSError *error){
+        [dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *children, NSError *error) {
             if (nil == children)
             {
                 self.lastTestSuccessful = NO;
