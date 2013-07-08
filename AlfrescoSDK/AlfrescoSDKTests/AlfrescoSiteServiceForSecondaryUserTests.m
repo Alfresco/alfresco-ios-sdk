@@ -119,7 +119,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
@@ -205,7 +205,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -273,7 +273,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
