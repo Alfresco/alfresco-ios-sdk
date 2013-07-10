@@ -23,11 +23,11 @@
 #import "AlfrescoLog.h"
 
 @interface AlfrescoOAuthHelper ()
-@property (nonatomic, strong, readwrite) NSURLConnection    * connection;
-@property (nonatomic, strong, readwrite) NSMutableData      * receivedData;
+@property (nonatomic, strong, readwrite) NSURLConnection *connection;
+@property (nonatomic, strong, readwrite) NSMutableData *receivedData;
 @property (nonatomic, copy, readwrite) AlfrescoOAuthCompletionBlock completionBlock;
-@property (nonatomic, strong, readwrite) AlfrescoOAuthData  * oauthData;
-@property (nonatomic, strong, readwrite) NSString * baseURL;
+@property (nonatomic, strong, readwrite) AlfrescoOAuthData *oauthData;
+@property (nonatomic, strong, readwrite) NSString *baseURL;
 @property (nonatomic, weak, readwrite) id<AlfrescoOAuthLoginDelegate> oauthDelegate;
 - (AlfrescoOAuthData *)updatedOAuthDataFromJSONWithError:(NSError **)error;
 - (NSError *)errorFromJSONDictionary:(NSDictionary *)jsonDictionary;
@@ -150,8 +150,8 @@
 }
 
 
-
 #pragma NSURLConnection Delegate methods
+
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     if (nil != data && data.length > 0)
@@ -172,10 +172,6 @@
             
         }
     }
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection

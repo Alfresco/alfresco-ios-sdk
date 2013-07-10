@@ -21,6 +21,7 @@
 #import "CMISSession.h"
 #import "CMISRepositoryService.h"
 #import "CMISRepositoryInfo.h"
+#import "CMISStandardUntrustedSSLAuthenticationProvider.h"
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
@@ -129,13 +130,12 @@
             id customCMISNetworkProvider = [parameters objectForKey:kAlfrescoCMISNetworkProvider];
             [self setObject:customCMISNetworkProvider forParameter:kAlfrescoCMISNetworkProvider];
         }
-        //enforce a default setting of NO in case the allow untrusted SSL certificate flag isn't set
-        if (![[parameters allKeys] containsObject:kAlfrescoAllowUntrustedSSLCertificate])
+
+        if ([[parameters allKeys] containsObject:kAlfrescoAllowUntrustedSSLCertificate])
         {
-            [self.sessionData setObject:[NSNumber numberWithBool:NO] forKey:kAlfrescoAllowUntrustedSSLCertificate];
+            [self.sessionData setObject:[parameters valueForKey:kAlfrescoAllowUntrustedSSLCertificate] forKey:kAlfrescoAllowUntrustedSSLCertificate];
         }
         
-        self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
         id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoNetworkProvider];
         if (customAlfrescoNetworkProvider)
         {
@@ -151,6 +151,10 @@
                                                reason:@"The custom network provider must be an object that conforms to the AlfrescoNetworkProvider protocol"
                                              userInfo:nil]);
             }
+        }
+        else
+        {
+            self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
         }
         
         self.unremovableSessionKeys = @[kAlfrescoSessionKeyCmisSession, kAlfrescoAuthenticationProviderObjectKey];
@@ -202,12 +206,14 @@
                                          userInfo:nil]);
         }
     }
-    //set the flag for trusted SSL server if provided
-    NSNumber *allowUntrustedServerFlag = [self.sessionData objectForKey:kAlfrescoAllowUntrustedSSLCertificate];
-    if (nil != allowUntrustedServerFlag)
+
+    // If connections are allowed for untrusted SSL certificates, we need a custom CMISAuthenticationProvider
+    BOOL allowUntrustedSSLCertificate = [[self.sessionData objectForKey:kAlfrescoAllowUntrustedSSLCertificate] boolValue];
+    if (allowUntrustedSSLCertificate)
     {
-        [v3params setObject:allowUntrustedServerFlag forKey:kCMISSessionAllowUntrustedSSLCertificate];
-        [v4params setObject:allowUntrustedServerFlag forKey:kCMISSessionAllowUntrustedSSLCertificate];
+        CMISStandardUntrustedSSLAuthenticationProvider *authProvider = [[CMISStandardUntrustedSSLAuthenticationProvider alloc] initWithUsername:username password:password];
+        v3params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
+        v4params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
     }
 
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -216,7 +222,7 @@
         {
             completionBlock(nil, error);
         }
-        else if( repositories.count == 0)
+        else if(repositories.count == 0)
         {
             error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoRepositoryFound];
             completionBlock(nil, error);

@@ -23,8 +23,6 @@
 @interface AlfrescoOAuthAuthenticationProvider ()
 @property (nonatomic, strong, readwrite) NSMutableDictionary *httpHeaders;
 @property (nonatomic, strong, readwrite) AlfrescoOAuthData *oauthData;
-@property (nonatomic, strong, readwrite) NSURLConnection    * connection;
-@property (nonatomic, strong, readwrite) NSMutableData      * receivedData;
 @end
 
 @implementation AlfrescoOAuthAuthenticationProvider

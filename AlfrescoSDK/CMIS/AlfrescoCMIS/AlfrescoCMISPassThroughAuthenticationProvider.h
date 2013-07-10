@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2012 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -17,39 +17,12 @@
  *  limitations under the License.
  *****************************************************************************
  */
+#import <Foundation/Foundation.h>
+#import "AlfrescoAuthenticationProvider.h"
+#import "CMISAuthenticationProvider.h"
 
-#import "AlfrescoRequest.h"
+@interface AlfrescoCMISPassThroughAuthenticationProvider : NSObject <CMISAuthenticationProvider>
+@property (nonatomic, strong, readonly) id<AlfrescoAuthenticationProvider> authProvider;
 
-@implementation AlfrescoRequest
-- (id)init
-{
-    self = [super init];
-    if (nil != self)
-    {
-        self.isCancelled = NO;
-    }
-    return self;
-}
-
-- (void)cancel
-{
-    self.isCancelled = YES;
-    if ([self.httpRequest respondsToSelector:@selector(cancel)])
-    {
-        [self.httpRequest cancel];
-    }
-}
-
-
-- (void)setHttpRequest:(id)httpRequest
-{
-    _httpRequest = httpRequest;
-    if (self.isCancelled)
-    {
-        if ([httpRequest respondsToSelector:@selector(cancel)])
-        {
-            [httpRequest cancel];
-        }
-    }
-}
+- (id)initWithAlfrescoAuthenticationProvider:(id<AlfrescoAuthenticationProvider>)authProvider;
 @end

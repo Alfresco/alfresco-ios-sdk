@@ -15,14 +15,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ******************************************************************************/
-#import "CMISPassThroughAuthenticationProvider.h"
+#import "AlfrescoCMISPassThroughAuthenticationProvider.h"
 
-@interface CMISPassThroughAuthenticationProvider ()
+@interface AlfrescoCMISPassThroughAuthenticationProvider ()
 @property (nonatomic, strong, readwrite) id<AlfrescoAuthenticationProvider> authProvider;
 @property (nonatomic, strong, readwrite) NSDictionary *httpHeadersToApply;
 @end
 
-@implementation CMISPassThroughAuthenticationProvider
+@implementation AlfrescoCMISPassThroughAuthenticationProvider
 
 - (id)initWithAlfrescoAuthenticationProvider:(id<AlfrescoAuthenticationProvider>)authProvider
 {
@@ -38,23 +38,19 @@
 
 - (void)updateWithHttpURLResponse:(NSHTTPURLResponse *)httpUrlResponse
 {
-    /// TODO: new method. Impact on AlfrescoSDK unknown at this stage
 }
 
 - (BOOL)canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
 {
-    /// TODO: new method. Impact on AlfrescoSDK unknown at this stage
     return YES;
 }
 
 - (void)didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    /// TODO: new method. Impact on AlfrescoSDK unknown at this stage
 }
 
 - (void)didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    /// TODO: new method. Impact on AlfrescoSDK unknown at this stage
 }
 
 @end

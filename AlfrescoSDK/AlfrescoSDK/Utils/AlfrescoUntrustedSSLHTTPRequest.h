@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -17,12 +17,9 @@
  *  limitations under the License.
  *****************************************************************************
  */
-#import <Foundation/Foundation.h>
-#import "AlfrescoAuthenticationProvider.h"
-#import "CMISAuthenticationProvider.h"
 
-@interface CMISPassThroughAuthenticationProvider : NSObject <CMISAuthenticationProvider>
-@property (nonatomic, strong, readonly) id<AlfrescoAuthenticationProvider> authProvider;
+#import "AlfrescoDefaultHTTPRequest.h"
 
-- (id)initWithAlfrescoAuthenticationProvider:(id<AlfrescoAuthenticationProvider>)authProvider;
+@interface AlfrescoUntrustedSSLHTTPRequest : AlfrescoDefaultHTTPRequest
+
 @end
