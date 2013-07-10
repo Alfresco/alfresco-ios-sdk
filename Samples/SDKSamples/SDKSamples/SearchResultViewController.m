@@ -20,20 +20,10 @@
 #import "DocumentViewController.h"
 
 @interface SearchResultViewController ()
-
 - (void)loadSearch;
-
 @end
 
 @implementation SearchResultViewController
-
-@synthesize searchService = _searchService;
-@synthesize searchText = _searchText;
-@synthesize fullText = _fullText;
-@synthesize exact = _exact;
-@synthesize resultArray = _resultArray;
-@synthesize activityIndicator = _activityIndicator;
-@synthesize activityBarButton = _activityBarButton;
 
 #pragma mark - Alfresco methods
 
@@ -49,7 +39,6 @@
     // get the document library for the site
     self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.session];
     AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:self.exact includeContent:self.fullText folder:nil includeDescendants:NO];
-//    __weak SearchResultViewController *weakSelf = self;
     [self.searchService searchWithKeywords:self.searchText 
                                    options:searchOptions 
                            completionBlock:^(NSArray *array, NSError *error) {
@@ -63,7 +52,6 @@
             self.resultArray = [NSArray arrayWithArray:array];
             [self.tableView reloadData];
         }
-        
     }];
 }
 

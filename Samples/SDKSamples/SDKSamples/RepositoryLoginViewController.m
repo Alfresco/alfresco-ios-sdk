@@ -24,17 +24,9 @@
 NSString * const kAlfrescoSDKSamplesHost = @"host";
 NSString * const kAlfrescoSDKSamplesUsername = @"username";
 NSString * const kAlfrescoSDKSamplesPassword = @"password";
-
-@interface RepositoryLoginViewController ()
-- (void)defaultSettings;
-- (void)authenticateRepoSession;
-@end
+NSString * const kAlfrescoSDKSamplesSSLValidation = @"sslvalidation";
 
 @implementation RepositoryLoginViewController
-@synthesize urlField = _urlField;
-@synthesize usernameField = _usernameField;
-@synthesize passwordField = _passwordField;
-@synthesize doneButton = _doneButton;
 
 - (void)viewDidLoad
 {
@@ -55,6 +47,13 @@ NSString * const kAlfrescoSDKSamplesPassword = @"password";
     {
         [self.doneButton setEnabled:YES];
     }
+}
+
+- (IBAction)sslValidationValueChanged:(id)sender
+{
+    NSUserDefaults *defaultSettings = [NSUserDefaults standardUserDefaults];
+    [defaultSettings setBool:self.sslValidationField.on forKey:kAlfrescoSDKSamplesSSLValidation];
+    [defaultSettings synchronize];
 }
 
 - (IBAction)authenticateWhenDone:(id)sender
@@ -82,7 +81,8 @@ NSString * const kAlfrescoSDKSamplesPassword = @"password";
     NSString *host = [defaultSettings stringForKey:kAlfrescoSDKSamplesHost];
     NSString *username = [defaultSettings stringForKey:kAlfrescoSDKSamplesUsername];
     NSString *password = [defaultSettings stringForKey:kAlfrescoSDKSamplesPassword];
-    if (host == nil || username == nil || password == nil)
+    BOOL sslValidation = [defaultSettings boolForKey:kAlfrescoSDKSamplesSSLValidation];
+    if (host == nil || username == nil || password == nil || [defaultSettings valueForKey:kAlfrescoSDKSamplesSSLValidation] == nil)
     {        
         if (nil == host)
         {
@@ -101,12 +101,19 @@ NSString * const kAlfrescoSDKSamplesPassword = @"password";
             password = @"admin";
             [defaultSettings setObject:password forKey:kAlfrescoSDKSamplesPassword];
         }
+        
+        if ([defaultSettings valueForKey:kAlfrescoSDKSamplesSSLValidation] == nil)
+        {
+            sslValidation = YES;
+            [defaultSettings setBool:sslValidation forKey:kAlfrescoSDKSamplesSSLValidation];
+        }
     }
     [defaultSettings synchronize];
     
     self.urlField.text = host;
     self.usernameField.text = username;
     self.passwordField.text = password;
+    self.sslValidationField.on = sslValidation;
 }
 
 - (void)authenticateRepoSession
@@ -123,9 +130,9 @@ NSString * const kAlfrescoSDKSamplesPassword = @"password";
         }
     };
     
-    // enable metadata extraction
-    NSDictionary *parameters = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-                                                           forKey:kAlfrescoMetadataExtraction];
+    // enable metadata extraction & pass SSL validation field
+    NSDictionary *parameters = @{kAlfrescoMetadataExtraction : [NSNumber numberWithBool:YES],
+                                 kAlfrescoAllowUntrustedSSLCertificate : [NSNumber numberWithBool:(!self.sslValidationField.on)]};
     
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.urlField.text]
                                      username:self.usernameField.text
@@ -152,10 +159,6 @@ NSString * const kAlfrescoSDKSamplesPassword = @"password";
 {
     [textField resignFirstResponder];
     return YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField

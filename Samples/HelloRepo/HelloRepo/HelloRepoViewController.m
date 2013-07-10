@@ -38,9 +38,6 @@
 
 @implementation HelloRepoViewController
 
-@synthesize nodes = _nodes;
-@synthesize session = _session;
-@synthesize isCloudTest = _isCloudTest;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -62,12 +59,15 @@
     NSURL *url = [NSURL URLWithString:@"http://localhost:8080/alfresco"];
     NSString *username = @"admin";
     NSString *password = @"admin";
-    
+
+    // If using an HTTPS scheme with an untrusted SSL certificate, change this parameter to YES
+    NSDictionary *parameters = @{kAlfrescoAllowUntrustedSSLCertificate: [NSNumber numberWithBool:NO]};
+
     __weak HelloRepoViewController *weakSelf = self;
     [AlfrescoRepositorySession connectWithUrl:url
                                      username:username
                                      password:password
-                                   parameters:nil
+                                   parameters:parameters
                               completionBlock:^(id<AlfrescoSession> session, NSError *error) {
                                   if (nil == session)
                                   {

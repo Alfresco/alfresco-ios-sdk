@@ -18,16 +18,7 @@
 
 #import "AddCommentViewController.h"
 
-@interface AddCommentViewController ()
-
-@end
-
 @implementation AddCommentViewController
-
-@synthesize document = _document;
-@synthesize commentView = _commentView;
-//@synthesize commentService = _commentService;
-@synthesize addCommentDelegate = _addCommentDelegate;
 
 /**
  this method uses the AlfrescoCommentService class addCommentToNode method.
@@ -38,7 +29,6 @@
     {
         // add a comment using an AlfrescoCommentService
         AlfrescoCommentService *commentService = [[AlfrescoCommentService alloc] initWithSession:self.session];
-//        __weak AddCommentViewController *weakSelf = self;
         [commentService addCommentToNode:self.document content:self.commentView.text title:nil completionBlock:^(AlfrescoComment *comment, NSError *error) {
             if (nil == comment) 
             {

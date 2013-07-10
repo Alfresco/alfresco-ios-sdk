@@ -19,17 +19,7 @@
 #import "SearchViewController.h"
 #import "SearchResultViewController.h"
 
-@interface SearchViewController ()
-
-@end
-
 @implementation SearchViewController
-
-@synthesize session = _session;
-@synthesize searchField = _searchField;
-@synthesize fullTextSwitch = _fullTextSwitch;
-@synthesize exactSwitch = _exactSwitch;
-@synthesize searchButton = _searchButton;
 
 - (void)viewDidLoad
 {
@@ -50,6 +40,7 @@
 }
 
 #pragma mark - TextField Delegate
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
@@ -67,7 +58,6 @@
     {
         self.searchButton.enabled = YES;
     }
-    
 }
 
 @end

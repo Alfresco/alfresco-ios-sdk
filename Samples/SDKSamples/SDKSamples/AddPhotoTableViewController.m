@@ -30,16 +30,6 @@
 
 @implementation AddPhotoTableViewController
 
-@synthesize documentName = _documentName;
-@synthesize documentDescription = _documentDescription;
-@synthesize tags = _tags;
-@synthesize tagsInSearchResult = _tagsInSearchResult;
-@synthesize tagsSelected = _tagsSelected;
-@synthesize taggingService = _taggingService;
-@synthesize addPhotoDelegate = _addPhotoDelegate;
-@synthesize firstLoad = _firstLoad;
-@synthesize currentSearchText = _currentSearchText;
-
 #pragma mark - Alfresco service calls
 
 /**
@@ -48,7 +38,6 @@
 - (void)loadTags
 {
     self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.session];
-//    __weak AddPhotoTableViewController *weakSelf = self;
     [self.taggingService retrieveAllTagsWithCompletionBlock:^(NSArray *array, NSError *error) {
         if (nil == array) 
         {

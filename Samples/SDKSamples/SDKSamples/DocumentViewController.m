@@ -26,7 +26,6 @@
 #import "AlfrescoLog.h"
 
 @interface DocumentViewController ()
-
 @property (nonatomic, strong) NSMutableArray *comments;
 @property (nonatomic, strong) NSMutableArray *versions;
 @property (nonatomic, strong) NSMutableArray *tags;
@@ -46,29 +45,6 @@
 @end
 
 @implementation DocumentViewController
-
-@synthesize document = _document;
-@synthesize commentService = _commentService;
-@synthesize versionService = _versionService;
-@synthesize documentService = _documentService;
-@synthesize comments = _comments;
-@synthesize versions = _versions;
-@synthesize documentPreviewItem = _documentPreviewItem;
-@synthesize downloadButton = _downloadButton;
-@synthesize likeButton = _likeButton;
-@synthesize commentButton = _commentButton;
-@synthesize taggingService = _taggingService;
-@synthesize ratingService = _ratingService;
-@synthesize isLiked = _isLiked;
-@synthesize tags = _tags;
-@synthesize activityIndicator = _activityIndicator;
-@synthesize thumbnail = _thumbnail;
-@synthesize progressView = _progressView;
-@synthesize tableView = _tableView;
-@synthesize activityBarButton = _activityBarButton;
-@synthesize avatarDictionary = _avatarDictionary;
-@synthesize personDictionary = _personDictionary;
-@synthesize personService = _personService;
 
 #pragma mark - Alfresco Methods
 /**
@@ -101,7 +77,7 @@
  through its property.
  The recommended way to deal with this scenario is to do the following:
  
- MyClass __weak *weakSelf = self;
+ __weak typeof(self) weakSelf = self;
  myclass.completionBlock = ^(void)(NSArray *array, NSError *error)
  {
     [weakSelf.doSomething];
@@ -121,7 +97,6 @@
     if(nil != self.session && self.document != nil)
     {
         self.documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-//        __weak DocumentViewController *weakSelf = self;
         [self.documentService retrieveRenditionOfNode:self.document renditionName:kAlfrescoThumbnailRendition completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
              if (nil != contentFile)
              {
@@ -142,7 +117,6 @@
     {
         // get the comments using an AlfrescoCommentService
         self.commentService = [[AlfrescoCommentService alloc] initWithSession:self.session];
-//        __weak DocumentViewController *weakSelf = self;
         [self.activityIndicator startAnimating];
         
         [self.commentService retrieveCommentsForNode:self.document completionBlock:^(NSArray *array, NSError *error){
@@ -177,7 +151,6 @@
         return;
     }
     
-//    __weak DocumentViewController *weakSelf = self;
     [self.personService retrievePersonWithIdentifier:userId completionBlock:^(AlfrescoPerson *person, NSError *error) {
         if (nil != person)
         {
@@ -208,7 +181,6 @@
     if(nil != self.session && self.document != nil)
     {
         self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.session];
-//        __weak DocumentViewController *weakSelf = self;
         [self.activityIndicator startAnimating];
         [self.taggingService retrieveTagsForNode:self.document 
                                  completionBlock:^(NSArray *array, NSError *error){
@@ -235,7 +207,6 @@
     {
         // get the document versions using the AlfrescoVersionService
         self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.session];
-//        __weak DocumentViewController *weakSelf = self;
         [self.activityIndicator startAnimating];
         
         [self.versionService retrieveAllVersionsOfDocument:self.document completionBlock:^(NSArray *array, NSError *error){
@@ -268,7 +239,6 @@
     if(nil != self.session && self.document != nil)
     {
         self.ratingService = [[AlfrescoRatingService alloc] initWithSession:self.session];
-//        __weak DocumentViewController *weakSelf = self;
         [self.activityIndicator startAnimating];
         [self.ratingService isNodeLiked:self.document 
                       completionBlock:^(BOOL success, BOOL pIsLiked, NSError *error){
@@ -302,8 +272,7 @@
 - (IBAction)setLikeDocumentTag:(id)sender
 {
     [self.activityIndicator startAnimating];
-//    __weak DocumentViewController *weakSelf = self;
-    if (self.isLiked == YES) 
+    if (self.isLiked == YES)
     {
         [self.ratingService unlikeNode:self.document 
                      completionBlock:^(BOOL success, NSError *error){
@@ -348,11 +317,10 @@
     self.documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
     self.progressView.hidden = NO;
     self.progressView.progress = 0.0;
-//    __weak DocumentViewController *weakSelf = self;
-    if(nil != self.session && self.document != nil)
+
+    if (nil != self.session && self.document != nil)
     {
-        [self.documentService retrieveContentOfDocument:self.document
-                                        completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+        [self.documentService retrieveContentOfDocument:self.document completionBlock:^(AlfrescoContentFile *contentFile, NSError *error) {
              if (nil == contentFile) 
              {
                  [self showFailureAlert:@"error_downloading_document"];

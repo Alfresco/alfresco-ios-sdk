@@ -21,16 +21,9 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoLog.h"
 
-NSString * const kAlfrescoSDKSamplesLogLevel = @"logLevel";
-
-@interface MobileSDKTableViewController ()
-@end
+static NSString * const kAlfrescoSDKSamplesLogLevel = @"logLevel";
 
 @implementation MobileSDKTableViewController
-@synthesize samplesLabel = _samplesLabel;
-@synthesize referenceLabel = _referenceLabel;
-@synthesize learnMoreLabel = _learnMoreLabel;
-
 
 - (void)viewDidLoad
 {
