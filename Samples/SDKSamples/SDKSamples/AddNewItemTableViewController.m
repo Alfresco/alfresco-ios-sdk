@@ -192,9 +192,8 @@
                   [self.navigationController popViewControllerAnimated:YES];                                                   
               }
           }
-      } 
-      progressBlock:^(NSInteger bytesUploaded, NSInteger totalBytes){
-          self.progressView.progress = ((float)bytesUploaded/(float)totalBytes) - 0.3;
+      } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+          self.progressView.progress = ((float)bytesTransferred/(float)bytesTotal) - 0.3;
       }];
 }
 

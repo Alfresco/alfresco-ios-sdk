@@ -372,10 +372,8 @@
              }
              self.progressView.hidden = YES;
              [self.activityIndicator stopAnimating];
-         } 
-                                          progressBlock:^(NSInteger bytesDownloaded, NSInteger bytesTotal)
-         {
-             self.progressView.progress = (float)bytesDownloaded/(float)bytesTotal;
+         } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+             self.progressView.progress = (float)bytesTransferred/(float)bytesTotal;
          }];
     }
 }

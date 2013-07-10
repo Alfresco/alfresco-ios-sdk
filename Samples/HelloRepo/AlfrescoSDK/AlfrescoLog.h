@@ -31,9 +31,7 @@
  * Default logging level
  *
  * The default logging level is Info for release builds and Debug for debug builds.
- * The recommended way to override the default is to #include this header file in your app's .pch file
- * and then redefine the ALFRESCO_LOG_LEVEL macro to suit, e.g.
- *     #undef ALFRESCO_LOG_LEVEL
+ * This can easily be overriden in your app's .pch file, e.g.
  *     #define ALFRESCO_LOG_LEVEL AlfrescoLogLevelTrace
  */
 #if !defined(ALFRESCO_LOG_LEVEL)

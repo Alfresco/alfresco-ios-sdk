@@ -38,6 +38,12 @@
 
 - (void)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
+              alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+                 outputStream:(NSOutputStream *)outputStream
+              completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
+
+- (void)executeRequestWithURL:(NSURL *)url
+                      session:(id<AlfrescoSession>)session
                        method:(NSString *)method
               alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
