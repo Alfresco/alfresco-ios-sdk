@@ -735,7 +735,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             break;
         }
     }
-    STAssertNotNil(propertyElement, [NSString stringWithFormat:@"No property '%@' was found", expectedProperty]);
+    STAssertNotNil(propertyElement, @"No property '%@' was found", expectedProperty);
 
     // Finally, verify the value
     CMISExtensionElement *valueElement = [propertyElement.children objectAtIndex:0];

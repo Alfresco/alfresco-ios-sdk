@@ -40,8 +40,8 @@
              else
              {
                  STAssertNotNil(person,@"Person should not be nil");
-                 STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, self.userName]);
-                 STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, self.firstName]);
+                 STAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
+                 STAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
                  STAssertNotNil(person.lastName, @"Persons last name should not be nil");
                  STAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
                  if (person.avatarIdentifier)
@@ -122,8 +122,8 @@
              else
              {
                  STAssertNotNil(person,@"Person should not be nil");
-                 STAssertTrue([self.userName isEqualToString:person.identifier],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.identifier, self.userName]);
-                 STAssertTrue([self.firstName isEqualToString:person.firstName],[NSString stringWithFormat:@"person.username is %@ but should be %@",person.firstName, self.firstName]);
+                 STAssertTrue([self.userName isEqualToString:person.identifier], @"person.username is %@ but should be %@", person.identifier, self.userName);
+                 STAssertTrue([self.firstName isEqualToString:person.firstName], @"person.username is %@ but should be %@", person.firstName, self.firstName);
                  
                  [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
                   {

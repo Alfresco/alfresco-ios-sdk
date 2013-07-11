@@ -844,7 +844,7 @@
              }
              else
              {
-                 STAssertTrue(array.count > 0, [NSString stringWithFormat:@"Expected folder children but got %i", array.count]);
+                 STAssertTrue(array.count > 0, @"Expected folder children but got %i", array.count);
                  if (self.isCloud)
                  {
                      STAssertTrue([self nodeArray:array containsName:@"Sample Filesrr"], @"Folder children should contain Sample Filesrr");
@@ -1621,7 +1621,7 @@
              else
              {
                  STAssertNotNil(node, @"node should not be nil");
-                 STAssertTrue([node.name isEqualToString:@"Sites"], [NSString stringWithFormat:@"node name should be Sites and not %@", node.name]);
+                 STAssertTrue([node.name isEqualToString:@"Sites"], @"node name should be Sites and not %@", node.name);
                  
                  self.lastTestSuccessful = YES;
              }
@@ -2355,7 +2355,7 @@
                               NSError *error;
                               NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
                               STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
-                              STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %d kb", [fileAttributes fileSize]/1024.0);
+                              STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %f kb", [fileAttributes fileSize]/1024.0);
                               
                               // Nice boys clean up after themselves
                               [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
@@ -2613,7 +2613,7 @@
                              
                              float updatedVersionNumber = [updatedDocument.versionLabel floatValue];
                              
-                             STAssertTrue(previousVersionNumber < updatedVersionNumber, @"expected the updated AlfrescoDocument object to have a higher version number, but previous %d is not less than %d", previousVersionNumber, updatedVersionNumber);
+                             STAssertTrue(previousVersionNumber < updatedVersionNumber, @"expected the updated AlfrescoDocument object to have a higher version number, but previous %f is not less than %f", previousVersionNumber, updatedVersionNumber);
                              STAssertTrue([previousLastModificationDate compare:updatedDocument.modifiedAt] == NSOrderedAscending, @"expected the returing AlfrescoDocument object to have a newer last modification date");
                              
                              [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *error){
@@ -3295,7 +3295,7 @@
              }
              else
              {
-                 STAssertTrue(array.count > 0, [NSString stringWithFormat:@"Expected folder children but got %i", array.count]);
+                 STAssertTrue(array.count > 0, @"Expected folder children but got %i", array.count);
                  STAssertTrue([self nodeArray:array containsName:@"Unit Test Subfolder"], @"Folder children should contain 'Unit Test Subfolder'");
                  AlfrescoDocument *testVersionedDoc = nil;
                  for (AlfrescoNode *node in array)

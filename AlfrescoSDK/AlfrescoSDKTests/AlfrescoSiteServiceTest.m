@@ -43,7 +43,7 @@
              else
              {
                  STAssertNotNil(array,@"the array should not be nil");
-                 STAssertTrue(array.count > 1, [NSString stringWithFormat:@"Site count should be greater than 1 not %i", array.count]);
+                 STAssertTrue(array.count > 1, @"Site count should be greater than 1 not %i", array.count);
                  self.lastTestSuccessful = YES;
              }
              self.callbackCompleted = YES;
@@ -298,7 +298,7 @@
              }
              else
              {
-                 STAssertTrue([site.shortName isEqualToString:self.testSiteName], [NSString stringWithFormat:@"Expected %@ site but got back %@",self.testSiteName, site.shortName]);
+                 STAssertTrue([site.shortName isEqualToString:self.testSiteName], @"Expected %@ site but got back %@", self.testSiteName, site.shortName);
                  STAssertNotNil(site.title, @"site title should not be nil");
                  STAssertNotNil(site.summary, @"site summary should not be nil");
                  self.lastTestSuccessful = YES;
