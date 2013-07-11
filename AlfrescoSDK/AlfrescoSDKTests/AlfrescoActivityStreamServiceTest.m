@@ -35,7 +35,7 @@
         self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:10 skipCount:0];
         
-        // create a new folder in the repository's root folder
+        // retrieve activity stream - there must be at least one site-based activity (e.g. document uploaded)
         [self.activityStreamService retrieveActivityStreamWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
          {
              if (nil == pagingResult)
@@ -71,7 +71,7 @@
     {
         self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
         
-        // create a new folder in the repository's root folder
+        // retrieve activity stream - there must be at least one site-based activity (e.g. document uploaded)
         [self.activityStreamService retrieveActivityStreamWithCompletionBlock:^(NSArray *array, NSError *error)
          {
              if (nil == array)
@@ -118,7 +118,7 @@
     {
         self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
         
-        // create a new folder in the repository's root folder
+        // retrieve activity stream - there must be at least one site-based activity (e.g. document uploaded)
         [self.activityStreamService retrieveActivityStreamForPerson:self.userName completionBlock:^(NSArray *array, NSError *error)
          {
              if (nil == array)
@@ -216,7 +216,7 @@
              }
              else
              {
-                 // create a new folder in the repository's root folder
+                 // retrieve activity stream - there must be at least one site-based activity (e.g. document uploaded)
                  [self.activityStreamService retrieveActivityStreamForSite:site completionBlock:^(NSArray *array, NSError *error)
                   {
                       if (nil == array)
@@ -280,7 +280,7 @@
              }
              else
              {
-                 // create a new folder in the repository's root folder
+                 // retrieve activity stream - there must be at least one site-based activity (e.g. document uploaded)
                  [self.activityStreamService retrieveActivityStreamForSite:site listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                   {
                       if (nil == pagingResult)
