@@ -51,7 +51,7 @@
                  self.callbackCompleted = YES;
              }];
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {
@@ -138,7 +138,7 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {
@@ -228,7 +228,7 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {

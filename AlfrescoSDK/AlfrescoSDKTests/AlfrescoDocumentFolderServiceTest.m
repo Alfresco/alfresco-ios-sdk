@@ -86,7 +86,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -149,7 +149,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -231,7 +231,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -302,7 +302,7 @@
              }
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -383,7 +383,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -457,7 +457,7 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -535,7 +535,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -602,7 +602,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -667,7 +667,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -724,7 +724,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -783,7 +783,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -817,7 +817,7 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -860,7 +860,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -937,7 +937,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -971,7 +971,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1023,7 +1023,7 @@
             self.callbackCompleted = YES;
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1113,7 +1113,7 @@
                                } progressBlock:^(unsigned long long transferred, unsigned long long total){}];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1238,7 +1238,7 @@
                                  }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1317,7 +1317,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1397,7 +1397,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1476,7 +1476,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1543,7 +1543,7 @@
         // get the children of the repository's root folder
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1589,7 +1589,7 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1629,7 +1629,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1667,7 +1667,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1725,7 +1725,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1796,7 +1796,7 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
@@ -1874,7 +1874,7 @@
         
         // get the documents of the repository's root folder
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1912,7 +1912,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -1971,7 +1971,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2041,7 +2041,7 @@
         
         // get the documents of the repository's root folder
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2077,7 +2077,7 @@
              self.callbackCompleted = YES;
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2156,7 +2156,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2195,7 +2195,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2268,7 +2268,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2304,7 +2304,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2379,7 +2379,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2465,7 +2465,7 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2544,7 +2544,7 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2660,7 +2660,7 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2751,7 +2751,7 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2832,7 +2832,7 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2898,7 +2898,7 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -2985,7 +2985,7 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -3071,7 +3071,7 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -3125,7 +3125,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -3193,7 +3193,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -3262,7 +3262,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -3342,7 +3342,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         
         /*
          AlfrescoDocument *document = [[AlfrescoDocument alloc] init];
@@ -3368,7 +3368,7 @@
          }];
          
          [self waitUntilCompleteWithFixedTimeInterval];
-         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
          */
     }
     else
@@ -3452,7 +3452,7 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -3531,7 +3531,7 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }];
     
 }
@@ -3687,7 +3687,7 @@
             }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
@@ -3781,7 +3781,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -3850,7 +3850,7 @@
             
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -3908,7 +3908,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -3980,7 +3980,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4016,7 +4016,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4119,7 +4119,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4228,7 +4228,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4255,7 +4255,7 @@
             self.callbackCompleted = YES;
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4291,7 +4291,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }];
 }
  */
@@ -4323,7 +4323,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4377,7 +4377,7 @@
 //        }];
 //        
 //        [self waitUntilCompleteWithFixedTimeInterval];
-//        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+//        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
 //    }];
 //}
 
@@ -4429,7 +4429,7 @@
 //        }];
 //        
 //        [self waitUntilCompleteWithFixedTimeInterval];
-//        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+//        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
 //    }];
 //}
 
@@ -4496,7 +4496,7 @@
 //        }];
 //        
 //        [self waitUntilCompleteWithFixedTimeInterval];
-//        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+//        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
 //    }];
 //}
 
@@ -4563,7 +4563,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4599,7 +4599,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4663,7 +4663,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4727,7 +4727,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4802,7 +4802,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4853,7 +4853,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -4954,7 +4954,7 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -5059,7 +5059,7 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -5144,7 +5144,7 @@
             
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -5199,7 +5199,7 @@
             self.callbackCompleted = YES;
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -5296,7 +5296,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
@@ -5360,7 +5360,7 @@
             } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         //        [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelDebug;
     }
@@ -5458,7 +5458,7 @@
             } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
             /*
              self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
              __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
@@ -5513,7 +5513,7 @@
              }];
              
              [self waitUntilCompleteWithFixedTimeInterval];
-             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
              */
         }
     }
