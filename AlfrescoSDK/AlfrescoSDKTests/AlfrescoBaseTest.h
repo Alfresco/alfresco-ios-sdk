@@ -78,5 +78,6 @@ extern NSString * const kAlfrescoTestNetworkID;
 - (void) setUpTestImageFile:(NSString *)filePath;
 //- (void) setUpTestChildFolder;
 - (void) resetTestVariables;
+- (NSString *)userTestConfigFolder;
 - (NSDictionary *)testEnvironmentDictionary;
 @end

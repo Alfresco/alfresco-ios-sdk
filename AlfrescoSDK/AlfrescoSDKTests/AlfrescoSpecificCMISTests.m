@@ -303,8 +303,7 @@
 {
     if (self.setUpSuccess)
     {
-        NSString *testFilePath = nil;
-        testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
+        NSString *testFilePath = [self.testFolderPathName stringByAppendingPathComponent:@"image-with-exif.jpg"];
         [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
@@ -335,8 +334,7 @@
 {
     if (self.setUpSuccess)
     {
-        NSString *testFilePath = nil;
-        testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
+        NSString *testFilePath = [self.testFolderPathName stringByAppendingPathComponent:@"image-with-exif.jpg"];
         [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
@@ -375,8 +373,9 @@
 
         NSDate *originalDate = [[CMISDateUtil defaultDateFormatter] dateFromString:@"2012-10-19T00:00:00.000Z"];
         NSDate *now = [NSDate date];
-        
-        [self.cmisSession retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" completionBlock:^(CMISObject *cmisObject, NSError *error){
+        NSString *testFilePath = [self.testFolderPathName stringByAppendingPathComponent:@"image-with-exif.jpg"];
+ 
+        [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
                 self.lastTestSuccessful = NO;

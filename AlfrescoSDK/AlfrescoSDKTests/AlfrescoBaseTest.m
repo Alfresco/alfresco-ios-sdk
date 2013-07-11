@@ -48,29 +48,35 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 #pragma mark unit test internal methods
 
+- (NSString *)userTestConfigFolder
+{
+    NSString *userName = [[NSString alloc] initWithCString:getlogin() encoding:NSUTF8StringEncoding];
+    return [@"/Users" stringByAppendingPathComponent:userName];
+}
+
 - (NSDictionary *)testEnvironmentDictionary
 {
     NSDictionary *environmentVariables = [[NSProcessInfo processInfo] environment];
     NSString *plistFileFromEnvironment = [environmentVariables valueForKey:@"TEST_SERVER_PLIST"];
     NSArray *environmentArray = nil;
+    NSString *testFolder = [self userTestConfigFolder];
     if (plistFileFromEnvironment)
     {
-        NSString *folderNameString = [NSString stringWithFormat:@"/Users/%@", NSUserName()];
-        if ([plistFileFromEnvironment hasPrefix:folderNameString])
+        if ([plistFileFromEnvironment hasPrefix:testFolder])
         {
             NSDictionary *listOfEnvironments = [NSDictionary dictionaryWithContentsOfFile:plistFileFromEnvironment];
             environmentArray = [listOfEnvironments objectForKey:@"environments"];
         }
         else
         {
-            NSString *pathName = [NSString stringWithFormat:@"%@/%@",folderNameString, plistFileFromEnvironment];
+            NSString *pathName = [testFolder stringByAppendingPathComponent:plistFileFromEnvironment];
             NSDictionary *listOfEnvironments =  [NSDictionary dictionaryWithContentsOfFile:pathName];
             environmentArray = [listOfEnvironments objectForKey:@"environments"];
         }
     }
     else
     {
-        NSString *environmentPath = [NSString stringWithFormat:@"/Users/%@/test-servers.plist", NSUserName()];
+        NSString *environmentPath = [testFolder stringByAppendingPathComponent:@"test-servers.plist"];
         NSDictionary *listOfEnvironments =  [NSDictionary dictionaryWithContentsOfFile:environmentPath];
         environmentArray = [listOfEnvironments objectForKey:@"environments"];
     }
@@ -78,10 +84,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     {
         return nil;
     }
-    else
-    {
-        return (NSDictionary *)[environmentArray objectAtIndex:0];
-    }
+    return (NSDictionary *)[environmentArray objectAtIndex:0];
 }
 
 - (void)setUp

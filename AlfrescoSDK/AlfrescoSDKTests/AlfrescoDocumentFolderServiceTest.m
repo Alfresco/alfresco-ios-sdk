@@ -1748,7 +1748,8 @@
         {
             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
             
-            [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
+            NSString *versionedFile = [self.testFolderPathName stringByAppendingPathComponent:@"multiple-versions.txt"];
+            [documentService retrieveNodeWithFolderPath:versionedFile completionBlock:^(AlfrescoNode *node, NSError *error)
              {
                  if (nil == node)
                  {
@@ -1773,7 +1774,7 @@
                      NSMutableArray *myObject = [NSMutableArray array];
                      [myObject addObject:doc];
                      
-                     NSString *filePath = [NSString stringWithFormat:@"/Users/%@/serialized-object.txt", NSUserName()];
+                     NSString *filePath = [[self userTestConfigFolder] stringByAppendingPathComponent:@"serialized-object.txt"];
                      [NSKeyedArchiver archiveRootObject:myObject toFile:filePath];
                      
                      NSMutableArray* myArray = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
@@ -2176,7 +2177,7 @@
     if (self.setUpSuccess)
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        NSString *folderPath = [NSString stringWithFormat:@"%@/%@",self.testFolderPathName, self.fixedFileName];
+        NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:self.fixedFileName];
         [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error)
          {
              if (nil == node)
@@ -2237,7 +2238,7 @@
              {
                  STAssertNotNil(folder, @"folder should not be nil");
                  STAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@",folderName);
-                 __block NSString *folderPath = [NSString stringWithFormat:@"%@%@",self.testFolderPathName, folderName];
+                 __block NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:folderName];
                  // check the properties were added at creation time
                  [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
                   {
@@ -3878,7 +3879,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
-        NSString *folderPath = [NSString stringWithFormat:@"%@/%@",self.testFolderPathName, self.fixedFileName];
+        NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:self.fixedFileName];
         
         // Running as admin, read and write access should be true
         [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *documentNode, NSError *error) {

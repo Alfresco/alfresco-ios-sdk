@@ -98,8 +98,8 @@
             self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
             
-            [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
-             {
+            NSString *versionedFile = [self.testFolderPathName stringByAppendingPathComponent:@"multiple-versions.txt"];
+            [documentService retrieveNodeWithFolderPath:versionedFile completionBlock:^(AlfrescoNode *node, NSError *error) {
                  if (nil == node)
                  {
                      documentService = nil;
