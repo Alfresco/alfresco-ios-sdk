@@ -125,6 +125,7 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 - (void)tearDown
 {
+    [self resetTestVariables];
     if (nil == self.testAlfrescoDocument || nil == self.currentSession)
     {
         self.lastTestSuccessful = YES;
@@ -147,9 +148,10 @@ NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                 self.callbackCompleted = YES;
             }
         }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
     }
-    [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");    
+    STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
 }
 
 + (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename
