@@ -211,7 +211,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                     else
                     {
                         STAssertNotNilWeakSelf(array, @"returned array of comments should not be nil");
-                        STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %@", array.count);
+                        STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %lu", (unsigned long)array.count);
                         if (array.count > 0)
                         {
                             STAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent], @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
@@ -283,7 +283,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                     else
                     {
                         STAssertNotNilWeakSelf(array, @"returned array of comments should not be nil");
-                        STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %@", array.count);
+                        STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %lu", (unsigned long)array.count);
                         if (array.count > 0)
                         {
                             STAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent], @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
@@ -435,7 +435,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                     else
                     {
                         STAssertNotNilWeakSelf(array, @"returned array of comments should not be nil");
-                        STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %@", array.count);
+                        STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %lu", (unsigned long)array.count);
                         if (array.count > 0)
                         {
                             AlfrescoComment *retrievedComment = (AlfrescoComment *)[array objectAtIndex:0];
@@ -514,7 +514,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                     else
                     {
                         STAssertNotNilWeakSelf(array, @"returned array of comments should not be nil");
-                        STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %@", array.count);
+                        STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %lu", (unsigned long)array.count);
                         if (array.count > 0)
                         {
                             AlfrescoComment *retrievedComment = (AlfrescoComment *)[array objectAtIndex:0];

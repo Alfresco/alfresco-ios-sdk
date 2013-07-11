@@ -418,7 +418,7 @@
         // Attempt to retrieve the item set
         AlfrescoListingContext *returnedListingContextObject = (AlfrescoListingContext *)[self.currentSession objectForParameter:key];
         
-        STAssertNotNil(returnedListingContextObject, @"Expected a listing object to be returned for the key", key);
+        STAssertNotNil(returnedListingContextObject, @"Expected a listing object to be returned for the key: %@", key);
         STAssertTrue(returnedListingContextObject.maxItems == expectedMaxItems, @"Expected the max items in the listing context stored in the session to return %i, but instead got %i", expectedMaxItems, returnedListingContextObject.maxItems);
         STAssertTrue(returnedListingContextObject.skipCount == expectedSkipCount, @"Expected the skip count in the listing context stored in the session to return %i, but instead got %i", expectedSkipCount, returnedListingContextObject.skipCount);
         
@@ -742,7 +742,7 @@
                                                                            NSError *error;
                                                                            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
                                                                            STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
-                                                                           STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %d kb", [fileAttributes fileSize]/1024.0);
+                                                                           STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %f kb", [fileAttributes fileSize]/1024.0);
                                                                            
                                                                            // Nice boys clean up after themselves
                                                                            [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
