@@ -328,24 +328,23 @@
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
         // get all sites
-        [self.siteService retrieveSiteWithShortName:@"asfadsfsdfds" completionBlock:^(AlfrescoSite *site, NSError *error)
-         {
-             if (nil == site || nil != error)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 self.lastTestSuccessful = YES;
-             }
-             
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.siteService retrieveSiteWithShortName:@"asfadsfsdfds" completionBlock:^(AlfrescoSite *site, NSError *error) {
+            if (nil != site || nil == error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+            
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertFalse(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }
     else
     {
@@ -405,23 +404,21 @@
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
         // get document library folder for site
-        [self.siteService retrieveDocumentLibraryFolderForSite:@"asdfsdfsdfsdf" completionBlock:^(AlfrescoFolder *folder, NSError *error)
-         {
-             if (nil == folder)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.siteService retrieveDocumentLibraryFolderForSite:@"asdfsdfsdfsdf" completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            if (nil != folder)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertFalse(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
     }
     else
     {
