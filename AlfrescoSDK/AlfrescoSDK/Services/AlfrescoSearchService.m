@@ -245,7 +245,7 @@
         }
         else 
         {
-            [searchQuery appendString:[NSString stringWithFormat:@"CONTAINS('~%@:*%@*')", kCMISPropertyName, keyword]];
+            [searchQuery appendString:[NSString stringWithFormat:@"CONTAINS('~%@:%@')", kCMISPropertyName, keyword]];
         }
         
         if (YES == options.includeContent)
