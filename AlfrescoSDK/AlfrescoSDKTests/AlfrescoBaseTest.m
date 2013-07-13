@@ -70,7 +70,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         {
             environment = (NSDictionary *)[allEnvironments objectForKey:serverID];
         }
-}
+    }
 
     if (nil == environment)
     {
@@ -80,12 +80,13 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         self.password = @"admin";
         self.firstName = @"Administrator";
         self.testSiteName = @"ios-sdk-test";
-        self.testSearchFileName = @"unknown";
-        self.textKeyWord = @"Rooney";
-        self.unitTestFolder = @"SDKUnitTestFolder";
-        self.testChildFolderName = @"unknown";
+        self.testSearchFileName = @"ios-search-test.txt";
+        self.testSearchFileKeywords = @"ios-search-test";
+        self.textKeyWord = @"lorem";
+        self.unitTestFolder = @"Unit Test Subfolder";
         self.fixedFileName = @"versioned-quote.txt";
         self.testFolderPathName = @"/ios-sdk-test";
+        self.exifDateTimeOriginalUTC = @"2001-04-06T11:51:40.000Z";
     }
     else
     {
@@ -103,14 +104,15 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         self.testSiteName = [environment valueForKey:@"testSite"];
         self.password = [environment valueForKey:@"password"];
         self.testSearchFileName = [environment valueForKey:@"testSearchFile"];
+        self.testSearchFileKeywords = [environment valueForKey:@"testSearchFileKeywords"];
         self.textKeyWord = [environment valueForKey:@"textKeyWord"];
         self.unitTestFolder = [environment valueForKey:@"testAddedFolder"];
-        self.testChildFolderName= [environment valueForKey:@"testChildFolder"];
         self.fixedFileName = [environment valueForKey:@"fixedFileName"];
         self.testFolderPathName = [environment valueForKey:@"docFolder"];
         self.secondUsername = [environment valueForKey:@"secondUsername"];
         self.secondPassword = [environment valueForKey:@"secondPassword"];
         self.moderatedSiteName = [environment valueForKey:@"moderatedSite"];
+        self.exifDateTimeOriginalUTC = [environment valueForKey:@"exifDateTimeOriginalUTC"];
     }
 
     [self resetTestVariables];
@@ -230,10 +232,6 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
             STAssertTrue([document.type isEqualToString:@"cm:content"], @"The test document should be of type cm:content but it is %@", document.type);
             self.lastTestSuccessful = YES;
             self.testAlfrescoDocument = document;
-            if (!self.isCloud)
-            {
-                self.testSearchFileName = self.testAlfrescoDocument.name;
-            }
             self.callbackCompleted = YES;
             success = YES;
         }

@@ -611,7 +611,7 @@
             
             BOOL isRunningOnVersion4 = [sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike];
             
-            STAssertTrue([sessionRepositoryInfo.edition isEqualToString:@"Enterprise"], @"Expected the edition to be Enterprise edition");
+            STAssertTrue([sessionRepositoryInfo.edition isEqualToString:@"Enterprise"] || [sessionRepositoryInfo.edition isEqualToString:@"Community"], @"Expected the edition to be Enterprise or Community but it is %@", sessionRepositoryInfo.edition);
             
             if (isRunningOnVersion4)
             {

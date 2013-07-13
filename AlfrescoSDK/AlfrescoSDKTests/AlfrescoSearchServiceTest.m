@@ -36,7 +36,6 @@
 
 - (void)testQueryWithKeywords
 {
-    
     if (self.setUpSuccess)
     {
         if (!self.isCloud)
@@ -44,51 +43,35 @@
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
             
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
+            NSString *searchTerm = [self.testSearchFileKeywords stringByDeletingPathExtension];
             
-            // Different search terms are required on the different versions of the OnPremise server, due to known indexing issues
-            BOOL isRunningOnVersion3 = (![[[self.currentSession repositoryInfo] capabilities] doesSupportCommentCounts]) ? YES : NO;
-            NSString *abbreviatedSearchTerm = nil;
-            if (isRunningOnVersion3)
-            {
-                abbreviatedSearchTerm = @"test";
-            }
-            else
-            {
-                abbreviatedSearchTerm = @"test_file";
-            }
-            
-            if([self.testSearchFileName hasSuffix:@".pptx"])
-            {
-                abbreviatedSearchTerm = [self.testSearchFileName stringByReplacingOccurrencesOfString:@".pptx" withString:@""];
-            }
             // search
-            [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions completionBlock:^(NSArray *array, NSError *error)
-             {
-                 if (nil == array)
-                 {
-                     self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 }
-                 else
-                 {
-                     STAssertNotNil(array, @"array should not be nil");
-                     STAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d",array.count);
-                     if(array.count == 0)
-                     {
-                         self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = @"No query result";
-                     }
-                     else
-                     {
-                         BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.testSearchFileName array:array];
-                         AlfrescoLogDebug(@"Search Term: %@", abbreviatedSearchTerm);
-                         AlfrescoLogDebug(@"Results array size is: %i, and the first object is: %@", [array count], [[array objectAtIndex:0] name]);
-                         STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
-                         self.lastTestSuccessful = arrayContainsTestFile;
-                     }
-                 }
-                 self.callbackCompleted = YES;
-             }];
+            [self.searchService searchWithKeywords:searchTerm options:searchOptions completionBlock:^(NSArray *array, NSError *error) {
+                if (nil == array)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
+                else
+                {
+                    STAssertNotNil(array, @"array should not be nil");
+                    STAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d", array.count);
+                    if (array.count == 0)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = @"No query result";
+                    }
+                    else
+                    {
+                        BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.testSearchFileName array:array];
+                        AlfrescoLogDebug(@"Search Term: %@", searchTerm);
+                        AlfrescoLogDebug(@"Results array size is: %i, and the first object is: %@", [array count], [[array objectAtIndex:0] name]);
+                        STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
+                        self.lastTestSuccessful = arrayContainsTestFile;
+                    }
+                }
+                self.callbackCompleted = YES;
+            }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -112,46 +95,25 @@
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
             
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithFolder:nil includeDescendants:YES];
-            
             AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
-            
-            // Different search terms are required on the different versions of the OnPremise server, due to known indexing issues
-            BOOL isRunningOnVersion3 = (![[[self.currentSession repositoryInfo] capabilities] doesSupportCommentCounts]) ? YES : NO;
-            NSString *abbreviatedSearchTerm = nil;
-            if (isRunningOnVersion3)
-            {
-                abbreviatedSearchTerm = @"test";
-            }
-            else
-            {
-                abbreviatedSearchTerm = @"test_file";
-            }
-            
-            if([self.testSearchFileName hasSuffix:@".pptx"])
-            {
-                abbreviatedSearchTerm = [self.testSearchFileName stringByReplacingOccurrencesOfString:@".pptx" withString:@""];
-            }
+            NSString *abbreviatedSearchTerm = [self.testSearchFileName stringByDeletingPathExtension];
             
             // search
-            [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions
-                                    listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-             {
-                 
-                 if (nil == pagingResult)
-                 {
-                     self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 }
-                 else
-                 {
-                     STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                     STAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result");
-                     STAssertTrue(pagingResult.objects.count > 0, @"number of objects found in current page should be more than 0, but we got %d",pagingResult.objects.count);
-                     self.lastTestSuccessful = YES;
-                 }
-                 self.callbackCompleted = YES;
-                 
-             }];
+            [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                if (nil == pagingResult)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
+                else
+                {
+                    STAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                    STAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result but got %d", pagingResult.objects.count);
+                    STAssertTrue(pagingResult.objects.count > 0, @"number of objects found in current page should be more than 0, but we got %d", pagingResult.objects.count);
+                    self.lastTestSuccessful = YES;
+                }
+                self.callbackCompleted = YES;
+            }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -231,28 +193,25 @@
             
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
             
-            
-            [self.searchService searchWithKeywords:self.testSearchFileName options:searchOptions completionBlock:^(NSArray *array, NSError *error)
-             {
-                 if (nil == array)
-                 {
-                     self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 }
-                 else
-                 {
-                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
-                     STAssertNotNil(array, @"array should not be nil");
-                     STAssertTrue(array.count > 0, @"expected >0 search results for OnPremise but got back %d",array.count);
-                     self.lastTestSuccessful = YES;
-                 }
-                 self.callbackCompleted = YES;
-                 
-             }];
+            [self.searchService searchWithKeywords:self.testSearchFileName options:searchOptions completionBlock:^(NSArray *array, NSError *error) {
+                if (nil == array)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
+                else
+                {
+                    AlfrescoLogDebug(@"search result array contains %d entries", array.count);
+                    STAssertNotNil(array, @"array should not be nil");
+                    STAssertTrue(array.count > 0, @"expected >0 search results for OnPremise but got back %d",array.count);
+                    self.lastTestSuccessful = YES;
+                }
+                self.callbackCompleted = YES;
+                
+            }];
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
-        
     }
     else
     {
@@ -274,36 +233,33 @@
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
             
             // search
-            
-            [self.searchService searchWithKeywords:self.textKeyWord options:searchOptions
-                                   completionBlock:^(NSArray *array, NSError *error)
-             {
-                 if (nil == array)
-                 {
-                     self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 }
-                 else
-                 {
-                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
-                     STAssertNotNil(array, @"array should not be nil");
-                     STAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d",array.count);
-                     if(array.count == 0)
-                     {
-                         self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = @"No query result";
-                     }
-                     else
-                     {
-                         BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.fixedFileName array:array];
-                         STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
-                         
-                         self.lastTestSuccessful = arrayContainsTestFile;
-                     }
-                 }
-                 self.callbackCompleted = YES;
-                 
-             }];
+            [self.searchService searchWithKeywords:self.textKeyWord options:searchOptions completionBlock:^(NSArray *array, NSError *error) {
+                if (nil == array)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
+                else
+                {
+                    AlfrescoLogDebug(@"search result array contains %d entries", array.count);
+                    STAssertNotNil(array, @"array should not be nil");
+                    STAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d",array.count);
+                    if (array.count == 0)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = @"No query result";
+                    }
+                    else
+                    {
+                        BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.fixedFileName array:array];
+                        STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
+                        
+                        self.lastTestSuccessful = arrayContainsTestFile;
+                    }
+                }
+                self.callbackCompleted = YES;
+                
+            }];
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
@@ -326,25 +282,10 @@
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
             
-            // Different search terms are required on the different versions of the OnPremise server, due to known indexing issues
-            BOOL isRunningOnVersion3 = (![[[self.currentSession repositoryInfo] capabilities] doesSupportCommentCounts]) ? YES : NO;
-            NSString *abbreviatedSearchTerm = nil;
-            if (isRunningOnVersion3)
-            {
-                abbreviatedSearchTerm = @"test";
-            }
-            else
-            {
-                abbreviatedSearchTerm = @"test_file";
-            }
-            
-            if([self.testSearchFileName hasSuffix:@".pptx"])
-            {
-                abbreviatedSearchTerm = [self.testSearchFileName stringByReplacingOccurrencesOfString:@".pptx" withString:@""];
-            }
+            NSString *searchTerm = [self.testSearchFileKeywords stringByDeletingPathExtension];
             
             // search
-            [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions completionBlock:^(NSArray *array, NSError *error)
+            [self.searchService searchWithKeywords:searchTerm options:searchOptions completionBlock:^(NSArray *array, NSError *error)
              {
                  if (nil == array)
                  {
@@ -396,45 +337,26 @@
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
             
             AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] init];
-            
             AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
-            
-            // Different search terms are required on the different versions of the OnPremise server, due to known indexing issues
-            BOOL isRunningOnVersion3 = (![[[self.currentSession repositoryInfo] capabilities] doesSupportCommentCounts]) ? YES : NO;
-            NSString *abbreviatedSearchTerm = nil;
-            if (isRunningOnVersion3)
-            {
-                abbreviatedSearchTerm = @"test";
-            }
-            else
-            {
-                abbreviatedSearchTerm = @"test_file";
-            }
-            
-            if([self.testSearchFileName hasSuffix:@".pptx"])
-            {
-                abbreviatedSearchTerm = [self.testSearchFileName stringByReplacingOccurrencesOfString:@".pptx" withString:@""];
-            }
+            NSString *abbreviatedSearchTerm = [self.testSearchFileName stringByDeletingPathExtension];
             
             // search
-            [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-             {
-                 
-                 if (nil == pagingResult)
-                 {
-                     self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 }
-                 else
-                 {
-                     AlfrescoLogDebug(@"search result array contains %d entries", pagingResult.objects.count);
-                     STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                     STAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result");
-                     self.lastTestSuccessful = YES;
-                 }
-                 self.callbackCompleted = YES;
-                 
-             }];
+            [self.searchService searchWithKeywords:abbreviatedSearchTerm options:searchOptions listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                if (nil == pagingResult)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
+                else
+                {
+                    AlfrescoLogDebug(@"search result array contains %d entries", pagingResult.objects.count);
+                    STAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                    STAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result");
+                    self.lastTestSuccessful = YES;
+                }
+                self.callbackCompleted = YES;
+                
+            }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
