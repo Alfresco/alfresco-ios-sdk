@@ -109,7 +109,6 @@
                                parameters:(NSDictionary *)parameters
                           completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:parameters];
     if (nil != sessionInstance)
@@ -137,6 +136,7 @@
         }
         else
         {
+            [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
             return [sessionInstance authenticateWithOAuthData:oauthData
                                               completionBlock:completionBlock];
         }
