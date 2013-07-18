@@ -980,7 +980,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                 }
                 else
                 {
-                    request.httpRequest = [self.cmisSession retrieveObject:cmisDocument.identifier completionBlock:^(CMISObject *updatedObject, NSError *updatedError){
+                    NSString *versionSeriesId = [cmisObject.properties propertyValueForId:@"cmis:versionSeriesId"];
+                    request.httpRequest = [self.cmisSession retrieveObject:versionSeriesId completionBlock:^(CMISObject *updatedObject, NSError *updatedError){
                         if (nil == updatedObject)
                         {
                             NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:updatedError];
@@ -1037,7 +1038,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                 }
                 else
                 {
-                    request.httpRequest = [self.cmisSession retrieveObject:document.identifier completionBlock:^(CMISObject *updatedObject, NSError *updatedError){
+                    NSString *versionSeriesId = [cmisObject.properties propertyValueForId:@"cmis:versionSeriesId"];
+                    request.httpRequest = [self.cmisSession retrieveObject:versionSeriesId completionBlock:^(CMISObject *updatedObject, NSError *updatedError){
                         if (nil == updatedObject)
                         {
                             NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:updatedError];
@@ -1178,7 +1180,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                                                 }
                                                 else
                                                 {
-                                                    request.httpRequest = [self.cmisSession retrieveObject:cmisObject.identifier completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError){
+                                                    NSString *versionSeriesId = [cmisObject.properties propertyValueForId:@"cmis:versionSeriesId"];
+                                                    request.httpRequest = [self.cmisSession retrieveObject:versionSeriesId completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError){
                                                         if (nil == updatedCMISObject)
                                                         {
                                                             completionBlock(nil, retrievalError);
