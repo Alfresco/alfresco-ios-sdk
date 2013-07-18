@@ -45,9 +45,10 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 - (void)tearDown
 {
-    
+    // No-op base class override
 }
-- (BOOL) setUpCMISSession
+
+- (BOOL)setUpCMISSession
 {
     __block BOOL success = NO;
     NSString *urlString = nil;
@@ -158,7 +159,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                     {
                         CMISDocument *doc = (CMISDocument *)object;
                         STAssertTrue([doc.name isEqualToString:documentName], @"expected %@ but got %@", documentName, doc.name);
-                        [self verifyDocument:doc hasExtensionProperty:@"cm:description" withValue:documentDescription];
+                        [self verifyDocument:doc hasExtensionProperty:@"cm:description" withValue:documentDescription forAspect:@"cm:titled"];
                         [doc deleteAllVersionsWithCompletionBlock:^(BOOL documentDeleted, NSError *deleteError){
                             if (deleteError)
                             {
@@ -315,9 +316,9 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
             {
                 CMISDocument *document = (CMISDocument *)cmisObject;
                 self.lastTestSuccessful = YES;
-                [self verifyDocument:document hasExtensionProperty:@"exif:manufacturer" withValue:@"NIKON"];
-                [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"E950"];
-                [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
+                [self verifyDocument:document hasExtensionProperty:@"exif:manufacturer" withValue:@"NIKON" forAspect:@"exif:exif"];
+                [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"E950" forAspect:@"exif:exif"];
+                [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false" forAspect:@"exif:exif"];
                 self.callbackCompleted = YES;
             }
         }];
@@ -483,7 +484,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                     else
                     {
                         CMISDocument *doc = (CMISDocument *)cmisObject;
-                        [self verifyDocument:doc hasExtensionProperty:@"exif:model" withValue:@"UberCam"];
+                        [self verifyDocument:doc hasExtensionProperty:@"exif:model" withValue:@"UberCam" forAspect:@"exif:exif"];
                         [doc deleteAllVersionsWithCompletionBlock:^(BOOL deleted, NSError *deleteError){
                             if (deleteError)
                             {
@@ -705,7 +706,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 #pragma mark Helper methods
 
-- (void)verifyDocument:(CMISDocument *)document hasExtensionProperty:(NSString *)expectedProperty withValue:(id)expectedValue
+- (void)verifyDocument:(CMISDocument *)document hasExtensionProperty:(NSString *)expectedProperty withValue:(id)expectedValue forAspect:(NSString *)aspect
 {
     // Let's do some extension juggling
     STAssertNotNil(document.properties.extensions, @"Expected extensions");
@@ -717,17 +718,31 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
     // Find properties extension element
     CMISExtensionElement *propertiesExtensionElement = nil;
+    BOOL aspectFound = NO;
     for (CMISExtensionElement *childExtensionElement in rootExtensionElement.children)
     {
-        if ([childExtensionElement.name isEqualToString:@"properties"])
+        if (!aspectFound)
         {
-            propertiesExtensionElement = childExtensionElement;
-            break;
+            // Loop round looking for the aspect we're interested in. Use hasSuffix as they will be preceeded with "P:"
+            if ([childExtensionElement.name isEqualToString:@"appliedAspects"] && [childExtensionElement.value hasSuffix:aspect])
+            {
+                aspectFound = YES;
+                continue;
+            }
+        }
+        else
+        {
+            // Aspect found so now only interested in next properties element
+            if ([childExtensionElement.name isEqualToString:@"properties"])
+            {
+                propertiesExtensionElement = childExtensionElement;
+                break;
+            }
         }
     }
-    STAssertNotNil(propertiesExtensionElement, @"No properties extension element found");
+    STAssertTrue(aspectFound, @"The aspect %@ was not found on this node", aspect);
 
-    // Find description property
+    // Find the property requested
     CMISExtensionElement *propertyElement = nil;
     for (CMISExtensionElement *childExtensionElement in propertiesExtensionElement.children)
     {
