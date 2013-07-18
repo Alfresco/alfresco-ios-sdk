@@ -29,19 +29,25 @@
 
 - (void)setUp
 {
-    NSDictionary *customParameters = [NSDictionary dictionaryWithObject:@"/service/cmis" forKey:kAlfrescoCMISBindingURL];
     [self setupEnvironmentParameters];
     BOOL success = NO;
-    if (!self.isCloud)
+    if (self.isCloud)
     {
+        // Cloud does not support these tests
+        success = YES;
+    }
+    else
+    {
+        NSDictionary *customParameters = [NSDictionary dictionaryWithObject:@"/service/cmis" forKey:kAlfrescoCMISBindingURL];
         success = [self authenticateOnPremiseServer:customParameters];
         [self resetTestVariables];
+        if (success)
+        {
+            success = [self retrieveAlfrescoTestFolder];
+            [self resetTestVariables];
+        }
     }
-    if (success)
-    {
-        success = [self retrieveAlfrescoTestFolder];
-        [self resetTestVariables];
-    }
+
     self.setUpSuccess = success;
 }
 
@@ -52,31 +58,34 @@
 {
     if (self.setUpSuccess)
     {
-        AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        [dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *children, NSError *error) {
-            if (nil == children)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                STAssertTrue(0 < children.count, @"we should have more than one element in the children's array");
-                CMISSession *cmisSession = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
-                if (cmisSession)
+        if (!self.isCloud)
+        {
+            AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+            [dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *children, NSError *error) {
+                if (nil == children)
                 {
-                    CMISSessionParameters *parameters = cmisSession.sessionParameters;
-                    NSString *atomPubUrl = [parameters.atomPubUrl absoluteString];
-                    STAssertFalse(NSNotFound == [atomPubUrl rangeOfString:kAlfrescoOnPremiseCMISPath].location, @"should have found the /service/cmis string in atomPubURl");
-                    
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    self.callbackCompleted = YES;
                 }
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
-        }];
-        [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+                else
+                {
+                    STAssertTrue(0 < children.count, @"we should have more than one element in the children's array");
+                    CMISSession *cmisSession = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
+                    if (cmisSession)
+                    {
+                        CMISSessionParameters *parameters = cmisSession.sessionParameters;
+                        NSString *atomPubUrl = [parameters.atomPubUrl absoluteString];
+                        STAssertFalse(NSNotFound == [atomPubUrl rangeOfString:kAlfrescoOnPremiseCMISPath].location, @"should have found the /service/cmis string in atomPubURl");
+                        
+                    }
+                    self.lastTestSuccessful = YES;
+                    self.callbackCompleted = YES;
+                }
+            }];
+            [self waitUntilCompleteWithFixedTimeInterval];
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
     }
     else
     {
