@@ -33,11 +33,15 @@
 
 static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
+@interface AlfrescoSpecificCMISTests()
+@property (nonatomic, strong) NSDictionary *environment;
+@end
+
 @implementation AlfrescoSpecificCMISTests
 
 - (void)setUp
 {
-    [self setupEnvironmentParameters];
+    self.environment = [self setupEnvironmentParameters];
     BOOL success = [self setUpCMISSession];
     [self resetTestVariables];
     self.setUpSuccess = success;
@@ -58,7 +62,15 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     }
     else
     {
-        urlString = [self.server stringByAppendingString:kAlfrescoOnPremiseCMISPath];
+        if ([[self.environment valueForKey:@"useWebscriptEndpointForAlfrescoSpecificCMISTests"] boolValue])
+        {
+            // Use the webscript binding for this server
+            urlString = [self.server stringByAppendingString:kAlfrescoOnPremiseCMISPath];
+        }
+        else
+        {
+            urlString = [self.server stringByAppendingString:kAlfrescoOnPremise4_xCMISPath];
+        }
     }
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc]
                                              initWithBindingType:CMISBindingTypeAtomPub];

@@ -55,7 +55,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     return [NSString pathWithComponents:@[@"/Users", userName, kAlfrescoTestServersConfigDirectory]];
 }
 
-- (void)setupEnvironmentParameters
+- (NSDictionary *)setupEnvironmentParameters
 {
     NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
     NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
@@ -113,9 +113,12 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         self.secondPassword = [environment valueForKey:@"secondPassword"];
         self.moderatedSiteName = [environment valueForKey:@"moderatedSite"];
         self.exifDateTimeOriginalUTC = [environment valueForKey:@"exifDateTimeOriginalUTC"];
+        
     }
 
     [self resetTestVariables];
+    
+    return environment;
 }
 
 - (void)setUp

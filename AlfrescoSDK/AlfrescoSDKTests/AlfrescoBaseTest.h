@@ -77,7 +77,7 @@ typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
 - (void)waitUntilCompleteWithFixedTimeInterval;
 - (BOOL)removeTestDocument;
 - (BOOL)uploadTestDocument:(NSString *)filePath;
-- (void)setupEnvironmentParameters;
+- (NSDictionary *)setupEnvironmentParameters;
 - (void)setUpTestImageFile:(NSString *)filePath;
 - (void)resetTestVariables;
 - (NSString *)userTestConfigFolder;
