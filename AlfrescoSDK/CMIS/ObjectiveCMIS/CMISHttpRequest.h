@@ -32,9 +32,8 @@
 @property (nonatomic, strong) NSDictionary *additionalHeaders;
 @property (nonatomic, strong) NSHTTPURLResponse *response;
 @property (nonatomic, strong) id<CMISAuthenticationProvider> authenticationProvider;
-@property (nonatomic, assign) BOOL trustedSSLServer;
 @property (nonatomic, copy) void (^completionBlock)(CMISHttpResponse *httpResponse, NSError *error);
-@property (nonatomic, strong) NSURL *requestURL;
+
 /**
  * starts a URL request for given HTTP method 
  * @param requestBody (optional)
@@ -47,7 +46,6 @@
                      requestBody:(NSData*)requestBody
                          headers:(NSDictionary*)additionalHeaders
           authenticationProvider:(id<CMISAuthenticationProvider>)authenticationProvider
-             useTrustedSSLServer:(BOOL)trustedSSLServer
                  completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
 
 /**

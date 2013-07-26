@@ -19,16 +19,11 @@
 #import "BasicPreviewItem.h"
 
 @interface BasicPreviewItem()
-
 @property (readwrite) NSURL *previewItemURL;
 @property (readwrite) NSString *previewItemTitle;
-
 @end
 
 @implementation BasicPreviewItem
-
-@synthesize previewItemURL = _previewItemURL;
-@synthesize previewItemTitle = _previewItemTitle;
 
 - (id) initWithUrl:(NSURL *)url andTitle:(NSString *)title
 {

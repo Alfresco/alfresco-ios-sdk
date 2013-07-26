@@ -34,7 +34,8 @@
 - (void)cancel
 {
     self.isCancelled = YES;
-    if ([self.httpRequest respondsToSelector:@selector(cancel)]){
+    if ([self.httpRequest respondsToSelector:@selector(cancel)])
+    {
         [self.httpRequest cancel];
     }
 }
@@ -43,8 +44,10 @@
 - (void)setHttpRequest:(id)httpRequest
 {
     _httpRequest = httpRequest;
-    if (self.isCancelled){
-        if ([httpRequest respondsToSelector:@selector(cancel)]) {
+    if (self.isCancelled)
+    {
+        if ([httpRequest respondsToSelector:@selector(cancel)])
+        {
             [httpRequest cancel];
         }
     }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="2q8-VX-rUh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="2q8-VX-rUh">
     <dependencies>
         <deployment version="1296" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -318,7 +318,7 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="tvN-CG-ec6">
-                                        <rect key="frame" x="0.0" y="119" width="768" height="45"/>
+                                        <rect key="frame" x="0.0" y="119" width="768" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="45" y="0.0" width="678" height="43"/>
@@ -345,6 +345,32 @@
                                         </view>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ET0-OF-Ibq">
+                                        <rect key="frame" x="0.0" y="163" width="768" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="45" y="0.0" width="678" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="SSL validation" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Are-IW-M4q">
+                                                    <rect key="frame" x="20" y="11" width="276" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="AOf-uR-WyF">
+                                                    <rect key="frame" x="581" y="8" width="79" height="27"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="sslValidationValueChanged:" destination="tp5-Ln-Liq" eventType="valueChanged" id="Hs8-UZ-WJw"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -364,6 +390,7 @@
                     <connections>
                         <outlet property="doneButton" destination="2qZ-sj-MER" id="U9b-XQ-pm4"/>
                         <outlet property="passwordField" destination="4Ae-Fs-Vsl" id="cmc-eg-yKt"/>
+                        <outlet property="sslValidationField" destination="AOf-uR-WyF" id="4TN-tD-Rv1"/>
                         <outlet property="urlField" destination="kkJ-iZ-dOK" id="p2z-I0-zya"/>
                         <outlet property="usernameField" destination="igJ-Sp-ykP" id="O5f-Qf-pBU"/>
                         <segue destination="adh-Ty-GUC" kind="push" identifier="repoAfterAuthentication" id="sLJ-BA-pOi"/>
@@ -1219,6 +1246,113 @@
         <image name="repository.png" width="44" height="44"/>
         <image name="samples.png" width="44" height="44"/>
     </resources>
+    <classes>
+        <class className="ActivitiesTableViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ActivitiesTableViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
+            </relationships>
+        </class>
+        <class className="AddCommentViewController" superclassName="BaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddCommentViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="commentView" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="AddNewItemTableViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddNewItemTableViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="activityIndicatorView" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="folderLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="photoLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
+            </relationships>
+        </class>
+        <class className="AddPhotoTableViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddPhotoTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="done:"/>
+            </relationships>
+        </class>
+        <class className="BaseTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BaseTableViewController.h"/>
+        </class>
+        <class className="BaseViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BaseViewController.h"/>
+        </class>
+        <class className="DocumentViewController" superclassName="BaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DocumentViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="downloadDocument:"/>
+                <relationship kind="action" name="setLikeDocumentTag:"/>
+                <relationship kind="outlet" name="activityBarButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="commentButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="downloadButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="likeButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="FolderViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FolderViewController.h"/>
+        </class>
+        <class className="MobileSDKTableViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MobileSDKTableViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="learnMoreLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="referenceLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="samplesLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="MobileSDKWebViewController" superclassName="BaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MobileSDKWebViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="goBack:"/>
+                <relationship kind="action" name="goForward:"/>
+                <relationship kind="outlet" name="activityButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="activityView" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="refreshButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+        <class className="RepositoryLoginViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RepositoryLoginViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="authenticateWhenDone:"/>
+                <relationship kind="action" name="sslValidationValueChanged:"/>
+                <relationship kind="outlet" name="doneButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="sslValidationField" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="urlField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="usernameField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="SamplesViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SamplesViewController.h"/>
+        </class>
+        <class className="SearchResultViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SearchResultViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="activityBarButton" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="SearchViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SearchViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="exactSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="fullTextSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="searchButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="searchField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="ServerSelectionTableViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ServerSelectionTableViewController.h"/>
+        </class>
+        <class className="SitesViewController" superclassName="BaseTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SitesViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

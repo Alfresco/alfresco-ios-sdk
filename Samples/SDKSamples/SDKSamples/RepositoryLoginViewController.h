@@ -22,6 +22,8 @@
 @property (nonatomic, weak) IBOutlet UITextField *urlField;
 @property (nonatomic, weak) IBOutlet UITextField *usernameField;
 @property (nonatomic, weak) IBOutlet UITextField *passwordField;
+@property (nonatomic, weak) IBOutlet UISwitch *sslValidationField;
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *doneButton;
+- (IBAction)sslValidationValueChanged:(id)sender;
 - (IBAction)authenticateWhenDone:(id)sender;
 @end

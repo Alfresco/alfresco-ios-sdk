@@ -31,13 +31,17 @@
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
 
+static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
+
+@interface AlfrescoSpecificCMISTests()
+@property (nonatomic, strong) NSDictionary *environment;
+@end
+
 @implementation AlfrescoSpecificCMISTests
 
 - (void)setUp
 {
-    NSDictionary *environmentsDict = [self testEnvironmentDictionary];
-    [self parseEnvironmentDictionary:environmentsDict];
-    [self resetTestVariables];
+    self.environment = [self setupEnvironmentParameters];
     BOOL success = [self setUpCMISSession];
     [self resetTestVariables];
     self.setUpSuccess = success;
@@ -45,24 +49,33 @@
 
 - (void)tearDown
 {
-    
+    // No-op base class override
 }
-- (BOOL) setUpCMISSession
+
+- (BOOL)setUpCMISSession
 {
     __block BOOL success = NO;
     NSString *urlString = nil;
     if (self.isCloud)
     {
-        urlString = [self.server stringByAppendingString:[NSString stringWithFormat:@"%@%@%@",kAlfrescoCloudPrecursor, kAlfrescoTestNetworkID, kAlfrescoCloudCMISPath]];
+        urlString = [self.server stringByAppendingString:[NSString stringWithFormat:@"%@%@%@", kAlfrescoCloudPrecursor, kAlfrescoTestNetworkID, kAlfrescoCloudCMISPath]];
     }
     else
     {
-        urlString = [self.server stringByAppendingString:kAlfrescoOnPremiseCMISPath];
+        if ([[self.environment valueForKey:@"useWebscriptEndpointForAlfrescoSpecificCMISTests"] boolValue])
+        {
+            // Use the webscript binding for this server
+            urlString = [self.server stringByAppendingString:kAlfrescoOnPremiseCMISPath];
+        }
+        else
+        {
+            urlString = [self.server stringByAppendingString:kAlfrescoOnPremise4_xCMISPath];
+        }
     }
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc]
                                              initWithBindingType:CMISBindingTypeAtomPub];
     params.username = self.userName;
-    params.password = self.testPassword;
+    params.password = self.password;
     params.atomPubUrl = [NSURL URLWithString:urlString];
     [CMISSession arrayOfRepositories:params completionBlock:^(NSArray *repositories, NSError *error){
         if (nil == repositories)
@@ -158,7 +171,7 @@
                     {
                         CMISDocument *doc = (CMISDocument *)object;
                         STAssertTrue([doc.name isEqualToString:documentName], @"expected %@ but got %@", documentName, doc.name);
-                        [self verifyDocument:doc hasExtensionProperty:@"cm:description" withValue:documentDescription];
+                        [self verifyDocument:doc hasExtensionProperty:@"cm:description" withValue:documentDescription forAspect:@"cm:titled"];
                         [doc deleteAllVersionsWithCompletionBlock:^(BOOL documentDeleted, NSError *deleteError){
                             if (deleteError)
                             {
@@ -183,7 +196,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -303,8 +316,7 @@
 {
     if (self.setUpSuccess)
     {
-        NSString *testFilePath = nil;
-        testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
+        NSString *testFilePath = [self.testFolderPathName stringByAppendingPathComponent:@"image-with-exif.jpg"];
         [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
@@ -316,9 +328,9 @@
             {
                 CMISDocument *document = (CMISDocument *)cmisObject;
                 self.lastTestSuccessful = YES;
-                [self verifyDocument:document hasExtensionProperty:@"exif:manufacturer" withValue:@"NIKON"];
-                [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"E950"];
-                [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
+                [self verifyDocument:document hasExtensionProperty:@"exif:manufacturer" withValue:@"NIKON" forAspect:@"exif:exif"];
+                [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:@"E950" forAspect:@"exif:exif"];
+                [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false" forAspect:@"exif:exif"];
                 self.callbackCompleted = YES;
             }
         }];
@@ -327,7 +339,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -335,8 +347,7 @@
 {
     if (self.setUpSuccess)
     {
-        NSString *testFilePath = nil;
-        testFilePath = [NSString stringWithFormat:@"%@/image-with-exif.jpg", self.testFolderPathName];
+        NSString *testFilePath = [self.testFolderPathName stringByAppendingPathComponent:@"image-with-exif.jpg"];
         [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
@@ -352,8 +363,11 @@
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:model"], @"E950", nil);
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:flash"], [NSNumber numberWithBool:NO], nil);
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:pixelXDimension"], [NSNumber numberWithInt:800], nil);
-                STAssertEqualObjects([document.properties propertyValueForId:@"exif:exposureTime"], [NSNumber numberWithDouble:0.012987012987013], nil);
-                STAssertEqualObjects([document.properties propertyValueForId:@"exif:dateTimeOriginal"], [CMISDateUtil dateFromString:@"2012-10-19T00:00:00.000Z"], nil);
+                // It seems different EXIF metadata extractors vary in precision, so just check the first 16 digits of exposureTime
+                NSString *trimmedExposureTime = [[NSString stringWithFormat:@"%@", [document.properties propertyValueForId:@"exif:exposureTime"]] substringToIndex:16];
+                STAssertEqualObjects(trimmedExposureTime, @"0.01298701298701", nil);
+                // Note: EXIF dates are considered to be in the local timezone, therefore the expected UTC-equivalent date is now specified in the test parameters
+                STAssertEqualObjects([document.properties propertyValueForId:@"exif:dateTimeOriginal"], [CMISDateUtil dateFromString:self.exifDateTimeOriginalUTC], nil);
                 self.callbackCompleted = YES;
             }
         }];
@@ -362,7 +376,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -375,8 +389,9 @@
 
         NSDate *originalDate = [[CMISDateUtil defaultDateFormatter] dateFromString:@"2012-10-19T00:00:00.000Z"];
         NSDate *now = [NSDate date];
-        
-        [self.cmisSession retrieveObjectByPath:@"/ios-test/image-with-exif.jpg" completionBlock:^(CMISObject *cmisObject, NSError *error){
+        NSString *testFilePath = [self.testFolderPathName stringByAppendingPathComponent:@"image-with-exif.jpg"];
+ 
+        [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
             if (nil == cmisObject)
             {
                 self.lastTestSuccessful = NO;
@@ -481,7 +496,7 @@
                     else
                     {
                         CMISDocument *doc = (CMISDocument *)cmisObject;
-                        [self verifyDocument:doc hasExtensionProperty:@"exif:model" withValue:@"UberCam"];
+                        [self verifyDocument:doc hasExtensionProperty:@"exif:model" withValue:@"UberCam" forAspect:@"exif:exif"];
                         [doc deleteAllVersionsWithCompletionBlock:^(BOOL deleted, NSError *deleteError){
                             if (deleteError)
                             {
@@ -504,7 +519,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -576,7 +591,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -649,7 +664,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -703,7 +718,7 @@
 
 #pragma mark Helper methods
 
-- (void)verifyDocument:(CMISDocument *)document hasExtensionProperty:(NSString *)expectedProperty withValue:(id)expectedValue
+- (void)verifyDocument:(CMISDocument *)document hasExtensionProperty:(NSString *)expectedProperty withValue:(id)expectedValue forAspect:(NSString *)aspect
 {
     // Let's do some extension juggling
     STAssertNotNil(document.properties.extensions, @"Expected extensions");
@@ -715,17 +730,31 @@
 
     // Find properties extension element
     CMISExtensionElement *propertiesExtensionElement = nil;
+    BOOL aspectFound = NO;
     for (CMISExtensionElement *childExtensionElement in rootExtensionElement.children)
     {
-        if ([childExtensionElement.name isEqualToString:@"properties"])
+        if (!aspectFound)
         {
-            propertiesExtensionElement = childExtensionElement;
-            break;
+            // Loop round looking for the aspect we're interested in. Use hasSuffix as they will be preceeded with "P:"
+            if ([childExtensionElement.name isEqualToString:@"appliedAspects"] && [childExtensionElement.value hasSuffix:aspect])
+            {
+                aspectFound = YES;
+                continue;
+            }
+        }
+        else
+        {
+            // Aspect found so now only interested in next properties element
+            if ([childExtensionElement.name isEqualToString:@"properties"])
+            {
+                propertiesExtensionElement = childExtensionElement;
+                break;
+            }
         }
     }
-    STAssertNotNil(propertiesExtensionElement, @"No properties extension element found");
+    STAssertTrue(aspectFound, @"The aspect %@ was not found on this node", aspect);
 
-    // Find description property
+    // Find the property requested
     CMISExtensionElement *propertyElement = nil;
     for (CMISExtensionElement *childExtensionElement in propertiesExtensionElement.children)
     {
@@ -736,7 +765,7 @@
             break;
         }
     }
-    STAssertNotNil(propertyElement, [NSString stringWithFormat:@"No property '%@' was found", expectedProperty]);
+    STAssertNotNil(propertyElement, @"No property '%@' was found", expectedProperty);
 
     // Finally, verify the value
     CMISExtensionElement *valueElement = [propertyElement.children objectAtIndex:0];

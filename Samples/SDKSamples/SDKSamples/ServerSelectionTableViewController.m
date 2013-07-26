@@ -28,7 +28,7 @@
 @end
 
 @implementation ServerSelectionTableViewController
-@synthesize loginController = _loginController;
+
 #pragma mark - private methods
 
 /**
@@ -44,7 +44,6 @@
 
 - (void)authenticateCloudWithOAuth
 {
-//    __weak ServerSelectionTableViewController *weakSelf = self;
     AlfrescoOAuthCompletionBlock completionBlock = ^void(AlfrescoOAuthData *oauthdata, NSError *error){
         if (nil == oauthdata)
         {

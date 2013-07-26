@@ -19,7 +19,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol CMISAuthenticationProvider
+@protocol CMISAuthenticationProvider <NSObject>
 
 /**
 * Returns a set of HTTP headers (key-value pairs) that should be added to a

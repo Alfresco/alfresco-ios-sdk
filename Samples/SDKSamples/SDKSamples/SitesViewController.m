@@ -22,17 +22,11 @@
 @interface SitesViewController ()
 
 @property (nonatomic, strong) NSMutableArray *sites;
-
 - (void)loadSites;
 - (void)loadSite:(AlfrescoSite *)site;
-
 @end
 
 @implementation SitesViewController
-
-@synthesize browsingType = _browsingType;
-@synthesize siteService = _siteService;
-@synthesize sites = _sites;
 
 #pragma mark - Alfresco Methods
 
@@ -49,8 +43,7 @@
 {
     // get the children for the folder using an AlfrescoDocumentFolderService
     self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.session];
-//    __weak SitesViewController *weakSelf = self;
-    if(nil != self.session)
+    if (nil != self.session)
     {
         if(self.browsingType == AlfrescoSiteBrowsingAll)
         {
@@ -66,7 +59,6 @@
                     self.sites = [NSArray arrayWithArray:array];
                     [self.tableView reloadData];
                 }
-                
             }];
         }
         else if(self.browsingType == AlfrescoSiteBrowsingFavorites)
@@ -83,7 +75,6 @@
                     self.sites = [NSArray arrayWithArray:array];
                     [self.tableView reloadData];
                 }
-                
             }];
         }
         else 
@@ -100,7 +91,6 @@
                     self.sites = [NSArray arrayWithArray:array];
                     [self.tableView reloadData];
                 }
-                
             }];
         }
     }
@@ -114,8 +104,7 @@
 {
     // get the document library for the site
     self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.session];
-//    __weak SitesViewController *weakSelf = self;
-    [self.siteService retrieveDocumentLibraryFolderForSite:site.shortName 
+    [self.siteService retrieveDocumentLibraryFolderForSite:site.shortName
                                            completionBlock:^(AlfrescoFolder *folder, NSError *error){
          if (nil == folder) 
          {

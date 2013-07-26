@@ -22,4 +22,6 @@
 
 @protocol AlfrescoOAuthLoginDelegate <NSObject>
 - (void)oauthLoginDidFailWithError:(NSError *)error;
+@optional
+- (void)oauthLoginDidCancel;
 @end

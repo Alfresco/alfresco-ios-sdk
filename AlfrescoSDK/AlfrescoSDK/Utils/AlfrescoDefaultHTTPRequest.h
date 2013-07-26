@@ -30,18 +30,18 @@
 
 @interface AlfrescoDefaultHTTPRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate, AlfrescoCancellableRequest>
 
+@property (nonatomic, strong, readonly) NSURL *requestURL;
+
 - (void)connectWithURL:(NSURL*)requestURL
                 method:(NSString *)method
                headers:(NSDictionary *)headers
            requestBody:(NSData *)requestBody
-   useTrustedSSLServer:(BOOL)trustedSSLServer
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
 - (void)connectWithURL:(NSURL*)requestURL
                 method:(NSString *)method
                headers:(NSDictionary *)headers
            requestBody:(NSData *)requestBody
-   useTrustedSSLServer:(BOOL)trustedSSLServer
           outputStream:(NSOutputStream *)outputStream
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
 
