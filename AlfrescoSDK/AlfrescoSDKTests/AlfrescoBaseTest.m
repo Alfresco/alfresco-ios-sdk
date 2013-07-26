@@ -298,6 +298,18 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     {
         self.currentSession = nil;
     }
+    
+    /**
+     * FIXME: Running unit tests from the command line doesn't unlock the keychain which in turn
+     *        doesn't allow SSL connections to be made. Apple Bug rdar://10406441 and rdar://8385355
+     *        (latter can be viewed at http://openradar.appspot.com/8385355 )
+     */
+    if (nil == parameters)
+    {
+        parameters = [NSMutableDictionary dictionary];
+    }
+    [parameters setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoAllowUntrustedSSLCertificate];
+    
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.server]
                                      username:self.userName
                                      password:self.password
@@ -342,6 +354,13 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
     [parameters setValue:self.userName forKey:@"org.alfresco.mobile.internal.session.username"];
     [parameters setValue:self.password forKey:@"org.alfresco.mobile.internal.session.password"];
+    
+    /**
+     * FIXME: Running unit tests from the command line doesn't unlock the keychain which in turn
+     *        doesn't allow SSL connections to be made. Apple Bug rdar://10406441 and rdar://8385355
+     *        (latter can be viewed at http://openradar.appspot.com/8385355 )
+     */
+    [parameters setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoAllowUntrustedSSLCertificate];
     
     [AlfrescoCloudSession connectWithOAuthData:nil parameters:parameters completionBlock:^(id<AlfrescoSession> cloudSession, NSError *error){
         if (nil == cloudSession)
