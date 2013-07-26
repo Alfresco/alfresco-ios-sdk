@@ -93,6 +93,7 @@
 }
 
 #pragma mark - private methods
+
 - (NSURL *)renditionURLForNode:(AlfrescoNode *)node renditionName:(NSString *)renditionName
 {
     NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];

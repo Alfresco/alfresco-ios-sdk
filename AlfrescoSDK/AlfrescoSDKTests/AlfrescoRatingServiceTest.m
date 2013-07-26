@@ -51,7 +51,7 @@
                  self.callbackCompleted = YES;
              }];
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {
@@ -60,7 +60,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -138,7 +138,7 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {
@@ -147,7 +147,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -228,7 +228,7 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {
@@ -237,7 +237,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

@@ -86,11 +86,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -149,11 +149,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -231,11 +231,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -302,11 +302,11 @@
              }
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -383,11 +383,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -408,64 +408,60 @@
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
-         {
-             if (nil == folder)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 self.callbackCompleted = YES;
-             }
-             else
-             {
-                 STAssertNotNil(folder, @"folder should not be nil");
-                 STAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@",folderName);
-                 __block AlfrescoFolder *strongFolder = folder;
-                 // check the properties were added at creation time
-                 NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
-                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
-                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
-                 
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
-                  {
-                      if (!success)
-                      {
-                          self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                          self.callbackCompleted = YES;
-                      }
-                      else
-                      {
-                          [weakService retrieveDocumentsInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error){
-                              if (nil == array)
-                              {
-                                  self.lastTestSuccessful = YES;
-                              }
-                              else
-                              {
-                                  self.lastTestSuccessful = NO;
-                                  self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";
-                              }
-                              self.callbackCompleted = YES;
-                          }];
-                          
-                      }
-                      
-                  }];
-             }
-             
-             
-             
-         }];
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            if (nil == folder)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(folder, @"folder should not be nil");
+                STAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@",folderName);
+                __block AlfrescoFolder *strongFolder = folder;
+                // check the properties were added at creation time
+                NSDictionary *newFolderProps = folder.properties;
+                AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
+                AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                
+                /**
+                 * FIXME: 07/Jun/2013 - Potential transaction completion race condition here..?
+                 */
+                
+                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                    if (!success)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        [weakService retrieveDocumentsInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error) {
+                            if (nil == array)
+                            {
+                                self.lastTestSuccessful = YES;
+                            }
+                            else
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";
+                            }
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+        }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -539,11 +535,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -606,11 +602,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -671,11 +667,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -728,11 +724,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -787,11 +783,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -821,11 +817,11 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -839,7 +835,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         // get the children of the repository's root folder
-        [self.dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *array, NSError *error)
+        [self.dfService retrieveChildrenInFolder:self.currentSession.rootFolder completionBlock:^(NSArray *array, NSError *error)
          {
              if (nil == array)
              {
@@ -848,14 +844,14 @@
              }
              else
              {
-                 STAssertTrue(array.count > 0, [NSString stringWithFormat:@"Expected folder children but got %i", array.count]);
+                 STAssertTrue(array.count > 0, @"Expected folder children but got %i", array.count);
                  if (self.isCloud)
                  {
-                     STAssertTrue([self nodeArray:array containsName:@"Sample Filesrr"], @"Folder children should contain Sample Filesrr");
+                     STAssertTrue([self nodeArray:array containsName:@"Sites"], @"Folder children should contain Sites");
                  }
                  else
                  {
-                     STAssertTrue([self nodeArray:array containsName:@"Sites"], @"Folder children should contain Sites");
+                     STAssertTrue([self nodeArray:array containsName:@"Data Dictionary"], @"Folder children should contain Data Dictionary");
                  }
                  
                  self.lastTestSuccessful = YES;
@@ -864,11 +860,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -941,11 +937,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -975,11 +971,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1027,11 +1023,11 @@
             self.callbackCompleted = YES;
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1117,11 +1113,11 @@
                                } progressBlock:^(unsigned long long transferred, unsigned long long total){}];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1242,11 +1238,11 @@
                                  }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1321,11 +1317,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1401,11 +1397,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1480,11 +1476,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1547,11 +1543,11 @@
         // get the children of the repository's root folder
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1593,11 +1589,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1625,7 +1621,7 @@
              else
              {
                  STAssertNotNil(node, @"node should not be nil");
-                 STAssertTrue([node.name isEqualToString:@"Sites"], [NSString stringWithFormat:@"node name should be Sites and not %@", node.name]);
+                 STAssertTrue([node.name isEqualToString:@"Sites"], @"node name should be Sites and not %@", node.name);
                  
                  self.lastTestSuccessful = YES;
              }
@@ -1633,11 +1629,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1671,11 +1667,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1729,11 +1725,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1748,7 +1744,8 @@
         {
             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
             
-            [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
+            NSString *versionedFile = [self.testFolderPathName stringByAppendingPathComponent:@"multiple-versions.txt"];
+            [documentService retrieveNodeWithFolderPath:versionedFile completionBlock:^(AlfrescoNode *node, NSError *error)
              {
                  if (nil == node)
                  {
@@ -1773,7 +1770,7 @@
                      NSMutableArray *myObject = [NSMutableArray array];
                      [myObject addObject:doc];
                      
-                     NSString *filePath = [NSString stringWithFormat:@"/Users/%@/serialized-object.txt", NSUserName()];
+                     NSString *filePath = [[self userTestConfigFolder] stringByAppendingPathComponent:@"serialized-object.txt"];
                      [NSKeyedArchiver archiveRootObject:myObject toFile:filePath];
                      
                      NSMutableArray* myArray = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
@@ -1799,12 +1796,12 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1877,11 +1874,11 @@
         
         // get the documents of the repository's root folder
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1915,11 +1912,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1974,11 +1971,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -2044,11 +2041,11 @@
         
         // get the documents of the repository's root folder
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -2080,11 +2077,11 @@
              self.callbackCompleted = YES;
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -2159,11 +2156,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -2176,34 +2173,33 @@
     if (self.setUpSuccess)
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        NSString *folderPath = [NSString stringWithFormat:@"%@/%@",self.testFolderPathName, self.fixedFileName];
-        [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error)
-         {
-             if (nil == node)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 STAssertNotNil(node, @"node should not be nil");
-                 STAssertNotNil(node.identifier, @"nodeRef should not be nil");
-                 STAssertTrue([node.name isEqualToString:self.fixedFileName], @"name should be equal to %@",self.fixedFileName);
-                 // REMOVED UNTIL BUG MOBSDK-462 IS RESOLVED
-                 //                STAssertTrue(node.isFolder, @"Node should be a folder");
-                 //                STAssertFalse(node.isDocument, @"Node should not be a document");
-                 
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-         }];
+        NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:self.fixedFileName];
+        [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error) {
+            if (nil == node)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(node, @"node should not be nil");
+                STAssertNotNil(node.identifier, @"nodeRef should not be nil");
+                STAssertTrue([node.name isEqualToString:self.fixedFileName], @"name should be equal to %@",self.fixedFileName);
+                // REMOVED UNTIL BUG MOBSDK-462 IS RESOLVED
+                //                STAssertTrue(node.isFolder, @"Node should be a folder");
+                //                STAssertFalse(node.isDocument, @"Node should not be a document");
+                
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -2237,7 +2233,7 @@
              {
                  STAssertNotNil(folder, @"folder should not be nil");
                  STAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@",folderName);
-                 __block NSString *folderPath = [NSString stringWithFormat:@"%@%@",self.testFolderPathName, folderName];
+                 __block NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:folderName];
                  // check the properties were added at creation time
                  [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
                   {
@@ -2272,11 +2268,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -2308,11 +2304,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -2359,7 +2355,7 @@
                               NSError *error;
                               NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
                               STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
-                              STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %d kb", [fileAttributes fileSize]/1024.0);
+                              STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %f kb", [fileAttributes fileSize]/1024.0);
                               
                               // Nice boys clean up after themselves
                               [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
@@ -2383,11 +2379,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -2469,11 +2465,11 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
@@ -2548,11 +2544,11 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
@@ -2617,8 +2613,8 @@
                              
                              float updatedVersionNumber = [updatedDocument.versionLabel floatValue];
                              
-                             STAssertTrue(previousVersionNumber < updatedVersionNumber, @"expected the returning AlfrescoDocument object to have a higher version number");
-                             STAssertTrue([previousLastModificationDate compare:updatedDocument.modifiedAt] == NSOrderedAscending, @"expected the returing AlfrescoDocument object to have a newer last modification date");
+                             STAssertTrue(previousVersionNumber < updatedVersionNumber, @"expected the updated AlfrescoDocument object to have a higher version number, but previous %f is not less than %f", previousVersionNumber, updatedVersionNumber);
+                             STAssertTrue([previousLastModificationDate compare:updatedDocument.modifiedAt] == NSOrderedAscending, @"expected the returned AlfrescoDocument object to have a newer last modification date");
                              
                              [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *error){
                                  if (nil == checkContentFile)
@@ -2664,11 +2660,11 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
@@ -2755,11 +2751,11 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
@@ -2836,11 +2832,11 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
@@ -2902,11 +2898,11 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -2989,11 +2985,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3075,11 +3071,11 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
@@ -3129,11 +3125,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3197,11 +3193,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3266,11 +3262,11 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3299,15 +3295,8 @@
              }
              else
              {
-                 STAssertTrue(array.count > 0, [NSString stringWithFormat:@"Expected folder children but got %i", array.count]);
-                 if (self.isCloud)
-                 {
-                     STAssertTrue([self nodeArray:array containsName:@"Sample Filesrr"], @"Folder children should contain Sample Filesrr");
-                 }
-                 else
-                 {
-                     STAssertTrue([self nodeArray:array containsName:@"Sites"], @"Folder children should contain Sites");
-                 }
+                 STAssertTrue(array.count > 0, @"Expected folder children but got %i", array.count);
+                 STAssertTrue([self nodeArray:array containsName:@"Unit Test Subfolder"], @"Folder children should contain 'Unit Test Subfolder'");
                  AlfrescoDocument *testVersionedDoc = nil;
                  for (AlfrescoNode *node in array)
                  {
@@ -3317,6 +3306,7 @@
                          if ([name isEqualToString:@"versioned-quote.txt"])
                          {
                              testVersionedDoc = (AlfrescoDocument *)node;
+                             break;
                          }
                          
                      }
@@ -3352,7 +3342,7 @@
              
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         
         /*
          AlfrescoDocument *document = [[AlfrescoDocument alloc] init];
@@ -3378,12 +3368,12 @@
          }];
          
          [self waitUntilCompleteWithFixedTimeInterval];
-         STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
          */
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
  
@@ -3462,11 +3452,11 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3541,7 +3531,7 @@
                                }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }];
     
 }
@@ -3559,7 +3549,7 @@
             
             __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
             
-            [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
+            [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error){
                 
                 if (node == nil)
                 {
@@ -3697,12 +3687,12 @@
             }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3730,7 +3720,7 @@
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3791,11 +3781,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3860,11 +3850,11 @@
             
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3878,7 +3868,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
-        NSString *folderPath = [NSString stringWithFormat:@"%@/%@",self.testFolderPathName, self.fixedFileName];
+        NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:self.fixedFileName];
         
         // Running as admin, read and write access should be true
         [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *documentNode, NSError *error) {
@@ -3918,11 +3908,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -3990,11 +3980,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4026,11 +4016,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4129,11 +4119,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 
 }
@@ -4238,11 +4228,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4265,11 +4255,11 @@
             self.callbackCompleted = YES;
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4301,7 +4291,7 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }];
 }
  */
@@ -4333,11 +4323,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4387,7 +4377,7 @@
 //        }];
 //        
 //        [self waitUntilCompleteWithFixedTimeInterval];
-//        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+//        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
 //    }];
 //}
 
@@ -4439,7 +4429,7 @@
 //        }];
 //        
 //        [self waitUntilCompleteWithFixedTimeInterval];
-//        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+//        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
 //    }];
 //}
 
@@ -4506,7 +4496,7 @@
 //        }];
 //        
 //        [self waitUntilCompleteWithFixedTimeInterval];
-//        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+//        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
 //    }];
 //}
 
@@ -4573,11 +4563,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4609,11 +4599,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4673,11 +4663,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4737,11 +4727,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4812,11 +4802,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4863,11 +4853,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -4964,11 +4954,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -5069,11 +5059,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
@@ -5134,7 +5124,7 @@
                         STAssertTrue([retrievedNode.type isEqualToString:createdType], @"Expected the created of the node to be %@, instead got back %@", createdType, retrievedNode.type);
                         STAssertTrue([retrievedNode.createdAt isEqualToDate:createdDate], @"Expected the created date of the node to be %@, instead got back %@", createdDate, retrievedNode.createdAt);
                         STAssertTrue([retrievedNode.createdBy isEqualToString:createdBy], @"Expected the created by of the node to be %@, instead got back %@", createdBy, retrievedNode.createdBy);
-                        STAssertTrue([retrievedNode.properties count] == [createdProperties count], @"Expected the properties count of the node to be %@, instead got back %@", [createdProperties count], [retrievedNode.properties count]);
+                        STAssertTrue([retrievedNode.properties count] == [createdProperties count], @"Expected the properties count of the node to be %lu, instead got back %lu", (unsigned long)[createdProperties count], (unsigned long)[retrievedNode.properties count]);
                         STAssertTrue([retrievedNode.aspects isEqualToArray:createdAspects], @"Expected the aspects of the node to be %@, instead got back %@", createdAspects, retrievedNode.aspects);
                         STAssertTrue(retrievedNode.isFolder, @"Expected the identifier of the node to be %i, instead got back %i", YES, retrievedNode.isFolder);
                         STAssertFalse(retrievedNode.isDocument, @"Expected the identifier of the node to be %i, instead got back %i", NO, retrievedNode.isDocument);
@@ -5154,11 +5144,11 @@
             
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -5209,11 +5199,11 @@
             self.callbackCompleted = YES;
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -5285,7 +5275,7 @@
                                 {
                                     STAssertNotNil(checkContentFile, @"Should have returned a content file object");
                                     // document content size should be the same as that of the updated content (empty document)
-                                    STAssertTrue(checkContentFile.length == updatedDocument.contentLength, @"Expected the length of the content file to be %f, but instead got back %f", updatedDocument.contentLength, checkContentFile.length);
+                                    STAssertTrue(checkContentFile.length == updatedDocument.contentLength, @"Expected the length of the content file to be %llu, but instead got back %llu", updatedDocument.contentLength, checkContentFile.length);
                                     STAssertTrue([checkContentFile.mimeType isEqualToString:@"text/plain"], @"Expected the mime type to be %@, but instead got back %@", @"text/plain", contentFile.mimeType);
                                     
                                     self.lastTestSuccessful = YES;
@@ -5306,11 +5296,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -5370,13 +5360,13 @@
             } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         //        [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelDebug;
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -5468,7 +5458,7 @@
             } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
             /*
              self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
              __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
@@ -5523,13 +5513,13 @@
              }];
              
              [self waitUntilCompleteWithFixedTimeInterval];
-             STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
              */
         }
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

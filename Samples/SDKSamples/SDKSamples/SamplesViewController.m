@@ -34,9 +34,6 @@
 @end
 
 @implementation SamplesViewController
-@synthesize connectionDetailsProvided = _connectionDetailsProvided;
-@synthesize session = _session;
-
 
 #pragma mark View Controller methods
 
@@ -48,17 +45,13 @@
 
 }
 
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) 
     {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } 
-    else 
-    {
-        return YES;
-    }
+    return YES;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -72,10 +65,7 @@
     {
         return 7;
     }
-    else
-    {
-        return 6;
-    }
+    return 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -248,6 +238,7 @@
 }
 
 #pragma mark - OAuth delegate method
+
 - (void)oauthLoginDidFailWithError:(NSError *)error
 {
     NSString *message = [NSString stringWithFormat:@"Refresh error %@", [error localizedDescription]];

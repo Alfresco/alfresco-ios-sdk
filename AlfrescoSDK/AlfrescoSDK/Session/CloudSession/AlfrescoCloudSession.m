@@ -30,7 +30,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoOAuthAuthenticationProvider.h"
-#import "CMISPassThroughAuthenticationProvider.h"
+#import "AlfrescoCMISPassThroughAuthenticationProvider.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
@@ -109,7 +109,6 @@
                                parameters:(NSDictionary *)parameters
                           completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:parameters];
     if (nil != sessionInstance)
@@ -137,6 +136,7 @@
         }
         else
         {
+            [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
             return [sessionInstance authenticateWithOAuthData:oauthData
                                               completionBlock:completionBlock];
         }
@@ -253,7 +253,7 @@
     {
         id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:oauthData];
         [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-        CMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[CMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
+        AlfrescoCMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[AlfrescoCMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
         CMISSession *cmisSession = [self objectForParameter:kAlfrescoSessionKeyCmisSession];
         if (cmisSession)
         {
@@ -432,7 +432,7 @@
 
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-    CMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[CMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
+    AlfrescoCMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[AlfrescoCMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
 
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];

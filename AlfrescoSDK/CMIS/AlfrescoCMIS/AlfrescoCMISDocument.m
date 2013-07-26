@@ -26,7 +26,9 @@
 #import "AlfrescoCMISDocument.h"
 #import "CMISSession.h"
 #import "CMISConstants.h"
+#import "CMISSessionParameters.h"
 #import "AlfrescoCMISUtil.h"
+#import "AlfrescoInternalConstants.h"
 
 @implementation AlfrescoCMISDocument
 
@@ -47,15 +49,19 @@
     if (properties != nil)
     {
         aspectAwareProperties = [[NSMutableDictionary alloc] initWithDictionary:properties];
-        
-        NSMutableString *objectTypeIdBuilder = [[NSMutableString alloc] init];
-        [objectTypeIdBuilder appendString:self.objectType];
-        for (NSString *aspectTypeId in self.aspectTypes)
+
+        NSString *objectTypeId = [self.aspectTypes componentsJoinedByString:@","];
+
+        CMISSessionParameters *sessionParameters = self.session.sessionParameters;
+        BOOL isWebscriptImplementation = [[sessionParameters.atomPubUrl relativeString] hasSuffix:kAlfrescoOnPremiseCMISPath];
+        if (isWebscriptImplementation)
         {
-            [objectTypeIdBuilder appendFormat:@", %@", aspectTypeId];
+            // Must add the objectType to the property for the old implementation
+            objectTypeId = [self.objectType stringByAppendingFormat:@",%@", objectTypeId];
         }
         
-        [aspectAwareProperties setValue:objectTypeIdBuilder forKey:kCMISPropertyObjectTypeId];
+        
+        [aspectAwareProperties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
     }
     [super updateProperties:aspectAwareProperties completionBlock:completionBlock];    
 }

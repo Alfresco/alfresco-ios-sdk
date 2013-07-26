@@ -53,7 +53,7 @@ typedef void (^AlfrescoFolderCompletionBlock)(AlfrescoFolder *folder, NSError *e
 typedef void (^AlfrescoNodeCompletionBlock)(AlfrescoNode *node, NSError *error);
 typedef void (^AlfrescoDocumentCompletionBlock)(AlfrescoDocument *document, NSError *error);
 typedef void (^AlfrescoPagingResultCompletionBlock)(AlfrescoPagingResult *pagingResult, NSError *error);
-typedef void (^AlfrescoProgressBlock)(NSInteger bytesTransferred, NSInteger bytesTotal);
+typedef void (^AlfrescoProgressBlock)(unsigned long long bytesTransferred, unsigned long long bytesTotal);
 typedef void (^AlfrescoContentFileCompletionBlock)(AlfrescoContentFile *contentFile, NSError *error);
 typedef void (^AlfrescoPermissionsCompletionBlock)(AlfrescoPermissions *permissions, NSError *error);
 typedef void (^AlfrescoPersonCompletionBlock)(AlfrescoPerson *person, NSError *error);

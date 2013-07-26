@@ -31,15 +31,7 @@
 
 @implementation FolderViewController
 
-@synthesize folder = _folder;
-@synthesize items = _items;
-@synthesize displayItemsCount = _displayItemsCount;
-@synthesize listingContext = _listingContext;
-@synthesize hasMoreItems = _hasMoreItems;
-@synthesize documentFolderService = _documentFolderService;
-
 #pragma mark - Alfresco Methods for retrieving content of folders
-
 
 /**
  loadChildrenForCurrentPage gets a specified number of children for the given folder. 
@@ -55,7 +47,6 @@
     }
     
     self.documentFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-//    __weak FolderViewController *weakSelf = self;
     [self.documentFolderService retrieveChildrenInFolder:self.folder listingContext:self.listingContext
                                          completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error){
          [activityIndicator stopAnimating];
@@ -98,10 +89,7 @@
     {
         return self.items.count + 1;
     }
-    else 
-    {
-        return self.items.count;
-    }
+    return self.items.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -111,7 +99,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row == self.items.count && self.hasMoreItems)
+    if (indexPath.row == self.items.count && self.hasMoreItems)
     {
         NSString *CellIdentifier = @"loadMoreCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -273,8 +261,5 @@
     self.listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:0];
     [self loadChildrenForCurrentPage:nil];
 }
-
-
-
 
 @end

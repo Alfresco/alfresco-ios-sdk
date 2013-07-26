@@ -76,10 +76,7 @@
     {
         return (NSString *)[strings objectAtIndex:0];
     }
-    else
-    {
-        return originalIdentifier;
-    }
+    return originalIdentifier;
 }
 
 
@@ -554,6 +551,7 @@
 }
 
 #pragma mark internal methods
+
 + (AlfrescoPropertyType)typeForCMISProperty:(NSString *)propertyIdentifier
 {
     if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeInt]) 
@@ -576,10 +574,7 @@
     {
         return AlfrescoPropertyTypeId;
     }
-    else
-    {
-        return AlfrescoPropertyTypeString;
-    }
+    return AlfrescoPropertyTypeString;
 }
 
 + (NSString *)propertyValueWithoutPrecursor:(NSString *)value
@@ -596,8 +591,7 @@
     {
         return [value stringByReplacingOccurrencesOfString:@"F:" withString:@""];
     }
-    else
-        return value;
+    return value;
 }
 
 

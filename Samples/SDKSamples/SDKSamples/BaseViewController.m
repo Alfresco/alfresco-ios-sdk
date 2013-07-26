@@ -20,8 +20,6 @@
 
 @implementation BaseViewController
 
-@synthesize session = _session;
-
 - (void) showFailureAlert:(NSString *)message
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:localized(@"error_title")
@@ -38,10 +36,7 @@
     {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } 
-    else 
-    {
-        return YES;
-    }
+    return YES;
 }
 
 @end

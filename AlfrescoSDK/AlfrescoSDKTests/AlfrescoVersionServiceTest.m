@@ -73,11 +73,11 @@
          ];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -98,8 +98,8 @@
             self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
             __block AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
             
-            [documentService retrieveNodeWithFolderPath:@"/multiple-versions.txt" completionBlock:^(AlfrescoNode *node, NSError *error)
-             {
+            NSString *versionedFile = [self.testFolderPathName stringByAppendingPathComponent:@"multiple-versions.txt"];
+            [documentService retrieveNodeWithFolderPath:versionedFile completionBlock:^(AlfrescoNode *node, NSError *error) {
                  if (nil == node)
                  {
                      documentService = nil;
@@ -148,12 +148,12 @@
              ];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -205,11 +205,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -239,7 +239,7 @@
                  {
                      AlfrescoDocument *document = (AlfrescoDocument *)node;
                      NSDate *createdAt = document.createdAt;
-                     NSDate *modifiedAt = document.modifiedAt;
+                     __unused NSDate *modifiedAt = document.modifiedAt;
                      
                      [self.versionService retrieveAllVersionsOfDocument:document completionBlock:^(NSArray *array, NSError *error)
                       {
@@ -370,13 +370,13 @@
              ];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, self.lastTestFailureMessage);
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
             
         }
     }
     else
     {
-        STFail(@"We could not run this test case");
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

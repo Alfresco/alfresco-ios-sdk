@@ -18,16 +18,7 @@
 
 #import "MobileSDKWebViewController.h"
 
-@interface MobileSDKWebViewController ()
-@end
-
 @implementation MobileSDKWebViewController
-@synthesize webView = _webView;
-@synthesize urlToLoad = _urlToLoad;
-@synthesize navTitle = _navTitle;
-@synthesize refreshButton = _refreshButton;
-@synthesize activityButton = _activityButton;
-@synthesize activityView = _activityView;
 
 - (void)viewDidLoad
 {
@@ -48,6 +39,7 @@
 }
 
 #pragma mark - Web View Delegate methods
+
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
     [self.activityView startAnimating];

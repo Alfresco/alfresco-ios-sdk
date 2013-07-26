@@ -36,21 +36,6 @@
 
 @implementation AddNewItemTableViewController
 
-@synthesize folderLabel = _folderLabel;
-@synthesize photoLabel = _photoLabel;
-@synthesize document = _document;
-@synthesize folder = _folder;
-@synthesize addNewItemDelegate = _addNewItemDelegate;
-@synthesize documentFolderService = _documentFolderService;
-@synthesize taggingService = _taggingService;
-@synthesize selectedPhoto = _selectedPhoto;
-@synthesize activityIndicatorView = _activityIndicatorView;
-@synthesize progressView = _progressView;
-@synthesize isFolderTextInput = _isFolderTextInput;
-@synthesize isIPad = _isIPad;
-@synthesize iPadPopoverController = _iPadPopoverController;
-
-
 #pragma mark - Alfresco methods
 
 /**
@@ -62,33 +47,30 @@
 {
     [self.activityIndicatorView startAnimating];
     self.documentFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-    __weak AddNewItemTableViewController *weakSelf = self;
-    [self.documentFolderService createFolderWithName:self.folderLabel.text 
-                                      inParentFolder:self.folder properties:nil  
-                                     completionBlock:^(AlfrescoFolder *folder, NSError *error){
-         if (nil == folder) 
-         {
-             UIAlertView *alert = [[UIAlertView alloc] 
-                                   initWithTitle:localized(@"error_title")
-                                   message:[error localizedDescription]
-                                   delegate:self 
-                                   cancelButtonTitle:localized(@"dialog_cancel")
-                                   otherButtonTitles: nil];
-             alert.alertViewStyle = UIAlertViewStyleDefault;
-             [alert show];    
-             [weakSelf.activityIndicatorView stopAnimating];
-             weakSelf.folderLabel.text = localized(@"add_folder_option");
-         }
-         else 
-         {
-             if ([weakSelf.addNewItemDelegate respondsToSelector:@selector(updateFolderContent)])
-             {
-                 [weakSelf.addNewItemDelegate updateFolderContent];
-             }
-             [weakSelf.activityIndicatorView stopAnimating];
-             [weakSelf.navigationController popViewControllerAnimated:YES];
-         }
-     }];      
+
+    __weak typeof(self) weakSelf = self;
+    [self.documentFolderService createFolderWithName:self.folderLabel.text inParentFolder:self.folder properties:nil completionBlock:^(AlfrescoFolder *folder, NSError *error){
+        if (nil == folder)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:localized(@"error_title")
+                                                            message:[error localizedDescription]
+                                                           delegate:self
+                                                  cancelButtonTitle:localized(@"dialog_cancel")
+                                                  otherButtonTitles: nil];
+            [alert show];
+            [weakSelf.activityIndicatorView stopAnimating];
+            weakSelf.folderLabel.text = localized(@"add_folder_option");
+        }
+        else
+        {
+            if ([weakSelf.addNewItemDelegate respondsToSelector:@selector(updateFolderContent)])
+            {
+                [weakSelf.addNewItemDelegate updateFolderContent];
+            }
+            [weakSelf.activityIndicatorView stopAnimating];
+            [weakSelf.navigationController popViewControllerAnimated:YES];
+        }
+    }];
 }
 
 /**
@@ -126,10 +108,10 @@
                      mimeType:@"image/jpeg"];
     }
     
-//    __weak AddNewItemTableViewController *weakSelf = self;
-    [self.documentFolderService createDocumentWithName:name 
+    [self.documentFolderService createDocumentWithName:name
                                         inParentFolder:self.folder 
-                                           contentFile:imageFile properties:properties 
+                                           contentFile:imageFile
+                                            properties:properties
                                        completionBlock:^(AlfrescoDocument *document, NSError *error){
           if (nil == document) 
           {                                               
@@ -156,10 +138,11 @@
                   }
                   
                   self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.session];
+                  __weak typeof(self) weakSelf = self;
                   [self.taggingService addTags:tagStrings toNode:document completionBlock:^(BOOL success, NSError *error){
                       if (!success) 
                       {
-                          self.progressView.hidden = YES;
+                          weakSelf.progressView.hidden = YES;
                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:localized(@"error_title")
                                                                           message:[NSString stringWithFormat:@"%@, %@",localized(@"error_adding_tags"), [error localizedDescription]] 
                                                                          delegate:nil 
@@ -170,13 +153,13 @@
                       }
                       else 
                       {
-                          self.progressView.progress = 1.0;
-                          if ([self.addNewItemDelegate respondsToSelector:@selector(updateFolderContent)])
+                          weakSelf.progressView.progress = 1.0;
+                          if ([weakSelf.addNewItemDelegate respondsToSelector:@selector(updateFolderContent)])
                           {
-                              [self.addNewItemDelegate updateFolderContent];
+                              [weakSelf.addNewItemDelegate updateFolderContent];
                           }
-                          self.progressView.hidden = YES;
-                          [self.navigationController popViewControllerAnimated:YES];
+                          weakSelf.progressView.hidden = YES;
+                          [weakSelf.navigationController popViewControllerAnimated:YES];
                       }
                        
                   }];
@@ -192,9 +175,8 @@
                   [self.navigationController popViewControllerAnimated:YES];                                                   
               }
           }
-      } 
-      progressBlock:^(NSInteger bytesUploaded, NSInteger totalBytes){
-          self.progressView.progress = ((float)bytesUploaded/(float)totalBytes) - 0.3;
+      } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+          self.progressView.progress = ((float)bytesTransferred/(float)bytesTotal) - 0.3;
       }];
 }
 

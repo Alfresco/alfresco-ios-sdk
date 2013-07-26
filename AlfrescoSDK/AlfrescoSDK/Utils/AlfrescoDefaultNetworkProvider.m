@@ -23,6 +23,7 @@
 #import "AlfrescoSession.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoDefaultHTTPRequest.h"
+#import "AlfrescoUntrustedSSLHTTPRequest.h"
 #import "AlfrescoInternalConstants.h"
 
 @implementation AlfrescoDefaultNetworkProvider
@@ -54,8 +55,7 @@
 }
 
 /**
- before creating a request, we check if the SSL certificate trusted server flag is set. This parameter is used in the request handler to see
- if SSL self certified users can be trusted
+ * The request is handed off to the appropriate HTTPRequest class, depending on the SSL trust flag
  */
 - (void)executeRequestWithURL:(NSURL *)url
                       session:(id<AlfrescoSession>)session
@@ -76,49 +76,38 @@
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
     id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-    NSNumber *trustedServerFlag = [session objectForParameter:kAlfrescoAllowUntrustedSSLCertificate];
-    BOOL isTrusted = NO;
-    if (nil != trustedServerFlag)
-    {
-        isTrusted = [trustedServerFlag boolValue];
-    }
-    NSDictionary *httpHeaders = [authenticationProvider willApplyHTTPHeadersForSession:nil];
-    [self requestWithURL:url method:method headers:httpHeaders requestBody:requestBody alfrescoRequest:alfrescoRequest useTrustedSSLServer:isTrusted outputStream:outputStream completionBlock:completionBlock];
-}
-
-- (void)requestWithURL:(NSURL *)requestURL
-                method:(NSString *)method
-               headers:(NSDictionary *)headers
-           requestBody:(NSData *)data
-       alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
-   useTrustedSSLServer:(BOOL)trustedSSLServer
-          outputStream:(NSOutputStream *)outputStream
-       completionBlock:(AlfrescoDataCompletionBlock)completionBlock;
-{
+    NSDictionary *headers = [authenticationProvider willApplyHTTPHeadersForSession:nil];
     
-    AlfrescoDefaultHTTPRequest *alfrescoDefaultRequest = [[AlfrescoDefaultHTTPRequest alloc] init];
-    if (alfrescoDefaultRequest && !alfrescoRequest.isCancelled)
+    BOOL allowUntrustedSSLCertificate = NO;
+    id obj = [session objectForParameter:kAlfrescoAllowUntrustedSSLCertificate];
+    if (obj != nil)
+    {
+        allowUntrustedSSLCertificate = [obj boolValue];
+    }
+    
+    Class httpRequestClass = allowUntrustedSSLCertificate ? [AlfrescoUntrustedSSLHTTPRequest class] : [AlfrescoDefaultHTTPRequest class];
+    AlfrescoDefaultHTTPRequest *alfrescoHTTPRequest = [[httpRequestClass alloc] init];
+
+    if (alfrescoHTTPRequest && !alfrescoRequest.isCancelled)
     {
         if (outputStream)
         {
-            [alfrescoDefaultRequest connectWithURL:requestURL
-                                            method:method
-                                           headers:headers
-                                       requestBody:data
-                               useTrustedSSLServer:trustedSSLServer
-                                      outputStream:outputStream
-                                   completionBlock:completionBlock];
+            [alfrescoHTTPRequest connectWithURL:url
+                                         method:method
+                                        headers:headers
+                                    requestBody:requestBody
+                                   outputStream:outputStream
+                                completionBlock:completionBlock];
         }
         else
         {
-            [alfrescoDefaultRequest connectWithURL:requestURL
-                                            method:method
-                                           headers:headers
-                                       requestBody:data
-                               useTrustedSSLServer:trustedSSLServer
-                                   completionBlock:completionBlock];
+            [alfrescoHTTPRequest connectWithURL:url
+                                         method:method
+                                        headers:headers
+                                    requestBody:requestBody
+                                completionBlock:completionBlock];
         }
-        alfrescoRequest.httpRequest = alfrescoDefaultRequest;
+        alfrescoRequest.httpRequest = alfrescoHTTPRequest;
     }
     else
     {

@@ -41,10 +41,6 @@ extern NSString * const kCMISSessionParameterLinkCacheSize;
 
 // TODO: Temporary, must be extracted into separate project
 extern NSString * const kCMISSessionParameterMode;
-/**
- This flag is used for SSL self certification and indicates, whether a server is trusted. Default value is NO.
- */
-extern NSString * const kCMISSessionAllowUntrustedSSLCertificate;
 
 @interface CMISSessionParameters : NSObject
 

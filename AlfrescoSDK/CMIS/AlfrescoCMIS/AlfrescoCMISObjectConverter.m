@@ -285,11 +285,8 @@
                     completionBlock(result, nil);
                 }
             }];
-            
         }
     }];
-    
-    
 }
 
 - (CMISTypeDefinition *)mainTypeFromArray:(NSArray *)typeArray
@@ -302,10 +299,6 @@
             typeDefinition = type;
             break;
         }
-    }
-    if (nil == typeDefinition)
-    {
-        typeDefinition = [typeArray objectAtIndex:0];
     }
     return typeDefinition;
 }

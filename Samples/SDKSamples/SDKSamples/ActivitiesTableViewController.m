@@ -32,12 +32,6 @@
 @end
 
 @implementation ActivitiesTableViewController
-@synthesize activityStreamService = _activityStreamService;
-@synthesize activities = _activities;
-@synthesize activityIndicator = _activityIndicator;
-@synthesize personService = _personService;
-@synthesize avatarDictionary = _avatarDictionary;
-
 
 #pragma mark - Alfresco methods
 
@@ -52,7 +46,6 @@
     }
     self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.session];
     [self.activityIndicator startAnimating];
-//    __weak ActivitiesTableViewController *weakSelf = self;
     [self.activityStreamService retrieveActivityStreamWithCompletionBlock:^(NSArray *array, NSError *error){
          if (nil == array) 
          {
@@ -88,7 +81,6 @@
         [avatarImageView setImage:[UIImage imageNamed:@"avatar.png"]];
     }
     
-//    __weak ActivitiesTableViewController *weakSelf = self;
     [self.personService retrievePersonWithIdentifier:userId completionBlock:^(AlfrescoPerson *person, NSError *error) {
         if (nil != person)
         {
