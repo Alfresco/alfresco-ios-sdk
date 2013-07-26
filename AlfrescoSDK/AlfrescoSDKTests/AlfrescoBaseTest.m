@@ -63,9 +63,9 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     NSDictionary *environment = nil;
     if (nil != allEnvironments)
     {
-        // Expecting a "server" argument passed in
-        NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
-        NSString *serverID = [standardDefaults stringForKey:@"server"];
+        // Expecting a "TEST_SERVER" environment variable
+        NSDictionary *environmentVariables = [[NSProcessInfo processInfo] environment];
+        NSString *serverID = [environmentVariables valueForKey:@"TEST_SERVER"];
         if (nil != serverID)
         {
             environment = (NSDictionary *)[allEnvironments objectForKey:serverID];
