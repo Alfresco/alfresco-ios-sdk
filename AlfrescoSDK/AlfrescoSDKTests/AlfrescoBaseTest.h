@@ -70,7 +70,7 @@ typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
 @property (nonatomic, strong) AlfrescoDocumentFolderService *docFolderService;
 
 + (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename;
-- (BOOL)authenticateOnPremiseServer:(NSDictionary *)parameters;
+- (BOOL)authenticateOnPremiseServer:(NSMutableDictionary *)parameters;
 - (BOOL)authenticateCloudServer;
 
 - (BOOL)retrieveAlfrescoTestFolder;

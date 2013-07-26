@@ -38,7 +38,7 @@
     }
     else
     {
-        NSDictionary *customParameters = [NSDictionary dictionaryWithObject:@"/service/cmis" forKey:kAlfrescoCMISBindingURL];
+        NSMutableDictionary *customParameters = [NSMutableDictionary dictionaryWithObject:@"/service/cmis" forKey:kAlfrescoCMISBindingURL];
         success = [self authenticateOnPremiseServer:customParameters];
         [self resetTestVariables];
         if (success)
