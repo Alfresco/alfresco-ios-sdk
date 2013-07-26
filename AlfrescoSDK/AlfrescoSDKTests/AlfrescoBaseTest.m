@@ -291,7 +291,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
 /*
  @Unique_TCRef 77S1
  */
-- (BOOL)authenticateOnPremiseServer:(NSDictionary *)parameters
+- (BOOL)authenticateOnPremiseServer:(NSMutableDictionary *)parameters
 {
     __block BOOL success = NO;
     if (self.currentSession)
