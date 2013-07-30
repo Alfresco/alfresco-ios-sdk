@@ -62,6 +62,7 @@ typedef void (^AlfrescoSessionCompletionBlock)(id<AlfrescoSession> session, NSEr
 typedef void (^AlfrescoCommentCompletionBlock)(AlfrescoComment *comment, NSError *error);
 typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSError *error);
 typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
+typedef void (^AlfrescoFavoritedCompletionBlock)(BOOL succeeded, BOOL isFavorited, NSError *error);
 
 /**---------------------------------------------------------------------------------------
  * @name Session parameters

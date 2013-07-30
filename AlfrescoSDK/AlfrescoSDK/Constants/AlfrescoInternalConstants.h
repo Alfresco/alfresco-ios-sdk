@@ -142,7 +142,10 @@ extern NSString * const kAlfrescoOnPremiseJoinModeratedSiteAPI;
 extern NSString * const kAlfrescoOnPremisePendingJoinRequestsAPI;
 extern NSString * const kAlfrescoOnPremiseCancelJoinRequestsAPI;
 extern NSString * const kAlfrescoOnPremiseLeaveSiteAPI;
-
+extern NSString * const kAlfrescoOnPremiseFavoriteDocumentsAPI;
+extern NSString * const kAlfrescoOnPremiseFavoriteFoldersAPI;
+extern NSString * const kAlfrescoOnPremiseFavoriteDocuments;
+extern NSString * const kAlfrescoOnPremiseFavoriteFolders;
 
 
 extern NSString * const kAlfrescoCloudURL;

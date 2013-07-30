@@ -444,4 +444,93 @@
 - (AlfrescoRequest *)deleteNode:(AlfrescoNode *)node
                 completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
+
+/**---------------------------------------------------------------------------------------
+ * @name Favorite or Unfavorite Documents and Folders
+ *  ---------------------------------------------------------------------------------------
+ */
+
+/** Retrieves a list of the current users favorite documents.
+ 
+ @param completionBlock The block that's called with the retrieved documents in case the operation succeeds.
+ */
+- (AlfrescoRequest *)favoriteDocumentsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of the current users favorite documents with a listing context.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve favorite documents.
+ @param completionBlock The block that's called with the retrieved documents in case the operation succeeds.
+ */
+- (AlfrescoRequest *)favoriteDocumentsWithListingContext:(AlfrescoListingContext *)listingContext
+                                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of the current users favorite folders.
+ 
+ @param completionBlock The block that's called with the retrieved folders in case the operation succeeds.
+ */
+- (AlfrescoRequest *)favoriteFoldersWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of the current users favorite folders with a listing context.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve favorite folders.
+ @param completionBlock The block that's called with the retrieved folders in case the operation succeeds.
+ */
+- (AlfrescoRequest *)favoriteFoldersWithListingContext:(AlfrescoListingContext *)listingContext
+                                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of the current users favorite nodes.
+ 
+ @param completionBlock The block that's called with the retrieved nodes in case the operation succeeds.
+ */
+- (AlfrescoRequest *)favoriteNodesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of the current users favorite nodes with a listing context.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve favorite nodes.
+ @param completionBlock The block that's called with the retrieved nodes in case the operation succeeds.
+ */
+- (AlfrescoRequest *)favoriteNodesWithListingContext:(AlfrescoListingContext *)listingContext
+                                     completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+
+/** Determine whether given node is favorite.
+ 
+ @param node The node for which favorite status is being determined
+ @param completionBlock The block that's called with current favorite status of the node.
+ */
+- (AlfrescoRequest *)isFavorite:(AlfrescoNode *)node
+              	completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock;
+
+
+/** Favorite a node.
+ 
+ @param node The node which is to be favorited
+ @param completionBlock The block that's called with current favorite status of the node.
+ */
+- (AlfrescoRequest *)addFavorite:(AlfrescoNode *)node
+                 completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock;
+
+
+/** UnFavorite a node.
+ 
+ @param node The node which is to be unfavorited
+ @param completionBlock The block that's called with current favorite status of the node.
+ */
+- (AlfrescoRequest *)removeFavorite:(AlfrescoNode *)node
+                    completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock;
+
+
+/** Retrieve the latest (and complete) metadata for the provided node.
+ 
+ @param The node which is to be refreshed with its latest metadata
+ @param completionBlock The block that's called with node's complete metadata.
+ */
+- (AlfrescoRequest *)refreshNode:(AlfrescoNode *)node
+                 completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
+
 @end

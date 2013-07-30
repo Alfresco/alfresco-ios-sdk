@@ -136,7 +136,7 @@ NSString *const kAlfrescoOAuthRefreshToken = @"refresh_token={refreshID}";
 
 
 /**
- On Premise constants
+ On Premise constants      
  */
 NSString * const kAlfrescoOnPremiseAPIPath = @"/service/api/";
 NSString * const kAlfrescoOnPremiseCMISPath = @"/service/cmis";
@@ -169,8 +169,13 @@ NSString * const kAlfrescoOnPremiseJoinModeratedSiteAPI = @"sites/{siteID}/invit
 NSString * const kAlfrescoOnPremisePendingJoinRequestsAPI = @"invitations?inviteeUserName={personID}";
 NSString * const kAlfrescoOnPremiseCancelJoinRequestsAPI = @"sites/{siteID}/invitations/{inviteID}";
 NSString * const kAlfrescoOnPremiseLeaveSiteAPI = @"sites/{siteID}/memberships/{personID}";
+
+NSString * const kAlfrescoOnPremiseFavoriteDocuments = @"org.alfresco.share.documents.favourites";
+NSString * const kAlfrescoOnPremiseFavoriteFolders = @"org.alfresco.share.folders.favourites";
+NSString * const kAlfrescoOnPremiseFavoriteDocumentsAPI = @"/people/{personID}/preferences?pf=org.alfresco.share.documents.favourites";
+NSString * const kAlfrescoOnPremiseFavoriteFoldersAPI = @"/people/{personID}/preferences?pf=org.alfresco.share.folders.favourites";
 /**
- Cloud constants
+ Cloud constants     
  */
 NSString * const kAlfrescoCloudURL = @"https://api.alfresco.com";
 NSString * const kAlfrescoCloudBindingService = @"/alfresco/service";
@@ -202,6 +207,10 @@ NSString * const kAlfrescoCloudCancelJoinRequestsAPI = @"people/-me-/site-member
 NSString * const kAlfrescoCloudLeaveSiteAPI = @"sites/{siteID}/members/{personID}";
 NSString * const kAlfrescoCloudPagingAPIParameters = @"maxItems={maxItems}&skipCount={skipCount}";
 
+NSString * const kAlfrescoCloudFavoriteDocuments = @"people/{personID}/favorites?where=(EXISTS(target/file))";
+NSString * const kAlfrescoCloudFavoriteFolders = @"people/{personID}/favorites?where=(EXISTS(target/folder))";
+NSString * const kAlfrescoCloudFavoritesAll = @"people/{personID}/favorites?where=(EXISTS(target/file) OR EXISTS(target/folder))";
+NSString * const kAlfrescoCloudFavorite = @"people/{personID}/favorites/{nodeRef}";
 /**
  JSON Constants
  */

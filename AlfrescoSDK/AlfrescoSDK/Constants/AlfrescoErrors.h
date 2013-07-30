@@ -81,7 +81,9 @@ typedef enum
     kAlfrescoErrorCodeSearch = 900,
 
     kAlfrescoErrorCodeRatings = 1000,
-    kAlfrescoErrorCodeRatingsNoRatings = 1001
+    kAlfrescoErrorCodeRatingsNoRatings = 1001,
+    
+    kAlfrescoErrorCodeFavorites = 1100
     
 }AlfrescoErrorCodes;
 
