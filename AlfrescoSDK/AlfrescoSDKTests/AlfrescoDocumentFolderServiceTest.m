@@ -5540,7 +5540,7 @@
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
-        [self.dfService favoriteDocumentsWithCompletionBlock:^(NSArray *array, NSError *error) {
+        [self.dfService retrieveFavoriteDocumentsWithCompletionBlock:^(NSArray *array, NSError *error) {
             if (error)
             {
                 self.lastTestSuccessful = NO;
@@ -5562,7 +5562,7 @@
                 BOOL isResultSortedInDescendingOrderByName = [array isEqualToArray:sortedArray];
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
                 
-                AlfrescoLogDebug(@"Favorites Documents: %@", array);
+                AlfrescoLogDebug(@"Favorites Documents: %@", [array valueForKeyPath:@"name"]);
                 self.lastTestSuccessful = YES;
             }
             self.callbackCompleted = YES;
@@ -5583,7 +5583,7 @@
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:2];
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
-        [self.dfService favoriteDocumentsWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        [self.dfService retrieveFavoriteDocumentsWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
             if (error)
             {
                 self.lastTestSuccessful = NO;
@@ -5610,7 +5610,7 @@
                 
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
                 
-                AlfrescoLogDebug(@"Favorites Documents with Listing Context: %@", pagingResult.objects);
+                AlfrescoLogDebug(@"Favorites Documents with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
                 self.lastTestSuccessful = YES;
             }
             self.callbackCompleted = YES;
@@ -5630,7 +5630,7 @@
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
-        [self.dfService favoriteFoldersWithCompletionBlock:^(NSArray *array, NSError *error) {
+        [self.dfService retrieveFavoriteFoldersWithCompletionBlock:^(NSArray *array, NSError *error) {
             if (error)
             {
                 self.lastTestSuccessful = NO;
@@ -5652,7 +5652,7 @@
                 BOOL isResultSortedInDescendingOrderByName = [array isEqualToArray:sortedArray];
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
                 
-                AlfrescoLogDebug(@"Favorites Folders: %@", array);
+                AlfrescoLogDebug(@"Favorites Folders: %@", [array valueForKeyPath:@"name"]);
                 self.lastTestSuccessful = YES;
             }
             self.callbackCompleted = YES;
@@ -5673,7 +5673,7 @@
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:2];
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
-        [self.dfService favoriteFoldersWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        [self.dfService retrieveFavoriteFoldersWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
             if (error)
             {
                 self.lastTestSuccessful = NO;
@@ -5700,7 +5700,7 @@
                 
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
                 
-                AlfrescoLogDebug(@"Favorites Folders with Listing Context: %@", pagingResult.objects);
+                AlfrescoLogDebug(@"Favorites Folders with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
                 self.lastTestSuccessful = YES;
             }
             self.callbackCompleted = YES;
@@ -5720,7 +5720,7 @@
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
-        [self.dfService favoriteNodesWithCompletionBlock:^(NSArray *array, NSError *error) {
+        [self.dfService retrieveFavoriteNodesWithCompletionBlock:^(NSArray *array, NSError *error) {
             if (error)
             {
                 self.lastTestSuccessful = NO;
@@ -5743,7 +5743,7 @@
                 NSLog(@"is sorted : %d", isResultSortedInDescendingOrderByName);
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
                 
-                AlfrescoLogDebug(@"Favorites Nodes: %@", array);
+                AlfrescoLogDebug(@"Favorites Nodes: %@", [array valueForKeyPath:@"name"]);
                 self.lastTestSuccessful = YES;
             }
             self.callbackCompleted = YES;
@@ -5764,7 +5764,7 @@
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:2];
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
-        [self.dfService favoriteNodesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        [self.dfService retrieveFavoriteNodesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
             if (error)
             {
                 self.lastTestSuccessful = NO;
@@ -5791,10 +5791,133 @@
                 
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
                 
-                AlfrescoLogDebug(@"Favorites Nodes with Listing Context: %@", pagingResult.objects);
+                AlfrescoLogDebug(@"Favorites Nodes with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
                 self.lastTestSuccessful = YES;
             }
             self.callbackCompleted = YES;
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testIsNodeFavorite
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        [self.dfService retrieveFavoriteNodesWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(array, @"The array result should not be nil");
+                
+                if (array.count > 0)
+                {
+                    [weakDfService isFavorite:[array objectAtIndex:0] completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                        if (succeeded)
+                        {
+                            NSLog(@"%@ : %d", [[array objectAtIndex:0] name], isFavorited);
+                            STAssertTrue(isFavorited, @"every node in array should be marked as Favorite");
+                            self.lastTestSuccessful = YES;
+                        }
+                        self.callbackCompleted = YES;
+                    }];
+                }
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testAddFavorite
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        [self.dfService retrieveRootFolderWithCompletionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                AlfrescoListingContext *listringContext = [[AlfrescoListingContext alloc] initWithMaxItems:3];
+                [weakDfService retrieveChildrenInFolder:folder listingContext:listringContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                    
+                    if (!error)
+                    {
+                        AlfrescoNode *node = [pagingResult.objects lastObject];
+                        if (node)
+                        {
+                            [weakDfService addFavorite:node completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                                if (succeeded)
+                                {
+                                    STAssertTrue(isFavorited, @"node should be marked as favorite");
+                                    self.lastTestSuccessful = YES;
+                                }
+                                self.callbackCompleted = YES;
+                            }];
+                        }
+                    }
+                }];
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRemoveFavorite
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        [self.dfService retrieveFavoriteNodesWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                if (array.count > 0)
+                {
+                    [weakDfService removeFavorite:[array objectAtIndex:0] completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                        
+                        if (succeeded)
+                        {
+                            STAssertFalse(isFavorited, @"node shouldn't be marked as favorite");
+                            self.lastTestSuccessful = YES;
+                        }
+                        self.callbackCompleted = YES;
+                    }];
+                }
+            }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);

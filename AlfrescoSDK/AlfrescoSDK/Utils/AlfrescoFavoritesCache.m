@@ -1,19 +1,28 @@
-//
-//  AlfrescoFavoritesCache.m
-//  AlfrescoSDK
-//
-//  Created by Mohamad Saeedi on 29/07/2013.
-//
-//
+/*
+ ******************************************************************************
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Mobile SDK.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *****************************************************************************
+ */
 
 #import "AlfrescoFavoritesCache.h"
 #import "AlfrescoInternalConstants.h"
 
 @interface AlfrescoFavoritesCache ()
 @property (nonatomic, strong) NSMutableArray * favoritesCache;
-@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteDocuments;
-@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteFolders;
-@property (nonatomic, assign, readwrite) NSInteger totalFavorites;
 @end
 
 @implementation AlfrescoFavoritesCache
@@ -24,8 +33,6 @@
     if (nil != self)
     {
         _favoritesCache = [NSMutableArray arrayWithCapacity:0];
-        _hasMoreFavoriteDocuments = YES;
-        _hasMoreFavoriteFolders = YES;
     }
     return self;
 }
@@ -85,9 +92,11 @@
     }
 }
 
-- (void)addFavorites:(NSArray *)nodes type:(AlfrescoFavoriteType)type
+- (void)addFavorites:(NSArray *)nodes
 {
-    [self addFavorites:nodes type:type hasMoreFavorites:NO totalFavorites:-1];
+    [nodes enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger index, BOOL *stop){
+        [self addFavorite:node];
+    }];
 }
 
 - (void)removeFavorite:(AlfrescoNode *)node
@@ -95,31 +104,13 @@
     [self.favoritesCache removeObject:node];
 }
 
-- (void)addFavorites:(NSArray *)nodes type:(AlfrescoFavoriteType)type hasMoreFavorites:(BOOL)hasMoreFavorites totalFavorites:(NSInteger)totalFavorites
+- (void)removeFavorites:(NSArray *)nodes
 {
-    if (nil == nodes)
-    {
-        return;
-    }
-    switch (type)
-    {
-        case AlfrescoFavoriteDocument:
-            self.hasMoreFavoriteDocuments = hasMoreFavorites;
-            self.totalFavorites = totalFavorites;
-            break;
-        case AlfrescoFavoriteFolder:
-            self.hasMoreFavoriteFolders = hasMoreFavorites;
-            self.totalFavorites = totalFavorites;
-            break;
-    }
     [nodes enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger index, BOOL *stop){
-        [self addFavorite:node];
+        [self removeFavorite:node];
     }];
 }
 
-/**
- the method returns the first entry found for the identifier.
- */
 - (AlfrescoNode *)objectWithIdentifier:(NSString *)identifier
 {
     if (!identifier)return nil;
@@ -127,6 +118,5 @@
     NSArray *results = [self.favoritesCache filteredArrayUsingPredicate:idPredicate];
     return (0 == results.count) ? nil : results[0];
 }
-
 
 @end
