@@ -79,6 +79,8 @@ extern NSString * const kAlfrescoSiteConsumer;
 extern NSString * const kAlfrescoMaxItems;
 extern NSString * const kAlfrescoSkipCount;
 
+extern NSString * const kAlfrescoProcessDefinitionID;
+
 extern NSString * const kAlfrescoSessionKeyCmisSession;
 extern NSString * const kAlfrescoSessionCloudURL;
 extern NSString * const kAlfrescoSessionCloudBasicAuth;
@@ -173,6 +175,11 @@ extern NSString * const kAlfrescoCloudJoinSiteAPI;
 extern NSString * const kAlfrescoCloudCancelJoinRequestsAPI;
 extern NSString * const kAlfrescoCloudLeaveSiteAPI;
 extern NSString * const kAlfrescoCloudPagingAPIParameters;
+
+extern NSString * const kAlfrescoWorkflowDefinitionOldAPI;
+extern NSString * const kAlfrescoWorkflowBasePublicAPIURL;
+extern NSString * const kAlfrescoWorkflowProcessDefinitionPublicAPI;
+extern NSString * const kAlfrescoWorkflowSingleProcessDefinitionPublicAPI;
 
 extern NSString * const kAlfrescoCloudJSONList;
 extern NSString * const kAlfrescoCloudJSONPagination;
@@ -269,6 +276,13 @@ extern NSString * const kAlfrescoJSONInviteId;
 extern NSString * const kAlfrescoJSONData;
 extern NSString * const kAlfrescoJSONResourceName;
 extern NSString * const kAlfrescoJSONMessage;
+
+extern NSString * const kAlfrescoJSONCategory;
+extern NSString * const kAlfrescoJSONStartFormResourceKey;
+extern NSString * const kAlfrescoJSONDeploymentID;
+extern NSString * const kAlfrescoJSONGraphicNotationDefined;
+extern NSString * const kAlfrescoJSONKey;
+extern NSString * const kAlfrescoJSONVersion;
 
 
 extern NSString * const kAlfrescoNodeAspects;

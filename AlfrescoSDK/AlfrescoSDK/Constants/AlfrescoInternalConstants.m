@@ -92,6 +92,8 @@ NSString * const kAlfrescoSiteConsumer = @"SiteConsumer";
 NSString * const kAlfrescoMaxItems = @"{maxItems}";
 NSString * const kAlfrescoSkipCount = @"{skipCount}";
 
+NSString * const kAlfrescoProcessDefinitionID = @"{processDefinitionId}";
+
 
 /**
  Session data key constants
@@ -201,6 +203,13 @@ NSString * const kAlfrescoCloudJoinSiteAPI = @"people/-me-/site-membership-reque
 NSString * const kAlfrescoCloudCancelJoinRequestsAPI = @"people/-me-/site-membership-requests/{siteID}";
 NSString * const kAlfrescoCloudLeaveSiteAPI = @"sites/{siteID}/members/{personID}";
 NSString * const kAlfrescoCloudPagingAPIParameters = @"maxItems={maxItems}&skipCount={skipCount}";
+/**
+ Workflow Constants
+ */
+NSString * const kAlfrescoWorkflowDefinitionOldAPI = @"/service/api/workflow-definitions";
+NSString * const kAlfrescoWorkflowBasePublicAPIURL = @"/api/-default-/public/alfresco/versions/1";
+NSString * const kAlfrescoWorkflowProcessDefinitionPublicAPI = @"process-definitions";
+NSString * const kAlfrescoWorkflowSingleProcessDefinitionPublicAPI = @"process-definitions/{processDefinitionId}";
 
 /**
  JSON Constants
@@ -301,6 +310,12 @@ NSString * const kAlfrescoJSONData = @"data";
 NSString * const kAlfrescoJSONResourceName = @"resourceName";
 NSString * const kAlfrescoJSONMessage = @"message";
 
+NSString * const kAlfrescoJSONCategory = @"category";
+NSString * const kAlfrescoJSONStartFormResourceKey = @"startFormResourceKey";
+NSString * const kAlfrescoJSONDeploymentID = @"deploymentId";
+NSString * const kAlfrescoJSONGraphicNotationDefined = @"graphicNotationDefined";
+NSString * const kAlfrescoJSONKey = @"key";
+NSString * const kAlfrescoJSONVersion = @"version";
 
 
 NSString * const kAlfrescoNodeAspects = @"cmis.aspects";

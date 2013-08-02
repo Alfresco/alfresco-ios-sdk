@@ -84,6 +84,7 @@
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property BOOL isUsingBaseAuthenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
+@property (nonatomic, strong, readwrite) AlfrescoWorkflowInfo *workflowInfo;
 @end
 
 
@@ -438,6 +439,9 @@
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
     params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     params.authenticationProvider = passthroughAuthProvider;
+    
+    // use activiti by default on cloud
+    self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
