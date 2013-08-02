@@ -207,9 +207,9 @@ NSString * const kAlfrescoCloudCancelJoinRequestsAPI = @"people/-me-/site-member
 NSString * const kAlfrescoCloudLeaveSiteAPI = @"sites/{siteID}/members/{personID}";
 NSString * const kAlfrescoCloudPagingAPIParameters = @"maxItems={maxItems}&skipCount={skipCount}";
 
-NSString * const kAlfrescoCloudFavoriteDocuments = @"people/{personID}/favorites?where=(EXISTS(target/file))";
-NSString * const kAlfrescoCloudFavoriteFolders = @"people/{personID}/favorites?where=(EXISTS(target/folder))";
-NSString * const kAlfrescoCloudFavoritesAll = @"people/{personID}/favorites?where=(EXISTS(target/file) OR EXISTS(target/folder))";
+NSString * const kAlfrescoCloudFavoriteDocumentsAPI = @"people/{personID}/favorites?where=(EXISTS(target/file))";
+NSString * const kAlfrescoCloudFavoriteFoldersAPI = @"people/{personID}/favorites?where=(EXISTS(target/folder))";
+NSString * const kAlfrescoCloudFavoritesAllAPI = @"people/{personID}/favorites?where=(EXISTS(target/file) OR EXISTS(target/folder))";
 NSString * const kAlfrescoCloudFavorite = @"people/{personID}/favorites/{nodeRef}";
 /**
  JSON Constants

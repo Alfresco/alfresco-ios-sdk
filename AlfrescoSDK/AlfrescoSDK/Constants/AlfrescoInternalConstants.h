@@ -176,6 +176,10 @@ extern NSString * const kAlfrescoCloudJoinSiteAPI;
 extern NSString * const kAlfrescoCloudCancelJoinRequestsAPI;
 extern NSString * const kAlfrescoCloudLeaveSiteAPI;
 extern NSString * const kAlfrescoCloudPagingAPIParameters;
+extern NSString * const kAlfrescoCloudFavoriteDocumentsAPI;
+extern NSString * const kAlfrescoCloudFavoriteFoldersAPI;
+extern NSString * const kAlfrescoCloudFavoritesAllAPI;
+extern NSString * const kAlfrescoCloudFavorite;
 
 extern NSString * const kAlfrescoCloudJSONList;
 extern NSString * const kAlfrescoCloudJSONPagination;
