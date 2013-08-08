@@ -30,21 +30,6 @@ static NSString * const kAlfrescoTestServersConfigDirectory = @"ios-sdk-test-con
 static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
 
 
-// Temporarily allow any SSL certificate during testing by overriding method on NSURLRequest.
-// Once MOBSDK-495 is implemented this should be removed
-/*
-@implementation NSURLRequest (IgnoreSSL)
-+ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host
-{
-    return YES;
-}
-@end
- */
-
-
-@interface AlfrescoBaseTest ()
-@end
-
 @implementation AlfrescoBaseTest
 
 #pragma mark unit test internal methods
@@ -113,7 +98,6 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         self.secondPassword = [environment valueForKey:@"secondPassword"];
         self.moderatedSiteName = [environment valueForKey:@"moderatedSite"];
         self.exifDateTimeOriginalUTC = [environment valueForKey:@"exifDateTimeOriginalUTC"];
-        
     }
 
     [self resetTestVariables];
@@ -164,8 +148,8 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     }
     else
     {
-        self.docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        [self.docFolderService deleteNode:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, NSError *error){
+        AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        [docFolderService deleteNode:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, NSError *error){
             if (!succeeded)
             {
                 self.testAlfrescoDocument = nil;
@@ -221,8 +205,8 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     [props setObject:@"test author" forKey:@"cm:author"];
 
     __block BOOL success = NO;
-    self.docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-    [self.docFolderService createDocumentWithName:newName inParentFolder:self.testDocFolder contentFile:textContentFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *error) {
+    AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+    [docFolderService createDocumentWithName:newName inParentFolder:self.testDocFolder contentFile:textContentFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *error) {
         if (nil == document)
         {
             self.lastTestSuccessful = NO;
