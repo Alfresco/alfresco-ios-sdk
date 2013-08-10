@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4E80E8EB1614540100922D5D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E80E8EA1614540100922D5D /* Default-568h@2x.png */; };
-		8218AF5B16E007E1001CE051 /* libAlfrescoSDKv1.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8218AF5A16E007E1001CE051 /* libAlfrescoSDKv1.1.0.a */; };
 		8219448F161B9E3A00D07520 /* app_icon_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219448B161B9E3A00D07520 /* app_icon_large.png */; };
 		82194490161B9E3A00D07520 /* app_icon_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219448C161B9E3A00D07520 /* app_icon_large@2x.png */; };
 		82194491161B9E3A00D07520 /* app_icon_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219448D161B9E3A00D07520 /* app_icon_small.png */; };
@@ -34,7 +33,6 @@
 		8218AF5416DEAB7D001CE051 /* AlfrescoLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoLog.h; sourceTree = "<group>"; };
 		8218AF5516DEAB7D001CE051 /* AlfrescoNetworkProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoNetworkProvider.h; sourceTree = "<group>"; };
 		8218AF5616DEAB7D001CE051 /* AlfrescoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRequest.h; sourceTree = "<group>"; };
-		8218AF5A16E007E1001CE051 /* libAlfrescoSDKv1.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAlfrescoSDKv1.1.0.a; sourceTree = "<group>"; };
 		8219448B161B9E3A00D07520 /* app_icon_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_large.png; sourceTree = "<group>"; };
 		8219448C161B9E3A00D07520 /* app_icon_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app_icon_large@2x.png"; sourceTree = "<group>"; };
 		8219448D161B9E3A00D07520 /* app_icon_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_small.png; sourceTree = "<group>"; };
@@ -96,7 +94,6 @@
 				82FC411415E7AC7D0081888D /* UIKit.framework in Frameworks */,
 				82FC411615E7AC7D0081888D /* Foundation.framework in Frameworks */,
 				82FC411815E7AC7D0081888D /* CoreGraphics.framework in Frameworks */,
-				8218AF5B16E007E1001CE051 /* libAlfrescoSDKv1.1.0.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,7 +162,6 @@
 			children = (
 				4E85F3871718493D005A43E1 /* AlfrescoContent.h */,
 				4E420BE8171715E4002D75D9 /* AlfrescoContentStream.h */,
-				8218AF5A16E007E1001CE051 /* libAlfrescoSDKv1.1.0.a */,
 				8218AF5316DEAB7D001CE051 /* AlfrescoFileManager.h */,
 				8218AF5416DEAB7D001CE051 /* AlfrescoLog.h */,
 				8218AF5516DEAB7D001CE051 /* AlfrescoNetworkProvider.h */,
@@ -365,7 +361,10 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/AlfrescoSDK\"",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"\"$(SRCROOT)/AlfrescoSDK/libAlfrescoSDKv1.1.0-debug.a\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				VALID_ARCHS = armv7;
@@ -384,7 +383,10 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/AlfrescoSDK\"",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"\"$(SRCROOT)/AlfrescoSDK/libAlfrescoSDKv1.1.0.a\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				VALID_ARCHS = armv7;

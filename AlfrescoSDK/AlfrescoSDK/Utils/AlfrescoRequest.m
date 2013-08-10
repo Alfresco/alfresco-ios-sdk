@@ -20,20 +20,24 @@
 
 #import "AlfrescoRequest.h"
 
+@interface AlfrescoRequest()
+@property (nonatomic, getter = isCancelled) BOOL cancelled;
+@end
+
 @implementation AlfrescoRequest
 - (id)init
 {
     self = [super init];
     if (nil != self)
     {
-        self.isCancelled = NO;
+        self.cancelled = NO;
     }
     return self;
 }
 
 - (void)cancel
 {
-    self.isCancelled = YES;
+    self.cancelled = YES;
     if ([self.httpRequest respondsToSelector:@selector(cancel)])
     {
         [self.httpRequest cancel];

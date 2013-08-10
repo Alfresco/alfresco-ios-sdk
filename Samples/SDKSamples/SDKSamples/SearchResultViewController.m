@@ -38,10 +38,18 @@
     
     // get the document library for the site
     self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.session];
-    AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:self.exact includeContent:self.fullText folder:nil includeDescendants:NO];
-    [self.searchService searchWithKeywords:self.searchText 
-                                   options:searchOptions 
-                           completionBlock:^(NSArray *array, NSError *error) {
+    AlfrescoKeywordSearchOptions *searchOptions;
+    
+    if (self.allMetadata)
+    {
+        searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:self.exact includeAll:self.allMetadata folder:nil includeDescendants:NO];
+    }
+    else
+    {
+        searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:self.exact includeContent:self.fullText folder:nil includeDescendants:NO];
+    }
+    
+    [self.searchService searchWithKeywords:self.searchText options:searchOptions completionBlock:^(NSArray *array, NSError *error) {
         [self.activityIndicator stopAnimating];
         if (nil == array) 
         {
