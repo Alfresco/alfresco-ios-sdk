@@ -25,6 +25,7 @@ static NSUInteger kKeywordSearchModelVersion = 1;
 @property (nonatomic, assign, readwrite) BOOL exactMatch;
 @property (nonatomic, assign, readwrite) BOOL includeContent;
 @property (nonatomic, assign, readwrite) BOOL includeDescendants;
+@property (nonatomic, assign, readwrite) BOOL includeAll;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *folder;
 @end
 
@@ -40,15 +41,22 @@ static NSUInteger kKeywordSearchModelVersion = 1;
     return [self initWithExactMatch:exactMatch includeContent:includeContent folder:nil includeDescendants:YES];
 }
 
+- (id)initWithExactMatch:(BOOL)exactMatch includeAll:(BOOL)includeAll
+{
+    self = [self initWithExactMatch:NO includeContent:NO folder:nil includeDescendants:YES];
+    if (self)
+    {
+        self.includeAll = includeAll;
+    }
+    return self;
+}
+
 - (id)initWithFolder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants
 {
     return [self initWithExactMatch:NO includeContent:NO folder:folder includeDescendants:includeDescendants];
 }
 
-- (id)initWithExactMatch:(BOOL)exactMatch
-          includeContent:(BOOL)includeContent
-                  folder:(AlfrescoFolder *)folder
-      includeDescendants:(BOOL)includeDescendants
+- (id)initWithExactMatch:(BOOL)exactMatch includeContent:(BOOL)includeContent folder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants
 {
     self = [super init];
     if (self)
@@ -57,6 +65,17 @@ static NSUInteger kKeywordSearchModelVersion = 1;
         self.folder = folder;
         self.includeContent = includeContent;
         self.includeDescendants = includeDescendants;
+        self.includeAll = NO;
+    }
+    return self;
+}
+
+- (id)initWithExactMatch:(BOOL)exactMatch includeAll:(BOOL)includeAll folder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants
+{
+    self = [self initWithExactMatch:exactMatch includeContent:YES folder:folder includeDescendants:includeDescendants];
+    if (self)
+    {
+        self.includeAll = includeAll;
     }
     return self;
 }
