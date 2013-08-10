@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSString *searchText;
 @property (nonatomic) BOOL fullText;
 @property (nonatomic) BOOL exact;
+@property (nonatomic) BOOL allMetadata;
 @property (nonatomic, strong) NSArray *resultArray;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *activityBarButton;

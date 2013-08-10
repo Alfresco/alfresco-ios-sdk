@@ -37,6 +37,7 @@
     [[segue destinationViewController] setSearchText:self.searchField.text];
     [[segue destinationViewController] setFullText:self.fullTextSwitch.isOn];
     [[segue destinationViewController] setExact:self.exactSwitch.isOn];
+    [[segue destinationViewController] setAllMetadata:self.allMetadataSwitch.isOn];
 }
 
 #pragma mark - TextField Delegate
