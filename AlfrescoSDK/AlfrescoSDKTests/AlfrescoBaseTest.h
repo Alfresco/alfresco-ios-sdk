@@ -67,7 +67,6 @@ typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
 @property (nonatomic, strong) CMISFolder *cmisRootFolder;
 @property (nonatomic, assign) BOOL isCloud;
 @property (nonatomic, assign) BOOL setUpSuccess;
-@property (nonatomic, strong) AlfrescoDocumentFolderService *docFolderService;
 
 + (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename;
 - (BOOL)authenticateOnPremiseServer:(NSMutableDictionary *)parameters;

@@ -21,6 +21,7 @@
 #import "AlfrescoListingContext.h"
 #import "AlfrescoPermissions.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoErrors.h"
 #import "CMISConstants.h"
 #import "AlfrescoContentStream.h"
 #import "AlfrescoInternalConstants.h"
@@ -5527,6 +5528,121 @@
              STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
              */
         }
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testCreateFolderCancellation
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        // create a new folder in the repository's root folder
+        NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
+        AlfrescoRequest *request = [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:nil completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            if (nil == folder)
+            {
+                // Should also get a cancellation error code
+                STAssertEquals(error.localizedDescription, kAlfrescoErrorDescriptionNetworkRequestCancelled, @"Expected cancellation error description, not \"%@\"", error.localizedDescription);
+                self.lastTestSuccessful = YES;
+                
+                // Try to clean-up as it's possible the folder will have got created anyway
+                [self.dfService retrieveNodeWithFolderPath:folderName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
+                    if (nil != node)
+                    {
+                        // delete the folder to clean up
+                        [self.dfService deleteNode:node completionBlock:^(BOOL success, NSError *error) {
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+            else
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = @"The request to create a folder was not cancelled correctly.";
+
+                // delete the folder to clean up
+                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                    if (!success)
+                    {
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    }
+                    
+                    self.callbackCompleted = YES;
+                }];
+            }
+        }];
+        
+        // immediately cancel the folder creation request
+        [request cancel];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testCreateDocumentCancellation
+{
+    if (self.setUpSuccess)
+    {
+        NSString *filePath = [[NSBundle bundleForClass:self.class] pathForResource:@"test_file.txt" ofType:nil];
+        NSURL *fileUrl = [NSURL URLWithString:filePath];
+        NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
+        NSData *fileData = [NSData dataWithContentsOfFile:filePath];
+        AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"text/plain"];
+        
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        AlfrescoRequest *request = [self.dfService createDocumentWithName:documentName inParentFolder:self.testDocFolder contentFile:textContentFile properties:nil completionBlock:^(AlfrescoDocument *document, NSError *error) {
+            if (nil == document)
+            {
+                // Should also get a cancellation error code
+                STAssertEquals(error.localizedDescription, kAlfrescoErrorDescriptionNetworkRequestCancelled, @"Expected cancellation error description, not \"%@\"", error.localizedDescription);
+                self.lastTestSuccessful = YES;
+
+                // Try to clean-up as it's possible the document will have got created anyway
+                [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
+                    if (nil != node)
+                    {
+                        // delete the document to clean up
+                        [self.dfService deleteNode:node completionBlock:^(BOOL success, NSError *error) {
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+            else
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = @"The request to create a document was not cancelled correctly.";
+                
+                // delete the document to clean up
+                [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
+                    if (!success)
+                    {
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    }
+                    
+                    self.callbackCompleted = YES;
+                }];
+            }
+        } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+            // No-op
+        }];
+        
+        // immediately cancel the document creation request
+        [request cancel];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
