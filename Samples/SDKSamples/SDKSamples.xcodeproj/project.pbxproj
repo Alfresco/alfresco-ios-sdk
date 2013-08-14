@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27E4D48917BBFE5500F5D773 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */; };
 		4E0C86751612FB65008B71DB /* ServerSelectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0C86741612FB65008B71DB /* ServerSelectionTableViewController.m */; };
 		4E0C867816131E19008B71DB /* RepositoryLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0C867716131E19008B71DB /* RepositoryLoginViewController.m */; };
 		4E29343F1580AD3D00C93F1D /* ActivitiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E29343E1580AD3C00C93F1D /* ActivitiesTableViewController.m */; };
@@ -82,6 +83,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4E0C86611612E2CB008B71DB /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthData.h; path = AlfrescoSDK/AlfrescoOAuthData.h; sourceTree = SOURCE_ROOT; };
 		4E0C86711612EE6F008B71DB /* AlfrescoOAuthLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthLoginViewController.h; path = AlfrescoSDK/AlfrescoOAuthLoginViewController.h; sourceTree = SOURCE_ROOT; };
 		4E0C86731612FB65008B71DB /* ServerSelectionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerSelectionTableViewController.h; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27E4D48917BBFE5500F5D773 /* MediaPlayer.framework in Frameworks */,
 				4EBBC4FB1585FE0B00EFDC16 /* QuartzCore.framework in Frameworks */,
 				D6A698A4156A5BC50094686D /* QuickLook.framework in Frameworks */,
 				D6A69932156FCFA80094686D /* MobileCoreServices.framework in Frameworks */,
@@ -355,6 +358,7 @@
 		829C5629155DB8F6004EE3C2 = {
 			isa = PBXGroup;
 			children = (
+				27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */,
 				829C563E155DB8F6004EE3C2 /* SDKSamples */,
 				4E34A45E15B01E490075B46E /* AlfrescoSDK */,
 				8276E25F155EFD1900344A29 /* Resources */,
