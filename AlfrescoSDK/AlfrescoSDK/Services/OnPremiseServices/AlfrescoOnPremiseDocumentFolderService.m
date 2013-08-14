@@ -413,7 +413,7 @@
                                                             }
                                                             else
                                                             {
-                                                                [self.favoritesCache addFavorites:resultsArray];
+                                                                [self.favoritesCache addFavorites:resultsArray type:AlfrescoFavoriteNode hasMoreFavorites:NO totalFavorites:0];
                                                                 if (arrayCompletionBlock)
                                                                 {
                                                                     arrayCompletionBlock(resultsArray, nil);

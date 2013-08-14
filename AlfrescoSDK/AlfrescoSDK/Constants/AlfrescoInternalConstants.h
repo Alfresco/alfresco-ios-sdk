@@ -180,6 +180,7 @@ extern NSString * const kAlfrescoCloudFavoriteDocumentsAPI;
 extern NSString * const kAlfrescoCloudFavoriteFoldersAPI;
 extern NSString * const kAlfrescoCloudFavoritesAllAPI;
 extern NSString * const kAlfrescoCloudFavorite;
+extern NSString * const kAlfrescoCloudAddFavoriteAPI;
 
 extern NSString * const kAlfrescoCloudJSONList;
 extern NSString * const kAlfrescoCloudJSONPagination;
@@ -276,6 +277,8 @@ extern NSString * const kAlfrescoJSONInviteId;
 extern NSString * const kAlfrescoJSONData;
 extern NSString * const kAlfrescoJSONResourceName;
 extern NSString * const kAlfrescoJSONMessage;
+extern NSString * const kAlfrescoJSONFile;
+extern NSString * const kAlfrescoJSONFolder;
 
 
 extern NSString * const kAlfrescoNodeAspects;

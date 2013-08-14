@@ -211,6 +211,7 @@ NSString * const kAlfrescoCloudFavoriteDocumentsAPI = @"people/{personID}/favori
 NSString * const kAlfrescoCloudFavoriteFoldersAPI = @"people/{personID}/favorites?where=(EXISTS(target/folder))";
 NSString * const kAlfrescoCloudFavoritesAllAPI = @"people/{personID}/favorites?where=(EXISTS(target/file) OR EXISTS(target/folder))";
 NSString * const kAlfrescoCloudFavorite = @"people/{personID}/favorites/{nodeRef}";
+NSString * const kAlfrescoCloudAddFavoriteAPI = @"people/-me-/favorites";
 /**
  JSON Constants
  */
@@ -309,6 +310,8 @@ NSString * const kAlfrescoJSONInviteId = @"inviteId";
 NSString * const kAlfrescoJSONData = @"data";
 NSString * const kAlfrescoJSONResourceName = @"resourceName";
 NSString * const kAlfrescoJSONMessage = @"message";
+NSString * const kAlfrescoJSONFile = @"file";
+NSString * const kAlfrescoJSONFolder = @"folder";
 
 
 

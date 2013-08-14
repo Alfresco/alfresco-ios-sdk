@@ -23,6 +23,12 @@
 
 @interface AlfrescoFavoritesCache ()
 @property (nonatomic, strong) NSMutableArray * favoritesCache;
+@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteDocuments;
+@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteFolders;
+@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteNodes;
+@property (nonatomic, assign, readwrite) NSInteger totalDocuments;
+@property (nonatomic, assign, readwrite) NSInteger totatlFolders;
+@property (nonatomic, assign, readwrite) NSInteger totalNodes;
 @end
 
 @implementation AlfrescoFavoritesCache
@@ -33,6 +39,9 @@
     if (nil != self)
     {
         _favoritesCache = [NSMutableArray arrayWithCapacity:0];
+        _hasMoreFavoriteDocuments = YES;
+        _hasMoreFavoriteFolders = YES;
+        _hasMoreFavoriteNodes = YES;
     }
     return self;
 }
@@ -55,6 +64,12 @@
 - (void)clear
 {
     [self.favoritesCache removeAllObjects];
+    _hasMoreFavoriteDocuments = YES;
+    _hasMoreFavoriteFolders = YES;
+    _hasMoreFavoriteNodes = YES;
+    _totalDocuments = 0;
+    _totalFolders = 0;
+    _totalNodes = 0;
 }
 
 - (NSArray *)allFavorites
@@ -80,7 +95,8 @@
     {
         return;
     }
-    NSUInteger foundIndex = [self.favoritesCache indexOfObject:node];
+    NSArray *identifiers = [self.favoritesCache valueForKey:@"identifier"];
+    NSUInteger foundIndex = [identifiers indexOfObject:node.identifier];
     
     if (NSNotFound == foundIndex)
     {
@@ -92,8 +108,28 @@
     }
 }
 
-- (void)addFavorites:(NSArray *)nodes
+- (void)addFavorites:(NSArray *)nodes type:(AlfrescoFavoriteType)type hasMoreFavorites:(BOOL)hasMoreFavorites totalFavorites:(NSInteger)totalFavorites
 {
+    if (nil == nodes)
+    {
+        return;
+    }
+    switch (type)
+    {
+        case AlfrescoFavoriteDocument:
+            self.hasMoreFavoriteDocuments = hasMoreFavorites;
+            self.totalDocuments = totalFavorites;
+            break;
+        case AlfrescoFavoriteFolder:
+            self.hasMoreFavoriteFolders = hasMoreFavorites;
+            self.totatlFolders = totalFavorites;
+            break;
+        case AlfrescoFavoriteNode:
+            self.hasMoreFavoriteNodes = hasMoreFavorites;
+            self.totalNodes = totalFavorites;
+            break;
+    }
+    
     [nodes enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger index, BOOL *stop){
         [self addFavorite:node];
     }];

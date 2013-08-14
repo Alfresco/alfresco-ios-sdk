@@ -25,11 +25,18 @@ typedef enum
 {
     AlfrescoFavoriteDocument = 0,
     AlfrescoFavoriteFolder,
+    AlfrescoFavoriteNode,
     
 } AlfrescoFavoriteType;
 
 @interface AlfrescoFavoritesCache : NSObject
 
+@property (nonatomic, assign, readonly) BOOL hasMoreFavoriteDocuments;
+@property (nonatomic, assign, readonly) BOOL hasMoreFavoriteFolders;
+@property (nonatomic, assign, readonly) BOOL hasMoreFavoriteNodes;
+@property (nonatomic, assign, readonly) NSInteger totalDocuments;
+@property (nonatomic, assign, readonly) NSInteger totalFolders;
+@property (nonatomic, assign, readonly) NSInteger totalNodes;
 /**
  initialiser
  */
@@ -48,7 +55,7 @@ typedef enum
 - (NSArray *)favoriteFolders;
 
 - (void)addFavorite:(AlfrescoNode *)node;
-- (void)addFavorites:(NSArray *)nodes;
+- (void)addFavorites:(NSArray *)nodes type:(AlfrescoFavoriteType)type hasMoreFavorites:(BOOL)hasMoreFavorites totalFavorites:(NSInteger)totalFavorites;
 
 - (void)removeFavorite:(AlfrescoNode *)node;
 - (void)removeFavorites:(NSArray *)nodes;
