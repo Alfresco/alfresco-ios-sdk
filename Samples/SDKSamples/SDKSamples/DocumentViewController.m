@@ -26,9 +26,9 @@
 #import "AlfrescoLog.h"
 
 @interface DocumentViewController ()
-@property (nonatomic, strong) NSMutableArray *comments;
-@property (nonatomic, strong) NSMutableArray *versions;
-@property (nonatomic, strong) NSMutableArray *tags;
+@property (nonatomic, strong) NSArray *comments;
+@property (nonatomic, strong) NSArray *versions;
+@property (nonatomic, strong) NSArray *tags;
 @property (nonatomic, strong) id<QLPreviewItem> documentPreviewItem;
 @property (nonatomic, strong) NSMutableDictionary *avatarDictionary;
 @property (nonatomic, strong) NSMutableDictionary *personDictionary;
@@ -363,9 +363,9 @@
     self.thumbnail = [UIImage imageNamed:@"mime_img.png"]; // for the case we don't have a thumbnail
     [self.activityBarButton setCustomView:self.activityIndicator];
     
-    self.comments = [NSMutableArray array];
-    self.tags = [NSMutableArray array];
-    self.versions = [NSMutableArray array];
+    self.comments = [NSArray array];
+    self.tags = [NSArray array];
+    self.versions = [NSArray array];
     self.avatarDictionary = [NSMutableDictionary dictionary];
     self.personDictionary = [NSMutableDictionary dictionary];
     
