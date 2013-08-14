@@ -322,16 +322,6 @@
     return nil;
 }
 
-- (AlfrescoRequest *)refreshNode:(AlfrescoNode *)node
-                 completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"identifier"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    AlfrescoRequest *request = [self retrieveNodeWithIdentifier:node.identifier completionBlock:completionBlock];
-    return request;
-}
-
 - (void)clearFavoritesCache
 {
     [self.favoritesCache clear];

@@ -1408,6 +1408,8 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     return processedProperties;
 }
 
+#pragma mark - Favorites
+
 - (AlfrescoRequest *)retrieveFavoriteDocumentsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
@@ -1471,8 +1473,11 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 - (AlfrescoRequest *)refreshNode:(AlfrescoNode *)node
                  completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
 {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    AlfrescoRequest *request = [self retrieveNodeWithIdentifier:node.identifier completionBlock:completionBlock];
+    return request;
 }
 
 - (void)clearFavoritesCache

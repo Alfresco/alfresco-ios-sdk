@@ -383,12 +383,6 @@
     return request;
 }
 
-- (AlfrescoRequest *)refreshNode:(AlfrescoNode *)node
-                 completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
-{
-    return nil;
-}
-
 - (void)clearFavoritesCache
 {
     [self.favoritesCache clear];
@@ -503,16 +497,15 @@
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:&conversionError];
     
     __block NSInteger total = entriesArray.count;
+    NSMutableArray *resultsArray = [NSMutableArray arrayWithCapacity:entriesArray.count];
     
-    if (nil != entriesArray)
+    if (nil != entriesArray && entriesArray.count > 0)
     {
-        NSMutableArray *resultsArray = [NSMutableArray arrayWithCapacity:entriesArray.count];
-        
         NSArray *identifiers = [entriesArray valueForKeyPath:@"entry.targetGuid"];
         
-        for (NSString *identifer in identifiers)
+        for (NSString *identifier in identifiers)
         {
-            [self retrieveNodeWithIdentifier:identifer completionBlock:^(AlfrescoNode *node, NSError *error) {
+            [self retrieveNodeWithIdentifier:identifier completionBlock:^(AlfrescoNode *node, NSError *error) {
                 
                 if (!error)
                 {
@@ -529,7 +522,7 @@
     }
     else
     {
-        completionBlock(nil, conversionError);
+        completionBlock(resultsArray, conversionError);
     }
 }
 
