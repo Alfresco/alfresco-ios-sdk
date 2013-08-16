@@ -19,6 +19,7 @@
  */
 
 #import <Foundation/Foundation.h>
+@class AlfrescoCompany;
 
 /** The AlfrescoPerson represents a user in an Alfresco repository.
  
@@ -47,7 +48,42 @@
 /// Returns the unique identifier to the content of the avatar rendition.
 @property (nonatomic, strong, readonly) NSString *avatarIdentifier;
 
-- (id)initWithProperties:(NSDictionary *)properties;
+// Job title of the person. 
+@property (nonatomic, strong, readonly) NSString *jobTitle;
 
+// Location of the person
+@property (nonatomic, strong, readonly) NSString *location;
+
+// Summury / Description of the person
+@property (nonatomic, strong, readonly) NSString *description;
+
+// Telephone number of the person
+@property (nonatomic, strong, readonly) NSString *telephoneNumber;
+
+// Mobile Number of the person
+@property (nonatomic, strong, readonly) NSString *mobileNumber;
+
+// Email of the person
+@property (nonatomic, strong, readonly) NSString *email;
+
+// Skype Id of the person
+@property (nonatomic, strong, readonly) NSString *skypeId;
+
+// Instant Message Id of the person
+@property (nonatomic, strong, readonly) NSString *instantMessageId;
+
+// Good Id of the person
+@property (nonatomic, strong, readonly) NSString *googleId;
+
+// Status of the person
+@property (nonatomic, strong, readonly) NSString *status;
+
+// Time the Status change
+@property (nonatomic, strong, readonly) NSDate *statusTime;
+
+// Company Info of the person
+@property (nonatomic, strong, readonly) AlfrescoCompany *company;
+
+- (id)initWithProperties:(NSDictionary *)properties;
 
 @end

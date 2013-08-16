@@ -1,14 +1,14 @@
 /*******************************************************************************
  * Copyright (C) 2005-2012 Alfresco Software Limited.
- * 
+ *
  * This file is part of the Alfresco Mobile SDK.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,18 @@ static NSInteger kPersonModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSString *lastName;
 @property (nonatomic, strong, readwrite) NSString *fullName;
 @property (nonatomic, strong, readwrite) NSString *avatarIdentifier;
+@property (nonatomic, strong, readwrite) NSString *jobTitle;
+@property (nonatomic, strong, readwrite) NSString *location;
+@property (nonatomic, strong, readwrite) NSString *description;
+@property (nonatomic, strong, readwrite) NSString *telephoneNumber;
+@property (nonatomic, strong, readwrite) NSString *mobileNumber;
+@property (nonatomic, strong, readwrite) NSString *email;
+@property (nonatomic, strong, readwrite) NSString *skypeId;
+@property (nonatomic, strong, readwrite) NSString *instantMessageId;
+@property (nonatomic, strong, readwrite) NSString *googleId;
+@property (nonatomic, strong, readwrite) NSString *status;
+@property (nonatomic, strong, readwrite) NSDate *statusTime;
+@property (nonatomic, strong, readwrite) AlfrescoCompany *company;
 @end
 
 @implementation AlfrescoPerson
@@ -100,14 +112,16 @@ static NSInteger kPersonModelVersion = 1;
         [self setOnPremiseProperties:properties];
         [self setCloudProperties:properties];
         
-        if ([[properties allKeys] containsObject:kAlfrescoJSONFirstName])
-        {
-            self.firstName = [properties valueForKey:kAlfrescoJSONFirstName];
-        }
-        if ([[properties allKeys] containsObject:kAlfrescoJSONLastName])
-        {
-            self.lastName = [properties valueForKey:kAlfrescoJSONLastName];
-        }
+        self.firstName = [properties valueForKey:kAlfrescoJSONFirstName];
+        self.lastName = [properties valueForKey:kAlfrescoJSONLastName];
+        self.location =  [properties valueForKey:kAlfrescoJSONLocation];
+        self.telephoneNumber = [properties valueForKey:kAlfrescoJSONTelephoneNumber];
+        self.mobileNumber = [properties valueForKey:kAlfrescoJSONMobileNumber];
+        self.email = [properties valueForKey:kAlfrescoJSONEmail];
+        self.status = [properties valueForKey:kAlfrescoJSONStatus];
+        self.statusTime = [properties valueForKey:kAlfrescoJSONStatusTime];
+        self.company = [properties valueForKey:kAlfrescoJSONCompany];
+        
         if (self.lastName != nil && self.lastName.length > 0)
         {
             if (self.firstName != nil && self.firstName.length > 0)
@@ -133,43 +147,38 @@ static NSInteger kPersonModelVersion = 1;
 
 - (void)setOnPremiseProperties:(NSDictionary *)properties
 {
-    if ([[properties allKeys] containsObject:kAlfrescoJSONUserName])
-    {
-        self.identifier = [properties valueForKey:kAlfrescoJSONUserName];
-    }
-    if ([[properties allKeys] containsObject:kAlfrescoJSONAvatar])
-    {
-        self.avatarIdentifier = [properties valueForKey:kAlfrescoJSONAvatar];
-    }
-    
+    self.identifier = self.identifier ? self.identifier : [properties valueForKey:kAlfrescoJSONUserName];
+    self.avatarIdentifier = self.avatarIdentifier ? self.avatarIdentifier : [properties valueForKey:kAlfrescoJSONAvatar];
+    self.jobTitle = self.jobTitle ? self.jobTitle : [properties valueForKey:kAlfrescoJSONJobtitle];
+    self.description = self.description ? self.description : [properties valueForKey:kAlfrescoJSONPersonDescription];
+    self.skypeId = self.skypeId ? self.skypeId : [properties valueForKey:kAlfrescoJSONSkype];
+    self.instantMessageId = self.instantMessageId ? self.instantMessageId : [properties valueForKey:kAlfrescoJSONInstantMessage];
+    self.googleId = self.googleId ? self.googleId : [properties valueForKey:kAlfrescoJSONGoogle];
 }
 
 - (void)setCloudProperties:(NSDictionary *)properties
 {
-    if ([[properties allKeys] containsObject:kAlfrescoJSONIdentifier])
-    {
-        self.identifier = [properties valueForKey:kAlfrescoJSONIdentifier];
-    }
-    if ([[properties allKeys] containsObject:kAlfrescoJSONAvatarId])
-    {
-        id avatarObj = [properties valueForKey:kAlfrescoJSONAvatarId];
-        if ([avatarObj isKindOfClass:[NSString class]])
-        {
-            self.avatarIdentifier = [properties valueForKey:kAlfrescoJSONAvatarId];
-        }
-        else if ([avatarObj isKindOfClass:[NSDictionary class]])
-        {
-            NSDictionary *avatarDict = (NSDictionary *)avatarObj;
-            if ([[avatarDict allKeys] containsObject:kAlfrescoJSONIdentifier])
-            {
-                self.avatarIdentifier = [avatarDict valueForKey:kAlfrescoJSONIdentifier];
-            }
-            
-        }
-    }
+    self.identifier = self.identifier ? self.identifier : [properties valueForKey:kAlfrescoJSONIdentifier];
+    self.jobTitle = self.jobTitle ? self.jobTitle : [properties valueForKey:kAlfrescoJSONJobTitle];
+    self.description = self.description ? self.description : [properties valueForKey:kAlfrescoJSONDescription];
+    self.skypeId = self.skypeId ? self.skypeId : [properties valueForKey:kAlfrescoJSONSkypeId];
+    self.instantMessageId = self.instantMessageId ? self.instantMessageId : [properties valueForKey:kAlfrescoJSONInstantMessageId];
+    self.googleId = self.googleId ? self.googleId : [properties valueForKey:kAlfrescoJSONGoogleId];
     
+    id avatarObj = [properties valueForKey:kAlfrescoJSONAvatarId];
+    if (!self.avatarIdentifier && [avatarObj isKindOfClass:[NSString class]])
+    {
+        self.avatarIdentifier = [properties valueForKey:kAlfrescoJSONAvatarId];
+    }
+    else if (!self.avatarIdentifier && [avatarObj isKindOfClass:[NSDictionary class]])
+    {
+        NSDictionary *avatarDict = (NSDictionary *)avatarObj;
+        if ([[avatarDict allKeys] containsObject:kAlfrescoJSONIdentifier])
+        {
+            self.avatarIdentifier = [avatarDict valueForKey:kAlfrescoJSONIdentifier];
+        }
+    }
 }
-
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
@@ -177,8 +186,20 @@ static NSInteger kPersonModelVersion = 1;
     [aCoder encodeObject:self.avatarIdentifier forKey:kAlfrescoJSONAvatarId];
     [aCoder encodeObject:self.firstName forKey:kAlfrescoJSONFirstName];
     [aCoder encodeObject:self.lastName forKey:kAlfrescoJSONLastName];
-    [aCoder encodeObject:self.fullName forKey:@"fullName"];
+    [aCoder encodeObject:self.fullName forKey:kAlfrescoJSONFullName];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
+    [aCoder encodeObject:self.jobTitle forKey:kAlfrescoJSONJobTitle];
+    [aCoder encodeObject:self.location forKey:kAlfrescoJSONLocation];
+    [aCoder encodeObject:self.description forKey:kAlfrescoJSONDescription];
+    [aCoder encodeObject:self.telephoneNumber forKey:kAlfrescoJSONTelephoneNumber];
+    [aCoder encodeObject:self.mobileNumber forKey:kAlfrescoJSONMobileNumber];
+    [aCoder encodeObject:self.skypeId forKey:kAlfrescoJSONSkypeId];
+    [aCoder encodeObject:self.instantMessageId forKey:kAlfrescoJSONInstantMessageId];
+    [aCoder encodeObject:self.status forKey:kAlfrescoJSONStatus];
+    [aCoder encodeObject:self.statusTime forKey:kAlfrescoJSONStatusTime];
+    [aCoder encodeObject:self.googleId forKey:kAlfrescoJSONGoogleId];
+    [aCoder encodeObject:self.email forKey:kAlfrescoJSONEmail];
+    [aCoder encodeObject:self.company forKey:kAlfrescoJSONCompany];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -187,15 +208,26 @@ static NSInteger kPersonModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+        //        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.avatarIdentifier = [aDecoder decodeObjectForKey:kAlfrescoJSONAvatarId];
         self.firstName = [aDecoder decodeObjectForKey:kAlfrescoJSONFirstName];
         self.lastName = [aDecoder decodeObjectForKey:kAlfrescoJSONLastName];
-        self.fullName = [aDecoder decodeObjectForKey:@"fullName"];
+        self.fullName = [aDecoder decodeObjectForKey:kAlfrescoJSONFullName];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
+        self.jobTitle = [aDecoder decodeObjectForKey:kAlfrescoJSONJobTitle];
+        self.location = [aDecoder decodeObjectForKey:kAlfrescoJSONLocation];
+        self.description = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
+        self.telephoneNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONTelephoneNumber];
+        self.mobileNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONMobileNumber];
+        self.skypeId = [aDecoder decodeObjectForKey:kAlfrescoJSONSkypeId];
+        self.instantMessageId = [aDecoder decodeObjectForKey:kAlfrescoJSONInstantMessageId];
+        self.status = [aDecoder decodeObjectForKey:kAlfrescoJSONStatus];
+        self.statusTime = [aDecoder decodeObjectForKey:kAlfrescoJSONStatusTime];
+        self.googleId = [aDecoder decodeObjectForKey:kAlfrescoJSONGoogleId];
+        self.email = [aDecoder decodeObjectForKey:kAlfrescoJSONEmail];
+        self.company = [aDecoder decodeObjectForKey:kAlfrescoJSONCompany];
     }
     return self;
 }
-
 
 @end
