@@ -110,13 +110,24 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
 {
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
     id errorObj = [parameters valueForKey:kAlfrescoJSONError];
+    id descriptionObj = [parameters valueForKey:kAlfrescoJSONErrorDescription];
+
     int code = kAlfrescoErrorCodeJSONParsing;
     if (nil != errorObj && [errorObj isKindOfClass:[NSString class]])
     {
         NSString *errorCode = (NSString *)errorObj;
         if ([errorCode hasPrefix:@"invalid_request"])
         {
-            code = kAlfrescoErrorCodeInvalidRequest;
+            BOOL isExpired = ([descriptionObj rangeOfString:@"expired"].location != NSNotFound);
+            
+            if ([descriptionObj hasPrefix:@"refresh_token"])
+            {
+                code = isExpired ? kAlfrescoErrorCodeRefreshTokenExpired : kAlfrescoErrorCodeRefreshTokenInvalid;
+            }
+            else
+            {
+                code = kAlfrescoErrorCodeInvalidRequest;
+            }
         }
         else if([errorCode hasPrefix:@"invalid_grant"])
         {
@@ -131,7 +142,7 @@ NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found"
             code = kAlfrescoErrorCodeRefreshTokenInvalid;
         }
     }
-    id descriptionObj = [parameters valueForKey:kAlfrescoJSONErrorDescription];
+
     if (nil != descriptionObj && [descriptionObj isKindOfClass:[NSString class]])
     {
         NSString *description = (NSString *)descriptionObj;

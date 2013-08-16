@@ -29,8 +29,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoOAuthData *oauthData;
 @property (nonatomic, strong, readwrite) NSString *baseURL;
 @property (nonatomic, weak, readwrite) id<AlfrescoOAuthLoginDelegate> oauthDelegate;
-- (AlfrescoOAuthData *)updatedOAuthDataFromJSONWithError:(NSError **)error;
-- (NSError *)errorFromJSONDictionary:(NSDictionary *)jsonDictionary;
 @end
 
 @implementation AlfrescoOAuthHelper
@@ -279,13 +277,11 @@
     {
         if (nil == *error)
         {
-//            *error = [self errorFromJSONDictionary:(NSDictionary *)jsonDictionary];
             *error = [AlfrescoErrors alfrescoErrorFromJSONParameters:jsonDictionary];
         }
         else
         {
             NSError *underlyingError = [AlfrescoErrors alfrescoErrorFromJSONParameters:jsonDictionary];
-//            NSError *underlyingError = [self errorFromJSONDictionary:(NSDictionary *)jsonDictionary];
             *error = [AlfrescoErrors alfrescoErrorWithUnderlyingError:underlyingError andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         }
         return nil;
@@ -298,32 +294,5 @@
     
     return updatedOAuthData;
 }
-
-- (NSError *)errorFromJSONDictionary:(NSDictionary *)jsonDictionary
-{
-    id descriptionObject = [jsonDictionary objectForKey:kAlfrescoJSONErrorDescription];
-    if (nil == descriptionObject)
-    {
-        return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
-    }
-    if (![descriptionObject isKindOfClass:[NSString class]])
-    {
-        return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
-    }
-    NSString *description = (NSString *)descriptionObject;
-    NSRange messageRange = [description rangeOfString:@"refresh_token"];
-    if (messageRange.location != NSNotFound)
-    {
-        return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeRefreshTokenInvalid];
-    }
-    
-    messageRange = [description rangeOfString:@"expired"];
-    if (messageRange.location != NSNotFound)
-    {
-        return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeAccessTokenExpired];
-    }
-    return [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
-}
-
 
 @end
