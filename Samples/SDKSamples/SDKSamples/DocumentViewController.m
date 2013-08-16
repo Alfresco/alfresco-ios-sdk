@@ -24,11 +24,13 @@
 #import "AlfrescoPerson.h"
 #import "AlfrescoTag.h"
 #import "AlfrescoLog.h"
+#import <MediaPlayer/MediaPlayer.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface DocumentViewController ()
-@property (nonatomic, strong) NSMutableArray *comments;
-@property (nonatomic, strong) NSMutableArray *versions;
-@property (nonatomic, strong) NSMutableArray *tags;
+@property (nonatomic, strong) NSArray *comments;
+@property (nonatomic, strong) NSArray *versions;
+@property (nonatomic, strong) NSArray *tags;
 @property (nonatomic, strong) id<QLPreviewItem> documentPreviewItem;
 @property (nonatomic, strong) NSMutableDictionary *avatarDictionary;
 @property (nonatomic, strong) NSMutableDictionary *personDictionary;
@@ -329,13 +331,24 @@
              {
                  self.progressView.progress = 1.0;
                  self.documentPreviewItem = [[BasicPreviewItem alloc] initWithUrl:contentFile.fileUrl andTitle:self.document.name];
-                 QLPreviewController *previewController = [[QLPreviewController alloc] init];
                  
-                 //setting the datasource property to self
-                 previewController.dataSource = self;
+                 NSString *filePath = [contentFile.fileUrl path];
+                 if ([self isAudioOrVideo:filePath])
+                 {
+                     MPMoviePlayerViewController *moviePlayer = [[MPMoviePlayerViewController alloc] initWithContentURL:contentFile.fileUrl];
+                     [self presentMoviePlayerViewControllerAnimated:moviePlayer];
+                 }
+                 else
+                 {
+                     QLPreviewController *previewController = [[QLPreviewController alloc] init];
+                     
+                     //setting the datasource property to self
+                     previewController.dataSource = self;
+                     
+                     //pushing the QLPreviewController to the navigation stack
+                     [[self navigationController] pushViewController:previewController animated:YES];
+                 }
                  
-                 //pushing the QLPreviewController to the navigation stack
-                 [[self navigationController] pushViewController:previewController animated:YES];
                  [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
              }
              self.progressView.hidden = YES;
@@ -345,6 +358,21 @@
          }];
     }
 }
+
+- (BOOL)isAudioOrVideo:(NSString *)filePath
+{
+    BOOL filePathIsAudioOrVideo = NO;
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[filePath pathExtension], NULL);
+    
+    if (UTTypeConformsTo(UTI, (__bridge CFStringRef)@"public.movie") || (UTTypeConformsTo(UTI, (__bridge CFStringRef)@"public.audio")))
+    {
+        filePathIsAudioOrVideo = YES;
+    }
+    CFRelease(UTI);
+    
+    return filePathIsAudioOrVideo;
+}
+
 
 
 #pragma mark View Controller methods
@@ -363,9 +391,9 @@
     self.thumbnail = [UIImage imageNamed:@"mime_img.png"]; // for the case we don't have a thumbnail
     [self.activityBarButton setCustomView:self.activityIndicator];
     
-    self.comments = [NSMutableArray array];
-    self.tags = [NSMutableArray array];
-    self.versions = [NSMutableArray array];
+    self.comments = [NSArray array];
+    self.tags = [NSArray array];
+    self.versions = [NSArray array];
     self.avatarDictionary = [NSMutableDictionary dictionary];
     self.personDictionary = [NSMutableDictionary dictionary];
     

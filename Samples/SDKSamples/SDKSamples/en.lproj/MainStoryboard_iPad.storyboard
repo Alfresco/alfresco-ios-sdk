@@ -80,7 +80,7 @@
                         <sections>
                             <tableViewSection id="cxO-Qc-2nR">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MobileSDKCell" textLabel="a5Z-0B-8V5" imageView="KuZ-jQ-Gw2" rowHeight="70" style="IBUITableViewCellStyleDefault" id="PG6-7t-v4M">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MobileSDKCell" textLabel="a5Z-0B-8V5" imageView="KuZ-jQ-Gw2" rowHeight="70" style="IBUITableViewCellStyleDefault" id="PG6-7t-v4M">
                                         <rect key="frame" x="0.0" y="30" width="768" height="71"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">

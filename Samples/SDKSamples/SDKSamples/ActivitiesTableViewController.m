@@ -24,11 +24,8 @@
 
 @interface ActivitiesTableViewController ()
 @property (nonatomic, strong) AlfrescoActivityStreamService *activityStreamService;
-@property (nonatomic, strong) NSMutableArray *activities;
+@property (nonatomic, strong) NSArray *activities;
 @property (nonatomic, strong) NSMutableDictionary *avatarDictionary;
-- (void)loadActivities;
-- (NSString *)replaceStringWithPlaceholders:(NSString *)originalString placeholderReplacements:(NSArray *)replacements error:(NSError **)error;
-- (NSString *)stringKeyFromOriginal:(NSString *)stringKey;
 @end
 
 @implementation ActivitiesTableViewController
@@ -53,7 +50,7 @@
          }
          else 
          {
-             self.activities = [NSMutableArray arrayWithArray:array];
+             self.activities = [NSArray arrayWithArray:array];
              [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
          }
          [self.activityIndicator stopAnimating];
@@ -63,7 +60,7 @@
 /**
  loadAvatars - gets the avatar images using the AlfrescoPersonService. The avatars are loaded at the point of table (re)loading.
  */
-- (void)loadAvatar:(UIImageView *) avatarImageView withUserId:(NSString *)userId
+- (void)loadAvatar:(UIImageView *)avatarImageView withUserId:(NSString *)userId
 {
     if (nil == self.session) 
     {
@@ -119,16 +116,17 @@
     int index = 0;
     for (id replacement in replacements)
     {
-        NSString *placeholderString = [NSString stringWithFormat:@"{%d}",index];
+        NSString *placeholderString = [NSString stringWithFormat:@"{%d}", index];
         NSString *replacementString = nil;
         
-        if ([replacement isKindOfClass:[NSString class]]) {
+        if ([replacement isKindOfClass:[NSString class]])
+        {
             replacementString = (NSString *)replacement;
         }
         else if ([replacement isKindOfClass:[NSNumber class]])
         {
             NSNumber *number = (NSNumber *)replacement;
-            replacementString = [NSString stringWithFormat:@"%d",[number intValue]];
+            replacementString = [NSString stringWithFormat:@"%d", [number intValue]];
         }
         else
         {
@@ -139,21 +137,14 @@
             
             return nil;
         }
-        originalString = [originalString
-                          stringByReplacingOccurrencesOfString:placeholderString
-                          withString:replacementString];
+        originalString = [originalString stringByReplacingOccurrencesOfString:placeholderString withString:replacementString];
         index++;
     }
     return originalString;
 }
 
-- (NSString *)stringKeyFromOriginal:(NSString *)stringKey
-{
-    stringKey = [stringKey stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
-    return [stringKey stringByReplacingOccurrencesOfString:@"." withString:@"_"];
-}
-
 #pragma mark - View Controller methods
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -183,10 +174,7 @@
     {
         return 75.0;        
     }
-    else 
-    {
-        return 63.0;
-    }
+    return 63.0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -195,15 +183,12 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     AlfrescoActivityEntry *activityEntry = (AlfrescoActivityEntry *)[self.activities objectAtIndex:indexPath.row];
+    NSString *activityType = activityEntry.type;
+    NSDictionary *activityData = activityEntry.data;
     
     UIImageView *documentThumbnailView = (UIImageView *)[cell viewWithTag:1];
     documentThumbnailView.contentMode = UIViewContentModeScaleAspectFit;
     documentThumbnailView.image = nil;
-    
-    /**
-     load the avatar for the person
-     */
-    [self loadAvatar:documentThumbnailView withUserId:activityEntry.createdBy];
     
     UILabel *dateLabel = (UILabel *)[cell viewWithTag:3];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -211,11 +196,59 @@
     [formatter setLocale:[NSLocale currentLocale]];
     dateLabel.text = [formatter stringFromDate:activityEntry.createdAt];
 
-    NSString *localizedTypeKey = [self stringKeyFromOriginal:activityEntry.type];
-    NSString *parametisedString = localized(localizedTypeKey);
-    id titleData = [activityEntry.data valueForKey:@"title"];
-        
-    NSArray *replacementStrings = [NSArray arrayWithObjects:titleData, activityEntry.createdBy, @"", @"", activityEntry.siteShortName, nil];
+    NSString *parametisedString = localized(activityEntry.type);
+    NSString *titleData = [activityEntry.data valueForKey:@"title"];
+    
+    NSString *fullName;
+    NSString *customParameter;
+    NSString *followingName;
+    NSString *avatarUserName = activityEntry.createdBy;
+    
+    // Site membership activities need to display the member as the subject rather than the activity creator
+    if ([activityType isEqualToString:@"org.alfresco.site.user-joined"] ||
+        [activityType isEqualToString:@"org.alfresco.site.user-left"] ||
+        [activityType isEqualToString:@"org.alfresco.site.user-role-changed"])
+    {
+        fullName = [NSString stringWithFormat:@"%@ %@", activityData[@"memberFirstName"], activityData[@"memberLastName"]];
+        customParameter = activityData[@"role"];
+        avatarUserName = activityData[@"memberUserName"];
+    }
+    else
+    {
+        fullName = [NSString stringWithFormat:@"%@ %@", activityData[@"firstName"], activityData[@"lastName"]];
+    }
+    // Trim name string
+    fullName = [fullName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+    // Custom parameter used by certain activity types
+    if ([activityType isEqualToString:@"org.alfresco.site.group-added"] ||
+        [activityType isEqualToString:@"org.alfresco.site.group-removed"] ||
+        [activityType isEqualToString:@"org.alfresco.site.group-role-changed"])
+    {
+        customParameter = activityData[@"role"];
+    }
+    
+    // Special case processing for following activity type
+    if ([activityType isEqualToString:@"org.alfresco.subscriptions.followed"])
+    {
+        followingName = [NSString stringWithFormat:@"%@ %@", activityData[@"userFirstName"], activityData[@"userLastName"]];
+    }
+    
+    /**
+     * Load the avatar for the person
+     */
+    [self loadAvatar:documentThumbnailView withUserId:avatarUserName];
+    
+    // Ensures strings are not nil
+    NSString *(^populateNilString)(NSString *) = ^(NSString *string){
+        if (nil == string)
+        {
+            return @"";
+        }
+        return string;
+    };
+    
+    NSArray *replacementStrings = @[populateNilString(titleData), populateNilString(fullName), populateNilString(customParameter), @"", populateNilString(activityEntry.siteShortName), populateNilString(followingName), populateNilString(activityData[@"status"])];
     NSError *error = nil;
     NSString *displayedText = [self replaceStringWithPlaceholders:parametisedString placeholderReplacements:replacementStrings error:&error];
     if (nil != displayedText) 
