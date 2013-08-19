@@ -42,10 +42,6 @@ typedef enum
 @property (nonatomic, assign, readonly) NSInteger totalMemberSites;
 @property (nonatomic, assign, readonly) NSInteger totalFavoriteSites;
 @property (nonatomic, assign, readonly) NSInteger totalPendingSites;
-/**
- initialiser
- */
-+ (id)siteCacheForSession:(id<AlfrescoSession>)session;
 
 /**
  clears all entries in the cache

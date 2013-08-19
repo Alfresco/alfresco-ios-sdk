@@ -23,7 +23,7 @@
 #import "AlfrescoInternalConstants.h"
 
 @interface AlfrescoSiteCache ()
-@property (nonatomic, strong) NSMutableArray * sitesCache;
+@property (nonatomic, strong) NSMutableArray *sitesCache;
 @property (nonatomic, assign, readwrite) BOOL hasMoreSites;
 @property (nonatomic, assign, readwrite) BOOL hasMoreMemberSites;
 @property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteSites;
@@ -48,21 +48,6 @@
         _hasMoreSites = YES;
     }
     return self;
-}
-
-+ (id)siteCacheForSession:(id<AlfrescoSession>)session
-{
-    static dispatch_once_t singleDispatchToken;
-    static AlfrescoSiteCache *cache = nil;
-    dispatch_once(&singleDispatchToken, ^{
-        cache = [[self alloc] init];
-        if (cache)
-        {
-            NSString *key = [NSString stringWithFormat:@"%@%@",kAlfrescoSessionInternalCache, [AlfrescoSiteCache class]];
-            [session setObject:cache forParameter:key];
-        }
-    });
-    return cache;
 }
 
 - (NSArray *)allSites
