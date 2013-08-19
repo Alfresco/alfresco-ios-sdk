@@ -358,7 +358,6 @@
 		829C5629155DB8F6004EE3C2 = {
 			isa = PBXGroup;
 			children = (
-				27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */,
 				829C563E155DB8F6004EE3C2 /* SDKSamples */,
 				4E34A45E15B01E490075B46E /* AlfrescoSDK */,
 				8276E25F155EFD1900344A29 /* Resources */,
@@ -378,11 +377,12 @@
 		829C5637155DB8F6004EE3C2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4EBBC4FA1585FE0B00EFDC16 /* QuartzCore.framework */,
+				829C563A155DB8F6004EE3C2 /* Foundation.framework */,
+				27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */,
 				D6A69930156FCF9E0094686D /* MobileCoreServices.framework */,
+				4EBBC4FA1585FE0B00EFDC16 /* QuartzCore.framework */,
 				D6A698A2156A5BB10094686D /* QuickLook.framework */,
 				829C5638155DB8F6004EE3C2 /* UIKit.framework */,
-				829C563A155DB8F6004EE3C2 /* Foundation.framework */,
 				829C563C155DB8F6004EE3C2 /* CoreGraphics.framework */,
 			);
 			name = Frameworks;

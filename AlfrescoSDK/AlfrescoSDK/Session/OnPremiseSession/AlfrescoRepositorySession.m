@@ -330,10 +330,7 @@
     {
         return [self.sessionCache objectForKey:key];
     }
-    else
-    {
-        return [self.sessionData objectForKey:key];        
-    }
+    return [self.sessionData objectForKey:key];
 }
 
 - (void)setObject:(id)object forParameter:(id)key

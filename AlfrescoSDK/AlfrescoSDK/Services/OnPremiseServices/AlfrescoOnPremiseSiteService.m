@@ -62,23 +62,19 @@
         self.defaultSortKey = kAlfrescoSortByTitle;
         self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByTitle, kAlfrescoSortByShortname, nil];
         self.joinRequests = [NSMutableArray array];
-        NSString *siteCacheKey = [NSString stringWithFormat:@"%@%@",kAlfrescoSessionInternalCache,NSStringFromClass([AlfrescoSiteCache class])];
+
+        NSString *siteCacheKey = [NSString stringWithFormat:@"%@%@", kAlfrescoSessionInternalCache, NSStringFromClass([AlfrescoSiteCache class])];
         id cachedObj = [self.session objectForParameter:siteCacheKey];
         if (cachedObj)
         {
-            if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelDebug)
-            {
-                AlfrescoLogDebug(@"we found an existing Site cache for key %@ and are using that", siteCacheKey );
-            }
+            AlfrescoLogDebug(@"Found an existing SiteCache for key: %@", siteCacheKey);
             self.siteCache = (AlfrescoSiteCache *)cachedObj;
         }
         else
         {
-            if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelDebug)
-            {
-                AlfrescoLogDebug(@"we found no existing Site cache for key %@ and must create it", siteCacheKey );
-            }
-            self.siteCache = [AlfrescoSiteCache siteCacheForSession:self.session];
+            AlfrescoLogDebug(@"Creating SiteCache for key: %@", siteCacheKey);
+            self.siteCache = [[AlfrescoSiteCache alloc] init];
+            [self.session setObject:self.siteCache forParameter:siteCacheKey];
         }
     }
     return self;
