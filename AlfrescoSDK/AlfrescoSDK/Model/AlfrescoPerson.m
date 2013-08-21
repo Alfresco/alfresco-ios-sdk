@@ -112,15 +112,16 @@ static NSInteger kPersonModelVersion = 1;
         [self setOnPremiseProperties:properties];
         [self setCloudProperties:properties];
         
-        self.firstName = [properties valueForKey:kAlfrescoJSONFirstName];
-        self.lastName = [properties valueForKey:kAlfrescoJSONLastName];
-        self.location =  [properties valueForKey:kAlfrescoJSONLocation];
-        self.telephoneNumber = [properties valueForKey:kAlfrescoJSONTelephoneNumber];
-        self.mobileNumber = [properties valueForKey:kAlfrescoJSONMobileNumber];
-        self.email = [properties valueForKey:kAlfrescoJSONEmail];
-        self.status = [properties valueForKey:kAlfrescoJSONStatus];
-        self.statusTime = [properties valueForKey:kAlfrescoJSONStatusTime];
-        self.company = [properties valueForKey:kAlfrescoJSONCompany];
+        self.firstName = [self valueForProperty:kAlfrescoJSONFirstName inProperties:properties];
+        self.lastName = [self valueForProperty:kAlfrescoJSONLastName inProperties:properties];
+        self.location = [self valueForProperty:kAlfrescoJSONLocation inProperties:properties];
+        self.telephoneNumber = [self valueForProperty:kAlfrescoJSONTelephoneNumber inProperties:properties];
+        self.mobileNumber = [self valueForProperty:kAlfrescoJSONMobileNumber inProperties:properties];
+        self.email = [self valueForProperty:kAlfrescoJSONEmail inProperties:properties];
+        self.status = [self valueForProperty:kAlfrescoJSONStatus inProperties:properties];
+        self.statusTime = [self valueForProperty:kAlfrescoJSONStatusTime inProperties:properties];
+        self.company = [self valueForProperty:kAlfrescoJSONCompany inProperties:properties];
+        
         
         if (self.lastName != nil && self.lastName.length > 0)
         {
@@ -147,36 +148,72 @@ static NSInteger kPersonModelVersion = 1;
 
 - (void)setOnPremiseProperties:(NSDictionary *)properties
 {
-    self.identifier = self.identifier ? self.identifier : [properties valueForKey:kAlfrescoJSONUserName];
-    self.avatarIdentifier = self.avatarIdentifier ? self.avatarIdentifier : [properties valueForKey:kAlfrescoJSONAvatar];
-    self.jobTitle = self.jobTitle ? self.jobTitle : [properties valueForKey:kAlfrescoJSONJobtitle];
-    self.description = self.description ? self.description : [properties valueForKey:kAlfrescoJSONPersonDescription];
-    self.skypeId = self.skypeId ? self.skypeId : [properties valueForKey:kAlfrescoJSONSkype];
-    self.instantMessageId = self.instantMessageId ? self.instantMessageId : [properties valueForKey:kAlfrescoJSONInstantMessage];
-    self.googleId = self.googleId ? self.googleId : [properties valueForKey:kAlfrescoJSONGoogle];
+    if (!self.identifier)
+    {
+        self.identifier = [self valueForProperty:kAlfrescoJSONUserName inProperties:properties];
+    }
+    if (!self.avatarIdentifier)
+    {
+        self.avatarIdentifier = [self valueForProperty:kAlfrescoJSONAvatar inProperties:properties];
+    }
+    if (!self.jobTitle)
+    {
+        self.jobTitle = [self valueForProperty:kAlfrescoJSONJobtitle inProperties:properties];
+    }
+    if (!self.description)
+    {
+        self.description = [self valueForProperty:kAlfrescoJSONPersonDescription inProperties:properties];
+    }
+    if (!self.skypeId)
+    {
+        self.skypeId = [self valueForProperty:kAlfrescoJSONSkype inProperties:properties];
+    }
+    if (!self.instantMessageId)
+    {
+        self.instantMessageId = [self valueForProperty:kAlfrescoJSONInstantMessage inProperties:properties];
+    }
+    if (!self.googleId)
+    {
+        self.googleId = [self valueForProperty:kAlfrescoJSONGoogle inProperties:properties];
+    }
 }
 
 - (void)setCloudProperties:(NSDictionary *)properties
 {
-    self.identifier = self.identifier ? self.identifier : [properties valueForKey:kAlfrescoJSONIdentifier];
-    self.jobTitle = self.jobTitle ? self.jobTitle : [properties valueForKey:kAlfrescoJSONJobTitle];
-    self.description = self.description ? self.description : [properties valueForKey:kAlfrescoJSONDescription];
-    self.skypeId = self.skypeId ? self.skypeId : [properties valueForKey:kAlfrescoJSONSkypeId];
-    self.instantMessageId = self.instantMessageId ? self.instantMessageId : [properties valueForKey:kAlfrescoJSONInstantMessageId];
-    self.googleId = self.googleId ? self.googleId : [properties valueForKey:kAlfrescoJSONGoogleId];
+    if (!self.identifier)
+    {
+        self.identifier = [self valueForProperty:kAlfrescoJSONIdentifier inProperties:properties];
+    }
+    if (!self.jobTitle)
+    {
+        self.jobTitle = [self valueForProperty:kAlfrescoJSONJobTitle inProperties:properties];
+    }
+    if (!self.description)
+    {
+        self.description = [self valueForProperty:kAlfrescoJSONDescription inProperties:properties];
+    }
+    if (!self.skypeId)
+    {
+        self.skypeId = [self valueForProperty:kAlfrescoJSONSkypeId inProperties:properties];
+    }
+    if (!self.instantMessageId)
+    {
+        self.instantMessageId = [self valueForProperty:kAlfrescoJSONInstantMessageId inProperties:properties];
+    }
+    if (!self.googleId)
+    {
+        self.googleId = [self valueForProperty:kAlfrescoJSONGoogleId inProperties:properties];
+    }
     
-    id avatarObj = [properties valueForKey:kAlfrescoJSONAvatarId];
+    id avatarObj = [self valueForProperty:kAlfrescoJSONAvatarId inProperties:properties];
     if (!self.avatarIdentifier && [avatarObj isKindOfClass:[NSString class]])
     {
-        self.avatarIdentifier = [properties valueForKey:kAlfrescoJSONAvatarId];
+        self.avatarIdentifier = avatarObj;
     }
     else if (!self.avatarIdentifier && [avatarObj isKindOfClass:[NSDictionary class]])
     {
         NSDictionary *avatarDict = (NSDictionary *)avatarObj;
-        if ([[avatarDict allKeys] containsObject:kAlfrescoJSONIdentifier])
-        {
-            self.avatarIdentifier = [avatarDict valueForKey:kAlfrescoJSONIdentifier];
-        }
+        self.avatarIdentifier = [self valueForProperty:kAlfrescoJSONIdentifier inProperties:avatarDict];
     }
 }
 
@@ -208,7 +245,7 @@ static NSInteger kPersonModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-        //        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+        //NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.avatarIdentifier = [aDecoder decodeObjectForKey:kAlfrescoJSONAvatarId];
         self.firstName = [aDecoder decodeObjectForKey:kAlfrescoJSONFirstName];
         self.lastName = [aDecoder decodeObjectForKey:kAlfrescoJSONLastName];
@@ -228,6 +265,17 @@ static NSInteger kPersonModelVersion = 1;
         self.company = [aDecoder decodeObjectForKey:kAlfrescoJSONCompany];
     }
     return self;
+}
+
+- (id)valueForProperty:(NSString *)property inProperties:(NSDictionary *)properties
+{
+    id value = [properties valueForKey:property];
+    
+    if (value && ![value isKindOfClass:[NSNull class]])
+    {
+        return value;
+    }
+    return nil;
 }
 
 @end

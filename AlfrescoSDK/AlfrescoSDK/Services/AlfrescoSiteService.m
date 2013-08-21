@@ -143,6 +143,20 @@
     return nil;    
 }
 
+- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site
+                     WithListingContext:(AlfrescoListingContext *)listingContext
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (void)clear
 {
     [self doesNotRecognizeSelector:_cmd];

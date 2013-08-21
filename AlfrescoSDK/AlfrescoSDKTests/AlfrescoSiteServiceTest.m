@@ -18,6 +18,7 @@
 
 #import "AlfrescoSiteServiceTest.h"
 #import "AlfrescoSite.h"
+#import "AlfrescoLog.h"
 
 @implementation AlfrescoSiteServiceTest
 
@@ -505,6 +506,57 @@
     }
     
 }
+
+- (void)testRetrieveAllMembersForSite
+{
+    if (self.setUpSuccess)
+    {
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        [self.siteService retrieveFavoriteSitesWithCompletionBlock:^(NSArray *array, NSError *error)
+         {
+             if (nil == array)
+             {
+                 STAssertNil(array,@"if failure, the array should be nil");
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+             }
+             else
+             {
+                 STAssertNotNil(array,@"the array should not be nil");
+                 //STAssertTrue(array.count >= 1, @"Expected multiple favorite sites but got %d",array.count);
+                 /*
+                 for (AlfrescoSite *site in array)
+                 {
+                     STAssertTrue(site.isFavorite, @"site %@ should be marked as favourite", site.identifier);
+                 }
+                  */
+                 
+                 if (array.count > 0)
+                 {
+                     [self.siteService retrieveAllMembers:[array objectAtIndex:0] completionBlock:^(NSArray *array, NSError *error) {
+                         
+                         for (AlfrescoPerson *person in array)
+                         {
+                             AlfrescoLogDebug(@"Person company Name: %@", person.company.name);
+                         }
+                     }];
+                 }
+                 self.lastTestSuccessful = YES;
+             }
+             self.callbackCompleted = YES;
+             
+         }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 
 #pragma mark unit test internal methods
 

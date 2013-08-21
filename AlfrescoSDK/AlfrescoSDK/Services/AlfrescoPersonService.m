@@ -49,4 +49,28 @@
     return nil;
 }
 
+- (AlfrescoRequest *)search:(NSString *)filter completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)search:(NSString *)filter
+         WithListingContext:(AlfrescoListingContext *)listingContext
+            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)refreshPerson:(AlfrescoPerson *)person
+                   completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
+{
+    AlfrescoRequest *request = [self retrievePersonWithIdentifier:person.identifier completionBlock:^(AlfrescoPerson *person, NSError *error) {
+        
+        completionBlock(person, error);
+    }];
+    return request;
+}
+
 @end

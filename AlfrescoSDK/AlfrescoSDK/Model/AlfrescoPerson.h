@@ -19,11 +19,11 @@
  */
 
 #import <Foundation/Foundation.h>
-@class AlfrescoCompany;
+#import "AlfrescoCompany.h"
 
 /** The AlfrescoPerson represents a user in an Alfresco repository.
  
- Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco), Mohamad Saeedi (Alfresco)
  */
 
 @interface AlfrescoPerson : NSObject <NSCoding>

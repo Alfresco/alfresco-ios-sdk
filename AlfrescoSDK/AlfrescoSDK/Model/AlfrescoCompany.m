@@ -43,8 +43,7 @@ static NSInteger kCompanyModelVersion = 1;
         [self setOnPremiseProperties:properties];
         [self setCloudProperties:properties];
         
-        self.name = [properties valueForKey:kAlfrescoJSONCompanyName];
-        self.telephoneNumber = [properties valueForKey:kAlfrescoJSONTelephoneNumber];
+        self.name = [self valueForProperty:kAlfrescoJSONCompanyName inProperties:properties];
         
         if (self.addressLine1 && self.addressLine1.length > 0)
         {
@@ -60,7 +59,7 @@ static NSInteger kCompanyModelVersion = 1;
         }
         if (self.postCode && self.postCode.length > 0)
         {
-            self.fullAddress = [NSString stringWithFormat:@"%@, %@", self.fullAddress, self.addressLine3];
+            self.fullAddress = [NSString stringWithFormat:@"%@, %@", self.fullAddress, self.postCode];
         }
     }
     return self;
@@ -68,20 +67,66 @@ static NSInteger kCompanyModelVersion = 1;
 
 - (void)setOnPremiseProperties:(NSDictionary *)properties
 {
-    self.addressLine1 = self.addressLine1 ? self.addressLine1 : [properties valueForKey:kAlfrescoJSONCompanyAddressLine1];
-    self.addressLine2 = self.addressLine2 ? self.addressLine2 : [properties valueForKey:kAlfrescoJSONCompanyAddressLine2];
-    self.addressLine3 = self.addressLine3 ? self.addressLine3 : [properties valueForKey:kAlfrescoJSONCompanyAddressLine3];
-    self.postCode = self.postCode ? self.postCode : [properties valueForKey:kAlfrescoJSONCompanyPostcode];
-    self.faxNumber = self.faxNumber ? self.faxNumber : [properties valueForKey:kAlfrescoJSONCompanyFaxNumber];
-    self.email = self.email ? self.email : [properties valueForKey:kAlfrescoJSONCompanyEmail];
+    if (!self.addressLine1)
+    {
+        self.addressLine1 = [self valueForProperty:kAlfrescoJSONCompanyAddressLine1 inProperties:properties];
+    }
+    if (!self.addressLine2)
+    {
+        self.addressLine2 = [self valueForProperty:kAlfrescoJSONCompanyAddressLine2 inProperties:properties];
+    }
+    if (!self.addressLine3)
+    {
+        self.addressLine3 = [self valueForProperty:kAlfrescoJSONCompanyAddressLine3 inProperties:properties];
+    }
+    if (!self.postCode)
+    {
+        self.postCode = [self valueForProperty:kAlfrescoJSONCompanyPostcode inProperties:properties];
+    }
+    if (!self.faxNumber)
+    {
+        self.faxNumber = [self valueForProperty:kAlfrescoJSONCompanyFaxNumber inProperties:properties];
+    }
+    if (!self.telephoneNumber)
+    {
+        self.telephoneNumber = [self valueForProperty:kAlfrescoJSONCompanyTelephone inProperties:properties];
+    }
+    if (!self.email)
+    {
+        self.email = [self valueForProperty:kAlfrescoJSONCompanyEmail inProperties:properties];
+    }
 }
 
 - (void)setCloudProperties:(NSDictionary *)properties
 {
-    self.addressLine1 = self.addressLine1 ? self.addressLine1 : [properties valueForKey:kAlfrescoJSONAddressLine1];
-    self.postCode = self.postCode ? self.postCode : [properties valueForKey:kAlfrescoJSONPostcode];
-    self.faxNumber = self.faxNumber ? self.faxNumber : [properties valueForKey:kAlfrescoJSONFaxNumber];
-    self.email = self.email ? self.email : [properties valueForKey:kAlfrescoJSONEmail];
+    if (!self.addressLine1)
+    {
+        self.addressLine1 = [self valueForProperty:kAlfrescoJSONAddressLine1 inProperties:properties];
+    }
+    if (!self.addressLine2)
+    {
+        self.addressLine2 = [self valueForProperty:kAlfrescoJSONAddressLine2 inProperties:properties];
+    }
+    if (!self.addressLine3)
+    {
+        self.addressLine3 = [self valueForProperty:kAlfrescoJSONAddressLine3 inProperties:properties];
+    }
+    if (!self.postCode)
+    {
+        self.postCode = [self valueForProperty:kAlfrescoJSONPostcode inProperties:properties];
+    }
+    if (!self.faxNumber)
+    {
+        self.faxNumber = [self valueForProperty:kAlfrescoJSONFaxNumber inProperties:properties];
+    }
+    if (!self.telephoneNumber)
+    {
+        self.telephoneNumber = [self valueForProperty:kAlfrescoJSONTelephoneNumber inProperties:properties];
+    }
+    if (!self.email)
+    {
+        self.email = [self valueForProperty:kAlfrescoJSONEmail inProperties:properties];
+    }
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
@@ -116,6 +161,17 @@ static NSInteger kCompanyModelVersion = 1;
         self.fullAddress = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyFullAddress];
     }
     return self;
+}
+
+- (id)valueForProperty:(NSString *)property inProperties:(NSDictionary *)properties
+{
+    id value = [properties valueForKey:property];
+    
+    if (value && ![value isKindOfClass:[NSNull class]])
+    {
+        return value;
+    }
+    return nil;
 }
 
 @end

@@ -167,6 +167,20 @@
 - (AlfrescoRequest *)leaveSite:(AlfrescoSite *)site
                completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
 
+/** Returns a list of all members for a site.
+ @param site - site from which members are retrieved
+ @param completionBlock - contains Array of person objects who are member of site if successful, or nil if not.
+ */
+- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+/** Returns a paged list of all members for a site.
+ @param site - site from which members are retrieved
+ @param listingContext - The listing context with a paging definition that's used to retrieve members.
+ @param completionBlock - contains Array of person objects that are members of the site if successful, or nil if not.
+ */
+- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site
+                     WithListingContext:(AlfrescoListingContext *)listingContext
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /**
  clears the sites cache
