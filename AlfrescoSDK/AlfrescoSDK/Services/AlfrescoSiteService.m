@@ -157,6 +157,21 @@
     return nil;
 }
 
+- (AlfrescoRequest *)searchMembers:(AlfrescoSite *)site
+                            filter:(NSString *)filter
+                WithListingContext:(AlfrescoListingContext *)listingContext
+                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)isPerson:(AlfrescoPerson *)person memberOfSite:(AlfrescoSite *)site completionBlock:(AlfrescoMemberCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (void)clear
 {
     [self doesNotRecognizeSelector:_cmd];

@@ -144,6 +144,7 @@ extern NSString * const kAlfrescoOnPremiseJoinModeratedSiteAPI;
 extern NSString * const kAlfrescoOnPremisePendingJoinRequestsAPI;
 extern NSString * const kAlfrescoOnPremiseCancelJoinRequestsAPI;
 extern NSString * const kAlfrescoOnPremiseLeaveSiteAPI;
+extern NSString * const kAlfrescoOnPremiseSiteMembershipFilter;
 
 
 

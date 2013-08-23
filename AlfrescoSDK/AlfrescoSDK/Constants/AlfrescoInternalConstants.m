@@ -171,6 +171,8 @@ NSString * const kAlfrescoOnPremisePendingJoinRequestsAPI = @"invitations?invite
 NSString * const kAlfrescoOnPremiseCancelJoinRequestsAPI = @"sites/{siteID}/invitations/{inviteID}";
 NSString * const kAlfrescoOnPremiseLeaveSiteAPI = @"sites/{siteID}/memberships/{personID}";
 
+NSString * const kAlfrescoOnPremiseSiteMembershipFilter = @"?nf={filter}&authorityType=USER";
+
 /**
  Cloud constants
  */

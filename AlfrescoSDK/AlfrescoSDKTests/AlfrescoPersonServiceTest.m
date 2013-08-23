@@ -205,4 +205,44 @@
     }
 }
 
+- (void)testUpdateProfile
+{
+    if (self.setUpSuccess)
+    {
+        self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
+        
+        NSString *jobTitle = @"Software Engineer";
+        NSString *location = @"London";
+        NSString *description = @"Developing people APIs";
+
+        NSDictionary *newProperties = @{kAlfrescoPersonPropertyJobTitle: jobTitle, kAlfrescoPersonPropertyLocation: location, kAlfrescoPersonPropertyDescription: description};
+
+        [self.personService updateProfile:newProperties completionBlock:^(AlfrescoPerson *person, NSError *error) {
+          
+            if (nil == person)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = @"Failed to retrieve person.";
+            }
+            else
+            {
+                 STAssertTrue([person.jobTitle isEqualToString:jobTitle],@"person.jobTitle is %@ but should be %@", person.jobTitle, jobTitle);
+                 STAssertTrue([person.location isEqualToString:location],@"person.location is %@ but should be %@", person.location, location);
+                 //STAssertTrue([person.description isEqualToString:description],@"person.description is %@ but should be %@", person.description, description);
+                
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+
 @end

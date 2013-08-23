@@ -182,11 +182,27 @@
                      WithListingContext:(AlfrescoListingContext *)listingContext
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
+/** Returns a paged list of all members for a site that respect the filter.
+ @param site - site from which members are retrieved
+ @param filter - filter that needs to be applied to search query.
+ @param listingContext - The listing context with a paging definition that's used to retrieve members.
+ @param completionBlock - contains Array of person objects that are members of the site if successful, or nil if not.
+ */
+- (AlfrescoRequest *)searchMembers:(AlfrescoSite *)site
+                            filter:(NSString *)filter
+                WithListingContext:(AlfrescoListingContext *)listingContext
+                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+/** Returns true if the person is member of the site, returns false otherwise
+ @param person - person for whome membership status is retrieved
+ @param site - site from which membership status for the person is retrieved
+ @param completionBlock - returns yes or no depending of person membership status in the site
+ */
+- (AlfrescoRequest *)isPerson:(AlfrescoPerson *)person memberOfSite:(AlfrescoSite *)site completionBlock:(AlfrescoMemberCompletionBlock)completionBlock;
+
 /**
  clears the sites cache
  */
 - (void)clear;
-
-
 
 @end

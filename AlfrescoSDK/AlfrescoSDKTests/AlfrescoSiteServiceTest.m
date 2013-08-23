@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoSiteServiceTest.h"
+#import "AlfrescoPersonService.h"
 #import "AlfrescoSite.h"
 #import "AlfrescoLog.h"
 
@@ -524,13 +525,6 @@
              else
              {
                  STAssertNotNil(array,@"the array should not be nil");
-                 //STAssertTrue(array.count >= 1, @"Expected multiple favorite sites but got %d",array.count);
-                 /*
-                 for (AlfrescoSite *site in array)
-                 {
-                     STAssertTrue(site.isFavorite, @"site %@ should be marked as favourite", site.identifier);
-                 }
-                  */
                  
                  if (array.count > 0)
                  {
@@ -557,6 +551,103 @@
     }
 }
 
+- (void)testRetrieveFilteredMembersForSite
+{
+    if (self.setUpSuccess)
+    {
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        [self.siteService retrieveFavoriteSitesWithCompletionBlock:^(NSArray *array, NSError *error)
+         {
+             if (nil == array)
+             {
+                 STAssertNil(array,@"if failure, the array should be nil");
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+             }
+             else
+             {
+                 STAssertNotNil(array,@"the array should not be nil");
+                 
+                 if (array.count > 0)
+                 {
+                     [self.siteService searchMembers:[array objectAtIndex:0] filter:@"" WithListingContext:nil completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                         
+                         NSArray *members = pagingResult.objects;
+                         for (AlfrescoPerson *person in members)
+                         {
+                             AlfrescoLogDebug(@"Person company Name: %@", person.company.name);
+                         }
+                     }];
+                 }
+                 self.lastTestSuccessful = YES;
+             }
+             self.callbackCompleted = YES;
+             
+         }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testPersonIsMemberOfSite
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoPersonService *personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        [personService retrievePersonWithIdentifier:self.userName completionBlock:^(AlfrescoPerson *person, NSError *error) {
+            
+            if (!error)
+            {
+                AlfrescoListingContext * listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:5];
+                [self.siteService retrieveAllSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                 {
+                     
+                     if (nil == pagingResult || nil != error)
+                     {
+                         self.lastTestSuccessful = NO;
+                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     }
+                     
+                     else
+                     {
+                         NSArray *sites = pagingResult.objects;
+                         __block int requestsCompleted = 0;
+                         
+                         for (AlfrescoSite *site in sites)
+                         {
+                             [self.siteService isPerson:person memberOfSite:site completionBlock:^(BOOL succeeded, BOOL isMember, NSError *error) {
+                                 
+                                 requestsCompleted++;
+                                 
+                                 AlfrescoLogDebug(@"person %@ is member of Site %@: %d", person.fullName, site.shortName, isMember);
+                                 self.lastTestSuccessful = YES;
+                                 
+                                 if (requestsCompleted == sites.count)
+                                 {
+                                     self.callbackCompleted = YES;
+                                 }
+                             }];
+                         }
+                     }
+                 }];
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
 
 #pragma mark unit test internal methods
 

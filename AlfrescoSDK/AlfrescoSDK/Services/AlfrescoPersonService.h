@@ -58,6 +58,16 @@
 - (AlfrescoRequest *)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
+ * @name Update Person profile method
+ *  ---------------------------------------------------------------------------------------
+ */
+/** Update person profile
+ @param properties - dictionary of properties that are being updated
+ @param completionBlock - The block that's called with person's updated properties
+ */
+- (AlfrescoRequest *)updateProfile:(NSDictionary *)properties completionBlock:(AlfrescoPersonCompletionBlock)completionBlock;
+
+/**---------------------------------------------------------------------------------------
  * @name Search Person methods
  *  ---------------------------------------------------------------------------------------
  */
