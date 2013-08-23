@@ -288,9 +288,24 @@
                     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
                     NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
                     AlfrescoLogDebug(@"session connected with user %@, repo version is %@", username, version);
+
                     if ([majorVersionNumber intValue] >= 4 && !useCustomBinding)
                     {
-                        request.httpRequest = [CMISSession connectWithSessionParameters:v4params completionBlock:sessionv4CompletionBlock];
+                        // We'll intercept the v4 request completion to be able to fallback to v3
+                        void (^sessionCompletionBlock)(CMISSession *session, NSError *error) = ^void(CMISSession *session, NSError *error){
+                            if (nil == session)
+                            {
+                                AlfrescoLogWarning(@"v4 session unexpectedly failed to connect; falling back to v3 endpoint");
+                                // v4 session unexpectedly didn't work - fall back to v3 session
+                                [self establishCMISSession:v3Session username:username password:password];
+                                request.httpRequest = [v3Session retrieveRootFolderWithCompletionBlock:rootFolderCompletionBlock];
+                            }
+                            else
+                            {
+                                sessionv4CompletionBlock(session, error);
+                            }
+                        };
+                        request.httpRequest = [CMISSession connectWithSessionParameters:v4params completionBlock:sessionCompletionBlock];
                     }
                     else
                     {
