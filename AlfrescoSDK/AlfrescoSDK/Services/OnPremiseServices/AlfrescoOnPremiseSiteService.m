@@ -786,7 +786,7 @@
     [AlfrescoErrors assertArgumentNotNil:person argumentName:@"person"];
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
- 
+    
     NSString *requestString = [kAlfrescoOnPremiseLeaveSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];

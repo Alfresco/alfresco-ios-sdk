@@ -187,15 +187,7 @@
                                             {
                                                 NSError *conversionError = nil;
                                                 NSArray *people = [self peopleArrayFromJSONData:responseData error:&conversionError];
-                                                
-                                                if (conversionError)
-                                                {
-                                                    completionBlock(nil, conversionError);
-                                                }
-                                                else
-                                                {
-                                                    completionBlock(people, conversionError);
-                                                }
+                                                completionBlock(people, conversionError);
                                             }
                                         }];
     return alfrescoRequest;
