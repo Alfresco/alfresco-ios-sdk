@@ -52,9 +52,9 @@
 - (AlfrescoRequest *)retrieveProcessDefinitionsWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 // Returns a process definition for a given process identifier
-- (AlfrescoRequest *)retrieveProcess:(NSString *)processIdentifier completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveProcessDefinitionWithIdentifier:(NSString *)processIdentifier completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock;
 
-// Returns the form model for the given task
-//- (AlfrescoRequest *)retrieveFormModelForProcess:(AlfrescoWorkflowProcessDefinition *)processDefinition completionBlock:(Return Type?)completionBlock;
+// Returns the form model for the given task ID
+- (AlfrescoRequest *)retrieveFormModelForProcess:(NSString *)processDefinitionId completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock;
 
 @end

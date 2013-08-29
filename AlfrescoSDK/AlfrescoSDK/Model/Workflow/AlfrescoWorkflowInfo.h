@@ -18,13 +18,21 @@
  *****************************************************************************
  */
 
-/** The AlfrescoWorkflowTask model object
+/** The AlfrescoWorkflowInfo model object
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoWorkflowTask.h"
+#import <Foundation/Foundation.h>
+#import "AlfrescoWorkflowUtils.h"
 
-@implementation AlfrescoWorkflowTask
+@protocol AlfrescoSession;
+
+@interface AlfrescoWorkflowInfo : NSObject
+
+@property (nonatomic, assign, readonly) AlfrescoWorkflowEngineType workflowEngine;
+@property (nonatomic, assign, readonly) BOOL publicAPI;
+
+- (id)initWithSession:(id<AlfrescoSession>)session workflowEngine:(AlfrescoWorkflowEngineType)workflowEngine;
 
 @end

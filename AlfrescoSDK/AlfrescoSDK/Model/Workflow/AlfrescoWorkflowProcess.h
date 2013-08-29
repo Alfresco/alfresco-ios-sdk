@@ -23,9 +23,22 @@
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoWorkflowProcess.h"
-#import "AlfrescoInternalConstants.h"
+#import <Foundation/Foundation.h>
 
-@implementation AlfrescoWorkflowProcess
+@protocol AlfrescoSession;
+
+@interface AlfrescoWorkflowProcess : NSObject
+
+@property (nonatomic, strong, readonly) NSString *identifier;
+@property (nonatomic, strong, readonly) NSString *processDefinitionIdentifier;
+@property (nonatomic, strong, readonly) NSString *processDefinitionKey;
+@property (nonatomic, strong, readonly) NSDate *startedAt;
+@property (nonatomic, strong, readonly) NSDate *endedAt;
+@property (nonatomic, strong, readonly) NSDate *dueAt;
+@property (nonatomic, strong, readonly) NSNumber *priority;
+@property (nonatomic, strong, readonly) NSString *processDescription;
+@property (nonatomic, strong, readonly) NSString *initiatorUsername;
+
+- (id)initWithProperties:(NSDictionary *)properties session:(id<AlfrescoSession>)session;
 
 @end

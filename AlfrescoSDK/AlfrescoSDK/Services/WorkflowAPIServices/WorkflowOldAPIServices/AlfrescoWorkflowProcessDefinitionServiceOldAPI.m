@@ -18,29 +18,29 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowProcessPublicAPIService
+/** AlfrescoWorkflowProcessOldAPIService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoWorkflowProcessDefinitionPublicAPI.h"
-#import "AlfrescoObjectConverter.h"
-#import "AlfrescoAuthenticationProvider.h"
-#import "AlfrescoBasicAuthenticationProvider.h"
-#import "AlfrescoInternalConstants.h"
+#import "AlfrescoWorkflowProcessDefinitionServiceOldAPI.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoNetworkProvider.h"
+#import "AlfrescoRequest.h"
+#import "AlfrescoObjectConverter.h"
+#import "AlfrescoInternalConstants.h"
 #import "AlfrescoURLUtils.h"
+#import "AlfrescoPagingUtils.h"
+#import "AlfrescoWorkflowUtils.h"
 
-@interface AlfrescoWorkflowProcessDefinitionPublicAPI ()
+@interface AlfrescoWorkflowProcessDefinitionServiceOldAPI ()
 
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
-@property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
-@property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 
 @end
 
-@implementation AlfrescoWorkflowProcessDefinitionPublicAPI
+@implementation AlfrescoWorkflowProcessDefinitionServiceOldAPI
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -48,13 +48,7 @@
     if (self)
     {
         self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoWorkflowBasePublicAPIURL];
-        id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-        self.authenticationProvider = nil;
-        if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
-        {
-            self.authenticationProvider = (AlfrescoBasicAuthenticationProvider *)authenticationObject;
-        }
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoWorkflowBaseOldAPIURL];
     }
     return self;
 }
@@ -63,11 +57,10 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessDefinitionPublicAPI];
-    
-    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {
-        if (error)
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessDefinitionOldAPI];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (!data)
         {
             completionBlock(nil, error);
         }
@@ -78,19 +71,23 @@
             completionBlock(workflowDefinitions, conversionError);
         }
     }];
-    return alfrescoRequest;
+    
+    return request;
 }
 
 - (AlfrescoRequest *)retrieveProcessDefinitionsWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:listingContext argumentName:@"listingContext"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessDefinitionPublicAPI listingContext:listingContext];
+    if (!listingContext)
+    {
+        listingContext = self.session.defaultListingContext;
+    }
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessDefinitionOldAPI];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
+        if (!data)
         {
             completionBlock(nil, error);
         }
@@ -98,14 +95,7 @@
         {
             NSError *conversionError = nil;
             NSArray *workflowDefinitions = [self workflowDefinitionsFromJSONData:data error:&conversionError];
-            NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
-            AlfrescoPagingResult *pagingResult = nil;
-            if (pagingInfo)
-            {
-                BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
-                int total = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
-                pagingResult = [[AlfrescoPagingResult alloc] initWithArray:workflowDefinitions hasMoreItems:hasMore totalItems:total];
-            }
+            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:workflowDefinitions listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
         }
     }];
@@ -113,48 +103,54 @@
     return request;
 }
 
-- (AlfrescoRequest *)retrieveProcess:(NSString *)processIdentifier completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveProcessDefinitionWithIdentifier:(NSString *)processIdentifier completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:processIdentifier argumentName:@"processIdentifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    NSString *requestString = [kAlfrescoWorkflowSingleProcessDefinitionPublicAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:processIdentifier];
-    
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [AlfrescoErrors assertArgumentNotNil:processIdentifier argumentName:@"processIdentifier"];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
+    
+    NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
+    NSString *completeProcessIdentifier = [workflowEnginePrefix stringByAppendingString:processIdentifier];
+    NSString *requestString = [kAlfrescoWorkflowProcessDefinitionOldAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:completeProcessIdentifier];
+    
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (!data)
         {
             completionBlock(nil, error);
         }
         else
         {
-            NSError *parseError = nil;
-            id jsonResponseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
-            if (parseError)
+            NSError *conversionError = nil;
+            NSArray *workflowDefinitions = [self workflowDefinitionsFromJSONData:data error:&conversionError];
+            if (workflowDefinitions.count > 0)
             {
-                completionBlock(nil, parseError);
+                AlfrescoWorkflowProcessDefinition *processDefinition = [workflowDefinitions objectAtIndex:0];
+                completionBlock(processDefinition, conversionError);
             }
             else
             {
-                AlfrescoWorkflowProcessDefinition *processDefinition = [[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:jsonResponseDictionary];
-                completionBlock(processDefinition, error);
+                completionBlock(nil, conversionError);
             }
         }
     }];
     return request;
 }
 
-//- (AlfrescoRequest *)retrieveFormModelForProcess:(AlfrescoWorkflowProcessDefinition *)processDefinition completionBlock:(Return Type?)completionBlock
-//{
-//    
-//    return nil;
-//}
+- (AlfrescoRequest *)retrieveFormModelForProcess:(NSString *)processDefinitionId completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
+    if (completionBlock != NULL)
+    {
+        completionBlock(nil, notSupportedError);
+    }
+    return nil;
+}
 
 #pragma mark - Private Functions
 
-- (NSArray *)workflowDefinitionsFromJSONData:(NSData *)jsonData error:(NSError **)conversionError;
+- (NSArray *)workflowDefinitionsFromJSONData:(NSData *)jsonData error:(NSError **)conversionError
 {
     NSMutableArray *workflowDefinitions = nil;
     
@@ -185,13 +181,11 @@
         return workflowDefinitions;
     }
     
-    NSDictionary *listDictionary = [jsonResponseDictionary valueForKey:kAlfrescoCloudJSONList];
-    NSArray *processArray = [listDictionary valueForKey:kAlfrescoCloudJSONEntries];
+    NSArray *processArray = [jsonResponseDictionary valueForKey:kAlfrescoOldJSONData];
     workflowDefinitions = [@[] mutableCopy];
-    
     for (NSDictionary *entryDictionary in processArray)
     {
-        [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:entryDictionary]];
+        [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:entryDictionary session:self.session]];
     }
     
     return workflowDefinitions;

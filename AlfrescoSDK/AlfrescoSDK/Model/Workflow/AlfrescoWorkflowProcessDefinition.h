@@ -18,14 +18,22 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowProcessOldAPIService
+/** The AlfrescoWorkflowProcessDefinition model object
  
  Author: Tauseef Mughal (Alfresco)
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoWorkflowProcessDefinitionService.h"
 
-@interface AlfrescoWorkflowProcessDefinitionOldAPI : AlfrescoWorkflowProcessDefinitionService
+@protocol AlfrescoSession;
+
+@interface AlfrescoWorkflowProcessDefinition : NSObject <NSCoding>
+
+@property (nonatomic, strong, readonly) NSString *identifier;
+@property (nonatomic, strong, readonly) NSString *name;
+@property (nonatomic, strong, readonly) NSString *processDescription;
+@property (nonatomic, strong, readonly) NSNumber *version;
+
+- (id)initWithProperties:(NSDictionary *)properties session:(id<AlfrescoSession>)session;
 
 @end

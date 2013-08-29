@@ -18,7 +18,7 @@
  *****************************************************************************
  */
 
-/** The AlfrescoWorkflowInfo model object
+/** The AlfrescoWorkflowTask model object
  
  Author: Tauseef Mughal (Alfresco)
  */
@@ -27,18 +27,18 @@
 
 @protocol AlfrescoSession;
 
-typedef NS_ENUM(NSInteger, AlfrescoWorkflowEngineType)
-{
-    AlfrescoWorkflowEngineTypeUnknown,
-    AlfrescoWorkflowEngineTypeJBPM,
-    AlfrescoWorkflowEngineTypeActiviti
-};
+@interface AlfrescoWorkflowTask : NSObject <NSCoding>
 
-@interface AlfrescoWorkflowInfo : NSObject
+@property (nonatomic, strong, readonly) NSString *identifier;
+@property (nonatomic, strong, readonly) NSString *processIdentifier;
+@property (nonatomic, strong, readonly) NSString *processDefinitionIdentifier;
+@property (nonatomic, strong, readonly) NSDate *startedAt;
+@property (nonatomic, strong, readonly) NSDate *endedAt;
+@property (nonatomic, strong, readonly) NSDate *dueAt;
+@property (nonatomic, strong, readonly) NSString *taskDescription;
+@property (nonatomic, strong, readonly) NSNumber *priority;
+@property (nonatomic, strong, readonly) NSString *assigneeIdentifier;
 
-@property (nonatomic, assign, readonly) AlfrescoWorkflowEngineType workflowEngine;
-@property (nonatomic, assign, readonly) BOOL publicAPI;
-
-- (id)initWithSession:(id<AlfrescoSession>)session workflowEngine:(AlfrescoWorkflowEngineType)workflowEngine;
+- (id)initWithProperties:(NSDictionary *)properties session:(id<AlfrescoSession>)session;
 
 @end

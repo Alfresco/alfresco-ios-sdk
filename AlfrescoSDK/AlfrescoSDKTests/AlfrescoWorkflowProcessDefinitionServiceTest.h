@@ -28,6 +28,4 @@
 
 @interface AlfrescoWorkflowProcessDefinitionServiceTest : AlfrescoBaseTest
 
-@property (nonatomic, strong) AlfrescoWorkflowProcessDefinitionService *processDefinitionService;
-
 @end

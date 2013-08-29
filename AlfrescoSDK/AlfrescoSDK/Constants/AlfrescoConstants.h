@@ -69,6 +69,8 @@ typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSEr
 typedef void (^AlfrescoProcessDefinitionCompletionBlock)(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error);
 typedef void (^AlfrescoProcessCompletionBlock)(AlfrescoWorkflowProcess *process, NSError *error);
 typedef void (^AlfrescoTaskCompletionBlock)(AlfrescoWorkflowTask *task, NSError *error);
+typedef void (^AlfrescoDictionaryCompletionBlock)(NSDictionary *dictionary, NSError *error);
+
 
 /**---------------------------------------------------------------------------------------
  * @name Session parameters
@@ -110,3 +112,20 @@ extern NSString * const kAlfrescoIsFolder;
 extern NSString * const kAlfrescoNetworkProvider;
 extern NSString * const kAlfrescoCMISBindingURL;
 extern NSString * const kAlfrescoAllowUntrustedSSLCertificate;
+
+/**---------------------------------------------------------------------------------------
+ * @name Workflow Task Constants
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoTaskComment;
+extern NSString * const kAlfrescoTaskReviewOutcome;
+extern NSString * const kAlfrescoTaskApprove;
+extern NSString * const kAlfrescoTaskReject;
+extern NSString * const kAlfrescoWorkflowProcessStateAny;
+extern NSString * const kAlfrescoWorkflowProcessStateActive;
+extern NSString * const kAlfrescoWorkflowProcessStateCompleted;
+
+extern NSString * const kAlfrescoWorkflowProcessDescription;
+extern NSString * const kAlfrescoWorkflowProcessPriority;
+extern NSString * const kAlfrescoWorkflowProcessSendEmailNotification;
+extern NSString * const kAlfrescoWorkflowProcessDueDate;
+extern NSString * const kAlfrescoWorkflowProcessApprovalRate;

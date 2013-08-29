@@ -18,24 +18,14 @@
  *****************************************************************************
  */
 
-/** The AlfrescoWorkflowProcessDefinition model object
+/** AlfrescoWorkflowProcessOldAPI
  
  Author: Tauseef Mughal (Alfresco)
  */
 
 #import <Foundation/Foundation.h>
+#import "AlfrescoWorkflowProcessService.h"
 
-@interface AlfrescoWorkflowProcessDefinition : NSObject <NSCoding>
-
-@property (nonatomic, strong, readonly) NSString *identifier;
-@property (nonatomic, strong, readonly) NSString *category;
-@property (nonatomic, strong, readonly) NSString *name;
-@property (nonatomic, strong, readonly) NSString *startFormKey;
-@property (nonatomic, strong, readonly) NSString *depolymentIdentifier;
-@property (nonatomic, assign, readonly) BOOL graphicNotationDefined;
-@property (nonatomic, strong, readonly) NSString *key;
-@property (nonatomic, strong, readonly) NSNumber *version;
-
-- (id)initWithProperties:(NSDictionary *)properties;
+@interface AlfrescoWorkflowProcessServiceOldAPI : AlfrescoWorkflowProcessService
 
 @end

@@ -26,6 +26,6 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoWorkflowProcessService.h"
 
-@interface AlfrescoWorkflowProcessPublicAPI : AlfrescoWorkflowProcessService
+@interface AlfrescoWorkflowProcessServicePublicAPI : AlfrescoWorkflowProcessService
 
 @end

@@ -47,7 +47,7 @@
 - (AlfrescoRequest *)retrieveTasksWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 // Retrieves the task for the given task identifier. Returns the updated Task.
-- (AlfrescoRequest *)retrieveTask:(NSString *)taskIdentifier completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveTaskWithIdentifier:(NSString *)taskIdentifier completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
 
 // Returns the form model for the given task
 //- (AlfrescoRequest *)retrieveFormModelForTask:(AlfrescoWorkflowTask *)task completionBlock:(Return Type?)completionBlock;
@@ -62,6 +62,9 @@
  * @name Task assignment methods for the Alfresco Workflow Task Service
  *  ---------------------------------------------------------------------------------------
  */
+
+// Completes the provided task
+- (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task properties:(NSDictionary *)properties completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
 
 // Claims the task for the authenticated user. Returns the updated Task.
 - (AlfrescoRequest *)claimTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
@@ -81,7 +84,7 @@
  */
 
 // there doesn't seem to be a way to add multiple "items" to the task
-- (AlfrescoRequest *)addAttachment:(NSString *)nodeIdentifier toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
+- (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
  * @name Update methods for the Alfresco Workflow Task Service
@@ -97,7 +100,7 @@
  */
 
 // Removes the item from the task
-- (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
+- (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 // Removes the list of variables provided on the given task
 - (AlfrescoRequest *)removeVariables:(NSArray *)variablesKeys forTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;

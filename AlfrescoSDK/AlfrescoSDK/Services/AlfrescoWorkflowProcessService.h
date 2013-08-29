@@ -27,6 +27,8 @@
 #import "AlfrescoRequest.h"
 #import "AlfrescoConstants.h"
 
+@class AlfrescoWorkflowProcessDefinition;
+
 @interface AlfrescoWorkflowProcessService : NSObject
 
 /**---------------------------------------------------------------------------------------
@@ -53,10 +55,10 @@
 - (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 // Returns a paged result of the of processes that are within a given state in accordance to the listing context provided
-- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 // Returns a process for a given process identifier
-- (AlfrescoRequest *)retrieveProcess:(NSString *)processID completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveProcessWithIdentifier:(NSString *)processID completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
 // Retrieves variables on a given process
 - (AlfrescoRequest *)retrieveVariablesForProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
@@ -65,24 +67,24 @@
 - (AlfrescoRequest *)retrieveAllTasksForProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 // Returns an array of tasks that the user is able to see and are in the status provided. Tasks are returned if the user created of is part of a given task.
-- (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process inState:(NSString *)status completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process inState:(NSString *)status completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 //// Returns an array of Activites for the given process
 //- (AlfrescoRequest *)retrieveActivitiesForProcess:(AlfrescoWorkflowProcess *)process completionBlock:(???)completionBlock;
-
-// Returns an array of AlfrescoDocument objects of attachment to the provided process. Nil, if there are not attachments
-- (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 // Returns an image of the process. An image is only returned if the user has started the process or is involved in any of the tasks
 - (AlfrescoRequest *)retrieveProcessImage:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
 
 // Returns an image of the process. An image is only returned if the user has started the process or is involved in any of the tasks.
-- (AlfrescoRequest *)retrieveProcessImage:(AlfrescoWorkflowProcess *)process outputStream:(NSOutputStream *)outputStream completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveProcessImage:(AlfrescoWorkflowProcess *)process outputStream:(NSOutputStream *)outputStream completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
  * @name Add methods for the Alfresco Workflow Process Service
  *  ---------------------------------------------------------------------------------------
  */
+
+// creates and starts a process
+- (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition assignees:(NSArray *)assignees variables:(NSDictionary *)variables attachments:(NSArray *)attachmentNodes completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
 // there doesn't seem to be a way to add multiple "items" to the process
 - (AlfrescoRequest *)addAttachment:(NSString *)nodeIdentifier toProcess:(AlfrescoWorkflowTask *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
@@ -106,7 +108,7 @@
 // Removes the list of variables provided on the given process
 - (AlfrescoRequest *)removeVariables:(NSArray *)variablesKeys forProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
-//// Removes the item from the process
-//- (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
+// Removes the item from the process
+- (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
 @end

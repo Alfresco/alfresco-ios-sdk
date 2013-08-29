@@ -18,13 +18,14 @@
  *****************************************************************************
  */
 
-/** The AlfrescoWorkflowProcess model object
+/** AlfrescoWorkflowProcessOldAPIService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
 #import <Foundation/Foundation.h>
+#import "AlfrescoWorkflowProcessDefinitionService.h"
 
-@interface AlfrescoWorkflowProcess : NSObject
+@interface AlfrescoWorkflowProcessDefinitionServiceOldAPI : AlfrescoWorkflowProcessDefinitionService
 
 @end

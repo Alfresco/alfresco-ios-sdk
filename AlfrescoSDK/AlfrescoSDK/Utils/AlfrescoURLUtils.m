@@ -82,5 +82,27 @@
     return [NSString stringWithFormat:@"%@%@",parameterString, parameterExtension];    
 }
 
++ (NSString *)buildQueryStringWithDictionary:(NSDictionary *)parameters
+{
+    NSMutableString *queryString = [[NSMutableString alloc] init];
+    
+    if (parameters)
+    {
+        [queryString appendString:@"?"];
+        NSArray *allKeys = [parameters allKeys];
+        for (int i = 0; i < allKeys.count; i++)
+        {
+            id key = allKeys[i];
+            id value = [parameters objectForKey:key];
+            [queryString appendString:[NSString stringWithFormat:@"%@=%@", key, value]];
+            if (i != (allKeys.count -1))
+            {
+                [queryString appendString:@"&"];
+            }
+        }
+    }
+    
+    return queryString;
+}
 
 @end

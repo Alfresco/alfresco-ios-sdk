@@ -58,16 +58,16 @@
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveProcess:(NSString *)processIdentifier completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveProcessDefinitionWithIdentifier:(NSString *)processIdentifier completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-//- (AlfrescoRequest *)retrieveFormModelForProcess:(AlfrescoWorkflowProcessDefinition *)processDefinition completionBlock:(Return Type?)completionBlock
-//{
-//    [self doesNotRecognizeSelector:_cmd];
-//    return nil;
-//}
+- (AlfrescoRequest *)retrieveFormModelForProcess:(NSString *)processDefinitionId completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
 
 @end
