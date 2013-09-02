@@ -69,6 +69,9 @@
 // Returns an array of tasks that the user is able to see and are in the status provided. Tasks are returned if the user created of is part of a given task.
 - (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process inState:(NSString *)status completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
+// Returns an array of AlfrescoNode objects of attachment to the provided process.
+- (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
 //// Returns an array of Activites for the given process
 //- (AlfrescoRequest *)retrieveActivitiesForProcess:(AlfrescoWorkflowProcess *)process completionBlock:(???)completionBlock;
 
@@ -86,8 +89,8 @@
 // creates and starts a process
 - (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition assignees:(NSArray *)assignees variables:(NSDictionary *)variables attachments:(NSArray *)attachmentNodes completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
-// there doesn't seem to be a way to add multiple "items" to the process
-- (AlfrescoRequest *)addAttachment:(NSString *)nodeIdentifier toProcess:(AlfrescoWorkflowTask *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
+// adds an AlfrescoNode to a givven process
+- (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toProcess:(AlfrescoWorkflowTask *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
  * @name Update methods for the Alfresco Workflow Process Service

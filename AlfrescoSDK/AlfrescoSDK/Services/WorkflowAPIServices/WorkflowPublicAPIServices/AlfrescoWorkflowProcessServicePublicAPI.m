@@ -224,6 +224,12 @@
 
 //- (AlfrescoRequest *)retrieveActivitiesForProcess:(AlfrescoWorkflowProcess *)process completionBlock:(???)completionBlock;
 
+- (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    // TODO
+    return nil;
+}
+
 - (AlfrescoRequest *)retrieveProcessImage:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
@@ -370,7 +376,7 @@
     return request;
 }
 
-- (AlfrescoRequest *)addAttachment:(NSString *)nodeIdentifier toProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
+- (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
     // TODO
     return nil;

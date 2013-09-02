@@ -114,7 +114,7 @@ extern NSString * const kAlfrescoCMISBindingURL;
 extern NSString * const kAlfrescoAllowUntrustedSSLCertificate;
 
 /**---------------------------------------------------------------------------------------
- * @name Workflow Task Constants
+ * @name Workflow Constants
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoTaskComment;
 extern NSString * const kAlfrescoTaskReviewOutcome;
