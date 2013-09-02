@@ -53,27 +53,28 @@
 
 - (void)setupAPIVersion
 {
-    if (self.workflowEngine == AlfrescoWorkflowEngineTypeJBPM)
-    {
-        self.publicAPI = NO;
-    }
-    else
-    {
-        NSNumber *majorVersion = self.session.repositoryInfo.majorVersion;
-        NSNumber *minorVersion = self.session.repositoryInfo.minorVersion;
-        float version = [[NSString stringWithFormat:@"%i.%i", majorVersion.intValue, minorVersion.intValue] floatValue];
-        
-        // if cloud, or Repo 4.2+
-        if ([self.session isKindOfClass:[AlfrescoCloudSession class]] ||
-            ([self.session isKindOfClass:[AlfrescoRepositorySession class]] && version >= 4.2f))
-        {
-            self.publicAPI = YES;
-        }
-        else
-        {
-            self.publicAPI = NO;
-        }
-    }
+    self.publicAPI = NO;
+//    if (self.workflowEngine == AlfrescoWorkflowEngineTypeJBPM)
+//    {
+//        self.publicAPI = NO;
+//    }
+//    else
+//    {
+//        NSNumber *majorVersion = self.session.repositoryInfo.majorVersion;
+//        NSNumber *minorVersion = self.session.repositoryInfo.minorVersion;
+//        float version = [[NSString stringWithFormat:@"%i.%i", majorVersion.intValue, minorVersion.intValue] floatValue];
+//        
+//        // if cloud, or Repo 4.2+
+//        if ([self.session isKindOfClass:[AlfrescoCloudSession class]] ||
+//            ([self.session isKindOfClass:[AlfrescoRepositorySession class]] && version >= 4.2f))
+//        {
+//            self.publicAPI = YES;
+//        }
+//        else
+//        {
+//            self.publicAPI = NO;
+//        }
+//    }
 }
 
 @end

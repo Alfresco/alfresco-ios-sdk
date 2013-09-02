@@ -83,8 +83,14 @@
         self.processIdentifier = [[workflowInstance objectForKey:kAlfrescoOldJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
         self.processDefinitionIdentifier = [[workflowInstance objectForKey:kAlfrescoOldJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
         self.startedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONStartedAt]];
-        self.endedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONEndedAt]];
-        self.dueAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONDueAt]];
+        if ([taskProperties objectForKey:kAlfrescoOldBPMJSONEndedAt] != [NSNull null])
+        {
+            self.endedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONEndedAt]];
+        }
+        if ([taskProperties objectForKey:kAlfrescoOldBPMJSONDueAt] != [NSNull null])
+        {
+            self.dueAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONDueAt]];
+        }
         self.taskDescription = [taskProperties objectForKey:kAlfrescoOldBPMJSONDescription];
         self.priority = [taskProperties objectForKey:kAlfrescoOldBPMJSONPriority];
         // This is currently a node ref, and not the assignee's identifier - Person Service?

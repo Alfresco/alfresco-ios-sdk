@@ -66,8 +66,8 @@
     {
         NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
         self.identifier = [[properties objectForKey:kAlfrescoJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.name = [properties objectForKey:kAlfrescoJSONName];
-        self.processDescription = [properties objectForKey:kAlfrescoJSONDescription];
+        self.name = [[properties objectForKey:kAlfrescoOldJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.processDescription = [properties objectForKey:kAlfrescoOldJSONDescription];
         self.version = [properties objectForKey:kAlfrescoPublicJSONVersion];
     }
 }

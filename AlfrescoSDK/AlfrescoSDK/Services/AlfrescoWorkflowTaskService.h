@@ -83,8 +83,11 @@
  *  ---------------------------------------------------------------------------------------
  */
 
-// there doesn't seem to be a way to add multiple "items" to the task
+// Adds a single AlfrescoNode to a given task
 - (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+
+// Adds an array of AlfrescoNodes to a task
+- (AlfrescoRequest *)addAttachments:(NSArray *)nodeArray toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
  * @name Update methods for the Alfresco Workflow Task Service

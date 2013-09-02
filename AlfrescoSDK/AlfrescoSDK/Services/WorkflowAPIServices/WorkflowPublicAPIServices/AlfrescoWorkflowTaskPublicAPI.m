@@ -215,22 +215,43 @@
 
 - (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    return [self addAttachments:@[node] toTask:task completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)addAttachments:(NSArray *)nodeArray toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:nodeArray argumentName:@"nodeArray"];
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoWorkflowTaskAttachmentsPublicAPI stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
+    NSMutableArray *requestBody = [NSMutableArray arrayWithCapacity:nodeArray.count];
+    for (id nodeObject in nodeArray)
+    {
+        if (![nodeObject isKindOfClass:[AlfrescoNode class]])
+        {
+            NSString *exceptionMessage = [NSString stringWithFormat:@"The node array passed into %@ should contain instances of %@, instead it contained instances of %@",
+                                          NSStringFromSelector(_cmd),
+                                          NSStringFromClass([AlfrescoNode class]),
+                                          NSStringFromClass([nodeObject class])];
+            @throw [NSException exceptionWithName:@"Invaild parameters" reason:exceptionMessage userInfo:nil];
+        }
+        
+        AlfrescoNode *currentNode = (AlfrescoNode *)nodeObject;
+        // this should be fixed in the workflow api to accept complete node refs
+//        [nodeRefs addObject:@{kAlfrescoJSONIdentifier : currentNode.identifier}];
+        [requestBody addObject:@{kAlfrescoJSONIdentifier : [AlfrescoWorkflowUtils nodeGUIDFromNodeIdentifier:currentNode.identifier]}];
+    }
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    
-    NSDictionary *requestDictionary = @{kAlfrescoJSONIdentifier : [AlfrescoWorkflowUtils nodeGUIDFromNodeIdentifier:node.identifier]};
     NSError *requestConversionError = nil;
-    NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestDictionary options:0 error:&requestConversionError];
+    NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestBody options:0 error:&requestConversionError];
     
     if (requestConversionError)
     {
         AlfrescoLogDebug(@"Request could not be parsed correctly in %@", NSStringFromSelector(_cmd));
     }
+    
+    NSString *requestString = [kAlfrescoWorkflowTaskAttachmentsPublicAPI stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {

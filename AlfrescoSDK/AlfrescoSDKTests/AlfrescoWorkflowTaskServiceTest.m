@@ -28,6 +28,7 @@
 #import "AlfrescoWorkflowProcessService.h"
 #import "AlfrescoWorkflowProcessDefinitionService.h"
 #import "AlfrescoPersonService.h"
+#import "AlfrescoErrors.h"
 
 @interface AlfrescoWorkflowTaskServiceTest ()
 
@@ -308,6 +309,7 @@
                             }
                             else
                             {
+                                // This currently fails on Old API as the assigneeIdentifier is not mapped in the object creation.
                                 STAssertTrue([unclaimedTask.assigneeIdentifier isEqualToString:self.currentSession.personIdentifier], @"The task has not been successfully claimed");
                                 
                                 [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
@@ -389,7 +391,7 @@
             }
             else
             {
-                [weakSelf.taskService addAttachment:self.testAlfrescoDocument toTask:task completionBlock:^(BOOL succeeded, NSError *addError) {
+                [weakSelf.taskService addAttachments:@[self.testAlfrescoDocument] toTask:task completionBlock:^(BOOL succeeded, NSError *addError) {
                     if (addError)
                     {
                         weakSelf.lastTestSuccessful = NO;
@@ -442,8 +444,8 @@
 {
     if (self.setUpSuccess)
     {
-        self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
-        
+            self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
+            
         [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiReview:1:8" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
@@ -454,22 +456,36 @@
             else
             {
                 [self.taskService resolveTask:task completionBlock:^(AlfrescoWorkflowTask *resolvedTask, NSError *resolveError) {
-                    if (resolveError)
+                    if (self.currentSession.workflowInfo.publicAPI)
                     {
-                        self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [resolveError localizedDescription], [resolveError localizedFailureReason]];
-                        self.callbackCompleted = YES;
+                        if (resolveError)
+                        {
+                            self.lastTestSuccessful = NO;
+                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [resolveError localizedDescription], [resolveError localizedFailureReason]];
+                            self.callbackCompleted = YES;
+                        }
+                        else
+                        {
+                            STAssertNotNil(resolvedTask, @"The resolved task should not be nil");
+                            STAssertNotNil(resolvedTask.endedAt, @"The resolved tasks endedAt property should not be nil");
+                            
+                            // TODO
+                            
+                            [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
+                                self.lastTestSuccessful = succeeded;
+                                self.callbackCompleted = YES;
+                            }];
+                        }
                     }
                     else
                     {
-                        STAssertNotNil(resolvedTask, @"The resolved task should not be nil");
-                        // TODO
-//                        STAssertNotNil(resolvedTask.endedAt, @"The resolved tasks endedAt property should not be nil");
+                        STAssertNil(resolvedTask, @"Resolved task should be nil");
+                        STAssertNotNil(resolveError, @"Resolving using the Old API should have thrown an error");
+                        STAssertEqualObjects(resolveError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, resolveError.localizedDescription);
+                        STAssertTrue(resolveError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, resolveError.code);
                         
-                        [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
-                            self.lastTestSuccessful = succeeded;
-                            self.callbackCompleted = YES;
-                        }];
+                        self.lastTestSuccessful = YES;
+                        self.callbackCompleted = YES;
                     }
                 }];
             }

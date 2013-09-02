@@ -125,8 +125,10 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *tasks = [self workflowTasksFromJSONData:data error:&conversionError];
-            AlfrescoWorkflowTask *task = [tasks objectAtIndex:0];
+            id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
+            
+            NSDictionary *entry = [(NSDictionary *)responseObject objectForKey:kAlfrescoOldJSONData];
+            AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry session:self.session];
             completionBlock(task, conversionError);
         }
     }];
@@ -202,7 +204,6 @@
 {
     NSMutableDictionary *requestBody = [[NSMutableDictionary alloc] init];
     
-    // add additional properties passed
     [requestBody addEntriesFromDictionary:properties];
     
     if (self.session.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
@@ -242,9 +243,69 @@
     else
     {
         AlfrescoLogError(@"The workflow engine type can not be determined in selector - %@", NSStringFromSelector(_cmd));
+        return nil;
     }
     
-    return [self updateTaskState:task requestBody:requestBody completionBlock:completionBlock];
+    NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
+    NSString *taskIdentifier = [workflowEnginePrefix stringByAppendingString:task.identifier];
+    NSString *requestString = [kAlfrescoWorkflowTaskCompleteOldAPI stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:taskIdentifier];
+    
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    NSError *requestBodyConversionError = nil;
+    NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestBody options:0 error:&requestBodyConversionError];
+    
+    if (requestBodyConversionError)
+    {
+        AlfrescoLogDebug(@"Request could not be parsed correctly in %@", NSStringFromSelector(_cmd));
+        return nil;
+    }
+    
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (error)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
+            if (conversionError)
+            {
+                completionBlock(nil, conversionError);
+            }
+            else
+            {
+                NSString *completedString = [(NSDictionary *)responseObject objectForKey:@"persistedObject"];
+                NSArray *seperatedStrings = [completedString componentsSeparatedByString:@","];
+                NSString *createdTaskID = [[[seperatedStrings objectAtIndex:0] componentsSeparatedByString:@"$"] lastObject];
+                
+                NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
+                NSString *completeTaskIdentifier = [workflowEnginePrefix stringByAppendingString:createdTaskID];
+                NSString *requestString = [kAlfrescoWorkflowSingleTaskOldAPI stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:completeTaskIdentifier];
+                
+                NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+                
+                [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+                    if (!data)
+                    {
+                        completionBlock(nil, error);
+                    }
+                    else
+                    {
+                        NSError *conversionError = nil;
+                        id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
+                        
+                        NSDictionary *entry = [(NSDictionary *)responseObject objectForKey:kAlfrescoOldJSONData];
+                        AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry session:self.session];
+                        completionBlock(task, conversionError);
+                    }
+                }];
+            }
+        }
+    }];
+    return request;
 }
 
 - (AlfrescoRequest *)claimTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
@@ -264,14 +325,22 @@
 
 - (AlfrescoRequest *)resolveTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    // assuming this is the correct way to resolve a task - conformation required from Mike
-    return [self updateTaskState:task requestBody:@{kAlfrescoOldBPMJSONTransition : [NSNull null]} completionBlock:completionBlock];
+    NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
+    if (completionBlock != NULL)
+    {
+        completionBlock(nil, notSupportedError);
+    }
+    return nil;
 }
 
 - (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    // TODO
-    return nil;
+    return [self updateAttachments:@[node] onTask:task addition:YES completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)addAttachments:(NSArray *)nodeArray toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    return [self updateAttachments:nodeArray onTask:task addition:YES completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)updateVariables:(NSDictionary *)variables forTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
@@ -282,8 +351,7 @@
 
 - (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    // TODO
-    return nil;
+     return [self updateAttachments:@[node] onTask:task addition:NO completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)removeVariables:(NSArray *)variablesKeys forTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
@@ -329,7 +397,6 @@
     workflowTasks = [@[] mutableCopy];
     for (NSDictionary *entryDictionary in processArray)
     {
-        // CALL PERSON SERVICE TO GET BACK THE USERNAME
         [workflowTasks addObject:[[AlfrescoWorkflowTask alloc] initWithProperties:entryDictionary session:self.session]];
     }
     
@@ -345,11 +412,11 @@
     if ([response isKindOfClass:[NSDictionary class]])
     {
         NSDictionary *jsonResponseDictionary = (NSDictionary *)response;
-        NSArray *processArray = [jsonResponseDictionary valueForKey:kAlfrescoJSONData];
+        NSDictionary *processDictionary = [jsonResponseDictionary valueForKey:kAlfrescoJSONData];
         
-        if (processArray)
+        if (processDictionary)
         {
-            NSDictionary *taskProperties = [processArray[0] objectForKey:kAlfrescoOldJSONProperties];
+            NSDictionary *taskProperties = [processDictionary objectForKey:kAlfrescoOldJSONProperties];
             containerRef = [taskProperties objectForKey:kAlfrescoOldBPMJSONPackageContainer];
         }
     }
@@ -424,17 +491,11 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowTasks = [self workflowTasksFromJSONData:data error:&conversionError];
+            id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
             
-            if (conversionError)
-            {
-                completionBlock(nil, conversionError);
-            }
-            else
-            {
-                AlfrescoWorkflowTask *task = [workflowTasks objectAtIndex:0];
-                completionBlock(task, conversionError);
-            }
+            NSDictionary *entry = [(NSDictionary *)responseObject objectForKey:kAlfrescoOldJSONData];
+            AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry session:self.session];
+            completionBlock(task, conversionError);
         }
     }];
     
@@ -443,7 +504,7 @@
 
 - (void)retrieveAlfrescoNodes:(NSArray *)alfrescoNodeIdentifiers completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    __block NSMutableArray *alfrescoNodes = nil;
+    __block NSMutableArray *alfrescoNodes = [NSMutableArray arrayWithCapacity:alfrescoNodeIdentifiers.count];
     __block NSInteger callBacks = 0;
     
     for (NSString *nodeIdentifier in alfrescoNodeIdentifiers)
@@ -461,6 +522,77 @@
             }
         }];
     }
+}
+
+- (AlfrescoRequest *)updateAttachments:(NSArray *)nodeArray onTask:(AlfrescoWorkflowTask *)task addition:(BOOL)addition completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:nodeArray argumentName:@"nodeArray"];
+    [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *nodeReferences = @"";
+    for (int i = 0; i < nodeArray.count; i++)
+    {
+        id nodeObject = nodeArray[i];
+        if (![nodeObject isKindOfClass:[AlfrescoNode class]])
+        {
+            NSString *exceptionMessage = [NSString stringWithFormat:@"The node array passed into %@ should contain instances of %@, instead it contained instances of %@",
+                                          NSStringFromSelector(_cmd),
+                                          NSStringFromClass([AlfrescoNode class]),
+                                          NSStringFromClass([nodeObject class])];
+            @throw [NSException exceptionWithName:@"Invaild parameters" reason:exceptionMessage userInfo:nil];
+        }
+        
+        AlfrescoNode *currentNode = (AlfrescoNode *)nodeObject;
+        
+        // remove the version number
+        NSRange range = [currentNode.identifier rangeOfString:@";" options:NSBackwardsSearch];
+        NSString *nodeRefWithoutVersionNumber = (!NSEqualRanges(range, NSMakeRange(NSNotFound, 0))) ? [currentNode.identifier substringToIndex:range.location] : currentNode.identifier;
+        
+        if (i == 0)
+        {
+            nodeReferences = nodeRefWithoutVersionNumber;
+        }
+        else
+        {
+            nodeReferences = [NSString stringWithFormat:@"%@,%@", nodeReferences, nodeRefWithoutVersionNumber];
+        }
+    }
+    
+    // request body
+    NSString *attachmentKey = (addition) ? kAlfrescoOldBPMJSONProcessAttachmentsAdd : kAlfrescoOldBPMJSONProcessAttachmentsRemove;
+    NSDictionary *requestBody = @{attachmentKey : nodeReferences};
+    
+    // build URL
+    NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
+    NSString *completeTaskID = [workflowEnginePrefix stringByAppendingString:task.identifier];
+    NSString *requestString = [kAlfrescoWorkflowTaskCompleteOldAPI stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:completeTaskID];
+    
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    // convert
+    NSError *requestConversionError = nil;
+    NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestBody options:0 error:&requestConversionError];
+    
+    if (requestConversionError)
+    {
+        AlfrescoLogDebug(@"Request could not be parsed correctly in %@", NSStringFromSelector(_cmd));
+        return nil;
+    }
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (error)
+        {
+            completionBlock(NO, error);
+        }
+        else
+        {
+            completionBlock(YES, error);
+        }
+    }];
+    
+    return request;
 }
 
 @end
