@@ -30,7 +30,6 @@
 #import "AlfrescoSiteCache.h"
 #import <objc/runtime.h>
 
-
 @interface AlfrescoCloudSiteService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;

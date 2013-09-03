@@ -21,7 +21,7 @@
 #import "CMISRepositoryService.h"
 #import "CMISRepositoryInfo.h"
 #import "CMISDateUtil.h"
-#import "AlfrescoObjectConverter.h"
+#import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
@@ -267,7 +267,7 @@
                 if (newCMISsession)
                 {
                     [self setObject:newCMISsession forParameter:kAlfrescoSessionKeyCmisSession];
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:newCMISsession];
                     [newCMISsession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
                         if (rootFolder)
@@ -493,7 +493,7 @@
                 else
                 {
                     [self setObject:cmisSession forParameter:kAlfrescoSessionKeyCmisSession];
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
                     alfrescoRequest.httpRequest = [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
                         if (nil == rootFolder)

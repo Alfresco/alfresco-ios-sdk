@@ -93,8 +93,10 @@
         }
         self.taskDescription = [taskProperties objectForKey:kAlfrescoOldBPMJSONDescription];
         self.priority = [taskProperties objectForKey:kAlfrescoOldBPMJSONPriority];
-        // This is currently a node ref, and not the assignee's identifier - Person Service?
-        self.assigneeIdentifier = [taskProperties objectForKey:kAlfrescoOldBPMJSONAssignee];
+        if ([taskProperties objectForKey:kAlfrescoOldJSONOwner] != [NSNull null])
+        {
+            self.assigneeIdentifier = [taskProperties objectForKey:kAlfrescoOldJSONOwner];
+        }
     }
 }
 

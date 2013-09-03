@@ -22,7 +22,7 @@
 #import "CMISRepositoryService.h"
 #import "CMISRepositoryInfo.h"
 #import "CMISStandardUntrustedSSLAuthenticationProvider.h"
-#import "AlfrescoObjectConverter.h"
+#import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
@@ -270,7 +270,7 @@
                 }
                 else
                 {
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                     self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
                     workflowDefinitionsCompletionBlock(error);
                 }
@@ -299,7 +299,7 @@
                 else
                 {
                     self.personIdentifier = username;
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:v3Session];
 
                     // Workaround for MNT-6405: Malformed cmis:productName in some v4 instances
@@ -335,7 +335,7 @@
     id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
                                                                                                         andPassword:password];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:session];
 }
 

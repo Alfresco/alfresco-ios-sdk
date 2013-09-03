@@ -21,7 +21,7 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoPagingResult.h"
 #import "AlfrescoListingContext.h"
-#import "AlfrescoObjectConverter.h"
+#import "AlfrescoCMISToAlfrescoObjectConverter.h"
 
 @class CMISOperationContext, CMISPagedResult;
 
@@ -30,7 +30,7 @@
 + (CMISOperationContext *) operationContextFromListingContext:(AlfrescoListingContext *)listingContext;
 
 
-+ (AlfrescoPagingResult *) pagedResultFromArray:(CMISPagedResult *)cmisResult objectConverter:(AlfrescoObjectConverter *)converter;
++ (AlfrescoPagingResult *) pagedResultFromArray:(CMISPagedResult *)cmisResult objectConverter:(AlfrescoCMISToAlfrescoObjectConverter *)converter;
 
 
 + (AlfrescoPagingResult *) pagedResultFromArray:(NSArray *)nonPagedArray listingContext:(AlfrescoListingContext *) listingContext;

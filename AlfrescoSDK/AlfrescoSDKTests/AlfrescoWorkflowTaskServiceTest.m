@@ -215,7 +215,7 @@
         self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
         self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
         
-        NSString *newAssignee = @"tmughal";
+        NSString *newAssignee = @"iosunittest";
         
         [self.personService retrievePersonWithIdentifier:newAssignee completionBlock:^(AlfrescoPerson *person, NSError *personError) {
             if (personError)
@@ -237,19 +237,19 @@
                     }
                     else
                     {
-                        [self.taskService assignTask:task toAssignee:person completionBlock:^(AlfrescoWorkflowTask *task, NSError *asignError) {
-                            if (asignError)
+                        [self.taskService assignTask:task toAssignee:person completionBlock:^(AlfrescoWorkflowTask *assignedTask, NSError *assignError) {
+                            if (assignError)
                             {
                                 self.lastTestSuccessful = NO;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [asignError localizedDescription], [asignError localizedFailureReason]];
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [assignError localizedDescription], [assignError localizedFailureReason]];
                                 self.callbackCompleted = YES;
                             }
                             else
                             {
-                                STAssertNotNil(task, @"Updated task should not be nil");
+                                STAssertNotNil(assignedTask, @"Updated task should not be nil");
                                 NSLog(@"%@ %@", newAssignee, task.assigneeIdentifier);
                                 
-                                // Commented out - KNOWN BUG IN JSON RESPONSE FROM SERVER
+                                // Commented out - KNOWN BUG IN JSON RESPONSE FROM SERVER - Public API
 //                                STAssertTrue([task.assigneeIdentifier isEqualToString:newAssignee], @"The new assignee identifier has not bee updated");
                                 
                                 [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
@@ -301,7 +301,7 @@
 //                        STAssertNil(unclaimedTask.assigneeIdentifier, @"Assignee Identifier should be nil");
                         
                         [self.taskService claimTask:unclaimedTask completionBlock:^(AlfrescoWorkflowTask *claimedTask, NSError *claimingError) {
-                            if (unclaimError)
+                            if (claimingError)
                             {
                                 self.lastTestSuccessful = NO;
                                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [claimingError localizedDescription], [claimingError localizedFailureReason]];
@@ -309,8 +309,7 @@
                             }
                             else
                             {
-                                // This currently fails on Old API as the assigneeIdentifier is not mapped in the object creation.
-                                STAssertTrue([unclaimedTask.assigneeIdentifier isEqualToString:self.currentSession.personIdentifier], @"The task has not been successfully claimed");
+                                STAssertTrue([claimedTask.assigneeIdentifier isEqualToString:self.currentSession.personIdentifier], @"The task has not been successfully claimed");
                                 
                                 [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                                     self.lastTestSuccessful = succeeded;
