@@ -27,6 +27,10 @@
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoRepositorySession.h"
 
+NSString * const kCloudEdition = @"Alfresco in the Cloud";
+NSString * const kEnterpriseEdition = @"Enterprise";
+NSString * const kCommunityEdition = @"Community";
+
 @interface AlfrescoWorkflowInfo ()
 
 @property (nonatomic, assign, readwrite) AlfrescoWorkflowEngineType workflowEngine;
@@ -53,26 +57,37 @@
 
 - (void)setupAPIVersion
 {
-    if (self.workflowEngine == AlfrescoWorkflowEngineTypeJBPM)
+    AlfrescoRepositoryInfo *repositoryInfo = self.session.repositoryInfo;
+    
+    if ([repositoryInfo.edition isEqualToString:kCloudEdition] || [repositoryInfo.edition isEqualToString:kEnterpriseEdition])
     {
-        self.publicAPI = NO;
-    }
-    else
-    {
-        NSNumber *majorVersion = self.session.repositoryInfo.majorVersion;
-        NSNumber *minorVersion = self.session.repositoryInfo.minorVersion;
-        float version = [[NSString stringWithFormat:@"%i.%i", majorVersion.intValue, minorVersion.intValue] floatValue];
-        
-        // if cloud, or Repo 4.2+
-        if ([self.session isKindOfClass:[AlfrescoCloudSession class]] ||
-            ([self.session isKindOfClass:[AlfrescoRepositorySession class]] && version >= 4.2f))
-        {
-            self.publicAPI = YES;
-        }
-        else
+        if (self.workflowEngine == AlfrescoWorkflowEngineTypeJBPM)
         {
             self.publicAPI = NO;
         }
+        else
+        {
+            NSNumber *majorVersion = repositoryInfo.majorVersion;
+            NSNumber *minorVersion = repositoryInfo.minorVersion;
+            float version = [[NSString stringWithFormat:@"%i.%i", majorVersion.intValue, minorVersion.intValue] floatValue];
+            
+            if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
+            {
+                self.publicAPI = YES;
+            }
+            else if ([self.session isKindOfClass:[AlfrescoRepositorySession class]] && version >= 4.2f)
+            {
+                self.publicAPI = YES;
+            }
+            else
+            {
+                self.publicAPI = NO;
+            }
+        }
+    }
+    else
+    {
+        self.publicAPI = NO;
     }
 }
 
