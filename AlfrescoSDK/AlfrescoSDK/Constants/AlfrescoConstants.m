@@ -15,17 +15,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ******************************************************************************/
-/** The AlfrescoErrors error definitions for Mobile SDK.
- 
- Author: Peter Schmidt (Alfresco)
- */
 
 #import "AlfrescoConstants.h"
 
 /**
- SDK Version constants
+ SDK Version constants - defined in AlfrescoSDK.xcconfig
  */
-NSString * const kAlfrescoSDKVersion = @"1.1.0";
+NSString * const kAlfrescoSDKVersion = ALFRESCO_SDK_VERSION;
 
 /**
  Session parameter constants

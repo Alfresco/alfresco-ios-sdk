@@ -31,6 +31,7 @@
 #import "CMISStringInOutParameter.h"
 #import "CMISRendition.h"
 #import "CMISEnums.h"
+#import "CMISErrors.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoErrors.h"
@@ -131,12 +132,19 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     NSDictionary *processedProperties = [self propertiesForName:folderName properties:properties type:type aspects:aspects isFolder:YES];
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [self.cmisSession createFolder:processedProperties inFolder:folder.identifier completionBlock:^(NSString *folderRef, NSError *error){
-        if (nil != folderRef)
+        if (request.isCancelled)
+        {
+            if (nil == error)
+            {
+                // Request was cancelled too late to generate a cancellation error code, so create one now
+                error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeCancelled detailedDescription:@"Request was cancelled"];
+            }
+            completionBlock(nil, [AlfrescoCMISUtil alfrescoErrorWithCMISError:error]);
+        }
+        else if (nil != folderRef)
         {
             request = [self retrieveNodeWithIdentifier:folderRef completionBlock:^(AlfrescoNode *node, NSError *error) {
-                
                 completionBlock((AlfrescoFolder *)node, error);
-                
             }];
         }
         else
@@ -144,7 +152,6 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
             completionBlock(nil, alfrescoError);
         }
-        
     }];
     return request;
 }
@@ -216,7 +223,16 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     NSDictionary *processedProperties = [self propertiesForName:documentName properties:properties type:type aspects:aspects isFolder:NO];
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [self.cmisSession createDocumentFromFilePath:[file.fileUrl path] mimeType:file.mimeType properties:processedProperties inFolder:folder.identifier completionBlock:^(NSString *identifier, NSError *error){
-        if (nil == identifier)
+        if (request.isCancelled)
+        {
+            if (nil == error)
+            {
+                // Request was cancelled too late to generate a cancellation error code, so create one now
+                error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeCancelled detailedDescription:@"Request was cancelled"];
+            }
+            completionBlock(nil, [AlfrescoCMISUtil alfrescoErrorWithCMISError:error]);
+        }
+        else if (nil == identifier)
         {
             NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
             completionBlock(nil, alfrescoError);
@@ -317,37 +333,45 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                                                                  inFolder:folder.identifier
                                                             bytesExpected:contentStream.length
                                                           completionBlock:^(NSString *objectId, NSError *error) {
-                                                              if (nil == objectId)
-                                                              {
-                                                                  NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
-                                                                  completionBlock(nil, alfrescoError);
-                                                              }
-                                                              else
-                                                              {
-                                                                  request = [self retrieveNodeWithIdentifier:objectId completionBlock:^(AlfrescoNode *node, NSError *error) {
-                                                                      
-                                                                      completionBlock((AlfrescoDocument *)node, error);
-                                                                      if (nil != node)
-                                                                      {
-                                                                          BOOL isExtractMetadata = [[self.session objectForParameter:kAlfrescoMetadataExtraction] boolValue];
-                                                                          if (isExtractMetadata)
-                                                                          {
-                                                                              [self extractMetadataForNode:node alfrescoRequest:request];
-                                                                          }
-                                                                          BOOL isGenerateThumbnails = [[self.session objectForParameter:kAlfrescoThumbnailCreation] boolValue];
-                                                                          if (isGenerateThumbnails)
-                                                                          {
-                                                                              [self generateThumbnailForNode:node alfrescoRequest:request];
-                                                                          }
-                                                                      }
-                                                                  }];
-                                                              }
-                                                          } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
-                                                              if (progressBlock && 0 < contentStream.length)
-                                                              {
-                                                                  progressBlock(bytesUploaded, bytesTotal);
-                                                              }
-                                                          }];
+        if (request.isCancelled)
+        {
+            if (nil == error)
+            {
+                // Request was cancelled too late to generate a cancellation error code, so create one now
+                error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeCancelled detailedDescription:@"Request was cancelled"];
+            }
+            completionBlock(nil, [AlfrescoCMISUtil alfrescoErrorWithCMISError:error]);
+        }
+        else if (nil == objectId)
+        {
+            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+            completionBlock(nil, alfrescoError);
+        }
+        else
+        {
+            request = [self retrieveNodeWithIdentifier:objectId completionBlock:^(AlfrescoNode *node, NSError *error) {
+                completionBlock((AlfrescoDocument *)node, error);
+                if (nil != node)
+                {
+                    BOOL isExtractMetadata = [[self.session objectForParameter:kAlfrescoMetadataExtraction] boolValue];
+                    if (isExtractMetadata)
+                    {
+                        [self extractMetadataForNode:node alfrescoRequest:request];
+                    }
+                    BOOL isGenerateThumbnails = [[self.session objectForParameter:kAlfrescoThumbnailCreation] boolValue];
+                    if (isGenerateThumbnails)
+                    {
+                        [self generateThumbnailForNode:node alfrescoRequest:request];
+                    }
+                }
+            }];
+        }
+    } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
+        if (progressBlock && 0 < contentStream.length)
+        {
+            progressBlock(bytesUploaded, bytesTotal);
+        }
+    }];
     return request;
 }
 

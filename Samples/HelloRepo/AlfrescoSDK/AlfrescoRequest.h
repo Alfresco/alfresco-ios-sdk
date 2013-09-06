@@ -26,7 +26,7 @@
 @end
 
 @interface AlfrescoRequest : NSObject
-@property (nonatomic, assign) BOOL isCancelled;
+@property (nonatomic, readonly, getter = isCancelled) BOOL cancelled;
 @property (nonatomic, strong) id httpRequest;
 - (void)cancel;
 @end

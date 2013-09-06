@@ -230,7 +230,7 @@
     NSArray *keywordArray = [keywords componentsSeparatedByString:@" "];
     for (NSString *keyword in keywordArray)
     {
-        if (firstKeyword == NO)
+        if (!firstKeyword)
         {
             [searchQuery appendString:@" OR "];
         }
@@ -239,22 +239,30 @@
             firstKeyword = NO;
         }
         
-        if (YES == options.exactMatch)
+        // the includeALL option overrides all others
+        if (options.includeAll)
         {
-            [searchQuery appendString:[NSString stringWithFormat:@"%@ = '%@'", kCMISPropertyName, keyword]];
+            [searchQuery appendString:[NSString stringWithFormat:@"CONTAINS('ALL:%@%@')", keyword, (options.exactMatch ? @"*" : @"")]];
         }
-        else 
+        else
         {
-            [searchQuery appendString:[NSString stringWithFormat:@"CONTAINS('~%@:%@')", kCMISPropertyName, keyword]];
-        }
-        
-        if (YES == options.includeContent)
-        {
-            [searchQuery appendString:[NSString stringWithFormat:@" OR CONTAINS('%@')", keyword]];
+            if (options.exactMatch)
+            {
+                [searchQuery appendString:[NSString stringWithFormat:@"%@ = '%@'", kCMISPropertyName, keyword]];
+            }
+            else 
+            {
+                [searchQuery appendString:[NSString stringWithFormat:@"CONTAINS('~%@:%@')", kCMISPropertyName, keyword]];
+            }
+            
+            if (options.includeContent)
+            {
+                [searchQuery appendString:[NSString stringWithFormat:@" OR CONTAINS('%@')", keyword]];
+            }
         }
     }
     [searchQuery appendString:@")"];
-    if (YES == options.includeDescendants) 
+    if (options.includeDescendants)
     {
         if (nil != options.folder && nil != options.folder.identifier) 
         {

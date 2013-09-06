@@ -25,5 +25,6 @@
 @property (nonatomic, weak) IBOutlet UITextField *searchField;
 @property (nonatomic, weak) IBOutlet UISwitch *fullTextSwitch;
 @property (nonatomic, weak) IBOutlet UISwitch *exactSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *allMetadataSwitch;
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *searchButton;
 @end

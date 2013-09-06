@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27E4D48917BBFE5500F5D773 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */; };
 		4E0C86751612FB65008B71DB /* ServerSelectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0C86741612FB65008B71DB /* ServerSelectionTableViewController.m */; };
 		4E0C867816131E19008B71DB /* RepositoryLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0C867716131E19008B71DB /* RepositoryLoginViewController.m */; };
 		4E29343F1580AD3D00C93F1D /* ActivitiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E29343E1580AD3C00C93F1D /* ActivitiesTableViewController.m */; };
@@ -25,7 +26,6 @@
 		4E80E8F016145A4D00922D5D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E80E8EF16145A4D00922D5D /* Default-568h@2x.png */; };
 		4EAA12671577CD6D001B073B /* MobileSDKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EAA12661577CD6D001B073B /* MobileSDKWebViewController.m */; };
 		4EBBC4FB1585FE0B00EFDC16 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBBC4FA1585FE0B00EFDC16 /* QuartzCore.framework */; };
-		8218AF5D16E00ED3001CE051 /* libAlfrescoSDKv1.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8218AF5C16E00ED3001CE051 /* libAlfrescoSDKv1.1.0.a */; };
 		82194470161B980E00D07520 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219446C161B980E00D07520 /* cloud.png */; };
 		82194471161B980E00D07520 /* cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219446D161B980E00D07520 /* cloud@2x.png */; };
 		82194472161B980E00D07520 /* repository.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219446E161B980E00D07520 /* repository.png */; };
@@ -83,6 +83,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4E0C86611612E2CB008B71DB /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthData.h; path = AlfrescoSDK/AlfrescoOAuthData.h; sourceTree = SOURCE_ROOT; };
 		4E0C86711612EE6F008B71DB /* AlfrescoOAuthLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthLoginViewController.h; path = AlfrescoSDK/AlfrescoOAuthLoginViewController.h; sourceTree = SOURCE_ROOT; };
 		4E0C86731612FB65008B71DB /* ServerSelectionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerSelectionTableViewController.h; sourceTree = "<group>"; };
@@ -112,7 +113,6 @@
 		4EAA12651577CD6D001B073B /* MobileSDKWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobileSDKWebViewController.h; sourceTree = "<group>"; };
 		4EAA12661577CD6D001B073B /* MobileSDKWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobileSDKWebViewController.m; sourceTree = "<group>"; };
 		4EBBC4FA1585FE0B00EFDC16 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		8218AF5C16E00ED3001CE051 /* libAlfrescoSDKv1.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAlfrescoSDKv1.1.0.a; path = AlfrescoSDK/libAlfrescoSDKv1.1.0.a; sourceTree = SOURCE_ROOT; };
 		8219446C161B980E00D07520 /* cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud.png; sourceTree = "<group>"; };
 		8219446D161B980E00D07520 /* cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud@2x.png"; sourceTree = "<group>"; };
 		8219446E161B980E00D07520 /* repository.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = repository.png; sourceTree = "<group>"; };
@@ -226,13 +226,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27E4D48917BBFE5500F5D773 /* MediaPlayer.framework in Frameworks */,
 				4EBBC4FB1585FE0B00EFDC16 /* QuartzCore.framework in Frameworks */,
 				D6A698A4156A5BC50094686D /* QuickLook.framework in Frameworks */,
 				D6A69932156FCFA80094686D /* MobileCoreServices.framework in Frameworks */,
 				829C5639155DB8F6004EE3C2 /* UIKit.framework in Frameworks */,
 				829C563B155DB8F6004EE3C2 /* Foundation.framework in Frameworks */,
 				829C563D155DB8F6004EE3C2 /* CoreGraphics.framework in Frameworks */,
-				8218AF5D16E00ED3001CE051 /* libAlfrescoSDKv1.1.0.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,7 +244,6 @@
 			children = (
 				4E85F3861718490B005A43E1 /* AlfrescoContent.h */,
 				4E420BE7171715BC002D75D9 /* AlfrescoContentStream.h */,
-				8218AF5C16E00ED3001CE051 /* libAlfrescoSDKv1.1.0.a */,
 				8233930516DE35C60031CF7B /* AlfrescoLog.h */,
 				8233930616DE35C60031CF7B /* AlfrescoRequest.h */,
 				8233930316DE34EE0031CF7B /* AlfrescoFileManager.h */,
@@ -378,11 +377,12 @@
 		829C5637155DB8F6004EE3C2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4EBBC4FA1585FE0B00EFDC16 /* QuartzCore.framework */,
+				829C563A155DB8F6004EE3C2 /* Foundation.framework */,
+				27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */,
 				D6A69930156FCF9E0094686D /* MobileCoreServices.framework */,
+				4EBBC4FA1585FE0B00EFDC16 /* QuartzCore.framework */,
 				D6A698A2156A5BB10094686D /* QuickLook.framework */,
 				829C5638155DB8F6004EE3C2 /* UIKit.framework */,
-				829C563A155DB8F6004EE3C2 /* Foundation.framework */,
 				829C563C155DB8F6004EE3C2 /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
@@ -682,7 +682,10 @@
 					"\"$(SRCROOT)/SDKSamples\"",
 					"\"$(SRCROOT)/AlfrescoSDK\"",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"\"$(SRCROOT)/AlfrescoSDK/libAlfrescoSDKv1.3.0-debug.a\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				VALID_ARCHS = armv7;
@@ -702,7 +705,10 @@
 					"\"$(SRCROOT)/SDKSamples\"",
 					"\"$(SRCROOT)/AlfrescoSDK\"",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"\"$(SRCROOT)/AlfrescoSDK/libAlfrescoSDKv1.3.0.a\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				VALID_ARCHS = armv7;

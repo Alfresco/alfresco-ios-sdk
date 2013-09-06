@@ -22,13 +22,14 @@
 #import "AlfrescoFolder.h"
 /** The AlfrescoKeywordSearchOptions are used in Alfresco Search Service.
  
- Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Mike Hatfield (Alfresco)
  */
 
 @interface AlfrescoKeywordSearchOptions : NSObject <NSCoding>
 @property (nonatomic, assign, readonly) BOOL exactMatch;
 @property (nonatomic, assign, readonly) BOOL includeContent;
 @property (nonatomic, assign, readonly) BOOL includeDescendants;
+@property (nonatomic, assign, readonly) BOOL includeAll;
 @property (nonatomic, strong, readonly) AlfrescoFolder *folder;
 
 /**
@@ -36,6 +37,12 @@
  @param includeContent - searches also the content of files
  */
 - (id)initWithExactMatch:(BOOL)exactMatch includeContent:(BOOL)includeContent;
+
+/**
+ @param exactMatch
+ @param includeAll - searches content and metadata (implies includeContent)
+ */
+- (id)initWithExactMatch:(BOOL)exactMatch includeAll:(BOOL)includeAll;
 
 /**
  @param folder - the node to be searched
@@ -49,9 +56,14 @@
  @param folder - the node to be searched
  @param includeDescendants - search sub-folders as well
  */
-- (id)initWithExactMatch:(BOOL)exactMatch
-          includeContent:(BOOL)includeContent
-                  folder:(AlfrescoFolder *)folder
-      includeDescendants:(BOOL)includeDescendants;
+- (id)initWithExactMatch:(BOOL)exactMatch includeContent:(BOOL)includeContent folder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants;
+
+/**
+ @param exactMatch
+ @param includeAll - searches content and metadata (implies includeContent)
+ @param folder - the node to be searched
+ @param includeDescendants - search sub-folders as well
+ */
+- (id)initWithExactMatch:(BOOL)exactMatch includeAll:(BOOL)includeAll folder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants;
 
 @end

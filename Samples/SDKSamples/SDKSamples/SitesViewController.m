@@ -21,7 +21,7 @@
 
 @interface SitesViewController ()
 
-@property (nonatomic, strong) NSMutableArray *sites;
+@property (nonatomic, strong) NSArray *sites;
 - (void)loadSites;
 - (void)loadSite:(AlfrescoSite *)site;
 @end
