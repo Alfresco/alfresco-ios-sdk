@@ -27,6 +27,8 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoSession.h"
 
+static NSInteger kWorkflowProcessModelVersion = 1;
+
 @interface AlfrescoWorkflowProcess ()
 
 @property (nonatomic, weak, readwrite) id<AlfrescoSession> session;
@@ -90,12 +92,34 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    // TODO
+    [aCoder encodeInteger:kWorkflowProcessModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeObject:self.identifier forKey:kAlfrescoPublicJSONIdentifier];
+    [aCoder encodeObject:self.processDefinitionIdentifier forKey:kAlfrescoPublicJSONProcessDefinitionID];
+    [aCoder encodeObject:self.processDefinitionKey forKey:kAlfrescoPublicJSONProcessDefinitionKey];
+    [aCoder encodeObject:self.startedAt forKey:kAlfrescoPublicJSONStartedAt];
+    [aCoder encodeObject:self.endedAt forKey:kAlfrescoPublicJSONEndedAt];
+    [aCoder encodeObject:self.dueAt forKey:kAlfrescoPublicJSONDueAt];
+    [aCoder encodeObject:self.processDescription forKey:kAlfrescoPublicJSONDescription];
+    [aCoder encodeObject:self.priority forKey:kAlfrescoPublicJSONPriority];
+    [aCoder encodeObject:self.initiatorUsername forKey:kAlfrescoPublicJSONStartUserID];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    // TODO
+    self = [super init];
+    if (self)
+    {
+//        NSInteger version = [aDecoder decodeIntegerForKey:NSStringFromClass([self class])];
+        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONIdentifier];
+        self.processDefinitionIdentifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessDefinitionID];
+        self.processDefinitionKey = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessDefinitionKey];
+        self.startedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONStartedAt];
+        self.endedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONEndedAt];
+        self.dueAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDueAt];
+        self.processDescription = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDescription];
+        self.priority = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONPriority];
+        self.initiatorUsername = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONStartUserID];
+    }
     return self;
 }
 

@@ -28,7 +28,7 @@
 
 @protocol AlfrescoSession;
 
-@interface AlfrescoWorkflowInfo : NSObject
+@interface AlfrescoWorkflowInfo : NSObject <NSCoding>
 
 @property (nonatomic, assign, readonly) AlfrescoWorkflowEngineType workflowEngine;
 @property (nonatomic, assign, readonly) BOOL publicAPI;

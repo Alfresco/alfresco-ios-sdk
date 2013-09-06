@@ -27,6 +27,8 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoSession.h"
 
+static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
+
 @interface AlfrescoWorkflowProcessDefinition ()
 
 @property (nonatomic, weak, readwrite) id<AlfrescoSession> session;
@@ -74,12 +76,24 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    // TODO
+    [aCoder encodeInteger:kWorkflowProcessDefinitionModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeObject:self.identifier forKey:kAlfrescoPublicJSONIdentifier];
+    [aCoder encodeObject:self.name forKey:kAlfrescoPublicJSONName];
+    [aCoder encodeObject:self.processDescription forKey:kAlfrescoPublicJSONDescription];
+    [aCoder encodeObject:self.version forKey:kAlfrescoPublicJSONVersion];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    // TODO
+    self = [super init];
+    if (self)
+    {
+//        NSInteger version = [aDecoder decodeIntegerForKey:NSStringFromClass([self class])];
+        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONIdentifier];
+        self.name = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONName];
+        self.processDescription = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDescription];
+        self.version = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONVersion];
+    }
     return self;
 }
 

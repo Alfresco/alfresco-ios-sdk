@@ -26,16 +26,14 @@
 #import "AlfrescoWorkflowInfo.h"
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoRepositorySession.h"
+#import "AlfrescoInternalConstants.h"
 
-NSString * const kCloudEdition = @"Alfresco in the Cloud";
-NSString * const kEnterpriseEdition = @"Enterprise";
-NSString * const kCommunityEdition = @"Community";
+static NSInteger kWorkflowInfoModelVersion = 1;
 
 @interface AlfrescoWorkflowInfo ()
 
 @property (nonatomic, assign, readwrite) AlfrescoWorkflowEngineType workflowEngine;
 @property (nonatomic, assign, readwrite) BOOL publicAPI;
-@property (nonatomic, weak, readwrite) id<AlfrescoSession> session;
 
 @end
 
@@ -47,19 +45,18 @@ NSString * const kCommunityEdition = @"Community";
     if (self)
     {
         self.workflowEngine = workflowEngine;
-        self.session = session;
-        [self setupAPIVersion];
+        [self setupAPIVersionUsingSession:session];
     }
     return self;
 }
 
 #pragma mark - Private Functions
 
-- (void)setupAPIVersion
+- (void)setupAPIVersionUsingSession:(id<AlfrescoSession>)session
 {
-    AlfrescoRepositoryInfo *repositoryInfo = self.session.repositoryInfo;
+    AlfrescoRepositoryInfo *repositoryInfo = session.repositoryInfo;
     
-    if ([repositoryInfo.edition isEqualToString:kCloudEdition] || [repositoryInfo.edition isEqualToString:kEnterpriseEdition])
+    if ([repositoryInfo.edition isEqualToString:kAlfrescoCloudEdition] || [repositoryInfo.edition isEqualToString:kAlfrescoRepositoryEnterprise])
     {
         if (self.workflowEngine == AlfrescoWorkflowEngineTypeJBPM)
         {
@@ -71,11 +68,11 @@ NSString * const kCommunityEdition = @"Community";
             NSNumber *minorVersion = repositoryInfo.minorVersion;
             float version = [[NSString stringWithFormat:@"%i.%i", majorVersion.intValue, minorVersion.intValue] floatValue];
             
-            if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
+            if ([session isKindOfClass:[AlfrescoCloudSession class]])
             {
                 self.publicAPI = YES;
             }
-            else if ([self.session isKindOfClass:[AlfrescoRepositorySession class]] && version >= 4.2f)
+            else if ([session isKindOfClass:[AlfrescoRepositorySession class]] && version >= 4.2f)
             {
                 self.publicAPI = YES;
             }
@@ -89,6 +86,25 @@ NSString * const kCommunityEdition = @"Community";
     {
         self.publicAPI = NO;
     }
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeInteger:kWorkflowInfoModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:self.workflowEngine forKey:kAlfrescoWorkflowEngineType];
+    [aCoder encodeBool:self.publicAPI forKey:kAlfrescoWorkflowUsingPublicAPI];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self)
+    {
+//        NSInteger version = [aDecoder decodeIntegerForKey:NSStringFromClass([self class])];
+        self.workflowEngine = [aDecoder decodeIntegerForKey:kAlfrescoWorkflowEngineType];
+        self.publicAPI = [aDecoder decodeBoolForKey:kAlfrescoWorkflowUsingPublicAPI];
+    }
+    return self;
 }
 
 @end

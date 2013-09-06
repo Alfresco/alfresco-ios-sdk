@@ -77,7 +77,6 @@ extern NSString * const kAlfrescoWorkflowJBPMEnginePrefix;
 extern NSString * const kAlfrescoWorkflowActivitiEnginePrefix;
 extern NSString * const kAlfrescoWorkflowNodeRefPrefix;
 
-// workflow
 extern NSString * const kAlfrescoPublicJSONEntry;
 extern NSString * const kAlfrescoPublicJSONIdentifier;
 extern NSString * const kAlfrescoPublicJSONName;
@@ -150,3 +149,6 @@ extern NSString * const kAlfrescoOldJSONDueAt;
 extern NSString * const kAlfrescoOldJSONPriority;
 extern NSString * const kAlfrescoOldJSONDescription;
 extern NSString * const kAlfrescoOldJSONInitiator;
+
+extern NSString * const kAlfrescoWorkflowEngineType;
+extern NSString * const kAlfrescoWorkflowUsingPublicAPI;

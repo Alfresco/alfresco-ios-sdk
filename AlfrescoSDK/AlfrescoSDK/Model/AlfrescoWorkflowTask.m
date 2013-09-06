@@ -27,6 +27,8 @@
 #import "AlfrescoSession.h"
 #import "AlfrescoInternalConstants.h"
 
+static NSInteger kWorkflowTaskModelVersion = 1;
+
 @interface AlfrescoWorkflowTask ()
 
 @property (nonatomic, weak, readwrite) id<AlfrescoSession> session;
@@ -63,7 +65,7 @@
     if (self.session.workflowInfo.publicAPI)
     {
         NSDictionary *entry = [properties objectForKey:kAlfrescoCloudJSONEntry];
-        self.identifier = [entry objectForKey:kAlfrescoJSONIdentifier];
+        self.identifier = [entry objectForKey:kAlfrescoPublicJSONIdentifier];
         self.processIdentifier = [entry objectForKey:kAlfrescoPublicJSONProcessID];
         self.processDefinitionIdentifier = [entry objectForKey:kAlfrescoPublicJSONProcessDefinitionID];
         self.startedAt = [entry objectForKey:kAlfrescoPublicJSONStartedAt];
@@ -102,12 +104,34 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    // TODO
+    [aCoder encodeInteger:kWorkflowTaskModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeObject:self.identifier forKey:kAlfrescoPublicJSONIdentifier];
+    [aCoder encodeObject:self.processIdentifier forKey:kAlfrescoPublicJSONProcessID];
+    [aCoder encodeObject:self.processDefinitionIdentifier forKey:kAlfrescoPublicJSONProcessDefinitionID];
+    [aCoder encodeObject:self.startedAt forKey:kAlfrescoPublicJSONStartedAt];
+    [aCoder encodeObject:self.endedAt forKey:kAlfrescoPublicJSONEndedAt];
+    [aCoder encodeObject:self.dueAt forKey:kAlfrescoPublicJSONDueAt];
+    [aCoder encodeObject:self.taskDescription forKey:kAlfrescoPublicJSONDescription];
+    [aCoder encodeObject:self.priority forKey:kAlfrescoPublicJSONPriority];
+    [aCoder encodeObject:self.assigneeIdentifier forKey:kAlfrescoPublicJSONAssignee];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    // TODO
+    self = [super init];
+    if (self)
+    {
+//        NSInteger version = [aDecoder decodeIntegerForKey:NSStringFromClass([self class])];
+        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONIdentifier];
+        self.processIdentifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessID];
+        self.processDefinitionIdentifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessDefinitionID];
+        self.startedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONStartedAt];
+        self.endedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONEndedAt];
+        self.dueAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDueAt];
+        self.taskDescription = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDescription];
+        self.priority = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONPriority];
+        self.assigneeIdentifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONAssignee];
+    }
     return self;
 }
 

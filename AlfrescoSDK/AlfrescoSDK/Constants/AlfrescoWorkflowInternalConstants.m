@@ -153,3 +153,10 @@ NSString * const kAlfrescoOldJSONDueAt = @"dueDate";
 NSString * const kAlfrescoOldJSONPriority = @"priority";
 NSString * const kAlfrescoOldJSONDescription = @"description";
 NSString * const kAlfrescoOldJSONInitiator = @"initiator";
+
+/**
+ Property name constants
+ */
+NSString * const kAlfrescoWorkflowEngineType = @"workflowEngineType";
+NSString * const kAlfrescoWorkflowUsingPublicAPI = @"workflowPublicAPI";
+
