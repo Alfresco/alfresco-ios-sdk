@@ -202,6 +202,7 @@ NSString * const kAlfrescoCloudCancelJoinRequestsAPI = @"people/-me-/site-member
 NSString * const kAlfrescoCloudLeaveSiteAPI = @"sites/{siteID}/members/{personID}";
 NSString * const kAlfrescoCloudPagingAPIParameters = @"maxItems={maxItems}&skipCount={skipCount}";
 
+
 /**
  JSON Constants
  */
@@ -300,6 +301,7 @@ NSString * const kAlfrescoJSONInviteId = @"inviteId";
 NSString * const kAlfrescoJSONData = @"data";
 NSString * const kAlfrescoJSONResourceName = @"resourceName";
 NSString * const kAlfrescoJSONMessage = @"message";
+
 
 
 

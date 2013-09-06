@@ -63,3 +63,20 @@ NSString * const kAlfrescoIsFolder = @"isFolder";
  */
 NSString * const kAlfrescoNetworkProvider = @"org.alfresco.mobile.session.networkprovider";
 NSString * const kAlfrescoCMISBindingURL = @"org.alfresco.mobile.session.cmisbindingurl";
+
+/**
+ Workflow Task Constants
+ */
+NSString * const kAlfrescoTaskComment = @"org.alfresco.mobile.task.comment";
+NSString * const kAlfrescoTaskReviewOutcome = @"org.alfresco.mobile.task.reviewoutcome";
+NSString * const kAlfrescoTaskApprove = @"Approve";
+NSString * const kAlfrescoTaskReject = @"Reject";
+NSString * const kAlfrescoWorkflowProcessStateAny = @"org.alfresco.mobile.process.state.any";
+NSString * const kAlfrescoWorkflowProcessStateActive = @"org.alfresco.mobile.process.state.active";
+NSString * const kAlfrescoWorkflowProcessStateCompleted = @"org.alfresco.mobile.process.state.completed";
+
+NSString * const kAlfrescoWorkflowProcessDescription = @"org.alfresco.mobile.process.create.description";
+NSString * const kAlfrescoWorkflowProcessPriority = @"org.alfresco.mobile.process.create.priority";
+NSString * const kAlfrescoWorkflowProcessSendEmailNotification = @"org.alfresco.mobile.process.create.sendemailnotification";
+NSString * const kAlfrescoWorkflowProcessDueDate = @"org.alfresco.mobile.process.create.duedate";
+NSString * const kAlfrescoWorkflowProcessApprovalRate = @"org.alfresco.mobile.process.create.approvalrate";

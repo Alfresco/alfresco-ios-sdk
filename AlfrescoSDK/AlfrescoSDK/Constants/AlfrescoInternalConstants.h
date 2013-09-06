@@ -19,7 +19,7 @@
  */
 
 #import <Foundation/Foundation.h>
-
+#import "AlfrescoWorkflowInternalConstants.h"
 
 extern NSString * const kAlfrescoClassVersion;
 
@@ -174,6 +174,7 @@ extern NSString * const kAlfrescoCloudCancelJoinRequestsAPI;
 extern NSString * const kAlfrescoCloudLeaveSiteAPI;
 extern NSString * const kAlfrescoCloudPagingAPIParameters;
 
+
 extern NSString * const kAlfrescoCloudJSONList;
 extern NSString * const kAlfrescoCloudJSONPagination;
 extern NSString * const kAlfrescoCloudJSONCount;
@@ -269,7 +270,6 @@ extern NSString * const kAlfrescoJSONInviteId;
 extern NSString * const kAlfrescoJSONData;
 extern NSString * const kAlfrescoJSONResourceName;
 extern NSString * const kAlfrescoJSONMessage;
-
 
 extern NSString * const kAlfrescoNodeAspects;
 extern NSString * const kAlfrescoNodeProperties;

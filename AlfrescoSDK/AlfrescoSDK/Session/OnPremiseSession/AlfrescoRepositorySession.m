@@ -22,7 +22,7 @@
 #import "CMISRepositoryService.h"
 #import "CMISRepositoryInfo.h"
 #import "CMISStandardUntrustedSSLAuthenticationProvider.h"
-#import "AlfrescoObjectConverter.h"
+#import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
@@ -31,6 +31,7 @@
 #import "AlfrescoLog.h"
 #import "CMISLog.h"
 #import <objc/runtime.h>
+#import "AlfrescoURLUtils.h"
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -43,6 +44,8 @@
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
+@property (nonatomic, strong, readwrite) AlfrescoWorkflowInfo *workflowInfo;
+
 - (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
 - (AlfrescoRequest *)authenticateWithUsername:(NSString *)username
                                   andPassword:(NSString *)password
@@ -240,6 +243,25 @@
             
             __block NSString *v3RepositoryProductName = nil;
             
+            void (^workflowDefinitionsCompletionBlock)(NSError *error) = ^(NSError *error) {
+                NSString *workflowDefinitionString = [kAlfrescoWorkflowBaseOldAPIURL stringByAppendingString:kAlfrescoWorkflowProcessDefinitionOldAPI];
+                NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:workflowDefinitionString];
+                [self.networkProvider executeRequestWithURL:url session:self alfrescoRequest:request completionBlock:^(NSData *data, NSError *workkflowError) {
+                    if (error)
+                    {
+                        AlfrescoLogError(@"Could not determine whether to use JBPM");
+                        completionBlock(nil, error);
+                    }
+                    else
+                    {
+                        AlfrescoWorkflowEngineType workflowEngine = [self determineWorkflowEngineFromJSONData:data];
+                        self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:workflowEngine];
+                        completionBlock(self, error);
+                    }
+                    
+                }];
+            };
+            
             void (^rootFolderCompletionBlock)(CMISFolder *folder, NSError *error) = ^void(CMISFolder *rootFolder, NSError *error){
                 if (nil == rootFolder)
                 {
@@ -248,9 +270,9 @@
                 }
                 else
                 {
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                     self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
-                    completionBlock(self, error);
+                    workflowDefinitionsCompletionBlock(error);
                 }
             };
             
@@ -277,7 +299,7 @@
                 else
                 {
                     self.personIdentifier = username;
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:v3Session];
 
                     // Workaround for MNT-6405: Malformed cmis:productName in some v4 instances
@@ -328,7 +350,7 @@
     id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
                                                                                                         andPassword:password];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:session];
 }
 
@@ -406,7 +428,23 @@
     [self.sessionCache removeAllObjects];
 }
 
-
+- (AlfrescoWorkflowEngineType)determineWorkflowEngineFromJSONData:(NSData *)jsonData
+{
+    AlfrescoWorkflowEngineType workflowEngine = workflowEngine;
+    
+    NSString *responseDictionaryString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    if ([responseDictionaryString rangeOfString:@"jbpm$"].location != NSNotFound)
+    {
+        workflowEngine = AlfrescoWorkflowEngineTypeJBPM;
+    }
+    else if ([responseDictionaryString rangeOfString:@"activiti$"].location != NSNotFound)
+    {
+        workflowEngine = AlfrescoWorkflowEngineTypeActiviti;
+    }
+    
+    return workflowEngine;
+}
 
 + (NSNumber *)majorVersionFromString:(NSString *)versionString
 {
