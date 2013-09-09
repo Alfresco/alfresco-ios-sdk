@@ -91,7 +91,7 @@ NSString * const kAlfrescoModerated = @"MODERATED";
 NSString * const kAlfrescoSiteConsumer = @"SiteConsumer";
 NSString * const kAlfrescoMaxItems = @"{maxItems}";
 NSString * const kAlfrescoSkipCount = @"{skipCount}";
-
+NSString * const kAlfrescoSearchFilter = @"{filter}";
 
 /**
  Session data key constants
@@ -158,6 +158,7 @@ NSString * const kAlfrescoOnPremiseCommentForNodeAPI = @"comment/node/{commentID
 NSString * const kAlfrescoOnPremiseTagsAPI = @"tags/workspace/SpacesStore";
 NSString * const kAlfrescoOnPremiseTagsForNodeAPI = @"node/{nodeRef}/tags";
 NSString * const kAlfrescoOnPremisePersonAPI = @"people/{personID}";
+NSString * const kAlfrescoOnPremisePersonSearchAPI = @"people?filter={filter}";
 NSString * const kAlfrescoOnPremiseAvatarForPersonAPI = @"/service/slingshot/profile/avatar/{personID}";
 NSString * const kAlfrescoOnPremiseMetadataExtractionAPI = @"/service/api/actionQueue";
 NSString * const kAlfrescoOnPremiseThumbnailCreationAPI = @"/node/{nodeRef}/content/thumbnails?as=true";
@@ -169,6 +170,7 @@ NSString * const kAlfrescoOnPremiseJoinModeratedSiteAPI = @"sites/{siteID}/invit
 NSString * const kAlfrescoOnPremisePendingJoinRequestsAPI = @"invitations?inviteeUserName={personID}";
 NSString * const kAlfrescoOnPremiseCancelJoinRequestsAPI = @"sites/{siteID}/invitations/{inviteID}";
 NSString * const kAlfrescoOnPremiseLeaveSiteAPI = @"sites/{siteID}/memberships/{personID}";
+NSString * const kAlfrescoOnPremiseSiteMembershipFilter = @"?nf={filter}&authorityType=USER";
 
 NSString * const kAlfrescoOnPremiseFavoriteDocuments = @"org.alfresco.share.documents.favourites";
 NSString * const kAlfrescoOnPremiseFavoriteFolders = @"org.alfresco.share.folders.favourites";
@@ -198,6 +200,7 @@ NSString * const kAlfrescoCloudCommentForNodeAPI = @"nodes/{nodeRef}/comments/{c
 NSString * const kAlfrescoCloudTagsAPI = @"tags";
 NSString * const kAlfrescoCloudTagsForNodeAPI = @"nodes/{nodeRef}/tags";
 NSString * const kAlfrescoCloudPersonAPI = @"people/{personID}";
+NSString * const kAlfrescoCloudPersonSearchAPI = @"people?filter={filter}";
 NSString * const kAlfrescoCloudDefaultRedirectURI = @"http://www.alfresco.com/mobile-auth-callback.html";
 
 NSString * const kAlfrescoCloudAddFavoriteSiteAPI = @"people/-me-/favorites";
@@ -206,12 +209,18 @@ NSString * const kAlfrescoCloudJoinSiteAPI = @"people/-me-/site-membership-reque
 NSString * const kAlfrescoCloudCancelJoinRequestsAPI = @"people/-me-/site-membership-requests/{siteID}";
 NSString * const kAlfrescoCloudLeaveSiteAPI = @"sites/{siteID}/members/{personID}";
 NSString * const kAlfrescoCloudPagingAPIParameters = @"maxItems={maxItems}&skipCount={skipCount}";
+NSString * const kAlfrescoCloudSiteMembersAPI = @"sites/{siteID}/members";
 
 NSString * const kAlfrescoCloudFavoriteDocumentsAPI = @"people/{personID}/favorites?where=(EXISTS(target/file))";
 NSString * const kAlfrescoCloudFavoriteFoldersAPI = @"people/{personID}/favorites?where=(EXISTS(target/folder))";
 NSString * const kAlfrescoCloudFavoritesAllAPI = @"people/{personID}/favorites?where=(EXISTS(target/file) OR EXISTS(target/folder))";
 NSString * const kAlfrescoCloudFavorite = @"people/{personID}/favorites/{nodeRef}";
 NSString * const kAlfrescoCloudAddFavoriteAPI = @"people/-me-/favorites";
+/**
+ Cloud Internals
+ */
+NSString * const kAlfrescoCloudInternalAPIPath = @"api/";
+
 /**
  JSON Constants
  */
@@ -285,6 +294,7 @@ NSString * const kAlfrescoJSONTag = @"tag";
 NSString * const kAlfrescoJSONUserName = @"userName";
 NSString * const kAlfrescoJSONFirstName = @"firstName";
 NSString * const kAlfrescoJSONLastName = @"lastName";
+NSString * const kAlfrescoJSONFullName = @"fullName";
 NSString * const kAlfrescoJSONActionedUponNode = @"actionedUponNode";
 NSString * const kAlfrescoJSONExtractMetadata = @"extract-metadata";
 NSString * const kAlfrescoJSONActionDefinitionName = @"actionDefinitionName";
@@ -292,6 +302,39 @@ NSString * const kAlfrescoJSONThumbnailName = @"thumbnailName";
 NSString * const kAlfrescoJSONSite = @"site";
 NSString * const kAlfrescoJSONPostedAt = @"postedAt";
 NSString * const kAlfrescoJSONAvatarId = @"avatarId";
+NSString * const kAlfrescoJSONAuthority = @"authority";
+
+NSString * const kAlfrescoJSONJobtitle = @"jobtitle";
+NSString * const kAlfrescoJSONJobTitle = @"jobTitle";
+NSString * const kAlfrescoJSONLocation = @"location";
+NSString * const kAlfrescoJSONPersonDescription = @"persondescription";
+NSString * const kAlfrescoJSONTelephoneNumber = @"telephone";
+NSString * const kAlfrescoJSONMobileNumber = @"mobile";
+NSString * const kAlfrescoJSONSkype = @"skype";
+NSString * const kAlfrescoJSONGoogle = @"googleusername";
+NSString * const kAlfrescoJSONInstantMessage = @"instantmsg";
+NSString * const kAlfrescoJSONSkypeId = @"skypeId";
+NSString * const kAlfrescoJSONGoogleId = @"googleId";
+NSString * const kAlfrescoJSONInstantMessageId = @"instantMessageId";
+NSString * const kAlfrescoJSONStatus = @"userStatus";
+NSString * const kAlfrescoJSONStatusTime = @"userStatusTime";
+NSString * const kAlfrescoJSONEmail = @"email";
+NSString * const kAlfrescoJSONCompany = @"company";
+
+NSString * const kAlfrescoJSONCompanyAddressLine1 = @"companyaddress1";
+NSString * const kAlfrescoJSONCompanyAddressLine2 = @"companyaddress2";
+NSString * const kAlfrescoJSONCompanyAddressLine3 = @"companyaddress3";
+NSString * const kAlfrescoJSONCompanyFullAddress = @"fullAddress";
+NSString * const kAlfrescoJSONCompanyPostcode = @"companypostcode";
+NSString * const kAlfrescoJSONCompanyFaxNumber = @"companyfax";
+NSString * const kAlfrescoJSONCompanyName = @"organization";
+NSString * const kAlfrescoJSONCompanyTelephone = @"companytelephone";
+NSString * const kAlfrescoJSONCompanyEmail = @"companyemail";
+NSString * const kAlfrescoJSONAddressLine1 = @"address1";
+NSString * const kAlfrescoJSONAddressLine2 = @"address2";
+NSString * const kAlfrescoJSONAddressLine3 = @"address3";
+NSString * const kAlfrescoJSONPostcode = @"postcode";
+NSString * const kAlfrescoJSONFaxNumber = @"fax";
 
 NSString * const kAlfrescoJSONOrg = @"org";
 NSString * const kAlfrescoJSONAlfresco = @"alfresco";
@@ -301,6 +344,7 @@ NSString * const kAlfrescoJSONFavorites = @"favourites";
 NSString * const kAlfrescoJSONGUID = @"guid";
 NSString * const kAlfrescoJSONTarget = @"target";
 NSString * const kAlfrescoJSONPerson = @"person";
+NSString * const kAlfrescoJSONPeople = @"people";
 NSString * const kAlfrescoJSONRole = @"role";
 NSString * const kAlfrescoJSONInvitationType = @"invitationType";
 NSString * const kAlfrescoJSONInviteeUsername = @"inviteeUserName";

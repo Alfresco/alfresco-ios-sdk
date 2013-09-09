@@ -700,7 +700,117 @@
     
 }
 
+- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    AlfrescoRequest *request = [self retrieveAllMembersForSite:site WithListingContext:nil completionBlock:completionBlock];
+    return request;
+}
 
+- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site
+                     WithListingContext:(AlfrescoListingContext *)listingContext
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    if (nil == listingContext)
+    {
+        listingContext = self.session.defaultListingContext;
+    }
+    
+    AlfrescoRequest *request = [self retrieveAllMembersForSite:site WithListingContext:listingContext completionBlock:^(NSArray *array, NSError *error) {
+        
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:array listingContext:listingContext];
+        completionBlock(pagingResult, error);
+    }];
+    return request;
+}
+
+- (AlfrescoRequest *)retrieveAllMembersForSite:(AlfrescoSite *)site
+                            WithListingContext:(AlfrescoListingContext *)listingContext
+                               completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    NSString *requestString = [kAlfrescoCloudSiteMembersAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
+                                                                                      withString:site.identifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (nil == data)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *members = [self membersArrayWithData:data error:&conversionError];
+            completionBlock(members, conversionError);
+        }
+    }];
+    return request;
+}
+
+- (AlfrescoRequest *)searchMembers:(AlfrescoSite *)site
+                            filter:(NSString *)filter
+                WithListingContext:(AlfrescoListingContext *)listingContext
+                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *requestString = [kAlfrescoCloudSiteMembersAPI stringByAppendingString:kAlfrescoOnPremiseSiteMembershipFilter];
+    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.identifier];
+    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:filter];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (nil == data)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *members = [self membersArrayWithData:data error:&conversionError];
+            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:members listingContext:listingContext];
+            completionBlock(pagingResult, error);
+        }
+    }];
+    return request;
+}
+
+- (AlfrescoRequest *)isPerson:(AlfrescoPerson *)person memberOfSite:(AlfrescoSite *)site completionBlock:(AlfrescoMemberCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:person argumentName:@"person"];
+    [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *requestString = [kAlfrescoCloudLeaveSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
+                                                                                    withString:site.identifier];
+    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        
+        // if person is not member : the request returns error and data is nil so its difficult to differenciate if request failed or person is not member
+        if (error)
+        {
+            completionBlock(YES, NO, nil);
+        }
+        else
+        {
+            completionBlock(YES, YES, nil);
+        }
+    }];
+    
+    return request;
+}
 
 - (void)errorForCompletionBlocks:(NSError *)error
             arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
@@ -852,6 +962,27 @@
         return nil;
 }
 
+- (NSArray *)membersArrayWithData:(NSData *)data error:(NSError **)outError
+{
+    NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:outError];
+    if (nil != entriesArray)
+    {
+        NSMutableArray *resultsArray = [NSMutableArray arrayWithCapacity:entriesArray.count];
+        
+        for (NSDictionary *entry in entriesArray)
+        {
+            NSDictionary *entryProperties = [entry valueForKey:kAlfrescoCloudJSONEntry];
+            NSMutableDictionary *memberProperties = [NSMutableDictionary dictionaryWithDictionary:[entryProperties valueForKey:kAlfrescoJSONPerson]];
+            
+            AlfrescoCompany *company = [[AlfrescoCompany alloc] initWithProperties:[memberProperties objectForKey:kAlfrescoJSONCompany]];
+            [memberProperties setValue:company forKey:kAlfrescoJSONCompany];
+            AlfrescoPerson *person = [[AlfrescoPerson alloc] initWithProperties:memberProperties];
+            [resultsArray addObject:person];
+        }
+        return resultsArray;
+    }
+    return nil;
+}
 
 - (NSArray *) specifiedSiteArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
