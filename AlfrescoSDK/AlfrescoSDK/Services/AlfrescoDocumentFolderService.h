@@ -444,4 +444,98 @@
 - (AlfrescoRequest *)deleteNode:(AlfrescoNode *)node
                 completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
+
+/**---------------------------------------------------------------------------------------
+ * @name Favorite or Unfavorite Documents, Folders, Nodes
+ *  ---------------------------------------------------------------------------------------
+ */
+
+/** Retrieves a list of favorite documents for current user .
+ 
+ @param completionBlock The block that's called with the retrieved documents in case the operation succeeds.
+ */
+- (AlfrescoRequest *)retrieveFavoriteDocumentsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of favorite documents with a listing context for current user.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve favorite documents.
+ @param completionBlock The block that's called with the retrieved documents in case the operation succeeds.
+ */
+- (AlfrescoRequest *)retrieveFavoriteDocumentsWithListingContext:(AlfrescoListingContext *)listingContext
+                                                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of favorite folders for current user.
+ 
+ @param completionBlock The block that's called with the retrieved folders in case the operation succeeds.
+ */
+- (AlfrescoRequest *)retrieveFavoriteFoldersWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of favorite folders with a listing context for current user.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve favorite folders.
+ @param completionBlock The block that's called with the retrieved folders in case the operation succeeds.
+ */
+- (AlfrescoRequest *)retrieveFavoriteFoldersWithListingContext:(AlfrescoListingContext *)listingContext
+                                               completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of favorite nodes for current user.
+ 
+ @param completionBlock The block that's called with the retrieved nodes in case the operation succeeds.
+ */
+- (AlfrescoRequest *)retrieveFavoriteNodesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+
+/** Retrieves a list of favorite nodes with a listing context for current user.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve favorite nodes.
+ @param completionBlock The block that's called with the retrieved nodes in case the operation succeeds.
+ */
+- (AlfrescoRequest *)retrieveFavoriteNodesWithListingContext:(AlfrescoListingContext *)listingContext
+                                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+
+/** Determine whether given node is favorite.
+ 
+ @param node The node for which favorite status is being determined
+ @param completionBlock The block that's called with current favorite status of the node.
+ */
+- (AlfrescoRequest *)isFavorite:(AlfrescoNode *)node
+              	completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock;
+
+
+/** Favorite a node.
+ 
+ @param node The node which is to be favorited
+ @param completionBlock The block that's called with current favorite status of the node.
+ */
+- (AlfrescoRequest *)addFavorite:(AlfrescoNode *)node
+                 completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock;
+
+
+/** UnFavorite a node.
+ 
+ @param node The node which is to be unfavorited
+ @param completionBlock The block that's called with current favorite status of the node.
+ */
+- (AlfrescoRequest *)removeFavorite:(AlfrescoNode *)node
+                    completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock;
+
+
+/** Retrieve the latest (and complete) metadata for the provided node.
+ 
+ @param The node which is to be refreshed with its latest metadata
+ @param completionBlock The block that's called with node's complete metadata.
+ */
+- (AlfrescoRequest *)refreshNode:(AlfrescoNode *)node
+                 completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
+
+/**
+ clears the Favorites cache
+ */
+- (void)clearFavoritesCache;
+
 @end

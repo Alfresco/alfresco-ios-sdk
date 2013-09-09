@@ -142,10 +142,121 @@
     return alfrescoRequest;
 }
 
+- (AlfrescoRequest *)updateProfile:(NSDictionary *)properties completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
+{
+    /*
+    [AlfrescoErrors assertArgumentNotNil:properties argumentName:@"properties"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    NSData *bodyData = [self jsonDataForUpdatingProfile:[self propretiesWithOnPremiseKeys:properties]];
+    AlfrescoLogDebug(@"body json: %@", [[NSString alloc] initWithData:bodyData encoding:NSUTF8StringEncoding]);
+    
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                            requestBody:bodyData
+                                                 method:kAlfrescoHTTPPut
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *responseData, NSError *error) {
+                                            if (nil == responseData)
+                                            {
+                                                completionBlock(nil, error);
+                                            }
+                                            else
+                                            {
+                                                AlfrescoLogDebug(@"Person: %@", [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+                                                NSError *conversionError = nil;
+                                                AlfrescoPerson *person = [self alfrescoPersonFromJSONData:responseData error:&conversionError];
+                                                completionBlock(person, conversionError);
+                                            }
+                                        }];
+    return alfrescoRequest;
+     */
+    return nil;
+}
 
+- (AlfrescoRequest *)search:(NSString *)filter completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    return [self searchPeople:filter completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)search:(NSString *)filter
+         WithListingContext:(AlfrescoListingContext *)listingContext
+            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    if (nil == listingContext)
+    {
+        listingContext = self.session.defaultListingContext;
+    }
+    
+    AlfrescoRequest *request = [self searchPeople:filter completionBlock:^(NSArray *array, NSError *error) {
+        
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:array listingContext:listingContext];
+        completionBlock(pagingResult, error);
+    }];    
+    return request;
+}
+
+- (AlfrescoRequest *)searchPeople:(NSString *)filter completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    NSString *requestString = [kAlfrescoOnPremisePersonSearchAPI stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:filter];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url
+                                                session:self.session
+                                        alfrescoRequest:alfrescoRequest
+                                        completionBlock:^(NSData *responseData, NSError *error) {
+                                            if (nil == responseData)
+                                            {
+                                                completionBlock(nil, error);
+                                            }
+                                            else
+                                            {
+                                                NSError *conversionError = nil;
+                                                NSArray *people = [self peopleArrayFromJSONData:responseData error:&conversionError];
+                                                completionBlock(people, conversionError);
+                                            }
+                                        }];
+    return alfrescoRequest;
+}
 
 #pragma mark - private methods
-- (AlfrescoPerson *) alfrescoPersonFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
+- (AlfrescoPerson *)alfrescoPersonFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
+{
+    NSMutableDictionary *jsonPersonDictionary = [self extractJsonDictionaryFromData:data error:outError];
+    AlfrescoCompany *company = [[AlfrescoCompany alloc] initWithProperties:jsonPersonDictionary];
+    [jsonPersonDictionary setValue:company forKey:kAlfrescoJSONCompany];
+    
+    return [[AlfrescoPerson alloc] initWithProperties:jsonPersonDictionary];
+}
+
+- (NSArray *)peopleArrayFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
+{
+    NSMutableDictionary *jsonPeopleDictionary = [self extractJsonDictionaryFromData:data error:outError];
+    
+    NSArray *peopleProperties = [jsonPeopleDictionary objectForKey:kAlfrescoJSONPeople];
+    NSMutableArray *people = [[NSMutableArray alloc] init];
+    
+    for (NSDictionary *personProperties in peopleProperties)
+    {
+        AlfrescoCompany *company = [[AlfrescoCompany alloc] initWithProperties:personProperties];
+        [personProperties setValue:company forKey:kAlfrescoJSONCompany];
+        AlfrescoPerson *person = [[AlfrescoPerson alloc] initWithProperties:personProperties];
+        [people addObject:person];
+    }
+    return people;
+}
+
+- (id)extractJsonDictionaryFromData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
     if (nil == data)
     {
@@ -162,13 +273,13 @@
     }
     
     NSError *error = nil;
-    id jsonPersonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-    if(nil == jsonPersonDict)
+    id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+    if(nil == jsonDictionary)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodePerson];
         return nil;
     }
-    if ([[jsonPersonDict valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+    if ([[jsonDictionary valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
     {
         // no person found
         if (nil == *outError)
@@ -182,7 +293,7 @@
         }
         return nil;
     }
-    if (NO == [jsonPersonDict isKindOfClass:[NSDictionary class]])
+    if (NO == [jsonDictionary isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -195,8 +306,51 @@
         }
         return nil;
     }
-    return [[AlfrescoPerson alloc] initWithProperties:jsonPersonDict];
+    return jsonDictionary;
+}
+
+- (NSData *)jsonDataForUpdatingProfile:(NSDictionary *)properties
+{
+    return [NSJSONSerialization dataWithJSONObject:properties options:NSJSONWritingPrettyPrinted error:nil];
+}
+
+- (NSDictionary *)propretiesWithOnPremiseKeys:(NSDictionary *)properties
+{
+    NSDictionary *mappedOnPremiseKeys = @{kAlfrescoPersonPropertyFirstName: kAlfrescoJSONFirstName,
+                                          kAlfrescoPersonPropertyLastName: kAlfrescoJSONLastName,
+                                          kAlfrescoPersonPropertyJobTitle: kAlfrescoJSONJobtitle,
+                                          kAlfrescoPersonPropertyLocation: kAlfrescoJSONLocation,
+                                          kAlfrescoPersonPropertyDescription: kAlfrescoJSONPersonDescription,
+                                          kAlfrescoPersonPropertyTelephoneNumber: kAlfrescoJSONTelephoneNumber,
+                                          kAlfrescoPersonPropertyMobileNumber: kAlfrescoJSONMobileNumber,
+                                          kAlfrescoPersonPropertyEmail: kAlfrescoJSONEmail,
+                                          kAlfrescoPersonPropertySkypeId: kAlfrescoJSONSkype,
+                                          kAlfrescoPersonPropertyInstantMessageId: kAlfrescoJSONInstantMessage,
+                                          kAlfrescoPersonPropertyGoogleId: kAlfrescoJSONGoogle,
+                                          kAlfrescoPersonPropertyStatus: kAlfrescoJSONStatus,
+                                          kAlfrescoPersonPropertyStatusTime: kAlfrescoJSONStatusTime,
+                                          kAlfrescoPersonPropertyCompanyName: kAlfrescoJSONCompanyName,
+                                          kAlfrescoPersonPropertyCompanyAddressLine1: kAlfrescoJSONCompanyAddressLine1,
+                                          kAlfrescoPersonPropertyCompanyAddressLine2: kAlfrescoJSONCompanyAddressLine2,
+                                          kAlfrescoPersonPropertyCompanyAddressLine3: kAlfrescoJSONCompanyAddressLine3,
+                                          kAlfrescoPersonPropertyCompanyPostcode: kAlfrescoJSONCompanyPostcode,
+                                          kAlfrescoPersonPropertyCompanyTelephoneNumber: kAlfrescoJSONCompanyTelephone,
+                                          kAlfrescoPersonPropertyCompanyFaxNumber: kAlfrescoJSONCompanyFaxNumber,
+                                          kAlfrescoPersonPropertyCompanyEmail: kAlfrescoJSONCompanyEmail};
     
+    NSArray *propertyKeys = [properties allKeys];
+    NSMutableDictionary *updatedProperties = [[NSMutableDictionary alloc] init];
+    
+    
+    for (NSString *key in propertyKeys)
+    {
+        NSString *mappedKey = [mappedOnPremiseKeys objectForKey:key];
+        if (mappedKey)
+        {
+            [updatedProperties setValue:properties[key] forKey:mappedKey];
+        }
+    }
+    return updatedProperties;
 }
 
 @end
