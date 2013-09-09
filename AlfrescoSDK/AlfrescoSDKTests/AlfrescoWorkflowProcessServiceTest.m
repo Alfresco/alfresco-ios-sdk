@@ -27,6 +27,7 @@
 #import "AlfrescoWorkflowProcessService.h"
 #import "AlfrescoWorkflowProcessDefinitionService.h"
 #import "AlfrescoFileManager.h"
+#import "AlfrescoErrors.h"
 
 @interface AlfrescoWorkflowProcessServiceTest ()
 
@@ -278,25 +279,38 @@
                 [self.processesService retrieveProcessImage:createdProcess completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveImageError) {
                     if (retrieveImageError)
                     {
-                        self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveImageError localizedDescription], [retrieveImageError localizedFailureReason]];
-                        self.callbackCompleted = YES;
+                        if (self.currentSession.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
+                        {
+                            self.lastTestSuccessful = NO;
+                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveImageError localizedDescription], [retrieveImageError localizedFailureReason]];
+                            self.callbackCompleted = YES;
+                        }
+                        else
+                        {
+                            STAssertNil(contentFile, @"Content file should be nil");
+                            STAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
+                            STAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
+                            STAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, retrieveImageError.code);
+                     
+                            self.lastTestSuccessful = YES;
+                            self.callbackCompleted = YES;
+                        }
                     }
                     else
                     {
                         STAssertNotNil(contentFile, @"Content file should not be nil");
                         BOOL fileExists = [[AlfrescoFileManager sharedManager] fileExistsAtPath:contentFile.fileUrl.path];
                         STAssertTrue(fileExists, @"The image does not exist at the path");
-                        
+                     
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
                             STAssertTrue(succeeded, @"Deletion flag should be true");
                             self.lastTestSuccessful = succeeded;
                             self.callbackCompleted = YES;
                         }];
                     }
-                }];
+                 }];
             }
-        }];        
+        }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
@@ -337,21 +351,48 @@
                 [self.processesService retrieveProcessImage:createdProcess outputStream:outputStream completionBlock:^(BOOL succeeded, NSError *retrieveImageError) {
                     if (retrieveImageError)
                     {
-                        self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveImageError localizedDescription], [retrieveImageError localizedFailureReason]];
-                        self.callbackCompleted = YES;
+                        if (self.currentSession.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
+                        {
+                        
+                            self.lastTestSuccessful = NO;
+                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveImageError localizedDescription], [retrieveImageError localizedFailureReason]];
+                            self.callbackCompleted = YES;
+                        }
+                        else
+                        {
+                            STAssertFalse(succeeded, @"Success flag should be false.");
+                            STAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
+                            STAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
+                            STAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, retrieveImageError.code);
+                        
+                            self.lastTestSuccessful = YES;
+                            self.callbackCompleted = YES;
+                        }
                     }
                     else
                     {
-                        STAssertTrue(succeeded, @"The completion of the file writing did not complete");
-                        BOOL fileExists = [[AlfrescoFileManager sharedManager] fileExistsAtPath:filePath];
-                        STAssertTrue(fileExists, @"The image does not exist at the path");
-                        
-                        [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                            STAssertTrue(succeeded, @"Deletion flag should be true");
-                            self.lastTestSuccessful = succeeded;
+                        if (self.currentSession.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
+                        {
+                            STAssertTrue(succeeded, @"The completion of the file writing did not complete");
+                            BOOL fileExists = [[AlfrescoFileManager sharedManager] fileExistsAtPath:filePath];
+                            STAssertTrue(fileExists, @"The image does not exist at the path");
+                            
+                            [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                                STAssertTrue(succeeded, @"Deletion flag should be true");
+                                self.lastTestSuccessful = succeeded;
+                                self.callbackCompleted = YES;
+                            }];
+                        }
+                        else
+                        {
+                            STAssertFalse(succeeded, @"Success flag should be false.");
+                            STAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
+                            STAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
+                            STAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, retrieveImageError.code);
+                            
+                            self.lastTestSuccessful = YES;
                             self.callbackCompleted = YES;
-                        }];
+                        }
                     }
                 }];
             }
@@ -452,14 +493,7 @@
     self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
     
     [self.processesService deleteProcess:process completionBlock:^(BOOL succeeded, NSError *deleteError) {
-        if (deleteError)
-        {
-            completionBlock(NO, deleteError);
-        }
-        else
-        {
-            completionBlock(YES, deleteError);
-        }
+        completionBlock(succeeded, deleteError);
     }];
 }
 
