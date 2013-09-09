@@ -142,7 +142,10 @@ extern NSString * const kAlfrescoOnPremiseJoinModeratedSiteAPI;
 extern NSString * const kAlfrescoOnPremisePendingJoinRequestsAPI;
 extern NSString * const kAlfrescoOnPremiseCancelJoinRequestsAPI;
 extern NSString * const kAlfrescoOnPremiseLeaveSiteAPI;
-
+extern NSString * const kAlfrescoOnPremiseFavoriteDocumentsAPI;
+extern NSString * const kAlfrescoOnPremiseFavoriteFoldersAPI;
+extern NSString * const kAlfrescoOnPremiseFavoriteDocuments;
+extern NSString * const kAlfrescoOnPremiseFavoriteFolders;
 
 
 extern NSString * const kAlfrescoCloudURL;
@@ -173,6 +176,11 @@ extern NSString * const kAlfrescoCloudJoinSiteAPI;
 extern NSString * const kAlfrescoCloudCancelJoinRequestsAPI;
 extern NSString * const kAlfrescoCloudLeaveSiteAPI;
 extern NSString * const kAlfrescoCloudPagingAPIParameters;
+extern NSString * const kAlfrescoCloudFavoriteDocumentsAPI;
+extern NSString * const kAlfrescoCloudFavoriteFoldersAPI;
+extern NSString * const kAlfrescoCloudFavoritesAllAPI;
+extern NSString * const kAlfrescoCloudFavorite;
+extern NSString * const kAlfrescoCloudAddFavoriteAPI;
 
 
 extern NSString * const kAlfrescoCloudJSONList;
@@ -270,6 +278,8 @@ extern NSString * const kAlfrescoJSONInviteId;
 extern NSString * const kAlfrescoJSONData;
 extern NSString * const kAlfrescoJSONResourceName;
 extern NSString * const kAlfrescoJSONMessage;
+extern NSString * const kAlfrescoJSONFile;
+extern NSString * const kAlfrescoJSONFolder;
 
 extern NSString * const kAlfrescoNodeAspects;
 extern NSString * const kAlfrescoNodeProperties;

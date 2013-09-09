@@ -1432,5 +1432,81 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     return processedProperties;
 }
 
+#pragma mark - Favorites
+
+- (AlfrescoRequest *)retrieveFavoriteDocumentsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveFavoriteDocumentsWithListingContext:(AlfrescoListingContext *)listingContext
+                                                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveFavoriteFoldersWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveFavoriteFoldersWithListingContext:(AlfrescoListingContext *)listingContext
+                                               completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveFavoriteNodesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveFavoriteNodesWithListingContext:(AlfrescoListingContext *)listingContext
+                                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)isFavorite:(AlfrescoNode *)node
+              	completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)addFavorite:(AlfrescoNode *)node
+                 completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)removeFavorite:(AlfrescoNode *)node
+                    completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)refreshNode:(AlfrescoNode *)node
+                 completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    AlfrescoRequest *request = [self retrieveNodeWithIdentifier:node.identifier completionBlock:completionBlock];
+    return request;
+}
+
+- (void)clearFavoritesCache
+{
+    [self doesNotRecognizeSelector:_cmd];
+}
 
 @end

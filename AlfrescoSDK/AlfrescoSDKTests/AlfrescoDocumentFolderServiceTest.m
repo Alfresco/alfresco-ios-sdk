@@ -5650,6 +5650,318 @@
     }
 }
 
+- (void)testRetrieveFavoriteDocuments
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        [self.dfService retrieveFavoriteDocumentsWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(array, @"The result array should not be nil");
+                
+                AlfrescoLogDebug(@"Favorites Documents: %@", [array valueForKeyPath:@"name"]);
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }   
+}
+
+- (void)testRetrieveFavoriteDocumentsWithListingContext
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:2];
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        [self.dfService retrieveFavoriteDocumentsWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(pagingResult, @"The paging result should not be nil");
+                
+                STAssertTrue([pagingResult.objects count] <= 2, @"Expected the objects array to be of size less than or equal to %i, instead got back a size %i", 2, [pagingResult.objects count]);
+                
+                AlfrescoLogDebug(@"Favorites Documents with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveFavoriteFolders
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        [self.dfService retrieveFavoriteFoldersWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(array, @"The result array should not be nil");
+                
+                AlfrescoLogDebug(@"Favorites Folders: %@", [array valueForKeyPath:@"name"]);
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveFavoriteFoldersWithListingContext
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:2];
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        [self.dfService retrieveFavoriteFoldersWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(pagingResult, @"The paging result should not be nil");
+                
+                STAssertTrue([pagingResult.objects count] <= 2, @"Expected the objects array to be of size less than or equal %i, instead got back a size %i", 2, [pagingResult.objects count]);
+                
+                AlfrescoLogDebug(@"Favorites Folders with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveFavoriteNodes
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        [self.dfService retrieveFavoriteNodesWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(array, @"The result array should not be nil");
+                
+                AlfrescoLogDebug(@"Favorites Nodes: %@", [array valueForKeyPath:@"name"]);
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveFavoriteNodesWithListingContext
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:2];
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        [self.dfService retrieveFavoriteNodesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(pagingResult, @"The paging result should not be nil");
+                
+                STAssertTrue([pagingResult.objects count] <= 2, @"Expected the objects array to be of size less than or equal %i, instead got back a size %i", 2, [pagingResult.objects count]);
+                
+                AlfrescoLogDebug(@"Favorites Nodes with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testIsNodeFavorite
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        [self.dfService retrieveFavoriteNodesWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                STAssertNotNil(array, @"The array result should not be nil");
+                
+                if (array.count > 0)
+                {
+                    [weakDfService isFavorite:[array objectAtIndex:0] completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                        if (succeeded)
+                        {
+                            NSLog(@"%@ : %d", [[array objectAtIndex:0] name], isFavorited);
+                            STAssertTrue(isFavorited, @"every node in array should be marked as Favorite");
+                            self.lastTestSuccessful = YES;
+                        }
+                        self.callbackCompleted = YES;
+                    }];
+                }
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testAddFavorite
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        [self.dfService retrieveRootFolderWithCompletionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                AlfrescoListingContext *listringContext = [[AlfrescoListingContext alloc] initWithMaxItems:3];
+                [weakDfService retrieveChildrenInFolder:folder listingContext:listringContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                     
+                    if (!error)
+                    {
+                        AlfrescoNode *node = [pagingResult.objects lastObject];
+                        if (node)
+                        {
+                            [weakDfService addFavorite:node completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                                if (succeeded)
+                                {
+                                    STAssertTrue(isFavorited, @"node should be marked as favorite");
+                                    self.lastTestSuccessful = YES;
+                                }
+                                self.callbackCompleted = YES;
+                            }];
+                        }
+                    }
+                }];
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRemoveFavorite
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+        [self.dfService retrieveFavoriteNodesWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                if (array.count > 0)
+                {
+                    [weakDfService removeFavorite:[array objectAtIndex:0] completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                        
+                        if (succeeded)
+                        {
+                            STAssertFalse(isFavorited, @"node shouldn't be marked as favorite");
+                            self.lastTestSuccessful = YES;
+                        }
+                        self.callbackCompleted = YES;
+                    }];
+                }
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 #pragma mark unit test internal methods
 
 - (BOOL)nodeArray:(NSArray *)nodeArray containsName:(NSString *)name
