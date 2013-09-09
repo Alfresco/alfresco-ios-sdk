@@ -158,7 +158,7 @@ static NSInteger kPersonModelVersion = 1;
     }
     if (!self.jobTitle)
     {
-        self.jobTitle = [self valueForProperty:kAlfrescoJSONJobtitle inProperties:properties];
+        self.jobTitle = [self valueForProperty:kAlfrescoJSONJobTitle inProperties:properties];
     }
     if (!self.description)
     {
@@ -186,7 +186,7 @@ static NSInteger kPersonModelVersion = 1;
     }
     if (!self.jobTitle)
     {
-        self.jobTitle = [self valueForProperty:kAlfrescoJSONJobTitle inProperties:properties];
+        self.jobTitle = [self valueForProperty:kAlfrescoCloudJSONJobTitle inProperties:properties];
     }
     if (!self.description)
     {
@@ -225,7 +225,7 @@ static NSInteger kPersonModelVersion = 1;
     [aCoder encodeObject:self.lastName forKey:kAlfrescoJSONLastName];
     [aCoder encodeObject:self.fullName forKey:kAlfrescoJSONFullName];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
-    [aCoder encodeObject:self.jobTitle forKey:kAlfrescoJSONJobTitle];
+    [aCoder encodeObject:self.jobTitle forKey:kAlfrescoCloudJSONJobTitle];
     [aCoder encodeObject:self.location forKey:kAlfrescoJSONLocation];
     [aCoder encodeObject:self.description forKey:kAlfrescoJSONDescription];
     [aCoder encodeObject:self.telephoneNumber forKey:kAlfrescoJSONTelephoneNumber];
@@ -251,7 +251,7 @@ static NSInteger kPersonModelVersion = 1;
         self.lastName = [aDecoder decodeObjectForKey:kAlfrescoJSONLastName];
         self.fullName = [aDecoder decodeObjectForKey:kAlfrescoJSONFullName];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
-        self.jobTitle = [aDecoder decodeObjectForKey:kAlfrescoJSONJobTitle];
+        self.jobTitle = [aDecoder decodeObjectForKey:kAlfrescoCloudJSONJobTitle];
         self.location = [aDecoder decodeObjectForKey:kAlfrescoJSONLocation];
         self.description = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
         self.telephoneNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONTelephoneNumber];

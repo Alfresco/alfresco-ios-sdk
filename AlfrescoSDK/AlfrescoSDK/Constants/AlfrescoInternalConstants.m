@@ -304,8 +304,8 @@ NSString * const kAlfrescoJSONPostedAt = @"postedAt";
 NSString * const kAlfrescoJSONAvatarId = @"avatarId";
 NSString * const kAlfrescoJSONAuthority = @"authority";
 
-NSString * const kAlfrescoJSONJobtitle = @"jobtitle";
-NSString * const kAlfrescoJSONJobTitle = @"jobTitle";
+NSString * const kAlfrescoJSONJobTitle = @"jobtitle";
+NSString * const kAlfrescoCloudJSONJobTitle = @"jobTitle";
 NSString * const kAlfrescoJSONLocation = @"location";
 NSString * const kAlfrescoJSONPersonDescription = @"persondescription";
 NSString * const kAlfrescoJSONTelephoneNumber = @"telephone";
