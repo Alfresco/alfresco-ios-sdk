@@ -151,7 +151,7 @@
     NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
-    NSData *bodyData = [self jsonDataForUpdatingProfile:[self propretiesWithOnPremiseKeys:properties]];
+    NSData *bodyData = [self jsonDataForUpdatingProfile:[self propertiesWithOnPremiseKeys:properties]];
     AlfrescoLogDebug(@"body json: %@", [[NSString alloc] initWithData:bodyData encoding:NSUTF8StringEncoding]);
     
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
@@ -314,11 +314,11 @@
     return [NSJSONSerialization dataWithJSONObject:properties options:NSJSONWritingPrettyPrinted error:nil];
 }
 
-- (NSDictionary *)propretiesWithOnPremiseKeys:(NSDictionary *)properties
+- (NSDictionary *)propertiesWithOnPremiseKeys:(NSDictionary *)properties
 {
     NSDictionary *mappedOnPremiseKeys = @{kAlfrescoPersonPropertyFirstName: kAlfrescoJSONFirstName,
                                           kAlfrescoPersonPropertyLastName: kAlfrescoJSONLastName,
-                                          kAlfrescoPersonPropertyJobTitle: kAlfrescoJSONJobtitle,
+                                          kAlfrescoPersonPropertyJobTitle: kAlfrescoJSONJobTitle,
                                           kAlfrescoPersonPropertyLocation: kAlfrescoJSONLocation,
                                           kAlfrescoPersonPropertyDescription: kAlfrescoJSONPersonDescription,
                                           kAlfrescoPersonPropertyTelephoneNumber: kAlfrescoJSONTelephoneNumber,

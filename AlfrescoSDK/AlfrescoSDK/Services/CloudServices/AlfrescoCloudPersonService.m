@@ -111,7 +111,7 @@
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
     
-    NSData *bodyData = [self jsonDataForUpdatingProfile:[self propretiesWithCloudKeys:properties]];
+    NSData *bodyData = [self jsonDataForUpdatingProfile:[self propertiesWithCloudKeys:properties]];
     AlfrescoLogDebug(@"body json: %@", [[NSString alloc] initWithData:bodyData encoding:NSUTF8StringEncoding]);
     
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
@@ -253,12 +253,14 @@
     return [NSJSONSerialization dataWithJSONObject:properties options:NSJSONWritingPrettyPrinted error:nil];
 }
 
-- (NSDictionary *)propretiesWithCloudKeys:(NSDictionary *)properties
+- (NSDictionary *)propertiesWithCloudKeys:(NSDictionary *)properties
 {
-    /*
+    /**
+     * Temporary until cloud supports a full person service
+     *
     NSDictionary *mappedCloudKeys = @{kAlfrescoPersonPropertyFirstName: kAlfrescoJSONFirstName,
                                       kAlfrescoPersonPropertyLastName: kAlfrescoJSONLastName,
-                                      kAlfrescoPersonPropertyJobTitle: kAlfrescoJSONJobTitle,
+                                      kAlfrescoPersonPropertyJobTitle: kAlfrescoCloudJSONJobTitle,
                                       kAlfrescoPersonPropertyLocation: kAlfrescoJSONLocation,
                                       kAlfrescoPersonPropertyDescription: kAlfrescoJSONDescription,
                                       kAlfrescoPersonPropertyTelephoneNumber: kAlfrescoJSONTelephoneNumber,
@@ -281,7 +283,7 @@
     
     NSDictionary *mappedOnPremiseKeys = @{kAlfrescoPersonPropertyFirstName: kAlfrescoJSONFirstName,
                                           kAlfrescoPersonPropertyLastName: kAlfrescoJSONLastName,
-                                          kAlfrescoPersonPropertyJobTitle: kAlfrescoJSONJobtitle,
+                                          kAlfrescoPersonPropertyJobTitle: kAlfrescoJSONJobTitle,
                                           kAlfrescoPersonPropertyLocation: kAlfrescoJSONLocation,
                                           kAlfrescoPersonPropertyDescription: kAlfrescoJSONPersonDescription,
                                           kAlfrescoPersonPropertyTelephoneNumber: kAlfrescoJSONTelephoneNumber,
