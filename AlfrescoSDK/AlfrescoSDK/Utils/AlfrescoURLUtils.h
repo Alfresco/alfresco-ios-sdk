@@ -31,4 +31,6 @@
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL listingContext:(AlfrescoListingContext *)listingContext;
 
++ (NSString *)buildQueryStringWithDictionary:(NSDictionary *)parameters;
+
 @end

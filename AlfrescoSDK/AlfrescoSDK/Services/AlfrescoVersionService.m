@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -21,7 +21,7 @@
 #import "CMISVersioningService.h"
 #import "CMISDocument.h"
 #import "CMISSession.h"
-#import "AlfrescoObjectConverter.h"
+#import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoErrors.h"
@@ -30,7 +30,7 @@
 @interface AlfrescoVersionService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) CMISSession *cmisSession;
-@property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
+@property (nonatomic, strong, readwrite) AlfrescoCMISToAlfrescoObjectConverter *objectConverter;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
 
@@ -45,7 +45,7 @@
     {
         self.session = session;
         self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
+        self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         self.defaultSortKey = kAlfrescoSortByName;
         self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt, nil];
     }

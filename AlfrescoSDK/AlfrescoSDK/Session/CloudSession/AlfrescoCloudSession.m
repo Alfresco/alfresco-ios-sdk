@@ -21,7 +21,7 @@
 #import "CMISRepositoryService.h"
 #import "CMISRepositoryInfo.h"
 #import "CMISDateUtil.h"
-#import "AlfrescoObjectConverter.h"
+#import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
@@ -84,6 +84,7 @@
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property BOOL isUsingBaseAuthenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
+@property (nonatomic, strong, readwrite) AlfrescoWorkflowInfo *workflowInfo;
 @end
 
 
@@ -266,7 +267,7 @@
                 if (newCMISsession)
                 {
                     [self setObject:newCMISsession forParameter:kAlfrescoSessionKeyCmisSession];
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:newCMISsession];
                     [newCMISsession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
                         if (rootFolder)
@@ -439,6 +440,9 @@
     params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     params.authenticationProvider = passthroughAuthProvider;
     
+    // use activiti by default on cloud
+    self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
+    
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
                                                                               alfrescoRequest:request
@@ -489,7 +493,7 @@
                 else
                 {
                     [self setObject:cmisSession forParameter:kAlfrescoSessionKeyCmisSession];
-                    AlfrescoObjectConverter *objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self];
+                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
                     alfrescoRequest.httpRequest = [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
                         if (nil == rootFolder)

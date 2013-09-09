@@ -32,7 +32,7 @@
 #import "CMISRendition.h"
 #import "CMISEnums.h"
 #import "CMISErrors.h"
-#import "AlfrescoObjectConverter.h"
+#import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoListingContext.h"
@@ -55,7 +55,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 @interface AlfrescoDocumentFolderService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) CMISSession *cmisSession;
-@property (nonatomic, strong, readwrite) AlfrescoObjectConverter *objectConverter;
+@property (nonatomic, strong, readwrite) AlfrescoCMISToAlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
@@ -79,7 +79,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     {
         self.session = session;
         self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
-        self.objectConverter = [[AlfrescoObjectConverter alloc] initWithSession:self.session];
+        self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
         self.authenticationProvider = nil;
         if ([authenticationObject isKindOfClass:[AlfrescoBasicAuthenticationProvider class]])
