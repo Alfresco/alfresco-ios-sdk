@@ -209,6 +209,7 @@
 		73971AB016ADA0100056031F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0780A15B0123A00DF7DED /* libz.dylib */; };
 		73AAFF3B17CE4690000C4484 /* AlfrescoWorkflowInternalConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 73AAFF3917CE4690000C4484 /* AlfrescoWorkflowInternalConstants.h */; };
 		73AAFF3C17CE4690000C4484 /* AlfrescoWorkflowInternalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 73AAFF3A17CE4690000C4484 /* AlfrescoWorkflowInternalConstants.m */; };
+		73B4C31F17DF341100F0E2CF /* AlfrescoWorkflowServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B4C31E17DF341100F0E2CF /* AlfrescoWorkflowServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		73CB836C16C4187500B780A6 /* CMISAclService.h in Headers */ = {isa = PBXBuildFile; fileRef = 73CB831916C4187500B780A6 /* CMISAclService.h */; };
 		73CB836D16C4187500B780A6 /* CMISAllowableActions.h in Headers */ = {isa = PBXBuildFile; fileRef = 73CB831A16C4187500B780A6 /* CMISAllowableActions.h */; };
 		73CB836E16C4187500B780A6 /* CMISAllowableActionsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 73CB831B16C4187500B780A6 /* CMISAllowableActionsParser.h */; };
@@ -576,6 +577,7 @@
 		73971A9D16AD65F30056031F /* AlfrescoDefaultNetworkProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoDefaultNetworkProvider.m; sourceTree = "<group>"; };
 		73AAFF3917CE4690000C4484 /* AlfrescoWorkflowInternalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowInternalConstants.h; sourceTree = "<group>"; };
 		73AAFF3A17CE4690000C4484 /* AlfrescoWorkflowInternalConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoWorkflowInternalConstants.m; sourceTree = "<group>"; };
+		73B4C31E17DF341100F0E2CF /* AlfrescoWorkflowServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowServices.h; sourceTree = "<group>"; };
 		73CB831916C4187500B780A6 /* CMISAclService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAclService.h; sourceTree = "<group>"; };
 		73CB831A16C4187500B780A6 /* CMISAllowableActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAllowableActions.h; sourceTree = "<group>"; };
 		73CB831B16C4187500B780A6 /* CMISAllowableActionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAllowableActionsParser.h; sourceTree = "<group>"; };
@@ -1058,6 +1060,7 @@
 				4EB0774915B00EE700DF7DED /* AlfrescoTaggingService.m */,
 				4EB0774A15B00EE700DF7DED /* AlfrescoVersionService.h */,
 				4EB0774B15B00EE700DF7DED /* AlfrescoVersionService.m */,
+				73B4C31E17DF341100F0E2CF /* AlfrescoWorkflowServices.h */,
 				731F7C6817A7DE2E003A871C /* AlfrescoWorkflowProcessDefinitionService.h */,
 				731F7C6917A7DE2E003A871C /* AlfrescoWorkflowProcessDefinitionService.m */,
 				731F7C8917AA81AE003A871C /* AlfrescoWorkflowProcessService.h */,
@@ -1256,6 +1259,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73B4C31F17DF341100F0E2CF /* AlfrescoWorkflowServices.h in Headers */,
 				08FC125917BE1EDD0096F21E /* AlfrescoCompany.h in Headers */,
 				73D268ED17D76CEE00C49848 /* AlfrescoWorkflowInfo.h in Headers */,
 				73D268F017D76CEE00C49848 /* AlfrescoWorkflowProcess.h in Headers */,
