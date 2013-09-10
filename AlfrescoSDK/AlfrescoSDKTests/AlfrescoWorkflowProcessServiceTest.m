@@ -225,7 +225,7 @@
         self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
         self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = @"activitiReview:1:8";
+        NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
         [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
@@ -262,7 +262,7 @@
         self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
         self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = @"activitiReview:1:8";
+        NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
         [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
@@ -327,7 +327,7 @@
         self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
         self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = @"activitiReview:1:8";
+        NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
         [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
@@ -465,16 +465,10 @@
     self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
     
     [self.processesDefinitionService retrieveProcessDefinitionWithIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
-        if (retrieveError)
-        {
-            completionBlock(nil, retrieveError);
-        }
-        else
-        {
-            STAssertNotNil(processDefinition, @"Process definition should not be nil");
-            STAssertNotNil(processDefinition.identifier, @"Process definition identifier should not be nil");
-            
-            [self.processesService startProcessForProcessDefinition:processDefinition assignees:assignees variables:variables attachments:attachmentNodes completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
+        
+        // define the process creation block
+        void (^createProcessWithDefinition)(AlfrescoWorkflowProcessDefinition *definition) = ^(AlfrescoWorkflowProcessDefinition *definition) {
+            [self.processesService startProcessForProcessDefinition:definition assignees:assignees variables:variables attachments:attachmentNodes completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
                 if (startError)
                 {
                     completionBlock(nil, startError);
@@ -484,6 +478,32 @@
                     completionBlock(process, startError);
                 }
             }];
+        };
+        
+        if (retrieveError)
+        {
+            if (retrieveError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported)
+            {
+                NSDictionary *properties = @{@"id" : @"jbpm$1",
+                                                 @"url" : @"api/workflow-definitions/jbpm$1",
+                                                 @"name" : @"jbpm$wf:adhoc",
+                                                 @"title" : @"Adhoc",
+                                                 @"description" : @"Assign task to colleague",
+                                                 @"version" : @"1"};
+                processDefinition = [[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:properties session:self.currentSession];
+                createProcessWithDefinition(processDefinition);
+            }
+            else
+            {
+                completionBlock(nil, retrieveError);
+            }
+        }
+        else
+        {
+            STAssertNotNil(processDefinition, @"Process definition should not be nil");
+            STAssertNotNil(processDefinition.identifier, @"Process definition identifier should not be nil");
+            
+            createProcessWithDefinition(processDefinition);
         }
     }];
 }
