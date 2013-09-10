@@ -260,8 +260,6 @@
                         }];
                     }
                 }];
-                
-                
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -506,19 +504,15 @@
     self.processService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
     [self.processDefinitionService retrieveProcessDefinitionWithIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
-        if (retrieveError)
-        {
-            completionBlock(nil, nil, retrieveError);
-        }
-        else
-        {
-            [self.processService startProcessForProcessDefinition:processDefinition assignees:nil variables:nil attachments:nil completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
+        // define creation block
+        void (^createProcessAndTaskForDefinition)(AlfrescoWorkflowProcessDefinition *definition) = ^(AlfrescoWorkflowProcessDefinition *definition) {
+            [self.processService startProcessForProcessDefinition:definition assignees:nil variables:nil attachments:nil completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
                 if (startError)
                 {
                     completionBlock(nil, nil, retrieveError);
                 }
                 else
-                {                    
+                {
                     [self.processService retrieveAllTasksForProcess:process completionBlock:^(NSArray *array, NSError *retrieveTaskError) {
                         if (retrieveTaskError)
                         {
@@ -528,7 +522,7 @@
                         {
                             if (array.count > 0)
                             {
-                                completionBlock(process, array[0], retrieveTaskError);
+                                completionBlock(process, [array lastObject], retrieveTaskError);
                             }
                             else
                             {
@@ -538,6 +532,29 @@
                     }];
                 }
             }];
+        };
+        
+        if (retrieveError)
+        {
+            if (retrieveError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported)
+            {
+                NSDictionary *properties = @{@"id" : @"jbpm$1",
+                                             @"url" : @"api/workflow-definitions/jbpm$1",
+                                             @"name" : @"jbpm$wf:adhoc",
+                                             @"title" : @"Adhoc",
+                                             @"description" : @"Assign task to colleague",
+                                             @"version" : @"1"};
+                processDefinition = [[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:properties session:self.currentSession];
+                createProcessAndTaskForDefinition(processDefinition);
+            }
+            else
+            {
+                completionBlock(nil, nil, retrieveError);
+            }
+        }
+        else
+        {
+            createProcessAndTaskForDefinition(processDefinition);
         }
     }];
 }
