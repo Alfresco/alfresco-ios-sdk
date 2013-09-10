@@ -10,7 +10,7 @@
 		0800984817A6B4B40018C20A /* AlfrescoFavoritesCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 0800984617A6B4B40018C20A /* AlfrescoFavoritesCache.h */; };
 		0800984917A6B4B40018C20A /* AlfrescoFavoritesCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0800984717A6B4B40018C20A /* AlfrescoFavoritesCache.m */; };
 		0800984A17A6B4B40018C20A /* AlfrescoFavoritesCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0800984717A6B4B40018C20A /* AlfrescoFavoritesCache.m */; };
-		08FC125917BE1EDD0096F21E /* AlfrescoCompany.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FC125717BE1EDD0096F21E /* AlfrescoCompany.h */; };
+		08FC125917BE1EDD0096F21E /* AlfrescoCompany.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FC125717BE1EDD0096F21E /* AlfrescoCompany.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		08FC125A17BE1EDD0096F21E /* AlfrescoCompany.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC125817BE1EDD0096F21E /* AlfrescoCompany.m */; };
 		08FC125B17BE1EDD0096F21E /* AlfrescoCompany.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC125817BE1EDD0096F21E /* AlfrescoCompany.m */; };
 		08FC13F91754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FC13F71754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h */; };
@@ -1256,6 +1256,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08FC125917BE1EDD0096F21E /* AlfrescoCompany.h in Headers */,
 				73D268ED17D76CEE00C49848 /* AlfrescoWorkflowInfo.h in Headers */,
 				73D268F017D76CEE00C49848 /* AlfrescoWorkflowProcess.h in Headers */,
 				73D268F317D76CEE00C49848 /* AlfrescoWorkflowProcessDefinition.h in Headers */,
@@ -1428,7 +1429,6 @@
 				08FC13FE1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.h in Headers */,
 				08FC14031754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.h in Headers */,
 				27786B87178DBC6B00E78A5D /* AlfrescoCMISPassThroughAuthenticationProvider.h in Headers */,
-				08FC125917BE1EDD0096F21E /* AlfrescoCompany.h in Headers */,
 				0800984817A6B4B40018C20A /* AlfrescoFavoritesCache.h in Headers */,
 				731F7CE817BA3020003A871C /* AlfrescoWorkflowUtils.h in Headers */,
 				73AAFF3B17CE4690000C4484 /* AlfrescoWorkflowInternalConstants.h in Headers */,

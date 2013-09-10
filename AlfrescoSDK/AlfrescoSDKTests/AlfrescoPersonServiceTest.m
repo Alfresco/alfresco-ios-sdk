@@ -172,7 +172,7 @@
     if (self.setUpSuccess)
     {
         self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
-        [self.personService search:@"b" completionBlock:^(NSArray *array, NSError *error) {
+        [self.personService search:self.userName completionBlock:^(NSArray *array, NSError *error) {
              if (nil == array)
              {
                  self.lastTestSuccessful = NO;
@@ -181,7 +181,7 @@
              else
              {
                  STAssertNotNil(array,@"Array should not be nil");
-                 /*
+                 AlfrescoPerson *person = [array objectAtIndex:0];
                  STAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
                  STAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
                  STAssertNotNil(person.lastName, @"Persons last name should not be nil");
@@ -190,7 +190,6 @@
                  {
                      STAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
                  }
-                  */
                  self.lastTestSuccessful = YES;
              }
              self.callbackCompleted = YES;
@@ -205,7 +204,10 @@
     }
 }
 
-- (void)testUpdateProfile
+/**
+ * Disabled until the implementation on AlfrescoPersonService is complete
+ */
+- (void)DISABLED_testUpdateProfile_DISABLED
 {
     if (self.setUpSuccess)
     {
@@ -218,7 +220,6 @@
         NSDictionary *newProperties = @{kAlfrescoPersonPropertyJobTitle: jobTitle, kAlfrescoPersonPropertyLocation: location, kAlfrescoPersonPropertyDescription: description};
 
         [self.personService updateProfile:newProperties completionBlock:^(AlfrescoPerson *person, NSError *error) {
-          
             if (nil == person)
             {
                 self.lastTestSuccessful = NO;
@@ -226,9 +227,9 @@
             }
             else
             {
-                 STAssertTrue([person.jobTitle isEqualToString:jobTitle],@"person.jobTitle is %@ but should be %@", person.jobTitle, jobTitle);
-                 STAssertTrue([person.location isEqualToString:location],@"person.location is %@ but should be %@", person.location, location);
-                 //STAssertTrue([person.description isEqualToString:description],@"person.description is %@ but should be %@", person.description, description);
+                STAssertTrue([person.jobTitle isEqualToString:jobTitle],@"person.jobTitle is %@ but should be %@", person.jobTitle, jobTitle);
+                STAssertTrue([person.location isEqualToString:location],@"person.location is %@ but should be %@", person.location, location);
+                STAssertTrue([person.description isEqualToString:description],@"person.description is %@ but should be %@", person.description, description);
                 
                 self.lastTestSuccessful = YES;
             }
@@ -243,6 +244,5 @@
         STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
-
 
 @end

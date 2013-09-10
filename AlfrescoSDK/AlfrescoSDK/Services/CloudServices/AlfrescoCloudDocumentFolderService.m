@@ -48,20 +48,19 @@
 {
     if (self = [super initWithSession:session])
     {
-        self.session = session;
-        self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudAPIPath];
-        self.defaultSortKey = kAlfrescoSortByTitle;
-        NSString *favoritesCacheKey = [NSString stringWithFormat:@"%@%@",kAlfrescoSessionInternalCache,NSStringFromClass([AlfrescoFavoritesCache class])];
+
+        NSString *favoritesCacheKey = [NSString stringWithFormat:@"%@%@", kAlfrescoSessionInternalCache, NSStringFromClass([AlfrescoFavoritesCache class])];
         id cachedObj = [self.session objectForParameter:favoritesCacheKey];
         if (cachedObj)
         {
+            AlfrescoLogDebug(@"Using existing AlfrescoFavoritesCache for key %@", favoritesCacheKey);
             self.favoritesCache = (AlfrescoFavoritesCache *)cachedObj;
         }
         else
         {
-            AlfrescoFavoritesCache *cache = [AlfrescoFavoritesCache favoritesCacheForSession:session];
-            self.favoritesCache = cache;
+            AlfrescoLogDebug(@"Creating new AlfrescoFavoritesCache for key %@", favoritesCacheKey);
+            self.favoritesCache = [AlfrescoFavoritesCache favoritesCacheForSession:session];
         }
     }
     return self;
@@ -71,7 +70,6 @@
                                renditionName:(NSString *)renditionName
                              completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:renditionName argumentName:@"renditionName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -381,11 +379,6 @@
                                             }
                                         }];
     return request;
-}
-
-- (void)clearFavoritesCache
-{
-    [self.favoritesCache clear];
 }
 
 #pragma mark - private methods
