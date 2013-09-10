@@ -41,20 +41,18 @@
 {
     if (self = [super initWithSession:session])
     {
-        self.session = session;
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
-        self.defaultSortKey = kAlfrescoSortByTitle;
         
-        NSString *favoritesCacheKey = [NSString stringWithFormat:@"%@%@",kAlfrescoSessionInternalCache,NSStringFromClass([AlfrescoFavoritesCache class])];
+        NSString *favoritesCacheKey = [NSString stringWithFormat:@"%@%@", kAlfrescoSessionInternalCache, NSStringFromClass([AlfrescoFavoritesCache class])];
         id cachedObj = [self.session objectForParameter:favoritesCacheKey];
         if (cachedObj)
         {
-            AlfrescoLogDebug(@"we found an existing Favorite cache for key %@ and are using that", favoritesCacheKey );
+            AlfrescoLogDebug(@"Using existing AlfrescoFavoritesCache for key %@", favoritesCacheKey);
             self.favoritesCache = (AlfrescoFavoritesCache *)cachedObj;
         }
         else
         {
-            AlfrescoLogDebug(@"we found no existing Favorite cache for key %@ and must create it", favoritesCacheKey );
+            AlfrescoLogDebug(@"Creating new AlfrescoFavoritesCache for key %@", favoritesCacheKey);
             self.favoritesCache = [AlfrescoFavoritesCache favoritesCacheForSession:self.session];
         }
     }
@@ -65,7 +63,6 @@
                                renditionName:(NSString *)renditionName
                              completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:renditionName argumentName:@"renditionName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -320,11 +317,6 @@
         }];
     }];
     return nil;
-}
-
-- (void)clearFavoritesCache
-{
-    [self.favoritesCache clear];
 }
 
 #pragma mark - private methods
