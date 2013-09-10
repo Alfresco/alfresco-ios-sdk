@@ -83,6 +83,8 @@ typedef enum
     kAlfrescoErrorCodeRatings = 1000,
     kAlfrescoErrorCodeRatingsNoRatings = 1001,
     
+    kAlfrescoErrorCodeFavorites = 1100,
+    
     kAlfrescoErrorCodeWorkflowFunctionNotSupported = 2000,
     kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound = 2001,
     kAlfrescoErrorCodeWorkflowNoProcessFound = 2002,

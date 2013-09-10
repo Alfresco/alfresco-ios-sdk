@@ -430,7 +430,7 @@
 
 - (AlfrescoWorkflowEngineType)determineWorkflowEngineFromJSONData:(NSData *)jsonData
 {
-    AlfrescoWorkflowEngineType workflowEngine = workflowEngine;
+    AlfrescoWorkflowEngineType workflowEngine = AlfrescoWorkflowEngineTypeUnknown;
     
     NSString *responseDictionaryString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
