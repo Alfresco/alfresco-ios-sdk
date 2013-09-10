@@ -43,10 +43,18 @@
         else
         {
             NSMutableArray *workflowDefinitions = [NSMutableArray array];
-            NSArray *processArray = [jsonObject valueForKey:kAlfrescoOldJSONData];
-            for (NSDictionary *entryDictionary in processArray)
+            id processDataResponseObject = [jsonObject valueForKey:kAlfrescoOldJSONData];
+            
+            if ([processDataResponseObject isKindOfClass:[NSArray class]])
             {
-                [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:entryDictionary session:session]];
+                for (NSDictionary *entryDictionary in processDataResponseObject)
+                {
+                    [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:entryDictionary session:session]];
+                }
+            }
+            else if ([processDataResponseObject isKindOfClass:[NSDictionary class]])
+            {
+                [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:processDataResponseObject session:session]];
             }
             return workflowDefinitions;
         }

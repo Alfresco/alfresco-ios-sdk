@@ -114,35 +114,44 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     [AlfrescoErrors assertArgumentNotNil:processIdentifier argumentName:@"processIdentifier"];
     
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = nil;
     
-    NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-    NSString *completeProcessIdentifier = [workflowEnginePrefix stringByAppendingString:processIdentifier];
-    NSString *requestString = [kAlfrescoWorkflowProcessDefinitionOldAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:completeProcessIdentifier];
-    
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    
-    __weak typeof(self) weakSelf = self;
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (!data)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *workflowDefinitions = [weakSelf.workflowObjectConverter workflowDefinitionsFromOldJSONData:data session:weakSelf.session conversionError:&conversionError];
-            if (workflowDefinitions.count > 0)
+    if (!self.session.repositoryInfo.capabilities.doesSupportLikingNodes)
+    {
+        NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
+        completionBlock(nil, notSupportedError);
+    }
+    else
+    {
+        request = [[AlfrescoRequest alloc] init];
+        NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
+        NSString *completeProcessIdentifier = [workflowEnginePrefix stringByAppendingString:processIdentifier];
+        NSString *requestString = [kAlfrescoWorkflowSingleProcessDefinitionOldAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:completeProcessIdentifier];
+        
+        NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+        
+        __weak typeof(self) weakSelf = self;
+        [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+            if (!data)
             {
-                AlfrescoWorkflowProcessDefinition *processDefinition = [workflowDefinitions objectAtIndex:0];
-                completionBlock(processDefinition, conversionError);
+                completionBlock(nil, error);
             }
             else
             {
-                completionBlock(nil, conversionError);
+                NSError *conversionError = nil;
+                NSArray *workflowDefinitions = [weakSelf.workflowObjectConverter workflowDefinitionsFromOldJSONData:data session:weakSelf.session conversionError:&conversionError];
+                if (workflowDefinitions.count > 0)
+                {
+                    AlfrescoWorkflowProcessDefinition *processDefinition = [workflowDefinitions objectAtIndex:0];
+                    completionBlock(processDefinition, conversionError);
+                }
+                else
+                {
+                    completionBlock(nil, conversionError);
+                }
             }
-        }
-    }];
+        }];
+    }
     return request;
 }
 

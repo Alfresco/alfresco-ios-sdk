@@ -81,10 +81,21 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         NSDictionary *workflowInstance = [properties objectForKey:kAlfrescoOldJSONWorkflowInstance];
         
         NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-        self.identifier = [taskProperties objectForKey:kAlfrescoOldBPMJSONID];
+        
+        if ([[taskProperties objectForKey:kAlfrescoOldBPMJSONID] isKindOfClass:[NSNumber class]])
+        {
+            self.identifier = [[taskProperties objectForKey:kAlfrescoOldBPMJSONID] stringValue];
+        }
+        else
+        {
+            self.identifier = [taskProperties objectForKey:kAlfrescoOldBPMJSONID];
+        }
         self.processIdentifier = [[workflowInstance objectForKey:kAlfrescoOldJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
         self.processDefinitionIdentifier = [[workflowInstance objectForKey:kAlfrescoOldJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.startedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONStartedAt]];
+        if ([taskProperties objectForKey:kAlfrescoOldBPMJSONStartedAt] != [NSNull null])
+        {
+            self.startedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONStartedAt]];
+        }
         if ([taskProperties objectForKey:kAlfrescoOldBPMJSONEndedAt] != [NSNull null])
         {
             self.endedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONEndedAt]];

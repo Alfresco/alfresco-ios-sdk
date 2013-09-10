@@ -35,7 +35,7 @@ NSString * const kAlfrescoWorkflowBasePublicAPIURL = @"/api/-default-/public/wor
 // process-definitions
 NSString * const kAlfrescoWorkflowProcessDefinitionOldAPI = @"workflow-definitions";
 NSString * const kAlfrescoWorkflowProcessDefinitionPublicAPI = @"process-definitions";
-NSString * const kAlfrescoWorkflowSingleProcessDefinitionOldAPI = @"process-workflows/{processDefinitionId}";
+NSString * const kAlfrescoWorkflowSingleProcessDefinitionOldAPI = @"workflow-definitions/{processDefinitionId}";
 NSString * const kAlfrescoWorkflowSingleProcessDefinitionPublicAPI = @"process-definitions/{processDefinitionId}";
 NSString * const kAlfrescoWorkflowProcessDefinitionFormModelPublicAPI = @"process-definitions/{processDefinitionId}/start-form-model";
 // processes

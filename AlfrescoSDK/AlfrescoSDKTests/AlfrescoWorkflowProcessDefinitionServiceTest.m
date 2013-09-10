@@ -116,10 +116,18 @@
         self.processDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
         
         [self.processDefinitionService retrieveProcessDefinitionWithIdentifier:processID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error) {
-            if (processDefinition == nil)
+            if (error)
             {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                if (error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported)
+                {
+                    STAssertEqualObjects(error.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Error description should be %@, but instead got back %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, error.localizedDescription);
+                    self.lastTestSuccessful = YES;
+                }
+                else
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
                 self.callbackCompleted = YES;
             }
             else
