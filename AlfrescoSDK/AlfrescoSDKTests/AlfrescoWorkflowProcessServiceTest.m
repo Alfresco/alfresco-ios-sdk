@@ -225,7 +225,7 @@
         self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
         self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = @"activitiReview:1:8";
+        NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
         [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
@@ -262,7 +262,7 @@
         self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
         self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = @"activitiReview:1:8";
+        NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
         [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
@@ -327,7 +327,7 @@
         self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
         self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = @"activitiReview:1:8";
+        NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
         [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)

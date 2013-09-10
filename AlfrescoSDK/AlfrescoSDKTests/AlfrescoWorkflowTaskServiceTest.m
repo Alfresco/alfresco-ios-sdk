@@ -116,7 +116,7 @@
     {
         self.processService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiReview:1:8" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -163,7 +163,7 @@
     {
         self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiReview:1:8" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -228,7 +228,7 @@
             {
                 STAssertNotNil(person, @"Person should not be nil");
                 
-                [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiReview:1:8" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+                [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
                     if (creationError)
                     {
                         self.lastTestSuccessful = NO;
@@ -277,7 +277,7 @@
     {
         self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiReview:1:8" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -334,7 +334,7 @@
     {
         self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiReview:1:8" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -379,7 +379,7 @@
         
         __weak typeof(self) weakSelf = self;
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiReview:1:8" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 weakSelf.lastTestSuccessful = NO;
@@ -443,7 +443,7 @@
     {
             self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
             
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiReview:1:8" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -522,7 +522,16 @@
                         {
                             if (array.count > 0)
                             {
-                                completionBlock(process, [array lastObject], retrieveTaskError);
+                                AlfrescoWorkflowTask *returnedTask = nil;
+                                if (self.currentSession.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeJBPM)
+                                {
+                                    returnedTask = [array lastObject];
+                                }
+                                else
+                                {
+                                    returnedTask = array[0];
+                                }
+                                completionBlock(process, returnedTask, retrieveTaskError);
                             }
                             else
                             {
