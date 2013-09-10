@@ -49,6 +49,7 @@
 #import "AlfrescoNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoCMISUtil.h"
+#import "AlfrescoFavoritesCache.h"
 
 typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error);
 
@@ -57,6 +58,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 @property (nonatomic, strong, readwrite) CMISSession *cmisSession;
 @property (nonatomic, strong, readwrite) AlfrescoCMISToAlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
+@property (nonatomic, strong, readwrite) AlfrescoFavoritesCache *favoritesCache;
 @property (nonatomic, strong, readwrite) NSArray *supportedSortKeys;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
 @end
@@ -1506,7 +1508,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
 
 - (void)clearFavoritesCache
 {
-    [self doesNotRecognizeSelector:_cmd];
+    [self.favoritesCache clear];
 }
 
 @end

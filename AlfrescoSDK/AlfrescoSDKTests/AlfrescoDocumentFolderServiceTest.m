@@ -4774,7 +4774,7 @@
                 for (AlfrescoNode *node in pagingResult.objects)
                 {
                     NSString *name = node.name;
-                    AlfrescoLogInfo(@"*** the name of the node is %@", name);
+                    AlfrescoLogInfo(@"*** pagingResult: %@", name);
                 }
                 
                 // check if array is sorted correctly
@@ -4786,15 +4786,13 @@
                     return [node2.name compare:node1.name options:NSCaseInsensitiveSearch];
                 }];
                 
-                BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
-                
                 for (AlfrescoNode *node in sortedArray)
                 {
                     NSString *name = node.name;
-                    AlfrescoLogInfo(@"*** SORTED ARRAY the name of the node is %@", name);
+                    AlfrescoLogInfo(@"*** local sort: %@", name);
                 }
                 
-                
+                BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
                 
                 // check properties
@@ -4845,7 +4843,13 @@
                 STAssertNil(error, @"The retrieval should not have caused an error");
                 STAssertNotNil(pagingResult, @"Paging result should not be nil");
                 STAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %i", [pagingResult.objects count]);
-                
+
+                for (AlfrescoNode *node in pagingResult.objects)
+                {
+                    NSString *name = node.name;
+                    AlfrescoLogInfo(@"*** pagingResult: %@", name);
+                }
+
                 // check if array is sorted correctly
                 NSArray *sortedArray = [pagingResult.objects sortedArrayUsingComparator:^(id a, id b) {
                     
@@ -4855,8 +4859,13 @@
                     return [node2.name compare:node1.name options:NSCaseInsensitiveSearch];
                 }];
                 
-                BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
+                for (AlfrescoNode *node in sortedArray)
+                {
+                    NSString *name = node.name;
+                    AlfrescoLogInfo(@"*** local sort: %@", name);
+                }
                 
+                BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
                 STAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
                 
                 self.lastTestSuccessful = YES;
