@@ -18,7 +18,6 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
-#import "AlfrescoOAuthLoginDelegate.h"
 
 #warning ENTER YOUR API AND SECRET KEY
 

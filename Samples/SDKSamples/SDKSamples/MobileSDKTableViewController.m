@@ -18,8 +18,6 @@
 
 #import "MobileSDKTableViewController.h"
 #import "MobileSDKWebViewController.h"
-#import "AlfrescoErrors.h"
-#import "AlfrescoLog.h"
 
 static NSString * const kAlfrescoSDKSamplesLogLevel = @"logLevel";
 

@@ -18,11 +18,7 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
-#import "AlfrescoRepositorySession.h"
-#import "AlfrescoDocumentFolderService.h"
 #import "AddNewItemTableViewController.h"
-#import "AlfrescoListingContext.h"
-#import "AlfrescoPagingResult.h"
 
 #define MAXNUMBERITEMS 10
 

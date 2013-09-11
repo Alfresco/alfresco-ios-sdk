@@ -17,10 +17,6 @@
  ******************************************************************************/
 
 #import "ActivitiesTableViewController.h"
-#import "AlfrescoActivityEntry.h"
-#import "AlfrescoContentFile.h"
-#import "AlfrescoErrors.h"
-#import "AlfrescoLog.h"
 
 @interface ActivitiesTableViewController ()
 @property (nonatomic, strong) AlfrescoActivityStreamService *activityStreamService;

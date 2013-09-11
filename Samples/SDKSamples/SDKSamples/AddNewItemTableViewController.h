@@ -20,11 +20,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import "BaseTableViewController.h"
 #import "AddPhotoTableViewController.h"
-#import "AlfrescoRepositorySession.h"
-#import "AlfrescoCloudSession.h"
-#import "AlfrescoDocumentFolderService.h"
-#import "AlfrescoTaggingService.h"
-#import "AlfrescoDocument.h"
 
 @protocol AddNewItemTableViewDelegate <NSObject>
 

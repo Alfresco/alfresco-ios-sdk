@@ -19,12 +19,7 @@
 #import "SamplesViewController.h"
 #import "FolderViewController.h"
 #import "SitesViewController.h"
-#import "AlfrescoRepositorySession.h"
-#import "AlfrescoCloudSession.h"
 #import "ActivitiesTableViewController.h"
-#import "AlfrescoListingContext.h"
-#import "AlfrescoOAuthHelper.h"
-#import "AlfrescoOAuthData.h"
 
 @interface SamplesViewController ()
 @property (nonatomic, assign) BOOL connectionDetailsProvided;
