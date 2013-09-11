@@ -32,6 +32,7 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoWorkflowObjectConverter.h"
+#import "AlfrescoWorkflowUtils.h"
 
 @interface AlfrescoWorkflowProcessServiceOldAPI ()
 
