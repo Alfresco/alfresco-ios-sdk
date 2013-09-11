@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "AlfrescoSession.h"
 
 @interface BaseTableViewController : UITableViewController
 

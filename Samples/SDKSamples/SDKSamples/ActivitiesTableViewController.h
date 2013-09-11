@@ -18,10 +18,6 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
-#import "AlfrescoRepositorySession.h"
-#import "AlfrescoCloudSession.h"
-#import "AlfrescoActivityStreamService.h"
-#import "AlfrescoPersonService.h"
 
 @interface ActivitiesTableViewController : BaseTableViewController
 

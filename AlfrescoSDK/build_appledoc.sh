@@ -16,6 +16,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+source ./sdk_version.sh
+
 ALFRESCO_SDK_HELP="AlfrescoSDKHelp"
 
 # remove previous generated documentation
@@ -41,7 +43,7 @@ if type -p appledoc &>/dev/null; then
     .
     cd $ALFRESCO_SDK_HELP
     mv docset com.alfresco.AlfrescoSDK.docset
-    jar cvf alfresco-ios-sdk-docset-1.1.0.zip com.alfresco.AlfrescoSDK.docset
+    jar cvf alfresco-ios-sdk-docset-$ALFRESCO_SDK_VERSION.zip com.alfresco.AlfrescoSDK.docset
 else
     echo "appledoc: executable can not be found, you can find installation instructions at https://github.com/tomaz/appledoc"
     echo "appledoc: Quick install via Homebrew: brew install appledoc"

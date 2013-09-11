@@ -32,6 +32,7 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoWorkflowObjectConverter.h"
+#import "AlfrescoWorkflowUtils.h"
 
 @interface AlfrescoWorkflowTaskPublicAPI ()
 

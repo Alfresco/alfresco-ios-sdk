@@ -56,4 +56,44 @@
  @param completionBlock - contains the AlfrescoContentFile object with a pointer to the avatar image if successful, or nil if not.
  */
 - (AlfrescoRequest *)retrieveAvatarForPerson:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock;
+
+/**---------------------------------------------------------------------------------------
+ * @name Update Person profile method
+ *  ---------------------------------------------------------------------------------------
+ */
+/** Update person profile
+ @param properties - dictionary of properties that are being updated
+ @param completionBlock - The block that's called with person's updated properties
+ */
+- (AlfrescoRequest *)updateProfile:(NSDictionary *)properties completionBlock:(AlfrescoPersonCompletionBlock)completionBlock;
+
+/**---------------------------------------------------------------------------------------
+ * @name Search Person methods
+ *  ---------------------------------------------------------------------------------------
+ */
+/** Returns a list of site members that respect the filter.
+ 
+ @param filter - filter that needs to be applied to search query.
+ @param completionBlock - contains Array of person objects that respect the filter if successful, or nil if not.
+ */
+- (AlfrescoRequest *)search:(NSString *)filter completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+/** Returns a paged list of site members that respect the filter.
+ 
+ @param filter - filter that needs to be applied to search query.
+ @param listingContext - The listing context with a paging definition that's used to search for people.
+ @param completionBlock - contains Array of person objects that respect the filter if successful, or nil if not.
+ */
+- (AlfrescoRequest *)search:(NSString *)filter
+         WithListingContext:(AlfrescoListingContext *)listingContext
+            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+/** Retrieve the latest (and complete) properties for person.
+ 
+ @param The person which is to be refreshed with its latest properties
+ @param completionBlock The block that's called with person's complete properties.
+ */
+- (AlfrescoRequest *)refreshPerson:(AlfrescoPerson *)person
+                   completionBlock:(AlfrescoPersonCompletionBlock)completionBlock;
+
 @end

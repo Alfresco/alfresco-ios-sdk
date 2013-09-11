@@ -18,9 +18,6 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
-#import "AlfrescoRepositorySession.h"
-#import "AlfrescoSearchService.h"
-#import "AlfrescoKeywordSearchOptions.h"
 
 @interface SearchResultViewController : BaseTableViewController
 

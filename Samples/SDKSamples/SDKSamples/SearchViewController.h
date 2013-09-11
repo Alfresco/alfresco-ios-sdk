@@ -18,7 +18,6 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
-#import "AlfrescoRepositorySession.h"
 
 @interface SearchViewController : BaseTableViewController <UITextFieldDelegate>
 

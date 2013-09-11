@@ -16,7 +16,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-ALFRESCO_SDK_VERSION=1.1.0
+source ./sdk_version.sh
+
 ALFRESCO_SDK_PACKAGE=alfresco-ios-sdk-$ALFRESCO_SDK_VERSION.zip
 PACKAGE_DIR=build/Package
 

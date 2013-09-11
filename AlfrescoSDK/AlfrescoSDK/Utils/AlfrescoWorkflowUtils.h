@@ -24,13 +24,7 @@
  */
 
 #import <Foundation/Foundation.h>
-
-typedef NS_ENUM(NSInteger, AlfrescoWorkflowEngineType)
-{
-    AlfrescoWorkflowEngineTypeUnknown,
-    AlfrescoWorkflowEngineTypeJBPM,
-    AlfrescoWorkflowEngineTypeActiviti
-};
+#import "AlfrescoConstants.h"
 
 @interface AlfrescoWorkflowUtils : NSObject
 

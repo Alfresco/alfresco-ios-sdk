@@ -26,6 +26,7 @@
 #import "AlfrescoWorkflowTask.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoWorkflowUtils.h"
 
 static NSInteger kWorkflowTaskModelVersion = 1;
 

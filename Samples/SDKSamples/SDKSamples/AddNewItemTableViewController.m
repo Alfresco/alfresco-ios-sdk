@@ -19,8 +19,6 @@
 #import "AddNewItemTableViewController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "AddPhotoTableViewController.h"
-#import "AlfrescoContentFile.h"
-#import "AlfrescoTag.h"
 
 @interface AddNewItemTableViewController ()
 @property (nonatomic, strong) UIImage *selectedPhoto;

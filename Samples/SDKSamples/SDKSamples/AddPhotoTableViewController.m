@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AddPhotoTableViewController.h"
-#import "AlfrescoTag.h"
 
 @interface AddPhotoTableViewController ()
 
