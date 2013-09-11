@@ -24,7 +24,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoWorkflowUtils.h"
+#import "AlfrescoConstants.h"
 
 @protocol AlfrescoSession;
 

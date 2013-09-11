@@ -18,7 +18,6 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
-#import "AlfrescoTaggingService.h"
 
 @protocol AddPhotoTableViewDelegate <NSObject>
 

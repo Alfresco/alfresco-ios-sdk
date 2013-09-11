@@ -17,13 +17,7 @@
  ******************************************************************************/
 
 #import "DocumentViewController.h"
-#import "AlfrescoVersionService.h"
-#import "AlfrescoComment.h"
-#import "AlfrescoDocument.h"
 #import "BasicPreviewItem.h"
-#import "AlfrescoPerson.h"
-#import "AlfrescoTag.h"
-#import "AlfrescoLog.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 

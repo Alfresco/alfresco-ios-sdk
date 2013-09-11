@@ -20,14 +20,6 @@
 #import <QuickLook/QuickLook.h>
 #import "BaseViewController.h"
 #import "AddCommentViewController.h"
-#import "AlfrescoCommentService.h"
-#import "AlfrescoVersionService.h"
-#import "AlfrescoDocumentFolderService.h"
-#import "AlfrescoRepositorySession.h"
-#import "AlfrescoDocument.h"
-#import "AlfrescoRatingService.h"
-#import "AlfrescoTaggingService.h"
-#import "AlfrescoPersonService.h"
 
 @interface DocumentViewController : BaseViewController <AddCommentViewDelegate, QLPreviewControllerDataSource, UITableViewDelegate, UITableViewDataSource>
 

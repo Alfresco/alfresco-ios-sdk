@@ -81,7 +81,14 @@ typedef enum
     kAlfrescoErrorCodeSearch = 900,
 
     kAlfrescoErrorCodeRatings = 1000,
-    kAlfrescoErrorCodeRatingsNoRatings = 1001
+    kAlfrescoErrorCodeRatingsNoRatings = 1001,
+    
+    kAlfrescoErrorCodeFavorites = 1100,
+    
+    kAlfrescoErrorCodeWorkflowFunctionNotSupported = 2000,
+    kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound = 2001,
+    kAlfrescoErrorCodeWorkflowNoProcessFound = 2002,
+    kAlfrescoErrorCodeWorkflowNoTaskFound = 2003
     
 }AlfrescoErrorCodes;
 
@@ -138,6 +145,11 @@ extern NSString * const kAlfrescoErrorDescriptionSearch;
 
 extern NSString * const kAlfrescoErrorDescriptionRatings;
 extern NSString * const kAlfrescoErrorDescriptionRatingsNoRatings;
+
+extern NSString * const kAlfrescoErrorDescriptionWorkflowFunctionNotSupported;
+extern NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessDefinitionFound;
+extern NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessFound;
+extern NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound;
 
 
 /** AlfrescoErrors is used in case an error occurs when executing an operation against the Alfresco repository.

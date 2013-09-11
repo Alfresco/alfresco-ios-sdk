@@ -83,6 +83,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2717211D17DFF59200F00847 /* AlfrescoCompany.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCompany.h; path = AlfrescoSDK/AlfrescoCompany.h; sourceTree = SOURCE_ROOT; };
+		2717211E17DFF59200F00847 /* AlfrescoSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoSDK.h; path = AlfrescoSDK/AlfrescoSDK.h; sourceTree = SOURCE_ROOT; };
+		2717211F17DFF59200F00847 /* AlfrescoWorkflowInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoWorkflowInfo.h; path = AlfrescoSDK/AlfrescoWorkflowInfo.h; sourceTree = SOURCE_ROOT; };
+		2717212017DFF59200F00847 /* AlfrescoWorkflowProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoWorkflowProcess.h; path = AlfrescoSDK/AlfrescoWorkflowProcess.h; sourceTree = SOURCE_ROOT; };
+		2717212117DFF59200F00847 /* AlfrescoWorkflowProcessDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoWorkflowProcessDefinition.h; path = AlfrescoSDK/AlfrescoWorkflowProcessDefinition.h; sourceTree = SOURCE_ROOT; };
+		2717212217DFF59200F00847 /* AlfrescoWorkflowProcessDefinitionService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoWorkflowProcessDefinitionService.h; path = AlfrescoSDK/AlfrescoWorkflowProcessDefinitionService.h; sourceTree = SOURCE_ROOT; };
+		2717212317DFF59200F00847 /* AlfrescoWorkflowProcessService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoWorkflowProcessService.h; path = AlfrescoSDK/AlfrescoWorkflowProcessService.h; sourceTree = SOURCE_ROOT; };
+		2717212417DFF59200F00847 /* AlfrescoWorkflowServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoWorkflowServices.h; path = AlfrescoSDK/AlfrescoWorkflowServices.h; sourceTree = SOURCE_ROOT; };
+		2717212517DFF59200F00847 /* AlfrescoWorkflowTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoWorkflowTask.h; path = AlfrescoSDK/AlfrescoWorkflowTask.h; sourceTree = SOURCE_ROOT; };
+		2717212617DFF59200F00847 /* AlfrescoWorkflowTaskService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoWorkflowTaskService.h; path = AlfrescoSDK/AlfrescoWorkflowTaskService.h; sourceTree = SOURCE_ROOT; };
 		27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4E0C86611612E2CB008B71DB /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthData.h; path = AlfrescoSDK/AlfrescoOAuthData.h; sourceTree = SOURCE_ROOT; };
 		4E0C86711612EE6F008B71DB /* AlfrescoOAuthLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthLoginViewController.h; path = AlfrescoSDK/AlfrescoOAuthLoginViewController.h; sourceTree = SOURCE_ROOT; };
@@ -242,6 +252,8 @@
 		4E34A45E15B01E490075B46E /* AlfrescoSDK */ = {
 			isa = PBXGroup;
 			children = (
+				2717211E17DFF59200F00847 /* AlfrescoSDK.h */,
+				2717211D17DFF59200F00847 /* AlfrescoCompany.h */,
 				4E85F3861718490B005A43E1 /* AlfrescoContent.h */,
 				4E420BE7171715BC002D75D9 /* AlfrescoContentStream.h */,
 				8233930516DE35C60031CF7B /* AlfrescoLog.h */,
@@ -284,6 +296,14 @@
 				82D7611715F0227E007712DE /* AlfrescoTag.h */,
 				82D7611815F0227E007712DE /* AlfrescoTaggingService.h */,
 				82D7611915F0227E007712DE /* AlfrescoVersionService.h */,
+				2717211F17DFF59200F00847 /* AlfrescoWorkflowInfo.h */,
+				2717212017DFF59200F00847 /* AlfrescoWorkflowProcess.h */,
+				2717212117DFF59200F00847 /* AlfrescoWorkflowProcessDefinition.h */,
+				2717212217DFF59200F00847 /* AlfrescoWorkflowProcessDefinitionService.h */,
+				2717212317DFF59200F00847 /* AlfrescoWorkflowProcessService.h */,
+				2717212417DFF59200F00847 /* AlfrescoWorkflowServices.h */,
+				2717212517DFF59200F00847 /* AlfrescoWorkflowTask.h */,
+				2717212617DFF59200F00847 /* AlfrescoWorkflowTaskService.h */,
 			);
 			name = AlfrescoSDK;
 			path = SDKSamples/AlfrescoSDK;
