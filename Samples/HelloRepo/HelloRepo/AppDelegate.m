@@ -21,8 +21,6 @@
 
 @implementation AppDelegate
 
-@synthesize window = _window;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -30,7 +28,6 @@
     navController.navigationBar.tintColor = [UIColor blackColor];
     
     self.window.rootViewController = navController;
-//    self.window.rootViewController = [[HelloRepoViewController alloc] init];
     [self.window makeKeyAndVisible];
     
     return YES;

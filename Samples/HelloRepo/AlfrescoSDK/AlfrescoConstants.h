@@ -30,6 +30,9 @@
 #import "AlfrescoDocument.h"
 #import "AlfrescoComment.h"
 #import "AlfrescoOAuthData.h"
+#import "AlfrescoWorkflowProcessDefinition.h"
+#import "AlfrescoWorkflowProcess.h"
+#import "AlfrescoWorkflowTask.h"
 
 @protocol AlfrescoSession;
 /** The AlfrescoConstants used in the SDK.
@@ -62,6 +65,14 @@ typedef void (^AlfrescoSessionCompletionBlock)(id<AlfrescoSession> session, NSEr
 typedef void (^AlfrescoCommentCompletionBlock)(AlfrescoComment *comment, NSError *error);
 typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSError *error);
 typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
+typedef void (^AlfrescoMemberCompletionBlock)(BOOL succeeded, BOOL isMember, NSError *error);
+typedef void (^AlfrescoFavoritedCompletionBlock)(BOOL succeeded, BOOL isFavorited, NSError *error);
+// workflow
+typedef void (^AlfrescoProcessDefinitionCompletionBlock)(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error);
+typedef void (^AlfrescoProcessCompletionBlock)(AlfrescoWorkflowProcess *process, NSError *error);
+typedef void (^AlfrescoTaskCompletionBlock)(AlfrescoWorkflowTask *task, NSError *error);
+typedef void (^AlfrescoDictionaryCompletionBlock)(NSDictionary *dictionary, NSError *error);
+
 
 /**---------------------------------------------------------------------------------------
  * @name Session parameters
@@ -103,3 +114,52 @@ extern NSString * const kAlfrescoIsFolder;
 extern NSString * const kAlfrescoNetworkProvider;
 extern NSString * const kAlfrescoCMISBindingURL;
 extern NSString * const kAlfrescoAllowUntrustedSSLCertificate;
+
+/**---------------------------------------------------------------------------------------
+ * @name Person Profile Constants 
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoPersonPropertyFirstName;
+extern NSString * const kAlfrescoPersonPropertyLastName;
+extern NSString * const kAlfrescoPersonPropertyJobTitle;
+extern NSString * const kAlfrescoPersonPropertyLocation;
+extern NSString * const kAlfrescoPersonPropertyDescription;
+extern NSString * const kAlfrescoPersonPropertyTelephoneNumber;
+extern NSString * const kAlfrescoPersonPropertyMobileNumber;
+extern NSString * const kAlfrescoPersonPropertyEmail;
+extern NSString * const kAlfrescoPersonPropertySkypeId;
+extern NSString * const kAlfrescoPersonPropertyInstantMessageId;
+extern NSString * const kAlfrescoPersonPropertyGoogleId;
+extern NSString * const kAlfrescoPersonPropertyStatus;
+extern NSString * const kAlfrescoPersonPropertyStatusTime;
+extern NSString * const kAlfrescoPersonPropertyCompanyName;
+extern NSString * const kAlfrescoPersonPropertyCompanyAddressLine1;
+extern NSString * const kAlfrescoPersonPropertyCompanyAddressLine2;
+extern NSString * const kAlfrescoPersonPropertyCompanyAddressLine3;
+extern NSString * const kAlfrescoPersonPropertyCompanyPostcode;
+extern NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber;
+extern NSString * const kAlfrescoPersonPropertyCompanyFaxNumber;
+extern NSString * const kAlfrescoPersonPropertyCompanyEmail;
+
+/**---------------------------------------------------------------------------------------
+ * @name Workflow Constants
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoTaskComment;
+extern NSString * const kAlfrescoTaskReviewOutcome;
+extern NSString * const kAlfrescoTaskApprove;
+extern NSString * const kAlfrescoTaskReject;
+extern NSString * const kAlfrescoWorkflowProcessStateAny;
+extern NSString * const kAlfrescoWorkflowProcessStateActive;
+extern NSString * const kAlfrescoWorkflowProcessStateCompleted;
+
+extern NSString * const kAlfrescoWorkflowProcessDescription;
+extern NSString * const kAlfrescoWorkflowProcessPriority;
+extern NSString * const kAlfrescoWorkflowProcessSendEmailNotification;
+extern NSString * const kAlfrescoWorkflowProcessDueDate;
+extern NSString * const kAlfrescoWorkflowProcessApprovalRate;
+
+typedef NS_ENUM(NSInteger, AlfrescoWorkflowEngineType)
+{
+    AlfrescoWorkflowEngineTypeUnknown,
+    AlfrescoWorkflowEngineTypeJBPM,
+    AlfrescoWorkflowEngineTypeActiviti
+};

@@ -17,12 +17,6 @@
  ******************************************************************************/
 
 #import "HelloRepoViewController.h"
-#import "AlfrescoRepositorySession.h"
-#import "AlfrescoCloudSession.h"
-#import "AlfrescoDocumentFolderService.h"
-#import "AlfrescoNode.h"
-#import "AlfrescoOAuthData.h"
-#import "AlfrescoOAuthLoginViewController.h"
 
 @interface HelloRepoViewController ()
 

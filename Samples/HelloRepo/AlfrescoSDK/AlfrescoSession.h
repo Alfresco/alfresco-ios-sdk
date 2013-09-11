@@ -22,10 +22,11 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoRepositoryInfo.h"
 #import "AlfrescoNetworkProvider.h"
+#import "AlfrescoWorkflowInfo.h"
 
 /** The AlfrescoSession category defines the properties made available for a session to an Alfresco repository.
  
- Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco), Tauseef Mughal (Alfresco)
  */
 
 // Protocol defining a session for an Alfresco based server.
@@ -54,6 +55,9 @@
 
 /// The network provider, if this is not provided, a default implementation is set
 @property (nonatomic, strong, readonly) id<AlfrescoNetworkProvider> networkProvider;
+
+/// Information describing the workflow engine and api to use
+@property (nonatomic, strong, readonly) AlfrescoWorkflowInfo *workflowInfo;
 
 
 /**---------------------------------------------------------------------------------------
