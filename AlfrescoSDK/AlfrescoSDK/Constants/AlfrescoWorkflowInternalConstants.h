@@ -88,6 +88,10 @@ extern NSString * const kAlfrescoPublicJSONHasMoreItems;
 extern NSString * const kAlfrescoPublicJSONTotalItems;
 extern NSString * const kAlfrescoPublicJSONSkipCount;
 extern NSString * const kAlfrescoPublicJSONMaxItems;
+extern NSString * const kAlfrescoOldJSONPagination;
+extern NSString * const kAlfrescoOldJSONMaxItems;
+extern NSString * const kAlfrescoOldJSONSkipCount;
+extern NSString * const kAlfrescoOldJSONTotalItems;
 
 extern NSString * const kAlfrescoPublicJSONProcessID;
 extern NSString * const kAlfrescoPublicJSONProcessDefinitionID;
