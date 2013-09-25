@@ -38,6 +38,8 @@
 
 + (NSString *)nodeRefWithoutVersionID:(NSString *)originalIdentifier;
 
-- (id)parseJSONData:(NSData *)jsonData notFoundErrorCode:(AlfrescoErrorCodes)errorCode parseBlock:(id (^)(id jsonObject, NSError *parseError))parseBlock;
++ (id)parseJSONData:(NSData *)jsonData notFoundErrorCode:(AlfrescoErrorCodes)errorCode parseBlock:(id (^)(id jsonObject, NSError *parseError))parseBlock;
+
++ (NSDictionary *)paginationJSONFromOldAPIData:(NSData *)data error:(NSError **)outError;
 
 @end

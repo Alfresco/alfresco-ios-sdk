@@ -230,7 +230,7 @@
     return originalIdentifier;
 }
 
-- (id)parseJSONData:(NSData *)jsonData notFoundErrorCode:(AlfrescoErrorCodes)errorCode parseBlock:(id (^)(id jsonObject, NSError *parseError))parseBlock
++ (id)parseJSONData:(NSData *)jsonData notFoundErrorCode:(AlfrescoErrorCodes)errorCode parseBlock:(id (^)(id jsonObject, NSError *parseError))parseBlock
 {
     NSError *conversionError = nil;
     
@@ -264,5 +264,14 @@
     
     return parseBlock(jsonResponseObject, conversionError);
 }
+
++ (NSDictionary *)paginationJSONFromOldAPIData:(NSData *)data error:(NSError **)outError
+{
+    return [self parseJSONData:data notFoundErrorCode:kAlfrescoErrorCodeJSONParsingNilData parseBlock:^id(id jsonObject, NSError *parseError) {
+        NSDictionary *pagingDictionary = [(NSDictionary *)jsonObject objectForKey:kAlfrescoOldJSONPagination];
+        return pagingDictionary;
+    }];
+}
+
 
 @end

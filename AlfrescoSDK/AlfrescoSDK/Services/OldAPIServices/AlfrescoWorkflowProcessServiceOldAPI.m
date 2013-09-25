@@ -136,7 +136,10 @@
         {
             NSError *conversionError = nil;
             NSArray *processes = [weakSelf.workflowObjectConverter workflowProcessesFromOldJSONData:data session:weakSelf.session conversionError:&conversionError];
-            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:processes listingContext:listingContext];
+            NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromOldAPIData:data error:&conversionError];
+            int total = [[pagingInfo valueForKey:kAlfrescoOldJSONTotalItems] intValue];
+            BOOL hasMore = (listingContext.skipCount < total) ? YES : NO;
+            AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:processes hasMoreItems:hasMore totalItems:total];
             completionBlock(pagingResult, conversionError);
         }
     }];

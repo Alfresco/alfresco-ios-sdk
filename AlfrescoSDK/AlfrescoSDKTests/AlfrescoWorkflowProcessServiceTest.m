@@ -79,7 +79,7 @@
     {
         self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
-        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:10 skipCount:0];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
         [self.processesService retrieveProcessesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
             if (retrieveError)
@@ -91,8 +91,8 @@
             else
             {
                 STAssertNotNil(pagingResult, @"Paging result should not be nil");
-                STAssertTrue(pagingResult.objects.count > 1, @"PagingResult objects should contain more than 1 process");
-                STAssertFalse(pagingResult.hasMoreItems, @"PagingResult should not conatin more objects");
+                STAssertTrue(pagingResult.objects.count == 1, @"PagingResult objects should contain 1 process");
+                STAssertTrue(pagingResult.hasMoreItems, @"PagingResult should contain more objects");
                 
                 // TODO
                 
@@ -186,7 +186,7 @@
     {
         self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
         
-        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:10 skipCount:0];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:0];
         
         [self.processesService retrieveProcessesInState:kAlfrescoWorkflowProcessStateAny listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
             if (retrieveError)
@@ -199,7 +199,7 @@
             {
                 STAssertNotNil(pagingResult, @"Paging result should not be nil");
                 STAssertTrue(pagingResult.objects.count > 1, @"PagingResult objects should contain more than 1 process");
-                STAssertFalse(pagingResult.hasMoreItems, @"PagingResult should not conatin more objects");
+                STAssertTrue(pagingResult.hasMoreItems, @"PagingResult should contain more objects");
                 
                 // TODO
                 
