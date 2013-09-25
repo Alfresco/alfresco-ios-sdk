@@ -34,7 +34,7 @@
 
 - (NSArray *)workflowDefinitionsFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
 {
-    return [self parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound parseBlock:^id(id jsonObject, NSError *parseError) {
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
         {
             *error = parseError;
@@ -63,7 +63,7 @@
 
 - (NSArray *)workflowDefinitionsFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
 {
-    return [self parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound parseBlock:^id(id jsonObject, NSError *parseError) {
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
         {
             *error = parseError;
@@ -86,7 +86,7 @@
 
 - (NSArray *)workflowProcessesFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
 {
-    return [self parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessFound parseBlock:^id(id jsonObject, NSError *parseError) {
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
         {
             *error = parseError;
@@ -107,7 +107,7 @@
 
 - (NSArray *)workflowProcessesFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
 {
-    return [self parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessFound parseBlock:^id(id jsonObject, NSError *parseError) {
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
         {
             *error = parseError;
@@ -129,7 +129,7 @@
 
 - (NSArray *)workflowTasksFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
 {
-    return [self parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
         {
             *error = parseError;
@@ -150,7 +150,7 @@
 
 - (NSArray *)workflowTasksFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
 {
-    return [self parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
         {
             *error = parseError;
@@ -172,7 +172,7 @@
 
 - (NSString *)attachmentContainerNodeRefFromOldJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
-    return [self parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeJSONParsing parseBlock:^id(id jsonObject, NSError *parseError) {
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeJSONParsing parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
         {
             *error = parseError;
@@ -203,7 +203,7 @@
 
 - (NSArray *)attachmentIdentifiersFromOldJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
-    return [self parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeJSONParsing parseBlock:^id(id jsonObject, NSError *parseError) {
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeJSONParsing parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
         {
             *error = parseError;
@@ -240,7 +240,7 @@
 
 - (NSArray *)attachmentIdentifiersFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
-    return [self parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeJSONParsing parseBlock:^id(id jsonObject, NSError *parseError) {
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeJSONParsing parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
         {
             *error = parseError;

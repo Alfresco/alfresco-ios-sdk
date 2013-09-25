@@ -92,6 +92,10 @@ NSString * const kAlfrescoPublicJSONHasMoreItems = @"hasMoreItems";
 NSString * const kAlfrescoPublicJSONTotalItems = @"totalItems";
 NSString * const kAlfrescoPublicJSONSkipCount = @"skipCount";
 NSString * const kAlfrescoPublicJSONMaxItems = @"maxItems";
+NSString * const kAlfrescoOldJSONPagination = @"paging";
+NSString * const kAlfrescoOldJSONMaxItems = @"maxItems";
+NSString * const kAlfrescoOldJSONSkipCount = @"skipCount";
+NSString * const kAlfrescoOldJSONTotalItems = @"totalItems";
 
 NSString * const kAlfrescoPublicJSONProcessID = @"processId";
 NSString * const kAlfrescoPublicJSONProcessDefinitionID = @"processDefinitionId";
