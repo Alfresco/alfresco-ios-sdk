@@ -56,6 +56,7 @@ NSString * const kAlfrescoWorkflowProcessPublicActive = @"active";
 NSString * const kAlfrescoWorkflowProcessPublicCompleted = @"completed";
 NSString * const kAlfrescoWorkflowProcessOldInProgress = @"in_progress";
 NSString * const kAlfrescoWorkflowProcessOldCompleted = @"completed";
+NSString * const kAlfrescoWorkflowProcessIncludeVariables = @"includeVariables";
 // tasks
 NSString * const kAlfrescoWorkflowTasksOldAPI = @"task-instances";
 NSString * const kAlfrescoWorkflowTasksPublicAPI = @"tasks";
@@ -105,6 +106,7 @@ NSString * const kAlfrescoPublicJSONEndedAt = @"endedAt";
 NSString * const kAlfrescoPublicJSONDueAt = @"dueAt";
 NSString * const kAlfrescoPublicJSONPriority = @"priority";
 NSString * const kAlfrescoPublicJSONAssignee = @"assignee";
+NSString * const kAlfrescoPublicJSONProcessVariables = @"processVariables";
 NSString * const kAlfrescoPublicJSONVariables = @"variables";
 NSString * const kAlfrescoPublicJSONStartUserID = @"startUserId";
 
@@ -114,6 +116,7 @@ NSString * const kAlfrescoOldJSONData = @"data";
 NSString * const kAlfrescoOldBPMJSONID = @"bpm_taskId";
 NSString * const kAlfrescoOldJSONIdentifier = @"id";
 NSString * const kAlfrescoOldJSONName = @"name";
+NSString * const kAlfrescoOldJSONMessage = @"message";
 NSString * const kAlfrescoOldBPMJSONStartedAt = @"bpm_startDate";
 NSString * const kAlfrescoOldBPMJSONEndedAt = @"bpm_completionDate";
 NSString * const kAlfrescoOldBPMJSONDueAt = @"bpm_dueDate";
@@ -124,6 +127,7 @@ NSString * const kAlfrescoOldBPMJSONPackageContainer = @"bpm_package";
 
 NSString * const kAlfrescoOldJSONOwner = @"cm_owner";
 
+NSString * const kAlfrescoPublicBMPJSONProcessTitle = @"bpm_description";
 NSString * const kAlfrescoPublicBPMJSONProcessDescription = @"bpm_workflowDescription";
 NSString * const kAlfrescoPublicBPMJSONProcessPriority= @"bpm_workflowPriority";
 NSString * const kAlfrescoPublicBPMJSONProcessAssignee = @"bpm_assignee";
@@ -157,6 +161,10 @@ NSString * const kAlfrescoOldJSONDueAt = @"dueDate";
 NSString * const kAlfrescoOldJSONPriority = @"priority";
 NSString * const kAlfrescoOldJSONDescription = @"description";
 NSString * const kAlfrescoOldJSONInitiator = @"initiator";
+
+NSString * const kAlfrescoPublicJSONVariableName = @"name";
+NSString * const kAlfrescoPublicJSONVariableType = @"type";
+NSString * const kAlfrescoPublicJSONVariableValue = @"value";
 
 /**
  Property name constants

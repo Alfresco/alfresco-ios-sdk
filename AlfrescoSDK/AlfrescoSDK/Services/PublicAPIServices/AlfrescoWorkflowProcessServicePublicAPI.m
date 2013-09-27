@@ -82,7 +82,9 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)", kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state]];
+    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@ AND %@=%@)",
+                                      kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state],
+                                      kAlfrescoWorkflowProcessIncludeVariables, @"true"];
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowProcessWhereParameter : whereParameterString}];
     NSString *extenstionURLString = [kAlfrescoWorkflowProcessesPublicAPI stringByAppendingString:queryString];
     
@@ -114,7 +116,9 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)", kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state]];
+    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@ AND %@=%@)",
+                                      kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state],
+                                      kAlfrescoWorkflowProcessIncludeVariables, @"true"];
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowProcessWhereParameter : whereParameterString}];
     NSString *extenstionURLString = [kAlfrescoWorkflowProcessesPublicAPI stringByAppendingString:queryString];
     
