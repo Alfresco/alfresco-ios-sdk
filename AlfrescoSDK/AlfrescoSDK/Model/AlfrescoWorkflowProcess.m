@@ -27,6 +27,8 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoWorkflowUtils.h"
+#import "AlfrescoWorkflowObjectConverter.h"
+#import "AlfrescoWorkflowVariable.h"
 
 static NSInteger kWorkflowProcessModelVersion = 1;
 
@@ -36,12 +38,14 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *processDefinitionIdentifier;
 @property (nonatomic, strong, readwrite) NSString *processDefinitionKey;
+@property (nonatomic, strong, readwrite) NSString *title;
 @property (nonatomic, strong, readwrite) NSDate *startedAt;
 @property (nonatomic, strong, readwrite) NSDate *endedAt;
 @property (nonatomic, strong, readwrite) NSDate *dueAt;
 @property (nonatomic, strong, readwrite) NSNumber *priority;
 @property (nonatomic, strong, readwrite) NSString *processDescription;
 @property (nonatomic, strong, readwrite) NSString *initiatorUsername;
+@property (nonatomic, strong, readwrite) NSArray *variables;
 
 @end
 
@@ -65,15 +69,30 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     if (self.session.workflowInfo.publicAPI)
     {
         NSDictionary *entry = [properties objectForKey:kAlfrescoPublicJSONEntry];
+        
+        AlfrescoWorkflowObjectConverter *objectConverter = [[AlfrescoWorkflowObjectConverter alloc] init];
+        NSArray *rawVariables = [entry objectForKey:kAlfrescoPublicJSONProcessVariables];
+        NSArray *convertedVariables = [objectConverter workflowVariablesFromArray:rawVariables];
+        
         self.identifier = [entry objectForKey:kAlfrescoPublicJSONIdentifier];
         self.processDefinitionIdentifier = [entry objectForKey:kAlfrescoPublicJSONProcessDefinitionID];
         self.processDefinitionKey = [entry objectForKey:kAlfrescoPublicJSONProcessDefinitionKey];
+        if (convertedVariables)
+        {
+            NSInteger indexOfTitleVariableObject = [[convertedVariables valueForKey:@"name"] indexOfObject:kAlfrescoPublicBPMJSONProcessTitle];
+            AlfrescoWorkflowVariable *titleVariable = [convertedVariables objectAtIndex:indexOfTitleVariableObject];
+            if (titleVariable.value != [NSNull null])
+            {
+                self.title = (NSString *)titleVariable.value;
+            }
+        }
         self.startedAt = [entry objectForKey:kAlfrescoPublicJSONStartedAt];
         self.endedAt = [entry objectForKey:kAlfrescoPublicJSONEndedAt];
         self.dueAt = [entry objectForKey:kAlfrescoPublicJSONDueAt];
         self.processDescription = [entry objectForKey:kAlfrescoPublicJSONDescription];
         self.priority = [entry objectForKey:kAlfrescoPublicJSONPriority];
         self.initiatorUsername = [entry objectForKey:kAlfrescoPublicJSONStartUserID];
+        self.variables = convertedVariables;
     }
     else
     {
@@ -81,6 +100,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.identifier = [[properties objectForKey:kAlfrescoPublicJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
         self.processDefinitionIdentifier = [[[properties objectForKey:kAlfrescoOldJSONProcessDefinitionID] lastPathComponent] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
         self.processDefinitionKey = [[properties objectForKey:kAlfrescoOldJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.title = [properties objectForKey:kAlfrescoOldJSONMessage];
         self.startedAt = [properties objectForKey:kAlfrescoOldJSONStartedAt];
         self.endedAt = [properties objectForKey:kAlfrescoOldJSONEndedAt];
         self.dueAt = [properties objectForKey:kAlfrescoOldJSONDueAt];
@@ -97,12 +117,14 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     [aCoder encodeObject:self.identifier forKey:kAlfrescoPublicJSONIdentifier];
     [aCoder encodeObject:self.processDefinitionIdentifier forKey:kAlfrescoPublicJSONProcessDefinitionID];
     [aCoder encodeObject:self.processDefinitionKey forKey:kAlfrescoPublicJSONProcessDefinitionKey];
+    [aCoder encodeObject:self.title forKey:kAlfrescoPublicBPMJSONProcessTitle];
     [aCoder encodeObject:self.startedAt forKey:kAlfrescoPublicJSONStartedAt];
     [aCoder encodeObject:self.endedAt forKey:kAlfrescoPublicJSONEndedAt];
     [aCoder encodeObject:self.dueAt forKey:kAlfrescoPublicJSONDueAt];
     [aCoder encodeObject:self.processDescription forKey:kAlfrescoPublicJSONDescription];
     [aCoder encodeObject:self.priority forKey:kAlfrescoPublicJSONPriority];
     [aCoder encodeObject:self.initiatorUsername forKey:kAlfrescoPublicJSONStartUserID];
+    [aCoder encodeObject:self.variables forKey:kAlfrescoPublicJSONProcessVariables];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -114,12 +136,14 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONIdentifier];
         self.processDefinitionIdentifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessDefinitionID];
         self.processDefinitionKey = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessDefinitionKey];
+        self.title = [aDecoder decodeObjectForKey:kAlfrescoPublicBPMJSONProcessTitle];
         self.startedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONStartedAt];
         self.endedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONEndedAt];
         self.dueAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDueAt];
         self.processDescription = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDescription];
         self.priority = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONPriority];
         self.initiatorUsername = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONStartUserID];
+        self.variables = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessVariables];
     }
     return self;
 }

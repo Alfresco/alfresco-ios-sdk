@@ -41,6 +41,9 @@
 - (NSArray *)workflowTasksFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
 - (NSArray *)workflowTasksFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
 
+// variables
+- (NSArray *)workflowVariablesFromArray:(NSArray *)variables;
+
 // attachment identifiers
 - (NSString *)attachmentContainerNodeRefFromOldJSONData:(NSData *)jsonData conversionError:(NSError **)error;
 - (NSArray *)attachmentIdentifiersFromOldJSONData:(NSData *)jsonData conversionError:(NSError **)error;
