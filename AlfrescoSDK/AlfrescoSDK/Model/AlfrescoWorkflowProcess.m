@@ -79,7 +79,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.processDefinitionKey = [entry objectForKey:kAlfrescoPublicJSONProcessDefinitionKey];
         if (convertedVariables)
         {
-            NSInteger indexOfTitleVariableObject = [[convertedVariables valueForKey:@"name"] indexOfObject:kAlfrescoPublicBMPJSONProcessTitle];
+            NSInteger indexOfTitleVariableObject = [[convertedVariables valueForKey:@"name"] indexOfObject:kAlfrescoPublicBPMJSONProcessTitle];
             AlfrescoWorkflowVariable *titleVariable = [convertedVariables objectAtIndex:indexOfTitleVariableObject];
             if (titleVariable.value != [NSNull null])
             {
@@ -117,7 +117,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     [aCoder encodeObject:self.identifier forKey:kAlfrescoPublicJSONIdentifier];
     [aCoder encodeObject:self.processDefinitionIdentifier forKey:kAlfrescoPublicJSONProcessDefinitionID];
     [aCoder encodeObject:self.processDefinitionKey forKey:kAlfrescoPublicJSONProcessDefinitionKey];
-    [aCoder encodeObject:self.title forKey:kAlfrescoPublicBMPJSONProcessTitle];
+    [aCoder encodeObject:self.title forKey:kAlfrescoPublicBPMJSONProcessTitle];
     [aCoder encodeObject:self.startedAt forKey:kAlfrescoPublicJSONStartedAt];
     [aCoder encodeObject:self.endedAt forKey:kAlfrescoPublicJSONEndedAt];
     [aCoder encodeObject:self.dueAt forKey:kAlfrescoPublicJSONDueAt];
@@ -136,7 +136,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONIdentifier];
         self.processDefinitionIdentifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessDefinitionID];
         self.processDefinitionKey = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessDefinitionKey];
-        self.title = [aDecoder decodeObjectForKey:kAlfrescoPublicBMPJSONProcessTitle];
+        self.title = [aDecoder decodeObjectForKey:kAlfrescoPublicBPMJSONProcessTitle];
         self.startedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONStartedAt];
         self.endedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONEndedAt];
         self.dueAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDueAt];

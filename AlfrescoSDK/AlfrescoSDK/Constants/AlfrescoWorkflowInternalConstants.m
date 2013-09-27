@@ -127,7 +127,7 @@ NSString * const kAlfrescoOldBPMJSONPackageContainer = @"bpm_package";
 
 NSString * const kAlfrescoOldJSONOwner = @"cm_owner";
 
-NSString * const kAlfrescoPublicBMPJSONProcessTitle = @"bpm_description";
+NSString * const kAlfrescoPublicBPMJSONProcessTitle = @"bpm_description";
 NSString * const kAlfrescoPublicBPMJSONProcessDescription = @"bpm_workflowDescription";
 NSString * const kAlfrescoPublicBPMJSONProcessPriority= @"bpm_workflowPriority";
 NSString * const kAlfrescoPublicBPMJSONProcessAssignee = @"bpm_assignee";

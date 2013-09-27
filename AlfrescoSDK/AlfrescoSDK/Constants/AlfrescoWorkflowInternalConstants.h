@@ -123,7 +123,7 @@ extern NSString * const kAlfrescoOldBPMJSONPackageContainer;
 
 extern NSString * const kAlfrescoOldJSONOwner;
 
-extern NSString * const kAlfrescoPublicBMPJSONProcessTitle;
+extern NSString * const kAlfrescoPublicBPMJSONProcessTitle;
 extern NSString * const kAlfrescoPublicBPMJSONProcessDescription;
 extern NSString * const kAlfrescoPublicBPMJSONProcessPriority;
 extern NSString * const kAlfrescoPublicBPMJSONProcessAssignee;
