@@ -100,7 +100,10 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.identifier = [[properties objectForKey:kAlfrescoPublicJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
         self.processDefinitionIdentifier = [[[properties objectForKey:kAlfrescoOldJSONProcessDefinitionID] lastPathComponent] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
         self.processDefinitionKey = [[properties objectForKey:kAlfrescoOldJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.title = [properties objectForKey:kAlfrescoOldJSONMessage];
+        if ([properties objectForKey:kAlfrescoOldJSONMessage] != [NSNull null])
+        {
+            self.title = [properties objectForKey:kAlfrescoOldJSONMessage];
+        }
         self.startedAt = [properties objectForKey:kAlfrescoOldJSONStartedAt];
         self.endedAt = [properties objectForKey:kAlfrescoOldJSONEndedAt];
         self.dueAt = [properties objectForKey:kAlfrescoOldJSONDueAt];
