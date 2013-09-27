@@ -343,7 +343,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4EB076AD15B00D8E00DF7DED /* PBXContainerItemProxy */ = {
+		279AB8E717F5D1C500412120 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4EB0768E15B00D8E00DF7DED /* Project object */;
 			proxyType = 1;
@@ -1489,12 +1489,11 @@
 				4EB076A215B00D8E00DF7DED /* Sources */,
 				4EB076A315B00D8E00DF7DED /* Frameworks */,
 				4EB076A415B00D8E00DF7DED /* Resources */,
-				4EB076A515B00D8E00DF7DED /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4EB076AE15B00D8E00DF7DED /* PBXTargetDependency */,
+				279AB8E817F5D1C500412120 /* PBXTargetDependency */,
 			);
 			name = AlfrescoSDKTests;
 			productName = AlfrescoSDKTests;
@@ -1543,19 +1542,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4EB076A515B00D8E00DF7DED /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
 		4EB076C315B00E9100DF7DED /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1723,10 +1709,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4EB076AE15B00D8E00DF7DED /* PBXTargetDependency */ = {
+		279AB8E817F5D1C500412120 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4EB0769615B00D8E00DF7DED /* AlfrescoSDK */;
-			targetProxy = 4EB076AD15B00D8E00DF7DED /* PBXContainerItemProxy */;
+			targetProxy = 279AB8E717F5D1C500412120 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
