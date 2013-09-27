@@ -53,6 +53,7 @@ extern NSString * const kAlfrescoWorkflowProcessPublicActive;
 extern NSString * const kAlfrescoWorkflowProcessPublicCompleted;
 extern NSString * const kAlfrescoWorkflowProcessOldInProgress;
 extern NSString * const kAlfrescoWorkflowProcessOldCompleted;
+extern NSString * const kAlfrescoWorkflowProcessIncludeVariables;
 
 extern NSString * const kAlfrescoWorkflowTasksOldAPI;
 extern NSString * const kAlfrescoWorkflowTasksPublicAPI;
@@ -101,6 +102,7 @@ extern NSString * const kAlfrescoPublicJSONEndedAt;
 extern NSString * const kAlfrescoPublicJSONDueAt;
 extern NSString * const kAlfrescoPublicJSONPriority;
 extern NSString * const kAlfrescoPublicJSONAssignee;
+extern NSString * const kAlfrescoPublicJSONProcessVariables;
 extern NSString * const kAlfrescoPublicJSONVariables;
 extern NSString * const kAlfrescoPublicJSONStartUserID;
 
@@ -110,6 +112,7 @@ extern NSString * const kAlfrescoOldJSONData;
 extern NSString * const kAlfrescoOldBPMJSONID;
 extern NSString * const kAlfrescoOldJSONIdentifier;
 extern NSString * const kAlfrescoOldJSONName;
+extern NSString * const kAlfrescoOldJSONMessage;
 extern NSString * const kAlfrescoOldBPMJSONStartedAt;
 extern NSString * const kAlfrescoOldBPMJSONEndedAt;
 extern NSString * const kAlfrescoOldBPMJSONDueAt;
@@ -120,6 +123,7 @@ extern NSString * const kAlfrescoOldBPMJSONPackageContainer;
 
 extern NSString * const kAlfrescoOldJSONOwner;
 
+extern NSString * const kAlfrescoPublicBPMJSONProcessTitle;
 extern NSString * const kAlfrescoPublicBPMJSONProcessDescription;
 extern NSString * const kAlfrescoPublicBPMJSONProcessPriority;
 extern NSString * const kAlfrescoPublicBPMJSONProcessAssignee;
@@ -153,6 +157,10 @@ extern NSString * const kAlfrescoOldJSONDueAt;
 extern NSString * const kAlfrescoOldJSONPriority;
 extern NSString * const kAlfrescoOldJSONDescription;
 extern NSString * const kAlfrescoOldJSONInitiator;
+
+extern NSString * const kAlfrescoPublicJSONVariableName;
+extern NSString * const kAlfrescoPublicJSONVariableType;
+extern NSString * const kAlfrescoPublicJSONVariableValue;
 
 extern NSString * const kAlfrescoWorkflowEngineType;
 extern NSString * const kAlfrescoWorkflowUsingPublicAPI;

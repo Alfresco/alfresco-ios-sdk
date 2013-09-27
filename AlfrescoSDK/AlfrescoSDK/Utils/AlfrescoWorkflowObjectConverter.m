@@ -29,6 +29,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoWorkflowVariable.h"
 
 @implementation AlfrescoWorkflowObjectConverter
 
@@ -168,6 +169,22 @@
             return workflowTasks;
         }
     }];
+}
+
+- (NSArray *)workflowVariablesFromArray:(NSArray *)variables
+{
+    NSMutableArray *variableArray = nil;
+    if (variables)
+    {
+        variableArray = [NSMutableArray arrayWithCapacity:variables.count];
+    }
+    
+    for (NSDictionary *variableProperties in variables)
+    {
+        AlfrescoWorkflowVariable *variable = [[AlfrescoWorkflowVariable alloc] initWithProperties:variableProperties];
+        [variableArray addObject:variable];
+    }
+    return variableArray;
 }
 
 - (NSString *)attachmentContainerNodeRefFromOldJSONData:(NSData *)jsonData conversionError:(NSError **)error
