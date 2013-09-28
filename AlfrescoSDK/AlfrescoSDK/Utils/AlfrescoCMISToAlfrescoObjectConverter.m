@@ -215,7 +215,7 @@
     
     [properties setValue:cmisDocument.creationDate forKey:kCMISPropertyCreationDate];
     [properties setValue:cmisDocument.lastModificationDate forKey:kCMISPropertyModificationDate];
-    NSNumber *length = [NSNumber numberWithInt:cmisDocument.contentStreamLength];
+    NSNumber *length = [NSNumber numberWithUnsignedLongLong:cmisDocument.contentStreamLength];
     [properties setValue:length forKey:kCMISPropertyContentStreamLength];
     NSNumber *isLatest = [NSNumber numberWithBool:cmisDocument.isLatestVersion];
     [properties setValue:isLatest forKey:kCMISPropertyIsLatestVersion];
