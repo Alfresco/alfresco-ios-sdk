@@ -23,7 +23,7 @@
  */
 #if !defined(ALFRESCO_SDK_VERSION)
     #warning Missing AlfrescoSDK.xcconfig entries. Ensure the project configuration settings are correct.
-    #define ALFRESCO_SDK_VERSION @"Unknown";
+    #define ALFRESCO_SDK_VERSION @"Unknown"
 #endif
 NSString * const kAlfrescoSDKVersion = ALFRESCO_SDK_VERSION;
 
