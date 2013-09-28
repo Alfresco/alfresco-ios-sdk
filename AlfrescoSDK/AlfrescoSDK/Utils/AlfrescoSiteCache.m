@@ -233,41 +233,52 @@
     return canRemoveFromCache;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
 - (void)siteStateForSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type isOn:(BOOL)isOn
 {
+    SEL changePendingStateSelector = sel_registerName("changePendingState:");
+    SEL changeMemberStateSelector = sel_registerName("changeMemberState:");
+    SEL changeFavoriteStateSelector = sel_registerName("changeFavoriteState:");
+
     if (AlfrescoSitePendingMember == type)
     {
-        [site performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:isOn]];
+        [site performSelector:changePendingStateSelector withObject:[NSNumber numberWithBool:isOn]];
     }
     else if (AlfrescoSiteMember == type)
     {
-        [site performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:isOn]];
+        [site performSelector:changeMemberStateSelector withObject:[NSNumber numberWithBool:isOn]];
     }
     else if (AlfrescoSiteFavorite == type)
     {
-        [site performSelector:@selector(changeFavoriteState:) withObject:[NSNumber numberWithBool:isOn]];
+        [site performSelector:changeFavoriteStateSelector withObject:[NSNumber numberWithBool:isOn]];
     }
 }
 
 - (void)transferStatesForSite:(AlfrescoSite *)site fromSite:(AlfrescoSite *)originalSite type:(AlfrescoSiteFlags)type
 {
+    SEL changePendingStateSelector = sel_registerName("changePendingState:");
+    SEL changeMemberStateSelector = sel_registerName("changeMemberState:");
+    SEL changeFavoriteStateSelector = sel_registerName("changeFavoriteState:");
+
     if (AlfrescoSitePendingMember == type)
     {
-        [site performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:originalSite.isMember]];
-        [site performSelector:@selector(changeFavoriteState:) withObject:[NSNumber numberWithBool:originalSite.isFavorite]];
+        [site performSelector:changeMemberStateSelector withObject:[NSNumber numberWithBool:originalSite.isMember]];
+        [site performSelector:changeFavoriteStateSelector withObject:[NSNumber numberWithBool:originalSite.isFavorite]];
     }
     else if (AlfrescoSiteMember == type)
     {
-        [site performSelector:@selector(changeFavoriteState:) withObject:[NSNumber numberWithBool:originalSite.isFavorite]];
-        [site performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:originalSite.isPendingMember]];
+        [site performSelector:changeFavoriteStateSelector withObject:[NSNumber numberWithBool:originalSite.isFavorite]];
+        [site performSelector:changePendingStateSelector withObject:[NSNumber numberWithBool:originalSite.isPendingMember]];
     }
     else if (AlfrescoSiteFavorite == type)
     {
-        [site performSelector:@selector(changeMemberState:) withObject:[NSNumber numberWithBool:originalSite.isMember]];
-        [site performSelector:@selector(changePendingState:) withObject:[NSNumber numberWithBool:originalSite.isPendingMember]];
+        [site performSelector:changeMemberStateSelector withObject:[NSNumber numberWithBool:originalSite.isMember]];
+        [site performSelector:changePendingStateSelector withObject:[NSNumber numberWithBool:originalSite.isPendingMember]];
     }
-    
 }
 
+#pragma clang diagnostic pop
 
 @end

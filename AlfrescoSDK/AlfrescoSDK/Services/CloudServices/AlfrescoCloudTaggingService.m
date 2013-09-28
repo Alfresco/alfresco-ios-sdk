@@ -161,7 +161,7 @@
     
     NSString *requestString = [kAlfrescoCloudTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                       withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
