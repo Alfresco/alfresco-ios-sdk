@@ -1491,6 +1491,7 @@
 				4EB076A215B00D8E00DF7DED /* Sources */,
 				4EB076A315B00D8E00DF7DED /* Frameworks */,
 				4EB076A415B00D8E00DF7DED /* Resources */,
+				276AB06417F998BA00D13B53 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1544,6 +1545,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		276AB06417F998BA00D13B53 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Use ios-sim to run unit tests on build machine\n# From: https://confluence.atlassian.com/display/BAMBOO/Xcode\nif [ \"$RUN_UNIT_TEST_WITH_IOS_SIM\" = \"YES\" ]; then\n    test_bundle_path=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION\"\n    ios-sim launch \"$(dirname \"$TEST_HOST\")\" --setenv DYLD_INSERT_LIBRARIES=/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection --setenv XCInjectBundle=\"$test_bundle_path\" --setenv XCInjectBundleInto=\"$TEST_HOST\" --args -SenTest All \"$test_bundle_path\"\n    echo \"Finished running tests with ios-sim\"\nfi";
+		};
 		4EB076C315B00E9100DF7DED /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
