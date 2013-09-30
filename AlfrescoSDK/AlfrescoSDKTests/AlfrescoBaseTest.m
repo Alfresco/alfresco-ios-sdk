@@ -42,23 +42,29 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
 
 - (NSDictionary *)setupEnvironmentParameters
 {
-    NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
-    NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
-    NSDictionary *allEnvironments = [plistContents objectForKey:@"environments"];
     NSDictionary *environment = nil;
-    if (nil != allEnvironments)
+
+    // Expecting a "TEST_SERVER" environment variable via the xcconfig file
+#if !defined(TEST_SERVER)
+    #warning Missing AlfrescoSDKTests.xcconfig entries. Ensure the project configuration settings are correct.
+    #define TEST_SERVER nil
+#endif
+
+    if (TEST_SERVER)
     {
-        // Expecting a "TEST_SERVER" environment variable
-        NSDictionary *environmentVariables = [[NSProcessInfo processInfo] environment];
-        NSString *serverID = [environmentVariables valueForKey:@"TEST_SERVER"];
-        if (nil != serverID)
+        NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
+        NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
+        NSDictionary *allEnvironments = [plistContents objectForKey:@"environments"];
+        if (nil != allEnvironments)
         {
-            environment = (NSDictionary *)[allEnvironments objectForKey:serverID];
+            AlfrescoLogDebug(@"TEST_SERVER from xcconfig: %@", TEST_SERVER);
+            environment = (NSDictionary *)[allEnvironments objectForKey:TEST_SERVER];
         }
     }
 
     if (nil == environment)
     {
+        AlfrescoLogDebug(@"WARNING: No test environment selected, using localhost defaults.");
         self.server = @"http://localhost:8080/alfresco";
         self.isCloud = NO;
         self.userName = @"admin";
