@@ -114,7 +114,7 @@
     
     if (state && ![state isEqualToString:kAlfrescoWorkflowProcessStateAny])
     {
-        queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowState : [self.publicToPrivateStateMappings objectForKey:state]}];
+        queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowProcessStatus : [self.publicToPrivateStateMappings objectForKey:state]}];
     }
     
     if (!listingContext)
