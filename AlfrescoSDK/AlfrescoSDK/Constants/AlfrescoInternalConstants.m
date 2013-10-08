@@ -162,7 +162,7 @@ NSString * const kAlfrescoOnPremisePersonSearchAPI = @"people?filter={filter}";
 NSString * const kAlfrescoOnPremiseAvatarForPersonAPI = @"/service/slingshot/profile/avatar/{personID}";
 NSString * const kAlfrescoOnPremiseMetadataExtractionAPI = @"/service/api/actionQueue";
 NSString * const kAlfrescoOnPremiseThumbnailCreationAPI = @"/node/{nodeRef}/content/thumbnails?as=true";
-NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI = @"node/{nodeRef}/content/thumbnails/{renditionID}";
+NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI = @"node/{nodeRef}/content/thumbnails/{renditionID}?c=queue";
 
 NSString * const kAlfrescoOnPremiseAddOrRemoveFavoriteSiteAPI = @"people/{personID}/preferences";
 NSString * const kAlfrescoOnPremiseJoinPublicSiteAPI = @"sites/{siteID}/memberships";
