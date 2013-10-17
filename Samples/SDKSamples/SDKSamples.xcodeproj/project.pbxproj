@@ -93,6 +93,7 @@
 		2717212417DFF59200F00847 /* AlfrescoWorkflowServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowServices.h; sourceTree = "<group>"; };
 		2717212517DFF59200F00847 /* AlfrescoWorkflowTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowTask.h; sourceTree = "<group>"; };
 		2717212617DFF59200F00847 /* AlfrescoWorkflowTaskService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowTaskService.h; sourceTree = "<group>"; };
+		272CBC4E18100200001B301A /* AlfrescoWorkflowVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowVariable.h; sourceTree = "<group>"; };
 		27E4D48817BBFE5500F5D773 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4E0C86611612E2CB008B71DB /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthData.h; sourceTree = "<group>"; };
 		4E0C86711612EE6F008B71DB /* AlfrescoOAuthLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoOAuthLoginViewController.h; sourceTree = "<group>"; };
@@ -304,6 +305,7 @@
 				2717212417DFF59200F00847 /* AlfrescoWorkflowServices.h */,
 				2717212517DFF59200F00847 /* AlfrescoWorkflowTask.h */,
 				2717212617DFF59200F00847 /* AlfrescoWorkflowTaskService.h */,
+				272CBC4E18100200001B301A /* AlfrescoWorkflowVariable.h */,
 			);
 			name = AlfrescoSDK;
 			path = ../AlfrescoSDK;

@@ -23,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		272CBC4F18100222001B301A /* AlfrescoWorkflowVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowVariable.h; sourceTree = "<group>"; };
 		27503B5617DFEF32008538C9 /* AlfrescoCompany.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoCompany.h; sourceTree = "<group>"; };
 		27503B5717DFEF32008538C9 /* AlfrescoSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSDK.h; sourceTree = "<group>"; };
 		27503B5817DFEF32008538C9 /* AlfrescoWorkflowInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowInfo.h; sourceTree = "<group>"; };
@@ -222,6 +223,7 @@
 				27503B5D17DFEF32008538C9 /* AlfrescoWorkflowServices.h */,
 				27503B5E17DFEF32008538C9 /* AlfrescoWorkflowTask.h */,
 				27503B5F17DFEF32008538C9 /* AlfrescoWorkflowTaskService.h */,
+				272CBC4F18100222001B301A /* AlfrescoWorkflowVariable.h */,
 			);
 			name = AlfrescoSDK;
 			path = ../AlfrescoSDK;
