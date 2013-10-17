@@ -20,7 +20,7 @@
 
 @interface HelloRepoViewController ()
 
-@property (nonatomic, strong) NSMutableArray *nodes;
+@property (nonatomic, strong) NSArray *nodes;
 @property (nonatomic, strong) id<AlfrescoSession> session;
 @property BOOL isCloudTest;
 
@@ -57,25 +57,30 @@
     // If using an HTTPS scheme with an untrusted SSL certificate, change this parameter to YES
     NSDictionary *parameters = @{kAlfrescoAllowUntrustedSSLCertificate: [NSNumber numberWithBool:NO]};
 
-    __weak HelloRepoViewController *weakSelf = self;
-    [AlfrescoRepositorySession connectWithUrl:url
-                                     username:username
-                                     password:password
-                                   parameters:parameters
-                              completionBlock:^(id<AlfrescoSession> session, NSError *error) {
-                                  if (nil == session)
-                                  {
-                                      NSLog(@"Failed to authenticate: %@:", error);
-                                  }
-                                  else
-                                  {
-                                      NSLog(@"Authenticated successfully");
-                                      NSLog(@"Repository version: %@", session.repositoryInfo.version);
-                                      NSLog(@"Repository edition: %@", session.repositoryInfo.edition);
-                                      weakSelf.session = session;
-                                      [weakSelf loadRootFolder];
-                                  }
-                              }];
+    // Example of making an AlfrescoSDK request on a background thread.
+    // Note the dispatch_async to the main thread below for UI updates.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __weak HelloRepoViewController *weakSelf = self;
+        [AlfrescoRepositorySession connectWithUrl:url
+                                         username:username
+                                         password:password
+                                       parameters:parameters
+                                  completionBlock:^(id<AlfrescoSession> session, NSError *error) {
+                                      if (nil == session)
+                                      {
+                                          NSLog(@"Failed to authenticate: %@:", error);
+                                      }
+                                      else
+                                      {
+                                          NSLog(@"Authenticated successfully");
+                                          NSLog(@"Repository version: %@", session.repositoryInfo.version);
+                                          NSLog(@"Repository edition: %@", session.repositoryInfo.edition);
+                                          weakSelf.session = session;
+                                          [weakSelf loadRootFolder];
+                                      }
+                                  }];
+    });
+    
 }
 
 - (void)helloFromCloud
@@ -145,7 +150,10 @@
         {
             NSLog(@"Retrieved root folder with %d children", array.count);
             weakSelf.nodes = [NSArray arrayWithArray:array];
-            [weakSelf.tableView reloadData];
+            // Note the UI must only be updated on the main thread
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.tableView reloadData];
+            });
         }
     }];
 }
