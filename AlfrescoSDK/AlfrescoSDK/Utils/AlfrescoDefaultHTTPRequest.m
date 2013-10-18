@@ -88,8 +88,9 @@
         [self.outputStream open];
     }
     self.responseData = nil;
-    self.connection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    CFRunLoopRun();
+    self.connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self startImmediately:NO];
+    [self.connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [self.connection start];
 }
 
 #pragma URL delegate methods
@@ -176,8 +177,6 @@
     self.completionBlock = nil;
     self.connection = nil;
     self.responseData = nil;
-
-    CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -192,8 +191,6 @@
         self.completionBlock(nil, error);
     }
     self.connection = nil;
-
-    CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
 
@@ -213,8 +210,6 @@
         
         NSError *alfrescoError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
         dataCompletionBlock(nil, alfrescoError);
-
-        CFRunLoopStop(CFRunLoopGetCurrent());
     }
 }
 
