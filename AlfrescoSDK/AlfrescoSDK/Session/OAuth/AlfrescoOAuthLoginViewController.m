@@ -317,14 +317,19 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
         
         if ([requestComponents containsObject:kOAuthRequestDenyAction])
         {
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
             if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidCancel)])
             {
                 [self.oauthDelegate oauthLoginDidCancel];
             }
             else if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
             {
-                NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
                 [self.oauthDelegate oauthLoginDidFailWithError:error];
+            }
+            
+            if (self.completionBlock != NULL)
+            {
+                self.completionBlock(nil, error);
             }
         }
         else
@@ -351,6 +356,11 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
         if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
         {
             [self.oauthDelegate oauthLoginDidFailWithError:error];
+        }
+        
+        if (self.completionBlock != NULL)
+        {
+            self.completionBlock(nil, error);
         }
     }
     else
@@ -429,6 +439,12 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
             else
             {
                 showAlert = YES;
+            }
+            
+            if (self.completionBlock != NULL)
+            {
+                self.completionBlock(nil, error);
+                showAlert = NO;
             }
         }
         else
