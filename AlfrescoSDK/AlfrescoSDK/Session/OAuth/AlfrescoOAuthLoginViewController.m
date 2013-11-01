@@ -149,7 +149,11 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     [super viewWillAppear:animated];
     self.isLoginScreenLoad = YES;
     [self loadWebView];
-    [self createActivityView];
+    
+    if (!self.activityIndicator)
+    {
+        [self createActivityView];
+    }
 }
 
 #ifdef __IPHONE_6_0
@@ -205,6 +209,12 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
+    
+    if (!self.activityIndicator)
+    {
+        [self createActivityView];
+    }
+    [self.activityIndicator startAnimating];
         
     NSMutableString *authURLString = [NSMutableString string];
     [authURLString appendString:self.baseURL];
@@ -283,7 +293,7 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    
+    [self.activityIndicator stopAnimating];
     if (self.webView.loading)
     {
         [self.webView stopLoading];
