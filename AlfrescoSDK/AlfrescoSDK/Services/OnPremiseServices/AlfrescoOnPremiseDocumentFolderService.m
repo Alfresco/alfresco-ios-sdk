@@ -471,8 +471,13 @@
         joinedFavoriteNodes = [favoritesDictionary valueForKeyPath:kAlfrescoOnPremiseFavoriteFolders];
     }
     
-    NSArray *favorites = (joinedFavoriteNodes.length > 0) ? [joinedFavoriteNodes componentsSeparatedByString:@","] : [NSArray array];
-    return favorites;
+    NSMutableArray *favoriteNodes = [NSMutableArray array];
+    if (joinedFavoriteNodes.length > 0)
+    {
+        favoriteNodes = [[joinedFavoriteNodes componentsSeparatedByString:@","] mutableCopy];
+        [favoriteNodes removeObject:@""];
+    }
+    return favoriteNodes;
 }
 
 - (void)updateFavoritesWithList:(NSData *)data forType:(AlfrescoFavoriteType)type completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
