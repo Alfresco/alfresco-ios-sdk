@@ -477,7 +477,7 @@
         favoriteNodes = [[joinedFavoriteNodes componentsSeparatedByString:@","] mutableCopy];
         [favoriteNodes removeObject:@""];
     }
-    return favoriteNodes;
+    return [NSArray arrayWithArray:favoriteNodes];
 }
 
 - (void)updateFavoritesWithList:(NSData *)data forType:(AlfrescoFavoriteType)type completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
