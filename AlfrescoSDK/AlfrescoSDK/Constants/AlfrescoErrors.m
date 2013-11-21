@@ -128,6 +128,10 @@ NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task 
             {
                 code = isExpired ? kAlfrescoErrorCodeRefreshTokenExpired : kAlfrescoErrorCodeRefreshTokenInvalid;
             }
+            else if ([descriptionObj hasPrefix:@"The access token"])
+            {
+                code = kAlfrescoErrorCodeAccessTokenExpired;
+            }
             else
             {
                 code = kAlfrescoErrorCodeInvalidRequest;
