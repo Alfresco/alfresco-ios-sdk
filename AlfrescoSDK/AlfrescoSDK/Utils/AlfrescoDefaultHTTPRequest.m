@@ -146,7 +146,18 @@
     {
         if (self.statusCode == 401)
         {
-            error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnauthorisedAccess];
+            NSError *jsonError = nil;
+            id jsonDictionary = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&jsonError];
+            NSError *errorFromDescription = [AlfrescoErrors alfrescoErrorFromJSONParameters:jsonDictionary];
+            
+            if (!jsonError && errorFromDescription.code != kAlfrescoErrorCodeJSONParsing)
+            {
+                error = errorFromDescription;
+            }
+            else
+            {
+                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnauthorisedAccess];
+            }
         }
         else
         {
