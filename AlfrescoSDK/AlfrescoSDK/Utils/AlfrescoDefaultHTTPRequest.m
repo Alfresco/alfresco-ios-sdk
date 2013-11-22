@@ -88,7 +88,9 @@
         [self.outputStream open];
     }
     self.responseData = nil;
-    self.connection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    self.connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self startImmediately:NO];
+    [self.connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [self.connection start];
 }
 
 #pragma URL delegate methods
@@ -144,7 +146,18 @@
     {
         if (self.statusCode == 401)
         {
-            error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnauthorisedAccess];
+            NSError *jsonError = nil;
+            id jsonDictionary = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&jsonError];
+            NSError *errorFromDescription = [AlfrescoErrors alfrescoErrorFromJSONParameters:jsonDictionary];
+            
+            if (!jsonError && errorFromDescription.code != kAlfrescoErrorCodeJSONParsing)
+            {
+                error = errorFromDescription;
+            }
+            else
+            {
+                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnauthorisedAccess];
+            }
         }
         else
         {

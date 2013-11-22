@@ -20,7 +20,7 @@
 
 @interface HelloRepoViewController ()
 
-@property (nonatomic, strong) NSMutableArray *nodes;
+@property (nonatomic, strong) NSArray *nodes;
 @property (nonatomic, strong) id<AlfrescoSession> session;
 @property BOOL isCloudTest;
 
@@ -145,7 +145,10 @@
         {
             NSLog(@"Retrieved root folder with %d children", array.count);
             weakSelf.nodes = [NSArray arrayWithArray:array];
-            [weakSelf.tableView reloadData];
+            // Note the UI must only be updated on the main thread
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.tableView reloadData];
+            });
         }
     }];
 }

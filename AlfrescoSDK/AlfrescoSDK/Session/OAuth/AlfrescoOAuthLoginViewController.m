@@ -149,7 +149,11 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     [super viewWillAppear:animated];
     self.isLoginScreenLoad = YES;
     [self loadWebView];
-    [self createActivityView];
+    
+    if (!self.activityIndicator)
+    {
+        [self createActivityView];
+    }
 }
 
 #ifdef __IPHONE_6_0
@@ -205,6 +209,12 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
+    
+    if (!self.activityIndicator)
+    {
+        [self createActivityView];
+    }
+    [self.activityIndicator startAnimating];
         
     NSMutableString *authURLString = [NSMutableString string];
     [authURLString appendString:self.baseURL];
@@ -283,7 +293,7 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    
+    [self.activityIndicator stopAnimating];
     if (self.webView.loading)
     {
         [self.webView stopLoading];
@@ -317,14 +327,19 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
         
         if ([requestComponents containsObject:kOAuthRequestDenyAction])
         {
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
             if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidCancel)])
             {
                 [self.oauthDelegate oauthLoginDidCancel];
             }
             else if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
             {
-                NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
                 [self.oauthDelegate oauthLoginDidFailWithError:error];
+            }
+            
+            if (self.completionBlock != NULL)
+            {
+                self.completionBlock(nil, error);
             }
         }
         else
@@ -351,6 +366,11 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
         if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
         {
             [self.oauthDelegate oauthLoginDidFailWithError:error];
+        }
+        
+        if (self.completionBlock != NULL)
+        {
+            self.completionBlock(nil, error);
         }
     }
     else
@@ -429,6 +449,12 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
             else
             {
                 showAlert = YES;
+            }
+            
+            if (self.completionBlock != NULL)
+            {
+                self.completionBlock(nil, error);
+                showAlert = NO;
             }
         }
         else

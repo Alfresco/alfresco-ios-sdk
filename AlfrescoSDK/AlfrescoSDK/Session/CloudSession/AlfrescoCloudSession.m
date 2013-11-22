@@ -155,9 +155,9 @@
     AlfrescoCloudSession *sessionInstance = [[AlfrescoCloudSession alloc] initWithParameters:nil];
     if (nil != sessionInstance)
     {
-        return [sessionInstance authenticateWithOAuthData:oauthData
-                                                  network:networkIdentifer
-                                          completionBlock:completionBlock];
+        return [sessionInstance retrieveNetworksAndAuthenticateWithOAuthData:oauthData
+                                                           networkIdentifier:networkIdentifer
+                                                             completionBlock:completionBlock];
     }
     return nil;
 }
@@ -197,9 +197,9 @@
         }
         else
         {
-            return [sessionInstance authenticateWithOAuthData:oauthData
-                                                      network:networkIdentifer
-                                              completionBlock:completionBlock];
+            return [sessionInstance retrieveNetworksAndAuthenticateWithOAuthData:oauthData
+                                                               networkIdentifier:networkIdentifer
+                                                                 completionBlock:completionBlock];
         }
     }
     return nil;
@@ -378,6 +378,13 @@
 - (AlfrescoRequest *)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
                                completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
+    return [self retrieveNetworksAndAuthenticateWithOAuthData:oauthData networkIdentifier:nil completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)retrieveNetworksAndAuthenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
+                                                networkIdentifier:(NSString *)networkIdentifier
+                                                  completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+{
     self.isUsingBaseAuthenticationProvider = NO;
     NSString *baseURL = kAlfrescoCloudURL;
     if ([[self.sessionData allKeys] containsObject:kAlfrescoSessionCloudURL])
@@ -389,7 +396,7 @@
     self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
     _oauthData = oauthData; ///setting oauthData only via instance variable. The setter method recreates a CMIS session and this shouldn't be used here.
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
+    request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
         if (nil == networks)
         {
             completionBlock(nil, error);
@@ -397,23 +404,21 @@
         else
         {
             AlfrescoLogDebug(@"found %d networks", networks.count);
-            __block AlfrescoCloudNetwork *homeNetwork = [self homeNetworkFromArray:networks];
-            if (nil == homeNetwork)
+            __block NSString *networkToConnectIdentifier = networkIdentifier ? networkIdentifier : [[self homeNetworkFromArray:networks] identifier];
+            if (nil == networkToConnectIdentifier)
             {
                 completionBlock(nil, error);
             }
             else
             {
                 request = [self authenticateWithOAuthData:oauthData
-                                                  network:homeNetwork.identifier
+                                                  network:networkToConnectIdentifier
                                           completionBlock:completionBlock];
             }
-            
         }
     }];
     return request;
 }
-
 
 - (AlfrescoRequest *)authenticateWithOAuthData:(AlfrescoOAuthData *)oauthData
                                        network:(NSString *)network
