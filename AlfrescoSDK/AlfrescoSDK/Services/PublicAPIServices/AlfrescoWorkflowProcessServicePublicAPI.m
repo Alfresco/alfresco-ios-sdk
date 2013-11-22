@@ -335,13 +335,22 @@
     {
         [completeVariables setValue:self.session.personIdentifier forKey:kAlfrescoPublicBPMJSONProcessAssignee];
     }
-    else if (assignees.count == 1)
-    {
-        [completeVariables setValue:assignees[0] forKey:kAlfrescoPublicBPMJSONProcessAssignee];
-    }
     else
     {
-        [completeVariables setValue:assignees forKey:kAlfrescoPublicBPMJSONProcessAssignees];
+        NSMutableArray *assigneeIdentifiers = [NSMutableArray arrayWithCapacity:assignees.count];
+        for (AlfrescoPerson *person in assignees)
+        {
+            [assigneeIdentifiers addObject:person.identifier];
+        }
+        
+        if (assignees.count == 1)
+        {
+            [completeVariables setValue:assigneeIdentifiers[0] forKey:kAlfrescoPublicBPMJSONProcessAssignee];
+        }
+        else
+        {
+            [completeVariables setValue:assigneeIdentifiers forKey:kAlfrescoPublicBPMJSONProcessAssignees];
+        }
     }
     
     // add the variables dictionary to the request
