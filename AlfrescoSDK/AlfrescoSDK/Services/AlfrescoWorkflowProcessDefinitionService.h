@@ -34,9 +34,10 @@
  *  ---------------------------------------------------------------------------------------
  */
 
-/** Initialises with a public or old API implementation
+/**
+ Initialises with a public or old API implementation
  
- @param session the AlfrescoSession to initialise the site service with.
+ @param session the AlfrescoSession to initialise the site service with
  */
 - (id)initWithSession:(id<AlfrescoSession>)session;
 
@@ -45,16 +46,35 @@
  *  ---------------------------------------------------------------------------------------
  */
 
-// Returns a list of all process definitions
+/**
+ Retrieves a list of all process definitions.
+ 
+ @param completionBlock The block that's called with the operation completes
+ */
 - (AlfrescoRequest *)retrieveAllProcessDefinitionsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
-// Returns a paged result of the process defintions
+/**
+ Retrieves a paged result of all process defintions in accordance to a listing context.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve process definitions
+ @param completionBlock The block that's called with the operation completes
+ */
 - (AlfrescoRequest *)retrieveProcessDefinitionsWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
-// Returns a process definition for a given process identifier
-- (AlfrescoRequest *)retrieveProcessDefinitionWithIdentifier:(NSString *)processIdentifier completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock;
+/**
+ Retrieves a process definition for a specific process identifier.
+ 
+ @param processDefinitionId The process definition identifier for the process definition to be retrieved
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveProcessDefinitionWithIdentifier:(NSString *)processDefinitionId completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock;
 
-// Returns the form model for the given task ID
+/**
+ Retrieves the form model for a specific process definition identifier.
+ 
+ @param processIdentifier The process identifier for which the form model should be retrieved
+ @param completionBlock The block that's called with the operation completes
+ */
 - (AlfrescoRequest *)retrieveFormModelForProcess:(NSString *)processDefinitionId completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock;
 
 @end

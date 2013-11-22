@@ -236,7 +236,7 @@
 
 - (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
@@ -335,13 +335,22 @@
     {
         [completeVariables setValue:self.session.personIdentifier forKey:kAlfrescoPublicBPMJSONProcessAssignee];
     }
-    else if (assignees.count == 1)
-    {
-        [completeVariables setValue:assignees[0] forKey:kAlfrescoPublicBPMJSONProcessAssignee];
-    }
     else
     {
-        [completeVariables setValue:assignees forKey:kAlfrescoPublicBPMJSONProcessAssignees];
+        NSMutableArray *assigneeIdentifiers = [NSMutableArray arrayWithCapacity:assignees.count];
+        for (AlfrescoPerson *person in assignees)
+        {
+            [assigneeIdentifiers addObject:person.identifier];
+        }
+        
+        if (assignees.count == 1)
+        {
+            [completeVariables setValue:assigneeIdentifiers[0] forKey:kAlfrescoPublicBPMJSONProcessAssignee];
+        }
+        else
+        {
+            [completeVariables setValue:assigneeIdentifiers forKey:kAlfrescoPublicBPMJSONProcessAssignees];
+        }
     }
     
     // add the variables dictionary to the request
@@ -388,13 +397,13 @@
 
 - (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
 - (AlfrescoRequest *)updateVariables:(NSDictionary *)variables forProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
@@ -423,13 +432,13 @@
 
 - (AlfrescoRequest *)removeVariables:(NSArray *)variablesKeys forProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
 - (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
