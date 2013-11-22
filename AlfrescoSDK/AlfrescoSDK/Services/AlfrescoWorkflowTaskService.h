@@ -73,14 +73,6 @@
  */
 - (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
-/**
- Retrieves variables for a specific task.
- 
- @param task The task for which variables should be retrieved
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)retrieveVariablesForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
-
 /**---------------------------------------------------------------------------------------
  * @name Task assignment methods for the Alfresco Workflow Task Service
  *  ---------------------------------------------------------------------------------------
@@ -153,20 +145,6 @@
 - (AlfrescoRequest *)addAttachments:(NSArray *)nodeArray toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
- * @name Update methods for the Alfresco Workflow Task Service
- *  ---------------------------------------------------------------------------------------
- */
-
-/**
- Updates the variables on a specific task. Variables that are not currently present will be added.
- 
- @param variables A dictionary of process variables to add or update to the task
- @param task The task to which the variables should be added/updated
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)updateVariables:(NSDictionary *)variables forTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
-
-/**---------------------------------------------------------------------------------------
  * @name Removal methods for the Alfresco Workflow Task Service
  *  ---------------------------------------------------------------------------------------
  */
@@ -179,14 +157,5 @@
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
-
-/**
- Removes the list of variables from a specific task.
- 
- @param variablesKeys The keys of the variables you wish to remove
- @param task The task from which the variables should be removed
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)removeVariables:(NSArray *)variablesKeys forTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
 
 @end

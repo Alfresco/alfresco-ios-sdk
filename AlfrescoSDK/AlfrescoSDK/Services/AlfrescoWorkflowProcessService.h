@@ -92,14 +92,6 @@
 - (AlfrescoRequest *)retrieveProcessWithIdentifier:(NSString *)processID completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
 /**
- Retrieves any variables on a given any given process.
- 
- @param process The process for which you would like to retrieve the variables for
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)retrieveVariablesForProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
-
-/**
  Retrieves an array of all tasks that the user is able to see. Tasks are returned if created by the user, or if the user is involved in the task.
  
  @param process The process for which task(s) should be retrieved
@@ -115,14 +107,6 @@
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process inState:(NSString *)status completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
-
-/**
- Retrieves an array of AlfrescoNode's attached to a given task.
- 
- @param task The task for which attachements should be retrieved
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /**
  Retrieves an image of the given process. An image is only returned if the user has started the process or is involved in any of the tasks.
@@ -157,29 +141,6 @@
  */
 - (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition assignees:(NSArray *)assignees variables:(NSDictionary *)variables attachments:(NSArray *)attachmentNodes completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
-/**
- Adds an attachment to the provided process.
- 
- @param node The attachment to be added to the process
- @param process The process for which you would like to add an attachment
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toProcess:(AlfrescoWorkflowTask *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
-
-/**---------------------------------------------------------------------------------------
- * @name Update methods for the Alfresco Workflow Process Service
- *  ---------------------------------------------------------------------------------------
- */
-
-/**
- Updates the variables provided on the given process. Variables that are not currently present will be added to the process.
- 
- @param variables A dictionary of process variables to add or update to the process
- @param process The process to which variables should be added/updated
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)updateVariables:(NSDictionary *)variables forProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
-
 /**---------------------------------------------------------------------------------------
  * @name Removal methods for the Alfresco Workflow Process Service
  *  ---------------------------------------------------------------------------------------
@@ -192,23 +153,5 @@
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)deleteProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
-
-/**
- Removes the list of variables provided on a given process.
- 
- @param variablesKeys The keys of the variables you wish to remove
- @param process The process for which you would like to remove the variables
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)removeVariables:(NSArray *)variablesKeys forProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
-
-/**
- Removes an attachement from a given process.
- 
- @param node The node you wish to remove from the process
- @param task The task for which you would like to remove the attachment
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
 @end

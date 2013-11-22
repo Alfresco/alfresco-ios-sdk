@@ -236,7 +236,7 @@
 
 - (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
@@ -388,13 +388,13 @@
 
 - (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
 - (AlfrescoRequest *)updateVariables:(NSDictionary *)variables forProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
@@ -423,13 +423,13 @@
 
 - (AlfrescoRequest *)removeVariables:(NSArray *)variablesKeys forProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
 - (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
-    // TODO
+    // STUB - Not part of 1.3
     return nil;
 }
 
