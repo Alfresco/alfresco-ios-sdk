@@ -108,39 +108,50 @@
 }
 
 
-- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type hasMoreSites:(BOOL)hasMoreSites totalSites:(NSInteger)totalSites
+- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type completionBlock:(void (^)())completionBlock
+{
+    [self addSites:sites type:type hasMoreSites:NO totalSites:-1 completionBlock:completionBlock];
+}
+
+- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type hasMoreSites:(BOOL)hasMoreSites totalSites:(NSInteger)totalSites completionBlock:(void (^)())completionBlock
 {
     if (nil == sites)
     {
         return;
     }
-    switch (type)
-    {
-        case AlfrescoSiteAll:
-            self.hasMoreSites = hasMoreSites;
-            self.totalSites = totalSites;
-            break;
-        case AlfrescoSitePendingMember:
-            self.hasMorePendingSites = hasMoreSites;
-            self.totalPendingSites = totalSites;
-            break;
-        case AlfrescoSiteMember:
-            self.hasMoreMemberSites = hasMoreSites;
-            self.totalMemberSites = totalSites;
-            break;
-        case AlfrescoSiteFavorite:
-            self.hasMoreFavoriteSites = hasMoreSites;
-            self.totalFavoriteSites = totalSites;
-            break;
-    }
-    [sites enumerateObjectsUsingBlock:^(AlfrescoSite *site, NSUInteger index, BOOL *stop){
-        [self addSite:site type:type];
-    }];
-}
 
-- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type
-{
-    [self addSites:sites type:type hasMoreSites:NO totalSites:-1];
+    // This could be a long process for large site collections, we keep it off the main thread
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        switch (type)
+        {
+            case AlfrescoSiteAll:
+                self.hasMoreSites = hasMoreSites;
+                self.totalSites = totalSites;
+                break;
+            case AlfrescoSitePendingMember:
+                self.hasMorePendingSites = hasMoreSites;
+                self.totalPendingSites = totalSites;
+                break;
+            case AlfrescoSiteMember:
+                self.hasMoreMemberSites = hasMoreSites;
+                self.totalMemberSites = totalSites;
+                break;
+            case AlfrescoSiteFavorite:
+                self.hasMoreFavoriteSites = hasMoreSites;
+                self.totalFavoriteSites = totalSites;
+                break;
+        }
+        [sites enumerateObjectsUsingBlock:^(AlfrescoSite *site, NSUInteger index, BOOL *stop){
+            [self addSite:site type:type];
+        }];
+
+        if (completionBlock != NULL)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock();
+            });
+        }
+    });
 }
 
 
