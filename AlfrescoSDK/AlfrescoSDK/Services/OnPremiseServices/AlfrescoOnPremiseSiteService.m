@@ -545,8 +545,11 @@
             if (siteArray)
             {
                 NSArray *allSortedArray = [AlfrescoSortingUtils sortedArrayForArray:siteArray sortKey:self.defaultSortKey ascending:YES];
-                [self.siteCache addSites:allSortedArray type:AlfrescoSiteAll];
-                [self retrieveFavouriteSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:request];
+
+                __weak typeof(self) weakSelf = self;
+                [self.siteCache addSites:allSortedArray type:AlfrescoSiteAll completionBlock:^{
+                    [weakSelf retrieveFavouriteSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:request];
+                }];
             }
             else
             {
@@ -584,8 +587,10 @@
             {
                 NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"shortName IN %@",favSitesArray];
                 NSArray *favoriteSites = [self.siteCache.allSites filteredArrayUsingPredicate:favoritePredicate];
-                [self.siteCache addSites:favoriteSites type:AlfrescoSiteFavorite];
-                [self retrieveMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest];
+                __weak typeof(self) weakSelf = self;
+                [self.siteCache addSites:favoriteSites type:AlfrescoSiteFavorite completionBlock:^{
+                    [weakSelf retrieveMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest];
+                }];
             }
             else
             {
@@ -620,8 +625,10 @@
             if (mySiteArray)
             {
                 NSArray *mySortedSiteArray = [AlfrescoSortingUtils sortedArrayForArray:mySiteArray sortKey:self.defaultSortKey ascending:YES];
-                [self.siteCache addSites:mySortedSiteArray type:AlfrescoSiteMember];
-                [self retrievePendingMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest];
+                __weak typeof(self) weakSelf = self;
+                [self.siteCache addSites:mySortedSiteArray type:AlfrescoSiteMember completionBlock:^{
+                    [weakSelf retrievePendingMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest];
+                }];
             }
             else
             {
@@ -656,33 +663,35 @@
             NSArray *requests = [self joinRequestArrayFromJSONData:data error:&jsonError];
             if (requests)
             {
-                NSArray *resultsArray = nil;
                 NSArray *pendingSites = [self sitesArrayFromJoinRequests:requests];
-                [self.siteCache addSites:pendingSites type:AlfrescoSitePendingMember];
-                switch (type)
-                {
-                    case AlfrescoSiteAll:
-                        resultsArray = [self.siteCache allSites];
-                        break;
-                    case AlfrescoSiteFavorite:
-                        resultsArray = [self.siteCache favoriteSites];
-                        break;
-                    case AlfrescoSiteMember:
-                        resultsArray = [self.siteCache memberSites];
-                        break;
-                    case AlfrescoSitePendingMember:
-                        resultsArray = [self.siteCache pendingMemberSites];
-                        break;
-                }
-                if (arrayCompletionBlock)
-                {
-                    arrayCompletionBlock(resultsArray, nil);
-                }
-                else
-                {
-                    AlfrescoPagingResult *paging = [AlfrescoPagingUtils pagedResultFromArray:resultsArray listingContext:listingContext];
-                    pagingCompletionBlock(paging, nil);
-                }
+                __weak typeof(self) weakSelf = self;
+                [self.siteCache addSites:pendingSites type:AlfrescoSitePendingMember completionBlock:^{
+                    NSArray *resultsArray = nil;
+                    switch (type)
+                    {
+                        case AlfrescoSiteAll:
+                            resultsArray = [weakSelf.siteCache allSites];
+                            break;
+                        case AlfrescoSiteFavorite:
+                            resultsArray = [weakSelf.siteCache favoriteSites];
+                            break;
+                        case AlfrescoSiteMember:
+                            resultsArray = [weakSelf.siteCache memberSites];
+                            break;
+                        case AlfrescoSitePendingMember:
+                            resultsArray = [weakSelf.siteCache pendingMemberSites];
+                            break;
+                    }
+                    if (arrayCompletionBlock)
+                    {
+                        arrayCompletionBlock(resultsArray, nil);
+                    }
+                    else
+                    {
+                        AlfrescoPagingResult *paging = [AlfrescoPagingUtils pagedResultFromArray:resultsArray listingContext:listingContext];
+                        pagingCompletionBlock(paging, nil);
+                    }
+                }];
             }
             else
             {

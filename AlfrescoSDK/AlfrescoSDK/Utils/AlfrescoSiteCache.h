@@ -69,14 +69,12 @@ typedef enum
 - (NSArray *)allSites;
 
 - (void)addSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type;
-
 - (void)removeSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type;
 
-- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type hasMoreSites:(BOOL)hasMoreSites totalSites:(NSInteger)totalSites;
+- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type completionBlock:(void(^)())completionBlock;
+- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type hasMoreSites:(BOOL)hasMoreSites totalSites:(NSInteger)totalSites completionBlock:(void (^)())completionBlock;
 
 - (AlfrescoSite *)addPendingRequest:(AlfrescoOnPremiseJoinSiteRequest *)pendingRequest;
-
-- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type;
 
 - (AlfrescoSite *)objectWithIdentifier:(NSString *)identifier;
 

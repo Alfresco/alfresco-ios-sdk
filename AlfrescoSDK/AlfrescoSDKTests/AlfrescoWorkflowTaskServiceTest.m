@@ -215,7 +215,7 @@
         self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
         self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
         
-        NSString *newAssignee = @"iosunittest";
+        NSString *newAssignee = self.secondUsername;
         
         [self.personService retrievePersonWithIdentifier:newAssignee completionBlock:^(AlfrescoPerson *person, NSError *personError) {
             if (personError)
@@ -249,8 +249,8 @@
                                 STAssertNotNil(assignedTask, @"Updated task should not be nil");
                                 NSLog(@"%@ %@", newAssignee, task.assigneeIdentifier);
                                 
-                                // Commented out - KNOWN BUG IN JSON RESPONSE FROM SERVER - Public API
-//                                STAssertTrue([task.assigneeIdentifier isEqualToString:newAssignee], @"The new assignee identifier has not bee updated");
+                                // Commented out - KNOWN BUG IN JSON RESPONSE FROM SERVER - Public API (See ALF-20568)
+//                                STAssertTrue([task.assigneeIdentifier isEqualToString:newAssignee], @"The new assignee identifier has not been updated");
                                 
                                 [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                                     self.lastTestSuccessful = succeeded;

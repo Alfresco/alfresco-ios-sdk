@@ -152,46 +152,47 @@
 
 - (void)testRetrieveFormModelByProcessID
 {
-    if (self.setUpSuccess)
-    {
-        NSString *processID = @"activitiAdhoc:1:4";
-        self.processDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
-        
-        [self.processDefinitionService retrieveFormModelForProcess:processID completionBlock:^(NSDictionary *dictionary, NSError *error) {
-            if (self.currentSession.workflowInfo.publicAPI)
-            {
-                if (!dictionary)
-                {
-                    self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                    self.callbackCompleted = YES;
-                }
-                else
-                {
-                    STAssertNotNil(dictionary, @"Returned object should not be nil");
-                    
-                    self.lastTestSuccessful = YES;
-                }
-            }
-            else
-            {
-                STAssertNil(dictionary, @"Returned dictionary was expected to be nil");
-                STAssertNotNil(error, @"Expected an error to be returned");
-                STAssertTrue(error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected error code: %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported);
-                STAssertTrue([error.localizedDescription isEqualToString:kAlfrescoErrorDescriptionWorkflowFunctionNotSupported], @"Expected error description: %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported);
-                
-                self.lastTestSuccessful = YES;
-            }
-            self.callbackCompleted = YES;
-        }];
-        
-        [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-    }
-    else
-    {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
-    }
+    // Commented out by mhatfield on 25/Nov/2013 - unsupported in SDK 1.3
+//    if (self.setUpSuccess)
+//    {
+//        NSString *processID = @"activitiAdhoc:1:4";
+//        self.processDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
+//        
+//        [self.processDefinitionService retrieveFormModelForProcess:processID completionBlock:^(NSDictionary *dictionary, NSError *error) {
+//            if (self.currentSession.workflowInfo.publicAPI)
+//            {
+//                if (!dictionary)
+//                {
+//                    self.lastTestSuccessful = NO;
+//                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+//                    self.callbackCompleted = YES;
+//                }
+//                else
+//                {
+//                    STAssertNotNil(dictionary, @"Returned object should not be nil");
+//                    
+//                    self.lastTestSuccessful = YES;
+//                }
+//            }
+//            else
+//            {
+//                STAssertNil(dictionary, @"Returned dictionary was expected to be nil");
+//                STAssertNotNil(error, @"Expected an error to be returned");
+//                STAssertTrue(error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected error code: %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported);
+//                STAssertTrue([error.localizedDescription isEqualToString:kAlfrescoErrorDescriptionWorkflowFunctionNotSupported], @"Expected error description: %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported);
+//                
+//                self.lastTestSuccessful = YES;
+//            }
+//            self.callbackCompleted = YES;
+//        }];
+//        
+//        [self waitUntilCompleteWithFixedTimeInterval];
+//        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+//    }
+//    else
+//    {
+//        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+//    }
 }
 
 @end

@@ -518,8 +518,11 @@
                 {
                     totalAllSites = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
                 }
-                [self.siteCache addSites:allSortedSites type:AlfrescoSiteAll hasMoreSites:hasMoreAllSites totalSites:totalAllSites];
-                [self retrieveFavouriteSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:request usePaging:isPaging];
+                
+                __weak typeof(self) weakSelf = self;
+                [self.siteCache addSites:allSortedSites type:AlfrescoSiteAll hasMoreSites:hasMoreAllSites totalSites:totalAllSites completionBlock:^{
+                    [weakSelf retrieveFavouriteSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:request usePaging:isPaging];
+                }];
             }
             else
             {
@@ -565,8 +568,11 @@
                 }
                 
                 NSArray *favSortedSites = [AlfrescoSortingUtils sortedArrayForArray:sites sortKey:self.defaultSortKey ascending:YES];
-                [self.siteCache addSites:favSortedSites type:AlfrescoSiteFavorite hasMoreSites:hasMoreFavSites totalSites:totalFavSites];
-                [self retrieveMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest usePaging:usePaging];
+
+                __weak typeof(self) weakSelf = self;
+                [self.siteCache addSites:favSortedSites type:AlfrescoSiteFavorite hasMoreSites:hasMoreFavSites totalSites:totalFavSites completionBlock:^{
+                    [weakSelf retrieveMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest usePaging:usePaging];
+                }];
             }
             else
             {
@@ -609,8 +615,11 @@
                 {
                     totalMemberSites = [[sitesPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems] intValue];
                 }
-                [self.siteCache addSites:mySortedSites type:AlfrescoSiteMember hasMoreSites:hasMoreMemberSites totalSites:totalMemberSites];
-                [self retrievePendingMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest usePaging:usePaging];
+
+                __weak typeof(self) weakSelf = self;
+                [self.siteCache addSites:mySortedSites type:AlfrescoSiteMember hasMoreSites:hasMoreMemberSites totalSites:totalMemberSites completionBlock:^{
+                    [weakSelf retrievePendingMemberSitesForType:type arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock listingContext:listingContext alfrescoRequest:alfrescoRequest usePaging:usePaging];
+                }];
             }
             else
             {
@@ -643,53 +652,57 @@
         {
             NSError *jsonError = nil;
             NSArray *pending = [self joinRequestSitesArrayFromJSONData:data error:&jsonError];
-            NSArray *resultsArray = nil;
             NSDictionary *pendingPagination = [AlfrescoObjectConverter paginationJSONFromData:data error:&jsonError];
             if (pending && pendingPagination)
             {
-                BOOL hasMore = [[pendingPagination valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
-                int totalItems = -1;
+                __block BOOL hasMore = [[pendingPagination valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
+                __block int totalItems = -1;
                 if ([pendingPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems])
                 {
                     totalItems = [[pendingPagination valueForKeyPath:kAlfrescoCloudJSONTotalItems] intValue];
                 }
-                [self.siteCache addSites:pending type:AlfrescoSitePendingMember hasMoreSites:hasMore totalSites:totalItems];
-                switch (type)
-                {
-                    case AlfrescoSiteAll:
+
+                __weak typeof(self) weakSelf = self;
+                [self.siteCache addSites:pending type:AlfrescoSitePendingMember hasMoreSites:hasMore totalSites:totalItems completionBlock:^{
+                    NSArray *resultsArray = nil;
+
+                    switch (type)
                     {
-                        hasMore = self.siteCache.hasMoreSites;
-                        totalItems = self.siteCache.totalSites;
-                        resultsArray = [self.siteCache allSites];
+                        case AlfrescoSiteAll:
+                        {
+                            hasMore = weakSelf.siteCache.hasMoreSites;
+                            totalItems = weakSelf.siteCache.totalSites;
+                            resultsArray = [weakSelf.siteCache allSites];
+                        }
+                            break;
+                        case AlfrescoSiteFavorite:
+                        {
+                            hasMore = weakSelf.siteCache.hasMoreFavoriteSites;
+                            totalItems = weakSelf.siteCache.totalFavoriteSites;
+                            resultsArray = [weakSelf.siteCache favoriteSites];
+                        }
+                            break;
+                        case AlfrescoSiteMember:
+                        {
+                            hasMore = weakSelf.siteCache.hasMoreMemberSites;
+                            totalItems = weakSelf.siteCache.totalMemberSites;
+                            resultsArray = [weakSelf.siteCache memberSites];
+                        }
+                            break;
+                        case AlfrescoSitePendingMember:
+                            resultsArray = [weakSelf.siteCache pendingMemberSites];
+                            break;
                     }
-                        break;
-                    case AlfrescoSiteFavorite:
+                    if (usePaging)
                     {
-                        hasMore = self.siteCache.hasMoreFavoriteSites;
-                        totalItems = self.siteCache.totalFavoriteSites;
-                        resultsArray = [self.siteCache favoriteSites];
+                        AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:resultsArray hasMoreItems:hasMore totalItems:totalItems];
+                        pagingCompletionBlock(pagingResult, nil);
                     }
-                        break;
-                    case AlfrescoSiteMember:
+                    else
                     {
-                        hasMore = self.siteCache.hasMoreMemberSites;
-                        totalItems = self.siteCache.totalMemberSites;
-                        resultsArray = [self.siteCache memberSites];
+                        arrayCompletionBlock(resultsArray, nil);
                     }
-                        break;
-                    case AlfrescoSitePendingMember:
-                        resultsArray = [self.siteCache pendingMemberSites];
-                        break;
-                }
-                if (usePaging)
-                {
-                    AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:resultsArray hasMoreItems:hasMore totalItems:totalItems];
-                    pagingCompletionBlock(pagingResult, nil);
-                }
-                else
-                {
-                    arrayCompletionBlock(resultsArray, nil);
-                }
+                }];
             }
             else
             {

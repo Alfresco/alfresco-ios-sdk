@@ -46,7 +46,7 @@ static NSUInteger kCommentModelVersion = 1;
     if (nil != self)
     {
         self.standardDateFormatter = [[NSDateFormatter alloc] init];
-        [self.standardDateFormatter setDateFormat:@"MMM' 'dd' 'yyyy' 'HH:mm:ss' 'zzz"];
+        [self.standardDateFormatter setDateFormat:@"MMM dd yyyy HH:mm:ss zzz"];
         if ([[properties allKeys] containsObject:kAlfrescoJSONTitle])
         {
             self.title = [properties valueForKey:kAlfrescoJSONTitle];
@@ -110,7 +110,7 @@ static NSUInteger kCommentModelVersion = 1;
             NSString *created = [properties valueForKey:kAlfrescoJSONCreatedOn];
             if (nil != created)
             {
-                NSArray *dateComponents = [created componentsSeparatedByString:@"("];
+                NSArray *dateComponents = [created componentsSeparatedByString:@"+"];
                 NSString *dateWithZZZTimeZone = [dateComponents objectAtIndex:0];
                 self.createdAt = [self.standardDateFormatter dateFromString:dateWithZZZTimeZone];
             }
@@ -132,7 +132,7 @@ static NSUInteger kCommentModelVersion = 1;
             NSString *modified = [properties valueForKey:kAlfrescoJSONModifiedOn];
             if (nil != modified)
             {
-                NSArray *dateComponents = [modified componentsSeparatedByString:@"("];
+                NSArray *dateComponents = [modified componentsSeparatedByString:@"+"];
                 NSString *dateWithZZZTimeZone = [dateComponents objectAtIndex:0];
                 self.modifiedAt = [self.standardDateFormatter dateFromString:dateWithZZZTimeZone];
             }

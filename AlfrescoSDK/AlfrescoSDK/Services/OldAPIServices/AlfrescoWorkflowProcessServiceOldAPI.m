@@ -200,6 +200,10 @@
     NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
     NSString *completeProcessIdentifier = [workflowEnginePrefix stringByAppendingString:process.identifier];
     NSString *requestString = [kAlfrescoWorkflowTasksForProcessOldAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:completeProcessIdentifier];
+    if (queryString)
+    {
+        requestString = [requestString stringByAppendingString:queryString];
+    }
     
     __weak typeof(self) weakSelf = self;
     

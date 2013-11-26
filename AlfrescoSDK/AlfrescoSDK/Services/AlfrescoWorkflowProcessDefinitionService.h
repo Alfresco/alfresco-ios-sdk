@@ -75,6 +75,6 @@
  @param processIdentifier The process identifier for which the form model should be retrieved
  @param completionBlock The block that's called with the operation completes
  */
-- (AlfrescoRequest *)retrieveFormModelForProcess:(NSString *)processDefinitionId completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock;
+//- (AlfrescoRequest *)retrieveFormModelForProcess:(NSString *)processDefinitionId completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock;
 
 @end

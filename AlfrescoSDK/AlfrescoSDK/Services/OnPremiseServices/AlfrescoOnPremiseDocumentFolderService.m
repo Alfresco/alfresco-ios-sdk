@@ -554,7 +554,7 @@
             {
                 favoriteKeyComponentDictionaries = [NSDictionary dictionaryWithObject:joinedFavoriteIdentifiers forKey:keyComponent];
             }
-            else
+            else if (favoriteKeyComponentDictionaries)
             {
                 favoriteKeyComponentDictionaries = [NSDictionary dictionaryWithObject:favoriteKeyComponentDictionaries forKey:keyComponent];
             }
