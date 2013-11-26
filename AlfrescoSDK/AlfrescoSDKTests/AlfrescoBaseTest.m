@@ -47,18 +47,27 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     // Expecting a "TEST_SERVER" environment variable via the xcconfig file
 #if !defined(TEST_SERVER)
     #warning Missing AlfrescoSDKTests.xcconfig entries. Ensure the project configuration settings are correct.
-    #define TEST_SERVER nil
+    #define TEST_SERVER @""
 #endif
 
-    if (TEST_SERVER)
+    NSString *testServer = TEST_SERVER;
+    if ([testServer isEqualToString:@""])
+    {
+        // Try to read directly from environment variables. This allows the test server to be set by
+        // a developer via Xcode's "Edit Scheme ⌘<" view
+        NSDictionary *environmentVariables = [[NSProcessInfo processInfo] environment];
+        testServer = [environmentVariables valueForKey:@"TEST_SERVER"];
+    }
+    
+    if (testServer)
     {
         NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
         NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
         NSDictionary *allEnvironments = [plistContents objectForKey:@"environments"];
         if (nil != allEnvironments)
         {
-            AlfrescoLogDebug(@"TEST_SERVER from xcconfig: %@", TEST_SERVER);
-            environment = (NSDictionary *)[allEnvironments objectForKey:TEST_SERVER];
+            AlfrescoLogDebug(@"TEST_SERVER specified as: %@", testServer);
+            environment = (NSDictionary *)[allEnvironments objectForKey:testServer];
         }
     }
 
