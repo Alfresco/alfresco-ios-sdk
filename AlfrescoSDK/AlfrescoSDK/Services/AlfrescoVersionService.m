@@ -60,7 +60,6 @@
     [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-//    __weak AlfrescoVersionService *weakSelf = self;
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [self.cmisSession.binding.versioningService
                            retrieveAllVersions:document.identifier
@@ -100,7 +99,6 @@
         listingContext = self.session.defaultListingContext;
     }
     
-//    __weak AlfrescoVersionService *weakSelf = self;
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [self.cmisSession.binding.versioningService
                            retrieveAllVersions:document.identifier

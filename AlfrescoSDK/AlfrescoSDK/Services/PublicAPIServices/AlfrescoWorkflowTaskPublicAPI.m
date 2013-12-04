@@ -65,7 +65,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowTasksPublicAPI];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -74,7 +73,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowTasks = [weakSelf.workflowObjectConverter workflowTasksFromPublicJSONData:data session:weakSelf.session conversionError:&conversionError];
+            NSArray *workflowTasks = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data session:self.session conversionError:&conversionError];
             completionBlock(workflowTasks, conversionError);
         }
     }];
@@ -93,7 +92,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessDefinitionPublicAPI listingContext:listingContext];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -102,7 +100,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowDefinitions = [weakSelf.workflowObjectConverter workflowTasksFromPublicJSONData:data session:weakSelf.session conversionError:&conversionError];;
+            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data session:self.session conversionError:&conversionError];;
             NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
             AlfrescoPagingResult *pagingResult = nil;
             if (pagingInfo)
@@ -127,7 +125,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -143,7 +140,7 @@
             }
             else
             {
-                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject session:weakSelf.session];
+                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject session:self.session];
                 completionBlock(task, conversionError);
             }
 
@@ -164,7 +161,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -173,14 +169,14 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *attachmentIdentifiers = [weakSelf.workflowObjectConverter attachmentIdentifiersFromPublicJSONData:data conversionError:&conversionError];
+            NSArray *attachmentIdentifiers = [self.workflowObjectConverter attachmentIdentifiersFromPublicJSONData:data conversionError:&conversionError];
             if (conversionError)
             {
                 completionBlock(nil, conversionError);
             }
             else
             {
-                [weakSelf retrieveAlfrescoNodes:attachmentIdentifiers completionBlock:completionBlock];
+                [self retrieveAlfrescoNodes:attachmentIdentifiers completionBlock:completionBlock];
             }
         }
     }];
@@ -347,7 +343,6 @@
     }
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPut alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -363,7 +358,7 @@
             }
             else
             {
-                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject session:weakSelf.session];
+                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject session:self.session];
                 completionBlock(task, conversionError);
             }
         }
