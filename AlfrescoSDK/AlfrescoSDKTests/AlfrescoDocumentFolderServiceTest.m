@@ -2565,7 +2565,7 @@
      *        Currently there is no COCI feature in ObjectiveCMIS, so this test cannot currently pass on those earlier repositories.
      */
     AlfrescoRepositoryInfo *repositoryInfo = [self.currentSession repositoryInfo];
-    if ([repositoryInfo.majorVersion integerValue] == 4)
+    if ([repositoryInfo.majorVersion integerValue] == 4 || [repositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCloud])
     {
         return;
     }

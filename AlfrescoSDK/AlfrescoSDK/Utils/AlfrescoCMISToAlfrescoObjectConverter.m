@@ -83,7 +83,7 @@
     NSMutableDictionary *capabilities = [NSMutableDictionary dictionary];
     if (self.isCloud)
     {
-        [repoDictionary setObject:kAlfrescoCloudEdition forKey:kAlfrescoRepositoryEdition];
+        [repoDictionary setObject:kAlfrescoRepositoryEditionCloud forKey:kAlfrescoRepositoryEdition];
         [repoDictionary setObject:identifier forKey:kAlfrescoRepositoryIdentifier];
         [repoDictionary setObject:summary forKey:kAlfrescoRepositorySummary];
         [repoDictionary setObject:productName forKey:kAlfrescoRepositoryName];
@@ -94,13 +94,13 @@
     else
     {
         [repoDictionary setObject:productName forKey:kAlfrescoRepositoryName];
-        if ([productName rangeOfString:kAlfrescoRepositoryCommunity].location != NSNotFound)
+        if ([productName rangeOfString:kAlfrescoRepositoryEditionCommunity].location != NSNotFound)
         {
-            [repoDictionary setObject:kAlfrescoRepositoryCommunity forKey:kAlfrescoRepositoryEdition];
+            [repoDictionary setObject:kAlfrescoRepositoryEditionCommunity forKey:kAlfrescoRepositoryEdition];
         }
         else
         {
-            [repoDictionary setObject:kAlfrescoRepositoryEnterprise forKey:kAlfrescoRepositoryEdition];
+            [repoDictionary setObject:kAlfrescoRepositoryEditionEnterprise forKey:kAlfrescoRepositoryEdition];
         }
         [repoDictionary setObject:identifier forKey:kAlfrescoRepositoryIdentifier];
         [repoDictionary setObject:summary forKey:kAlfrescoRepositorySummary];

@@ -48,10 +48,10 @@ NSString * const kAlfrescoTypeFolder = @"cm:folder";
  Property name constants
  */
 NSString * const kAlfrescoRepositoryName = @"name";
-NSString * const kAlfrescoRepositoryCommunity = @"Community";
-NSString * const kAlfrescoRepositoryEnterprise = @"Enterprise";
 NSString * const kAlfrescoRepositoryEdition = @"edition";
-NSString * const kAlfrescoCloudEdition = @"Alfresco in the Cloud";
+NSString * const kAlfrescoRepositoryEditionCommunity = @"Community";
+NSString * const kAlfrescoRepositoryEditionEnterprise = @"Enterprise";
+NSString * const kAlfrescoRepositoryEditionCloud = @"Alfresco in the Cloud";
 NSString * const kAlfrescoRepositoryIdentifier = @"identifier";
 NSString * const kAlfrescoRepositorySummary = @"summary";
 NSString * const kAlfrescoRepositoryVersion = @"version";

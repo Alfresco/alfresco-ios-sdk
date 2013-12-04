@@ -645,7 +645,7 @@
             STAssertNotNil(sessionRepositoryInfo.summary, @"Expected the summary of the repository not to be nil");
             STAssertNotNil(sessionRepositoryInfo.capabilities, @"Expected the capabilities of the repository not to be nil");
             
-            STAssertTrue([sessionRepositoryInfo.edition isEqualToString:@"Alfresco in the Cloud"], @"Expected the edition to be cloud edition, but instead got %@", sessionRepositoryInfo.edition);
+            STAssertTrue([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCloud], @"Expected the edition to be cloud edition, but instead got %@", sessionRepositoryInfo.edition);
             
             STAssertNil(sessionRepositoryInfo.majorVersion, @"Expected the major version of the repository item to be nil, instead got back %@", sessionRepositoryInfo.majorVersion);
             STAssertNil(sessionRepositoryInfo.minorVersion, @"Expected the minor version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.minorVersion);
