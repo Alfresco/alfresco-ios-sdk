@@ -140,16 +140,24 @@
 
 - (AlfrescoRequest *)search:(NSString *)filter completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
+    /**
+     * Removed 03/Dec/2013 - Internal APIs no longer supported on Cloud
+     *
     [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     return [self searchPeople:filter withListingContext:nil completionBlock:completionBlock];
+     */
+    return nil;
 }
 
 - (AlfrescoRequest *)search:(NSString *)filter
          WithListingContext:(AlfrescoListingContext *)listingContext
             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
+    /**
+     * Removed 03/Dec/2013 - Internal APIs no longer supported on Cloud
+     *
     [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
@@ -164,12 +172,17 @@
         completionBlock(pagingResult, nil);
     }];
     return request;
+     */
+    return nil;
 }
 
 - (AlfrescoRequest *)searchPeople:(NSString *)filter
                withListingContext:(AlfrescoListingContext *)listingContext
                   completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
+    /**
+     * Removed 03/Dec/2013 - Internal APIs no longer supported on Cloud
+     *
     NSString *requestString = [kAlfrescoCloudInternalAPIPath stringByAppendingString:kAlfrescoCloudPersonSearchAPI];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:filter];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString listingContext:listingContext];
@@ -191,9 +204,12 @@
                                             }
                                         }];
     return alfrescoRequest;
+     */
+    return nil;
 }
 
 #pragma mark - private methods
+
 - (AlfrescoPerson *)alfrescoPersonFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
     NSMutableDictionary *entryDict = [[AlfrescoObjectConverter dictionaryJSONEntryFromListData:data error:outError] mutableCopy];

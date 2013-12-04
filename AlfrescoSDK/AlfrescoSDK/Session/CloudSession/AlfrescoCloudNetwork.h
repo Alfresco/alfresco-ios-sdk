@@ -28,7 +28,7 @@
 /**
  identifier string for network/tenant
  */
-@property (nonatomic, strong) NSString * identifier;
+@property (nonatomic, strong) NSString *identifier;
 /**
  flag indicating whether the network object is the Home network
  */
@@ -40,11 +40,11 @@
 /**
  the subscription level for this network
  */
-@property (nonatomic, strong) NSString * subscriptionLevel;
+@property (nonatomic, strong) NSString *subscriptionLevel;
 /**
  the date the network was created at
  */
-@property (nonatomic, strong) NSDate * createdAt;
+@property (nonatomic, strong) NSDate *createdAt;
 
 /**
  the flag indicating whether this network is enabled
