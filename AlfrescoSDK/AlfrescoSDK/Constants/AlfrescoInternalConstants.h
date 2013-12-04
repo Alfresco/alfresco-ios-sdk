@@ -38,10 +38,10 @@ extern NSString * const kAlfrescoTypeContent;
 extern NSString * const kAlfrescoTypeFolder;
 
 extern NSString * const kAlfrescoRepositoryName;
-extern NSString * const kAlfrescoRepositoryCommunity;
-extern NSString * const kAlfrescoRepositoryEnterprise;
 extern NSString * const kAlfrescoRepositoryEdition;
-extern NSString * const kAlfrescoCloudEdition;
+extern NSString * const kAlfrescoRepositoryEditionCommunity;
+extern NSString * const kAlfrescoRepositoryEditionEnterprise;
+extern NSString * const kAlfrescoRepositoryEditionCloud;
 extern NSString * const kAlfrescoRepositoryIdentifier;
 extern NSString * const kAlfrescoRepositorySummary;
 extern NSString * const kAlfrescoRepositoryVersion;
@@ -152,8 +152,6 @@ extern NSString * const kAlfrescoOnPremiseFavoriteFolders;
 
 
 extern NSString * const kAlfrescoCloudURL;
-extern NSString * const kAlfrescoCloudBindingService;
-extern NSString * const kAlfrescoCloudPrecursor;
 extern NSString * const kAlfrescoCloudAPIPath;
 extern NSString * const kAlfrescoCloudCMISPath;
 extern NSString * const kAlfrescoHomeNetworkType;
@@ -186,8 +184,6 @@ extern NSString * const kAlfrescoCloudFavoriteFoldersAPI;
 extern NSString * const kAlfrescoCloudFavoritesAllAPI;
 extern NSString * const kAlfrescoCloudFavorite;
 extern NSString * const kAlfrescoCloudAddFavoriteAPI;
-
-extern NSString * const kAlfrescoCloudInternalAPIPath;
 
 extern NSString * const kAlfrescoCloudJSONList;
 extern NSString * const kAlfrescoCloudJSONPagination;

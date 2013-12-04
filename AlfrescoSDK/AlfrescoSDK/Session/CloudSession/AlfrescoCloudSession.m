@@ -80,7 +80,7 @@
 @property (nonatomic, strong, readwrite) NSString *emailAddress;
 @property (nonatomic, strong, readwrite) NSString *password;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
-@property (nonatomic, strong, readwrite) NSString * apiKey;
+@property (nonatomic, strong, readwrite) NSString *apiKey;
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property BOOL isUsingBaseAuthenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
@@ -115,8 +115,8 @@
     if (nil != sessionInstance)
     {
         BOOL useBasicConnect = NO;
-        NSString * username = nil;
-        NSString * password = nil;
+        NSString *username = nil;
+        NSString *password = nil;
         if (nil != parameters)
         {
             if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudBasicAuth])
@@ -174,8 +174,8 @@
     if (nil != sessionInstance)
     {
         BOOL useBasicConnect = NO;
-        NSString * username = nil;
-        NSString * password = nil;
+        NSString *username = nil;
+        NSString *password = nil;
         if (nil != parameters)
         {
             if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudBasicAuth])
@@ -207,7 +207,6 @@
 
 - (AlfrescoRequest *)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-//    __weak AlfrescoCloudSession *weakSelf = self;
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -393,7 +392,7 @@
         AlfrescoLogDebug(@"overriding Cloud URL with: %@", baseURL);
     }
     self.baseUrl = [NSURL URLWithString:baseURL];
-    self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
+    self.baseURLWithoutNetwork = [self.baseUrl copy];
     _oauthData = oauthData; ///setting oauthData only via instance variable. The setter method recreates a CMIS session and this shouldn't be used here.
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
@@ -431,7 +430,7 @@
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
         AlfrescoLogDebug(@"overriding Cloud URL with: %@", baseURL);
     }
-    self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",baseURL,network]];
+    self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", baseURL, network]];
     self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
     _oauthData = oauthData; ///setting oauthData only via instance variable. The setter method recreates a CMIS session and this shouldn't be used here.
     self.personIdentifier = kAlfrescoMe;
@@ -543,8 +542,8 @@ This authentication method authorises the user to access the home network assign
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
         AlfrescoLogDebug(@"overriding Cloud URL with: %@", baseURL);
     }
-    self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
-    self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
+    self.baseUrl = [NSURL URLWithString:baseURL];
+    self.baseURLWithoutNetwork = self.baseUrl;
     AlfrescoLogDebug(@"baseURLWithoutNetwork = %@", [self.baseURLWithoutNetwork absoluteString]);
     self.emailAddress = emailAddress;
     self.password = password;
@@ -591,8 +590,8 @@ This authentication method authorises the user to access the home network assign
         baseURL = [self.sessionData valueForKey:kAlfrescoSessionCloudURL];
         AlfrescoLogDebug(@"overriding Cloud URL with: %@", baseURL);
     }
-    self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@", baseURL, kAlfrescoCloudPrecursor, network]];
-    self.baseURLWithoutNetwork = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", baseURL, kAlfrescoCloudPrecursor]];
+    self.baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", baseURL, network]];
+    self.baseURLWithoutNetwork = [NSURL URLWithString:baseURL];
     self.emailAddress = emailAddress;
     self.password = password;
     self.personIdentifier = emailAddress;
@@ -709,7 +708,7 @@ This authentication method authorises the user to access the home network assign
  parses the JSON data to look for an array containing the Alfresco network details. Once found, it calls the networkFromJSON method
  to set up a AlfrescoCloudNetwork object.
  */
-- (NSArray *) networkArrayFromJSONData:(NSData *)data error:(NSError **)outError
+- (NSArray *)networkArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
     if (data == nil)
     {
@@ -724,6 +723,7 @@ This authentication method authorises the user to access the home network assign
         }
         return nil;
     }
+    
     NSError *error = nil;
     id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (nil == jsonDictionary)
@@ -760,6 +760,7 @@ This authentication method authorises the user to access the home network assign
         }
         return nil;
     }
+    
     id entries = [listObject valueForKey:kAlfrescoCloudJSONEntries];
     if (![entries isKindOfClass:[NSArray class]])
     {
@@ -774,6 +775,7 @@ This authentication method authorises the user to access the home network assign
         }
         return nil;
     }
+    
     NSArray *entriesArray = [NSArray arrayWithArray:entries];
     if (0 == entriesArray.count)
     {
@@ -797,7 +799,6 @@ This authentication method authorises the user to access the home network assign
         [resultsArray addObject:[self networkFromJSON:individualEntry]];
     }
     return resultsArray;
-    
 }
 
 

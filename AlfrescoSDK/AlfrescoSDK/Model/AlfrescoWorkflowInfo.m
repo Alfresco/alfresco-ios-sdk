@@ -55,36 +55,32 @@ static NSInteger kWorkflowInfoModelVersion = 1;
 - (void)setupAPIVersionUsingSession:(id<AlfrescoSession>)session
 {
     AlfrescoRepositoryInfo *repositoryInfo = session.repositoryInfo;
+
+    // Assume no Public Workflow API support
+    self.publicAPI = NO;
     
-    if ([repositoryInfo.edition isEqualToString:kAlfrescoCloudEdition] || [repositoryInfo.edition isEqualToString:kAlfrescoRepositoryEnterprise])
+    if ([session isKindOfClass:[AlfrescoCloudSession class]])
     {
-        if (self.workflowEngine == AlfrescoWorkflowEngineTypeJBPM)
-        {
-            self.publicAPI = NO;
-        }
-        else
-        {
-            NSNumber *majorVersion = repositoryInfo.majorVersion;
-            NSNumber *minorVersion = repositoryInfo.minorVersion;
-            float version = [[NSString stringWithFormat:@"%i.%i", majorVersion.intValue, minorVersion.intValue] floatValue];
-            
-            if ([session isKindOfClass:[AlfrescoCloudSession class]])
-            {
-                self.publicAPI = YES;
-            }
-            else if ([session isKindOfClass:[AlfrescoRepositorySession class]] && version >= 4.2f)
-            {
-                self.publicAPI = YES;
-            }
-            else
-            {
-                self.publicAPI = NO;
-            }
-        }
+        // Alfresco in the Cloud must only be accessed using the Public Workflow API
+        self.publicAPI = YES;
     }
-    else
+    else if (self.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
     {
-        self.publicAPI = NO;
+        // Public Workflow API only supports the Activiti workflow engine and does not support JBPM
+        NSNumber *majorVersion = repositoryInfo.majorVersion;
+        NSNumber *minorVersion = repositoryInfo.minorVersion;
+        float version = [[NSString stringWithFormat:@"%i.%i", majorVersion.intValue, minorVersion.intValue] floatValue];
+        
+        if ([repositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] && version >= 4.2f)
+        {
+            // Public Workflow API available in Alfresco 4.2 Enterprise Edition and newer
+            self.publicAPI = YES;
+        }
+        else if ([repositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity] && version >= 4.3f)
+        {
+            // Public Workflow API available in Alfresco 4.3 Community Edition and newer
+            self.publicAPI = YES;
+        }
     }
 }
 

@@ -58,7 +58,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     NSString *urlString = nil;
     if (self.isCloud)
     {
-        urlString = [self.server stringByAppendingString:[NSString stringWithFormat:@"%@%@%@", kAlfrescoCloudPrecursor, kAlfrescoTestNetworkID, kAlfrescoCloudCMISPath]];
+        urlString = [self.server stringByAppendingString:[NSString stringWithFormat:@"%@%@", kAlfrescoTestNetworkID, kAlfrescoCloudCMISPath]];
     }
     else
     {

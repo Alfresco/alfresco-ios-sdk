@@ -48,10 +48,10 @@ NSString * const kAlfrescoTypeFolder = @"cm:folder";
  Property name constants
  */
 NSString * const kAlfrescoRepositoryName = @"name";
-NSString * const kAlfrescoRepositoryCommunity = @"Community";
-NSString * const kAlfrescoRepositoryEnterprise = @"Enterprise";
 NSString * const kAlfrescoRepositoryEdition = @"edition";
-NSString * const kAlfrescoCloudEdition = @"Alfresco in the Cloud";
+NSString * const kAlfrescoRepositoryEditionCommunity = @"Community";
+NSString * const kAlfrescoRepositoryEditionEnterprise = @"Enterprise";
+NSString * const kAlfrescoRepositoryEditionCloud = @"Alfresco in the Cloud";
 NSString * const kAlfrescoRepositoryIdentifier = @"identifier";
 NSString * const kAlfrescoRepositorySummary = @"summary";
 NSString * const kAlfrescoRepositoryVersion = @"version";
@@ -180,8 +180,6 @@ NSString * const kAlfrescoOnPremiseFavoriteFoldersAPI = @"/people/{personID}/pre
  Cloud constants     
  */
 NSString * const kAlfrescoCloudURL = @"https://api.alfresco.com";
-NSString * const kAlfrescoCloudBindingService = @"/alfresco/service";
-NSString * const kAlfrescoCloudPrecursor = @"/alfresco/a";
 NSString * const kAlfrescoCloudCMISPath = @"/public/cmis/versions/1.0/atom";
 NSString * const kAlfrescoCloudAPIPath  = @"/public/alfresco/versions/1/";
 NSString * const kAlfrescoDocumentLibrary =@"documentLibrary";
@@ -216,10 +214,6 @@ NSString * const kAlfrescoCloudFavoriteFoldersAPI = @"people/{personID}/favorite
 NSString * const kAlfrescoCloudFavoritesAllAPI = @"people/{personID}/favorites?where=(EXISTS(target/file) OR EXISTS(target/folder))";
 NSString * const kAlfrescoCloudFavorite = @"people/{personID}/favorites/{nodeRef}";
 NSString * const kAlfrescoCloudAddFavoriteAPI = @"people/-me-/favorites";
-/**
- Cloud Internals
- */
-NSString * const kAlfrescoCloudInternalAPIPath = @"api/";
 
 /**
  JSON Constants

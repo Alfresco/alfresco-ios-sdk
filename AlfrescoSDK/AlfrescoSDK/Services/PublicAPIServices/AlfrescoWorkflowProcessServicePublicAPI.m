@@ -91,7 +91,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extenstionURLString];
     
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -100,7 +99,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowProcesses = [weakSelf.workflowObjectConverter workflowProcessesFromPublicJSONData:data session:weakSelf.session conversionError:&conversionError];
+            NSArray *workflowProcesses = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data session:self.session conversionError:&conversionError];
             completionBlock(workflowProcesses, conversionError);
         }
     }];
@@ -125,7 +124,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extenstionURLString listingContext:listingContext];
     
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -134,7 +132,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowDefinitions = [weakSelf.workflowObjectConverter workflowProcessesFromPublicJSONData:data session:weakSelf.session conversionError:&conversionError];
+            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data session:self.session conversionError:&conversionError];
             NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
             AlfrescoPagingResult *pagingResult = nil;
             if (pagingInfo)
@@ -156,11 +154,9 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSString *requestString = [kAlfrescoWorkflowSingleProcessPublicAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:processID];
-    
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -169,7 +165,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowProcesses = [weakSelf.workflowObjectConverter workflowProcessesFromPublicJSONData:data session:weakSelf.session conversionError:&conversionError];
+            NSArray *workflowProcesses = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data session:self.session conversionError:&conversionError];
             if (conversionError)
             {
                 completionBlock(nil, conversionError);
@@ -208,7 +204,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:completeRequestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -217,7 +212,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *tasks = [weakSelf.workflowObjectConverter workflowTasksFromPublicJSONData:data session:weakSelf.session conversionError:&conversionError];
+            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data session:self.session conversionError:&conversionError];
             
             if (error)
             {

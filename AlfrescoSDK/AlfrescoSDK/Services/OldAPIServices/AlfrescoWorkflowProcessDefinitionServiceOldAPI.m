@@ -62,7 +62,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessDefinitionOldAPI];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (!data)
         {
@@ -71,7 +70,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowDefinitions = [weakSelf.workflowObjectConverter workflowDefinitionsFromOldJSONData:data session:weakSelf.session conversionError:&conversionError];
+            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowDefinitionsFromOldJSONData:data session:self.session conversionError:&conversionError];
             completionBlock(workflowDefinitions, conversionError);
         }
     }];
@@ -91,7 +90,6 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessDefinitionOldAPI];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (!data)
         {
@@ -100,7 +98,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowDefinitions = [weakSelf.workflowObjectConverter workflowDefinitionsFromOldJSONData:data session:weakSelf.session conversionError:&conversionError];
+            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowDefinitionsFromOldJSONData:data session:self.session conversionError:&conversionError];
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:workflowDefinitions listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
         }
@@ -130,7 +128,6 @@
         
         NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
         
-        __weak typeof(self) weakSelf = self;
         [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
             if (!data)
             {
@@ -139,7 +136,7 @@
             else
             {
                 NSError *conversionError = nil;
-                NSArray *workflowDefinitions = [weakSelf.workflowObjectConverter workflowDefinitionsFromOldJSONData:data session:weakSelf.session conversionError:&conversionError];
+                NSArray *workflowDefinitions = [self.workflowObjectConverter workflowDefinitionsFromOldJSONData:data session:self.session conversionError:&conversionError];
                 if (workflowDefinitions.count > 0)
                 {
                     AlfrescoWorkflowProcessDefinition *processDefinition = [workflowDefinitions objectAtIndex:0];

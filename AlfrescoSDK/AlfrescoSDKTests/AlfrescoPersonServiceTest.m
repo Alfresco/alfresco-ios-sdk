@@ -169,38 +169,44 @@
  */
 - (void)testSearchPeople
 {
-    if (self.setUpSuccess)
+    /**
+     * Removed from cloud 03/Dec/2013 - Internal APIs no longer supported on Cloud R32
+     */
+    if (!self.isCloud)
     {
-        self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
-        [self.personService search:self.userName completionBlock:^(NSArray *array, NSError *error) {
-             if (nil == array)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = @"Failed to retrieve person.";
-             }
-             else
-             {
-                 STAssertNotNil(array,@"Array should not be nil");
-                 AlfrescoPerson *person = [array objectAtIndex:0];
-                 STAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
-                 STAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
-                 STAssertNotNil(person.lastName, @"Persons last name should not be nil");
-                 STAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
-                 if (person.avatarIdentifier)
+        if (self.setUpSuccess)
+        {
+            self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
+            [self.personService search:self.userName completionBlock:^(NSArray *array, NSError *error) {
+                 if (nil == array)
                  {
-                     STAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
+                     self.lastTestSuccessful = NO;
+                     self.lastTestFailureMessage = @"Failed to retrieve person.";
                  }
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-         }];
-        [self waitUntilCompleteWithFixedTimeInterval];
-        
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-    }
-    else
-    {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+                 else
+                 {
+                     STAssertNotNil(array,@"Array should not be nil");
+                     AlfrescoPerson *person = [array objectAtIndex:0];
+                     STAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
+                     STAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
+                     STAssertNotNil(person.lastName, @"Persons last name should not be nil");
+                     STAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
+                     if (person.avatarIdentifier)
+                     {
+                         STAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
+                     }
+                     self.lastTestSuccessful = YES;
+                 }
+                 self.callbackCompleted = YES;
+             }];
+            [self waitUntilCompleteWithFixedTimeInterval];
+            
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
+        else
+        {
+            STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        }
     }
 }
 
