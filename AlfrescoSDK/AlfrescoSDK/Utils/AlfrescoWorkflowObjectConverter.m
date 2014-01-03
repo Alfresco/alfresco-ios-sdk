@@ -96,11 +96,20 @@
         else
         {
             NSMutableArray *workflowProcesses = [NSMutableArray array];
-            NSArray *processArray = [jsonObject valueForKey:kAlfrescoOldJSONData];
-            for (NSDictionary *entryDictionary in processArray)
+            id processDataResponseObject = [jsonObject valueForKey:kAlfrescoOldJSONData];
+            
+            if ([processDataResponseObject isKindOfClass:[NSArray class]])
             {
-                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                for (NSDictionary *entryDictionary in processDataResponseObject)
+                {
+                    [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                }
             }
+            else if ([processDataResponseObject isKindOfClass:[NSDictionary class]])
+            {
+                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:processDataResponseObject session:session]];
+            }
+            
             return workflowProcesses;
         }
     }];
@@ -118,11 +127,20 @@
         {
             NSMutableArray *workflowProcesses = [NSMutableArray array];
             NSDictionary *listDictionary = [jsonObject valueForKey:kAlfrescoPublicJSONList];
-            NSArray *processArray = [listDictionary valueForKey:kAlfrescoPublicJSONEntries];
-            for (NSDictionary *entryDictionary in processArray)
+            
+            if (listDictionary)
             {
-                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                NSArray *processArray = [listDictionary valueForKey:kAlfrescoPublicJSONEntries];
+                for (NSDictionary *entryDictionary in processArray)
+                {
+                    [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                }
             }
+            else
+            {
+                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:jsonObject session:session]];
+            }
+            
             return workflowProcesses;
         }
     }];
