@@ -35,6 +35,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 @interface AlfrescoWorkflowProcess ()
 
 @property (nonatomic, weak, readwrite) id<AlfrescoSession> session;
+@property (nonatomic, strong, readwrite) NSDateFormatter *dateFormatter;
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *processDefinitionIdentifier;
 @property (nonatomic, strong, readwrite) NSString *processDefinitionKey;
@@ -56,6 +57,8 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     self = [super init];
     if (self)
     {
+        self.dateFormatter = [[NSDateFormatter alloc] init];
+        [self.dateFormatter setDateFormat:kAlfrescoISO8601DateStringFormat];
         self.session = session;
         [self setupProperties:properties];
     }
@@ -86,9 +89,9 @@ static NSInteger kWorkflowProcessModelVersion = 1;
                 self.title = (NSString *)titleVariable.value;
             }
         }
-        self.startedAt = [entry objectForKey:kAlfrescoPublicJSONStartedAt];
-        self.endedAt = [entry objectForKey:kAlfrescoPublicJSONEndedAt];
-        self.dueAt = [entry objectForKey:kAlfrescoPublicJSONDueAt];
+        self.startedAt = [self.dateFormatter dateFromString:[entry objectForKey:kAlfrescoPublicJSONStartedAt]];
+        self.endedAt = [self.dateFormatter dateFromString:[entry objectForKey:kAlfrescoPublicJSONEndedAt]];
+        self.dueAt = [self.dateFormatter dateFromString:[entry objectForKey:kAlfrescoPublicJSONDueAt]];
         self.processDescription = [entry objectForKey:kAlfrescoPublicJSONDescription];
         self.priority = [entry objectForKey:kAlfrescoPublicJSONPriority];
         self.initiatorUsername = [entry objectForKey:kAlfrescoPublicJSONStartUserID];

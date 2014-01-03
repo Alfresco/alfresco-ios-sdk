@@ -217,6 +217,56 @@
     }
 }
 
+- (void)testRetrieveProcessWithIdentifier
+{
+    if (self.setUpSuccess)
+    {
+        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        
+        NSString *processDefinitionID = @"activitiAdhoc:1:4";
+        
+        [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+            if (creationError)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [creationError localizedDescription], [creationError localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(createdProcess, @"Process should not be nil");
+                STAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
+                
+                [self.processesService retrieveProcessWithIdentifier:createdProcess.identifier completionBlock:^(AlfrescoWorkflowProcess *process, NSError *error) {
+                    if (error)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [creationError localizedDescription], [creationError localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        STAssertNotNil(process.processDefinitionIdentifier, @"Process definition identifier should not be nil");
+                        STAssertNotNil(process.startedAt, @"Process started at date should not be nil");
+                        
+                        [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                            STAssertTrue(succeeded, @"Deletion flag should be true");
+                            self.lastTestSuccessful = succeeded;
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 // retrieve by ID, start, delete
 - (void)testStartProcessForProcessDefinition
 {
