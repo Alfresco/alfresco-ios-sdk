@@ -79,6 +79,7 @@ extern NSString * const kAlfrescoSiteConsumer;
 extern NSString * const kAlfrescoMaxItems;
 extern NSString * const kAlfrescoSkipCount;
 extern NSString * const kAlfrescoSearchFilter;
+extern NSString * const kAlfrescoReverseComments;
 
 extern NSString * const kAlfrescoSessionKeyCmisSession;
 extern NSString * const kAlfrescoSessionCloudURL;

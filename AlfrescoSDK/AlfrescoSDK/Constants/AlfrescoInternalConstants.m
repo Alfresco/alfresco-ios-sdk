@@ -92,6 +92,7 @@ NSString * const kAlfrescoSiteConsumer = @"SiteConsumer";
 NSString * const kAlfrescoMaxItems = @"{maxItems}";
 NSString * const kAlfrescoSkipCount = @"{skipCount}";
 NSString * const kAlfrescoSearchFilter = @"{filter}";
+NSString * const kAlfrescoReverseComments = @"reverse";
 
 /**
  Session data key constants
