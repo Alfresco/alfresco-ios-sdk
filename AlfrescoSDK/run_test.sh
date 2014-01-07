@@ -31,7 +31,7 @@ else
          JUNIT_FLAG="true"
       else
          # define the main command
-         BUILD_OPTS=(test -scheme "Unit Tests" -destination OS=7.0,name="iPhone Retina (4-inch)" TEST_SERVER=${param})
+         BUILD_OPTS=(test -scheme AlfrescoSDK -destination OS=7.0,name="iPhone Retina (4-inch)" TEST_SERVER=${param})
       fi
    done
 fi
