@@ -45,9 +45,24 @@
     return nil;
 }
 
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node latestFirst:(BOOL)latestFirst completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
+                              listingContext:(AlfrescoListingContext *)listingContext
+                                 latestFirst:(BOOL)latestFirst
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;

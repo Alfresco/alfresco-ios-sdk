@@ -57,30 +57,41 @@
 
 - (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
+    return [self retrieveCommentsForNode:node latestFirst:NO completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node latestFirst:(BOOL)latestFirst completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     AlfrescoListingContext *maxListing = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
-    return [self retrieveCommentsForNode:node arrayCompletionBlock:completionBlock pagingCompletionBlock:nil listingContext:maxListing usePaging:NO];
+    return [self retrieveCommentsForNode:node arrayCompletionBlock:completionBlock pagingCompletionBlock:nil listingContext:maxListing usePaging:NO latestFirst:latestFirst];
 }
 
 - (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
                               listingContext:(AlfrescoListingContext *)listingContext
                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
+    return [self retrieveCommentsForNode:node listingContext:listingContext latestFirst:NO completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
+                              listingContext:(AlfrescoListingContext *)listingContext
+                                 latestFirst:(BOOL)latestFirst
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-
+    
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
     }
-    return [self retrieveCommentsForNode:node arrayCompletionBlock:nil pagingCompletionBlock:completionBlock listingContext:listingContext usePaging:YES];
+    return [self retrieveCommentsForNode:node arrayCompletionBlock:nil pagingCompletionBlock:completionBlock listingContext:listingContext usePaging:YES latestFirst:latestFirst];
 }
-
-
 
 - (AlfrescoRequest *)addCommentToNode:(AlfrescoNode *)node
                               content:(NSString *)content
@@ -198,7 +209,7 @@
 
 
 #pragma private methods
-- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock listingContext:(AlfrescoListingContext *)listingContext usePaging:(BOOL)usePaging
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock listingContext:(AlfrescoListingContext *)listingContext usePaging:(BOOL)usePaging latestFirst:(BOOL)latestCommentFirst
 {
     NSString *requestString = [kAlfrescoCloudCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                    withString:[node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
@@ -228,7 +239,12 @@
                 {
                     BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoCloudJSONHasMoreItems] boolValue];
                     int total = [[pagingInfo valueForKey:kAlfrescoCloudJSONTotalItems] intValue];
-                    NSArray *sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:comments sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+                    NSArray *sortedCommentArray = comments;
+                    // only sort the comments if we don't want the latest comment first, as Cloud returns in reverse order by default
+                    if (!latestCommentFirst)
+                    {
+                        sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:comments sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+                    }
                     pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedCommentArray hasMoreItems:hasMore totalItems:total];
                 }
                 pagingCompletionBlock(pagingResult, conversionError);
@@ -237,7 +253,12 @@
             {
                 if (nil != comments)
                 {
-                    NSArray *sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:comments sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+                    NSArray *sortedCommentArray = comments;
+                    // only sort the comments if we don't want the latest comment first, as Cloud returns in reverse order by default
+                    if (!latestCommentFirst)
+                    {
+                        sortedCommentArray = [AlfrescoSortingUtils sortedArrayForArray:comments sortKey:kAlfrescoSortByCreatedAt ascending:YES];
+                    }
                     arrayCompletionBlock(sortedCommentArray, nil);
                 }
                 else

@@ -54,6 +54,15 @@
  */
 - (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
+/** Retrieves the comments for the given node. If the latest first flag is set to YES, comments are returned with the latest first.
+ Setting this flag to NO is equivalent to retrieveCommentsForNode:completionBlock:
+ 
+ @param node The node for which the comments are retrieved.
+ @param latestFirst Flag indicating whether the latest comments should be returned first (reverse order).
+ @param completionBlock The block that's called with the retrieved comments in case the operation succeeds.
+ */
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node latestFirst:(BOOL)latestFirst completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
 /** Retrieves the comments for the given node with a listing context.
  
  @param node The node for which the comments are retrieved.
@@ -62,6 +71,19 @@
  */
 - (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
                               listingContext:(AlfrescoListingContext *)listingContext
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+/** Retrieves the comments for the given node with a listing context. If the latest first flag is set to YES, comments are returned with the latest first.
+ Setting this flag to NO is equivalent to retrieveCommentsForNode:listingContext:completionBlock:
+ 
+ @param node The node for which the comments are retrieved.
+ @param listingContext The listing context with a paging definition that's used to retrieve the comments.
+ @param latestFirst Flag indicating whether the latest comments should be returned first (reverse order).
+ @param completionBlock The block that's called with the retrieved comments in case the operation succeeds.
+ */
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
+                              listingContext:(AlfrescoListingContext *)listingContext
+                                 latestFirst:(BOOL)latestFirst
                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /**---------------------------------------------------------------------------------------
