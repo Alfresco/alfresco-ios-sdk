@@ -442,13 +442,15 @@
  */
 - (void)testSearchWithStatementWithListingContext
 {
+    static int MaxItems = 5;
+    
     if (self.setUpSuccess)
     {
         if (!self.isCloud)
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
             
-            AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0];
+            AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:MaxItems skipCount:0];
             
             NSString *searchStatement = @"SELECT * FROM cmis:document";
             
@@ -466,11 +468,11 @@
                     
                     if (pagingResult.hasMoreItems)
                     {
-                        STAssertTrue([pagingResult.objects count] == 25, @"Expected the objects array to contain 25 objects, instead we got back %i", [pagingResult.objects count]);
+                        STAssertTrue([pagingResult.objects count] == MaxItems, @"Expected the objects array to contain %d objects, instead we got back %i", MaxItems, [pagingResult.objects count]);
                     }
                     else
                     {
-                        STAssertTrue([pagingResult.objects count] <= 25, @"Expected back less than or upto 25 items in the search result, instead got back %i", [pagingResult.objects count]);
+                        STAssertTrue([pagingResult.objects count] <= MaxItems, @"Expected back %d items or less in the search result, instead got back %i", MaxItems, [pagingResult.objects count]);
                     }
                     
                     self.lastTestSuccessful = YES;
