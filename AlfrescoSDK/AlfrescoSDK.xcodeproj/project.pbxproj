@@ -19,10 +19,16 @@
 		08FC13FF1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13FD1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m */; };
 		08FC14031754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FC14011754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.h */; };
 		08FC14041754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */; };
+		275C6C31187F087400346323 /* AlfrescoCloudWorkflowProcessService.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C6C2F187F087400346323 /* AlfrescoCloudWorkflowProcessService.h */; };
+		275C6C32187F087400346323 /* AlfrescoCloudWorkflowProcessService.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C6C30187F087400346323 /* AlfrescoCloudWorkflowProcessService.m */; };
+		275C6C35187F099900346323 /* AlfrescoCloudWorkflowTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 275C6C33187F099900346323 /* AlfrescoCloudWorkflowTask.h */; };
+		275C6C36187F099900346323 /* AlfrescoCloudWorkflowTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C6C34187F099900346323 /* AlfrescoCloudWorkflowTask.m */; };
 		27786B85178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 27786B83178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.h */; settings = {ATTRIBUTES = (); }; };
 		27786B86178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27786B84178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m */; };
 		27786B87178DBC6B00E78A5D /* AlfrescoCMISPassThroughAuthenticationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 278B2694177BAF4D0049C229 /* AlfrescoCMISPassThroughAuthenticationProvider.h */; };
 		27786B88178DBC6E00E78A5D /* AlfrescoCMISPassThroughAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 278B2695177BAF4D0049C229 /* AlfrescoCMISPassThroughAuthenticationProvider.m */; };
+		27BC53B6187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.h in Headers */ = {isa = PBXBuildFile; fileRef = 27BC53B4187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.h */; };
+		27BC53B7187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BC53B5187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.m */; };
 		27D7D514184F805B00F17230 /* AlfrescoWorkflowInfoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D7D513184F805B00F17230 /* AlfrescoWorkflowInfoTest.m */; };
 		4E0457C21608C124005A6C76 /* AlfrescoOAuthData.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E0457C01608C124005A6C76 /* AlfrescoOAuthData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E0457C31608C124005A6C76 /* AlfrescoOAuthData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */; };
@@ -367,10 +373,16 @@
 		2719ECD5176A29D200A6F3DD /* AlfrescoTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlfrescoTestMacros.h; sourceTree = "<group>"; };
 		273E3E61177DEB0D00E1AE0F /* CMISStandardAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISStandardAuthenticationProvider.h; sourceTree = "<group>"; };
 		273E3E62177DEB0D00E1AE0F /* CMISStandardUntrustedSSLAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISStandardUntrustedSSLAuthenticationProvider.h; sourceTree = "<group>"; };
+		275C6C2F187F087400346323 /* AlfrescoCloudWorkflowProcessService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudWorkflowProcessService.h; path = CloudServices/AlfrescoCloudWorkflowProcessService.h; sourceTree = "<group>"; };
+		275C6C30187F087400346323 /* AlfrescoCloudWorkflowProcessService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCloudWorkflowProcessService.m; path = CloudServices/AlfrescoCloudWorkflowProcessService.m; sourceTree = "<group>"; };
+		275C6C33187F099900346323 /* AlfrescoCloudWorkflowTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudWorkflowTask.h; path = CloudServices/AlfrescoCloudWorkflowTask.h; sourceTree = "<group>"; };
+		275C6C34187F099900346323 /* AlfrescoCloudWorkflowTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCloudWorkflowTask.m; path = CloudServices/AlfrescoCloudWorkflowTask.m; sourceTree = "<group>"; };
 		27786B83178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoUntrustedSSLHTTPRequest.h; sourceTree = "<group>"; };
 		27786B84178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoUntrustedSSLHTTPRequest.m; sourceTree = "<group>"; };
 		278B2694177BAF4D0049C229 /* AlfrescoCMISPassThroughAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCMISPassThroughAuthenticationProvider.h; path = CMIS/AlfrescoCMIS/AlfrescoCMISPassThroughAuthenticationProvider.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		278B2695177BAF4D0049C229 /* AlfrescoCMISPassThroughAuthenticationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCMISPassThroughAuthenticationProvider.m; path = CMIS/AlfrescoCMIS/AlfrescoCMISPassThroughAuthenticationProvider.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		27BC53B4187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudWorkflowProcessDefinitionService.h; path = CloudServices/AlfrescoCloudWorkflowProcessDefinitionService.h; sourceTree = "<group>"; };
+		27BC53B5187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCloudWorkflowProcessDefinitionService.m; path = CloudServices/AlfrescoCloudWorkflowProcessDefinitionService.m; sourceTree = "<group>"; };
 		27D7D513184F805B00F17230 /* AlfrescoWorkflowInfoTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AlfrescoWorkflowInfoTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		27D7D515184F80BC00F17230 /* AlfrescoWorkflowInfoTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowInfoTest.h; sourceTree = "<group>"; };
 		27D85CA017D7E3FC009D15C4 /* AlfrescoSDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = AlfrescoSDK.xcconfig; sourceTree = "<group>"; };
@@ -804,6 +816,12 @@
 				4E90EE8615D2735000302F5D /* AlfrescoCloudSiteService.m */,
 				4E4E379A15DCDDE90064F2DE /* AlfrescoCloudTaggingService.h */,
 				4E4E379B15DCDDE90064F2DE /* AlfrescoCloudTaggingService.m */,
+				27BC53B4187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.h */,
+				27BC53B5187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.m */,
+				275C6C2F187F087400346323 /* AlfrescoCloudWorkflowProcessService.h */,
+				275C6C30187F087400346323 /* AlfrescoCloudWorkflowProcessService.m */,
+				275C6C33187F099900346323 /* AlfrescoCloudWorkflowTask.h */,
+				275C6C34187F099900346323 /* AlfrescoCloudWorkflowTask.m */,
 			);
 			name = CloudServices;
 			sourceTree = "<group>";
@@ -1304,6 +1322,7 @@
 				4EB077B715B00EE800DF7DED /* AlfrescoPagingResult.h in Headers */,
 				4EB077B915B00EE800DF7DED /* AlfrescoPermissions.h in Headers */,
 				4EB077BB15B00EE800DF7DED /* AlfrescoPerson.h in Headers */,
+				275C6C35187F099900346323 /* AlfrescoCloudWorkflowTask.h in Headers */,
 				4EB077BD15B00EE800DF7DED /* AlfrescoProperty.h in Headers */,
 				4EB077C115B00EE800DF7DED /* AlfrescoRepositoryInfo.h in Headers */,
 				4EB077C315B00EE800DF7DED /* AlfrescoSearchLanguage.h in Headers */,
@@ -1383,6 +1402,7 @@
 				73CB837D16C4187500B780A6 /* CMISAtomPubObjectService.h in Headers */,
 				73CB837E16C4187500B780A6 /* CMISAtomPubRepositoryService.h in Headers */,
 				73CB837F16C4187500B780A6 /* CMISAtomPubVersioningService.h in Headers */,
+				275C6C31187F087400346323 /* AlfrescoCloudWorkflowProcessService.h in Headers */,
 				73CB838016C4187500B780A6 /* CMISAuthenticationProvider.h in Headers */,
 				73CB838116C4187500B780A6 /* CMISBase64Encoder.h in Headers */,
 				73CB838316C4187500B780A6 /* CMISBinding.h in Headers */,
@@ -1446,6 +1466,7 @@
 				73CB83BD16C4187500B780A6 /* CMISWorkspace.h in Headers */,
 				4EA2AE4816DE25DE0053D05D /* CMISLog.h in Headers */,
 				4E43A18F16EF3F6D00A835E7 /* AlfrescoSiteCache.h in Headers */,
+				27BC53B6187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.h in Headers */,
 				4E9E21E616F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.h in Headers */,
 				08FC13F91754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h in Headers */,
 				08FC13FE1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.h in Headers */,
@@ -1579,6 +1600,7 @@
 				4EB077B415B00EE800DF7DED /* AlfrescoListingContext.m in Sources */,
 				4EB077B615B00EE800DF7DED /* AlfrescoNode.m in Sources */,
 				4EB077B815B00EE800DF7DED /* AlfrescoPagingResult.m in Sources */,
+				275C6C36187F099900346323 /* AlfrescoCloudWorkflowTask.m in Sources */,
 				4EB077BA15B00EE800DF7DED /* AlfrescoPermissions.m in Sources */,
 				4EB077BC15B00EE800DF7DED /* AlfrescoPerson.m in Sources */,
 				4EB077BE15B00EE800DF7DED /* AlfrescoProperty.m in Sources */,
@@ -1637,6 +1659,7 @@
 				737B2EE716B2AD1D00AB99EC /* AlfrescoURLUtils.m in Sources */,
 				737B2EE916B2BAC600AB99EC /* AlfrescoDefaultFileManager.m in Sources */,
 				733407C516BBCE9800AC3740 /* AlfrescoDefaultHTTPRequest.m in Sources */,
+				27BC53B7187EE9D100F63B4D /* AlfrescoCloudWorkflowProcessDefinitionService.m in Sources */,
 				4E9CE53316D511CF004C7934 /* AlfrescoRequest.m in Sources */,
 				4E21EAE416DF88A800E3952C /* AlfrescoLog.m in Sources */,
 				4E43A19016EF3F6D00A835E7 /* AlfrescoSiteCache.m in Sources */,
@@ -1655,6 +1678,7 @@
 				731F7CE917BA3020003A871C /* AlfrescoWorkflowUtils.m in Sources */,
 				73AAFF3C17CE4690000C4484 /* AlfrescoWorkflowInternalConstants.m in Sources */,
 				73FB56BA17D4DBC00049E89D /* AlfrescoObjectConverter.m in Sources */,
+				275C6C32187F087400346323 /* AlfrescoCloudWorkflowProcessService.m in Sources */,
 				73FB56BE17D4DBEA0049E89D /* AlfrescoWorkflowObjectConverter.m in Sources */,
 				73D268EE17D76CEE00C49848 /* AlfrescoWorkflowInfo.m in Sources */,
 				73D268F117D76CEE00C49848 /* AlfrescoWorkflowProcess.m in Sources */,

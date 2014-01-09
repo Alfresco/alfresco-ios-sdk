@@ -24,10 +24,10 @@
  */
 
 #import "AlfrescoPlaceholderWorkflowProcessDefinitionService.h"
-#import "AlfrescoPublicAPIWorkflowProcessDefinitionService.h"
-#import "AlfrescoLegacyAPIWorkflowProcessDefinitionService.h"
-#import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
+#import "AlfrescoCloudWorkflowProcessDefinitionService.h"
+#import "AlfrescoLegacyAPIWorkflowProcessDefinitionService.h"
+#import "AlfrescoPublicAPIWorkflowProcessDefinitionService.h"
 
 @implementation AlfrescoPlaceholderWorkflowProcessDefinitionService
 
@@ -35,6 +35,10 @@
 {
     if (session.workflowInfo.publicAPI)
     {
+        if ([session isKindOfClass:[AlfrescoCloudSession class]])
+        {
+            return (id)[[AlfrescoCloudWorkflowProcessDefinitionService alloc] initWithSession:session];
+        }
         return (id)[[AlfrescoPublicAPIWorkflowProcessDefinitionService alloc] initWithSession:session];
     }
     else

@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,34 +18,13 @@
  *****************************************************************************
  */
 
-/** AlfrescoPlaceholderWorkflowTaskService
+/** AlfrescoCloudWorkflowTask
  
- Author: Tauseef Mughal (Alfresco)
+ Author: Mike Hatfield (Alfresco)
  */
 
-#import "AlfrescoPlaceholderWorkflowTaskService.h"
-#import "AlfrescoCloudSession.h"
-#import "AlfrescoCloudWorkflowTask.h"
-#import "AlfrescoLegacyAPIWorkflowTask.h"
 #import "AlfrescoPublicAPIWorkflowTask.h"
 
-@implementation AlfrescoPlaceholderWorkflowTaskService
-
-- (id)initWithSession:(id<AlfrescoSession>)session
-{
-    if (session.workflowInfo.publicAPI)
-    {
-        if ([session isKindOfClass:[AlfrescoCloudSession class]])
-        {
-            return (id)[[AlfrescoCloudWorkflowTask alloc] initWithSession:session];
-        }
-        return (id)[[AlfrescoPublicAPIWorkflowTask alloc] initWithSession:session];
-    }
-    else
-    {
-        return (id)[[AlfrescoLegacyAPIWorkflowTask alloc] initWithSession:session];
-    }
-    return nil;
-}
+@interface AlfrescoCloudWorkflowTask : AlfrescoPublicAPIWorkflowTask
 
 @end

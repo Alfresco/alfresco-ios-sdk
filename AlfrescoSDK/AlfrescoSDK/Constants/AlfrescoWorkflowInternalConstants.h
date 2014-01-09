@@ -33,6 +33,7 @@ extern NSString * const kAlfrescoWorkflowReviewAndApprove;
 // Base URLs
 extern NSString * const kAlfrescoLegacyAPIWorkflowBaseURL;
 extern NSString * const kAlfrescoPublicAPIWorkflowBaseURL;
+extern NSString * const kAlfrescoCloudWorkflowBaseURL;
 
 // Workflow/Process Definitions
 extern NSString * const kAlfrescoLegacyAPIWorkflowProcessDefinition;

@@ -33,6 +33,7 @@ NSString * const kAlfrescoWorkflowReviewAndApprove = @"activitiReview";
 // Base URLs
 NSString * const kAlfrescoLegacyAPIWorkflowBaseURL = @"/service/api/";
 NSString * const kAlfrescoPublicAPIWorkflowBaseURL = @"/api/-default-/public/workflow/versions/1";
+NSString * const kAlfrescoCloudWorkflowBaseURL = @"/public/workflow/versions/1";
 
 // Workflow/Process Definitions
 NSString * const kAlfrescoLegacyAPIWorkflowProcessDefinition = @"workflow-definitions";
