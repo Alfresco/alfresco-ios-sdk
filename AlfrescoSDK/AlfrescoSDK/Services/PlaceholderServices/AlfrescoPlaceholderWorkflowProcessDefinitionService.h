@@ -18,30 +18,14 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowPlaceholderProcessService
+/** The AlfrescoPlaceholderWorkflowProcessDefinitionService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoWorkflowPlaceholderProcessService.h"
-#import "AlfrescoRepositorySession.h"
-#import "AlfrescoCloudSession.h"
-#import "AlfrescoWorkflowProcessServiceOldAPI.h"
-#import "AlfrescoWorkflowProcessServicePublicAPI.h"
+#import <Foundation/Foundation.h>
+#import "AlfrescoWorkflowProcessDefinitionService.h"
 
-@implementation AlfrescoWorkflowPlaceholderProcessService
-
-- (id)initWithSession:(id<AlfrescoSession>)session
-{
-    if (session.workflowInfo.publicAPI)
-    {
-        return (id)[[AlfrescoWorkflowProcessServicePublicAPI alloc] initWithSession:session];
-    }
-    else
-    {
-        return (id)[[AlfrescoWorkflowProcessServiceOldAPI alloc] initWithSession:session];
-    }
-    return nil;
-}
+@interface AlfrescoPlaceholderWorkflowProcessDefinitionService : AlfrescoWorkflowProcessDefinitionService
 
 @end

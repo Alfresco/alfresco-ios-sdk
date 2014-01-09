@@ -18,12 +18,12 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowProcessPublicAPIService
+/** AlfrescoPublicAPIWorkflowProcessDefinitionService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoWorkflowProcessDefinitionServicePublicAPI.h"
+#import "AlfrescoPublicAPIWorkflowProcessDefinitionService.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoInternalConstants.h"
@@ -31,7 +31,7 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoWorkflowObjectConverter.h"
 
-@interface AlfrescoWorkflowProcessDefinitionServicePublicAPI ()
+@interface AlfrescoPublicAPIWorkflowProcessDefinitionService ()
 
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
@@ -39,7 +39,7 @@
 
 @end
 
-@implementation AlfrescoWorkflowProcessDefinitionServicePublicAPI
+@implementation AlfrescoPublicAPIWorkflowProcessDefinitionService
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -47,7 +47,7 @@
     if (self)
     {
         self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoWorkflowBasePublicAPIURL];
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoPublicAPIWorkflowBaseURL];
         self.workflowObjectConverter = [[AlfrescoWorkflowObjectConverter alloc] init];
     }
     return self;
@@ -57,7 +57,7 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessDefinitionPublicAPI];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoPublicAPIWorkflowProcessDefinition];
     
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {
@@ -84,7 +84,7 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessDefinitionPublicAPI listingContext:listingContext];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoPublicAPIWorkflowProcessDefinition listingContext:listingContext];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
@@ -115,7 +115,7 @@
     [AlfrescoErrors assertArgumentNotNil:processIdentifier argumentName:@"processIdentifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoWorkflowSingleProcessDefinitionPublicAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:processIdentifier];
+    NSString *requestString = [kAlfrescoPublicAPIWorkflowSingleProcessDefinition stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:processIdentifier];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
@@ -148,7 +148,7 @@
     [AlfrescoErrors assertArgumentNotNil:processDefinitionId argumentName:@"processDefinitionId"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoWorkflowProcessDefinitionFormModelPublicAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:processDefinitionId];
+    NSString *requestString = [kAlfrescoPublicAPIWorkflowProcessDefinitionFormModel stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:processDefinitionId];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     

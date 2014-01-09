@@ -78,38 +78,38 @@ static NSInteger kWorkflowTaskModelVersion = 1;
     }
     else
     {
-        NSDictionary *taskProperties = [properties objectForKey:kAlfrescoOldJSONProperties];
-        NSDictionary *workflowInstance = [properties objectForKey:kAlfrescoOldJSONWorkflowInstance];
+        NSDictionary *taskProperties = [properties objectForKey:kAlfrescoLegacyJSONProperties];
+        NSDictionary *workflowInstance = [properties objectForKey:kAlfrescoLegacyJSONWorkflowInstance];
         
         NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
         
-        if ([[taskProperties objectForKey:kAlfrescoOldBPMJSONID] isKindOfClass:[NSNumber class]])
+        if ([[taskProperties objectForKey:kAlfrescoLegacyJSONBPMTaskID] isKindOfClass:[NSNumber class]])
         {
-            self.identifier = [[taskProperties objectForKey:kAlfrescoOldBPMJSONID] stringValue];
+            self.identifier = [[taskProperties objectForKey:kAlfrescoLegacyJSONBPMTaskID] stringValue];
         }
         else
         {
-            self.identifier = [taskProperties objectForKey:kAlfrescoOldBPMJSONID];
+            self.identifier = [taskProperties objectForKey:kAlfrescoLegacyJSONBPMTaskID];
         }
-        self.processIdentifier = [[workflowInstance objectForKey:kAlfrescoOldJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.processDefinitionIdentifier = [[workflowInstance objectForKey:kAlfrescoOldJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        if ([taskProperties objectForKey:kAlfrescoOldBPMJSONStartedAt] != [NSNull null])
+        self.processIdentifier = [[workflowInstance objectForKey:kAlfrescoLegacyJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.processDefinitionIdentifier = [[workflowInstance objectForKey:kAlfrescoLegacyJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        if ([taskProperties objectForKey:kAlfrescoLegacyJSONBPMStartedAt] != [NSNull null])
         {
-            self.startedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONStartedAt]];
+            self.startedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoLegacyJSONBPMStartedAt]];
         }
-        if ([taskProperties objectForKey:kAlfrescoOldBPMJSONEndedAt] != [NSNull null])
+        if ([taskProperties objectForKey:kAlfrescoLegacyJSONBPMEndedAt] != [NSNull null])
         {
-            self.endedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONEndedAt]];
+            self.endedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoLegacyJSONBPMEndedAt]];
         }
-        if ([taskProperties objectForKey:kAlfrescoOldBPMJSONDueAt] != [NSNull null])
+        if ([taskProperties objectForKey:kAlfrescoLegacyJSONBPMDueAt] != [NSNull null])
         {
-            self.dueAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoOldBPMJSONDueAt]];
+            self.dueAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoLegacyJSONBPMDueAt]];
         }
-        self.taskDescription = [taskProperties objectForKey:kAlfrescoOldBPMJSONDescription];
-        self.priority = [taskProperties objectForKey:kAlfrescoOldBPMJSONPriority];
-        if ([taskProperties objectForKey:kAlfrescoOldJSONOwner] != [NSNull null])
+        self.taskDescription = [taskProperties objectForKey:kAlfrescoLegacyJSONBPMDescription];
+        self.priority = [taskProperties objectForKey:kAlfrescoLegacyJSONBPMPriority];
+        if ([taskProperties objectForKey:kAlfrescoLegacyJSONOwner] != [NSNull null])
         {
-            self.assigneeIdentifier = [taskProperties objectForKey:kAlfrescoOldJSONOwner];
+            self.assigneeIdentifier = [taskProperties objectForKey:kAlfrescoLegacyJSONOwner];
         }
     }
 }

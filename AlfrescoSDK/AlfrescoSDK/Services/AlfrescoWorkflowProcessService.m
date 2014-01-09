@@ -24,7 +24,7 @@
  */
 
 #import "AlfrescoWorkflowProcessService.h"
-#import "AlfrescoWorkflowPlaceholderProcessService.h"
+#import "AlfrescoPlaceholderWorkflowProcessService.h"
 
 @implementation AlfrescoWorkflowProcessService
 
@@ -32,7 +32,7 @@
 {
     if (self == [AlfrescoWorkflowProcessService self])
     {
-        return (id)[AlfrescoWorkflowPlaceholderProcessService alloc];
+        return (id)[AlfrescoPlaceholderWorkflowProcessService alloc];
     }
     else
     {

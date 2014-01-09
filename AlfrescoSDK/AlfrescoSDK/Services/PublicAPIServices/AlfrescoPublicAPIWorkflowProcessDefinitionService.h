@@ -18,14 +18,14 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowPlaceholderTaskService
+/** AlfrescoPublicAPIWorkflowProcessDefinitionService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoWorkflowTaskService.h"
+#import "AlfrescoWorkflowProcessDefinitionService.h"
 
-@interface AlfrescoWorkflowPlaceholderTaskService : AlfrescoWorkflowTaskService
+@interface AlfrescoPublicAPIWorkflowProcessDefinitionService : AlfrescoWorkflowProcessDefinitionService
 
 @end
