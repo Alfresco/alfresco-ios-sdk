@@ -101,18 +101,18 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     {
         NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
         self.identifier = [[properties objectForKey:kAlfrescoPublicJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.processDefinitionIdentifier = [[[properties objectForKey:kAlfrescoOldJSONProcessDefinitionID] lastPathComponent] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.processDefinitionKey = [[properties objectForKey:kAlfrescoOldJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        if ([properties objectForKey:kAlfrescoOldJSONMessage] != [NSNull null])
+        self.processDefinitionIdentifier = [[[properties objectForKey:kAlfrescoLegacyJSONProcessDefinitionID] lastPathComponent] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.processDefinitionKey = [[properties objectForKey:kAlfrescoLegacyJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        if ([properties objectForKey:kAlfrescoLegacyJSONMessage] != [NSNull null])
         {
-            self.title = [properties objectForKey:kAlfrescoOldJSONMessage];
+            self.title = [properties objectForKey:kAlfrescoLegacyJSONMessage];
         }
-        self.startedAt = [properties objectForKey:kAlfrescoOldJSONStartedAt];
-        self.endedAt = [properties objectForKey:kAlfrescoOldJSONEndedAt];
-        self.dueAt = [properties objectForKey:kAlfrescoOldJSONDueAt];
-        self.processDescription = [properties objectForKey:kAlfrescoOldJSONDescription];
-        self.priority = [properties objectForKey:kAlfrescoOldJSONPriority];        
-        NSDictionary *initiatorDictionary = [properties objectForKey:kAlfrescoOldJSONInitiator];
+        self.startedAt = [properties objectForKey:kAlfrescoLegacyJSONStartedAt];
+        self.endedAt = [properties objectForKey:kAlfrescoLegacyJSONEndedAt];
+        self.dueAt = [properties objectForKey:kAlfrescoLegacyJSONDueAt];
+        self.processDescription = [properties objectForKey:kAlfrescoLegacyJSONDescription];
+        self.priority = [properties objectForKey:kAlfrescoLegacyJSONPriority];
+        NSDictionary *initiatorDictionary = [properties objectForKey:kAlfrescoLegacyJSONInitiator];
         self.initiatorUsername = [initiatorDictionary objectForKey:kAlfrescoJSONUserName];
     }
 }

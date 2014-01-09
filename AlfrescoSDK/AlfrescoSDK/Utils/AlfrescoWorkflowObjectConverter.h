@@ -30,23 +30,23 @@
 @interface AlfrescoWorkflowObjectConverter : AlfrescoObjectConverter
 
 // process definitions
-- (NSArray *)workflowDefinitionsFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
+- (NSArray *)workflowDefinitionsFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
 - (NSArray *)workflowDefinitionsFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
 
 // processes
-- (NSArray *)workflowProcessesFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
+- (NSArray *)workflowProcessesFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
 - (NSArray *)workflowProcessesFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
 
 // tasks
-- (NSArray *)workflowTasksFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
+- (NSArray *)workflowTasksFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
 - (NSArray *)workflowTasksFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
 
 // variables
 - (NSArray *)workflowVariablesFromArray:(NSArray *)variables;
 
 // attachment identifiers
-- (NSString *)attachmentContainerNodeRefFromOldJSONData:(NSData *)jsonData conversionError:(NSError **)error;
-- (NSArray *)attachmentIdentifiersFromOldJSONData:(NSData *)jsonData conversionError:(NSError **)error;
+- (NSString *)attachmentContainerNodeRefFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error;
+- (NSArray *)attachmentIdentifiersFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error;
 - (NSArray *)attachmentIdentifiersFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error;
 
 @end

@@ -18,7 +18,7 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowProcessPublicAPIService
+/** AlfrescoLegacyAPIWorkflowProcessDefinitionService
  
  Author: Tauseef Mughal (Alfresco)
  */
@@ -26,6 +26,6 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoWorkflowProcessDefinitionService.h"
 
-@interface AlfrescoWorkflowProcessDefinitionServicePublicAPI : AlfrescoWorkflowProcessDefinitionService
+@interface AlfrescoLegacyAPIWorkflowProcessDefinitionService : AlfrescoWorkflowProcessDefinitionService
 
 @end

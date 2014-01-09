@@ -18,7 +18,7 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowTaskOldAPI
+/** AlfrescoPublicAPIWorkflowTask
  
  Author: Tauseef Mughal (Alfresco)
  */
@@ -26,6 +26,6 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoWorkflowTaskService.h"
 
-@interface AlfrescoWorkflowTaskOldAPI : AlfrescoWorkflowTaskService
+@interface AlfrescoPublicAPIWorkflowTask : AlfrescoWorkflowTaskService
 
 @end

@@ -57,36 +57,28 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         // a developer via Xcode's "Edit Scheme ⌘<" view
         NSDictionary *environmentVariables = [[NSProcessInfo processInfo] environment];
         testServer = [environmentVariables valueForKey:@"TEST_SERVER"];
+        
+        // Still nothing? - default to localhost
+        if ([testServer isEqualToString:@""])
+        {
+            testServer = @"localhost";
+        }
     }
     
-    if (testServer)
+    NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
+    NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
+    NSDictionary *allEnvironments = [plistContents objectForKey:@"environments"];
+    if (nil != allEnvironments)
     {
-        NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
-        NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
-        NSDictionary *allEnvironments = [plistContents objectForKey:@"environments"];
-        if (nil != allEnvironments)
-        {
-            AlfrescoLogDebug(@"TEST_SERVER specified as: %@", testServer);
-            environment = (NSDictionary *)[allEnvironments objectForKey:testServer];
-        }
+        AlfrescoLogDebug(@"TEST_SERVER specified as: %@", testServer);
+        environment = (NSDictionary *)[allEnvironments objectForKey:testServer];
     }
 
     if (nil == environment)
     {
-        AlfrescoLogDebug(@"WARNING: No test environment selected, using localhost defaults.");
-        self.server = @"http://localhost:8080/alfresco";
-        self.isCloud = NO;
-        self.userName = @"admin";
-        self.password = @"admin";
-        self.firstName = @"Administrator";
-        self.testSiteName = @"ios-sdk-test";
-        self.testSearchFileName = @"ios-search-test.txt";
-        self.testSearchFileKeywords = @"ios-search-test";
-        self.textKeyWord = @"lorem";
-        self.unitTestFolder = @"Unit Test Subfolder";
-        self.fixedFileName = @"versioned-quote.txt";
-        self.testFolderPathName = @"/ios-sdk-test";
-        self.exifDateTimeOriginalUTC = @"2001-04-06T11:51:40.000Z";
+        AlfrescoLogDebug(@"ERROR: No test environment config specified.");
+        STFail(@"FATAL: No test environment specified. Check TEST_SERVER parameter and ~/ios-sdk-test-config/test-servers.plist");
+        exit(EXIT_FAILURE);
     }
     else
     {
