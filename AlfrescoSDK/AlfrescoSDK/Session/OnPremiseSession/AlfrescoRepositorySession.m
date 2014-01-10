@@ -25,6 +25,7 @@
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
+#import "AlfrescoClientCertificateAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoDefaultNetworkProvider.h"
@@ -137,6 +138,11 @@
         if ([[parameters allKeys] containsObject:kAlfrescoAllowUntrustedSSLCertificate])
         {
             [self.sessionData setObject:[parameters valueForKey:kAlfrescoAllowUntrustedSSLCertificate] forKey:kAlfrescoAllowUntrustedSSLCertificate];
+        }
+        
+        if ([[parameters allKeys] containsObject:kAlfrescoConnectUsingClientSSLCertificate])
+        {
+            [self.sessionData setObject:[parameters valueForKey:kAlfrescoConnectUsingClientSSLCertificate] forKey:kAlfrescoConnectUsingClientSSLCertificate];
         }
         
         id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoNetworkProvider];
@@ -345,16 +351,28 @@
 }
 
 - (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password
-{    
+{
     [self setObject:session forParameter:kAlfrescoSessionKeyCmisSession];
-    id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
-                                                                                                        andPassword:password];
+    id<AlfrescoAuthenticationProvider> authProvider = nil;
+    
+    BOOL connectUsingSSLCertificate = [[self.sessionData objectForKey:kAlfrescoConnectUsingClientSSLCertificate] boolValue];
+    if (connectUsingSSLCertificate)
+    {
+        SecIdentityRef certificateIdentity = (__bridge SecIdentityRef)[self.sessionData objectForKey:kAlfrescoClientCertificateIdentity];
+        NSArray *certificates = [self.sessionData objectForKey:kAlfrescoClientCertificates];
+        NSURLCredential *credentials = [[NSURLCredential alloc] initWithIdentity:certificateIdentity certificates:certificates persistence:NSURLCredentialPersistenceForSession];
+        authProvider = [[AlfrescoClientCertificateAuthenticationProvider alloc] initWithUsername:username password:password credentials:credentials];
+    }
+    else
+    {
+        authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
+                                                                         andPassword:password];
+    }
+    
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:session];
 }
-
-
 
 - (NSArray *)allParameterKeys
 {

@@ -24,6 +24,7 @@
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoDefaultHTTPRequest.h"
 #import "AlfrescoUntrustedSSLHTTPRequest.h"
+#import "AlfrescoClientCertificateHTTPRequest.h"
 #import "AlfrescoInternalConstants.h"
 
 @implementation AlfrescoDefaultNetworkProvider
@@ -85,8 +86,28 @@
         allowUntrustedSSLCertificate = [obj boolValue];
     }
     
-    Class httpRequestClass = allowUntrustedSSLCertificate ? [AlfrescoUntrustedSSLHTTPRequest class] : [AlfrescoDefaultHTTPRequest class];
-    AlfrescoDefaultHTTPRequest *alfrescoHTTPRequest = [[httpRequestClass alloc] init];
+    BOOL connectUsingClientCertificate = NO;
+    id useClientCertificate = [session objectForParameter:kAlfrescoConnectUsingClientSSLCertificate];
+    if (useClientCertificate != nil)
+    {
+        connectUsingClientCertificate = [useClientCertificate boolValue];
+    }
+    
+    AlfrescoDefaultHTTPRequest *alfrescoHTTPRequest = nil;
+    if (connectUsingClientCertificate)
+    {
+        SecIdentityRef certificateIdentity = (__bridge SecIdentityRef)[session objectForParameter:kAlfrescoClientCertificateIdentity];
+        NSArray *certificates = [session objectForParameter:kAlfrescoClientCertificates];
+        alfrescoHTTPRequest = [[AlfrescoClientCertificateHTTPRequest alloc] initWithIdentity:certificateIdentity certificates:certificates];
+    }
+    else if (allowUntrustedSSLCertificate)
+    {
+        alfrescoHTTPRequest = [[AlfrescoUntrustedSSLHTTPRequest alloc] init];
+    }
+    else
+    {
+        alfrescoHTTPRequest = [[AlfrescoDefaultHTTPRequest alloc] init];
+    }
 
     if (alfrescoHTTPRequest && !alfrescoRequest.isCancelled)
     {
