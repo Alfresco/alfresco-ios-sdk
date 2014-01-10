@@ -69,8 +69,8 @@ static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
     {
         NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
         self.identifier = [[properties objectForKey:kAlfrescoJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.name = [[properties objectForKey:kAlfrescoOldJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.processDescription = [properties objectForKey:kAlfrescoOldJSONDescription];
+        self.name = [[properties objectForKey:kAlfrescoLegacyJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.processDescription = [properties objectForKey:kAlfrescoLegacyJSONDescription];
         self.version = [properties objectForKey:kAlfrescoPublicJSONVersion];
     }
 }

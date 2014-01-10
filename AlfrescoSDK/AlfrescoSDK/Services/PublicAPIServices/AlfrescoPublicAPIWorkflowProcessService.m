@@ -18,23 +18,21 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowProcessPublicAPI
+/** AlfrescoPublicAPIWorkflowProcessService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoWorkflowProcessServicePublicAPI.h"
+#import "AlfrescoPublicAPIWorkflowProcessService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoSession.h"
-#import "AlfrescoWorkflowProcess.h"
 #import "AlfrescoDocumentFolderService.h"
-#import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoWorkflowObjectConverter.h"
 
-@interface AlfrescoWorkflowProcessServicePublicAPI ()
+@interface AlfrescoPublicAPIWorkflowProcessService ()
 
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
@@ -45,7 +43,7 @@
 
 @end
 
-@implementation AlfrescoWorkflowProcessServicePublicAPI
+@implementation AlfrescoPublicAPIWorkflowProcessService
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
@@ -53,11 +51,11 @@
     if (self)
     {
         self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoWorkflowBasePublicAPIURL];
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoPublicAPIWorkflowBaseURL];
         self.documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:session];
-        self.publicToPrivateStateMappings = @{kAlfrescoWorkflowProcessStateAny : kAlfrescoWorkflowProcessPublicAny,
-                                              kAlfrescoWorkflowProcessStateActive : kAlfrescoWorkflowProcessPublicActive,
-                                              kAlfrescoWorkflowProcessStateCompleted : kAlfrescoWorkflowProcessPublicCompleted};
+        self.publicToPrivateStateMappings = @{kAlfrescoWorkflowProcessStateAny : kAlfrescoPublicAPIWorkflowProcessStatusAny,
+                                              kAlfrescoWorkflowProcessStateActive : kAlfrescoPublicAPIWorkflowProcessStatusActive,
+                                              kAlfrescoWorkflowProcessStateCompleted : kAlfrescoPublicAPIWorkflowProcessStatusCompleted};
         self.publicToPrivateVariableMappings = @{kAlfrescoWorkflowProcessDescription : kAlfrescoPublicBPMJSONProcessDescription,
                                                  kAlfrescoWorkflowProcessPriority : kAlfrescoPublicBPMJSONProcessPriority,
                                                  kAlfrescoWorkflowProcessSendEmailNotification : kAlfrescoPublicBPMJSONProcessSendEmailNotification,
@@ -81,12 +79,18 @@
 - (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
+
+    /**
+     * MJH: Removed 08/Jan/2014 due to ALF-20731
+     *
     NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@ AND %@=%@)",
                                       kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state],
-                                      kAlfrescoWorkflowProcessIncludeVariables, @"true"];
-    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowProcessWhereParameter : whereParameterString}];
-    NSString *extenstionURLString = [kAlfrescoWorkflowProcessesPublicAPI stringByAppendingString:queryString];
+                                      kAlfrescoPublicAPIWorkflowProcessIncludeVariables, @"true"];
+     */
+    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)",
+                                      kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state]];
+    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
+    NSString *extenstionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extenstionURLString];
     
@@ -115,11 +119,17 @@
         listingContext = self.session.defaultListingContext;
     }
     
+    /**
+     * MJH: Removed 08/Jan/2014 due to ALF-20731
+     *
     NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@ AND %@=%@)",
                                       kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state],
-                                      kAlfrescoWorkflowProcessIncludeVariables, @"true"];
-    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowProcessWhereParameter : whereParameterString}];
-    NSString *extenstionURLString = [kAlfrescoWorkflowProcessesPublicAPI stringByAppendingString:queryString];
+                                      kAlfrescoPublicAPIWorkflowProcessIncludeVariables, @"true"];
+     */
+    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)",
+                                      kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state]];
+    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
+    NSString *extenstionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extenstionURLString listingContext:listingContext];
     
@@ -153,7 +163,7 @@
     [AlfrescoErrors assertArgumentNotNil:processID argumentName:@"processID"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoWorkflowSingleProcessPublicAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:processID];
+    NSString *requestString = [kAlfrescoPublicAPIWorkflowSingleProcess stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:processID];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -197,8 +207,8 @@
     [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowState : [self.publicToPrivateStateMappings objectForKey:state]}];
-    NSString *requestString = [kAlfrescoWorkflowTasksForProcessPublicAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowTaskState : [self.publicToPrivateStateMappings objectForKey:state]}];
+    NSString *requestString = [kAlfrescoPublicAPIWorkflowTasksForProcess stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
     NSString *completeRequestString = [requestString stringByAppendingString:queryString];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:completeRequestString];
@@ -240,7 +250,7 @@
     [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoWorkflowProcessImagePublicAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+    NSString *requestString = [kAlfrescoPublicAPIWorkflowProcessImage stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
@@ -266,7 +276,7 @@
     [AlfrescoErrors assertArgumentNotNil:outputStream argumentName:@"outputStream"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoWorkflowProcessImagePublicAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+    NSString *requestString = [kAlfrescoPublicAPIWorkflowProcessImage stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
@@ -364,7 +374,7 @@
         completionBlock(nil, requestConversionError);
     }
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoWorkflowProcessesPublicAPI];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoPublicAPIWorkflowProcesses];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
@@ -407,7 +417,7 @@
     [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoWorkflowSingleProcessPublicAPI stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+    NSString *requestString = [kAlfrescoPublicAPIWorkflowSingleProcess stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     

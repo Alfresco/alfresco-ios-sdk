@@ -117,15 +117,14 @@
 
     if (AlfrescoSearchLanguageCMIS == language)
     {
-        request.httpRequest = [self.cmisSession.binding.discoveryService
-         query:statement
-         searchAllVersions:NO
-         relationships:CMISIncludeRelationshipBoth
-         renditionFilter:nil
-         includeAllowableActions:YES
-         maxItems:[NSNumber numberWithInt:listingContext.maxItems]
-         skipCount:[NSNumber numberWithInt:listingContext.skipCount]
-         completionBlock:^(CMISObjectList *objectList, NSError *error){
+        request.httpRequest = [self.cmisSession.binding.discoveryService query:statement
+                                                             searchAllVersions:NO
+                                                                 relationships:CMISIncludeRelationshipBoth
+                                                               renditionFilter:nil
+                                                       includeAllowableActions:YES
+                                                                      maxItems:[NSNumber numberWithInt:listingContext.maxItems]
+                                                                     skipCount:[NSNumber numberWithInt:listingContext.skipCount]
+                                                               completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
                  NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
@@ -143,7 +142,7 @@
                                                                     supportedKeys:self.supportedSortKeys
                                                                        defaultKey:self.defaultSortKey
                                                                         ascending:listingContext.sortAscending];
-                 AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:NO totalItems:sortedArray.count];
+                 AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:objectList.hasMoreItems totalItems:sortedArray.count];
                  completionBlock(pagingResult, nil);
              }
              

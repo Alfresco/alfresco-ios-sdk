@@ -268,7 +268,7 @@
 + (NSDictionary *)paginationJSONFromOldAPIData:(NSData *)data error:(NSError **)outError
 {
     return [self parseJSONData:data notFoundErrorCode:kAlfrescoErrorCodeJSONParsingNilData parseBlock:^id(id jsonObject, NSError *parseError) {
-        NSDictionary *pagingDictionary = [(NSDictionary *)jsonObject objectForKey:kAlfrescoOldJSONPagination];
+        NSDictionary *pagingDictionary = [(NSDictionary *) jsonObject objectForKey:kAlfrescoLegacyJSONPagination];
         return pagingDictionary;
     }];
 }

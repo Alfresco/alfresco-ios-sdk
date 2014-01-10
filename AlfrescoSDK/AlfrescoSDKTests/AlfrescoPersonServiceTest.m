@@ -186,7 +186,15 @@
                  else
                  {
                      STAssertNotNil(array,@"Array should not be nil");
-                     AlfrescoPerson *person = [array objectAtIndex:0];
+                     // Might get multiple search results, so enumerate and find the one we're looking for
+                     __block AlfrescoPerson *person = nil;
+                     [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                         if ([[(AlfrescoPerson *)obj identifier] isEqualToString:self.userName])
+                         {
+                             person = (AlfrescoPerson *)obj;
+                             *stop = YES;
+                         }
+                     }];
                      STAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
                      STAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
                      STAssertNotNil(person.lastName, @"Persons last name should not be nil");

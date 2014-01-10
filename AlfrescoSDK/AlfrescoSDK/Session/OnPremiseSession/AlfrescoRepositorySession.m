@@ -250,7 +250,7 @@
             __block NSString *v3RepositoryProductName = nil;
             
             void (^workflowDefinitionsCompletionBlock)(NSError *error) = ^(NSError *error) {
-                NSString *workflowDefinitionString = [kAlfrescoWorkflowBaseOldAPIURL stringByAppendingString:kAlfrescoWorkflowProcessDefinitionOldAPI];
+                NSString *workflowDefinitionString = [kAlfrescoLegacyAPIWorkflowBaseURL stringByAppendingString:kAlfrescoLegacyAPIWorkflowProcessDefinition];
                 NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:workflowDefinitionString];
                 [self.networkProvider executeRequestWithURL:url session:self alfrescoRequest:request completionBlock:^(NSData *data, NSError *workkflowError) {
                     if (error)

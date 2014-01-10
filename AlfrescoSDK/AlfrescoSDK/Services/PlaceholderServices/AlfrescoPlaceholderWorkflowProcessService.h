@@ -18,7 +18,7 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowPlaceholderProcessService
+/** AlfrescoPlaceholderWorkflowProcessService
  
  Author: Tauseef Mughal (Alfresco)
  */
@@ -26,6 +26,6 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoWorkflowProcessService.h"
 
-@interface AlfrescoWorkflowPlaceholderProcessService : AlfrescoWorkflowProcessService
+@interface AlfrescoPlaceholderWorkflowProcessService : AlfrescoWorkflowProcessService
 
 @end

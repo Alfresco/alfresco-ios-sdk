@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,14 +18,13 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowPlaceholderTaskService
+/** AlfrescoCloudWorkflowTask
  
- Author: Tauseef Mughal (Alfresco)
+ Author: Mike Hatfield (Alfresco)
  */
 
-#import <Foundation/Foundation.h>
-#import "AlfrescoWorkflowTaskService.h"
+#import "AlfrescoPublicAPIWorkflowTask.h"
 
-@interface AlfrescoWorkflowPlaceholderTaskService : AlfrescoWorkflowTaskService
+@interface AlfrescoCloudWorkflowTask : AlfrescoPublicAPIWorkflowTask
 
 @end

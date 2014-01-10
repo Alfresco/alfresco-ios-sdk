@@ -441,7 +441,7 @@
 {
     if (self.setUpSuccess)
     {
-            self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
+        self.taskService = [[AlfrescoWorkflowTaskService alloc] initWithSession:self.currentSession];
             
         [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
@@ -464,7 +464,12 @@
                         else
                         {
                             STAssertNotNil(resolvedTask, @"The resolved task should not be nil");
+                            
+                            /**
+                             * MJH: Removed 08/Jan/2014 as Public API does not return endedAt property for task updates (as per API docs)
+                             *
                             STAssertNotNil(resolvedTask.endedAt, @"The resolved tasks endedAt property should not be nil");
+                             */
                             
                             // TODO
                             

@@ -57,14 +57,25 @@
 
 - (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
+    return [self retrieveCommentsForNode:node latestFirst:NO completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node latestFirst:(BOOL)latestFirst completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-
+    
     NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
-    NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                       withString:cleanNodeId];
+    NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
+    
+    if (latestFirst)
+    {
+        NSString *reverseQuery = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoReverseComments : @"true"}];
+        requestString = [requestString stringByAppendingString:reverseQuery];
+    }
+    
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
@@ -91,6 +102,14 @@
                  listingContext:(AlfrescoListingContext *)listingContext
                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
+    return [self retrieveCommentsForNode:node listingContext:listingContext latestFirst:NO completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)retrieveCommentsForNode:(AlfrescoNode *)node
+                              listingContext:(AlfrescoListingContext *)listingContext
+                                 latestFirst:(BOOL)latestFirst
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -101,8 +120,14 @@
     
     NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
-    NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
-                                                                                       withString:cleanNodeId];
+    NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
+    
+    if (latestFirst)
+    {
+        NSString *reverseQuery = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoReverseComments : @"true"}];
+        requestString = [requestString stringByAppendingString:reverseQuery];
+    }
+    
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){

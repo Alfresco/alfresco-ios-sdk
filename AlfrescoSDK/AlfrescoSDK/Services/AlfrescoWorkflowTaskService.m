@@ -24,7 +24,7 @@
  */
 
 #import "AlfrescoWorkflowTaskService.h"
-#import "AlfrescoWorkflowPlaceholderTaskService.h"
+#import "AlfrescoPlaceholderWorkflowTaskService.h"
 
 @implementation AlfrescoWorkflowTaskService
 
@@ -32,7 +32,7 @@
 {
     if (self == [AlfrescoWorkflowTaskService class])
     {
-        return (id)[AlfrescoWorkflowPlaceholderTaskService alloc];
+        return (id)[AlfrescoPlaceholderWorkflowTaskService alloc];
     }
     else
     {

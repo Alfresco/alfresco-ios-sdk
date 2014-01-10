@@ -33,7 +33,7 @@
 
 @implementation AlfrescoWorkflowObjectConverter
 
-- (NSArray *)workflowDefinitionsFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
+- (NSArray *)workflowDefinitionsFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -44,7 +44,7 @@
         else
         {
             NSMutableArray *workflowDefinitions = [NSMutableArray array];
-            id processDataResponseObject = [jsonObject valueForKey:kAlfrescoOldJSONData];
+            id processDataResponseObject = [jsonObject valueForKey:kAlfrescoLegacyJSONData];
             
             if ([processDataResponseObject isKindOfClass:[NSArray class]])
             {
@@ -85,7 +85,7 @@
     }];
 }
 
-- (NSArray *)workflowProcessesFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
+- (NSArray *)workflowProcessesFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -96,11 +96,20 @@
         else
         {
             NSMutableArray *workflowProcesses = [NSMutableArray array];
-            NSArray *processArray = [jsonObject valueForKey:kAlfrescoOldJSONData];
-            for (NSDictionary *entryDictionary in processArray)
+            id processDataResponseObject = [jsonObject valueForKey:kAlfrescoLegacyJSONData];
+            
+            if ([processDataResponseObject isKindOfClass:[NSArray class]])
             {
-                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                for (NSDictionary *entryDictionary in processDataResponseObject)
+                {
+                    [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                }
             }
+            else if ([processDataResponseObject isKindOfClass:[NSDictionary class]])
+            {
+                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:processDataResponseObject session:session]];
+            }
+            
             return workflowProcesses;
         }
     }];
@@ -118,17 +127,26 @@
         {
             NSMutableArray *workflowProcesses = [NSMutableArray array];
             NSDictionary *listDictionary = [jsonObject valueForKey:kAlfrescoPublicJSONList];
-            NSArray *processArray = [listDictionary valueForKey:kAlfrescoPublicJSONEntries];
-            for (NSDictionary *entryDictionary in processArray)
+            
+            if (listDictionary)
             {
-                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                NSArray *processArray = [listDictionary valueForKey:kAlfrescoPublicJSONEntries];
+                for (NSDictionary *entryDictionary in processArray)
+                {
+                    [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                }
             }
+            else
+            {
+                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:jsonObject session:session]];
+            }
+            
             return workflowProcesses;
         }
     }];
 }
 
-- (NSArray *)workflowTasksFromOldJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
+- (NSArray *)workflowTasksFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -139,7 +157,7 @@
         else
         {
             NSMutableArray *workflowTasks = [NSMutableArray array];
-            NSArray *processArray = [jsonObject valueForKey:kAlfrescoOldJSONData];
+            NSArray *processArray = [jsonObject valueForKey:kAlfrescoLegacyJSONData];
             for (NSDictionary *entryDictionary in processArray)
             {
                 [workflowTasks addObject:[[AlfrescoWorkflowTask alloc] initWithProperties:entryDictionary session:session]];
@@ -187,7 +205,7 @@
     return variableArray;
 }
 
-- (NSString *)attachmentContainerNodeRefFromOldJSONData:(NSData *)jsonData conversionError:(NSError **)error
+- (NSString *)attachmentContainerNodeRefFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeJSONParsing parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -205,8 +223,8 @@
                 
                 if (processDictionary)
                 {
-                    NSDictionary *taskProperties = [processDictionary objectForKey:kAlfrescoOldJSONProperties];
-                    containerRef = [taskProperties objectForKey:kAlfrescoOldBPMJSONPackageContainer];
+                    NSDictionary *taskProperties = [processDictionary objectForKey:kAlfrescoLegacyJSONProperties];
+                    containerRef = [taskProperties objectForKey:kAlfrescoLegacyJSONBPMPackageContainer];
                 }
             }
             else
@@ -218,7 +236,7 @@
     }];
 }
 
-- (NSArray *)attachmentIdentifiersFromOldJSONData:(NSData *)jsonData conversionError:(NSError **)error
+- (NSArray *)attachmentIdentifiersFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeJSONParsing parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -232,7 +250,7 @@
             if ([jsonObject isKindOfClass:[NSDictionary class]])
             {
                 NSDictionary *jsonResponseDictionary = (NSDictionary *)jsonObject;
-                NSArray *itemsArray = [[jsonResponseDictionary valueForKey:kAlfrescoOldJSONData] valueForKey:kAlfrescoJSONItems];
+                NSArray *itemsArray = [[jsonResponseDictionary valueForKey:kAlfrescoLegacyJSONData] valueForKey:kAlfrescoJSONItems];
                 
                 if (itemsArray)
                 {

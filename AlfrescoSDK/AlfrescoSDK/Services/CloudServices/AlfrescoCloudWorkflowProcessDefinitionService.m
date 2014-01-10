@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,30 +18,35 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowPlaceholderProcessService
+/** AlfrescoCloudWorkflowProcessDefinitionService
  
- Author: Tauseef Mughal (Alfresco)
+ Author: Mike Hatfield (Alfresco)
  */
 
-#import "AlfrescoWorkflowPlaceholderProcessService.h"
-#import "AlfrescoRepositorySession.h"
-#import "AlfrescoCloudSession.h"
-#import "AlfrescoWorkflowProcessServiceOldAPI.h"
-#import "AlfrescoWorkflowProcessServicePublicAPI.h"
+#import "AlfrescoCloudWorkflowProcessDefinitionService.h"
+#import "AlfrescoWorkflowObjectConverter.h"
+#import "AlfrescoSession.h"
+#import "AlfrescoInternalConstants.h"
 
-@implementation AlfrescoWorkflowPlaceholderProcessService
+
+@interface AlfrescoCloudWorkflowProcessDefinitionService ()
+
+@property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
+@property (nonatomic, strong, readwrite) NSString *baseApiUrl;
+
+@end
+
+@implementation AlfrescoCloudWorkflowProcessDefinitionService
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
-    if (session.workflowInfo.publicAPI)
+    self = [super initWithSession:session];
+    if (self)
     {
-        return (id)[[AlfrescoWorkflowProcessServicePublicAPI alloc] initWithSession:session];
+        self.session = session;
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudWorkflowBaseURL];
     }
-    else
-    {
-        return (id)[[AlfrescoWorkflowProcessServiceOldAPI alloc] initWithSession:session];
-    }
-    return nil;
+    return self;
 }
 
 @end

@@ -606,6 +606,9 @@ This authentication method authorises the user to access the home network assign
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
 
+    // use activiti by default on cloud
+    self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
+
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
                                                                               alfrescoRequest:request
