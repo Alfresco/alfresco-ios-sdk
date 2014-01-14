@@ -80,13 +80,14 @@
     NSDictionary *headers = [authenticationProvider willApplyHTTPHeadersForSession:nil];
     
     BOOL allowUntrustedSSLCertificate = NO;
+    BOOL connectUsingClientCertificate = NO;
+    
     id obj = [session objectForParameter:kAlfrescoAllowUntrustedSSLCertificate];
     if (obj != nil)
     {
         allowUntrustedSSLCertificate = [obj boolValue];
     }
     
-    BOOL connectUsingClientCertificate = NO;
     id useClientCertificate = [session objectForParameter:kAlfrescoConnectUsingClientSSLCertificate];
     if (useClientCertificate != nil)
     {
@@ -96,9 +97,8 @@
     AlfrescoDefaultHTTPRequest *alfrescoHTTPRequest = nil;
     if (connectUsingClientCertificate)
     {
-        SecIdentityRef certificateIdentity = (__bridge SecIdentityRef)[session objectForParameter:kAlfrescoClientCertificateIdentity];
-        NSArray *certificates = [session objectForParameter:kAlfrescoClientCertificates];
-        alfrescoHTTPRequest = [[AlfrescoClientCertificateHTTPRequest alloc] initWithIdentity:certificateIdentity certificates:certificates];
+        NSURLCredential *credential = [session objectForParameter:kAlfrescoClientCertificateCredentials];
+        alfrescoHTTPRequest = [[AlfrescoClientCertificateHTTPRequest alloc] initWithCertificateCredential:credential];
     }
     else if (allowUntrustedSSLCertificate)
     {
@@ -108,7 +108,7 @@
     {
         alfrescoHTTPRequest = [[AlfrescoDefaultHTTPRequest alloc] init];
     }
-
+    
     if (alfrescoHTTPRequest && !alfrescoRequest.isCancelled)
     {
         if (outputStream)

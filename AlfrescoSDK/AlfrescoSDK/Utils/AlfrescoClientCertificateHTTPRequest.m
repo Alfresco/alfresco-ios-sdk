@@ -22,20 +22,18 @@
 
 @interface AlfrescoClientCertificateHTTPRequest ()
 
-@property (nonatomic, assign) SecIdentityRef identity;
-@property (nonatomic, strong) NSArray *certificates;
+@property (nonatomic, strong) NSURLCredential *credential;
 
 @end
 
 @implementation AlfrescoClientCertificateHTTPRequest
 
-- (id)initWithIdentity:(SecIdentityRef)identity certificates:(NSArray *)certificates
+- (id)initWithCertificateCredential:(NSURLCredential *)credential
 {
     self = [super init];
     if (self)
     {
-        self.identity = identity;
-        self.certificates = certificates;
+        self.credential = credential;
     }
     return self;
 }
@@ -45,8 +43,7 @@
     BOOL isExpectedHost = [self.requestURL.host isEqualToString:challenge.protectionSpace.host];
     if (challenge.previousFailureCount == 0 && isExpectedHost && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate])
     {
-        NSURLCredential *credential = [NSURLCredential credentialWithIdentity:self.identity certificates:self.certificates persistence:NSURLCredentialPersistenceForSession];
-        [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+        [[challenge sender] useCredential:self.credential forAuthenticationChallenge:challenge];
     }
     else
     {

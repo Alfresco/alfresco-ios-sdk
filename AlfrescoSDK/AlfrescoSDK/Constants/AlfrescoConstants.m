@@ -34,8 +34,7 @@ NSString * const kAlfrescoMetadataExtraction = @"org.alfresco.mobile.features.ex
 NSString * const kAlfrescoThumbnailCreation = @"org.alfresco.mobile.features.generatethumbnails";
 NSString * const kAlfrescoAllowUntrustedSSLCertificate = @"org.alfresco.mobile.features.allowuntrustedsslcertificate";
 NSString * const kAlfrescoConnectUsingClientSSLCertificate = @"org.alfresco.mobile.features.connectusingclientsslcertificate";
-NSString * const kAlfrescoClientCertificateIdentity = @"org.alfresco.mobile.features.clientcertificateIdentity";
-NSString * const kAlfrescoClientCertificates = @"org.alfresco.mobile.features.clientcertificates";
+NSString * const kAlfrescoClientCertificateCredentials = @"org.alfresco.mobile.features.clientcertificateCredentials";
 
 /**
  Thumbnail constants

@@ -29,6 +29,6 @@
 
 @interface AlfrescoClientCertificateHTTPRequest : AlfrescoDefaultHTTPRequest
 
-- (id)initWithIdentity:(SecIdentityRef)identity certificates:(NSArray *)certificates;
+- (id)initWithCertificateCredential:(NSURLCredential *)credential;
 
 @end

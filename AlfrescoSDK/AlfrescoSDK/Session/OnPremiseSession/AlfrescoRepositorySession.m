@@ -25,7 +25,6 @@
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
-#import "AlfrescoClientCertificateAuthenticationProvider.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoDefaultNetworkProvider.h"
@@ -216,10 +215,21 @@
         }
     }
 
-    // If connections are allowed for untrusted SSL certificates, we need a custom CMISAuthenticationProvider
     BOOL allowUntrustedSSLCertificate = [[self.sessionData objectForKey:kAlfrescoAllowUntrustedSSLCertificate] boolValue];
-    if (allowUntrustedSSLCertificate)
+    BOOL connectUsingSSLCertificate = [[self.sessionData objectForKey:kAlfrescoConnectUsingClientSSLCertificate] boolValue];
+    
+    if (connectUsingSSLCertificate)
     {
+        // if client certificates are required, certificate credentials need to be setup for auth provider
+        NSURLCredential *credential = [self.sessionData objectForKey:kAlfrescoClientCertificateCredentials];
+        CMISStandardAuthenticationProvider *authProvider = [[CMISStandardAuthenticationProvider alloc] initWithUsername:username password:password];
+        authProvider.credential = credential;
+        v3params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
+        v4params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
+    }
+    else if (allowUntrustedSSLCertificate)
+    {
+        // If connections are allowed for untrusted SSL certificates, we need a custom CMISAuthenticationProvider: CMISStandardUntrustedSSLAuthenticationProvider
         CMISStandardUntrustedSSLAuthenticationProvider *authProvider = [[CMISStandardUntrustedSSLAuthenticationProvider alloc] initWithUsername:username password:password];
         v3params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
         v4params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
@@ -353,21 +363,8 @@
 - (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password
 {
     [self setObject:session forParameter:kAlfrescoSessionKeyCmisSession];
-    id<AlfrescoAuthenticationProvider> authProvider = nil;
-    
-    BOOL connectUsingSSLCertificate = [[self.sessionData objectForKey:kAlfrescoConnectUsingClientSSLCertificate] boolValue];
-    if (connectUsingSSLCertificate)
-    {
-        SecIdentityRef certificateIdentity = (__bridge SecIdentityRef)[self.sessionData objectForKey:kAlfrescoClientCertificateIdentity];
-        NSArray *certificates = [self.sessionData objectForKey:kAlfrescoClientCertificates];
-        NSURLCredential *credentials = [[NSURLCredential alloc] initWithIdentity:certificateIdentity certificates:certificates persistence:NSURLCredentialPersistenceForSession];
-        authProvider = [[AlfrescoClientCertificateAuthenticationProvider alloc] initWithUsername:username password:password credentials:credentials];
-    }
-    else
-    {
-        authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
-                                                                         andPassword:password];
-    }
+    id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
+                                                                                                        andPassword:password];
     
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
