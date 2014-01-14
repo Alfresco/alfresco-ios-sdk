@@ -114,6 +114,8 @@ extern NSString * const kAlfrescoIsFolder;
 extern NSString * const kAlfrescoNetworkProvider;
 extern NSString * const kAlfrescoCMISBindingURL;
 extern NSString * const kAlfrescoAllowUntrustedSSLCertificate;
+extern NSString * const kAlfrescoConnectUsingClientSSLCertificate;
+extern NSString * const kAlfrescoClientCertificateCredentials;
 
 /**---------------------------------------------------------------------------------------
  * @name Person Profile Constants 
