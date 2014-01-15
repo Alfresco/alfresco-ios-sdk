@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -139,6 +139,11 @@
             [self.sessionData setObject:[parameters valueForKey:kAlfrescoAllowUntrustedSSLCertificate] forKey:kAlfrescoAllowUntrustedSSLCertificate];
         }
         
+        if ([[parameters allKeys] containsObject:kAlfrescoConnectUsingClientSSLCertificate])
+        {
+            [self.sessionData setObject:[parameters valueForKey:kAlfrescoConnectUsingClientSSLCertificate] forKey:kAlfrescoConnectUsingClientSSLCertificate];
+        }
+        
         id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoNetworkProvider];
         if (customAlfrescoNetworkProvider)
         {
@@ -210,10 +215,21 @@
         }
     }
 
-    // If connections are allowed for untrusted SSL certificates, we need a custom CMISAuthenticationProvider
     BOOL allowUntrustedSSLCertificate = [[self.sessionData objectForKey:kAlfrescoAllowUntrustedSSLCertificate] boolValue];
-    if (allowUntrustedSSLCertificate)
+    BOOL connectUsingSSLCertificate = [[self.sessionData objectForKey:kAlfrescoConnectUsingClientSSLCertificate] boolValue];
+    
+    if (connectUsingSSLCertificate)
     {
+        // if client certificates are required, certificate credentials need to be setup for auth provider
+        NSURLCredential *credential = [self.sessionData objectForKey:kAlfrescoClientCertificateCredentials];
+        CMISStandardAuthenticationProvider *authProvider = [[CMISStandardAuthenticationProvider alloc] initWithUsername:username password:password];
+        authProvider.credential = credential;
+        v3params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
+        v4params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
+    }
+    else if (allowUntrustedSSLCertificate)
+    {
+        // If connections are allowed for untrusted SSL certificates, we need a custom CMISAuthenticationProvider: CMISStandardUntrustedSSLAuthenticationProvider
         CMISStandardUntrustedSSLAuthenticationProvider *authProvider = [[CMISStandardUntrustedSSLAuthenticationProvider alloc] initWithUsername:username password:password];
         v3params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
         v4params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
@@ -345,16 +361,15 @@
 }
 
 - (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password
-{    
+{
     [self setObject:session forParameter:kAlfrescoSessionKeyCmisSession];
     id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
                                                                                                         andPassword:password];
+    
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
     self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:session];
 }
-
-
 
 - (NSArray *)allParameterKeys
 {

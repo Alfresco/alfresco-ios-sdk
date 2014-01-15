@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -24,6 +24,7 @@
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoDefaultHTTPRequest.h"
 #import "AlfrescoUntrustedSSLHTTPRequest.h"
+#import "AlfrescoClientCertificateHTTPRequest.h"
 #import "AlfrescoInternalConstants.h"
 
 @implementation AlfrescoDefaultNetworkProvider
@@ -79,15 +80,35 @@
     NSDictionary *headers = [authenticationProvider willApplyHTTPHeadersForSession:nil];
     
     BOOL allowUntrustedSSLCertificate = NO;
+    BOOL connectUsingClientCertificate = NO;
+    
     id obj = [session objectForParameter:kAlfrescoAllowUntrustedSSLCertificate];
     if (obj != nil)
     {
         allowUntrustedSSLCertificate = [obj boolValue];
     }
     
-    Class httpRequestClass = allowUntrustedSSLCertificate ? [AlfrescoUntrustedSSLHTTPRequest class] : [AlfrescoDefaultHTTPRequest class];
-    AlfrescoDefaultHTTPRequest *alfrescoHTTPRequest = [[httpRequestClass alloc] init];
-
+    id useClientCertificate = [session objectForParameter:kAlfrescoConnectUsingClientSSLCertificate];
+    if (useClientCertificate != nil)
+    {
+        connectUsingClientCertificate = [useClientCertificate boolValue];
+    }
+    
+    AlfrescoDefaultHTTPRequest *alfrescoHTTPRequest = nil;
+    if (connectUsingClientCertificate)
+    {
+        NSURLCredential *credential = [session objectForParameter:kAlfrescoClientCertificateCredentials];
+        alfrescoHTTPRequest = [[AlfrescoClientCertificateHTTPRequest alloc] initWithCertificateCredential:credential];
+    }
+    else if (allowUntrustedSSLCertificate)
+    {
+        alfrescoHTTPRequest = [[AlfrescoUntrustedSSLHTTPRequest alloc] init];
+    }
+    else
+    {
+        alfrescoHTTPRequest = [[AlfrescoDefaultHTTPRequest alloc] init];
+    }
+    
     if (alfrescoHTTPRequest && !alfrescoRequest.isCancelled)
     {
         if (outputStream)
