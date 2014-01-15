@@ -1768,6 +1768,79 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		27554BC618871500009E8AA7 /* AdHoc */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 27D85CA017D7E3FC009D15C4 /* AlfrescoSDK.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_AFTER_BUILD = NO;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = AdHoc;
+		};
+		27554BC718871500009E8AA7 /* AdHoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/AlfrescoSDK.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
+				INSTALL_PATH = /AlfrescoSDK;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/AlfrescoSDK/CMIS\"",
+					"\"$(SRCROOT)/CMIS\"",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"\"$(SRCROOT)/CMIS/libObjectiveCMIS.a\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /AlfrescoSDK;
+				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)";
+				PUBLIC_HEADERS_FOLDER_PATH = /AlfrescoSDK;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_AFTER_BUILD = NO;
+			};
+			name = AdHoc;
+		};
+		27554BC818871500009E8AA7 /* AdHoc */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 27E4C7F817F6554E002C0F77 /* AlfrescoSDKTests.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
+				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
+				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION)-debug.a";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_AFTER_BUILD = NO;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = AdHoc;
+		};
 		4EB076B915B00D8E00DF7DED /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 27D85CA017D7E3FC009D15C4 /* AlfrescoSDK.xcconfig */;
@@ -1928,6 +2001,7 @@
 			buildConfigurations = (
 				4EB076B915B00D8E00DF7DED /* Debug */,
 				4EB076BA15B00D8E00DF7DED /* Release */,
+				27554BC618871500009E8AA7 /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1937,6 +2011,7 @@
 			buildConfigurations = (
 				4EB076BC15B00D8E00DF7DED /* Debug */,
 				4EB076BD15B00D8E00DF7DED /* Release */,
+				27554BC718871500009E8AA7 /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1946,6 +2021,7 @@
 			buildConfigurations = (
 				4EB076BF15B00D8E00DF7DED /* Debug */,
 				4EB076C015B00D8E00DF7DED /* Release */,
+				27554BC818871500009E8AA7 /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
