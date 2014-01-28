@@ -42,4 +42,6 @@
 
 + (NSDictionary *)paginationJSONFromOldAPIData:(NSData *)data error:(NSError **)outError;
 
++ (NSDictionary *)pagingFromOldAPIData:(NSData *)data error:(NSError **)outError;
+
 @end

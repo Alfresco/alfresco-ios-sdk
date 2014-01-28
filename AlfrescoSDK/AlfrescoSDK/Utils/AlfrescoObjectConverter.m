@@ -273,5 +273,27 @@
     }];
 }
 
++ (NSDictionary *)pagingFromOldAPIData:(NSData *)data error:(NSError **)outError
+{
+    return [self parseJSONData:data notFoundErrorCode:kAlfrescoErrorCodeJSONParsingNilData parseBlock:^id(id jsonObject, NSError *parseError) {
+        NSDictionary *parsedDictionary = (NSDictionary *)jsonObject;
+        
+        BOOL hasMoreItems = NO;
+        NSNumber *totalItems = [parsedDictionary objectForKey:kAlfrescoLegacyJSONTotal];
+        NSInteger skipCount = [[parsedDictionary objectForKey:kAlfrescoLegacyJSONSkipCount] integerValue];
+        NSInteger pageCount = [[parsedDictionary objectForKey:kAlfrescoLegacyJSONMaxItems] integerValue];
+        
+        if ((pageCount + skipCount) < totalItems.integerValue)
+        {
+            hasMoreItems = YES;
+        }
+        
+        NSMutableDictionary *pagingDictionary = [NSMutableDictionary dictionary];
+        [pagingDictionary setObject:totalItems forKey:kAlfrescoLegacyJSONTotal];
+        [pagingDictionary setObject:[NSNumber numberWithBool:hasMoreItems] forKey:kAlfrescoLegacyJSONHasMoreItems];
+        
+        return pagingDictionary;
+    }];
+}
 
 @end

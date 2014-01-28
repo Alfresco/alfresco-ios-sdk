@@ -80,6 +80,8 @@ extern NSString * const kAlfrescoMaxItems;
 extern NSString * const kAlfrescoSkipCount;
 extern NSString * const kAlfrescoSearchFilter;
 extern NSString * const kAlfrescoReverseComments;
+extern NSString * const kAlfrescoLegacyMaxItems;
+extern NSString * const kAlfrescoLegacySkipCount;
 
 extern NSString * const kAlfrescoSessionKeyCmisSession;
 extern NSString * const kAlfrescoSessionCloudURL;
@@ -318,6 +320,11 @@ extern NSString * const kAlfrescoJSONResourceName;
 extern NSString * const kAlfrescoJSONMessage;
 extern NSString * const kAlfrescoJSONFile;
 extern NSString * const kAlfrescoJSONFolder;
+
+extern NSString * const kAlfrescoLegacyJSONMaxItems;
+extern NSString * const kAlfrescoLegacyJSONSkipCount;
+extern NSString * const kAlfrescoLegacyJSONTotal;
+extern NSString * const kAlfrescoLegacyJSONHasMoreItems;
 
 extern NSString * const kAlfrescoNodeAspects;
 extern NSString * const kAlfrescoNodeProperties;

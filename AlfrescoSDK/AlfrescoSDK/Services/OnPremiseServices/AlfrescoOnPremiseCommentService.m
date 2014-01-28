@@ -70,11 +70,18 @@
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
     
+    // add an artifical cap, return the first 1000 comments - Related to ACE-469
+    NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionary];
+    [queryDictionary setObject:@"1000" forKey:kAlfrescoLegacyMaxItems];
+    [queryDictionary setObject:@"0" forKey:kAlfrescoLegacySkipCount];
+    
     if (latestFirst)
     {
-        NSString *reverseQuery = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoReverseComments : @"true"}];
-        requestString = [requestString stringByAppendingString:reverseQuery];
+        [queryDictionary setObject:@"true" forKey:kAlfrescoReverseComments];
     }
+    
+    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:queryDictionary];
+    requestString = [requestString stringByAppendingString:queryString];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
@@ -122,11 +129,17 @@
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
     
+    NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionary];
+    [queryDictionary setObject:[NSString stringWithFormat:@"%d", listingContext.maxItems] forKey:kAlfrescoLegacyMaxItems];
+    [queryDictionary setObject:[NSString stringWithFormat:@"%d", listingContext.skipCount] forKey:kAlfrescoLegacySkipCount];
+    
     if (latestFirst)
     {
-        NSString *reverseQuery = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoReverseComments : @"true"}];
-        requestString = [requestString stringByAppendingString:reverseQuery];
+        [queryDictionary setObject:@"true" forKey:kAlfrescoReverseComments];
     }
+    
+    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:queryDictionary];
+    requestString = [requestString stringByAppendingString:queryString];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
@@ -139,8 +152,29 @@
         {
             NSError *conversionError = nil;
             NSArray *comments = [self commentArrayFromJSONData:responseData error:&conversionError];
-            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:comments listingContext:listingContext];
-            completionBlock(pagingResult, conversionError);
+            
+            if (conversionError)
+            {
+                completionBlock(nil, conversionError);
+            }
+            else
+            {
+                NSError *pageError = nil;
+                NSDictionary *pagingDetails = [AlfrescoObjectConverter pagingFromOldAPIData:responseData error:&pageError];
+                
+                if (pageError)
+                {
+                    completionBlock(nil, pageError);
+                }
+                else
+                {
+                    BOOL hasMoreItems = [[pagingDetails objectForKey:kAlfrescoLegacyJSONHasMoreItems] boolValue];
+                    int totalItems = [[pagingDetails objectForKey:kAlfrescoLegacyJSONTotal] integerValue];
+                    
+                    AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:comments hasMoreItems:hasMoreItems totalItems:totalItems];
+                    completionBlock(pagingResult, conversionError);
+                }
+            }
         }
     }];
     return alfrescoRequest;
