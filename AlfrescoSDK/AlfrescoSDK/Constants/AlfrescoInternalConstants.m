@@ -93,6 +93,8 @@ NSString * const kAlfrescoMaxItems = @"{maxItems}";
 NSString * const kAlfrescoSkipCount = @"{skipCount}";
 NSString * const kAlfrescoSearchFilter = @"{filter}";
 NSString * const kAlfrescoReverseComments = @"reverse";
+NSString * const kAlfrescoLegacyMaxItems = @"pageSize";
+NSString * const kAlfrescoLegacySkipCount = @"startIndex";
 
 /**
  Session data key constants
@@ -352,8 +354,10 @@ NSString * const kAlfrescoJSONMessage = @"message";
 NSString * const kAlfrescoJSONFile = @"file";
 NSString * const kAlfrescoJSONFolder = @"folder";
 
-
-
+NSString * const kAlfrescoLegacyJSONMaxItems = @"pageSize";
+NSString * const kAlfrescoLegacyJSONSkipCount = @"startIndex";
+NSString * const kAlfrescoLegacyJSONTotal = @"total";
+NSString * const kAlfrescoLegacyJSONHasMoreItems = @"legacyHasMoreItems";
 
 NSString * const kAlfrescoNodeAspects = @"cmis.aspects";
 NSString * const kAlfrescoNodeProperties = @"cmis.properties";
