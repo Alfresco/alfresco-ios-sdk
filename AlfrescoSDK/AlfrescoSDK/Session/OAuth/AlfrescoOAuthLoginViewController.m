@@ -21,7 +21,6 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoOAuthHelper.h"
 #import "AlfrescoLog.h"
-#import <Availability.h>
 
 static NSString * const kOAuthRequestDenyAction = @"action=Deny";
 

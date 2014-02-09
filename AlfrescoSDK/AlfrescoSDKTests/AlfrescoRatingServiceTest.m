@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoRatingServiceTest.h"
-#import "AlfrescoRepositoryCapabilities.h"
 
 @implementation AlfrescoRatingServiceTest
 /*

@@ -50,7 +50,6 @@ extern NSString * const kAlfrescoSDKVersion;
 typedef void (^AlfrescoArrayCompletionBlock)(NSArray *array, NSError *error);
 typedef void (^AlfrescoBOOLCompletionBlock)(BOOL succeeded, NSError *error);
 typedef void (^AlfrescoNumberCompletionBlock)(NSNumber *count, NSError *error);
-typedef void (^AlfrescoURLCompletionBlock)(NSURL *url, NSError *error);
 typedef void (^AlfrescoDataCompletionBlock)(NSData *data, NSError *error);
 typedef void (^AlfrescoFolderCompletionBlock)(AlfrescoFolder *folder, NSError *error);
 typedef void (^AlfrescoNodeCompletionBlock)(AlfrescoNode *node, NSError *error);

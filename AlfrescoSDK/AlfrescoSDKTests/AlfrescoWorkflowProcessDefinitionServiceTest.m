@@ -25,7 +25,6 @@
 
 #import "AlfrescoWorkflowProcessDefinitionServiceTest.h"
 #import "AlfrescoErrors.h"
-#import "AlfrescoListingContext.h"
 
 @interface AlfrescoWorkflowProcessDefinitionServiceTest ()
 

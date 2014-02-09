@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoVersionServiceTest.h"
-#import "AlfrescoDocumentFolderService.h"
 
 @implementation AlfrescoVersionServiceTest
 

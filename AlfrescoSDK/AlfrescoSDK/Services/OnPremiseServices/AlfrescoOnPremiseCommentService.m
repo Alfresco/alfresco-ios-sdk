@@ -24,9 +24,6 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
-#import "AlfrescoObjectConverter.h"
-#import "AlfrescoNetworkProvider.h"
-#import "AlfrescoLog.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoOnPremiseCommentService ()

@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoRepositoryCapabilities.h"
-#import "AlfrescoInternalConstants.h"
 
 static NSInteger kRepositoryCapabilitiesModelVersion = 1;
 

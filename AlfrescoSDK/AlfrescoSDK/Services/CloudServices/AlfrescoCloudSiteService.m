@@ -25,7 +25,6 @@
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoDocumentFolderService.h"
-#import "AlfrescoNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoSiteCache.h"
 #import "AlfrescoProperty.h"

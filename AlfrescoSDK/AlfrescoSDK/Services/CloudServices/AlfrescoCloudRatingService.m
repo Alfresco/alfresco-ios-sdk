@@ -23,8 +23,6 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
-#import "AlfrescoNetworkProvider.h"
-#import "AlfrescoLog.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoCloudRatingService ()

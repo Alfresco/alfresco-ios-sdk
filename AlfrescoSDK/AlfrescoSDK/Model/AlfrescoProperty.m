@@ -18,7 +18,6 @@
 
 #import "AlfrescoProperty.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoConstants.h"
 
 static NSInteger kPropertyModelVersion = 1;
 

@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoPagingResult.h"
-#import "AlfrescoInternalConstants.h"
 
 static NSInteger kPagingResultModelVersion = 1;
 

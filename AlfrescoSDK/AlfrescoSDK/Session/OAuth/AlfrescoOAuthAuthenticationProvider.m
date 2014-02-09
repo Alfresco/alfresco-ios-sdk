@@ -17,8 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoOAuthAuthenticationProvider.h"
-#import "AlfrescoInternalConstants.h"
-#import "AlfrescoErrors.h"
 
 @interface AlfrescoOAuthAuthenticationProvider ()
 @property (nonatomic, strong, readwrite) NSMutableDictionary *httpHeaders;
@@ -37,9 +35,6 @@
     }
     return self;
 }
-
-
-
 
 
 #pragma AlfrescoAuthenticationProvider method

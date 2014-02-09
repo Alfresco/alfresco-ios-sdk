@@ -25,7 +25,6 @@
 
 #import "AlfrescoPublicAPIWorkflowProcessDefinitionService.h"
 #import "AlfrescoAuthenticationProvider.h"
-#import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"

@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoKeywordSearchOptions.h"
-#import "AlfrescoInternalConstants.h"
 
 static NSUInteger kKeywordSearchModelVersion = 1;
 

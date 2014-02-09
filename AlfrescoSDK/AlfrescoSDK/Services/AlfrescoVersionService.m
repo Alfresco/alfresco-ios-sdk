@@ -24,7 +24,6 @@
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
-#import "AlfrescoErrors.h"
 #import "AlfrescoCMISUtil.h"
 
 @interface AlfrescoVersionService ()

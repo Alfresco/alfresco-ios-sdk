@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoRatingService.h"
-#import "AlfrescoPlaceholderActivityStreamService.h"
 #import "AlfrescoPlaceholderRatingService.h"
 
 @implementation AlfrescoRatingService

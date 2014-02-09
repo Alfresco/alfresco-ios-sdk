@@ -27,6 +27,7 @@ static NSInteger kFolderModelVersion = 1;
 @end
 
 @implementation AlfrescoFolder
+
 - (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super initWithProperties:properties];

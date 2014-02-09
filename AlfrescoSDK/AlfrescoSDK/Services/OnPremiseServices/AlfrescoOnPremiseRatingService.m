@@ -20,12 +20,10 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
-#import "AlfrescoRepositoryInfo.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoObjectConverter.h"
 #import <objc/runtime.h>
-#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremiseRatingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;

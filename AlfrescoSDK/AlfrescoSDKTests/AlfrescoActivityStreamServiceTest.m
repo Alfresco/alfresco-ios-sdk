@@ -17,8 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoActivityStreamServiceTest.h"
-#import "AlfrescoActivityEntry.h"
-#import "AlfrescoSiteService.h"
 #import "AlfrescoLog.h"
 
 @implementation AlfrescoActivityStreamServiceTest

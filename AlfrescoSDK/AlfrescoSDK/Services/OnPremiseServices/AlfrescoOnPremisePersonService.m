@@ -23,7 +23,6 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
-#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremisePersonService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;

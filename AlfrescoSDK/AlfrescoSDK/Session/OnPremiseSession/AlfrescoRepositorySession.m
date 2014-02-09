@@ -19,17 +19,13 @@
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoInternalConstants.h"
 #import "CMISSession.h"
-#import "CMISRepositoryService.h"
-#import "CMISRepositoryInfo.h"
 #import "CMISStandardUntrustedSSLAuthenticationProvider.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
-#import "AlfrescoErrors.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
-#import "CMISLog.h"
 #import <objc/runtime.h>
 #import "AlfrescoURLUtils.h"
 

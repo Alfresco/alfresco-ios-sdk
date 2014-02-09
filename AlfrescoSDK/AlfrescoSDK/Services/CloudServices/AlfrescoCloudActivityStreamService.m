@@ -24,7 +24,6 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import <objc/runtime.h>
-#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoCloudActivityStreamService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;

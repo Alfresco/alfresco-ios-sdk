@@ -26,7 +26,6 @@
 #import "AlfrescoLegacyAPIWorkflowProcessDefinitionService.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoNetworkProvider.h"
-#import "AlfrescoRequest.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"

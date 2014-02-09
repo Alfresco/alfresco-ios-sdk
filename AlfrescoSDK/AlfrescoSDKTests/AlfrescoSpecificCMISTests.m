@@ -19,14 +19,9 @@
 #import "AlfrescoSpecificCMISTests.h"
 #import "CMISConstants.h"
 #import "CMISDocument.h"
-#import "CMISFolder.h"
-#import "CMISSession.h"
-#import "CMISProperties.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import "CMISDateUtil.h"
 #import "AlfrescoCMISDocument.h"
-#import "CMISDateUtil.h"
-#import "CMISStringInOutParameter.h"
 #import "AlfrescoInternalConstants.h"
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
@@ -128,13 +123,6 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     [self waitUntilCompleteWithFixedTimeInterval];
     XCTAssertTrue(self.lastTestSuccessful, @"setUpCMISSession failed");
     return success;
-}
-
-
-- (NSDictionary *)customCmisParameters
-{
-    // We could just write the class name as a NSString, but that would not refactor if we ever would rename this class
-    return @{kCMISSessionParameterObjectConverterClassName: NSStringFromClass([AlfrescoCMISObjectConverter class])};
 }
 
 - (void)testCreateDocumentWithDescription

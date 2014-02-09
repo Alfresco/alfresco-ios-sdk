@@ -18,7 +18,6 @@
 
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoErrors.h"
 
 @interface AlfrescoOAuthData ()
 @property (nonatomic, strong, readwrite) NSString           * accessToken;

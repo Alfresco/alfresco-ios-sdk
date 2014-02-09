@@ -17,12 +17,8 @@
  ******************************************************************************/
 
 #import "AlfrescoBaseTest.h"
-#import "AlfrescoContentFile.h"
-#import "AlfrescoInternalConstants.h"
-#import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoLog.h"
 #import "CMISConstants.h"
-#import "CMISDocument.h"
 
 // kAlfrescoTestServersConfigDirectory is expected to be found in the user's home folder.
 // Note: the entry in userhome can be a symbolic link created via "ln -s"
@@ -379,9 +375,6 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
 }
 
 
-
-
-
 /*
  @Unique_TCRef 51S0
  */
@@ -435,14 +428,6 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     self.testImageFile = textContentFile;
 }
 
-- (void)waitAtTheEnd
-{
-    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:TIMEGAP];
-    do {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
-    } while ([timeoutDate timeIntervalSinceNow] > 0 );
-//    XCTAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEGAP);
-}
 
 - (void)waitUntilCompleteWithFixedTimeInterval
 {
@@ -454,21 +439,6 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         } while (!self.callbackCompleted && [timeoutDate timeIntervalSinceNow] > 0 );
         XCTAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEINTERVAL);
     }
-}
-
-- (void)removePreExistingUnitTestFolder
-{
-    AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-    __weak AlfrescoDocumentFolderService *weakDocumentService = dfService;
-    
-    [dfService retrieveNodeWithFolderPath:self.unitTestFolder relativeToFolder:self.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
-        if (node)
-        {
-            [weakDocumentService deleteNode:node completionBlock:^(BOOL succeeded, NSError *error) {
-                // intentionally do nothing
-            }];
-        }
-    }];
 }
 
 @end

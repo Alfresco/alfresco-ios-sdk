@@ -17,11 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoSessionTest.h"
-#import "AlfrescoListingContext.h"
-#import "AlfrescoOAuthData.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoDocumentFolderService.h"
-#import "AlfrescoRequest.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoLog.h"
 @implementation AlfrescoSessionTest

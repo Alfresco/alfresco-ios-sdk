@@ -18,40 +18,25 @@
 
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoPlaceholderDocumentFolderService.h"
-#import <MobileCoreServices/MobileCoreServices.h>
 #import "CMISDocument.h"
 #import "CMISSession.h"
-#import "CMISQueryResult.h"
 #import "CMISObjectConverter.h"
-#import "CMISObjectId.h"
-#import "CMISFolder.h"
 #import "CMISPagedResult.h"
 #import "CMISOperationContext.h"
 #import "CMISConstants.h"
 #import "CMISStringInOutParameter.h"
-#import "CMISRendition.h"
-#import "CMISEnums.h"
 #import "CMISErrors.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
-#import "AlfrescoProperty.h"
-#import "AlfrescoErrors.h"
-#import "AlfrescoListingContext.h"
 #import "AlfrescoInternalConstants.h"
 #import <objc/runtime.h>
-#import "AlfrescoInternalConstants.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoSortingUtils.h"
-#import "AlfrescoCloudSession.h"
-#import "AlfrescoFileManager.h"
-#import "AlfrescoNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoCMISUtil.h"
 #import "AlfrescoFavoritesCache.h"
-
-typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error);
 
 @interface AlfrescoDocumentFolderService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;

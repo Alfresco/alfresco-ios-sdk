@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoSiteServiceForSecondaryUserTests.h"
-#import "AlfrescoSite.h"
 
 @implementation AlfrescoSiteServiceForSecondaryUserTests
 

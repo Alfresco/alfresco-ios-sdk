@@ -18,23 +18,16 @@
 
 #import "AlfrescoCloudSession.h"
 #import "CMISSession.h"
-#import "CMISRepositoryService.h"
-#import "CMISRepositoryInfo.h"
 #import "CMISDateUtil.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
-#import "AlfrescoErrors.h"
-#import "AlfrescoCloudNetwork.h"
-#import "AlfrescoURLUtils.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoOAuthData.h"
 #import "AlfrescoOAuthAuthenticationProvider.h"
 #import "AlfrescoCMISPassThroughAuthenticationProvider.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
-#import "CMISLog.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoCloudSession ()

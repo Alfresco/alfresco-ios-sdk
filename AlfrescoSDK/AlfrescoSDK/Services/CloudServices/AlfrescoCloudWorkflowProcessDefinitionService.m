@@ -24,7 +24,6 @@
  */
 
 #import "AlfrescoCloudWorkflowProcessDefinitionService.h"
-#import "AlfrescoWorkflowObjectConverter.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoInternalConstants.h"
 

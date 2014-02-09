@@ -17,8 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoCommentServiceTest.h"
-#import "AlfrescoDocumentFolderService.h"
-#import "AlfrescoLog.h"
 
 static NSString * const kAlfrescoTestCommentContent = @"<p>test</p>";
 static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";

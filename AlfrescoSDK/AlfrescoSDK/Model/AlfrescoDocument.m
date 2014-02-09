@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoDocument.h"
-#import "CMISEnums.h"
 #import "CMISConstants.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoProperty.h"
@@ -36,7 +35,6 @@ static NSInteger kDocumentModelVersion = 1;
 @end
 
 @implementation AlfrescoDocument
-
 
 - (id)initWithProperties:(NSDictionary *)properties
 {

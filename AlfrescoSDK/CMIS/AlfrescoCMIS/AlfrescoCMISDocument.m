@@ -26,7 +26,6 @@
 #import "AlfrescoCMISDocument.h"
 #import "CMISSession.h"
 #import "CMISConstants.h"
-#import "CMISSessionParameters.h"
 #import "AlfrescoCMISUtil.h"
 #import "AlfrescoInternalConstants.h"
 

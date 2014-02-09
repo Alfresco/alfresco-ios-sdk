@@ -24,8 +24,6 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoDocumentFolderService.h"
-#import "AlfrescoNetworkProvider.h"
-#import "AlfrescoLog.h"
 
 NSString * const kAlfrescoSearchNotImplemented = @"searchWithKeywords is not implemented as Alfresco in the Cloud does not have this capability";
 

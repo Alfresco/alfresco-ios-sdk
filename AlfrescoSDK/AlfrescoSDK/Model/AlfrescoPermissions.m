@@ -18,7 +18,6 @@
 
 #import "AlfrescoPermissions.h"
 #import "CMISEnums.h"
-#import "AlfrescoInternalConstants.h"
 
 static NSInteger kPermissionsModelVersion = 1;
 

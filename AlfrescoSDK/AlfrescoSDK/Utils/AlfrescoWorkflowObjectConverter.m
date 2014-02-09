@@ -26,8 +26,6 @@
 #import "AlfrescoWorkflowObjectConverter.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoSession.h"
-#import "AlfrescoErrors.h"
-#import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoWorkflowVariable.h"
 

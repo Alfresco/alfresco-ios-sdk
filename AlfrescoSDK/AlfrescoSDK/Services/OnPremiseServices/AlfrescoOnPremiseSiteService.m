@@ -17,17 +17,14 @@
  ******************************************************************************/
 
 #import "AlfrescoOnPremiseSiteService.h"
-#import "AlfrescoPersonService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
-#import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoSortingUtils.h"
-#import "AlfrescoNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoSiteCache.h"
 #import "AlfrescoOnPremiseJoinSiteRequest.h"

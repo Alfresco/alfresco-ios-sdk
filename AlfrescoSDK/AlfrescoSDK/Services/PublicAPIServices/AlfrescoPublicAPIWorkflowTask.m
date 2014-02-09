@@ -28,7 +28,6 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoWorkflowTask.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoWorkflowObjectConverter.h"

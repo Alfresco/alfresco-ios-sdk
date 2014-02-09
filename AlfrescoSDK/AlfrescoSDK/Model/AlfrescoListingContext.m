@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoListingContext.h"
-#import "AlfrescoInternalConstants.h"
+
 #define DEFAULTMAXITEMS 50
 #define DEFAULTSKIPCOUNT 0
 

@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoPersonServiceTest.h"
-#import "AlfrescoContentFile.h"
 
 @implementation AlfrescoPersonServiceTest
 

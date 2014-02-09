@@ -18,14 +18,10 @@
 
 #import "AlfrescoDocumentFolderServiceTest.h"
 #import "AlfrescoProperty.h"
-#import "AlfrescoListingContext.h"
-#import "AlfrescoPermissions.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoErrors.h"
 #import "CMISConstants.h"
-#import "AlfrescoContentStream.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoRepositorySession.h"
 #import "AlfrescoTaggingService.h"
 
 @implementation AlfrescoDocumentFolderServiceTest

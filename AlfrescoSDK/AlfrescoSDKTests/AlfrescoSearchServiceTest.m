@@ -17,8 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoSearchServiceTest.h"
-#import "AlfrescoKeywordSearchOptions.h"
-#import "AlfrescoSearchLanguage.h"
 #import "AlfrescoLog.h"
 
 @interface AlfrescoSearchServiceTest ()

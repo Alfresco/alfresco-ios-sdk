@@ -18,7 +18,6 @@
 
 #import "AlfrescoSiteServiceTest.h"
 #import "AlfrescoPersonService.h"
-#import "AlfrescoSite.h"
 #import "AlfrescoLog.h"
 
 @implementation AlfrescoSiteServiceTest
@@ -682,17 +681,4 @@
     }
 }
 
-#pragma mark unit test internal methods
-
-- (BOOL)siteArray:(NSArray *)siteArray containsShortName:(NSString *)shortName
-{
-    for (AlfrescoSite *site in siteArray)
-    {
-        if ([site.shortName isEqualToString:shortName])
-        {
-            return YES;
-        }
-    }
-    return NO;
-}
 @end

@@ -23,7 +23,6 @@
 #import "CMISConstants.h"
 #import "CMISDocument.h"
 #import "CMISSession.h"
-#import "CMISDiscoveryService.h"
 #import "CMISPagedResult.h"
 #import "CMISObjectList.h"
 #import "CMISQueryResult.h"

@@ -27,7 +27,6 @@
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoCloudWorkflowProcessDefinitionService.h"
 #import "AlfrescoLegacyAPIWorkflowProcessDefinitionService.h"
-#import "AlfrescoPublicAPIWorkflowProcessDefinitionService.h"
 
 @implementation AlfrescoPlaceholderWorkflowProcessDefinitionService
 

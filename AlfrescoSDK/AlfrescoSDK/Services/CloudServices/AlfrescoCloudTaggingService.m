@@ -24,8 +24,6 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoTag.h"
-#import "AlfrescoNetworkProvider.h"
-#import "AlfrescoLog.h"
 
 @interface AlfrescoCloudTaggingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
