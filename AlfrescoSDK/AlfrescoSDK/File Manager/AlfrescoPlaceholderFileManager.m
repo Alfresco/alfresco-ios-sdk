@@ -30,7 +30,7 @@
     NSString *customFileManagerClassString = infoPlist[kAlfrescoFileManagerClass];
     if (customFileManagerClassString)
     {
-        Class customFileManagerClass = NSClassFromString((NSString *)customFileManagerClassString);
+        Class customFileManagerClass = NSClassFromString(customFileManagerClassString);
         if ([customFileManagerClass isSubclassOfClass:[AlfrescoFileManager class]])
         {
             return (id)[[customFileManagerClass alloc] init];

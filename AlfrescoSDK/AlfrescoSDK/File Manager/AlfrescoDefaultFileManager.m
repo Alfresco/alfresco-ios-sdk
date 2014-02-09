@@ -160,10 +160,8 @@
 
 - (BOOL)fileStreamIsOpen:(NSStream *)stream
 {
-    BOOL isStreamOpen = NO;
     NSOutputStream *outputStream = (NSOutputStream *)stream;
-    isStreamOpen = (outputStream.streamStatus == NSStreamStatusOpen);
-    return isStreamOpen;
+    return (outputStream.streamStatus == NSStreamStatusOpen);
 }
 
 - (NSInputStream *)inputStreamWithFilePath:(NSString *)filePath

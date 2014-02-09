@@ -254,7 +254,7 @@
         }
         return nil;
     }
-    if (NO == [jsonDictionary isKindOfClass:[NSDictionary class]])
+    if (![jsonDictionary isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {

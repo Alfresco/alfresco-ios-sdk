@@ -140,14 +140,7 @@
             XCTAssertTrue(originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count], @"Removing a non existent parameter seems to have alterered the state of the session's parameters");
             
             // if they are the same. nothing was removed
-            if (originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count])
-            {
-                self.lastTestSuccessful = YES;
-            }
-            else
-            {
-                self.lastTestSuccessful = NO;
-            }
+            self.lastTestSuccessful = originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count];
             
             XCTAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
         }
@@ -184,15 +177,8 @@
         
         XCTAssertNotNil(urlToTest, @"The url to test is nil");
         XCTAssertTrue([self.server isEqualToString:urlToTest], @"Expected the baseURL in the session to be the same as that used to create the session");
-        
-        if ([self.server isEqualToString:urlToTest])
-        {
-            self.lastTestSuccessful = YES;
-        }
-        else
-        {
-            self.lastTestSuccessful = NO;
-        }
+
+        self.lastTestSuccessful = [self.server isEqualToString:urlToTest];
         XCTAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
     }
     else
@@ -213,15 +199,8 @@
         XCTAssertNotNil(sessionPersonalIdentifier, @"Personal Identifier in the session is nil");
         XCTAssertNotNil(self.userName, @"Username is nil");
         XCTAssertTrue([self.userName isEqualToString:sessionPersonalIdentifier], @"The appropriate person identifer for the logged in user was not returned");
-        
-        if ([self.userName isEqualToString:sessionPersonalIdentifier])
-        {
-            self.lastTestSuccessful = YES;
-        }
-        else
-        {
-            self.lastTestSuccessful = NO;
-        }
+
+        self.lastTestSuccessful = [self.userName isEqualToString:sessionPersonalIdentifier];
         XCTAssertTrue(self.lastTestSuccessful, @"OnPremise Session did not return the appropriate personal identifier");
     }
     else
@@ -248,15 +227,8 @@
         XCTAssertTrue(defaultListingContext.sortAscending, @"Expected the default sort to be set to ascending, instead got descending");
         XCTAssertTrue(defaultListingContext.maxItems == expectedMaxItems, @"Expected the default max items to be set to %i instead got %i", expectedMaxItems, defaultListingContext.maxItems);
         XCTAssertTrue(defaultListingContext.skipCount == expectedSkipCount, @"Expected the default skip count to be %i, instead got %i", expectedSkipCount, defaultListingContext.skipCount);
-        
-        if (!defaultListingContext.sortProperty && defaultListingContext.sortAscending && defaultListingContext.maxItems == 50 && defaultListingContext.skipCount == 0)
-        {
-            self.lastTestSuccessful = YES;
-        }
-        else
-        {
-            self.lastTestSuccessful = NO;
-        }
+
+        self.lastTestSuccessful = !defaultListingContext.sortProperty && defaultListingContext.sortAscending && defaultListingContext.maxItems == 50 && defaultListingContext.skipCount == 0;
         XCTAssertTrue(self.lastTestSuccessful, @"The session's default listing context state was not as expected");
     }
     else
@@ -280,19 +252,12 @@
         XCTAssertNotNil([[sessionRootFolder properties][@"cmis:objectId"] value], @"Expected the objectId not to be nil");
         XCTAssertNotNil([[sessionRootFolder properties][@"cmis:objectTypeId"] value], @"Expected the objectTypeId not to be nil");
         XCTAssertTrue([[[sessionRootFolder properties][@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"], @"Expected the objectTypeID to be a cmis folder type");
-        
-        if (sessionRootFolder &&
+
+        self.lastTestSuccessful = sessionRootFolder &&
             [[sessionRootFolder properties][@"cmis:path"] value] &&
             [[sessionRootFolder properties][@"cmis:objectId"] value] &&
             [[sessionRootFolder properties][@"cmis:objectTypeId"] value] &&
-            [[[sessionRootFolder properties][@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"])
-        {
-            self.lastTestSuccessful = YES;
-        }
-        else
-        {
-            self.lastTestSuccessful = NO;
-        }
+            [[[sessionRootFolder properties][@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"];
         XCTAssertTrue(self.lastTestSuccessful, @"The session's root folder did not return correct values");
     }
     else
@@ -370,15 +335,8 @@
         
         XCTAssertNotNil([self.currentSession objectForParameter:key], @"The session does not contain any value for the key %@", key);
         XCTAssertTrue([[self.currentSession objectForParameter:key] intValue] == expectedReturnValue, @"Expected the value for the parameter %@ to be %i, but instead got back %i", key, expectedReturnValue, [[self.currentSession objectForParameter:key] intValue]);
-        
-        if ([[self.currentSession objectForParameter:key] intValue] == expectedReturnValue)
-        {
-            self.lastTestSuccessful = YES;
-        }
-        else
-        {
-            self.lastTestSuccessful = NO;
-        }
+
+        self.lastTestSuccessful = [[self.currentSession objectForParameter:key] intValue] == expectedReturnValue;
         XCTAssertTrue(self.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
     }
     else
@@ -460,15 +418,8 @@
         id returnedObject = [self.currentSession objectForParameter:key];
         
         XCTAssertNil(returnedObject, @"There is no key value pair in the parameters for the current session with the key %@, however, an object was returned from objectForParameter:", key);
-        
-        if (!returnedObject)
-        {
-            self.lastTestSuccessful = YES;
-        }
-        else
-        {
-            self.lastTestSuccessful = NO;
-        }
+
+        self.lastTestSuccessful = !returnedObject;
         XCTAssertTrue(self.lastTestSuccessful, @"The session does not contain an object for the key provided, but still returned a value");
     }
     else

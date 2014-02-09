@@ -27,12 +27,8 @@
     {
         return [AlfrescoPlaceholderTaggingService alloc];
     }
-    else
-    {
-        return [super alloc];
-    }
+    return [super alloc];
 }
-
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {

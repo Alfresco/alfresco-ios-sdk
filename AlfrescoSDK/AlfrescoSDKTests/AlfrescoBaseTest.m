@@ -79,14 +79,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     else
     {
         self.server = [environment valueForKey:@"server"];
-        if ([[environment allKeys] containsObject:@"isCloud"])
-        {
-            self.isCloud = [[environment valueForKey:@"isCloud"] boolValue];
-        }
-        else
-        {
-            self.isCloud = NO;
-        }
+        self.isCloud = [[environment allKeys] containsObject:@"isCloud"] && [[environment valueForKey:@"isCloud"] boolValue];
         self.userName = [environment valueForKey:@"username"];
         self.firstName = [environment valueForKey:@"firstName"];
         self.testSiteName = [environment valueForKey:@"testSite"];

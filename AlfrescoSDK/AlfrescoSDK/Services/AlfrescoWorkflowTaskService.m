@@ -32,12 +32,9 @@
 {
     if (self == [AlfrescoWorkflowTaskService class])
     {
-        return (id)[AlfrescoPlaceholderWorkflowTaskService alloc];
+        return [AlfrescoPlaceholderWorkflowTaskService alloc];
     }
-    else
-    {
-        return [super alloc];
-    }
+    return [super alloc];
 }
 
 - (id)initWithSession:(id<AlfrescoSession>)session

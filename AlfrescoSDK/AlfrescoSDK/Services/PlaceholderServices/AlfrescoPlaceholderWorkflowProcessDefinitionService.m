@@ -40,11 +40,7 @@
         }
         return (id)[[AlfrescoPublicAPIWorkflowProcessDefinitionService alloc] initWithSession:session];
     }
-    else
-    {
-        return (id)[[AlfrescoLegacyAPIWorkflowProcessDefinitionService alloc] initWithSession:session];
-    }
-    return nil;
+    return (id)[[AlfrescoLegacyAPIWorkflowProcessDefinitionService alloc] initWithSession:session];
 }
 
 @end

@@ -20,17 +20,16 @@
 #import "AlfrescoPlaceholderPersonService.h"
 
 @implementation AlfrescoPersonService
+
 + (id)alloc
 {
     if (self == [AlfrescoPersonService self])
     {
         return [AlfrescoPlaceholderPersonService alloc];
     }
-    else
-    {
-        return [super alloc];
-    }
+    return [super alloc];
 }
+
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
     [self doesNotRecognizeSelector:_cmd];

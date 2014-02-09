@@ -27,10 +27,7 @@
     {
         return [AlfrescoPlaceholderCommentService alloc];
     }
-    else
-    {
-        return [super alloc];
-    }
+    return [super alloc];
 }
 
 - (id)initWithSession:(id<AlfrescoSession>)session

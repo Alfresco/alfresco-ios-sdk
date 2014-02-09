@@ -41,14 +41,7 @@
     if (self = [super init])
     {
         self.session = session;
-        if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
-        {
-            self.isCloud = YES;
-        }
-        else
-        {
-            self.isCloud = NO;
-        }
+        self.isCloud = [self.session isKindOfClass:[AlfrescoCloudSession class]];
     }
     
     return self;
