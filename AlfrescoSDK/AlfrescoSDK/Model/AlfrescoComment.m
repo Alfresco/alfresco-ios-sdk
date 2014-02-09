@@ -161,9 +161,9 @@ static NSUInteger kCommentModelVersion = 1;
         NSDictionary *createdByDict = [properties valueForKey:kAlfrescoJSONCreatedBy];
         self.createdBy = [createdByDict valueForKey:kAlfrescoJSONIdentifier];
     }
-    if ([[properties allKeys] containsObject:kAlfrescoJSONModifedAt])
+    if ([[properties allKeys] containsObject:kAlfrescoJSONModifiedAt])
     {
-        NSString *modifiedDateString = [properties valueForKey:kAlfrescoJSONModifedAt];
+        NSString *modifiedDateString = [properties valueForKey:kAlfrescoJSONModifiedAt];
         if (nil != modifiedDateString)
         {
             self.modifiedAt = [CMISDateUtil dateFromString:modifiedDateString];
@@ -192,7 +192,7 @@ static NSUInteger kCommentModelVersion = 1;
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
     [aCoder encodeObject:self.createdAt forKey:kAlfrescoJSONCreatedAt];
     [aCoder encodeObject:self.createdBy forKey:kAlfrescoJSONCreatedBy];
-    [aCoder encodeObject:self.modifiedAt forKey:kAlfrescoJSONModifedAt];
+    [aCoder encodeObject:self.modifiedAt forKey:kAlfrescoJSONModifiedAt];
     [aCoder encodeBool:self.canDelete forKey:kAlfrescoJSONCanDelete];
     [aCoder encodeBool:self.canEdit forKey:kAlfrescoJSONCanEdit];
     [aCoder encodeBool:self.isEdited forKey:kAlfrescoJSONEdited];
@@ -210,7 +210,7 @@ static NSUInteger kCommentModelVersion = 1;
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
         self.createdBy = [aDecoder decodeObjectForKey:kAlfrescoJSONCreatedBy];
         self.createdAt = [aDecoder decodeObjectForKey:kAlfrescoJSONCreatedAt];
-        self.modifiedAt = [aDecoder decodeObjectForKey:kAlfrescoJSONModifedAt];
+        self.modifiedAt = [aDecoder decodeObjectForKey:kAlfrescoJSONModifiedAt];
         self.isEdited = [aDecoder decodeBoolForKey:kAlfrescoJSONEdited];
         self.canEdit = [aDecoder decodeBoolForKey:kAlfrescoJSONCanEdit];
         self.canDelete = [aDecoder decodeBoolForKey:kAlfrescoJSONCanDelete];

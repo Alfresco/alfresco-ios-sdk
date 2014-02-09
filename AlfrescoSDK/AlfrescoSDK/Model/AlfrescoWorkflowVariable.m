@@ -48,7 +48,7 @@ static NSInteger kWorkflowVariableModelVersion = 1;
     return self;
 }
 
-#pragma mark - Priavte Functions
+#pragma mark - Private Functions
 
 - (void)setupProperties:(NSDictionary *)properties
 {

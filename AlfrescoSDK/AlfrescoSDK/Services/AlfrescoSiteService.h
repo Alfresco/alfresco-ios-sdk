@@ -33,7 +33,7 @@
 @interface AlfrescoSiteService : NSObject
 
 /**---------------------------------------------------------------------------------------
- * @name Initialialisation methods
+ * @name Initialisation methods
  *  ---------------------------------------------------------------------------------------
  */
 
@@ -58,7 +58,7 @@
 
 /** Retrieves sites in the repository with listing context.
  
- @param listingContext The listing context with a paging definition that's used to retrieve the nodes.
+ @param listingContext The listing context with a paging definition that's used to retrieve the sites.
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
@@ -72,7 +72,7 @@
 
 /** Retrieves the sites for the current session user with listing context.
  
- @param listingContext The listing context with a paging definition that's used to retrieve the nodes.
+ @param listingContext The listing context with a paging definition that's used to retrieve the sites.
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveSitesWithListingContext:(AlfrescoListingContext *)listingContext
@@ -87,7 +87,7 @@
 
 /** Retrieves the favorite sites for the current session user with listing context.
  
- @param listingContext The listing context with a paging definition that's used to retrieve the nodes.
+ @param listingContext The listing context with a paging definition that's used to retrieve the sites.
  @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrieveFavoriteSitesWithListingContext:(AlfrescoListingContext *)listingContext
@@ -113,61 +113,64 @@
                              completionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
 
 
-/**
- marks a site as favorite and adds it to the favorite list
+/** Marks a site as favorite and adds it to the favorite list
+
  @param site the site to be added to favorites
  @param completionBlock - returns the updated AlfrescoSite object (isFavorite set to YES) or nil if unsuccessful
  */
 - (AlfrescoRequest *)addFavoriteSite:(AlfrescoSite *)site
                      completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
 
-/**
- unmarks a site as favorite and removes it from the favorite list
+/** Unmarks a site as favorite and removes it from the favorite list
+
  @param site the site to be added to favorites
  @param completionBlock - returns the updated AlfrescoSite object (isFavorite set to NO) or nil if unsuccessful
  */
 - (AlfrescoRequest *)removeFavoriteSite:(AlfrescoSite *)site
                         completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
 
-/**
- creates a request to join a site. Please, note, this method works for both joining public and joining moderated sites.
+/** Creates a request to join a site. Please, note, this method works for both joining public and joining moderated sites.
  For public sites, the same AlfrescoSite object will be returned in the completion block.
  For moderated sites, an updated AlfrescoSite object will be returned - with pending flag set to YES.
+
  @param site - the site to join
  @param completionBlock - returns the updated AlfrescoSite object or nil if unsuccessful
  */
 - (AlfrescoRequest *)joinSite:(AlfrescoSite *)site
               completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
 
-/**
- retrieves a list of sites for which a join request is pending
+/** Retrieves a list of sites for which a join request is pending
+
  @param completionBlock - returns an array of AlfrescoSite objects or nil if unsuccessful
  */
 - (AlfrescoRequest *)retrievePendingSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
-/**
- retrieves a list of pending join request sites with a specified listing context
+/** Retrieves a list of pending join request sites with a specified listing context
+
+ @param listingContext The listing context with a paging definition that's used to retrieve the sites.
+ @param completionBlock The block that's called with the retrieved sites in case the operation succeeds.
  */
 - (AlfrescoRequest *)retrievePendingSitesWithListingContext:(AlfrescoListingContext *)listingContext
                                             completionblock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
-/**
- cancels a join request for a specified site
+/** Cancels a join request for a specified site
+
  @param site - the pending site for which the join request is to be cancelled
  @param completionBlock - returns the updated AlfrescoSite object or nil if unsuccessful
  */
 - (AlfrescoRequest *)cancelPendingJoinRequestForSite:(AlfrescoSite *)site
                                      completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
-/**
- leave a site
- @param site 
+/** Leave a site
+
+ @param site - site to leave
  @param completionBlock - returns the updated AlfrescoSite object or nil if unsuccessful
  */
 - (AlfrescoRequest *)leaveSite:(AlfrescoSite *)site
                completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
 
 /** Returns a list of all members for a site.
+
  @param site - site from which members are retrieved
  @param completionBlock - contains Array of person objects who are member of site if successful, or nil if not.
  */
@@ -195,7 +198,8 @@
                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /** Returns true if the person is member of the site, returns false otherwise
- @param person - person for whome membership status is retrieved
+
+ @param person - person for whom membership status is retrieved
  @param site - site from which membership status for the person is retrieved
  @param completionBlock - returns yes or no depending of person membership status in the site
  */
@@ -203,8 +207,7 @@
                  memberOfSite:(AlfrescoSite *)site
               completionBlock:(AlfrescoMemberCompletionBlock)completionBlock;
 
-/**
- clears the sites cache
+/** Clears the sites cache
  */
 - (void)clear;
 

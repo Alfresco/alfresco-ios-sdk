@@ -27,7 +27,7 @@
 @property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteFolders;
 @property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteNodes;
 @property (nonatomic, assign, readwrite) int totalDocuments;
-@property (nonatomic, assign, readwrite) int totatlFolders;
+@property (nonatomic, assign, readwrite) int totalFolders;
 @property (nonatomic, assign, readwrite) int totalNodes;
 @end
 
@@ -122,7 +122,7 @@
             break;
         case AlfrescoFavoriteFolder:
             self.hasMoreFavoriteFolders = hasMoreFavorites;
-            self.totatlFolders = totalFavorites;
+            self.totalFolders = totalFavorites;
             break;
         case AlfrescoFavoriteNode:
             self.hasMoreFavoriteNodes = hasMoreFavorites;

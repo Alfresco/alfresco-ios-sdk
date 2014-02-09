@@ -251,7 +251,7 @@ extern NSString * const kAlfrescoJSONCreatedBy;
 extern NSString * const kAlfrescoJSONCreator;
 extern NSString * const kAlfrescoJSONAvatar;
 extern NSString * const kAlfrescoJSONAuthority;
-extern NSString * const kAlfrescoJSONModifedAt;
+extern NSString * const kAlfrescoJSONModifiedAt;
 extern NSString * const kAlfrescoJSONEdited;
 extern NSString * const kAlfrescoJSONCanEdit;
 extern NSString * const kAlfrescoJSONCanDelete;

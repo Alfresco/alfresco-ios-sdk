@@ -134,7 +134,7 @@
     
     // Note: Even though 4.2.e does support the Public API, the SDK does not perform checks on the maintenance version number
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should be set for v4.2.e and Activiti");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.2.e and Activiti");
 
     // Community 4.3.a
     repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @4,

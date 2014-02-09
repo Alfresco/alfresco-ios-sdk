@@ -90,9 +90,9 @@
     NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)",
                                       kAlfrescoWorkflowProcessStatus, (self.publicToPrivateStateMappings)[state]];
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
-    NSString *extenstionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
+    NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extenstionURLString];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extensionURLString];
     
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {
@@ -129,9 +129,9 @@
     NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)",
                                       kAlfrescoWorkflowProcessStatus, (self.publicToPrivateStateMappings)[state]];
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
-    NSString *extenstionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
+    NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extenstionURLString listingContext:listingContext];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extensionURLString listingContext:listingContext];
     
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {

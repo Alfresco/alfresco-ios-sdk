@@ -34,7 +34,7 @@
 @interface AlfrescoActivityStreamService : NSObject
 
 /**---------------------------------------------------------------------------------------
- * @name Initialialisation methods
+ * @name Initialisation methods
  *  ---------------------------------------------------------------------------------------
  */
 

@@ -272,8 +272,8 @@
             else
             {
                 NSString *completedString = ((NSDictionary *)responseObject)[@"persistedObject"];
-                NSArray *seperatedStrings = [completedString componentsSeparatedByString:@","];
-                NSString *createdTaskID = [[seperatedStrings[0] componentsSeparatedByString:@"$"] lastObject];
+                NSArray *separatedStrings = [completedString componentsSeparatedByString:@","];
+                NSString *createdTaskID = [[separatedStrings[0] componentsSeparatedByString:@"$"] lastObject];
                 
                 NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
                 NSString *completeTaskIdentifier = [workflowEnginePrefix stringByAppendingString:createdTaskID];

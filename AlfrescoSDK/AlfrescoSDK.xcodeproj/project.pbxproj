@@ -1529,7 +1529,6 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/AlfrescoSDK/CMIS\"",
 					"\"$(SRCROOT)/CMIS\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1636,7 +1635,6 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/AlfrescoSDK/CMIS\"",
 					"\"$(SRCROOT)/CMIS\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1658,7 +1656,6 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/AlfrescoSDK/CMIS\"",
 					"\"$(SRCROOT)/CMIS\"",
 				);
 				OTHER_LDFLAGS = (

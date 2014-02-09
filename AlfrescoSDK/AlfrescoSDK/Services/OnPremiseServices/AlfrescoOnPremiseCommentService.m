@@ -67,7 +67,7 @@
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
     
-    // add an artifical cap, return the first 1000 comments - Related to ACE-469
+    // add an artificial cap, return the first 1000 comments - Related to ACE-469
     NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionary];
     queryDictionary[kAlfrescoLegacyMaxItems] = @"1000";
     queryDictionary[kAlfrescoLegacySkipCount] = @"0";

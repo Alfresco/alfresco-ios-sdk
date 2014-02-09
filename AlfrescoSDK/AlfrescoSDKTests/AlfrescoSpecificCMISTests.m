@@ -723,7 +723,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     {
         if (!aspectFound)
         {
-            // Loop round looking for the aspect we're interested in. Use hasSuffix as they will be preceeded with "P:"
+            // Loop round looking for the aspect we're interested in. Use hasSuffix as they will be preceded with "P:"
             if ([childExtensionElement.name isEqualToString:@"appliedAspects"] && [childExtensionElement.value hasSuffix:aspect])
             {
                 aspectFound = YES;

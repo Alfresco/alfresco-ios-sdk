@@ -70,11 +70,11 @@
  Therefore, this method should only be used after the initial OAuth setup is complete.
  The method well set to the specified network/tenant ID.
  @param oauthData
- @param networkIdentifer - also known as tenent ID
+ @param networkIdentifier - also known as tenant ID
  @param completionBlock
  */
 + (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-                         networkIdentifer:(NSString *)networkIdentifer
+                         networkIdentifer:(NSString *)networkIdentifier
                           completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 /**
@@ -82,12 +82,12 @@
  Therefore, this method should only be used after the initial OAuth setup is complete.
  The method well set to the specified network/tenant ID.
  @param oauthData
- @param networkIdentifer - also known as tenent ID
+ @param networkIdentifier - also known as tenant ID
  @param parameters - optional, may be nil
  @param completionBlock
  */
 + (AlfrescoRequest *)connectWithOAuthData:(AlfrescoOAuthData *)oauthData
-                         networkIdentifer:(NSString *)networkIdentifer
+                         networkIdentifer:(NSString *)networkIdentifier
                                parameters:(NSDictionary *)parameters
                           completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 

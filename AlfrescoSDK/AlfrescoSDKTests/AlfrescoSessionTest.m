@@ -118,13 +118,13 @@
  @Unique_TCRef 74F1
  @Unique_TCRef 75S1
  */
-- (void)testRemoveNonExistantParameter
+- (void)testRemoveNonExistentParameter
 {
     if (self.setUpSuccess)
     {
         if (self.isCloud)
         {
-            NSString *nonExistantKeyToRemove = @"testRemoveNonExistantParameter";
+            NSString *nonExistentKeyToRemove = @"testRemoveNonExistentParameter";
             
             NSArray *allParameters = [self.currentSession allParameterKeys];
             
@@ -134,10 +134,10 @@
             // get the size of the parameters array
             NSUInteger originalNumberOfParameterKeys = [allParameters count];
             
-            // attempt to remove non existant parameter
-            [self.currentSession removeParameter:nonExistantKeyToRemove];
+            // attempt to remove non existent parameter
+            [self.currentSession removeParameter:nonExistentKeyToRemove];
             
-            XCTAssertTrue(originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count], @"Removing a non existant parameter seems to have alterered the state of the session's parameters");
+            XCTAssertTrue(originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count], @"Removing a non existent parameter seems to have alterered the state of the session's parameters");
             
             // if they are the same. nothing was removed
             if (originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count])
@@ -451,11 +451,11 @@
  @Unique_TCRef 86F1
  @Unique_TCRef 73F1
  */
-- (void)testRetrieveNonExistantParameter
+- (void)testRetrieveNonExistentParameter
 {
     if (self.setUpSuccess)
     {
-        NSString *key = @"testRetrieveNonExistantParameter";
+        NSString *key = @"testRetrieveNonExistentParameter";
         
         id returnedObject = [self.currentSession objectForParameter:key];
         

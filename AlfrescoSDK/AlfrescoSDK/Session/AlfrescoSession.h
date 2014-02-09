@@ -99,7 +99,7 @@
 - (void)removeParameter:(id)key;
 
 /**
- clears all caches associacted with this session
+ clears all caches associated with this session
  */
 - (void)clear;
 

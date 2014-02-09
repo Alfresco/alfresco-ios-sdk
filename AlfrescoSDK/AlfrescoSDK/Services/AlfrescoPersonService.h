@@ -29,7 +29,7 @@
 
 @interface AlfrescoPersonService : NSObject
 /**---------------------------------------------------------------------------------------
- * @name Initialialisation methods
+ * @name Initialisation methods
  *  ---------------------------------------------------------------------------------------
  */
 

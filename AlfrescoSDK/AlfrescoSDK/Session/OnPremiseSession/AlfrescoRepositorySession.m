@@ -258,17 +258,17 @@
             void (^workflowDefinitionsCompletionBlock)(NSError *error) = ^(NSError *error) {
                 NSString *workflowDefinitionString = [kAlfrescoLegacyAPIWorkflowBaseURL stringByAppendingString:kAlfrescoLegacyAPIWorkflowProcessDefinition];
                 NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:workflowDefinitionString];
-                [self.networkProvider executeRequestWithURL:url session:self alfrescoRequest:request completionBlock:^(NSData *data, NSError *workkflowError) {
+                [self.networkProvider executeRequestWithURL:url session:self alfrescoRequest:request completionBlock:^(NSData *data, NSError *workflowError) {
                     if (error)
                     {
                         AlfrescoLogError(@"Could not determine whether to use JBPM");
-                        completionBlock(nil, error);
+                        completionBlock(nil, workflowError);
                     }
                     else
                     {
                         AlfrescoWorkflowEngineType workflowEngine = [self determineWorkflowEngineFromJSONData:data];
                         self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:workflowEngine];
-                        completionBlock(self, error);
+                        completionBlock(self, workflowError);
                     }
                     
                 }];

@@ -34,7 +34,7 @@
 @interface AlfrescoTaggingService : NSObject
 
 /**---------------------------------------------------------------------------------------
- * @name Initialialisation methods
+ * @name Initialisation methods
  *  ---------------------------------------------------------------------------------------
  */
 

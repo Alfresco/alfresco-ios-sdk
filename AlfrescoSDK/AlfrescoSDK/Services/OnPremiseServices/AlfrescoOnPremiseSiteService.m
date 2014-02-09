@@ -669,7 +669,7 @@
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         
-        // if person is not member : the request returns error and data is nil so its difficult to differenciate if request failed or person is not member
+        // if person is not member : the request returns error and data is nil so its difficult to differentiate if request failed or person is not member
         if (error)
         {
             completionBlock(YES, NO, nil);

@@ -32,7 +32,7 @@
 @interface AlfrescoWorkflowProcessService : NSObject
 
 /**---------------------------------------------------------------------------------------
- * @name Initialialisation methods
+ * @name Initialisation methods
  *  ---------------------------------------------------------------------------------------
  */
 
@@ -131,11 +131,11 @@
  */
 
 /**
- Creates and returns a process for a gievn process definition.
+ Creates and returns a process for a given process definition.
  
  @param processDefinition The process definition the process should be modeled on
  @param assignees (optional) An array of AlfrescoPerson's to assign to the task. If this is left blank, the process will be assigned to the creator
- @param variables (optional) A dictionary of process variables to add at the start of the process. Variable keys must be the same as those defined in the workflow model definition in the respository
+ @param variables (optional) A dictionary of process variables to add at the start of the process. Variable keys must be the same as those defined in the workflow model definition in the repository
  @param attachments (optional) An array of AlfrescoNode's to add to the process
  @param completionBlock The block that's called with the operation completes
  */

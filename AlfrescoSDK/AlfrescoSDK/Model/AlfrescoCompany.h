@@ -42,7 +42,7 @@
 // Postcode of the company
 @property (nonatomic, strong, readonly) NSString *postCode;
 
-// Telephone Number of the comapny
+// Telephone Number of the company
 @property (nonatomic, strong, readonly) NSString *telephoneNumber;
 
 // Fax Number of the company

@@ -870,14 +870,14 @@
                 XCTAssertNotNil(folder, @"Folder should not be nil");
                 XCTAssertTrue([folder.name isEqualToString:folderName], @"Folder name should be %@", folderName);
                 
-                // check the properties of the foder are correct
+                // check the properties of the folder are correct
                 NSDictionary *newFolderProps = folder.properties;
                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                 XCTAssertTrue([newDescriptionProp.value isEqualToString:@"Test Description"], @"cm:description property value does not match");
                 XCTAssertTrue([newTitleProp.value isEqualToString:@"Test Title"], @"cm:title property value does not match");
                 
-                // serach folder using paging
+                // search folder using paging
                 AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:100 skipCount:0];
                 __block AlfrescoFolder *blockFolder = folder;
                 [weakService retrieveChildrenInFolder:blockFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
@@ -2817,7 +2817,7 @@
          inParentFolder:self.testDocFolder
          contentFile:self.testImageFile
          properties:nil
-         completionBlock:^(AlfrescoDocument *doc, NSError *error){
+         completionBlock:^(AlfrescoDocument *doc, NSError *error) {
              if (nil == doc)
              {
                  self.lastTestSuccessful = NO;
@@ -2841,7 +2841,7 @@
                          NSString *title = doc.title;
                          XCTAssertNil(description, @"expected description to be NIL");
                          XCTAssertNil(title, @"expected title to be NIL");
-                         [self.dfService deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError){
+                         [self.dfService deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError) {
                              if (!succeeded)
                              {
                                  self.lastTestSuccessful = NO;
@@ -2855,11 +2855,10 @@
                          }];
                      }
                  }];
-                 
              }
-         }
-         progressBlock:^(unsigned long long bytesTransferred, unsigned long long total){}];
-        
+         } progressBlock:^(unsigned long long bytesTransferred, unsigned long long total) {
+             // No-op
+         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -4422,7 +4421,7 @@
 //            }
 //            else
 //            {
-//                XCTAssertNil(error, @"Error should not have occured trying to create the folder the first time");
+//                XCTAssertNil(error, @"Error should not have occurred trying to create the folder the first time");
 //                
 //                NSMutableDictionary *props = [NSMutableDictionary dictionary];
 //                [props setObject:folderName forKey:@"cmis:name"];
@@ -4439,10 +4438,10 @@
 //                    {
 //                        XCTAssertNotNil(error2, @"Trying to create another folder with the same name should produce an error");
 //                        
-//                        // delete the orginal we created - cleanup
+//                        // delete the original we created - cleanup
 //                        [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *deleteError) {
 //                            
-//                            XCTAssertNil(deleteError, @"Error occured trying to delete the folder node");
+//                            XCTAssertNil(deleteError, @"Error occurred trying to delete the folder node");
 //                            
 //                            self.lastTestSuccessful = succeeded;
 //                            
@@ -4502,7 +4501,7 @@
                     {
                         XCTAssertNotNil(duplicateError, @"Trying to create another file with the same name should produce an error");
                         
-                        // delete the orginal we created - cleanup
+                        // delete the original we created - cleanup
                         [weakFolderService deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError) {
                             
                             XCTAssertNil(deleteError, @"Error occured trying to delete the folder node");
@@ -4748,7 +4747,7 @@
                     XCTAssertNotNil(document.contentMimeType, @"Mime Type for the object with the name \"%@\" and identifier \"%@\" has no mime type", document.name, document.identifier);
                     XCTAssertTrue(document.contentLength > 0, @"Content Length for the object with the name \"%@\" and identifier \"%@\" was less than or equal to 0", document.name, document.identifier);
                     XCTAssertNotNil(document.versionLabel, @"Version Label for the object with the name \"%@\" and identifier \"%@\" was nil", document.name, document.identifier);
-                    //                    Need clearification to the purpose of this property, currently returning nil for all documents
+                    //                    Need clarification to the purpose of this property, currently returning nil for all documents
                     //                    XCTAssertNotNil(document.versionComment, @"Version Comment for the object with the name \"%@\" and identifier \"%@\" was nil", document.name, document.identifier);
                     XCTAssertTrue(document.isLatestVersion, @"isLatestVersion for the object with the name \"%@\" and identifier \"%@\" should be true", document.name, document.identifier);
                 }];
@@ -4776,10 +4775,9 @@
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
-        AlfrescoListingContext *listingConext = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0 sortProperty:@"***" sortAscending:NO];
-        
-        [self.dfService retrieveFoldersInFolder:self.testDocFolder listingContext:listingConext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
-            
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0 sortProperty:@"***" sortAscending:NO];
+
+        [self.dfService retrieveFoldersInFolder:self.testDocFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
             if (error)
             {
                 self.lastTestSuccessful = NO;
@@ -4789,7 +4787,7 @@
             {
                 XCTAssertNil(error, @"The retrieval should not have caused an error");
                 XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
-                XCTAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %lu", (unsigned long)pagingResult.objects.count);
+                XCTAssertTrue(pagingResult.objects.count <= 5, @"The objects array should contain 5 or less result objects, but instead got back %lu", (unsigned long)pagingResult.objects.count);
 
                 for (AlfrescoNode *node in pagingResult.objects)
                 {
@@ -4799,22 +4797,20 @@
 
                 // check if array is sorted correctly
                 NSArray *sortedArray = [pagingResult.objects sortedArrayUsingComparator:^(id a, id b) {
-                    
                     AlfrescoNode *node1 = (AlfrescoNode *)a;
                     AlfrescoNode *node2 = (AlfrescoNode *)b;
-                    
                     return [node2.name compare:node1.name options:NSCaseInsensitiveSearch];
                 }];
-                
+
                 for (AlfrescoNode *node in sortedArray)
                 {
                     NSString *name = node.name;
                     AlfrescoLogInfo(@"*** local sort: %@", name);
                 }
-                
+
                 BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
                 XCTAssertTrue(isResultSortedInDescendingOrderByName, @"The returned array was not sorted in descending order by name");
-                
+
                 self.lastTestSuccessful = YES;
             }
             self.callbackCompleted = YES;
@@ -5023,8 +5019,8 @@
                             });
                         }];
                     }
-                } progressBlock:^(unsigned long long bytesTransfered, unsigned long long totalBytes) {
-                    
+                } progressBlock:^(unsigned long long bytesTransferred, unsigned long long totalBytes) {
+                    // No-op
                 }];
             }
         }];

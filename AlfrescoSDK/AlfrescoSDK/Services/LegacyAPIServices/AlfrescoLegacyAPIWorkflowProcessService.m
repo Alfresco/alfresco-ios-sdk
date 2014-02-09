@@ -384,8 +384,8 @@
                 else
                 {
                     NSString *completedString = ((NSDictionary *)responseObject)[@"persistedObject"];
-                    NSArray *seperatedStrings = [completedString componentsSeparatedByString:@","];
-                    NSString *createdProcessID = [[seperatedStrings[0] componentsSeparatedByString:@"$"] lastObject];
+                    NSArray *separatedStrings = [completedString componentsSeparatedByString:@","];
+                    NSString *createdProcessID = [[separatedStrings[0] componentsSeparatedByString:@"$"] lastObject];
                     
                     NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
                     NSString *completeProcessIdentifier = [workflowEnginePrefix stringByAppendingString:createdProcessID];
