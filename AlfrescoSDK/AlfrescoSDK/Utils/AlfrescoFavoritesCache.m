@@ -137,7 +137,13 @@
 
 - (void)removeFavorite:(AlfrescoNode *)node
 {
-    [self.favoritesCache removeObject:node];
+    NSArray *identifiers = [self.favoritesCache valueForKey:@"identifier"];
+    NSUInteger foundIndex = [identifiers indexOfObject:node.identifier];
+    
+    if (foundIndex != NSNotFound)
+    {
+        [self.favoritesCache removeObjectAtIndex:foundIndex];
+    }
 }
 
 - (void)removeFavorites:(NSArray *)nodes
