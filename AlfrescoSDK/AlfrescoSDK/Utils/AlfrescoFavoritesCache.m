@@ -137,7 +137,14 @@
 
 - (void)removeFavorite:(AlfrescoNode *)node
 {
-    [self.favoritesCache removeObject:node];
+    [self.favoritesCache enumerateObjectsUsingBlock:^(AlfrescoNode *cachedNode, NSUInteger index, BOOL *stop) {
+        
+        if ([node.identifier isEqualToString:cachedNode.identifier])
+        {
+            *stop = YES;
+            [self.favoritesCache removeObject:cachedNode];
+        }
+    }];
 }
 
 - (void)removeFavorites:(NSArray *)nodes
