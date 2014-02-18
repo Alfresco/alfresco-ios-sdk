@@ -130,26 +130,42 @@
             break;
     }
     
-    [nodes enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger index, BOOL *stop){
+    [nodes enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger index, BOOL *stop) {
         [self addFavorite:node];
     }];
 }
 
 - (void)removeFavorite:(AlfrescoNode *)node
 {
-    [self.favoritesCache removeObject:node];
+    __block AlfrescoNode *nodeToRemove = nil;
+
+    [self.favoritesCache enumerateObjectsUsingBlock:^(AlfrescoNode *cachedNode, NSUInteger index, BOOL *stop) {
+        if ([node.identifier isEqualToString:cachedNode.identifier])
+        {
+            *stop = YES;
+            nodeToRemove = cachedNode;
+        }
+    }];
+
+    if (nodeToRemove)
+    {
+        [self.favoritesCache removeObject:nodeToRemove];
+    }
 }
 
 - (void)removeFavorites:(NSArray *)nodes
 {
-    [nodes enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger index, BOOL *stop){
+    [nodes enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger index, BOOL *stop) {
         [self removeFavorite:node];
     }];
 }
 
 - (AlfrescoNode *)objectWithIdentifier:(NSString *)identifier
 {
-    if (!identifier)return nil;
+    if (!identifier)
+    {
+        return nil;
+    }
     NSPredicate *idPredicate = [NSPredicate predicateWithFormat:@"identifier == %@",identifier];
     NSArray *results = [self.favoritesCache filteredArrayUsingPredicate:idPredicate];
     return (0 == results.count) ? nil : results[0];
