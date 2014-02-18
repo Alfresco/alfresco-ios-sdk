@@ -107,9 +107,18 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         {
             self.title = [properties objectForKey:kAlfrescoLegacyJSONMessage];
         }
-        self.startedAt = [properties objectForKey:kAlfrescoLegacyJSONStartedAt];
-        self.endedAt = [properties objectForKey:kAlfrescoLegacyJSONEndedAt];
-        self.dueAt = [properties objectForKey:kAlfrescoLegacyJSONDueAt];
+        if ([properties objectForKey:kAlfrescoLegacyJSONStartedAt] != [NSNull null])
+        {
+            self.startedAt = [self.dateFormatter dateFromString:[properties objectForKey:kAlfrescoLegacyJSONStartedAt]];
+        }
+        if ([properties objectForKey:kAlfrescoLegacyJSONEndedAt] != [NSNull null])
+        {
+            self.endedAt = [self.dateFormatter dateFromString:[properties objectForKey:kAlfrescoLegacyJSONEndedAt]];
+        }
+        if ([properties objectForKey:kAlfrescoLegacyJSONDueAt] != [NSNull null])
+        {
+            self.dueAt = [self.dateFormatter dateFromString:[properties objectForKey:kAlfrescoLegacyJSONDueAt]];
+        }
         self.processDescription = [properties objectForKey:kAlfrescoLegacyJSONDescription];
         self.priority = [properties objectForKey:kAlfrescoLegacyJSONPriority];
         NSDictionary *initiatorDictionary = [properties objectForKey:kAlfrescoLegacyJSONInitiator];
