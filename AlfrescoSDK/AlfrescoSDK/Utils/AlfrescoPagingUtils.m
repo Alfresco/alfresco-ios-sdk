@@ -63,7 +63,7 @@
         if (listingContext.skipCount == 0 || listingContext.skipCount < totalItems)
         {
             totalItemsAdded = totalItemsAdded + 1;
-            if (listingContext.maxItems >= totalItemsAdded)
+            if (listingContext.maxItems == -1 || listingContext.maxItems >= totalItemsAdded)
             {
                 [resultArray addObject:entry];
             }
