@@ -19,7 +19,8 @@
  */
 
 #import "AlfrescoSiteService.h"
+#import "AlfrescoSiteCache.h"
 
-@interface AlfrescoCloudSiteService : AlfrescoSiteService
+@interface AlfrescoCloudSiteService : AlfrescoSiteService <AlfrescoSiteCacheDataDelegate>
 
 @end

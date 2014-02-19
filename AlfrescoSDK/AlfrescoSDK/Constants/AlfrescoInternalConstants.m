@@ -105,6 +105,7 @@ NSString * const kAlfrescoSessionCloudBasicAuth = @"org.alfresco.mobile.internal
 NSString * const kAlfrescoSessionUsername = @"org.alfresco.mobile.internal.session.username";
 NSString * const kAlfrescoSessionPassword = @"org.alfresco.mobile.internal.session.password";
 NSString * const kAlfrescoSessionInternalCache = @"org.alfresco.mobile.internal.cache.";
+NSString * const kAlfrescoSessionSitesCache = @"org.alfresco.mobile.internal.cache.sites";
 
 NSString * const kAlfrescoSiteIsFavorite = @"isFavorite";
 NSString * const kAlfrescoSiteIsMember = @"isMember";

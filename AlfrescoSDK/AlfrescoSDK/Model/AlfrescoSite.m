@@ -153,7 +153,7 @@ static NSInteger kSiteModelVersion = 1;
     self.isPendingMember = [state boolValue];
 }
 
-#pragma NSCoding methods
+#pragma mark NSCoding methods
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
