@@ -120,7 +120,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSMutableArray *namesOfMissingSites = [NSMutableArray array];
 
-        self.internalSiteCache = [NSMutableDictionary dictionaryWithCapacity:32];
+        self.internalSiteCache = [NSMutableDictionary dictionary];
 
         // add sites the user is a member of to the internal cache with member flag set
         for (AlfrescoSite *site in self.memberSiteData)

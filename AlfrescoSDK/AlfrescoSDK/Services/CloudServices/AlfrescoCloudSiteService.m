@@ -83,8 +83,8 @@
 
 - (AlfrescoRequest *)retrieveAllSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    AlfrescoListingContext *lc = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
-    return [self retrieveAllSitesWithListingContext:lc completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveAllSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
         completionBlock(pagingResult.objects, error);
     }];
 }
@@ -102,7 +102,7 @@
     __block AlfrescoRequest *request = nil;
     if (!self.siteCache.isCacheBuilt)
     {
-        __weak AlfrescoCloudSiteService *weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
@@ -124,8 +124,8 @@
 
 - (AlfrescoRequest *)retrieveSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    AlfrescoListingContext *lc = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
-    return [self retrieveSitesWithListingContext:lc completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
         completionBlock(pagingResult.objects, error);
     }];
 }
@@ -143,7 +143,7 @@
     AlfrescoRequest *request = nil;
     if (!self.siteCache.isCacheBuilt)
     {
-        __weak AlfrescoCloudSiteService *weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
@@ -174,8 +174,8 @@
 
 - (AlfrescoRequest *)retrieveFavoriteSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    AlfrescoListingContext *lc = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
-    return [self retrieveFavoriteSitesWithListingContext:lc completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveFavoriteSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
         completionBlock(pagingResult.objects, error);
     }];
 }
@@ -193,7 +193,7 @@
     AlfrescoRequest *request = nil;
     if (!self.siteCache.isCacheBuilt)
     {
-        __weak AlfrescoCloudSiteService *weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
@@ -231,7 +231,7 @@
     __block AlfrescoRequest *request = nil;
     if (!self.siteCache.isCacheBuilt)
     {
-        __weak AlfrescoCloudSiteService *weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
@@ -275,7 +275,7 @@
         else
         {
             // site not cached yet, retrieve it
-            __weak AlfrescoCloudSiteService *weakSelf = self;
+            __weak typeof(self) weakSelf = self;
             request = [self retrieveDataForSiteWithShortName:siteShortName completionBlock:^(AlfrescoSite *site, NSError *error) {
                 if (site != nil)
                 {
@@ -303,7 +303,7 @@
     NSString *requestString = [kAlfrescoCloudSiteContainersAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:siteShortName];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                         alfrescoRequest:request
@@ -364,9 +364,9 @@
 
 - (AlfrescoRequest *)retrievePendingSitesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    AlfrescoListingContext *lc = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
     
-    return [self retrievePendingSitesWithListingContext:lc completionblock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+    return [self retrievePendingSitesWithListingContext:listingContext completionblock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
         completionBlock(pagingResult.objects, error);
     }];
 }
@@ -383,7 +383,7 @@
     AlfrescoRequest *request = nil;
     if (!self.siteCache.isCacheBuilt)
     {
-        __weak AlfrescoCloudSiteService *weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
@@ -421,7 +421,7 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudAddFavoriteSiteAPI];
     NSData *jsonData = [self jsonDataForAddingFavoriteSite:site.GUID];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:jsonData
@@ -452,7 +452,7 @@
                                                                                              withString:site.GUID];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:nil
@@ -482,7 +482,7 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoCloudJoinSiteAPI];
     NSData *jsonData = [self jsonDataForJoiningSite:site.identifier comment:@""];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:jsonData
@@ -533,7 +533,7 @@
                                                                                              withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:nil
@@ -565,7 +565,7 @@
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:nil
@@ -589,8 +589,8 @@
 
 - (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    AlfrescoListingContext *lc = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
-    return [self retrieveAllMembers:site WithListingContext:lc completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveAllMembers:site WithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
         completionBlock(pagingResult.objects, error);
     }];
 }
@@ -612,7 +612,7 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (nil == data)
         {
@@ -652,7 +652,7 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (nil == data)
         {
@@ -1002,7 +1002,7 @@
 - (AlfrescoRequest *)retrieveMemberSiteDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     NSString *mySitesRequestString = [kAlfrescoCloudSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                                withString:self.session.personIdentifier];
@@ -1027,7 +1027,7 @@
 - (AlfrescoRequest *)retrieveFavoriteSiteDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     NSString *favSitesRequestString = [kAlfrescoCloudFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                                         withString:self.session.personIdentifier];
@@ -1052,7 +1052,7 @@
 - (AlfrescoRequest *)retrievePendingSiteDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     NSString *pendingRequestString = kAlfrescoCloudJoinSiteAPI;
     NSURL *pendingApi = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:pendingRequestString];
@@ -1076,7 +1076,7 @@
 - (AlfrescoRequest *)retrieveDataForSiteWithShortName:(NSString *)shortName completionBlock:(AlfrescoSiteCompletionBlock)completionBlock
 {
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     NSString *requestString = [kAlfrescoCloudSiteForShortnameAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:shortName];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
@@ -1107,7 +1107,7 @@
                                      completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     __block AlfrescoRequest *request = nil;
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     // define completion block to fetch the sites
     AlfrescoRequest* (^fetchSites)(AlfrescoFolder *sitesFolder) =
@@ -1178,7 +1178,7 @@
 {
     AlfrescoRequest *request = nil;
     AlfrescoDocumentFolderService *docFolderSvc = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-    __weak AlfrescoCloudSiteService *weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     request = [docFolderSvc retrieveChildrenInFolder:self.session.rootFolder completionBlock:^(NSArray *children, NSError *error) {
         if (children != nil)
