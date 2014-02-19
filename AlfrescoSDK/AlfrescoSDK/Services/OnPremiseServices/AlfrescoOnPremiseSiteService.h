@@ -20,7 +20,8 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoSiteService.h"
+#import "AlfrescoSiteCache.h"
 
-@interface AlfrescoOnPremiseSiteService : AlfrescoSiteService
+@interface AlfrescoOnPremiseSiteService : AlfrescoSiteService <AlfrescoSiteCacheDataDelegate>
 
 @end

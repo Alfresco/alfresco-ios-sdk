@@ -21,273 +21,302 @@
 #import "AlfrescoSiteCache.h"
 #import "AlfrescoOnPremiseJoinSiteRequest.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoLog.h"
+
+#define TIMEOUTINTERVAL 120
 
 @interface AlfrescoSiteCache ()
-@property (nonatomic, strong) NSMutableArray *sitesCache;
-@property (nonatomic, assign, readwrite) BOOL hasMoreSites;
-@property (nonatomic, assign, readwrite) BOOL hasMoreMemberSites;
-@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteSites;
-@property (nonatomic, assign, readwrite) BOOL hasMorePendingSites;
-@property (nonatomic, assign, readwrite) NSInteger totalSites;
-@property (nonatomic, assign, readwrite) NSInteger totalMemberSites;
-@property (nonatomic, assign, readwrite) NSInteger totalFavoriteSites;
-@property (nonatomic, assign, readwrite) NSInteger totalPendingSites;
+@property (nonatomic, assign, readwrite) BOOL isCacheBuilt;
+@property (nonatomic, strong, readwrite) NSArray *allSites;
+@property (nonatomic, strong, readwrite) NSArray *memberSites;
+@property (nonatomic, strong, readwrite) NSArray *favoriteSites;
+@property (nonatomic, strong, readwrite) NSArray *pendingSites;
+
+@property (nonatomic, weak) id<AlfrescoSiteCacheDataDelegate> delegate;
+@property (nonatomic, strong) NSMutableArray *memberSiteData;
+@property (nonatomic, strong) NSMutableArray *favoriteSiteData;
+@property (nonatomic, strong) NSMutableArray *pendingSiteData;
+@property (nonatomic, strong) NSMutableDictionary *internalSiteCache;
 @end
 
 @implementation AlfrescoSiteCache
 
-- (id)init
+- (instancetype)initWithSiteCacheDataDelegate:(id<AlfrescoSiteCacheDataDelegate>)siteCacheDataDelegate
 {
     self = [super init];
     if (nil != self)
     {
-        _sitesCache = [NSMutableArray arrayWithCapacity:0];
-        _hasMoreFavoriteSites = YES;
-        _hasMoreMemberSites = YES;
-        _hasMorePendingSites = YES;
-        _hasMoreSites = YES;
+        self.isCacheBuilt = NO;
+        self.delegate = siteCacheDataDelegate;
     }
     return self;
 }
 
-- (NSArray *)allSites
+/**
+ clears all entries in the cache
+ */
+- (void)clear
 {
-    return self.sitesCache;
+    self.isCacheBuilt = NO;
+    [self.internalSiteCache removeAllObjects];
 }
 
-- (NSArray *)memberSites
+- (AlfrescoRequest *)buildCacheWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    NSPredicate *memberPredicate = [NSPredicate predicateWithFormat:@"isMember == YES"];
-    return [self.sitesCache filteredArrayUsingPredicate:memberPredicate];
-}
+    AlfrescoLogDebug(@"Building site cache");
 
-- (NSArray *)favoriteSites
-{
-    NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"isFavorite == YES"];
-    return [self.sitesCache filteredArrayUsingPredicate:favoritePredicate];
-}
-
-- (NSArray *)pendingMemberSites
-{
-    NSPredicate *pendingMemberPredicate = [NSPredicate predicateWithFormat:@"isPendingMember == YES"];
-    return [self.sitesCache filteredArrayUsingPredicate:pendingMemberPredicate];
-}
-
-- (void)addSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type
-{
-    if (nil == site)
-    {
-        return;
-    }
-    NSUInteger foundIndex = [self.sitesCache indexOfObject:site];
-    [self siteStateForSite:site type:type isOn:YES];
-
-    if (NSNotFound == foundIndex)
-    {
-        [self.sitesCache addObject:site];
-    }
-    else
-    {
-        AlfrescoSite *originalSite = (AlfrescoSite *)[self.sitesCache objectAtIndex:foundIndex];
-        [self transferStatesForSite:site fromSite:originalSite type:type];
-        [self.sitesCache replaceObjectAtIndex:foundIndex withObject:site];
-    }
-}
-
-- (void)removeSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type
-{
-    if (nil == site)
-    {
-        return;
-    }
-    [self siteStateForSite:site type:type isOn:NO];
-    if ([self canRemoveSite:site type:type])
-    {
-        [self.sitesCache removeObject:site];
-    }
-}
-
-
-- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type completionBlock:(void (^)())completionBlock
-{
-    [self addSites:sites type:type hasMoreSites:NO totalSites:-1 completionBlock:completionBlock];
-}
-
-- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type hasMoreSites:(BOOL)hasMoreSites totalSites:(NSInteger)totalSites completionBlock:(void (^)())completionBlock
-{
-    if (nil == sites)
-    {
-        return;
-    }
-
-    // This could be a long process for large site collections, we keep it off the main thread
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        switch (type)
+    // start the daisy chained methods to collect all the data required to build the initial caches
+    AlfrescoLogDebug(@"Requesting member site data from delegate");
+    __block AlfrescoRequest *request = [self.delegate retrieveMemberSiteDataWithCompletionBlock:^(NSArray *memberData, NSError *error) {
+        if (memberData != nil)
         {
-            case AlfrescoSiteAll:
-                self.hasMoreSites = hasMoreSites;
-                self.totalSites = totalSites;
-                break;
-            case AlfrescoSitePendingMember:
-                self.hasMorePendingSites = hasMoreSites;
-                self.totalPendingSites = totalSites;
-                break;
-            case AlfrescoSiteMember:
-                self.hasMoreMemberSites = hasMoreSites;
-                self.totalMemberSites = totalSites;
-                break;
-            case AlfrescoSiteFavorite:
-                self.hasMoreFavoriteSites = hasMoreSites;
-                self.totalFavoriteSites = totalSites;
-                break;
+            // store member site data
+            self.memberSiteData = [NSMutableArray arrayWithArray:memberData];
+            
+            // get favorite data
+            AlfrescoLogDebug(@"Requesting favorite site data from delegate");
+            request = [self.delegate retrieveFavoriteSiteDataWithCompletionBlock:^(NSArray *favoriteData, NSError *error) {
+                if (favoriteData != nil)
+                {
+                    // store favorite site data
+                    self.favoriteSiteData = [NSMutableArray arrayWithArray:favoriteData];
+                    
+                    // get pending data
+                    AlfrescoLogDebug(@"Requesting pending site data from delegate");
+                    request = [self.delegate retrievePendingSiteDataWithCompletionBlock:^(NSArray *pendingData, NSError *error) {
+                        if (pendingData != nil)
+                        {
+                            // store the pending data
+                            self.pendingSiteData = [NSMutableArray arrayWithArray:pendingData];
+                            
+                            // process the data
+                            [self processCacheDataWithCompletionBlock:completionBlock];
+                        }
+                        else
+                        {
+                            completionBlock(NO, error);
+                        }
+                    }];
+                }
+                else
+                {
+                    completionBlock(NO, error);
+                }
+            }];
         }
-        [sites enumerateObjectsUsingBlock:^(AlfrescoSite *site, NSUInteger index, BOOL *stop){
-            [self addSite:site type:type];
-        }];
+        else
+        {
+            completionBlock(NO, error);
+        }
+    }];
+    
+    return request;
+}
 
+- (void)processCacheDataWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    // this could take some time, especially if sites have to be individually retrieved,
+    // so move all this off the main thread
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSMutableArray *namesOfMissingSites = [NSMutableArray array];
+
+        self.internalSiteCache = [NSMutableDictionary dictionaryWithCapacity:32];
+
+        // add sites the user is a member of to the internal cache with member flag set
+        for (AlfrescoSite *site in self.memberSiteData)
+        {
+            [self cacheSite:site member:YES pending:NO favorite:NO];
+        }
+
+        // determine what form the favorite data is (onprem will be site names, public api will be site objects)
+        if (self.favoriteSiteData.count > 0)
+        {
+            // retrieve first object to get type
+            id firstObj = self.favoriteSiteData.firstObject;
+            if ([firstObj isKindOfClass:[AlfrescoSite class]])
+            {
+                for (AlfrescoSite *site in self.favoriteSiteData)
+                {
+                    AlfrescoSite *cachedSite = [self.internalSiteCache objectForKey:site.shortName];
+                    if (cachedSite != nil)
+                    {
+                        // if site is already cached just update favorite flag
+                        [self updateFavoriteStateForSite:cachedSite state:YES];
+                    }
+                    else
+                    {
+                        // add the site to the cache marked as a favorite
+                        [self cacheSite:site member:NO pending:NO favorite:YES];
+                    }
+                }
+            }
+            else
+            {
+                for (NSString *siteShortName in self.favoriteSiteData)
+                {
+                    AlfrescoSite *cachedSite = [self.internalSiteCache objectForKey:siteShortName];
+                    if (cachedSite != nil)
+                    {
+                        // if site is already cached just update favorite flag
+                        [self updateFavoriteStateForSite:cachedSite state:YES];
+                    }
+                    else
+                    {
+                        // add site to list to retrieve individually
+                        [namesOfMissingSites addObject:siteShortName];
+                    }
+                }
+            }
+        }
+
+        // determine what form the pending data is (onprem will be site names, public api will be site objects)
+        if (self.pendingSiteData.count > 0)
+        {
+            // retrieve first object to get type
+            id firstObj = self.pendingSiteData.firstObject;
+            if ([firstObj isKindOfClass:[AlfrescoSite class]])
+            {
+                for (AlfrescoSite *site in self.pendingSiteData)
+                {
+                    AlfrescoSite *cachedSite = [self.internalSiteCache objectForKey:site.shortName];
+                    if (cachedSite != nil)
+                    {
+                        // if site is already cached just update pending flag
+                        [self updatePendingStateForSite:cachedSite state:YES];
+                    }
+                    else
+                    {
+                        // add the site to the cache marked as pending
+                        [self cacheSite:site member:NO pending:YES favorite:NO];
+                    }
+                }
+            }
+            else
+            {
+                // add all the pending site names to the list of sites that need fetching
+                [namesOfMissingSites addObjectsFromArray:self.pendingSiteData];
+            }
+        }
+
+        if (namesOfMissingSites.count > 0)
+        {
+            // retrieve all the sites we don't have full data for (NOTE: blocks until they are retrieved or times out)
+            // TODO: we need a MUCH nicer way of doing this, can we use pre-defined blocks i.e. last one sets flags
+            
+            AlfrescoLogDebug(@"Fetching missing site data");
+            
+            __block BOOL allSitesFetched = NO;
+            NSString *siteName = nil;
+            for (int i = 0; i < namesOfMissingSites.count; i++)
+            {
+                siteName = [namesOfMissingSites objectAtIndex:i];
+                
+                AlfrescoLogDebug(@"Fetching site data for site: %@", siteName);
+                [self.delegate retrieveDataForSiteWithShortName:siteName completionBlock:^(AlfrescoSite *site, NSError *error) {
+                    if (site != nil)
+                    {
+                        // add site to the internal cache with appropriate state
+                        [self cacheSite:site member:NO
+                              pending:[self.pendingSiteData containsObject:site.identifier]
+                             favorite:[self.favoriteSiteData containsObject:site.identifier]];
+                    }
+                    
+                    // determine whether we've finished
+                    if (i == namesOfMissingSites.count-1)
+                    {
+                        allSitesFetched = YES;
+                    }
+                }];
+            }
+            
+            // block until all sites are fetched or we timeout....we MUST find a better way of doing this!!
+            NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:TIMEOUTINTERVAL];
+            do {
+                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
+            } while (!allSitesFetched && [timeoutDate timeIntervalSinceNow] > 0 );
+        }
+        
+        // now the caches have been built do some cleanup
+        self.isCacheBuilt = YES;
+        [self.memberSiteData removeAllObjects];
+        [self.favoriteSiteData removeAllObjects];
+        [self. pendingSiteData removeAllObjects];
+        
+        AlfrescoLogDebug(@"Site cache successfully built on background thread");
+        
+        // let the original caller know the cache is built on the main thread
         if (completionBlock != NULL)
         {
             dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock();
+                completionBlock(YES, nil);
             });
         }
     });
 }
 
-
-- (AlfrescoSite *)addPendingRequest:(AlfrescoOnPremiseJoinSiteRequest *)pendingRequest
+- (NSArray *)memberSites
 {
-    if (nil == pendingRequest)
-    {
-        return nil;
-    }
-    AlfrescoSite *site = [self objectWithIdentifier:pendingRequest.shortName];
-    if (site)
-    {
-        [self addSite:site type:AlfrescoSitePendingMember];
-    }
-    else
-    {
-        NSMutableDictionary *siteProperties = [NSMutableDictionary dictionary];
-        [siteProperties setValue:pendingRequest.shortName forKey:kAlfrescoJSONShortname];
-        [siteProperties setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoSiteIsPendingMember];
-        site = [[AlfrescoSite alloc] initWithProperties:siteProperties];
-        [self.sitesCache addObject:site];
-    }
-    return site;
+    NSPredicate *memberPredicate = [NSPredicate predicateWithFormat:@"isMember == YES"];
+    return [[self.internalSiteCache allValues]  filteredArrayUsingPredicate:memberPredicate];
 }
 
-- (NSArray *)addPendingRequests:(NSArray *)pendingRequests
+- (NSArray *)pendingSites
 {
-    if (nil == pendingRequests)
-    {
-        return nil;
-    }
-    [pendingRequests enumerateObjectsUsingBlock:^(AlfrescoOnPremiseJoinSiteRequest *pendingRequest, NSUInteger index, BOOL *stop){
-        [self addPendingRequest:pendingRequest];
-    }];
-    return [self pendingMemberSites];
+    NSPredicate *pendingPredicate = [NSPredicate predicateWithFormat:@"isPendingMember == YES"];
+    return [[self.internalSiteCache allValues] filteredArrayUsingPredicate:pendingPredicate];
+}
+
+- (NSArray *)favoriteSites
+{
+    NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"isFavorite == YES"];
+    return [[self.internalSiteCache allValues] filteredArrayUsingPredicate:favoritePredicate];
+}
+
+- (void)cacheSite:(AlfrescoSite *)site
+{
+    // add the site to the internal cache with it's current state
+    [self.internalSiteCache setObject:site forKey:site.identifier];
     
+    AlfrescoLogTrace(@"Cached site: %@", site.shortName);
 }
 
-- (void)clear
+- (void)cacheSite:(AlfrescoSite *)site member:(BOOL)member pending:(BOOL)pending favorite:(BOOL)favorite
 {
-    [self.sitesCache removeAllObjects];
+    // apply the given state to the given site object
+    [self updateMemberStateForSite:site state:member];
+    [self updatePendingStateForSite:site state:pending];
+    [self updateFavoriteStateForSite:site state:favorite];
+    
+    // add the site to the internal cache
+    [self.internalSiteCache setObject:site forKey:site.identifier];
+    
+    AlfrescoLogTrace(@"Cached site: %@", site.shortName);
 }
 
-/**
- the method returns the first entry found for the identifier. Typically, a site id is unique - but this may not always be the case(?)
- */
-- (AlfrescoSite *)objectWithIdentifier:(NSString *)identifier
+- (AlfrescoSite *)siteWithShortName:(NSString *)shortName
 {
-    if (!identifier)return nil;
-    NSPredicate *idPredicate = [NSPredicate predicateWithFormat:@"identifier == %@",identifier];
-    NSArray *results = [self.sitesCache filteredArrayUsingPredicate:idPredicate];
-    return (0 == results.count) ? nil : results[0];
-}
-
-#pragma private methods
-- (BOOL)canRemoveSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type
-{
-    if (![self.sitesCache containsObject:site])
-    {
-        return NO;
-    }
-    BOOL canRemoveFromCache = NO;
-    if ([self.sitesCache containsObject:site])
-    {
-        switch (type)
-        {
-            case AlfrescoSiteAll:
-                canRemoveFromCache = YES;
-                break;
-            case AlfrescoSiteFavorite:
-                if (!site.isMember && !site.isPendingMember)
-                {
-                    canRemoveFromCache = YES;
-                }
-                break;
-            case AlfrescoSiteMember:
-                if (!site.isFavorite)
-                {
-                    canRemoveFromCache = YES;
-                }
-                break;
-            case AlfrescoSitePendingMember:
-                if (!site.isFavorite)
-                {
-                    canRemoveFromCache = YES;
-                }
-                break;
-        }
-    }
-    return canRemoveFromCache;
+    return [self.internalSiteCache objectForKey:shortName];
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
-- (void)siteStateForSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type isOn:(BOOL)isOn
+- (void)updateMemberStateForSite:(AlfrescoSite *)site state:(BOOL)state
 {
-    SEL changePendingStateSelector = sel_registerName("changePendingState:");
     SEL changeMemberStateSelector = sel_registerName("changeMemberState:");
-    SEL changeFavoriteStateSelector = sel_registerName("changeFavoriteState:");
-
-    if (AlfrescoSitePendingMember == type)
-    {
-        [site performSelector:changePendingStateSelector withObject:[NSNumber numberWithBool:isOn]];
-    }
-    else if (AlfrescoSiteMember == type)
-    {
-        [site performSelector:changeMemberStateSelector withObject:[NSNumber numberWithBool:isOn]];
-    }
-    else if (AlfrescoSiteFavorite == type)
-    {
-        [site performSelector:changeFavoriteStateSelector withObject:[NSNumber numberWithBool:isOn]];
-    }
+    [site performSelector:changeMemberStateSelector withObject:[NSNumber numberWithBool:state]];
 }
 
-- (void)transferStatesForSite:(AlfrescoSite *)site fromSite:(AlfrescoSite *)originalSite type:(AlfrescoSiteFlags)type
+- (void)updatePendingStateForSite:(AlfrescoSite *)site state:(BOOL)state
 {
     SEL changePendingStateSelector = sel_registerName("changePendingState:");
-    SEL changeMemberStateSelector = sel_registerName("changeMemberState:");
-    SEL changeFavoriteStateSelector = sel_registerName("changeFavoriteState:");
+    [site performSelector:changePendingStateSelector withObject:[NSNumber numberWithBool:state]];
+}
 
-    if (AlfrescoSitePendingMember == type)
-    {
-        [site performSelector:changeMemberStateSelector withObject:[NSNumber numberWithBool:originalSite.isMember]];
-        [site performSelector:changeFavoriteStateSelector withObject:[NSNumber numberWithBool:originalSite.isFavorite]];
-    }
-    else if (AlfrescoSiteMember == type)
-    {
-        [site performSelector:changeFavoriteStateSelector withObject:[NSNumber numberWithBool:originalSite.isFavorite]];
-        [site performSelector:changePendingStateSelector withObject:[NSNumber numberWithBool:originalSite.isPendingMember]];
-    }
-    else if (AlfrescoSiteFavorite == type)
-    {
-        [site performSelector:changeMemberStateSelector withObject:[NSNumber numberWithBool:originalSite.isMember]];
-        [site performSelector:changePendingStateSelector withObject:[NSNumber numberWithBool:originalSite.isPendingMember]];
-    }
+- (void)updateFavoriteStateForSite:(AlfrescoSite *)site state:(BOOL)state
+{
+    SEL changeFavoriteStateSelector = sel_registerName("changeFavoriteState:");
+    [site performSelector:changeFavoriteStateSelector withObject:[NSNumber numberWithBool:state]];
 }
 
 #pragma clang diagnostic pop

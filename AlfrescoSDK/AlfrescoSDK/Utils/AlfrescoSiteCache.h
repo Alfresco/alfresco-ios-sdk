@@ -22,62 +22,33 @@
 #import "AlfrescoSite.h"
 #import "AlfrescoSession.h"
 
-typedef enum
-{
-    AlfrescoSiteFavorite = 0,
-    AlfrescoSiteMember,
-    AlfrescoSitePendingMember,
-    AlfrescoSiteAll    
-} AlfrescoSiteFlags;
-
-@class AlfrescoOnPremiseJoinSiteRequest;
+@protocol AlfrescoSiteCacheDataDelegate <NSObject>
+- (AlfrescoRequest *)retrieveMemberSiteDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveFavoriteSiteDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrievePendingSiteDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveDataForSiteWithShortName:(NSString *)shortName completionBlock:(AlfrescoSiteCompletionBlock)completionBlock;
+@end
 
 @interface AlfrescoSiteCache : NSObject
 
-@property (nonatomic, assign, readonly) BOOL hasMoreSites;
-@property (nonatomic, assign, readonly) BOOL hasMoreMemberSites;
-@property (nonatomic, assign, readonly) BOOL hasMoreFavoriteSites;
-@property (nonatomic, assign, readonly) BOOL hasMorePendingSites;
-@property (nonatomic, assign, readonly) NSInteger totalSites;
-@property (nonatomic, assign, readonly) NSInteger totalMemberSites;
-@property (nonatomic, assign, readonly) NSInteger totalFavoriteSites;
-@property (nonatomic, assign, readonly) NSInteger totalPendingSites;
+@property (nonatomic, assign, readonly) BOOL isCacheBuilt;
+@property (nonatomic, strong, readonly) NSArray *memberSites;
+@property (nonatomic, strong, readonly) NSArray *favoriteSites;
+@property (nonatomic, strong, readonly) NSArray *pendingSites;
+
+- (instancetype)initWithSiteCacheDataDelegate:(id<AlfrescoSiteCacheDataDelegate>)siteCacheDataDelegate;
+
+- (AlfrescoRequest *)buildCacheWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+
+- (void)cacheSite:(AlfrescoSite *)site;
+
+- (void)cacheSite:(AlfrescoSite *)site member:(BOOL)member pending:(BOOL)pending favorite:(BOOL)favorite;
+
+- (AlfrescoSite *)siteWithShortName:(NSString *)shortName;
 
 /**
  clears all entries in the cache
  */
 - (void)clear;
-
-/**
- returns my sites
- */
-- (NSArray *)memberSites;
-
-/**
- returns favourite sites
- */
-- (NSArray *)favoriteSites;
-
-/**
- returns sites for which a join request is pending (this would only be MODERATED sites)
- */
-- (NSArray *)pendingMemberSites;
-
-/**
- returns the entire site cache
- */
-- (NSArray *)allSites;
-
-- (void)addSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type;
-- (void)removeSite:(AlfrescoSite *)site type:(AlfrescoSiteFlags)type;
-
-- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type completionBlock:(void(^)())completionBlock;
-- (void)addSites:(NSArray *)sites type:(AlfrescoSiteFlags)type hasMoreSites:(BOOL)hasMoreSites totalSites:(NSInteger)totalSites completionBlock:(void (^)())completionBlock;
-
-- (AlfrescoSite *)addPendingRequest:(AlfrescoOnPremiseJoinSiteRequest *)pendingRequest;
-
-- (AlfrescoSite *)objectWithIdentifier:(NSString *)identifier;
-
-- (NSArray *)addPendingRequests:(NSArray *)pendingRequests;
 
 @end

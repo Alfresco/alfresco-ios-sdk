@@ -35,7 +35,6 @@
         // get all sites
         [self.siteService retrieveAllSitesWithCompletionBlock:^(NSArray *array, NSError *error)
          {
-             
              if (nil == array)
              {
                  STAssertNil(array,@"if failure, the array should be nil");
@@ -45,7 +44,7 @@
              else
              {
                  STAssertNotNil(array,@"the array should not be nil");
-                 STAssertTrue(array.count > 1, @"Site count should be greater than 1 not %i", array.count);
+                 STAssertTrue(array.count > 2, @"Site count should be greater than 2 not %i", array.count);
                  self.lastTestSuccessful = YES;
              }
              self.callbackCompleted = YES;
@@ -60,9 +59,6 @@
         STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
-
-
-
 
 /*
  @Unique_TCRef 46S1
@@ -87,6 +83,8 @@
              else
              {
                  STAssertNotNil(pagingResult, @"paged result should not be nil");
+                 STAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                 STAssertTrue(pagingResult.objects.count == 2, @"There should have been 2 sites in the objects array");
                  self.lastTestSuccessful = YES;
              }
              
@@ -530,9 +528,10 @@
                  {
                      [self.siteService retrieveAllMembers:[array objectAtIndex:0] completionBlock:^(NSArray *array, NSError *error) {
                          
+                         STAssertTrue(array.count > 0, @"There should be at least one member of the site");
                          for (AlfrescoPerson *person in array)
                          {
-                             AlfrescoLogDebug(@"Person company Name: %@", person.company.name);
+                             AlfrescoLogDebug(@"Person name: %@", person.fullName);
                          }
                      }];
                  }
@@ -576,7 +575,7 @@
                          NSArray *members = pagingResult.objects;
                          for (AlfrescoPerson *person in members)
                          {
-                             AlfrescoLogDebug(@"Person company Name: %@", person.company.name);
+                             AlfrescoLogDebug(@"Person name: %@", person.fullName);
                          }
                      }];
                  }
