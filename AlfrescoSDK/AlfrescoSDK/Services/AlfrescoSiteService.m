@@ -140,30 +140,33 @@
     return nil;    
 }
 
-- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAllMembersOfSite:(AlfrescoSite *)site
+                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site
-                     WithListingContext:(AlfrescoListingContext *)listingContext
-                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveMembersOfSite:(AlfrescoSite *)site
+                            listingContext:(AlfrescoListingContext *)listingContext
+                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (AlfrescoRequest *)searchMembers:(AlfrescoSite *)site
-                            filter:(NSString *)filter
-                WithListingContext:(AlfrescoListingContext *)listingContext
-                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchMembersOfSite:(AlfrescoSite *)site
+                             usingFilter:(NSString *)filter
+                          listingContext:(AlfrescoListingContext *)listingContext
+                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (AlfrescoRequest *)isPerson:(AlfrescoPerson *)person memberOfSite:(AlfrescoSite *)site completionBlock:(AlfrescoMemberCompletionBlock)completionBlock
+- (AlfrescoRequest *)isPerson:(AlfrescoPerson *)person
+                 memberOfSite:(AlfrescoSite *)site
+              completionBlock:(AlfrescoMemberCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;

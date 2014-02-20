@@ -563,17 +563,18 @@
     return request;
 }
 
-- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAllMembersOfSite:(AlfrescoSite *)site
+                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
-    return [self retrieveAllMembers:site WithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+    return [self retrieveMembersOfSite:site listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
         completionBlock(pagingResult.objects, error);
     }];
 }
 
-- (AlfrescoRequest *)retrieveAllMembers:(AlfrescoSite *)site
-                     WithListingContext:(AlfrescoListingContext *)listingContext
-                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveMembersOfSite:(AlfrescoSite *)site
+                            listingContext:(AlfrescoListingContext *)listingContext
+                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -612,14 +613,19 @@
     return request;
 }
 
-- (AlfrescoRequest *)searchMembers:(AlfrescoSite *)site
-                            filter:(NSString *)filter
-                WithListingContext:(AlfrescoListingContext *)listingContext
-                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchMembersOfSite:(AlfrescoSite *)site
+                             usingFilter:(NSString *)filter
+                          listingContext:(AlfrescoListingContext *)listingContext
+                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    if (nil == listingContext)
+    {
+        listingContext = self.session.defaultListingContext;
+    }
     
     NSString *requestString =  [kAlfrescoOnPremiseJoinPublicSiteAPI stringByAppendingString:kAlfrescoOnPremiseSiteMembershipFilter];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.identifier];
@@ -637,15 +643,23 @@
         {
             NSError *conversionError = nil;
             NSArray *members = [weakSelf membersArrayFromJSONData:data error:&conversionError];
-            // Members with incomplete properties
-            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:members listingContext:listingContext];
-            completionBlock(pagingResult, error);
+            if (conversionError == nil)
+            {
+                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:members listingContext:listingContext];
+                completionBlock(pagingResult, error);
+            }
+            else
+            {
+                completionBlock(nil, conversionError);
+            }
         }
     }];
     return request;
 }
 
-- (AlfrescoRequest *)isPerson:(AlfrescoPerson *)person memberOfSite:(AlfrescoSite *)site completionBlock:(AlfrescoMemberCompletionBlock)completionBlock
+- (AlfrescoRequest *)isPerson:(AlfrescoPerson *)person
+                 memberOfSite:(AlfrescoSite *)site
+              completionBlock:(AlfrescoMemberCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:person argumentName:@"person"];
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];

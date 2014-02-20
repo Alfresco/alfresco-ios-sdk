@@ -506,39 +506,97 @@
     
 }
 
-- (void)testRetrieveAllMembersForSite
+- (void)testRetrieveMembersForSite
 {
     if (self.setUpSuccess)
     {
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrieveFavoriteSitesWithCompletionBlock:^(NSArray *array, NSError *error)
-         {
-             if (nil == array)
+        [self.siteService retrieveSiteWithShortName:self.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error) {
+             if (nil == site)
              {
-                 STAssertNil(array,@"if failure, the array should be nil");
                  self.lastTestSuccessful = NO;
                  self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
              }
              else
              {
-                 STAssertNotNil(array,@"the array should not be nil");
-                 
-                 if (array.count > 0)
-                 {
-                     [self.siteService retrieveAllMembers:[array objectAtIndex:0] completionBlock:^(NSArray *array, NSError *error) {
+                 [self.siteService retrieveAllMembersOfSite:site completionBlock:^(NSArray *allSiteMembers, NSError *error) {
+                     if (allSiteMembers == nil)
+                     {
+                         self.lastTestSuccessful = NO;
+                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     }
+                     else
+                     {
+                         // check there is at least one member in the array
+                         STAssertTrue(allSiteMembers.count > 0, @"There should be at least one member of the test site");
                          
-                         STAssertTrue(array.count > 0, @"There should be at least one member of the site");
-                         for (AlfrescoPerson *person in array)
+                         BOOL testUserFound = NO;
+                         for (AlfrescoPerson *person in allSiteMembers)
                          {
-                             AlfrescoLogDebug(@"Person name: %@", person.fullName);
+                             if ([person.identifier isEqualToString:self.userName])
+                             {
+                                 testUserFound = YES;
+                             }
                          }
-                     }];
-                 }
-                 self.lastTestSuccessful = YES;
+                         
+                         if (testUserFound)
+                         {
+                             // we found the user we expected, now retrieve with paging
+                             AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1];
+                             [self.siteService retrieveMembersOfSite:site listingContext:paging
+                                                     completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                                 if (pagingResult == nil)
+                                 {
+                                     self.lastTestSuccessful = NO;
+                                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                 }
+                                 else
+                                 {
+                                     // check paging results are what we are expecting them to be
+                                     STAssertTrue(pagingResult.objects.count == 1, @"There should be one member of the test site returned");
+                                     
+                                     if (allSiteMembers.count == 1)
+                                     {
+                                         // we know there is only one result, check paging result is correct
+                                         STAssertTrue(pagingResult.totalItems == 1,
+                                                      [NSString stringWithFormat:@"Expecting the paging totalItems count to be 1 but it was: %d", pagingResult.totalItems]);
+                                         STAssertFalse(pagingResult.hasMoreItems, @"Expected the paging result to indicate there were no more items");
+                                         
+                                         // we know there is only one member so check it's the correct one
+                                         AlfrescoPerson *person = pagingResult.objects.firstObject;
+                                         self.lastTestSuccessful = [person.identifier isEqualToString:self.userName];
+                                         if (!self.lastTestSuccessful)
+                                         {
+                                             self.lastTestFailureMessage = @"We expected the one member of the site to be the test user";
+                                         }
+                                     }
+                                     else
+                                     {
+                                         // we know there are more results, check paging result is correct
+                                         STAssertTrue(pagingResult.totalItems == allSiteMembers.count,
+                                                      [NSString stringWithFormat:@"Expecting the paging totalItems count to be the same as the number of site members: %d", allSiteMembers.count]);
+                                         STAssertTrue(pagingResult.hasMoreItems, @"Expected the paging result to indicate there were more items");
+                                         
+                                         // make sure the object type is correct
+                                         STAssertTrue([pagingResult.objects.firstObject isKindOfClass:[AlfrescoPerson class]],
+                                                      [NSString stringWithFormat:@"Expected to find an AlfrescoPerson object in the objects array but found: %@", pagingResult.objects.firstObject]);
+                                         
+                                         self.lastTestSuccessful = YES;
+                                     }
+                                 }
+                                 self.callbackCompleted = YES;
+                             }];
+                         }
+                         else
+                         {
+                             self.lastTestSuccessful = NO;
+                             self.lastTestFailureMessage = @"Failed to found the test user as a member of the test site";
+                             self.callbackCompleted = YES;
+                         }
+                     }
+                 }];
              }
-             self.callbackCompleted = YES;
-             
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -556,34 +614,37 @@
     {
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrieveFavoriteSitesWithCompletionBlock:^(NSArray *array, NSError *error)
-         {
-             if (nil == array)
+        [self.siteService retrieveSiteWithShortName:self.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error) {
+             if (site == nil)
              {
-                 STAssertNil(array,@"if failure, the array should be nil");
                  self.lastTestSuccessful = NO;
                  self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
              }
              else
              {
-                 STAssertNotNil(array,@"the array should not be nil");
-                 
-                 if (array.count > 0)
-                 {
-                     [self.siteService searchMembers:[array objectAtIndex:0] filter:@"" WithListingContext:nil completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
-                         
-                         NSArray *members = pagingResult.objects;
-                         for (AlfrescoPerson *person in members)
+                 [self.siteService searchMembersOfSite:site usingFilter:self.userName listingContext:nil
+                                           completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                         if (pagingResult == nil)
                          {
-                             AlfrescoLogDebug(@"Person name: %@", person.fullName);
+                             self.lastTestSuccessful = NO;
+                             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                          }
+                         else
+                         {
+                             // there should be one result
+                             STAssertTrue(pagingResult.objects.count == 1, @"Exepcted to find 1 result");
+                             STAssertTrue(pagingResult.totalItems == 1,
+                                          [NSString stringWithFormat:@"Expecting the paging totalItems count to be 1 but it was: %d", pagingResult.totalItems]);
+                             STAssertFalse(pagingResult.hasMoreItems, @"Expected the paging result to indicate there were no more items");
+                             STAssertTrue([pagingResult.objects.firstObject isKindOfClass:[AlfrescoPerson class]],
+                                          [NSString stringWithFormat:@"Expected to find an AlfrescoPerson object in the objects array but found: %@", pagingResult.objects.firstObject]);
+                             
+                             self.lastTestSuccessful = YES;
+                         }
+                         self.callbackCompleted = YES;
                      }];
-                 }
-                 self.lastTestSuccessful = YES;
              }
-             self.callbackCompleted = YES;
-             
-         }];
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -602,43 +663,41 @@
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
         [personService retrievePersonWithIdentifier:self.userName completionBlock:^(AlfrescoPerson *person, NSError *error) {
-            
-            if (!error)
+            if (person == nil)
             {
-                AlfrescoListingContext * listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:5];
-                [self.siteService retrieveAllSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-                 {
-                     
-                     if (nil == pagingResult || nil != error)
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                [self.siteService retrieveSiteWithShortName:self.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error) {
+                     if (site == nil)
                      {
                          self.lastTestSuccessful = NO;
                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                      }
-                     
                      else
                      {
-                         NSArray *sites = pagingResult.objects;
-                         __block int requestsCompleted = 0;
-                         
-                         for (AlfrescoSite *site in sites)
-                         {
-                             [self.siteService isPerson:person memberOfSite:site completionBlock:^(BOOL succeeded, BOOL isMember, NSError *error) {
+                         [self.siteService isPerson:person memberOfSite:site completionBlock:^(BOOL succeeded, BOOL isMember, NSError *error) {
+                             if (!succeeded)
+                             {
+                                 self.lastTestSuccessful = NO;
+                                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                             }
+                             else
+                             {
+                                 // we know the test user is a member of the test site so check the result
+                                 STAssertTrue(isMember, @"Expected the test user to be a member of the test site");
                                  
-                                 requestsCompleted++;
-                                 
-                                 AlfrescoLogDebug(@"person %@ is member of Site %@: %d", person.fullName, site.shortName, isMember);
                                  self.lastTestSuccessful = YES;
-                                 
-                                 if (requestsCompleted == sites.count)
-                                 {
-                                     self.callbackCompleted = YES;
-                                 }
-                             }];
-                         }
+                             }
+                             self.callbackCompleted = YES;
+                         }];
                      }
-                 }];
+                }];
             }
         }];
+        
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
