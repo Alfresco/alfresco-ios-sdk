@@ -99,6 +99,7 @@ extern NSString * const kAlfrescoPublicJSONList;
 extern NSString * const kAlfrescoPublicJSONEntries;
 extern NSString * const kAlfrescoPublicJSONHasMoreItems;
 extern NSString * const kAlfrescoPublicJSONTotalItems;
+extern NSString * const kAlfrescoLegacyJSONMaxItems;
 extern NSString * const kAlfrescoLegacyJSONPagination;
 extern NSString * const kAlfrescoLegacyJSONTotalItems;
 

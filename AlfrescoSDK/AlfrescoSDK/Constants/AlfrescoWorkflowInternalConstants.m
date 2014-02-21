@@ -99,6 +99,7 @@ NSString * const kAlfrescoPublicJSONList = @"list";
 NSString * const kAlfrescoPublicJSONEntries = @"entries";
 NSString * const kAlfrescoPublicJSONHasMoreItems = @"hasMoreItems";
 NSString * const kAlfrescoPublicJSONTotalItems = @"totalItems";
+NSString * const kAlfrescoLegacyJSONMaxItems = @"maxItems";
 NSString * const kAlfrescoLegacyJSONPagination = @"paging";
 NSString * const kAlfrescoLegacyJSONTotalItems = @"totalItems";
 
