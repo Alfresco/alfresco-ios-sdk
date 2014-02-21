@@ -56,11 +56,11 @@
         self.publicToPrivateStateMappings = @{kAlfrescoWorkflowProcessStateAny : kAlfrescoPublicAPIWorkflowProcessStatusAny,
                                               kAlfrescoWorkflowProcessStateActive : kAlfrescoPublicAPIWorkflowProcessStatusActive,
                                               kAlfrescoWorkflowProcessStateCompleted : kAlfrescoPublicAPIWorkflowProcessStatusCompleted};
-        self.publicToPrivateVariableMappings = @{kAlfrescoWorkflowProcessDescription : kAlfrescoPublicBPMJSONProcessDescription,
-                                                 kAlfrescoWorkflowProcessPriority : kAlfrescoPublicBPMJSONProcessPriority,
-                                                 kAlfrescoWorkflowProcessSendEmailNotification : kAlfrescoPublicBPMJSONProcessSendEmailNotification,
-                                                 kAlfrescoWorkflowProcessDueDate : kAlfrescoPublicBPMJSONProcessDueDate,
-                                                 kAlfrescoWorkflowProcessApprovalRate : kAlfrescoPublicBPMJSONProcessApprovalRate};
+        self.publicToPrivateVariableMappings = @{kAlfrescoWorkflowProcessDescription : kAlfrescoWorkflowPublicBPMJSONProcessDescription,
+                                                 kAlfrescoWorkflowProcessPriority : kAlfrescoWorkflowPublicBPMJSONProcessPriority,
+                                                 kAlfrescoWorkflowProcessSendEmailNotification : kAlfrescoWorkflowPublicBPMJSONProcessSendEmailNotification,
+                                                 kAlfrescoWorkflowProcessDueDate : kAlfrescoWorkflowPublicBPMJSONProcessDueDate,
+                                                 kAlfrescoWorkflowProcessApprovalRate : kAlfrescoWorkflowPublicBPMJSONProcessApprovalRate};
         self.workflowObjectConverter = [[AlfrescoWorkflowObjectConverter alloc] init];
     }
     return self;
@@ -147,8 +147,8 @@
             AlfrescoPagingResult *pagingResult = nil;
             if (pagingInfo)
             {
-                BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoPublicJSONHasMoreItems] boolValue];
-                int total = [[pagingInfo valueForKey:kAlfrescoPublicJSONTotalItems] intValue];
+                BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoWorkflowPublicJSONHasMoreItems] boolValue];
+                int total = [[pagingInfo valueForKey:kAlfrescoWorkflowPublicJSONTotalItems] intValue];
                 pagingResult = [[AlfrescoPagingResult alloc] initWithArray:workflowDefinitions hasMoreItems:hasMore totalItems:total];
             }
             completionBlock(pagingResult, conversionError);
@@ -338,7 +338,7 @@
     
     if (!assignees)
     {
-        [completeVariables setValue:self.session.personIdentifier forKey:kAlfrescoPublicBPMJSONProcessAssignee];
+        [completeVariables setValue:self.session.personIdentifier forKey:kAlfrescoWorkflowPublicBPMJSONProcessAssignee];
     }
     else
     {
@@ -350,21 +350,21 @@
         
         if (assignees.count == 1)
         {
-            [completeVariables setValue:assigneeIdentifiers[0] forKey:kAlfrescoPublicBPMJSONProcessAssignee];
+            [completeVariables setValue:assigneeIdentifiers[0] forKey:kAlfrescoWorkflowPublicBPMJSONProcessAssignee];
         }
         else
         {
-            [completeVariables setValue:assigneeIdentifiers forKey:kAlfrescoPublicBPMJSONProcessAssignees];
+            [completeVariables setValue:assigneeIdentifiers forKey:kAlfrescoWorkflowPublicBPMJSONProcessAssignees];
         }
     }
     
     // add the variables dictionary to the request
     if (completeVariables.count > 0)
     {
-        [requestBody setValue:completeVariables forKey:kAlfrescoPublicJSONVariables];
+        [requestBody setValue:completeVariables forKey:kAlfrescoWorkflowPublicJSONVariables];
     }
     
-    [requestBody setObject:processDefinition.identifier forKey:kAlfrescoPublicJSONProcessDefinitionID];
+    [requestBody setObject:processDefinition.identifier forKey:kAlfrescoWorkflowPublicJSONProcessDefinitionID];
     
     NSError *requestConversionError = nil;
     NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestBody options:0 error:&requestConversionError];
