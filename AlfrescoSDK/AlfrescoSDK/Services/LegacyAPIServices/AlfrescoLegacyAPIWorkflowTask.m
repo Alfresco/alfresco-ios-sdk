@@ -103,7 +103,7 @@
             NSArray *workflowTasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data session:self.session conversionError:&conversionError];
             NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromOldAPIData:data error:&conversionError];
             int total = [[pagingInfo valueForKey:kAlfrescoWorkflowLegacyJSONTotalItems] intValue];
-            int maxItems = [[pagingInfo valueForKey:kAlfrescoLegacyJSONMaxItems] intValue];
+            int maxItems = [[pagingInfo valueForKey:kAlfrescoWorkflowLegacyJSONMaxItems] intValue];
             BOOL hasMore = ((listingContext.skipCount + maxItems) < total);
             AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:workflowTasks hasMoreItems:hasMore totalItems:total];
             completionBlock(pagingResult, conversionError);
