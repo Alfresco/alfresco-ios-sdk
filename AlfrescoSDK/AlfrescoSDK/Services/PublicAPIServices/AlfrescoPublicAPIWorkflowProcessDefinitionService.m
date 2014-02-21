@@ -100,8 +100,8 @@
             AlfrescoPagingResult *pagingResult = nil;
             if (pagingInfo)
             {
-                BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoPublicJSONHasMoreItems] boolValue];
-                int total = [[pagingInfo valueForKey:kAlfrescoPublicJSONTotalItems] intValue];
+                BOOL hasMore = [[pagingInfo valueForKeyPath:kAlfrescoWorkflowPublicJSONHasMoreItems] boolValue];
+                int total = [[pagingInfo valueForKey:kAlfrescoWorkflowPublicJSONTotalItems] intValue];
                 pagingResult = [[AlfrescoPagingResult alloc] initWithArray:workflowDefinitions hasMoreItems:hasMore totalItems:total];
             }
             completionBlock(pagingResult, conversionError);

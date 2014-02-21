@@ -52,17 +52,17 @@ static NSInteger kWorkflowVariableModelVersion = 1;
 
 - (void)setupProperties:(NSDictionary *)properties
 {
-    self.name = [properties valueForKey:kAlfrescoPublicJSONVariableName];
-    self.type = [properties valueForKey:kAlfrescoPublicJSONVariableType];
-    self.value = [properties valueForKey:kAlfrescoPublicJSONVariableValue];
+    self.name = [properties valueForKey:kAlfrescoWorkflowPublicJSONVariableName];
+    self.type = [properties valueForKey:kAlfrescoWorkflowPublicJSONVariableType];
+    self.value = [properties valueForKey:kAlfrescoWorkflowPublicJSONVariableValue];
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeInteger:kWorkflowVariableModelVersion forKey:NSStringFromClass([self class])];
-    [aCoder encodeObject:self.name forKey:kAlfrescoPublicJSONIdentifier];
-    [aCoder encodeObject:self.type forKey:kAlfrescoPublicJSONVariableType];
-    [aCoder encodeObject:self.value forKey:kAlfrescoPublicJSONVariableValue];
+    [aCoder encodeObject:self.name forKey:kAlfrescoWorkflowPublicJSONIdentifier];
+    [aCoder encodeObject:self.type forKey:kAlfrescoWorkflowPublicJSONVariableType];
+    [aCoder encodeObject:self.value forKey:kAlfrescoWorkflowPublicJSONVariableValue];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -71,9 +71,9 @@ static NSInteger kWorkflowVariableModelVersion = 1;
     if (self)
     {
         //        NSInteger version = [aDecoder decodeIntegerForKey:NSStringFromClass([self class])];
-        self.name = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONIdentifier];
-        self.type = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONVariableType];
-        self.value = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONVariableValue];
+        self.name = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONIdentifier];
+        self.type = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONVariableType];
+        self.value = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONVariableValue];
     }
     return self;
 }

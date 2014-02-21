@@ -66,50 +66,50 @@ static NSInteger kWorkflowTaskModelVersion = 1;
     if (self.session.workflowInfo.publicAPI)
     {
         NSDictionary *entry = [properties objectForKey:kAlfrescoCloudJSONEntry];
-        self.identifier = [entry objectForKey:kAlfrescoPublicJSONIdentifier];
-        self.processIdentifier = [entry objectForKey:kAlfrescoPublicJSONProcessID];
-        self.processDefinitionIdentifier = [entry objectForKey:kAlfrescoPublicJSONProcessDefinitionID];
-        self.startedAt = [self.dateFormatter dateFromString:[entry objectForKey:kAlfrescoPublicJSONStartedAt]];
-        self.endedAt = [self.dateFormatter dateFromString:[entry objectForKey:kAlfrescoPublicJSONEndedAt]];
-        self.dueAt = [self.dateFormatter dateFromString:[entry objectForKey:kAlfrescoPublicJSONDueAt]];
-        self.taskDescription = [entry objectForKey:kAlfrescoPublicJSONDescription];
-        self.priority = [entry objectForKey:kAlfrescoPublicJSONPriority];
-        self.assigneeIdentifier = [entry objectForKey:kAlfrescoPublicJSONAssignee];
+        self.identifier = [entry objectForKey:kAlfrescoWorkflowPublicJSONIdentifier];
+        self.processIdentifier = [entry objectForKey:kAlfrescoWorkflowPublicJSONProcessID];
+        self.processDefinitionIdentifier = [entry objectForKey:kAlfrescoWorkflowPublicJSONProcessDefinitionID];
+        self.startedAt = [self.dateFormatter dateFromString:[entry objectForKey:kAlfrescoWorkflowPublicJSONStartedAt]];
+        self.endedAt = [self.dateFormatter dateFromString:[entry objectForKey:kAlfrescoWorkflowPublicJSONEndedAt]];
+        self.dueAt = [self.dateFormatter dateFromString:[entry objectForKey:kAlfrescoWorkflowPublicJSONDueAt]];
+        self.taskDescription = [entry objectForKey:kAlfrescoWorkflowPublicJSONDescription];
+        self.priority = [entry objectForKey:kAlfrescoWorkflowPublicJSONPriority];
+        self.assigneeIdentifier = [entry objectForKey:kAlfrescoWorkflowPublicJSONAssignee];
     }
     else
     {
-        NSDictionary *taskProperties = [properties objectForKey:kAlfrescoLegacyJSONProperties];
-        NSDictionary *workflowInstance = [properties objectForKey:kAlfrescoLegacyJSONWorkflowInstance];
+        NSDictionary *taskProperties = [properties objectForKey:kAlfrescoWorkflowLegacyJSONProperties];
+        NSDictionary *workflowInstance = [properties objectForKey:kAlfrescoWorkflowLegacyJSONWorkflowInstance];
         
         NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
         
-        if ([[taskProperties objectForKey:kAlfrescoLegacyJSONBPMTaskID] isKindOfClass:[NSNumber class]])
+        if ([[taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMTaskID] isKindOfClass:[NSNumber class]])
         {
-            self.identifier = [[taskProperties objectForKey:kAlfrescoLegacyJSONBPMTaskID] stringValue];
+            self.identifier = [[taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMTaskID] stringValue];
         }
         else
         {
-            self.identifier = [taskProperties objectForKey:kAlfrescoLegacyJSONBPMTaskID];
+            self.identifier = [taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMTaskID];
         }
-        self.processIdentifier = [[workflowInstance objectForKey:kAlfrescoLegacyJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.processDefinitionIdentifier = [[workflowInstance objectForKey:kAlfrescoLegacyJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        if ([taskProperties objectForKey:kAlfrescoLegacyJSONBPMStartedAt] != [NSNull null])
+        self.processIdentifier = [[workflowInstance objectForKey:kAlfrescoWorkflowLegacyJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.processDefinitionIdentifier = [[workflowInstance objectForKey:kAlfrescoWorkflowLegacyJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        if ([taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMStartedAt] != [NSNull null])
         {
-            self.startedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoLegacyJSONBPMStartedAt]];
+            self.startedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMStartedAt]];
         }
-        if ([taskProperties objectForKey:kAlfrescoLegacyJSONBPMEndedAt] != [NSNull null])
+        if ([taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMEndedAt] != [NSNull null])
         {
-            self.endedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoLegacyJSONBPMEndedAt]];
+            self.endedAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMEndedAt]];
         }
-        if ([taskProperties objectForKey:kAlfrescoLegacyJSONBPMDueAt] != [NSNull null])
+        if ([taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMDueAt] != [NSNull null])
         {
-            self.dueAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoLegacyJSONBPMDueAt]];
+            self.dueAt = [self.dateFormatter dateFromString:[taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMDueAt]];
         }
-        self.taskDescription = [taskProperties objectForKey:kAlfrescoLegacyJSONBPMDescription];
-        self.priority = [taskProperties objectForKey:kAlfrescoLegacyJSONBPMPriority];
-        if ([taskProperties objectForKey:kAlfrescoLegacyJSONOwner] != [NSNull null])
+        self.taskDescription = [taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMDescription];
+        self.priority = [taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMPriority];
+        if ([taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONOwner] != [NSNull null])
         {
-            self.assigneeIdentifier = [taskProperties objectForKey:kAlfrescoLegacyJSONOwner];
+            self.assigneeIdentifier = [taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONOwner];
         }
     }
 }
@@ -117,15 +117,15 @@ static NSInteger kWorkflowTaskModelVersion = 1;
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeInteger:kWorkflowTaskModelVersion forKey:NSStringFromClass([self class])];
-    [aCoder encodeObject:self.identifier forKey:kAlfrescoPublicJSONIdentifier];
-    [aCoder encodeObject:self.processIdentifier forKey:kAlfrescoPublicJSONProcessID];
-    [aCoder encodeObject:self.processDefinitionIdentifier forKey:kAlfrescoPublicJSONProcessDefinitionID];
-    [aCoder encodeObject:self.startedAt forKey:kAlfrescoPublicJSONStartedAt];
-    [aCoder encodeObject:self.endedAt forKey:kAlfrescoPublicJSONEndedAt];
-    [aCoder encodeObject:self.dueAt forKey:kAlfrescoPublicJSONDueAt];
-    [aCoder encodeObject:self.taskDescription forKey:kAlfrescoPublicJSONDescription];
-    [aCoder encodeObject:self.priority forKey:kAlfrescoPublicJSONPriority];
-    [aCoder encodeObject:self.assigneeIdentifier forKey:kAlfrescoPublicJSONAssignee];
+    [aCoder encodeObject:self.identifier forKey:kAlfrescoWorkflowPublicJSONIdentifier];
+    [aCoder encodeObject:self.processIdentifier forKey:kAlfrescoWorkflowPublicJSONProcessID];
+    [aCoder encodeObject:self.processDefinitionIdentifier forKey:kAlfrescoWorkflowPublicJSONProcessDefinitionID];
+    [aCoder encodeObject:self.startedAt forKey:kAlfrescoWorkflowPublicJSONStartedAt];
+    [aCoder encodeObject:self.endedAt forKey:kAlfrescoWorkflowPublicJSONEndedAt];
+    [aCoder encodeObject:self.dueAt forKey:kAlfrescoWorkflowPublicJSONDueAt];
+    [aCoder encodeObject:self.taskDescription forKey:kAlfrescoWorkflowPublicJSONDescription];
+    [aCoder encodeObject:self.priority forKey:kAlfrescoWorkflowPublicJSONPriority];
+    [aCoder encodeObject:self.assigneeIdentifier forKey:kAlfrescoWorkflowPublicJSONAssignee];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -134,15 +134,15 @@ static NSInteger kWorkflowTaskModelVersion = 1;
     if (self)
     {
 //        NSInteger version = [aDecoder decodeIntegerForKey:NSStringFromClass([self class])];
-        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONIdentifier];
-        self.processIdentifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessID];
-        self.processDefinitionIdentifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONProcessDefinitionID];
-        self.startedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONStartedAt];
-        self.endedAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONEndedAt];
-        self.dueAt = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDueAt];
-        self.taskDescription = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONDescription];
-        self.priority = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONPriority];
-        self.assigneeIdentifier = [aDecoder decodeObjectForKey:kAlfrescoPublicJSONAssignee];
+        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONIdentifier];
+        self.processIdentifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONProcessID];
+        self.processDefinitionIdentifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONProcessDefinitionID];
+        self.startedAt = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONStartedAt];
+        self.endedAt = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONEndedAt];
+        self.dueAt = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONDueAt];
+        self.taskDescription = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONDescription];
+        self.priority = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONPriority];
+        self.assigneeIdentifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONAssignee];
     }
     return self;
 }
