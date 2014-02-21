@@ -37,6 +37,7 @@ if type -p appledoc &>/dev/null; then
     --output "$ALFRESCO_SDK_HELP" \
     --exit-threshold 2 \
     --ignore ".m" \
+    --ignore "build" \
     --ignore "AlfrescoSDKTests" \
     --ignore "CMIS" \
     --keep-intermediate-files \
