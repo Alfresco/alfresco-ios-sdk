@@ -484,7 +484,7 @@
                         XCTAssertNil(resolvedTask, @"Resolved task should be nil");
                         XCTAssertNotNil(resolveError, @"Resolving using the Old API should have thrown an error");
                         XCTAssertEqualObjects(resolveError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, resolveError.localizedDescription);
-                        XCTAssertTrue(resolveError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %li", kAlfrescoErrorCodeWorkflowFunctionNotSupported, (long)resolveError.code);
+                        XCTAssertTrue(resolveError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %ld, instead got back %li", (long)kAlfrescoErrorCodeWorkflowFunctionNotSupported, (long)resolveError.code);
                         
                         self.lastTestSuccessful = YES;
                         self.callbackCompleted = YES;

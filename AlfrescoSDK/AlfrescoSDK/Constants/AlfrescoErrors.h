@@ -25,7 +25,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-typedef enum 
+typedef NS_ENUM(NSInteger, AlfrescoErrorCodes)
 {
     kAlfrescoErrorCodeUnknown = 0,
     kAlfrescoErrorCodeHTTPResponse = 1,
@@ -90,7 +90,7 @@ typedef enum
     kAlfrescoErrorCodeWorkflowNoProcessFound = 2002,
     kAlfrescoErrorCodeWorkflowNoTaskFound = 2003
     
-}AlfrescoErrorCodes;
+};
 
 extern NSString * const kAlfrescoErrorDomainName;
 extern NSString * const kAlfrescoErrorDescriptionUnknown;

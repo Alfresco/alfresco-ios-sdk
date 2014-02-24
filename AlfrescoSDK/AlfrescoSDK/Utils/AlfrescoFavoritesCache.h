@@ -21,13 +21,13 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoSession.h"
 
-typedef enum
+typedef NS_ENUM(NSInteger, AlfrescoFavoriteType)
 {
     AlfrescoFavoriteDocument = 0,
     AlfrescoFavoriteFolder,
     AlfrescoFavoriteNode,
     
-} AlfrescoFavoriteType;
+};
 
 @interface AlfrescoFavoritesCache : NSObject
 

@@ -340,7 +340,7 @@
                             XCTAssertNil(contentFile, @"Content file should be nil");
                             XCTAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
                             XCTAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
-                            XCTAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %li", kAlfrescoErrorCodeWorkflowFunctionNotSupported, (long)retrieveImageError.code);
+                            XCTAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %ld, instead got back %li", (long)kAlfrescoErrorCodeWorkflowFunctionNotSupported, (long)retrieveImageError.code);
                      
                             self.lastTestSuccessful = YES;
                             self.callbackCompleted = YES;
@@ -413,7 +413,7 @@
                             XCTAssertFalse(succeeded, @"Success flag should be false.");
                             XCTAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
                             XCTAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
-                            XCTAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %li", kAlfrescoErrorCodeWorkflowFunctionNotSupported, (long)retrieveImageError.code);
+                            XCTAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %ld, instead got back %li", (long)kAlfrescoErrorCodeWorkflowFunctionNotSupported, (long)retrieveImageError.code);
                         
                             self.lastTestSuccessful = YES;
                             self.callbackCompleted = YES;
@@ -438,7 +438,7 @@
                             XCTAssertFalse(succeeded, @"Success flag should be false.");
                             XCTAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
                             XCTAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
-                            XCTAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %li", kAlfrescoErrorCodeWorkflowFunctionNotSupported, (long)retrieveImageError.code);
+                            XCTAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %ld, instead got back %li", (long)kAlfrescoErrorCodeWorkflowFunctionNotSupported, (long)retrieveImageError.code);
                             
                             self.lastTestSuccessful = YES;
                             self.callbackCompleted = YES;

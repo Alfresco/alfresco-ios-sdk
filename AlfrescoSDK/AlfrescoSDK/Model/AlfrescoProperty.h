@@ -25,7 +25,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
 
-typedef enum 
+typedef NS_ENUM(NSInteger, AlfrescoPropertyType)
 {
     AlfrescoPropertyTypeString = 0,
     AlfrescoPropertyTypeId,
@@ -33,7 +33,7 @@ typedef enum
     AlfrescoPropertyTypeDecimal,
     AlfrescoPropertyTypeDateTime,
     AlfrescoPropertyTypeBoolean,
-} AlfrescoPropertyType;
+};
 
 @interface AlfrescoProperty : NSObject <NSCoding>
 

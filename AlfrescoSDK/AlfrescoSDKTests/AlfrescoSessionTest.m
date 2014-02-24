@@ -730,7 +730,7 @@
                                                                        {
                                                                            self.lastTestSuccessful = YES;
                                                                            /// The CMIS error code for cancelled requests is kCMISErrorCodeCancelled = 6
-                                                                           XCTAssertEqual([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %ld", kAlfrescoErrorCodeNetworkRequestCancelled, (long)[error code]);
+                                                                           XCTAssertEqual([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %ld, but instead we get %ld", (long)kAlfrescoErrorCodeNetworkRequestCancelled, (long)[error code]);
                                                                        }
                                                                        else
                                                                        {

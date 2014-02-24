@@ -26,6 +26,7 @@
  * @name supported SQL search language definitions (at present only CMIS)
  --------------------------------------------------------------------------------------- */
 
-typedef enum {
+typedef NS_ENUM(NSInteger, AlfrescoSearchLanguage)
+{
     AlfrescoSearchLanguageCMIS = 0
-}AlfrescoSearchLanguage;
+};
