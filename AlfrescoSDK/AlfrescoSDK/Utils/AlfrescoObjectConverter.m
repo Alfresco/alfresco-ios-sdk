@@ -165,7 +165,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         return nil;
     }
-    if ([jsonSite isKindOfClass:[NSDictionary class]] == NO)
+    if (![jsonSite isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {

@@ -546,7 +546,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     {
                         sortedChildren = @[];
                     }
-                    pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedChildren hasMoreItems:pagedResult.hasMoreItems totalItems:pagedResult.numItems];
+                    pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedChildren hasMoreItems:pagedResult.hasMoreItems totalItems:(int)pagedResult.numItems];
 //                    pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedChildren listingContext:listingContext];
                     completionBlock(pagingResult, nil);
                 }

@@ -822,7 +822,7 @@
              }
              else
              {
-                 XCTAssertTrue(array.count > 0, @"Expected folder children but got %i", array.count);
+                 XCTAssertTrue(array.count > 0, @"Expected folder children but got %lu", (unsigned long)array.count);
                  if (self.isCloud)
                  {
                      XCTAssertTrue([self nodeArray:array containsName:@"Sites"], @"Folder children should contain Sites");
@@ -978,7 +978,7 @@
             else
             {
                 XCTAssertTrue(pagingResult.objects.count > 0, @"Expecting to return more than one result");
-                XCTAssertTrue(pagingResult.objects.count <= 10, @"Expecting a maximum of 10 results, instead got %i", pagingResult.objects.count);
+                XCTAssertTrue(pagingResult.objects.count <= 10, @"Expecting a maximum of 10 results, instead got %lu", (unsigned long)pagingResult.objects.count);
                 
                 // check if array is sorted correctly
                 NSArray *sortedArray = [pagingResult.objects sortedArrayUsingComparator:^(id a, id b) {
@@ -1270,7 +1270,7 @@
                      }
                      else
                      {
-                         XCTAssertTrue(children.count == 0, @"folder should be empty, instead we get %d entries",children.count);
+                         XCTAssertTrue(children.count == 0, @"folder should be empty, instead we get %lu entries", (unsigned long)children.count);
                          [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
                           {
                               if (!success)
@@ -1350,7 +1350,7 @@
                      }
                      else
                      {
-                         XCTAssertTrue(children.count == 0, @"folder should contain no documents, instead we get %d entries",children.count);
+                         XCTAssertTrue(children.count == 0, @"folder should contain no documents, instead we get %lu entries", (unsigned long)children.count);
                          [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
                           {
                               if (!success)
@@ -1429,7 +1429,7 @@
                      }
                      else
                      {
-                         XCTAssertTrue(children.count == 0, @"folder should contain no folders, instead we get %d entries",children.count);
+                         XCTAssertTrue(children.count == 0, @"folder should contain no folders, instead we get %lu entries", (unsigned long)children.count);
                          [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
                           {
                               if (!success)
@@ -1487,7 +1487,7 @@
             }
             else
             {
-                __block int numberOfChildren = array.count;
+                __block NSUInteger numberOfChildren = array.count;
                 XCTAssertFalse(0 == numberOfChildren, @"There should be at least 1 child element in the folder");
                 [self.dfService retrieveChildrenInFolder:self.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                  {
@@ -1498,9 +1498,9 @@
                      }
                      else
                      {
-                         XCTAssertTrue(pagingResult.totalItems <= numberOfChildren, @"We expected that the total number of items should be less equal %d, but instead we got %d", numberOfChildren, pagingResult.totalItems);
+                         XCTAssertTrue(pagingResult.totalItems <= numberOfChildren, @"We expected that the total number of items should be less equal %lu, but instead we got %lu", (unsigned long)numberOfChildren, (unsigned long)pagingResult.totalItems);
                          
-                         XCTAssertTrue(pagingResult.objects.count == 1 , @"We are asking for %d maxItems but got back %d", maxItems, pagingResult.objects.count);
+                         XCTAssertTrue(pagingResult.objects.count == 1 , @"We are asking for %d maxItems but got back %lu", maxItems, (unsigned long)pagingResult.objects.count);
                          
                          if (numberOfChildren > maxItems)
                          {
@@ -1551,14 +1551,14 @@
              else
              {
                  XCTAssertTrue(pagingResult.totalItems > 0, @"Expected folder children");
-                 XCTAssertTrue(pagingResult.objects.count > 0, @"Expected at least 1 folder children returned, but we got %d instead", pagingResult.objects.count);
+                 XCTAssertTrue(pagingResult.objects.count > 0, @"Expected at least 1 folder children returned, but we got %lu instead", (unsigned long)pagingResult.objects.count);
                  if (pagingResult.totalItems > 50)
                  {
                      XCTAssertTrue(pagingResult.hasMoreItems, @"Expected that there are more items left");
                  }
                  else
                  {
-                     XCTAssertFalse(pagingResult.hasMoreItems, @"We should not have more than 50 items in total, but instead we have %d",pagingResult.totalItems);
+                     XCTAssertFalse(pagingResult.hasMoreItems, @"We should not have more than 50 items in total, but instead we have %lu", (unsigned long)pagingResult.totalItems);
                  }
                  
                  self.lastTestSuccessful = YES;
@@ -1805,7 +1805,7 @@
             }
             else
             {
-                __block int numberOfDocs = foundDocuments.count;
+                __block NSUInteger numberOfDocs = foundDocuments.count;
                 XCTAssertFalse(0 == numberOfDocs, @"We should have at least 1 document in the folder. Instead we got none");
                 [self.dfService retrieveDocumentsInFolder:self.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                  {
@@ -1816,15 +1816,15 @@
                      }
                      else
                      {
-                         XCTAssertTrue(pagingResult.totalItems == numberOfDocs, @"Expected more than %d documents in total, but got %d",maxItems, pagingResult.totalItems);
-                         int maxToBeFound = numberOfDocs - skipCount;
+                         XCTAssertTrue(pagingResult.totalItems == numberOfDocs, @"Expected more than %d documents in total, but got %d", maxItems, pagingResult.totalItems);
+                         NSInteger maxToBeFound = numberOfDocs - skipCount;
                          if (maxToBeFound < 0)
                          {
                              maxToBeFound = 0;
                          }
                          if (maxItems <= maxToBeFound)
                          {
-                             XCTAssertTrue(pagingResult.objects.count == maxItems, @"Expected %d documents, but got %d", maxItems, pagingResult.objects.count);
+                             XCTAssertTrue(pagingResult.objects.count == maxItems, @"Expected %d documents, but got %lu", maxItems, (unsigned long)pagingResult.objects.count);
                              if (maxItems < maxToBeFound)
                              {
                                  XCTAssertTrue(pagingResult.hasMoreItems, @"we should have more items than we got back");
@@ -1836,7 +1836,7 @@
                          }
                          else
                          {
-                             XCTAssertTrue(pagingResult.objects.count == maxToBeFound, @"Expected %d documents, but got %d", maxToBeFound, pagingResult.objects.count);
+                             XCTAssertTrue(pagingResult.objects.count == maxToBeFound, @"Expected %ld documents, but got %lu", (long)maxToBeFound, (unsigned long)pagingResult.objects.count);
                              XCTAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
                          }
                          
@@ -1881,7 +1881,7 @@
              }
              else
              {
-                 XCTAssertTrue(pagingResult.objects.count > 0, @"Expected more than 0 documents, but instead we got %d",pagingResult.objects.count);
+                 XCTAssertTrue(pagingResult.objects.count > 0, @"Expected more than 0 documents, but instead we got %lu", (unsigned long)pagingResult.objects.count);
                  XCTAssertTrue(pagingResult.totalItems > 2, @"Expected more than 2 documents in total");
                  
                  self.lastTestSuccessful = YES;
@@ -1979,7 +1979,7 @@
             }
             else
             {
-                __block int numberOfFolders = foundFolders.count;
+                __block NSUInteger numberOfFolders = foundFolders.count;
                 [self.dfService retrieveFoldersInFolder:self.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
                  {
                      if (nil == pagingResult)
@@ -1989,11 +1989,11 @@
                      }
                      else
                      {
-                         XCTAssertTrue(pagingResult.totalItems == numberOfFolders, @"Expected %d folders in total, but we have %d",numberOfFolders, pagingResult.totalItems);
+                         XCTAssertTrue(pagingResult.totalItems == numberOfFolders, @"Expected %lu folders in total, but we have %lu", (unsigned long)numberOfFolders, (unsigned long)pagingResult.totalItems);
                          
                          if (numberOfFolders > maxItems)
                          {
-                             XCTAssertTrue(pagingResult.objects.count == maxItems, @"Expected at least %d folders, but got back %d", maxItems, pagingResult.objects.count);
+                             XCTAssertTrue(pagingResult.objects.count == maxItems, @"Expected at least %d folders, but got back %lu", maxItems, (unsigned long)pagingResult.objects.count);
                              if (numberOfFolders == maxItems)
                              {
                                  XCTAssertFalse(pagingResult.hasMoreItems, @"Expected no more folders available, but instead it says there are more items");
@@ -2005,7 +2005,7 @@
                          }
                          else
                          {
-                             XCTAssertTrue(pagingResult.objects.count == numberOfFolders, @"Expected at least %d folders, but got back %d", numberOfFolders, pagingResult.objects.count);
+                             XCTAssertTrue(pagingResult.objects.count == numberOfFolders, @"Expected at least %lu folders, but got back %lu", (unsigned long)numberOfFolders, (unsigned long)pagingResult.objects.count);
                              XCTAssertFalse(pagingResult.hasMoreItems, @"Expected no more folders available, but instead it says there are more items");
                          }
                          self.lastTestSuccessful = YES;
@@ -3262,7 +3262,7 @@
              }
              else
              {
-                 XCTAssertTrue(array.count > 0, @"Expected folder children but got %i", array.count);
+                 XCTAssertTrue(array.count > 0, @"Expected folder children but got %lu", (unsigned long)array.count);
                  XCTAssertTrue([self nodeArray:array containsName:@"Unit Test Subfolder"], @"Folder children should contain 'Unit Test Subfolder'");
                  AlfrescoDocument *testVersionedDoc = nil;
                  for (AlfrescoNode *node in array)
@@ -3902,7 +3902,7 @@
             else
             {
                 XCTAssertNotNil(entireArray, @"Expetced array to not be nil");
-                XCTAssertTrue([entireArray count] >= 5, @"Expected the entire array to return more than or equal to 5 items, but instead got back %i", [entireArray count]);
+                XCTAssertTrue([entireArray count] >= 5, @"Expected the entire array to return more than or equal to 5 items, but instead got back %lu", (unsigned long)entireArray.count);
                 
                 AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:3 skipCount:2];
                 
@@ -3916,7 +3916,7 @@
                     else
                     {
                         XCTAssertNotNil(pagingResult.objects, @"Expecting the objects array not to be nil");
-                        XCTAssertTrue([pagingResult.objects count] == 3, @"Expected the results of the objects array to contain 3 items, instead got back %i", [pagingResult.objects count]);
+                        XCTAssertTrue([pagingResult.objects count] == 3, @"Expected the results of the objects array to contain 3 items, instead got back %lu", (unsigned long)pagingResult.objects.count);
                         
                         int matchedNodes = 0;
                         
@@ -3933,7 +3933,7 @@
                             }
                         }
                         
-                        XCTAssertTrue(matchedNodes == pagingResult.objects.count, @"We expected to match the number of paged nodes with the original list. Expected %d but got %d", pagingResult.objects.count, matchedNodes);
+                        XCTAssertTrue(matchedNodes == pagingResult.objects.count, @"We expected to match the number of paged nodes with the original list. Expected %lu but got %d", (unsigned long)pagingResult.objects.count, matchedNodes);
                         
                         self.lastTestSuccessful = YES;
                     }
@@ -4720,7 +4720,7 @@
             {
                 XCTAssertNil(error, @"The retrieval should not have caused an error");
                 XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
-                XCTAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %i", [pagingResult.objects count]);
+                XCTAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %lu", (unsigned long)pagingResult.objects.count);
                 
                 for (AlfrescoNode *node in pagingResult.objects)
                 {
@@ -4793,7 +4793,7 @@
             {
                 XCTAssertNil(error, @"The retrieval should not have caused an error");
                 XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
-                XCTAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %i", [pagingResult.objects count]);
+                XCTAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %lu", (unsigned long)pagingResult.objects.count);
 
                 for (AlfrescoNode *node in pagingResult.objects)
                 {
@@ -5148,7 +5148,7 @@
             {
                 XCTAssertNotNil(pagingResult, @"The paging result should not be nil");
                 
-                XCTAssertTrue([pagingResult.objects count] == maxItemsExpected, @"Expected the objects array to be of size %i, instead got back a size %i", maxItemsExpected, [pagingResult.objects count]);
+                XCTAssertTrue([pagingResult.objects count] == maxItemsExpected, @"Expected the objects array to be of size %i, instead got back a size %lu", maxItemsExpected, (unsigned long)pagingResult.objects.count);
                 XCTAssertTrue(pagingResult.hasMoreItems, @"Expected the paging result to have more items");
                 XCTAssertTrue(pagingResult.totalItems > maxItemsExpected, @"Expected the paging result to have more than %i items as the total number, but instead got back %i", maxItemsExpected, pagingResult.totalItems);
                 
@@ -5612,7 +5612,7 @@
     /**
      * Note: This test assumes each repository has AT LEAST TWO DOCUMENTS marked as favorites for the default unit test user
      */
-    NSInteger numberOfFavoriteDocuments = 2;
+    int numberOfFavoriteDocuments = 2;
     
     if (self.setUpSuccess)
     {
@@ -5628,7 +5628,7 @@
             else
             {
                 XCTAssertNotNil(pagingResult, @"The paging result should not be nil");
-                XCTAssertTrue([pagingResult.objects count] == numberOfFavoriteDocuments, @"Expected the objects array to be of size %i, instead got back a size %i", numberOfFavoriteDocuments, [pagingResult.objects count]);
+                XCTAssertTrue(pagingResult.objects.count == numberOfFavoriteDocuments, @"Expected the objects array to be of size %i, instead got back a size %lu", numberOfFavoriteDocuments, (unsigned long)pagingResult.objects.count);
 
                 AlfrescoLogDebug(@"Favorites Documents with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
                 self.lastTestSuccessful = YES;
@@ -5680,7 +5680,7 @@
     /**
      * Note: This test assumes each repository has AT LEAST ONE FOLDER marked as favorites for the default unit test user
      */
-    NSInteger numberOfFavoriteFolders = 1;
+    int numberOfFavoriteFolders = 1;
     
     if (self.setUpSuccess)
     {
@@ -5696,7 +5696,7 @@
             else
             {
                 XCTAssertNotNil(pagingResult, @"The paging result should not be nil");
-                XCTAssertTrue([pagingResult.objects count] == numberOfFavoriteFolders, @"Expected the objects array to be of size %i, instead got back a size %i", numberOfFavoriteFolders, [pagingResult.objects count]);
+                XCTAssertTrue(pagingResult.objects.count == numberOfFavoriteFolders, @"Expected the objects array to be of size %i, instead got back a size %lu", numberOfFavoriteFolders, (unsigned long)pagingResult.objects.count);
                 
                 AlfrescoLogDebug(@"Favorites Folders with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
                 self.lastTestSuccessful = YES;
@@ -5748,7 +5748,7 @@
     /**
      * Note: This test assumes each repository has AT LEAST THREE NODES marked as favorites for the default unit test user
      */
-    NSInteger numberOfFavoriteNodes = 3;
+    int numberOfFavoriteNodes = 3;
     
     if (self.setUpSuccess)
     {
@@ -5764,7 +5764,7 @@
             else
             {
                 XCTAssertNotNil(pagingResult, @"The paging result should not be nil");
-                XCTAssertTrue([pagingResult.objects count] == numberOfFavoriteNodes, @"Expected the objects array to be of size %i, instead got back a size %i", numberOfFavoriteNodes, [pagingResult.objects count]);
+                XCTAssertTrue(pagingResult.objects.count == numberOfFavoriteNodes, @"Expected the objects array to be of size %i, instead got back a size %lu", numberOfFavoriteNodes, (unsigned long)pagingResult.objects.count);
 
                 AlfrescoLogDebug(@"Favorites Nodes with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
                 self.lastTestSuccessful = YES;
@@ -5970,8 +5970,9 @@
 
 - (BOOL)nodeArray:(NSArray *)nodeArray containsName:(NSString *)name
 {
-    for (AlfrescoNode *node in nodeArray) {
-        if([node.name isEqualToString:name] == YES)
+    for (AlfrescoNode *node in nodeArray)
+    {
+        if ([node.name isEqualToString:name])
         {
             return YES;
         }

@@ -155,7 +155,7 @@
                             }
                             else
                             {
-                                XCTAssertTrue(0 < pendingSites.count, @"We should have at least 1 requested site in the array, instead we got %d", pendingSites.count);
+                                XCTAssertTrue(0 < pendingSites.count, @"We should have at least 1 requested site in the array, instead we got %lu", (unsigned long)pendingSites.count);
                                 [self.siteService cancelPendingJoinRequestForSite:requestedSite completionBlock:^(AlfrescoSite *cancelledSite, NSError *cancelError) {
                                     if (nil == cancelledSite)
                                     {

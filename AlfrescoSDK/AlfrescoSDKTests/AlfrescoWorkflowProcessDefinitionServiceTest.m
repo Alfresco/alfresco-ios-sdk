@@ -88,7 +88,7 @@
             {
                 XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
                 XCTAssertTrue(pagingResult.objects.count > 1, @"Paging result should contain more than 1 process");
-                XCTAssertTrue(pagingResult.objects.count == maxItemsToRetrieve, @"Paging result should be %i, instead got back %i", maxItemsToRetrieve, pagingResult.objects.count);
+                XCTAssertTrue(pagingResult.objects.count == maxItemsToRetrieve, @"Paging result should be %i, instead got back %lu", maxItemsToRetrieve, (unsigned long)pagingResult.objects.count);
                 
                 // COMMENTED OUT FOR NOW - LOOK INTO WHY MORE ITEMS ARE BEING RETRIEVED
 //                XCTAssertTrue(pagingResult.totalItems == maxItemsToRetrieve, @"Paging result should be %i, instead got back %i", maxItemsToRetrieve, pagingResult.totalItems);

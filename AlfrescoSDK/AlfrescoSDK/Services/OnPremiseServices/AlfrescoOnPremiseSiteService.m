@@ -709,7 +709,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([jsonRequestObj isKindOfClass:[NSDictionary class]] == NO)
+    if (![jsonRequestObj isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -765,7 +765,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([jsonRequestObj isKindOfClass:[NSDictionary class]] == NO)
+    if (![jsonRequestObj isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -824,9 +824,9 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([jsonSiteArray isKindOfClass:[NSArray class]] == NO)
+    if (![jsonSiteArray isKindOfClass:[NSArray class]])
     {
-        if([jsonSiteArray isKindOfClass:[NSDictionary class]] == YES && [[jsonSiteArray valueForKeyPath:@"status.code"] isEqualToNumber:@404])
+        if ([jsonSiteArray isKindOfClass:[NSDictionary class]] && [[jsonSiteArray valueForKeyPath:@"status.code"] isEqualToNumber:@404])
         {
             // no results found
             return @[];
@@ -876,7 +876,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([jsonSite isKindOfClass:[NSDictionary class]] == NO)
+    if (![jsonSite isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -997,7 +997,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([favoriteSitesObject isKindOfClass:[NSDictionary class]] == NO)
+    if (![favoriteSitesObject isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {

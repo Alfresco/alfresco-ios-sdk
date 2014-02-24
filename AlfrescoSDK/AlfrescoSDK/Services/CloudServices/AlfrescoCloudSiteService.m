@@ -741,7 +741,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([jsonRequestObj isKindOfClass:[NSDictionary class]] == NO)
+    if (![jsonRequestObj isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -779,7 +779,7 @@
             *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
             return nil;
         }
-        else if([siteObj isKindOfClass:[NSDictionary class]] == NO)
+        else if (![siteObj isKindOfClass:[NSDictionary class]])
         {
             NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
             *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];

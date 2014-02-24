@@ -169,7 +169,7 @@
                 else
                 {
                     BOOL hasMoreItems = [pagingDetails[kAlfrescoLegacyJSONHasMoreItems] boolValue];
-                    int totalItems = [pagingDetails[kAlfrescoLegacyJSONTotal] integerValue];
+                    int totalItems = [pagingDetails[kAlfrescoLegacyJSONTotal] intValue];
                     
                     AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:comments hasMoreItems:hasMoreItems totalItems:totalItems];
                     completionBlock(pagingResult, conversionError);

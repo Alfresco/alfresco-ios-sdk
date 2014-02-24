@@ -142,7 +142,7 @@
                                                                     supportedKeys:self.supportedSortKeys
                                                                        defaultKey:self.defaultSortKey
                                                                         ascending:listingContext.sortAscending];
-                 AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:objectList.hasMoreItems totalItems:sortedArray.count];
+                 AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:objectList.hasMoreItems totalItems:(int)sortedArray.count];
                  completionBlock(pagingResult, nil);
              }
              

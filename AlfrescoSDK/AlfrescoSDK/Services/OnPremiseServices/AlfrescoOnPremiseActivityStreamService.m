@@ -188,9 +188,9 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
         return nil;
     }
-    if ([jsonActivityStreamArray isKindOfClass:[NSArray class]] == NO)
+    if (![jsonActivityStreamArray isKindOfClass:[NSArray class]])
     {
-        if([jsonActivityStreamArray isKindOfClass:[NSDictionary class]] == YES &&
+        if ([jsonActivityStreamArray isKindOfClass:[NSDictionary class]] &&
            [[jsonActivityStreamArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
         {
             // no results found

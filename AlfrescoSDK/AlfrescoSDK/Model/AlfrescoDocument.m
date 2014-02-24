@@ -66,7 +66,7 @@ static NSInteger kDocumentModelVersion = 1;
 {
     [super encodeWithCoder:aCoder];
     
-    [aCoder encodeInt:kDocumentModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kDocumentModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
     [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
     [aCoder encodeBool:self.isLatestVersion forKey:kCMISPropertyIsLatestVersion];

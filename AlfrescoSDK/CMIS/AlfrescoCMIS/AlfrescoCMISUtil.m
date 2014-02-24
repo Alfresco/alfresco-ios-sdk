@@ -105,9 +105,10 @@
 
 + (NSError *)alfrescoErrorWithCMISError:(NSError *)cmisError
 {
-    int cmisErrorCode = [cmisError code];
+    NSInteger cmisErrorCode = [cmisError code];
     NSError *alfrescoError = nil;
-    switch (cmisErrorCode) {
+    switch (cmisErrorCode)
+    {
         case kCMISErrorCodeNoReturn:
             alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
             break;

@@ -244,8 +244,8 @@
     {
         AlfrescoListingContext *defaultListingContext = [self.currentSession defaultListingContext];
         
-        NSInteger expectedMaxItems = 50;
-        NSInteger expectedSkipCount = 0;
+        int expectedMaxItems = 50;
+        int expectedSkipCount = 0;
         
         XCTAssertNotNil(defaultListingContext, @"Expected a default listing context within the current session");
         XCTAssertNil(defaultListingContext.sortProperty, @"Expected the default sort property to be nil");
@@ -730,7 +730,7 @@
                                                                        {
                                                                            self.lastTestSuccessful = YES;
                                                                            /// The CMIS error code for cancelled requests is kCMISErrorCodeCancelled = 6
-                                                                           XCTAssertEqual([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %d", kAlfrescoErrorCodeNetworkRequestCancelled, [error code]);
+                                                                           XCTAssertEqual([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %ld", kAlfrescoErrorCodeNetworkRequestCancelled, (long)[error code]);
                                                                        }
                                                                        else
                                                                        {

@@ -129,7 +129,7 @@
                  }
                  else
                  {
-                     XCTAssertTrue(array.count == 0, @"expected no tags for the newly uploaded file, but we got %d ",array.count);
+                     XCTAssertTrue(array.count == 0, @"expected no tags for the newly uploaded file, but we got %lu", (unsigned long)array.count);
                      self.lastTestSuccessful = YES;
                  }
                  self.callbackCompleted = YES;
@@ -171,7 +171,7 @@
                  else
                  {
                      XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                     XCTAssertTrue(pagingResult.objects.count == 0, @"expected no tag response for newly uploaded file but got %d",pagingResult.objects.count);
+                     XCTAssertTrue(pagingResult.objects.count == 0, @"expected no tag response for newly uploaded file but got %lu", (unsigned long)pagingResult.objects.count);
                      self.lastTestSuccessful = YES;
                  }
                  self.callbackCompleted = YES;
@@ -221,9 +221,8 @@
                          }
                          else
                          {
-                             int count = tags.count;
                              XCTAssertNotNilWeakSelf(tags, @"tags should not be nil");
-                             XCTAssertTrueWeakSelf(count > 0, @"Count should be > 0, and is in fact %d",count);
+                             XCTAssertTrueWeakSelf(tags.count > 0, @"Count should be > 0, and is in fact %lu", (unsigned long)tags.count);
                              NSString *testTag = testtags[0];
                              BOOL found = NO;
                              for (AlfrescoTag *tag in tags)
@@ -240,8 +239,6 @@
                          weakSelf.callbackCompleted = YES;
                      }];
                  }
-                 
-                 
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];

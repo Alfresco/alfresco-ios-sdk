@@ -26,9 +26,9 @@
 @property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteDocuments;
 @property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteFolders;
 @property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteNodes;
-@property (nonatomic, assign, readwrite) NSInteger totalDocuments;
-@property (nonatomic, assign, readwrite) NSInteger totatlFolders;
-@property (nonatomic, assign, readwrite) NSInteger totalNodes;
+@property (nonatomic, assign, readwrite) int totalDocuments;
+@property (nonatomic, assign, readwrite) int totatlFolders;
+@property (nonatomic, assign, readwrite) int totalNodes;
 @end
 
 @implementation AlfrescoFavoritesCache

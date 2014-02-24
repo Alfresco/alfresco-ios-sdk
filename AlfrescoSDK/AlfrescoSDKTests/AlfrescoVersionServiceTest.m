@@ -191,7 +191,7 @@
                       else
                       {
                           XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                          XCTAssertTrue(pagingResult.objects.count == 1, @"expected 1 version, but got %d",pagingResult.objects.count);
+                          XCTAssertTrue(pagingResult.objects.count == 1, @"expected 1 version, but got %lu", (unsigned long)pagingResult.objects.count);
                           XCTAssertTrue(pagingResult.totalItems >= 1, @"expected at least 1 version in total");
                           
                           self.lastTestSuccessful = YES;
@@ -288,7 +288,7 @@
                                                   }
                                                   else
                                                   {
-                                                      XCTAssertTrue(versions.count == 2, @"the versions count should have been incremented to 2. Instead we got %d", versions.count);
+                                                      XCTAssertTrue(versions.count == 2, @"the versions count should have been incremented to 2. Instead we got %lu", (unsigned long)versions.count);
                                                       self.lastTestSuccessful = YES;
                                                       BOOL foundPreviousVersion = NO;
                                                       AlfrescoDocument *lastDocument = nil;

@@ -46,7 +46,7 @@
              else
              {
                  XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                 XCTAssertTrue(pagingResult.objects.count > 1, @"expected more than 1 activity entries, but got %d", pagingResult.objects.count);
+                 XCTAssertTrue(pagingResult.objects.count > 1, @"expected more than 1 activity entries, but got %lu", (unsigned long)pagingResult.objects.count);
                  XCTAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
                  
                  self.lastTestSuccessful = YES;

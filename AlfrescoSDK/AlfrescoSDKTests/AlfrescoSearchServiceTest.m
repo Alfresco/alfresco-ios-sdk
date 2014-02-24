@@ -55,7 +55,7 @@
                 else
                 {
                     XCTAssertNotNil(array, @"array should not be nil");
-                    XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d", array.count);
+                    XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got %lu", (unsigned long)array.count);
                     if (array.count == 0)
                     {
                         self.lastTestSuccessful = NO;
@@ -108,8 +108,8 @@
                 else
                 {
                     XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                    XCTAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result but got %d", pagingResult.objects.count);
-                    XCTAssertTrue(pagingResult.objects.count > 0, @"number of objects found in current page should be more than 0, but we got %d", pagingResult.objects.count);
+                    XCTAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result but got %lu", (unsigned long)pagingResult.objects.count);
+                    XCTAssertTrue(pagingResult.objects.count > 0, @"number of objects found in current page should be more than 0, but we got %lu", (unsigned long)pagingResult.objects.count);
                     self.lastTestSuccessful = YES;
                 }
                 self.callbackCompleted = YES;
@@ -149,7 +149,7 @@
                  {
                      AlfrescoLogDebug(@"search result array contains %d entries", array.count);
                      XCTAssertNotNil(array, @"array should not be nil");
-                     XCTAssertTrue(array.count >= 1, @"expected at least 1 search results but got %d",array.count);
+                     XCTAssertTrue(array.count >= 1, @"expected at least 1 search results but got %lu", (unsigned long)array.count);
                      if(array.count == 0)
                      {
                          self.lastTestSuccessful = NO;
@@ -203,7 +203,7 @@
                 {
                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
                     XCTAssertNotNil(array, @"array should not be nil");
-                    XCTAssertTrue(array.count > 0, @"expected >0 search results for OnPremise but got back %d",array.count);
+                    XCTAssertTrue(array.count > 0, @"expected >0 search results for OnPremise but got back %lu", (unsigned long)array.count);
                     self.lastTestSuccessful = YES;
                 }
                 self.callbackCompleted = YES;
@@ -243,7 +243,7 @@
                 {
                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
                     XCTAssertNotNil(array, @"array should not be nil");
-                    XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d",array.count);
+                    XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got %lu", (unsigned long)array.count);
                     if (array.count == 0)
                     {
                         self.lastTestSuccessful = NO;
@@ -296,7 +296,7 @@
                  {
                      AlfrescoLogDebug(@"search result array contains %d entries", array.count);
                      XCTAssertNotNil(array, @"array should not be nil");
-                     XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got back %d", array.count);
+                     XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got back %lu", (unsigned long)array.count);
                      if(array.count == 0)
                      {
                          self.lastTestSuccessful = NO;
@@ -420,7 +420,7 @@
                 else
                 {
                     XCTAssertNotNil(resultsArray, @"The results array returned was nil");
-                    XCTAssertTrue([resultsArray count] >= 1, @"Expected the results array to have atleast one result, instead got back %i", [resultsArray count]);
+                    XCTAssertTrue([resultsArray count] >= 1, @"Expected the results array to have atleast one result, instead got back %lu", (unsigned long)resultsArray.count);
                     
                     self.lastTestSuccessful = YES;
                 }
@@ -442,7 +442,7 @@
  */
 - (void)testSearchWithStatementWithListingContext
 {
-    static int MaxItems = 5;
+    static int maxItems = 5;
     
     if (self.setUpSuccess)
     {
@@ -450,7 +450,7 @@
         {
             self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
             
-            AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:MaxItems skipCount:0];
+            AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:0];
             
             NSString *searchStatement = @"SELECT * FROM cmis:document";
             
@@ -464,15 +464,15 @@
                 else
                 {
                     XCTAssertNotNil(pagingResult, @"Paging result was nil");
-                    XCTAssertTrue([pagingResult.objects count] >= 1, @"Expected the results to contain atleast one result, but instead got back %i", [pagingResult.objects count]);
+                    XCTAssertTrue([pagingResult.objects count] >= 1, @"Expected the results to contain atleast one result, but instead got back %lu", (unsigned long)pagingResult.objects.count);
                     
                     if (pagingResult.hasMoreItems)
                     {
-                        XCTAssertTrue([pagingResult.objects count] == MaxItems, @"Expected the objects array to contain %d objects, instead we got back %i", MaxItems, [pagingResult.objects count]);
+                        XCTAssertTrue(pagingResult.objects.count == maxItems, @"Expected the objects array to contain %d objects, instead we got back %lu", maxItems, (unsigned long)pagingResult.objects.count);
                     }
                     else
                     {
-                        XCTAssertTrue([pagingResult.objects count] <= MaxItems, @"Expected back %d items or less in the search result, instead got back %i", MaxItems, [pagingResult.objects count]);
+                        XCTAssertTrue(pagingResult.objects.count <= maxItems, @"Expected back %d items or less in the search result, instead got back %lu", maxItems, (unsigned long)pagingResult.objects.count);
                     }
                     
                     self.lastTestSuccessful = YES;

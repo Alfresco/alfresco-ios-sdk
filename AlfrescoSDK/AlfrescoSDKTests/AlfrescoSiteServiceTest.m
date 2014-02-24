@@ -33,23 +33,21 @@
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
         // get all sites
-        [self.siteService retrieveAllSitesWithCompletionBlock:^(NSArray *array, NSError *error)
-         {
-             if (nil == array)
-             {
-                 XCTAssertNil(array,@"if failure, the array should be nil");
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertNotNil(array,@"the array should not be nil");
-                 XCTAssertTrue(array.count > 2, @"Site count should be greater than 2 not %i", array.count);
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.siteService retrieveAllSitesWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (nil == array)
+            {
+                XCTAssertNil(array, @"the array should be nil");
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertNotNil(array,@"the array should not be nil");
+                XCTAssertTrue(array.count > 2, @"Site count should be greater than 2 not %lu", (unsigned long)array.count);
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -72,26 +70,23 @@
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
         // get all sites
-        [self.siteService retrieveAllSitesWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-         {
-             if (nil == pagingResult)
-             {
-                 XCTAssertNil(pagingResult,@"if failure, the paging result should be nil");
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertNotNil(pagingResult, @"paged result should not be nil");
-                 XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
-                 XCTAssertTrue(pagingResult.objects.count == 2, @"There should have been 2 sites in the objects array");
-                 self.lastTestSuccessful = YES;
-             }
-             
-             
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.siteService retrieveAllSitesWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                XCTAssertNil(pagingResult,@"if failure, the paging result should be nil");
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult, @"paged result should not be nil");
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                XCTAssertTrue(pagingResult.objects.count == 2, @"Site count should be 2 but was %lu", (unsigned long)pagingResult.objects.count);
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -112,27 +107,25 @@
     {
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrieveSitesWithCompletionBlock:^(NSArray *array, NSError *error)
-         {
-             if (nil == array)
-             {
-                 XCTAssertNil(array,@"if failure, the array should be nil");
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertNotNil(array,@"the array should not be nil");
-                 XCTAssertTrue(array.count > 1, @"Expected multiple sites");
-                 for (AlfrescoSite *site in array)
-                 {
-                     XCTAssertTrue(site.isMember, @"site %@ should be marked as being a member site", site.identifier);
-                 }
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.siteService retrieveSitesWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (nil == array)
+            {
+                XCTAssertNil(array,@"if failure, the array should be nil");
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertNotNil(array,@"The sites array should not be nil");
+                XCTAssertTrue(array.count > 1, @"Expected multiple sites but got zero");
+                for (AlfrescoSite *site in array)
+                {
+                    XCTAssertTrue(site.isMember, @"Site %@ should be marked as being a member site", site.identifier);
+                }
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -155,25 +148,24 @@
         
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrieveSitesWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-         {
-             if (nil == pagingResult)
-             {
-                 XCTAssertNil(pagingResult,@"if failure, the paging result should be nil");
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertNotNil(pagingResult, @"paged result should not be nil");
-                 for (AlfrescoSite *site in pagingResult.objects)
-                 {
-                     XCTAssertTrue(site.isMember, @"site %@ should be marked as being a member site", site.identifier);
-                 }
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-         }];
+        [self.siteService retrieveSitesWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                XCTAssertNil(pagingResult,@"if failure, the paging result should be nil");
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult, @"paged result should not be nil");
+                for (AlfrescoSite *site in pagingResult.objects)
+                {
+                    XCTAssertTrue(site.isMember, @"Site %@ should be marked as being a member site", site.identifier);
+                }
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -194,27 +186,25 @@
     {
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrieveFavoriteSitesWithCompletionBlock:^(NSArray *array, NSError *error)
-         {
-             if (nil == array)
-             {
-                 XCTAssertNil(array,@"if failure, the array should be nil");
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertNotNil(array,@"the array should not be nil");
-                 XCTAssertTrue(array.count >= 1, @"Expected multiple favorite sites but got %d",array.count);
-                 for (AlfrescoSite *site in array)
-                 {
-                     XCTAssertTrue(site.isFavorite, @"site %@ should be marked as favourite", site.identifier);
-                 }
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.siteService retrieveFavoriteSitesWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (nil == array)
+            {
+                XCTAssertNil(array,@"if failure, the array should be nil");
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertNotNil(array,@"the array should not be nil");
+                XCTAssertTrue(array.count >= 1, @"Expected multiple favorite sites but got %lu", (unsigned long)array.count);
+                for (AlfrescoSite *site in array)
+                {
+                    XCTAssertTrue(site.isFavorite, @"Site %@ should be marked as favourite", site.identifier);
+                }
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -226,7 +216,6 @@
 }
 
 
-
 /*
  @Unique_TCRef 50S0
  */
@@ -236,38 +225,35 @@
     {
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:1];
         
-        
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrieveFavoriteSitesWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-         {
-             if (nil == pagingResult)
-             {
-                 XCTAssertNil(pagingResult,@"if failure, the paging result should be nil");
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertNotNil(pagingResult, @"paged result should not be nil");
-                 XCTAssertTrue(pagingResult.totalItems >= 1, @"Total favorite site count should be at least 1, but we got %d", pagingResult.totalItems);
-                 if (pagingResult.totalItems > 1)
-                 {
-                     XCTAssertTrue(pagingResult.objects.count == 1, @"Favorite site count should be 1, instead we get %d", pagingResult.objects.count);
-                     for (AlfrescoSite *site in pagingResult.objects)
-                     {
-                         XCTAssertTrue(site.isFavorite, @"site %@ should be marked as favourite", site.identifier);
-                     }
-                 }
-                 else
-                 {
-                     XCTAssertTrue(pagingResult.objects.count == 0, @"Favorite site count should be 0, instead we get %d", pagingResult.objects.count);
-                 }
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.siteService retrieveFavoriteSitesWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                XCTAssertNil(pagingResult,@"if failure, the paging result should be nil");
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult, @"paged result should not be nil");
+                XCTAssertTrue(pagingResult.totalItems >= 1, @"Total favorite site count should be at least 1, but we got %d", pagingResult.totalItems);
+                if (pagingResult.totalItems > 1)
+                {
+                    XCTAssertTrue(pagingResult.objects.count == 1, @"Favorite site count should be 1, instead we get %lu", (unsigned long)pagingResult.objects.count);
+                    for (AlfrescoSite *site in pagingResult.objects)
+                    {
+                        XCTAssertTrue(site.isFavorite, @"site %@ should be marked as favourite", site.identifier);
+                    }
+                }
+                else
+                {
+                    XCTAssertTrue(pagingResult.objects.count == 0, @"Favorite site count should be 0, instead we get %lu", (unsigned long)pagingResult.objects.count);
+                }
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -289,24 +275,22 @@
         // get all sites
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrieveSiteWithShortName:self.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error)
-         {
-             if (nil == site || nil != error)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertTrue([site.shortName isEqualToString:self.testSiteName], @"Expected %@ site but got back %@", self.testSiteName, site.shortName);
-                 XCTAssertNotNil(site.title, @"site title should not be nil");
-                 XCTAssertNotNil(site.summary, @"site summary should not be nil");
-                 self.lastTestSuccessful = YES;
-             }
-             
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.siteService retrieveSiteWithShortName:self.testSiteName completionBlock:^(AlfrescoSite *site, NSError *error) {
+            if (nil == site || nil != error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertTrue([site.shortName isEqualToString:self.testSiteName], @"Expected %@ site but got back %@", self.testSiteName, site.shortName);
+                XCTAssertNotNil(site.title, @"site title should not be nil");
+                XCTAssertNotNil(site.summary, @"site summary should not be nil");
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -364,24 +348,22 @@
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
         // get document library folder for site
-        [self.siteService retrieveDocumentLibraryFolderForSite:self.testSiteName completionBlock:^(AlfrescoFolder *folder, NSError *error)
-         {
-             if (nil == folder)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertNotNil(folder, @"folder should not be nil");
-                 XCTAssertTrue([folder.name isEqualToString:@"documentLibrary"], @"Folder name should be documentLibrary");
-                 
-                 self.lastTestSuccessful = YES;
-             }
-             
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.siteService retrieveDocumentLibraryFolderForSite:self.testSiteName completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            if (nil == folder)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertNotNil(folder, @"folder should not be nil");
+                XCTAssertTrue([folder.name isEqualToString:@"documentLibrary"], @"Folder name should be documentLibrary");
+                
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -391,7 +373,6 @@
         XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
-
 
 
 /*
@@ -427,14 +408,13 @@
 }
 
 
-
 - (void)testRetrievePendingSitesForUser
 {
     if (self.setUpSuccess)
     {
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrievePendingSitesWithCompletionBlock:^(NSArray *array, NSError *error){
+        [self.siteService retrievePendingSitesWithCompletionBlock:^(NSArray *array, NSError *error) {
             if (nil == array)
             {
                 self.lastTestSuccessful = NO;
@@ -446,7 +426,7 @@
                 XCTAssertTrue(array.count >= 0, @"Array needs to be >= 0");
                 if (0 < array.count)
                 {
-                    [array enumerateObjectsUsingBlock:^(AlfrescoSite *site, NSUInteger index, BOOL *stop){
+                    [array enumerateObjectsUsingBlock:^(AlfrescoSite *site, NSUInteger index, BOOL *stop) {
                         XCTAssertTrue(site.isPendingMember, @"The requested site should be in state isPendingMember, but appears not to be.");
                     }];
                 }
@@ -474,7 +454,7 @@
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:0];
         self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
         
-        [self.siteService retrievePendingSitesWithListingContext:paging completionblock:^(AlfrescoPagingResult *pagingResult, NSError *error){
+        [self.siteService retrievePendingSitesWithListingContext:paging completionblock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
             if (nil == pagingResult)
             {
                 self.lastTestSuccessful = NO;
@@ -486,7 +466,7 @@
                 XCTAssertTrue(pagingResult.objects.count >= 0, @"Array needs to be >= 0");
                 if (0 < pagingResult.objects.count)
                 {
-                    [pagingResult.objects enumerateObjectsUsingBlock:^(AlfrescoSite *site, NSUInteger index, BOOL *stop){
+                    [pagingResult.objects enumerateObjectsUsingBlock:^(AlfrescoSite *site, NSUInteger index, BOOL *stop) {
                         XCTAssertTrue(site.isPendingMember, @"The requested site should be in state isPendingMember, but appears not to be.");
                     }];
                 }
@@ -573,7 +553,7 @@
                                      else
                                      {
                                          // we know there are more results, check paging result is correct
-                                         XCTAssertTrue(pagingResult.totalItems == allSiteMembers.count, @"Expecting the paging totalItems count to be the same as the number of site members: %d", allSiteMembers.count);
+                                         XCTAssertTrue(pagingResult.totalItems == allSiteMembers.count, @"Expecting the paging totalItems count to be the same as the number of site members: %lu", (unsigned long)allSiteMembers.count);
                                          XCTAssertTrue(pagingResult.hasMoreItems, @"Expected the paging result to indicate there were more items");
                                          
                                          // make sure the object type is correct
@@ -620,24 +600,24 @@
              else
              {
                  [self.siteService searchMembersOfSite:site keywords:self.userName listingContext:nil
-                                           completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
-                         if (pagingResult == nil)
-                         {
-                             self.lastTestSuccessful = NO;
-                             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                         }
-                         else
-                         {
-                             // there should be one result
-                             XCTAssertTrue(pagingResult.objects.count == 1, @"Exepcted to find 1 result");
-                             XCTAssertTrue(pagingResult.totalItems == 1, @"Expecting the paging totalItems count to be 1 but it was: %d", pagingResult.totalItems);
-                             XCTAssertFalse(pagingResult.hasMoreItems, @"Expected the paging result to indicate there were no more items");
-                             XCTAssertTrue([pagingResult.objects.firstObject isKindOfClass:[AlfrescoPerson class]], @"Expected to find an AlfrescoPerson object in the objects array but found: %@", pagingResult.objects.firstObject);
-                             
-                             self.lastTestSuccessful = YES;
-                         }
-                         self.callbackCompleted = YES;
-                     }];
+                                       completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                     if (pagingResult == nil)
+                     {
+                         self.lastTestSuccessful = NO;
+                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     }
+                     else
+                     {
+                         // there should be one result
+                         XCTAssertTrue(pagingResult.objects.count == 1, @"Exepcted to find 1 result");
+                         XCTAssertTrue(pagingResult.totalItems == 1, @"Expecting the paging totalItems count to be 1 but it was: %d", pagingResult.totalItems);
+                         XCTAssertFalse(pagingResult.hasMoreItems, @"Expected the paging result to indicate there were no more items");
+                         XCTAssertTrue([pagingResult.objects.firstObject isKindOfClass:[AlfrescoPerson class]], @"Expected to find an AlfrescoPerson object in the objects array but found: %@", pagingResult.objects.firstObject);
+                         
+                         self.lastTestSuccessful = YES;
+                     }
+                     self.callbackCompleted = YES;
+                 }];
              }
         }];
         
@@ -706,8 +686,9 @@
 
 - (BOOL)siteArray:(NSArray *)siteArray containsShortName:(NSString *)shortName
 {
-    for (AlfrescoSite *site in siteArray) {
-        if([site.shortName isEqualToString:shortName] == YES)
+    for (AlfrescoSite *site in siteArray)
+    {
+        if ([site.shortName isEqualToString:shortName])
         {
             return YES;
         }
