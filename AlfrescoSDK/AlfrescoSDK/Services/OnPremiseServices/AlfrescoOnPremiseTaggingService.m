@@ -237,7 +237,7 @@
     if ([jsonTagArray isKindOfClass:[NSArray class]] == NO)
     {
         if([jsonTagArray isKindOfClass:[NSDictionary class]] == YES &&
-           [[jsonTagArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+           [[jsonTagArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
         {
             // no results found
             *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeTagging];

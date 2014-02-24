@@ -60,22 +60,22 @@ static NSInteger kPermissionsModelVersion = 1;
     self = [self init];
     if (self)
     {
-        self.canEdit = [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanUpdateProperties]];
-        self.canDelete = [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanDeleteObject]];
-        self.canAddChildren = ([permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanAddObjectToFolder]] ||
-                               [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanCreateDocument]] ||
-                               [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanCreateFolder]]);
+        self.canEdit = [permissionsSet containsObject:@(CMISActionCanUpdateProperties)];
+        self.canDelete = [permissionsSet containsObject:@(CMISActionCanDeleteObject)];
+        self.canAddChildren = ([permissionsSet containsObject:@(CMISActionCanAddObjectToFolder)] ||
+                               [permissionsSet containsObject:@(CMISActionCanCreateDocument)] ||
+                               [permissionsSet containsObject:@(CMISActionCanCreateFolder)]);
         self.canComment = self.canEdit;
-        self.canGetContent = [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanGetContentStream]];
-        self.canSetContent = ([permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanSetContentStream]] ||
-                              [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanDeleteContentStream]]);
-        self.canGetProperties = ([permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanGetFolderParent]] ||
-                                 [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanGetObjectParents]] ||
-                                 [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanGetProperties]]);
-        self.canGetAllVersions = [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanGetAllVersions]];
-        self.canGetChildren = ([permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanGetDescendants]] ||
-                               [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanGetFolderTree]] ||
-                               [permissionsSet containsObject:[NSNumber numberWithInt:CMISActionCanGetChildren]]);
+        self.canGetContent = [permissionsSet containsObject:@(CMISActionCanGetContentStream)];
+        self.canSetContent = ([permissionsSet containsObject:@(CMISActionCanSetContentStream)] ||
+                              [permissionsSet containsObject:@(CMISActionCanDeleteContentStream)]);
+        self.canGetProperties = ([permissionsSet containsObject:@(CMISActionCanGetFolderParent)] ||
+                                 [permissionsSet containsObject:@(CMISActionCanGetObjectParents)] ||
+                                 [permissionsSet containsObject:@(CMISActionCanGetProperties)]);
+        self.canGetAllVersions = [permissionsSet containsObject:@(CMISActionCanGetAllVersions)];
+        self.canGetChildren = ([permissionsSet containsObject:@(CMISActionCanGetDescendants)] ||
+                               [permissionsSet containsObject:@(CMISActionCanGetFolderTree)] ||
+                               [permissionsSet containsObject:@(CMISActionCanGetChildren)]);
     }
     return self;
 }

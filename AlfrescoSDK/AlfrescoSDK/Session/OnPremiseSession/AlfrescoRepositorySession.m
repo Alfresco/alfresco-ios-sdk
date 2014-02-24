@@ -116,7 +116,7 @@
         }
         else
         {
-            [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
+            [self setObject:@NO forParameter:kAlfrescoMetadataExtraction];
         }
         
         if ([[parameters allKeys] containsObject:kAlfrescoThumbnailCreation])
@@ -125,26 +125,26 @@
         }
         else
         {
-            [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
+            [self setObject:@NO forParameter:kAlfrescoThumbnailCreation];
         }
         
         if ([[parameters allKeys] containsObject:kAlfrescoCMISNetworkProvider])
         {
-            id customCMISNetworkProvider = [parameters objectForKey:kAlfrescoCMISNetworkProvider];
+            id customCMISNetworkProvider = parameters[kAlfrescoCMISNetworkProvider];
             [self setObject:customCMISNetworkProvider forParameter:kAlfrescoCMISNetworkProvider];
         }
 
         if ([[parameters allKeys] containsObject:kAlfrescoAllowUntrustedSSLCertificate])
         {
-            [self.sessionData setObject:[parameters valueForKey:kAlfrescoAllowUntrustedSSLCertificate] forKey:kAlfrescoAllowUntrustedSSLCertificate];
+            (self.sessionData)[kAlfrescoAllowUntrustedSSLCertificate] = [parameters valueForKey:kAlfrescoAllowUntrustedSSLCertificate];
         }
         
         if ([[parameters allKeys] containsObject:kAlfrescoConnectUsingClientSSLCertificate])
         {
-            [self.sessionData setObject:[parameters valueForKey:kAlfrescoConnectUsingClientSSLCertificate] forKey:kAlfrescoConnectUsingClientSSLCertificate];
+            (self.sessionData)[kAlfrescoConnectUsingClientSSLCertificate] = [parameters valueForKey:kAlfrescoConnectUsingClientSSLCertificate];
         }
         
-        id customAlfrescoNetworkProvider = [parameters objectForKey:kAlfrescoNetworkProvider];
+        id customAlfrescoNetworkProvider = parameters[kAlfrescoNetworkProvider];
         if (customAlfrescoNetworkProvider)
         {
             BOOL conformsToAlfrescoNetworkProvider = [customAlfrescoNetworkProvider conformsToProtocol:@protocol(AlfrescoNetworkProvider)];
@@ -180,7 +180,7 @@
 {
     BOOL useCustomBinding = NO;
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseCMISPath];
-    NSString *customBindingURL = [self.sessionData objectForKey:kAlfrescoCMISBindingURL];
+    NSString *customBindingURL = (self.sessionData)[kAlfrescoCMISBindingURL];
     if (customBindingURL)
     {
         NSString *binding = ([customBindingURL hasPrefix:@"/"]) ? customBindingURL : [NSString stringWithFormat:@"/%@",customBindingURL];
@@ -197,9 +197,9 @@
     v4params.username = username;
     v4params.password = password;
     v4params.atomPubUrl = [NSURL URLWithString:v4cmisUrl];
-    if ([self.sessionData objectForKey:kAlfrescoCMISNetworkProvider])
+    if ((self.sessionData)[kAlfrescoCMISNetworkProvider])
     {
-        id customCMISNetworkProvider = [self.sessionData objectForKey:kAlfrescoCMISNetworkProvider];
+        id customCMISNetworkProvider = (self.sessionData)[kAlfrescoCMISNetworkProvider];
         BOOL conformsToCMISNetworkProvider = [customCMISNetworkProvider conformsToProtocol:@protocol(CMISNetworkProvider)];
         
         if (conformsToCMISNetworkProvider)
@@ -215,13 +215,13 @@
         }
     }
 
-    BOOL allowUntrustedSSLCertificate = [[self.sessionData objectForKey:kAlfrescoAllowUntrustedSSLCertificate] boolValue];
-    BOOL connectUsingSSLCertificate = [[self.sessionData objectForKey:kAlfrescoConnectUsingClientSSLCertificate] boolValue];
+    BOOL allowUntrustedSSLCertificate = [(self.sessionData)[kAlfrescoAllowUntrustedSSLCertificate] boolValue];
+    BOOL connectUsingSSLCertificate = [(self.sessionData)[kAlfrescoConnectUsingClientSSLCertificate] boolValue];
     
     if (connectUsingSSLCertificate)
     {
         // if client certificates are required, certificate credentials need to be setup for auth provider
-        NSURLCredential *credential = [self.sessionData objectForKey:kAlfrescoClientCertificateCredentials];
+        NSURLCredential *credential = (self.sessionData)[kAlfrescoClientCertificateCredentials];
         CMISStandardAuthenticationProvider *authProvider = [[CMISStandardAuthenticationProvider alloc] initWithUsername:username password:password];
         authProvider.credential = credential;
         v3params.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
@@ -248,7 +248,7 @@
         }
         else
         {
-            CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
+            CMISRepositoryInfo *repoInfo = repositories[0];
             AlfrescoLogDebug(@"found repository with ID: %@", repoInfo.identifier);
             
             v3params.repositoryId = repoInfo.identifier;
@@ -324,7 +324,7 @@
                     NSString *version = self.repositoryInfo.version;
                     NSArray *versionArray = [version componentsSeparatedByString:@"."];
                     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-                    NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
+                    NSNumber *majorVersionNumber = [formatter numberFromString:versionArray[0]];
                     AlfrescoLogDebug(@"session connected with user %@, repo version is %@", username, version);
 
                     if ([majorVersionNumber intValue] >= 4 && !useCustomBinding)
@@ -380,24 +380,24 @@
 {
     if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
-        return [self.sessionCache objectForKey:key];
+        return (self.sessionCache)[key];
     }
-    return [self.sessionData objectForKey:key];
+    return (self.sessionData)[key];
 }
 
 - (void)setObject:(id)object forParameter:(id)key
 {
     if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
-        [self.sessionCache setObject:object forKey:key];
+        (self.sessionCache)[key] = object;
     }
     else if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
     {
-        [self.sessionData setObject:object forKey:key];
+        (self.sessionData)[key] = object;
     }
     else
     {
-        [self.sessionData setObject:object forKey:key];
+        (self.sessionData)[key] = object;
     }
 }
 
@@ -406,11 +406,11 @@
     [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
         {
-            [self.sessionData setObject:obj forKey:key];
+            (self.sessionData)[key] = obj;
         }
         else
         {
-            [self.sessionData setObject:obj forKey:key];
+            (self.sessionData)[key] = obj;
         }
     }];
 }
@@ -419,7 +419,7 @@
 {
     if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
-        id cached = [self.sessionCache objectForKey:key];
+        id cached = (self.sessionCache)[key];
         if ([cached respondsToSelector:@selector(clear)])
         {
             [cached clear];
@@ -465,7 +465,7 @@
 {
     NSArray *versionArray = [versionString componentsSeparatedByString:@"."];
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
+    NSNumber *majorVersionNumber = [formatter numberFromString:versionArray[0]];
     return majorVersionNumber;
 }
 

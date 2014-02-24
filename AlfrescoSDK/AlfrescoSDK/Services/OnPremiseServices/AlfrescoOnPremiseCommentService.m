@@ -72,12 +72,12 @@
     
     // add an artifical cap, return the first 1000 comments - Related to ACE-469
     NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionary];
-    [queryDictionary setObject:@"1000" forKey:kAlfrescoLegacyMaxItems];
-    [queryDictionary setObject:@"0" forKey:kAlfrescoLegacySkipCount];
+    queryDictionary[kAlfrescoLegacyMaxItems] = @"1000";
+    queryDictionary[kAlfrescoLegacySkipCount] = @"0";
     
     if (latestFirst)
     {
-        [queryDictionary setObject:@"true" forKey:kAlfrescoReverseComments];
+        queryDictionary[kAlfrescoReverseComments] = @"true";
     }
     
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:queryDictionary];
@@ -130,12 +130,12 @@
     NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
     
     NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionary];
-    [queryDictionary setObject:[NSString stringWithFormat:@"%d", listingContext.maxItems] forKey:kAlfrescoLegacyMaxItems];
-    [queryDictionary setObject:[NSString stringWithFormat:@"%d", listingContext.skipCount] forKey:kAlfrescoLegacySkipCount];
+    queryDictionary[kAlfrescoLegacyMaxItems] = [NSString stringWithFormat:@"%d", listingContext.maxItems];
+    queryDictionary[kAlfrescoLegacySkipCount] = [NSString stringWithFormat:@"%d", listingContext.skipCount];
     
     if (latestFirst)
     {
-        [queryDictionary setObject:@"true" forKey:kAlfrescoReverseComments];
+        queryDictionary[kAlfrescoReverseComments] = @"true";
     }
     
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:queryDictionary];
@@ -168,8 +168,8 @@
                 }
                 else
                 {
-                    BOOL hasMoreItems = [[pagingDetails objectForKey:kAlfrescoLegacyJSONHasMoreItems] boolValue];
-                    int totalItems = [[pagingDetails objectForKey:kAlfrescoLegacyJSONTotal] integerValue];
+                    BOOL hasMoreItems = [pagingDetails[kAlfrescoLegacyJSONHasMoreItems] boolValue];
+                    int totalItems = [pagingDetails[kAlfrescoLegacyJSONTotal] integerValue];
                     
                     AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:comments hasMoreItems:hasMoreItems totalItems:totalItems];
                     completionBlock(pagingResult, conversionError);
@@ -326,7 +326,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeCommentNoCommentFound];
         return nil;
     }
-    if ([[jsonCommentDict valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+    if ([[jsonCommentDict valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeCommentNoCommentFound];
         return nil;
@@ -363,7 +363,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeComment];
         return nil;
     }
-    if ([[jsonCommentDict valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+    if ([[jsonCommentDict valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeCommentNoCommentFound];
         return nil;

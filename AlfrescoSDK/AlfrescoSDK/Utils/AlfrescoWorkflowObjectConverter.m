@@ -223,8 +223,8 @@
                 
                 if (processDictionary)
                 {
-                    NSDictionary *taskProperties = [processDictionary objectForKey:kAlfrescoWorkflowLegacyJSONProperties];
-                    containerRef = [taskProperties objectForKey:kAlfrescoWorkflowLegacyJSONBPMPackageContainer];
+                    NSDictionary *taskProperties = processDictionary[kAlfrescoWorkflowLegacyJSONProperties];
+                    containerRef = taskProperties[kAlfrescoWorkflowLegacyJSONBPMPackageContainer];
                 }
             }
             else
@@ -282,8 +282,8 @@
             NSArray *nodeArray = [listDictionary valueForKey:kAlfrescoWorkflowPublicJSONEntries];
             for (NSDictionary *attachmentDictionary in nodeArray)
             {
-                NSDictionary *entryDictionary = [attachmentDictionary objectForKey:kAlfrescoWorkflowPublicJSONEntry];
-                NSString *nodeIdentifier = [entryDictionary objectForKey:kAlfrescoWorkflowPublicJSONIdentifier];
+                NSDictionary *entryDictionary = attachmentDictionary[kAlfrescoWorkflowPublicJSONEntry];
+                NSString *nodeIdentifier = entryDictionary[kAlfrescoWorkflowPublicJSONIdentifier];
                 if (nodeIdentifier)
                 {
                     [nodeRefIdentifiers addObject:nodeIdentifier];

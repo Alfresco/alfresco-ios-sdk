@@ -93,7 +93,7 @@
         for (int i = 0; i < allKeys.count; i++)
         {
             id key = allKeys[i];
-            id value = [parameters objectForKey:key];
+            id value = parameters[key];
             [queryString appendString:[NSString stringWithFormat:@"%@=%@", key, value]];
             if (i != (allKeys.count -1))
             {

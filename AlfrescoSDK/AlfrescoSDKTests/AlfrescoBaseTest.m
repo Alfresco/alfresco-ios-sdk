@@ -67,11 +67,11 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     
     NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
     NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
-    NSDictionary *allEnvironments = [plistContents objectForKey:@"environments"];
+    NSDictionary *allEnvironments = plistContents[@"environments"];
     if (nil != allEnvironments)
     {
         AlfrescoLogDebug(@"TEST_SERVER specified as: %@", testServer);
-        environment = (NSDictionary *)[allEnvironments objectForKey:testServer];
+        environment = (NSDictionary *)allEnvironments[testServer];
     }
 
     if (nil == environment)
@@ -206,10 +206,10 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"text/plain"];
     NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
-    [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
-    [props setObject:@"test file description" forKey:@"cm:description"];
-    [props setObject:@"test file title" forKey:@"cm:title"];
-    [props setObject:@"test author" forKey:@"cm:author"];
+    props[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+    props[@"cm:description"] = @"test file description";
+    props[@"cm:title"] = @"test file title";
+    props[@"cm:author"] = @"test author";
 
     __block BOOL success = NO;
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
@@ -299,7 +299,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     {
         parameters = [NSMutableDictionary dictionary];
     }
-    [parameters setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoAllowUntrustedSSLCertificate];
+    [parameters setValue:@YES forKey:kAlfrescoAllowUntrustedSSLCertificate];
     
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.server]
                                      username:self.userName
@@ -342,7 +342,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     }
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:self.server forKey:@"org.alfresco.mobile.internal.session.cloud.url"];
-    [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
+    [parameters setValue:@YES forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
     [parameters setValue:self.userName forKey:@"org.alfresco.mobile.internal.session.username"];
     [parameters setValue:self.password forKey:@"org.alfresco.mobile.internal.session.password"];
     
@@ -351,7 +351,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
      *        doesn't allow SSL connections to be made. Apple Bug rdar://10406441 and rdar://8385355
      *        (latter can be viewed at http://openradar.appspot.com/8385355 )
      */
-    [parameters setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoAllowUntrustedSSLCertificate];
+    [parameters setValue:@YES forKey:kAlfrescoAllowUntrustedSSLCertificate];
     
     [AlfrescoCloudSession connectWithOAuthData:nil parameters:parameters completionBlock:^(id<AlfrescoSession> cloudSession, NSError *error){
         if (nil == cloudSession)

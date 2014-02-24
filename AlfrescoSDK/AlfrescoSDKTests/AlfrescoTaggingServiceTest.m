@@ -199,7 +199,7 @@
         {
             self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
             
-            NSArray *testtags = [NSArray arrayWithObject:@"test"];
+            NSArray *testtags = @[@"test"];
             
             __weak typeof(self) weakSelf = self;
             [self.taggingService addTags:testtags toNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error) {
@@ -224,7 +224,7 @@
                              int count = tags.count;
                              STAssertNotNilWeakSelf(tags, @"tags should not be nil");
                              STAssertTrueWeakSelf(count > 0, @"Count should be > 0, and is in fact %d",count);
-                             NSString *testTag = [testtags objectAtIndex:0];
+                             NSString *testTag = testtags[0];
                              BOOL found = NO;
                              for (AlfrescoTag *tag in tags)
                              {

@@ -47,7 +47,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                 STAssertTrue(array.count == 0, @"newly uploaded document. We expect 0 comments");
                 if (array.count > 0)
                 {
-                    AlfrescoComment *comment = [array objectAtIndex:0];
+                    AlfrescoComment *comment = array[0];
                     STAssertTrue([comment.content isEqualToString:@"<p>this is a test comment</p>"], @"content should equal the test comment message");
                     STAssertTrue([comment.createdBy isEqualToString:self.userName], @"comment.createdBy should be  %@",self.userName);
                     STAssertNotNil(comment.createdAt, @"creationDate should not be nil");
@@ -89,7 +89,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
             if (nil == document)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
                 self.callbackCompleted = YES;
             }
             else
@@ -102,7 +102,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                     if (!success)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -438,7 +438,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                         STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %lu", (unsigned long)array.count);
                         if (array.count > 0)
                         {
-                            AlfrescoComment *retrievedComment = (AlfrescoComment *)[array objectAtIndex:0];
+                            AlfrescoComment *retrievedComment = (AlfrescoComment *)array[0];
                             STAssertTrueWeakSelf([retrievedComment.content isEqualToString:content], @"comment should be %@, but received %@", content, retrievedComment.content);
                             if (!weakSelf.isCloud)
                             {
@@ -517,7 +517,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                         STAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %lu", (unsigned long)array.count);
                         if (array.count > 0)
                         {
-                            AlfrescoComment *retrievedComment = (AlfrescoComment *)[array objectAtIndex:0];
+                            AlfrescoComment *retrievedComment = (AlfrescoComment *)array[0];
                             STAssertTrueWeakSelf([retrievedComment.content isEqualToString:content], @"comment should be %@, but received %@", content, retrievedComment.content);
                             if (!weakSelf.isCloud)
                             {

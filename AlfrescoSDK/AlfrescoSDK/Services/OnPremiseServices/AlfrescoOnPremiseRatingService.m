@@ -95,7 +95,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSMutableDictionary *likeDict = [NSMutableDictionary dictionaryWithCapacity:2];
-    [likeDict setValue:[NSNumber numberWithInt:1] forKey:kAlfrescoJSONRating];
+    [likeDict setValue:@1 forKey:kAlfrescoJSONRating];
     [likeDict setValue:kAlfrescoJSONLikesRatingScheme forKey:kAlfrescoJSONRatingScheme];
     
     NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];

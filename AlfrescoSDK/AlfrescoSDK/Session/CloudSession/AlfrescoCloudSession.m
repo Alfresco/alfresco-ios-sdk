@@ -291,11 +291,11 @@
 {
     if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
-        return [self.sessionCache objectForKey:key];
+        return (self.sessionCache)[key];
     }
     else
     {
-        return [self.sessionData objectForKey:key];
+        return (self.sessionData)[key];
     }
 }
 
@@ -303,15 +303,15 @@
 {
     if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
-        [self.sessionCache setObject:object forKey:key];
+        (self.sessionCache)[key] = object;
     }
     else if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
     {
-        [self.sessionData setObject:object forKey:key];
+        (self.sessionData)[key] = object;
     }
     else
     {
-        [self.sessionData setObject:object forKey:key];
+        (self.sessionData)[key] = object;
     }
 }
 
@@ -320,11 +320,11 @@
     [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
         {
-            [self.sessionData setObject:obj forKey:key];
+            (self.sessionData)[key] = obj;
         }
         else
         {
-            [self.sessionData setObject:obj forKey:key];
+            (self.sessionData)[key] = obj;
         }
     }];
 }
@@ -333,7 +333,7 @@
 {
     if ([key hasPrefix:kAlfrescoSessionInternalCache])
     {
-        id cached = [self.sessionCache objectForKey:key];
+        id cached = (self.sessionCache)[key];
         if ([cached respondsToSelector:@selector(clear)])
         {
             [cached clear];
@@ -479,7 +479,7 @@
         }
         else
         {
-            CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
+            CMISRepositoryInfo *repoInfo = repositories[0];
             parameters.repositoryId = repoInfo.identifier;
             [parameters setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
 
@@ -636,11 +636,11 @@ This authentication method authorises the user to access the home network assign
             self.sessionData = [NSMutableDictionary dictionaryWithCapacity:8];
         }
         self.sessionCache = [NSMutableDictionary dictionary];
-        [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoMetadataExtraction];
-        [self setObject:[NSNumber numberWithBool:NO] forParameter:kAlfrescoThumbnailCreation];
+        [self setObject:@NO forParameter:kAlfrescoMetadataExtraction];
+        [self setObject:@NO forParameter:kAlfrescoThumbnailCreation];
         
         self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
-        id networkObject = [parameters objectForKey:kAlfrescoNetworkProvider];
+        id networkObject = parameters[kAlfrescoNetworkProvider];
         if (networkObject)
         {
             BOOL conformsToAlfrescoNetworkProvider = [networkObject conformsToProtocol:@protocol(AlfrescoNetworkProvider)];

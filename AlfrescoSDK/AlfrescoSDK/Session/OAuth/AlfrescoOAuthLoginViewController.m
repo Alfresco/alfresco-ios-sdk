@@ -246,11 +246,11 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     if (2 == components.count)
     {
         self.receivedData = [NSMutableData data];
-        NSString *codeString = [components objectAtIndex:1];
+        NSString *codeString = components[1];
         NSArray *codeComponents = [codeString componentsSeparatedByString:@"&"];
         if (codeComponents.count > 0)
         {
-            return [codeComponents objectAtIndex:0];
+            return codeComponents[0];
         }
         
     }

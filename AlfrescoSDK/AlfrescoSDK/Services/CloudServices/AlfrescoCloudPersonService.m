@@ -136,7 +136,7 @@ NSString * const kAlfrescoSearchNotImplemented = @"searchWithKeywords is not imp
         }
         return nil;
     }
-    AlfrescoCompany *company = [[AlfrescoCompany alloc] initWithProperties:[entryDict objectForKey:kAlfrescoJSONCompany]];
+    AlfrescoCompany *company = [[AlfrescoCompany alloc] initWithProperties:entryDict[kAlfrescoJSONCompany]];
     [entryDict setValue:company forKey:kAlfrescoJSONCompany];
     
     return [[AlfrescoPerson alloc] initWithProperties:entryDict];
@@ -160,7 +160,7 @@ NSString * const kAlfrescoSearchNotImplemented = @"searchWithKeywords is not imp
         return nil;
     }
     
-    NSArray *peopleProperties = [entries objectForKey:kAlfrescoJSONPeople];
+    NSArray *peopleProperties = entries[kAlfrescoJSONPeople];
     NSMutableArray *people = [[NSMutableArray alloc] init];
     
     for (NSDictionary *personProperties in peopleProperties)
@@ -234,7 +234,7 @@ NSString * const kAlfrescoSearchNotImplemented = @"searchWithKeywords is not imp
     
     for (NSString *key in propertyKeys)
     {
-        NSString *mappedKey = [mappedOnPremiseKeys objectForKey:key];
+        NSString *mappedKey = mappedOnPremiseKeys[key];
         if (mappedKey)
         {
             [updatedProperties setValue:properties[key] forKey:mappedKey];

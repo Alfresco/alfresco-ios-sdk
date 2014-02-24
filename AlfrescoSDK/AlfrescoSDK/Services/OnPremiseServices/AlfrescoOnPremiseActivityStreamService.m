@@ -191,10 +191,10 @@
     if ([jsonActivityStreamArray isKindOfClass:[NSArray class]] == NO)
     {
         if([jsonActivityStreamArray isKindOfClass:[NSDictionary class]] == YES &&
-           [[jsonActivityStreamArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+           [[jsonActivityStreamArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
         {
             // no results found
-            return [NSArray array];
+            return @[];
         }
         else
         {

@@ -59,7 +59,7 @@ static NSInteger kDocumentModelVersion = 1;
     self.contentLength = [[properties valueForKey:kCMISPropertyContentStreamLength] unsignedLongLongValue];
     self.contentMimeType = [properties valueForKey:kCMISPropertyContentStreamMediaType];
     self.versionLabel = [properties valueForKey:kCMISPropertyVersionLabel];
-    self.versionComment = [(AlfrescoProperty *)[[properties objectForKey:kAlfrescoNodeProperties] valueForKey:kCMISPropertyCheckinComment] value];
+    self.versionComment = [(AlfrescoProperty *)[properties[kAlfrescoNodeProperties] valueForKey:kCMISPropertyCheckinComment] value];
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder

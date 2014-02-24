@@ -89,7 +89,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
             self.authenticationProvider = (AlfrescoBasicAuthenticationProvider *)authenticationObject;
         }
         self.defaultSortKey = kAlfrescoSortByName;
-        self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt, nil];
+        self.supportedSortKeys = @[kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt];
     }
     return self;
 }
@@ -544,7 +544,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     }
                     else
                     {
-                        sortedChildren = [NSArray array];
+                        sortedChildren = @[];
                     }
                     pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedChildren hasMoreItems:pagedResult.hasMoreItems totalItems:pagedResult.numItems];
 //                    pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedChildren listingContext:listingContext];
@@ -596,7 +596,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     }
                     else
                     {
-                        sortedDocuments = [NSArray array];
+                        sortedDocuments = @[];
                     }
                     completionBlock(sortedDocuments, nil);
                 }
@@ -653,7 +653,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     }
                     else
                     {
-                        sortedDocuments = [NSArray array];
+                        sortedDocuments = @[];
                     }
                     AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedDocuments listingContext:listingContext];
                     completionBlock(pagingResult, nil);
@@ -702,7 +702,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     }
                     else
                     {
-                        sortedFolders = [NSArray array];
+                        sortedFolders = @[];
                     }
                     completionBlock(sortedFolders, nil);
                 }
@@ -759,7 +759,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                     }
                     else
                     {
-                        sortedFolders = [NSArray array];
+                        sortedFolders = @[];
                     }
                     AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedFolders listingContext:listingContext];
                     completionBlock(pagingResult, nil);
@@ -1129,7 +1129,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
         cmisNodeType = kCMISPropertyObjectTypeIdValueFolder;
     }
     
-    NSString *objectTypeId = [properties objectForKey:kCMISPropertyObjectTypeId];
+    NSString *objectTypeId = properties[kCMISPropertyObjectTypeId];
     if (nil != objectTypeId)
     {
         if ([objectTypeId rangeOfString:kAlfrescoTypeFolder].location != NSNotFound)
@@ -1187,7 +1187,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
                      {
                          if (![cmisKey isEqualToString:kCMISPropertyObjectTypeId])
                          {
-                             CMISPropertyData *propData = [convertedProperties.propertiesDictionary objectForKey:cmisKey];
+                             CMISPropertyData *propData = (convertedProperties.propertiesDictionary)[cmisKey];
                              [updatedProperties addProperty:propData];
                          }
                      }
@@ -1300,7 +1300,7 @@ typedef void (^CMISObjectCompletionBlock)(CMISObject *cmisObject, NSError *error
     NSString *identifier = node.identifier;
     if (components.count > 1)
     {
-        identifier = [components objectAtIndex:0];
+        identifier = components[0];
     }
     
     [jsonDictionary setValue:identifier forKey:kAlfrescoJSONActionedUponNode];

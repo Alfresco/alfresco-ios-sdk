@@ -51,7 +51,7 @@
         self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
         self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         self.defaultSortKey = kAlfrescoSortByName;
-        self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt, nil];
+        self.supportedSortKeys = @[kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt];
     }
     return self;
 }
@@ -74,8 +74,8 @@
          relationships:CMISIncludeRelationshipBoth
          renditionFilter:nil
          includeAllowableActions:YES
-         maxItems:[NSNumber numberWithInt:self.session.defaultListingContext.maxItems]
-         skipCount:[NSNumber numberWithInt:self.session.defaultListingContext.skipCount]
+         maxItems:@(self.session.defaultListingContext.maxItems)
+         skipCount:@(self.session.defaultListingContext.skipCount)
          completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
@@ -122,8 +122,8 @@
                                                                  relationships:CMISIncludeRelationshipBoth
                                                                renditionFilter:nil
                                                        includeAllowableActions:YES
-                                                                      maxItems:[NSNumber numberWithInt:listingContext.maxItems]
-                                                                     skipCount:[NSNumber numberWithInt:listingContext.skipCount]
+                                                                      maxItems:@(listingContext.maxItems)
+                                                                     skipCount:@(listingContext.skipCount)
                                                                completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {

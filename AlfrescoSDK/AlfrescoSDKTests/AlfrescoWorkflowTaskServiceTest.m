@@ -411,7 +411,7 @@
                                 STAssertNotNil(array, @"Returned array should not be nil");
                                 STAssertTrue(array.count > 0, @"Array should contain more than one item");
                                 
-                                AlfrescoDocument *document = [array objectAtIndex:0];
+                                AlfrescoDocument *document = array[0];
                                 
                                 [weakSelf.taskService removeAttachment:document fromTask:task completionBlock:^(BOOL removalSuccess, NSError *removeAttachmentError) {
                                     STAssertTrue(removalSuccess, @"The removal of the attachment did not return true");

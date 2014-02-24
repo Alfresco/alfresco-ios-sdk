@@ -88,7 +88,7 @@
                                       kAlfrescoPublicAPIWorkflowProcessIncludeVariables, @"true"];
      */
     NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)",
-                                      kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state]];
+                                      kAlfrescoWorkflowProcessStatus, (self.publicToPrivateStateMappings)[state]];
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
     NSString *extenstionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
     
@@ -127,7 +127,7 @@
                                       kAlfrescoPublicAPIWorkflowProcessIncludeVariables, @"true"];
      */
     NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)",
-                                      kAlfrescoWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state]];
+                                      kAlfrescoWorkflowProcessStatus, (self.publicToPrivateStateMappings)[state]];
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
     NSString *extenstionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
     
@@ -182,7 +182,7 @@
             }
             else
             {
-                AlfrescoWorkflowProcess *process = [workflowProcesses objectAtIndex:0];
+                AlfrescoWorkflowProcess *process = workflowProcesses[0];
                 completionBlock(process, conversionError);
             }
         }
@@ -207,7 +207,7 @@
     [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowTaskState : [self.publicToPrivateStateMappings objectForKey:state]}];
+    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowTaskState : (self.publicToPrivateStateMappings)[state]}];
     NSString *requestString = [kAlfrescoPublicAPIWorkflowTasksForProcess stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
     NSString *completeRequestString = [requestString stringByAppendingString:queryString];
     
@@ -316,7 +316,7 @@
     
     if (nodeRefs.count > 0)
     {
-        [requestBody setObject:nodeRefs forKey:kAlfrescoJSONItems];
+        requestBody[kAlfrescoJSONItems] = nodeRefs;
     }
     
     NSArray *allVariableKeys = [variables allKeys];
@@ -324,15 +324,15 @@
     for (id keyObject in allVariableKeys)
     {
         NSString *key = (NSString *)keyObject;
-        NSString *mappedPrivateKey = [self.publicToPrivateVariableMappings objectForKey:key];
+        NSString *mappedPrivateKey = (self.publicToPrivateVariableMappings)[key];
         
         if (mappedPrivateKey)
         {
-            [completeVariables setValue:[variables objectForKey:key] forKey:mappedPrivateKey];
+            [completeVariables setValue:variables[key] forKey:mappedPrivateKey];
         }
         else
         {
-            [completeVariables setValue:[variables objectForKey:key] forKey:key];
+            [completeVariables setValue:variables[key] forKey:key];
         }
     }
     
@@ -364,7 +364,7 @@
         [requestBody setValue:completeVariables forKey:kAlfrescoWorkflowPublicJSONVariables];
     }
     
-    [requestBody setObject:processDefinition.identifier forKey:kAlfrescoWorkflowPublicJSONProcessDefinitionID];
+    requestBody[kAlfrescoWorkflowPublicJSONProcessDefinitionID] = processDefinition.identifier;
     
     NSError *requestConversionError = nil;
     NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestBody options:0 error:&requestConversionError];

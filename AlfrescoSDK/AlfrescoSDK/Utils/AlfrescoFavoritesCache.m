@@ -104,7 +104,7 @@
     }
     else
     {
-        [self.favoritesCache replaceObjectAtIndex:foundIndex withObject:node];
+        (self.favoritesCache)[foundIndex] = node;
     }
 }
 

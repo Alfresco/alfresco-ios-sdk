@@ -401,8 +401,8 @@
     NSArray *secondComponents = [previousLabel componentsSeparatedByString:@"."];
     for (int i = 0; i < firstComponents.count; i++)
     {
-        int first = [[firstComponents objectAtIndex:i] intValue];
-        int second = [[secondComponents objectAtIndex:i] intValue];
+        int first = [firstComponents[i] intValue];
+        int second = [secondComponents[i] intValue];
         if (first > second)
         {
             isHigherVersion = YES;

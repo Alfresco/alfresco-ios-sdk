@@ -163,7 +163,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 
 - (id)propertyValueWithName:(NSString *)propertyName
 {
-    AlfrescoProperty *property = [self.properties objectForKey:propertyName];
+    AlfrescoProperty *property = (self.properties)[propertyName];
     id value;
     if(property != nil)
     {

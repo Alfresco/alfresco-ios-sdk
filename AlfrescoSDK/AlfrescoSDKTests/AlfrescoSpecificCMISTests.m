@@ -92,7 +92,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         }
         else
         {
-            CMISRepositoryInfo *repoInfo = [repositories objectAtIndex:0];
+            CMISRepositoryInfo *repoInfo = repositories[0];
             params.repositoryId = repoInfo.identifier;
             [params setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
             [CMISSession connectWithSessionParameters:params completionBlock:^(CMISSession *cmisSession, NSError *cmisError){
@@ -134,7 +134,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 - (NSDictionary *)customCmisParameters
 {
     // We could just write the class name as a NSString, but that would not refactor if we ever would rename this class
-    return [NSDictionary dictionaryWithObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+    return @{kCMISSessionParameterObjectConverterClassName: NSStringFromClass([AlfrescoCMISObjectConverter class])};
 }
 
 - (void)testCreateDocumentWithDescription
@@ -146,9 +146,9 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
         NSString *documentDescription = @"This is a test description";
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
-        [documentProperties setObject:documentName forKey:kCMISPropertyName];
-        [documentProperties setObject:@"cmis:document, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
-        [documentProperties setObject:documentDescription forKey:@"cm:description"];
+        documentProperties[kCMISPropertyName] = documentName;
+        documentProperties[kCMISPropertyObjectTypeId] = @"cmis:document, P:cm:titled";
+        documentProperties[@"cm:description"] = documentDescription;
         
         // Create document with description
         [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
@@ -362,7 +362,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:manufacturer"], @"NIKON", nil);
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:model"], @"E950", nil);
                 STAssertEqualObjects([document.properties propertyValueForId:@"exif:flash"], [NSNumber numberWithBool:NO], nil);
-                STAssertEqualObjects([document.properties propertyValueForId:@"exif:pixelXDimension"], [NSNumber numberWithInt:800], nil);
+                STAssertEqualObjects([document.properties propertyValueForId:@"exif:pixelXDimension"], @800, nil);
                 // It seems different EXIF metadata extractors vary in precision, so just check the first 16 digits of exposureTime
                 NSString *trimmedExposureTime = [[NSString stringWithFormat:@"%@", [document.properties propertyValueForId:@"exif:exposureTime"]] substringToIndex:16];
                 STAssertEqualObjects(trimmedExposureTime, @"0.01298701298701", nil);
@@ -473,9 +473,9 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         NSURL *fileUrl = [NSURL URLWithString:filePath];
         NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
-        [documentProperties setObject:@"cmis:document, P:cm:titled, P:exif:exif" forKey:kCMISPropertyObjectTypeId];
-        [documentProperties setObject:documentName forKey:kCMISPropertyName];
-        [documentProperties setObject:@"UberCam" forKey:@"exif:model"];
+        documentProperties[kCMISPropertyObjectTypeId] = @"cmis:document, P:cm:titled, P:exif:exif";
+        documentProperties[kCMISPropertyName] = documentName;
+        documentProperties[@"exif:model"] = @"UberCam";
         
         [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
             if (nil == objectId)
@@ -531,8 +531,8 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         NSURL *fileUrl = [NSURL URLWithString:filePath];
         NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
         NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
-        [documentProperties setObject:documentName forKey:kCMISPropertyName];
-        [documentProperties setObject:kCMISPropertyObjectTypeIdValueDocument forKey:kCMISPropertyObjectTypeId];
+        documentProperties[kCMISPropertyName] = documentName;
+        documentProperties[kCMISPropertyObjectTypeId] = kCMISPropertyObjectTypeIdValueDocument;
         
         [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
             if (nil == objectId)
@@ -556,7 +556,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                         AlfrescoCMISDocument *cmisDocument = (AlfrescoCMISDocument *)cmisObject;
                         STAssertFalse([cmisDocument hasAspect:@"P:exif:exif"], @"We should not be able to find P:exif:exif aspect - but we do");
                         [cmisDocument.aspectTypes addObject:@"P:exif:exif"];
-                        [cmisDocument updateProperties:[NSDictionary dictionary] completionBlock:^(CMISObject *updatedObj, NSError *updError){
+                        [cmisDocument updateProperties:@{} completionBlock:^(CMISObject *updatedObj, NSError *updError){
                             if (nil == updatedObj)
                             {
                                 self.lastTestSuccessful = NO;
@@ -603,8 +603,8 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         NSURL *fileUrl = [NSURL URLWithString:filePath];
         NSString *documentName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:[fileUrl lastPathComponent]];
         __block NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
-        [documentProperties setObject:documentName forKey:kCMISPropertyName];
-        [documentProperties setObject:@"cmis:document, P:cm:titled, P:cm:author" forKey:kCMISPropertyObjectTypeId];
+        documentProperties[kCMISPropertyName] = documentName;
+        documentProperties[kCMISPropertyObjectTypeId] = @"cmis:document, P:cm:titled, P:cm:author";
         
         [self.cmisRootFolder createDocumentFromFilePath:filePath mimeType:@"text/plain" properties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
             if (nil == objectId)
@@ -625,8 +625,8 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                     else
                     {
                         NSString *description = @"This is a 'test'";
-                        [documentProperties setObject:description forKey:@"cm:description"];
-                        [documentProperties setObject:description forKey:@"cm:title"];
+                        documentProperties[@"cm:description"] = description;
+                        documentProperties[@"cm:title"] = description;
                         AlfrescoCMISDocument *cmisDoc = (AlfrescoCMISDocument *)cmisObject;
                         [cmisDoc updateProperties:documentProperties completionBlock:^(CMISObject *updObj, NSError *updError){
                             if (nil == updObj)
@@ -725,7 +725,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     STAssertTrue(document.properties.extensions.count > 0, @"Expected at least one property extension");
 
     // Verify root extension element
-    CMISExtensionElement *rootExtensionElement = (CMISExtensionElement *) [document.properties.extensions objectAtIndex:0];
+    CMISExtensionElement *rootExtensionElement = (CMISExtensionElement *) (document.properties.extensions)[0];
     STAssertTrue([rootExtensionElement.name isEqualToString:@"aspects"], @"root element of extensions should be 'aspects'");
 
     // Find properties extension element
@@ -759,7 +759,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     for (CMISExtensionElement *childExtensionElement in propertiesExtensionElement.children)
     {
         if (childExtensionElement.attributes != nil &&
-                ([[childExtensionElement.attributes objectForKey:@"propertyDefinitionId"] isEqualToString:expectedProperty]))
+                ([(childExtensionElement.attributes)[@"propertyDefinitionId"] isEqualToString:expectedProperty]))
         {
             propertyElement = childExtensionElement;
             break;
@@ -768,7 +768,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     STAssertNotNil(propertyElement, @"No property '%@' was found", expectedProperty);
 
     // Finally, verify the value
-    CMISExtensionElement *valueElement = [propertyElement.children objectAtIndex:0];
+    CMISExtensionElement *valueElement = (propertyElement.children)[0];
     STAssertNotNil(valueElement, @"There is no value element for the property");
     STAssertTrue([valueElement.value isEqual:expectedValue],
         @"Document property '%@' value does not match: was %@ but expected %@", expectedProperty, valueElement.value, expectedValue);

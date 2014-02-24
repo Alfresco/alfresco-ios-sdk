@@ -111,7 +111,7 @@ static NSUInteger kCommentModelVersion = 1;
             if (nil != created)
             {
                 NSArray *dateComponents = [created componentsSeparatedByString:@"+"];
-                NSString *dateWithZZZTimeZone = [dateComponents objectAtIndex:0];
+                NSString *dateWithZZZTimeZone = dateComponents[0];
                 self.createdAt = [self.standardDateFormatter dateFromString:dateWithZZZTimeZone];
             }
         }
@@ -133,7 +133,7 @@ static NSUInteger kCommentModelVersion = 1;
             if (nil != modified)
             {
                 NSArray *dateComponents = [modified componentsSeparatedByString:@"+"];
-                NSString *dateWithZZZTimeZone = [dateComponents objectAtIndex:0];
+                NSString *dateWithZZZTimeZone = dateComponents[0];
                 self.modifiedAt = [self.standardDateFormatter dateFromString:dateWithZZZTimeZone];
             }
         }

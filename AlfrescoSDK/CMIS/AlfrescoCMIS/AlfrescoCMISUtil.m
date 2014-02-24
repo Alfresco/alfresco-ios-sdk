@@ -74,9 +74,9 @@
         for (CMISExtensionElement *propertyExtension in propertyRootExtensionElement.children)
         {
             CMISPropertyData *propertyData = [[CMISPropertyData alloc] init];
-            propertyData.identifier = [propertyExtension.attributes objectForKey:kCMISAtomEntryPropertyDefId];
-            propertyData.displayName = [propertyExtension.attributes objectForKey:kCMISAtomEntryDisplayName];
-            propertyData.queryName = [propertyExtension.attributes objectForKey:kCMISAtomEntryQueryName];
+            propertyData.identifier = (propertyExtension.attributes)[kCMISAtomEntryPropertyDefId];
+            propertyData.displayName = (propertyExtension.attributes)[kCMISAtomEntryDisplayName];
+            propertyData.queryName = (propertyExtension.attributes)[kCMISAtomEntryQueryName];
             propertyData.type = [CMISAtomParserUtil atomPubTypeToInternalType:propertyExtension.name];
 
             

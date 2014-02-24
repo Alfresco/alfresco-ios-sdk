@@ -43,8 +43,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
         //        [documentProperties setObject:@"cmis:document, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -64,8 +64,8 @@
                  
                  // check the properties were added at creation time
                  NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  
@@ -104,9 +104,9 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:3];
-        [props setObject:@"cm:folder, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[kCMISPropertyObjectTypeId] = @"cm:folder, P:cm:titled";
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -127,8 +127,8 @@
                  
                  // check the properties were added at creation time
                  NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  
@@ -168,8 +168,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -189,8 +189,8 @@
                  
                  // check the properties were added at creation time
                  NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  
@@ -257,8 +257,8 @@
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -328,63 +328,55 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *unitTestFolder, NSError *error)
-         {
-             if (nil == unitTestFolder)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 self.callbackCompleted = YES;
-             }
-             else
-             {
-                 STAssertNotNil(unitTestFolder, @"folder should not be nil");
-                 STAssertTrue([unitTestFolder.name isEqualToString:folderName], @"folder name should be %@",folderName);
-                 __block AlfrescoFolder *strongFolder = unitTestFolder;
-                 // check the properties were added at creation time
-                 NSDictionary *newFolderProps = unitTestFolder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
-                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
-                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
-                 
-                 [self.dfService deleteNode:unitTestFolder completionBlock:^(BOOL success, NSError *deleteError)
-                  {
-                      if (!success)
-                      {
-                          self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
-                          self.callbackCompleted = YES;
-                      }
-                      else
-                      {
-                          [weakService retrieveChildrenInFolder:strongFolder completionBlock:^(NSArray *array, NSError *accessError){
-                              if (nil == array)
-                              {
-                                  self.lastTestSuccessful = YES;
-                              }
-                              else
-                              {
-                                  self.lastTestSuccessful = NO;
-                                  self.lastTestFailureMessage = @"We expected the folder not to be accessible after we deleted it";
-                              }
-                              self.callbackCompleted = YES;
-                          }];
-                          
-                      }
-                      
-                  }];
-             }
-             
-             
-             
-         }];
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *unitTestFolder, NSError *error) {
+            if (nil == unitTestFolder)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(unitTestFolder, @"folder should not be nil");
+                STAssertTrue([unitTestFolder.name isEqualToString:folderName], @"folder name should be %@",folderName);
+                __block AlfrescoFolder *strongFolder = unitTestFolder;
+                // check the properties were added at creation time
+                NSDictionary *newFolderProps = unitTestFolder.properties;
+                AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
+                STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                
+                [self.dfService deleteNode:unitTestFolder completionBlock:^(BOOL success, NSError *deleteError) {
+                    if (!success)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        [weakService retrieveChildrenInFolder:strongFolder completionBlock:^(NSArray *array, NSError *accessError) {
+                            if (nil == array)
+                            {
+                                self.lastTestSuccessful = YES;
+                            }
+                            else
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.lastTestFailureMessage = @"Expected the folder not to be accessible after it was deleted.";
+                            }
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+        }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
@@ -406,8 +398,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -425,8 +417,8 @@
                 __block AlfrescoFolder *strongFolder = folder;
                 // check the properties were added at creation time
                 NSDictionary *newFolderProps = folder.properties;
-                AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                 STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                 STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                 
@@ -480,8 +472,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -501,8 +493,8 @@
                  __block AlfrescoFolder *strongFolder = folder;
                  // check the properties were added at creation time
                  NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  
@@ -560,8 +552,8 @@
         __block NSString *title = @"Änderungswünsche";
         __block NSString *name = @"ÜÄÖTestsOrdner";
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:description forKey:@"cm:description"];
-        [props setObject:title forKey:@"cm:title"];
+        props[@"cm:description"] = description;
+        props[@"cm:title"] = title;
         
         // create a new folder in the repository's root folder
         [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props
@@ -580,8 +572,8 @@
                  
                  // check the properties were added at creation time
                  NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:description], @"cm:description property value does not match expected value %@",description);
                  STAssertTrue([newTitleProp.value isEqualToString:title], @"cm:title property value does not match expected value %@",title);
                  
@@ -625,50 +617,44 @@
         __block NSString *title = @"わさび";
         __block NSString *name = @"ラヂオコmプタ";
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:description forKey:@"cm:description"];
-        [props setObject:title forKey:@"cm:title"];
+        props[@"cm:description"] = description;
+        props[@"cm:title"] = title;
         
         // create a new folder in the repository's root folder
-        [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
-         {
-             if (nil == folder)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 self.callbackCompleted = YES;
-             }
-             else
-             {
-                 STAssertNotNil(folder, @"folder should not be nil");
-                 STAssertTrue([folder.name isEqualToString:name], @"folder name should be %@, but instead we got %@",name, folder.name);
-                 
-                 // check the properties were added at creation time
-                 NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
-                 STAssertTrue([newDescriptionProp.value isEqualToString:description], @"cm:description property value does not match expected value %@. Instead we get %@",description, newDescriptionProp.value);
-                 STAssertTrue([newTitleProp.value isEqualToString:title], @"cm:title property value does not match expected value %@. Instead we get %@",title, newTitleProp.value);
-                 
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
-                  {
-                      if (!success)
-                      {
-                          self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                      }
-                      else
-                      {
-                          self.lastTestSuccessful = YES;
-                      }
-                      
-                      self.callbackCompleted = YES;
-                  }];
-             }
-             
-             
-             
-         }];
+        [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+            if (nil == folder)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(folder, @"folder should not be nil");
+                STAssertTrue([folder.name isEqualToString:name], @"folder name should be %@, but instead we got %@",name, folder.name);
+                
+                // check the properties were added at creation time
+                NSDictionary *newFolderProps = folder.properties;
+                AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
+                STAssertTrue([newDescriptionProp.value isEqualToString:description], @"cm:description property value does not match expected value %@. Instead we get %@",description, newDescriptionProp.value);
+                STAssertTrue([newTitleProp.value isEqualToString:title], @"cm:title property value does not match expected value %@. Instead we get %@",title, newTitleProp.value);
+                
+                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                    if (!success)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    }
+                    else
+                    {
+                        self.lastTestSuccessful = YES;
+                    }
+                    
+                    self.callbackCompleted = YES;
+                }];
+            }
+        }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
@@ -690,8 +676,8 @@
         __block NSString *title = @"";
         __block NSString *name = @"";
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:description forKey:@"cm:description"];
-        [props setObject:title forKey:@"cm:title"];
+        props[@"cm:description"] = description;
+        props[@"cm:title"] = title;
         
         // create a new folder in the repository's root folder
         [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props
@@ -747,8 +733,8 @@
         __block NSString *title = @"";
         __block NSString *name = @"NameWIth.and\and/and?and\"and*<and>and|and!";
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:description forKey:@"cm:description"];
-        [props setObject:title forKey:@"cm:title"];
+        props[@"cm:description"] = description;
+        props[@"cm:title"] = title;
         
         // create a new folder in the repository's root folder
         [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props
@@ -882,8 +868,8 @@
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:2];
-        [properties setObject:@"Test Description" forKey:@"cm:description"];
-        [properties setObject:@"Test Title" forKey:@"cm:title"];
+        properties[@"cm:description"] = @"Test Description";
+        properties[@"cm:title"] = @"Test Title";
         
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
@@ -891,7 +877,7 @@
             if (folder == nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
                 self.callbackCompleted = YES;
             }
             else
@@ -901,8 +887,8 @@
                 
                 // check the properties of the foder are correct
                 NSDictionary *newFolderProps = folder.properties;
-                AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                 STAssertTrue([newDescriptionProp.value isEqualToString:@"Test Description"], @"cm:description property value does not match");
                 STAssertTrue([newTitleProp.value isEqualToString:@"Test Title"], @"cm:title property value does not match");
                 
@@ -913,7 +899,7 @@
                     if (pagingResult == nil)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -925,7 +911,7 @@
                              if (!success)
                              {
                                  self.lastTestSuccessful = NO;
-                                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                 self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
                              }
                              else
                              {
@@ -1041,10 +1027,10 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
-        [properties setObject:[kAlfrescoTypeContent stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
-        [properties setObject:@"Test Description" forKey:@"cm:description"];
-        [properties setObject:@"Test Title" forKey:@"cm:title"];
-        [properties setObject:@"Test Author" forKey:@"cm:author"];
+        properties[kCMISPropertyObjectTypeId] = [kAlfrescoTypeContent stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        properties[@"cm:description"] = @"Test Description";
+        properties[@"cm:title"] = @"Test Title";
+        properties[@"cm:author"] = @"Test Author";
         
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSError *sizeError = nil;
@@ -1094,8 +1080,8 @@
                                        STAssertTrue([document.type isEqualToString:kAlfrescoTypeContent], @"object type should be cm:content but instead we got %@", document.type);
                                        // check the properties were added at creation time
                                        NSDictionary *newFolderProps = document.properties;
-                                       AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                                       AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                                       AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                                       AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                                        STAssertTrue([newDescriptionProp.value isEqualToString:@"Test Description"], @"cm:description property value does not match - we got %@", newDescriptionProp.value);
                                        STAssertTrue([newTitleProp.value isEqualToString:@"Test Title"], @"cm:title property value does not match - we got %@", newTitleProp.value);
                                        [weakFolderServer deleteNode:document completionBlock:^(BOOL succeeded, NSError *error){
@@ -1139,10 +1125,10 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
-        [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
-        [properties setObject:@"Test Description" forKey:@"cm:description"];
-        [properties setObject:@"Test Title" forKey:@"cm:title"];
-        [properties setObject:@"Test Author" forKey:@"cm:author"];
+        properties[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        properties[@"cm:description"] = @"Test Description";
+        properties[@"cm:title"] = @"Test Title";
+        properties[@"cm:author"] = @"Test Author";
         
         __weak AlfrescoDocumentFolderService *weakFolderServer = self.dfService;
         
@@ -1260,8 +1246,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -1281,8 +1267,8 @@
                  
                  // check the properties were added at creation time
                  NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  __block AlfrescoFolder *blockFolder = folder;
@@ -1340,8 +1326,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -1361,8 +1347,8 @@
                  
                  // check the properties were added at creation time
                  NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  __block AlfrescoFolder *blockFolder = folder;
@@ -1419,8 +1405,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -1440,8 +1426,8 @@
                  
                  // check the properties were added at creation time
                  NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  __block AlfrescoFolder *blockFolder = folder;
@@ -1780,7 +1766,7 @@
                      
                      if ([myArray count] > 0)
                      {
-                         AlfrescoDocument *serializedDoc = [myArray objectAtIndex:0];
+                         AlfrescoDocument *serializedDoc = myArray[0];
                          AlfrescoProperty *serializedDocProperty = [doc.properties valueForKey:kCMISPropertyName];
                          
                          STAssertEqualObjects(docName, serializedDoc.name, @"name should match");
@@ -2100,8 +2086,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -2121,8 +2107,8 @@
                  __block AlfrescoFolder *strongFolder = folder;
                  // check the properties were added at creation time
                  NSDictionary *newFolderProps = folder.properties;
-                 AlfrescoProperty *newDescriptionProp = [newFolderProps objectForKey:@"cm:description"];
-                 AlfrescoProperty *newTitleProp = [newFolderProps objectForKey:@"cm:title"];
+                 AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
+                 AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                  STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  
@@ -2218,8 +2204,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -2342,7 +2328,7 @@
                  STAssertTrue(array.count > 0, @"Expected more than 0 documents");
                  if (array.count > 0)
                  {
-                     [weakDfService retrieveContentOfDocument:[array objectAtIndex:0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
+                     [weakDfService retrieveContentOfDocument:array[0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
                       {
                           if (nil == contentFile)
                           {
@@ -2402,70 +2388,66 @@
         NSString *filename = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.testImageName];
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
         // provide the objectTypeId so we can specify the cm:author aspect
-        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-                  forKey:kCMISPropertyObjectTypeId];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
-        [props setObject:@"test author" forKey:@"cm:author"];
+        props[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
+        props[@"cm:author"] = @"test author";
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
-        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder
-                                   contentFile:self.testImageFile
-                                    properties:props
-                               completionBlock:^(AlfrescoDocument *document, NSError *blockError){
-                                   if (nil == document)
-                                   {
-                                       self.lastTestSuccessful = NO;
-                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
-                                       self.callbackCompleted = YES;
-                                   }
-                                   else
-                                   {
-                                       STAssertNotNil(document.identifier, @"document identifier should be filled");
-                                       STAssertTrue(document.contentLength > 100, @"expected content to be filled");
-                                       
-                                       // check the properties were added at creation time
-                                       NSDictionary *newDocProps = document.properties;
-                                       AlfrescoProperty *newDescriptionProp = [newDocProps objectForKey:@"cm:description"];
-                                       AlfrescoProperty *newTitleProp = [newDocProps objectForKey:@"cm:title"];
-                                       AlfrescoProperty *newAuthorProp = [newDocProps objectForKey:@"cm:author"];
-                                       STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
-                                       STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
-                                       STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
-                                       
-                                       
-                                       __block AlfrescoDocument *strongDocument = document;
-                                       
-                                       // delete the test document
-                                       [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error)
-                                        {
-                                            if (!success)
-                                            {
-                                                self.lastTestSuccessful = NO;
-                                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                                self.callbackCompleted = YES;
-                                            }
-                                            else
-                                            {
-                                                [weakService retrieveContentOfDocument:strongDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
-                                                    if (nil == contentFile)
-                                                    {
-                                                        self.lastTestSuccessful = YES;
-                                                    }
-                                                    else
-                                                    {
-                                                        self.lastTestSuccessful = NO;
-                                                        self.lastTestFailureMessage = @"We should not be able to get content for a deleted/nonexisting document";
-                                                        
-                                                    }
-                                                    self.callbackCompleted = YES;
-                                                } progressBlock:^(unsigned long long down, unsigned long long total){}];
-                                            }
-                                        }];
-                                   }
-                               } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
-                               }];
+        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *blockError) {
+            if (nil == document)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(document.identifier, @"document identifier should be filled");
+                STAssertTrue(document.contentLength > 100, @"expected content to be filled");
+                
+                // check the properties were added at creation time
+                NSDictionary *newDocProps = document.properties;
+                AlfrescoProperty *newDescriptionProp = newDocProps[@"cm:description"];
+                AlfrescoProperty *newTitleProp = newDocProps[@"cm:title"];
+                AlfrescoProperty *newAuthorProp = newDocProps[@"cm:author"];
+                STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
+                
+                __block AlfrescoDocument *strongDocument = document;
+                
+                // delete the test document
+                [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
+                    if (!success)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        [weakService retrieveContentOfDocument:strongDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+                            if (nil == contentFile)
+                            {
+                                self.lastTestSuccessful = YES;
+                            }
+                            else
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.lastTestFailureMessage = @"We should not be able to get content for a deleted/nonexisting document";
+                            }
+                            self.callbackCompleted = YES;
+                        } progressBlock:^(unsigned long long down, unsigned long long total) {
+                            // No-op
+                        }];
+                    }
+                }];
+            }
+        } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
+            // No-op
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -2474,7 +2456,6 @@
     {
         STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
-    
 }
 
 
@@ -2490,11 +2471,10 @@
         NSString *filename = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.testImageName];
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
         // provide the objectTypeId so we can specify the cm:author aspect
-        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-                  forKey:kCMISPropertyObjectTypeId];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
-        [props setObject:@"test author" forKey:@"cm:author"];
+        props[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
+        props[@"cm:author"] = @"test author";
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder
@@ -2514,9 +2494,9 @@
                                        
                                        // check the properties were added at creation time
                                        NSDictionary *newDocProps = document.properties;
-                                       AlfrescoProperty *newDescriptionProp = [newDocProps objectForKey:@"cm:description"];
-                                       AlfrescoProperty *newTitleProp = [newDocProps objectForKey:@"cm:title"];
-                                       AlfrescoProperty *newAuthorProp = [newDocProps objectForKey:@"cm:author"];
+                                       AlfrescoProperty *newDescriptionProp = newDocProps[@"cm:description"];
+                                       AlfrescoProperty *newTitleProp = newDocProps[@"cm:title"];
+                                       AlfrescoProperty *newAuthorProp = newDocProps[@"cm:author"];
                                        STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                                        STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                                        STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
@@ -2695,74 +2675,69 @@
         NSString *filename = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.testImageName];
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
         // provide the objectTypeId so we can specify the cm:author aspect
-        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-                  forKey:kCMISPropertyObjectTypeId];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
-        [props setObject:@"test author" forKey:@"cm:author"];
+        props[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
+        props[@"cm:author"] = @"test author";
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
-        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder
-                                   contentFile:self.testImageFile
-                                    properties:props
-                               completionBlock:^(AlfrescoDocument *document, NSError *blockError){
-                                   if (nil == document)
-                                   {
-                                       self.lastTestSuccessful = NO;
-                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
-                                       self.callbackCompleted = YES;
-                                   }
-                                   else
-                                   {
-                                       STAssertNotNil(document.identifier, @"document identifier should be filled");
-                                       STAssertTrue(document.contentLength > 100, @"expected content to be filled");
-                                       
-                                       // check the properties were added at creation time
-                                       NSDictionary *newDocProps = document.properties;
-                                       AlfrescoProperty *newDescriptionProp = [newDocProps objectForKey:@"cm:description"];
-                                       AlfrescoProperty *newTitleProp = [newDocProps objectForKey:@"cm:title"];
-                                       AlfrescoProperty *newAuthorProp = [newDocProps objectForKey:@"cm:author"];
-                                       STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
-                                       STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
-                                       STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
-                                       
-                                       
-                                       __block AlfrescoDocument *strongDocument = document;
-                                       
-                                       // delete the test document
-                                       [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error)
-                                        {
-                                            if (!success)
-                                            {
-                                                self.lastTestSuccessful = NO;
-                                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                                                self.callbackCompleted = YES;
-                                            }
-                                            else
-                                            {
-                                                __block NSString *updatedContent = [NSString stringWithFormat:@"and we added some text."];
-                                                NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
-                                                __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"text/plain"];
-                                                [weakService updateContentOfDocument:strongDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDoc, NSError *error){
-                                                    if (nil == updatedDoc)
-                                                    {
-                                                        self.lastTestSuccessful = YES;
-                                                    }
-                                                    else
-                                                    {
-                                                        self.lastTestSuccessful = NO;
-                                                        self.lastTestFailureMessage = @"We should not be able to update a deleted/nonexisting document";
-                                                        
-                                                    }
-                                                    self.callbackCompleted = YES;
-                                                } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
-                                                //                                                self.lastTestSuccessful = YES;
-                                            }
-                                        }];
-                                   }
-                               } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){
-                               }];
+        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *blockError) {
+            if (nil == document)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                STAssertNotNil(document.identifier, @"document identifier should be filled");
+                STAssertTrue(document.contentLength > 100, @"expected content to be filled");
+                
+                // check the properties were added at creation time
+                NSDictionary *newDocProps = document.properties;
+                AlfrescoProperty *newDescriptionProp = newDocProps[@"cm:description"];
+                AlfrescoProperty *newTitleProp = newDocProps[@"cm:title"];
+                AlfrescoProperty *newAuthorProp = newDocProps[@"cm:author"];
+                STAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
+                STAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
+                STAssertTrue([newAuthorProp.value isEqualToString:@"test author"], @"cm:author property value does not match");
+                
+                __block AlfrescoDocument *strongDocument = document;
+                
+                // delete the test document
+                [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
+                    if (!success)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        __block NSString *updatedContent = [NSString stringWithFormat:@"and we added some text."];
+                        NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
+                        __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"text/plain"];
+                        [weakService updateContentOfDocument:strongDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDoc, NSError *error) {
+                            if (nil == updatedDoc)
+                            {
+                                self.lastTestSuccessful = YES;
+                            }
+                            else
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.lastTestFailureMessage = @"It should not be possible to update a deleted/nonexisting document";
+                            }
+                            self.callbackCompleted = YES;
+                        } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+                            // No-op
+                        }];
+                    }
+                }];
+            }
+        } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
+            // No-op
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -2771,7 +2746,6 @@
     {
         STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
-    
 }
 
 - (void)testRenameNode
@@ -2783,67 +2757,59 @@
         __block NSString *testTitle = @"test title";
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
         // provide the objectTypeId so we can specify the cm:author aspect
-        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-                  forKey:kCMISPropertyObjectTypeId];
-        [props setObject:testDescription forKey:@"cm:description"];
-        [props setObject:testTitle forKey:@"cm:title"];
+        props[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        props[@"cm:description"] = testDescription;
+        props[@"cm:title"] = testTitle;
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
         
-        [self.dfService
-         createDocumentWithName:filename
-         inParentFolder:self.testDocFolder
-         contentFile:self.testImageFile
-         properties:props
-         completionBlock:^(AlfrescoDocument *imageDoc, NSError *blockError){
-             if (nil == imageDoc)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
-                 self.callbackCompleted = YES;
-             }
-             else
-             {
-                 NSString *updatedName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.testImageName];
-                 NSMutableDictionary *updateProperties = [NSMutableDictionary dictionary];
-                 [updateProperties setObject:updatedName forKey:@"cm:name"];
-                 [weakDfService updatePropertiesOfNode:imageDoc properties:updateProperties completionBlock:^(AlfrescoNode *node, NSError *updateError){
-                     if (nil == node)
-                     {
-                         self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [updateError localizedDescription], [blockError localizedFailureReason]];
-                         self.callbackCompleted = YES;
-                     }
-                     else
-                     {
-                         STAssertTrue([node isKindOfClass:[AlfrescoDocument class]], @"the node should be of type AlfrescoDocument");
-                         AlfrescoDocument *updatedDoc = (AlfrescoDocument *)node;
-                         STAssertTrue([updatedDoc.name isEqualToString:updatedName], @"The name of the document should be %@, but instead we got %@", updatedName, updatedDoc.name);
-                         AlfrescoProperty *description = [updatedDoc.properties objectForKey:@"cm:description"];
-                         AlfrescoProperty *title = [updatedDoc.properties objectForKey:@"cm:title"];
-                         STAssertTrue([description.value isEqualToString:testDescription], @"expected description %@, but got %@", testDescription, description.value);
-                         STAssertTrue([title.value isEqualToString:testTitle], @"expected title %@, but got %@", testTitle, title.value);
-                         [weakDfService deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError){
-                             if (!succeeded)
-                             {
-                                 self.lastTestSuccessful = NO;
-                                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [updateError localizedDescription], [blockError localizedFailureReason]];
-                             }
-                             else
-                             {
-                                 self.lastTestSuccessful = YES;
-                             }
-                             self.callbackCompleted = YES;
-                         }];
-                     }
-                 }];
-             }
-             
-             
-         } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){
-         }];
-        
+        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *imageDoc, NSError *blockError) {
+            if (nil == imageDoc)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                NSString *updatedName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.testImageName];
+                NSMutableDictionary *updateProperties = [NSMutableDictionary dictionary];
+                updateProperties[@"cm:name"] = updatedName;
+                [weakDfService updatePropertiesOfNode:imageDoc properties:updateProperties completionBlock:^(AlfrescoNode *node, NSError *updateError){
+                    if (nil == node)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [updateError localizedDescription], [blockError localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        STAssertTrue([node isKindOfClass:[AlfrescoDocument class]], @"the node should be of type AlfrescoDocument");
+                        AlfrescoDocument *updatedDoc = (AlfrescoDocument *)node;
+                        STAssertTrue([updatedDoc.name isEqualToString:updatedName], @"The name of the document should be %@, but instead we got %@", updatedName, updatedDoc.name);
+                        AlfrescoProperty *description = (updatedDoc.properties)[@"cm:description"];
+                        AlfrescoProperty *title = (updatedDoc.properties)[@"cm:title"];
+                        STAssertTrue([description.value isEqualToString:testDescription], @"expected description %@, but got %@", testDescription, description.value);
+                        STAssertTrue([title.value isEqualToString:testTitle], @"expected title %@, but got %@", testTitle, title.value);
+                        [weakDfService deleteNode:node completionBlock:^(BOOL succeeded, NSError *deleteError){
+                            if (!succeeded)
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [updateError localizedDescription], [blockError localizedFailureReason]];
+                            }
+                            else
+                            {
+                                self.lastTestSuccessful = YES;
+                            }
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+        } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+            // No-op
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -2852,7 +2818,6 @@
     {
         STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
-    
 }
 
 - (void)testEmptyTitleAndDescriptionProperties
@@ -2947,10 +2912,10 @@
              {
                  __block NSString *propertyObjectTestValue = @"version-download-test-updated.txt";
                  NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:8];
-                 [propDict setObject:propertyObjectTestValue forKey:kCMISPropertyName];
-                 [propDict setObject:@"updated description" forKey:@"cm:description"];
-                 [propDict setObject:@"updated title" forKey:@"cm:title"];
-                 [propDict setObject:@"updated author" forKey:@"cm:author"];
+                 propDict[kCMISPropertyName] = propertyObjectTestValue;
+                 propDict[@"cm:description"] = @"updated description";
+                 propDict[@"cm:title"] = @"updated title";
+                 propDict[@"cm:author"] = @"updated author";
                  
                  [weakDfService updatePropertiesOfNode:self.testAlfrescoDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error)
                   {
@@ -2970,9 +2935,9 @@
                           
                           // check the updated properties
                           NSDictionary *updatedProps = updatedDocument.properties;
-                          AlfrescoProperty *updatedDescription = [updatedProps objectForKey:@"cm:description"];
-                          AlfrescoProperty *updatedTitle = [updatedProps objectForKey:@"cm:title"];
-                          AlfrescoProperty *updatedAuthor = [updatedProps objectForKey:@"cm:author"];
+                          AlfrescoProperty *updatedDescription = updatedProps[@"cm:description"];
+                          AlfrescoProperty *updatedTitle = updatedProps[@"cm:title"];
+                          AlfrescoProperty *updatedAuthor = updatedProps[@"cm:author"];
                           STAssertTrue([updatedDescription.value isEqualToString:@"updated description"], @"Updated description is incorrect");
                           STAssertTrue([updatedTitle.value isEqualToString:@"updated title"], @"Updated title is incorrect");
                           STAssertTrue([updatedAuthor.value isEqualToString:@"updated author"], @"Updated author is incorrect");
@@ -3019,11 +2984,10 @@
         NSString *filename = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.testImageName];
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
         // provide the objectTypeId so we can specify the cm:author aspect
-        [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-                  forKey:kCMISPropertyObjectTypeId];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
-        [props setObject:@"test author" forKey:@"cm:author"];
+        props[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
+        props[@"cm:author"] = @"test author";
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
@@ -3047,9 +3011,9 @@
                                        __block NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:8];
                                        //                 [propDict setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
                                        //                              forKey:kCMISPropertyObjectTypeId];
-                                       [propDict setObject:propertyObjectTestValue forKey:kCMISPropertyName];
-                                       [propDict setObject:@"updated description" forKey:@"cm:description"];
-                                       [propDict setObject:@"updated title" forKey:@"cm:title"];
+                                       propDict[kCMISPropertyName] = propertyObjectTestValue;
+                                       propDict[@"cm:description"] = @"updated description";
+                                       propDict[@"cm:title"] = @"updated title";
                                        
                                        
                                        __block AlfrescoDocument *strongDocument = document;
@@ -3159,8 +3123,8 @@
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -3594,44 +3558,42 @@
                     NSInteger hour = [components hour];
                     NSInteger minute = [components minute];
                     NSInteger second = [components second];
-                    NSNumber *imagePixelXDimension = [NSNumber numberWithInt:arc4random()%512];
-                    NSNumber *imagePixelYDimension = [NSNumber numberWithInt:arc4random()%382];
-                    NSNumber *imageExposureTime = [NSNumber numberWithInt:(arc4random()%100)/100.0];
-                    NSNumber *imageFNumber = [NSNumber numberWithInt:(arc4random()%100)/100.0];
-                    NSNumber *imageFlash = [NSNumber numberWithBool:YES];
-                    NSNumber *imageFocalLength = [NSNumber numberWithInt:(arc4random()%100)/100.0];
+                    NSNumber *imagePixelXDimension = @(arc4random()%512);
+                    NSNumber *imagePixelYDimension = @(arc4random()%382);
+                    NSDecimalNumber *imageExposureTime =[NSDecimalNumber decimalNumberWithDecimal:[@((arc4random()%100)/100.0) decimalValue]];
+                    NSDecimalNumber *imageFNumber = [NSDecimalNumber decimalNumberWithDecimal:[@((arc4random()%100)/100.0) decimalValue]];
+                    NSNumber *imageFlash = @YES;
+                    NSDecimalNumber *imageFocalLength = [NSDecimalNumber decimalNumberWithDecimal:[@((arc4random()%100)/100.0) decimalValue]];
                     NSString *imageISOSpeedRating = [NSString stringWithFormat:@"ISO Setting %i", arc4random()%2000];
                     NSString *imageManufacturer = [NSString stringWithFormat:@"Nikon %i", arc4random()%1000];
                     NSString *imageModel = [NSString stringWithFormat:@"D Series %i", arc4random()%999];;
                     NSString *imageSoftware = [NSString stringWithFormat:@"Photoshop %i", arc4random()%10];;
-                    NSNumber *imageOrientation = [NSNumber numberWithInt:arc4random()%1];
-                    NSNumber *imageXResolution = [NSNumber numberWithInt:arc4random()%512];
-                    NSNumber *imageYResolution = [NSNumber numberWithInt:arc4random()%382];
+                    NSNumber *imageOrientation = @(arc4random()%1);
+                    NSNumber *imageXResolution = @(arc4random()%512);
+                    NSNumber *imageYResolution = @(arc4random()%382);
                     NSString *imageResolutionUnit = [NSString stringWithFormat:@"ISO Setting %i", arc4random()%5000];;
                     
                     // create property
                     NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-                    [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author,P:exif:exif"]
-                                   forKey:kCMISPropertyObjectTypeId];
+                    properties[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author,P:exif:exif"];
                     // exif
-                    [properties setObject:dateTimeOriginal forKey:@"exif:dateTimeOriginal"];
-                    [properties setObject:imagePixelXDimension forKey:@"exif:pixelXDimension"];
-                    [properties setObject:imagePixelYDimension forKey:@"exif:pixelYDimension"];
-                    [properties setObject:imageExposureTime forKey:@"exif:exposureTime"];
-                    [properties setObject:imageFNumber forKey:@"exif:fNumber"];
-                    [properties setObject:imageFlash forKey:@"exif:flash"];
-                    [properties setObject:imageFocalLength forKey:@"exif:focalLength"];
-                    [properties setObject:imageISOSpeedRating forKey:@"exif:isoSpeedRatings"];
-                    [properties setObject:imageManufacturer forKey:@"exif:manufacturer"];
-                    [properties setObject:imageModel forKey:@"exif:model"];
-                    [properties setObject:imageSoftware forKey:@"exif:software"];
-                    [properties setObject:imageOrientation forKey:@"exif:orientation"];
-                    [properties setObject:imageXResolution forKey:@"exif:xResolution"];
-                    [properties setObject:imageYResolution forKey:@"exif:yResolution"];
-                    [properties setObject:imageResolutionUnit forKey:@"exif:resolutionUnit"];
+                    properties[@"exif:dateTimeOriginal"] = dateTimeOriginal;
+                    properties[@"exif:pixelXDimension"] = imagePixelXDimension;
+                    properties[@"exif:pixelYDimension"] = imagePixelYDimension;
+                    properties[@"exif:exposureTime"] = imageExposureTime;
+                    properties[@"exif:fNumber"] = imageFNumber;
+                    properties[@"exif:flash"] = imageFlash;
+                    properties[@"exif:focalLength"] = imageFocalLength;
+                    properties[@"exif:isoSpeedRatings"] = imageISOSpeedRating;
+                    properties[@"exif:manufacturer"] = imageManufacturer;
+                    properties[@"exif:model"] = imageModel;
+                    properties[@"exif:software"] = imageSoftware;
+                    properties[@"exif:orientation"] = imageOrientation;
+                    properties[@"exif:xResolution"] = imageXResolution;
+                    properties[@"exif:yResolution"] = imageYResolution;
+                    properties[@"exif:resolutionUnit"] = imageResolutionUnit;
                     
-                    [weakFolderService updatePropertiesOfNode:node properties:properties completionBlock:^(AlfrescoNode *modifiedNode, NSError *modifiedError){
-                        
+                    [weakFolderService updatePropertiesOfNode:node properties:properties completionBlock:^(AlfrescoNode *modifiedNode, NSError *modifiedError) {
                         if (modifiedNode == nil || modifiedError != nil) {
                             self.lastTestSuccessful = NO;
                             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [modifiedError localizedDescription], [modifiedError localizedFailureReason]];
@@ -3645,21 +3607,21 @@
                             // check the properties were changed
                             NSDictionary *modifiedProperties = modifiedNode.properties;
                             
-                            AlfrescoProperty *modifiedDateTimeOriginal = [modifiedProperties objectForKey:@"exif:dateTimeOriginal"];
-                            AlfrescoProperty *modifiedImagePixelXDimension = [modifiedProperties objectForKey:@"exif:pixelXDimension"];
-                            AlfrescoProperty *modifiedImagePixelYDimension = [modifiedProperties objectForKey:@"exif:pixelYDimension"];
-                            AlfrescoProperty *modifiedImageExposureTime = [modifiedProperties objectForKey:@"exif:exposureTime"];
-                            AlfrescoProperty *modifiedImageFNumber = [modifiedProperties objectForKey:@"exif:fNumber"];
-                            AlfrescoProperty *modifiedImageFlash = [modifiedProperties objectForKey:@"exif:flash"];
-                            AlfrescoProperty *modifiedImageFocalLength = [modifiedProperties objectForKey:@"exif:focalLength"];
-                            AlfrescoProperty *modifiedImageISOSpeedRating= [modifiedProperties objectForKey:@"exif:isoSpeedRatings"];
-                            AlfrescoProperty *modifiedImageManufacturer = [modifiedProperties objectForKey:@"exif:manufacturer"];
-                            AlfrescoProperty *modifiedImageModel = [modifiedProperties objectForKey:@"exif:model"];
-                            AlfrescoProperty *modifiedImageSoftware = [modifiedProperties objectForKey:@"exif:software"];
-                            AlfrescoProperty *modifiedImageOrientation = [modifiedProperties objectForKey:@"exif:orientation"];
-                            AlfrescoProperty *modifiedImageXResolution = [modifiedProperties objectForKey:@"exif:xResolution"];
-                            AlfrescoProperty *modifiedImageYResolution = [modifiedProperties objectForKey:@"exif:yResolution"];
-                            AlfrescoProperty *modifiedImageResolutionUnit = [modifiedProperties objectForKey:@"exif:resolutionUnit"];
+                            AlfrescoProperty *modifiedDateTimeOriginal = modifiedProperties[@"exif:dateTimeOriginal"];
+                            AlfrescoProperty *modifiedImagePixelXDimension = modifiedProperties[@"exif:pixelXDimension"];
+                            AlfrescoProperty *modifiedImagePixelYDimension = modifiedProperties[@"exif:pixelYDimension"];
+                            AlfrescoProperty *modifiedImageExposureTime = modifiedProperties[@"exif:exposureTime"];
+                            AlfrescoProperty *modifiedImageFNumber = modifiedProperties[@"exif:fNumber"];
+                            AlfrescoProperty *modifiedImageFlash = modifiedProperties[@"exif:flash"];
+                            AlfrescoProperty *modifiedImageFocalLength = modifiedProperties[@"exif:focalLength"];
+                            AlfrescoProperty *modifiedImageISOSpeedRating= modifiedProperties[@"exif:isoSpeedRatings"];
+                            AlfrescoProperty *modifiedImageManufacturer = modifiedProperties[@"exif:manufacturer"];
+                            AlfrescoProperty *modifiedImageModel = modifiedProperties[@"exif:model"];
+                            AlfrescoProperty *modifiedImageSoftware = modifiedProperties[@"exif:software"];
+                            AlfrescoProperty *modifiedImageOrientation = modifiedProperties[@"exif:orientation"];
+                            AlfrescoProperty *modifiedImageXResolution = modifiedProperties[@"exif:xResolution"];
+                            AlfrescoProperty *modifiedImageYResolution = modifiedProperties[@"exif:yResolution"];
+                            AlfrescoProperty *modifiedImageResolutionUnit = modifiedProperties[@"exif:resolutionUnit"];
                             
                             //exif
                             NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:modifiedDateTimeOriginal.value];
@@ -3667,29 +3629,29 @@
                             NSInteger modifiedMonth = [components month];
                             NSInteger modifiedYear = [components year];
                             NSInteger modifiedHour = [components hour];
-                            NSInteger mofifiedMinute = [components minute];
+                            NSInteger modifiedMinute = [components minute];
                             NSInteger modifiedSecond = [components second];
-                            STAssertTrue(modifiedDay == day, @"Day was not the same after being modified");
-                            STAssertTrue(modifiedMonth == month, @"Month was not the same after being modified");
-                            STAssertTrue(modifiedYear == year, @"Year was not the same after being modified");
-                            STAssertTrue(modifiedHour == hour, @"hour should be the same but it is %d orig and %d modified", hour, modifiedHour);
-                            STAssertTrue(mofifiedMinute == minute, @"minute should be the same but it is %d orig and %d modified", minute, mofifiedMinute);
-                            STAssertTrue(modifiedSecond == second, @"second should be the same but it is %d orig and %d modified", second, modifiedSecond);
+                            STAssertTrue(modifiedDay == day, @"Day: modified %lu differs from original %lu", modifiedDay, day);
+                            STAssertTrue(modifiedMonth == month, @"Month: modified %lu differs from original %lu", modifiedMonth, month);
+                            STAssertTrue(modifiedYear == year, @"Year: modified %lu differs from original %lu", modifiedYear, year);
+                            STAssertTrue(modifiedHour == hour, @"Hour: modified %lu differs from original %lu", modifiedHour, hour);
+                            STAssertTrue(modifiedMinute == minute, @"Minute: modified %lu differs from original %lu", modifiedMinute, minute);
+                            STAssertTrue(modifiedSecond == second, @"Second: modified %lu differs from original %lu", modifiedSecond, second);
                             
-                            STAssertTrue([modifiedImagePixelXDimension.value isEqualToNumber:imagePixelXDimension], @"Pixel X Dimension was not the same after being modified");
-                            STAssertTrue([modifiedImagePixelYDimension.value isEqualToNumber:imagePixelYDimension], @"Pixel Y Dimension was not the same after being modified");
-                            STAssertTrue([modifiedImageExposureTime.value isEqualToNumber:imageExposureTime], @"Exposure Time was not the same after being modified");
-                            STAssertTrue([modifiedImageFNumber.value isEqualToNumber:imageFNumber], @"F Number was not the same after being modified");
-                            STAssertTrue([modifiedImageFlash.value isEqualToNumber:imageFlash], @"Flash was not the same after being modified");
-                            STAssertTrue([modifiedImageFocalLength.value isEqualToNumber:imageFocalLength], @"Focal Length was not the same after being modified");
-                            STAssertTrue([modifiedImageISOSpeedRating.value isEqualToString:imageISOSpeedRating], @"ISO Speed Rating was not the same after being modified");
-                            STAssertTrue([modifiedImageManufacturer.value isEqualToString:imageManufacturer], @"Manufacturer was not the same after being modified");
-                            STAssertTrue([modifiedImageModel.value isEqualToString:imageModel], @"Model was not the same after being modified");
-                            STAssertTrue([modifiedImageSoftware.value isEqualToString:imageSoftware], @"Software was not the same after being modified");
-                            STAssertTrue([modifiedImageOrientation.value isEqualToNumber:imageOrientation], @"Orientation was not the same after being modified");
-                            STAssertTrue([modifiedImageXResolution.value isEqualToNumber:imageXResolution], @"XResolution was not the same after being modified");
-                            STAssertTrue([modifiedImageYResolution.value isEqualToNumber:imageYResolution], @"YResolution was not the same after being modified");
-                            STAssertTrue([modifiedImageResolutionUnit.value isEqualToString:imageResolutionUnit], @"Resolution Unit was not the same after being modified");
+                            STAssertTrue([modifiedImagePixelXDimension.value isEqualToNumber:imagePixelXDimension], @"Pixel X Dimension: modified %lu differs from original %lu", modifiedImagePixelXDimension.value, imagePixelXDimension);
+                            STAssertTrue([modifiedImagePixelYDimension.value isEqualToNumber:imagePixelYDimension], @"Pixel Y Dimension: modified %lu differs from original %lu", modifiedImagePixelYDimension.value, imagePixelYDimension);
+                            STAssertTrue([modifiedImageExposureTime.value isEqualToNumber:imageExposureTime], @"Exposure Time: modified %@ differs from original %@");
+                            STAssertTrue([modifiedImageFNumber.value isEqualToNumber:imageFNumber], @"F Number: modified %f differs from original %f", modifiedImageFNumber.value, imageFNumber);
+                            STAssertTrue([modifiedImageFlash.value isEqualToNumber:imageFlash], @"Flash: modified %@ differs from original %@", BOOL_TO_STRING(modifiedImageFlash.value), BOOL_TO_STRING(imageFocalLength));
+                            STAssertTrue([modifiedImageFocalLength.value isEqualToNumber:imageFocalLength], @"Focal Length: modified %lu differs from original %lu", modifiedImageFocalLength.value, imageFocalLength);
+                            STAssertTrue([modifiedImageISOSpeedRating.value isEqualToString:imageISOSpeedRating], @"ISO Speed Rating: modified %@ differs from original %@", modifiedImageISOSpeedRating.value, imageISOSpeedRating);
+                            STAssertTrue([modifiedImageManufacturer.value isEqualToString:imageManufacturer], @"Manufacturer: modified %@ differs from original %@", modifiedImageManufacturer.value, imageManufacturer);
+                            STAssertTrue([modifiedImageModel.value isEqualToString:imageModel], @"Model: modified %@ differs from original %@", modifiedImageModel.value, imageModel);
+                            STAssertTrue([modifiedImageSoftware.value isEqualToString:imageSoftware], @"Software: modified %@ differs from original %@", modifiedImageSoftware.value, imageSoftware);
+                            STAssertTrue([modifiedImageOrientation.value isEqualToNumber:imageOrientation], @"Orientation: modified %d differs from original %d", modifiedImageOrientation.value, imageOrientation);
+                            STAssertTrue([modifiedImageXResolution.value isEqualToNumber:imageXResolution], @"X Resolution: modified %lu differs from original %lu", modifiedImageXResolution.value, imageXResolution);
+                            STAssertTrue([modifiedImageYResolution.value isEqualToNumber:imageYResolution], @"Y Resolution: modified %lu differs from original %lu", modifiedImageYResolution.value, imageYResolution);
+                            STAssertTrue([modifiedImageResolutionUnit.value isEqualToString:imageResolutionUnit], @"Resolution Unit: modified %@ differs from original %@", modifiedImageResolutionUnit.value, imageResolutionUnit);
                             
                             self.lastTestSuccessful = YES;
                         }
@@ -3747,11 +3709,10 @@
         
         NSString *filename = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.testImageName];
         NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
-        [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"]
-                       forKey:kCMISPropertyObjectTypeId];
-        [properties setObject:@"test description" forKey:@"cm:description"];
-        [properties setObject:@"test title" forKey:@"cm:title"];
-        [properties setObject:@"test author" forKey:@"cm:author"];
+        properties[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        properties[@"cm:description"] = @"test description";
+        properties[@"cm:title"] = @"test title";
+        properties[@"cm:author"] = @"test author";
         
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
         
@@ -3972,10 +3933,10 @@
                         
                         for (int i = 0; i < [pagingResult.objects count]; i++)
                         {
-                            AlfrescoNode *pagedNode = (AlfrescoNode *)[pagingResult.objects objectAtIndex:i];
+                            AlfrescoNode *pagedNode = (AlfrescoNode *)(pagingResult.objects)[i];
                             for (int j = 0; j < entireArray.count; j++)
                             {
-                                AlfrescoNode *listedNode = (AlfrescoNode *)[entireArray objectAtIndex:j];
+                                AlfrescoNode *listedNode = (AlfrescoNode *)entireArray[j];
                                 if ([pagedNode.identifier isEqualToString:listedNode.identifier])
                                 {
                                     matchedNodes++;
@@ -4162,8 +4123,8 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         NSMutableDictionary *originalProperties = [NSMutableDictionary dictionary];
-        [originalProperties setObject:originalDescriptionString forKey:@"cm:description"];
-        [originalProperties setObject:originalTitleString forKey:@"cm:title"];
+        originalProperties[@"cm:description"] = originalDescriptionString;
+        originalProperties[@"cm:title"] = originalTitleString;
         
         //        __weak AlfrescoDocumentFolderServiceTest *weakSelf = self;
         
@@ -4182,18 +4143,18 @@
                 STAssertNotNil(folder.properties, @"The folders properties are nil");
                 
                 NSDictionary *folderProperties = folder.properties;
-                AlfrescoProperty *originalDescription = [folderProperties objectForKey:@"cm:description"];
-                AlfrescoProperty *originalTitle = [folderProperties objectForKey:@"cm:title"];
-                AlfrescoProperty *originalName = [folderProperties objectForKey:@"cmis:name"];
+                AlfrescoProperty *originalDescription = folderProperties[@"cm:description"];
+                AlfrescoProperty *originalTitle = folderProperties[@"cm:title"];
+                AlfrescoProperty *originalName = folderProperties[@"cmis:name"];
                 
                 STAssertNotNil(originalDescription, @"Expected the original description not to be nil");
                 STAssertNotNil(originalTitle, @"Expected the original title not to be nil");
                 STAssertNotNil(originalName, @"Expected the original name not to be nil");
                 
                 NSMutableDictionary *newFolderProperties = [NSMutableDictionary dictionary];
-                [newFolderProperties setObject:updatedDescriptionString forKey:@"cm:description"];
-                [newFolderProperties setObject:updatedTitleString forKey:@"cm:title"];
-                [newFolderProperties setObject:updatedNameString forKey:@"cmis:name"];
+                newFolderProperties[@"cm:description"] = updatedDescriptionString;
+                newFolderProperties[@"cm:title"] = updatedTitleString;
+                newFolderProperties[@"cmis:name"] = updatedNameString;
                 
                 [self.dfService updatePropertiesOfNode:folder properties:newFolderProperties completionBlock:^(AlfrescoNode *node, NSError *err) {
                     
@@ -4208,9 +4169,9 @@
                         STAssertNotNil(node.properties, @"Expected the returned nodes property not to be nil");
                         
                         NSDictionary *nodeProperties = node.properties;
-                        AlfrescoProperty *modifiedDescription = [nodeProperties objectForKey:@"cm:description"];
-                        AlfrescoProperty *modifiedTitle = [nodeProperties objectForKey:@"cm:title"];
-                        AlfrescoProperty *modifiedName = [nodeProperties objectForKey:@"cmis:name"];
+                        AlfrescoProperty *modifiedDescription = nodeProperties[@"cm:description"];
+                        AlfrescoProperty *modifiedTitle = nodeProperties[@"cm:title"];
+                        AlfrescoProperty *modifiedName = nodeProperties[@"cmis:name"];
                         
                         STAssertNotNil(modifiedDescription, @"Expected the modified description not to be nil");
                         STAssertNotNil(modifiedTitle, @"Expected the modified title not to be nil");
@@ -4527,9 +4488,9 @@
         __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-        [properties setObject:@"test description" forKey:@"cm:description"];
-        [properties setObject:@"test title" forKey:@"cm:title"];
-        [properties setObject:duplicateFileName forKey:@"cmis:name"];
+        properties[@"cm:description"] = @"test description";
+        properties[@"cm:title"] = @"test title";
+        properties[@"cmis:name"] = duplicateFileName;
         
         [self.dfService createDocumentWithName:duplicateFileName inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
             
@@ -4543,7 +4504,7 @@
                 STAssertNil(error, @"Error occured trying to create document the first time");
                 
                 NSMutableDictionary *props = [NSMutableDictionary dictionary];
-                [props setObject:duplicateFileName forKey:@"cmis:name"];
+                props[@"cmis:name"] = duplicateFileName;
                 
                 [weakFolderService createDocumentWithName:duplicateFileName inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *duplicateDocument, NSError *duplicateError) {
                     
@@ -4639,10 +4600,10 @@
         NSDate *yesterday = [gregorian dateByAddingComponents:components toDate:now options:0];
         
         NSMutableDictionary *props = [NSMutableDictionary dictionary];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         // set the created value to yesterday
-        [props setObject:yesterday forKey:@"cm:created"];
+        props[@"cm:created"] = yesterday;
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
@@ -4703,10 +4664,10 @@
         NSDate *yesterday = [gregorian dateByAddingComponents:components toDate:now options:0];
         
         NSMutableDictionary *props = [NSMutableDictionary dictionary];
-        [props setObject:@"test description" forKey:@"cm:description"];
-        [props setObject:@"test title" forKey:@"cm:title"];
+        props[@"cm:description"] = @"test description";
+        props[@"cm:title"] = @"test title";
         // set the created value to yesterday
-        [props setObject:yesterday forKey:@"cm:created"];
+        props[@"cm:created"] = yesterday;
         
         [self.dfService createDocumentWithName:@"testDocument.jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *error) {
             
@@ -4898,17 +4859,17 @@
         NSString *parentFolderTitle = @"Test Title";
         
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:parentFolderDescription forKey:@"cm:description"];
-        [props setObject:parentFolderTitle forKey:@"cm:title"];
+        props[@"cm:description"] = parentFolderDescription;
+        props[@"cm:title"] = parentFolderTitle;
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
-            
             if (error)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
             }
             else
             {
@@ -4919,15 +4880,15 @@
                 NSString *subFolderTitle = @"Test Title";
                 
                 NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:2];
-                [properties setObject:subFolderDescription forKey:@"cm:description"];
-                [properties setObject:subFolderTitle forKey:@"cm:title"];
+                properties[@"cm:description"] = subFolderDescription;
+                properties[@"cm:title"] = subFolderTitle;
                 
                 [weakFolderService createFolderWithName:subFolderName inParentFolder:folder properties:properties completionBlock:^(AlfrescoFolder *subFolder, NSError *subFolderError) {
-                    
                     if (subFolderError)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [subFolderError localizedDescription], [subFolderError localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [subFolderError localizedDescription], [subFolderError localizedFailureReason]];
+                        self.callbackCompleted = YES;
                     }
                     else
                     {
@@ -4935,11 +4896,10 @@
                         
                         // do a retrieve of the unit test folder
                         [weakFolderService retrieveChildrenInFolder:folder completionBlock:^(NSArray *childrenArray, NSError *childrenError) {
-                            
                             if (childrenError)
                             {
                                 self.lastTestSuccessful = NO;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [childrenError localizedDescription], [childrenError localizedFailureReason]];
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [childrenError localizedDescription], [childrenError localizedFailureReason]];
                             }
                             else
                             {
@@ -4947,7 +4907,7 @@
                                 
                                 STAssertTrue([childrenArray count] == 1, @"Expected only one node to be returned");
                                 
-                                AlfrescoNode *subFolderNode = [childrenArray objectAtIndex:0];
+                                AlfrescoNode *subFolderNode = childrenArray[0];
                                 STAssertTrue(subFolderNode.isFolder, @"The node returned should be a folder");
                                 STAssertFalse(subFolderNode.isDocument, @"The node returned should not be a document");
                                 STAssertNotNil(subFolderNode.identifier, @"The node's identifier should not be nil");
@@ -4962,7 +4922,6 @@
                             }
                             
                             [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *error) {
-                                
                                 if (error == nil)
                                 {
                                     self.lastTestSuccessful = succeeded;
@@ -4999,16 +4958,16 @@
         NSString *parentFolderTitle = @"Test Title";
         
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
-        [props setObject:parentFolderDescription forKey:@"cm:description"];
-        [props setObject:parentFolderTitle forKey:@"cm:title"];
+        props[@"cm:description"] = parentFolderDescription;
+        props[@"cm:title"] = parentFolderTitle;
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         // create a new folder in the repository's root folder
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
-            
             if (error)
             {
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
             }
             else
             {
@@ -5020,17 +4979,17 @@
                 NSString *documentAuthor = @"Test Author";
                 
                 NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
-                [properties setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
-                [properties setObject:documentDescription forKey:@"cm:description"];
-                [properties setObject:documentTitle forKey:@"cm:title"];
-                [properties setObject:documentAuthor forKey:@"cm:author"];
+                properties[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+                properties[@"cm:description"] = documentDescription;
+                properties[@"cm:title"] = documentTitle;
+                properties[@"cm:author"] = documentAuthor;
                 
                 [weakFolderService createDocumentWithName:documentName inParentFolder:folder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *docError) {
-                    
                     if (docError)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [docError localizedDescription], [docError localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [docError localizedDescription], [docError localizedFailureReason]];
+                        self.callbackCompleted = YES;
                     }
                     else
                     {
@@ -5042,7 +5001,7 @@
                             if (childrenError)
                             {
                                 self.lastTestSuccessful = NO;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [childrenError localizedDescription], [childrenError localizedFailureReason]];
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [childrenError localizedDescription], [childrenError localizedFailureReason]];
                             }
                             else
                             {
@@ -5050,7 +5009,7 @@
                                 
                                 STAssertTrue([childrenArray count] == 1, @"Expected only one node to be returned");
                                 
-                                AlfrescoNode *document = [childrenArray objectAtIndex:0];
+                                AlfrescoNode *document = childrenArray[0];
                                 STAssertFalse(document.isFolder, @"The node returned should not be a folder");
                                 STAssertTrue(document.isDocument, @"The node returned should be a document");
                                 STAssertNotNil(document.identifier, @"The node's identifier should not be nil");
@@ -5068,12 +5027,12 @@
                             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
                             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
                                 [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *error) {
-                                    
                                     if (error == nil)
                                     {
                                         self.lastTestSuccessful = succeeded;
                                     }
                                     
+                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
                                     self.callbackCompleted = YES;
                                 }];
                             });
@@ -5109,16 +5068,16 @@
         NSString *subFolderTitle = @"Test Title";
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:2];
-        [properties setObject:subFolderDescription forKey:@"cm:description"];
-        [properties setObject:subFolderTitle forKey:@"cm:title"];
+        properties[@"cm:description"] = subFolderDescription;
+        properties[@"cm:title"] = subFolderTitle;
         
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
-            
             if (error)
             {
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
             }
             else
             {
@@ -5134,11 +5093,11 @@
                 NSArray *createdAspects = folder.aspects;
                 
                 [weakFolderService retrieveNodeWithIdentifier:folder.identifier completionBlock:^(AlfrescoNode *retrievedNode, NSError *retrievedError) {
-                    
                     if (retrievedError)
                     {
                         self.lastTestSuccessful = NO;
                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrievedError localizedDescription], [retrievedError localizedFailureReason]];
+                        self.callbackCompleted = YES;
                     }
                     else
                     {
@@ -5156,7 +5115,6 @@
                         STAssertFalse(retrievedNode.isDocument, @"Expected the identifier of the node to be %i, instead got back %i", NO, retrievedNode.isDocument);
                         
                         [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                            
                             if (!deleteError)
                             {
                                 self.lastTestSuccessful = succeeded;
@@ -5164,10 +5122,8 @@
                             self.callbackCompleted = YES;
                         }];
                     }
-                    
                 }];
             }
-            
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
         STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -5340,8 +5296,8 @@
             NSMutableDictionary *props = [NSMutableDictionary dictionary];
             NSString *title = @"CustomType Example";
             NSString *description = @"An example to demonstrate the creation of docs with custom types";
-            [props setObject:title forKey:@"cm:title"];
-            [props setObject:description forKey:@"cm:description"];
+            props[@"cm:title"] = title;
+            props[@"cm:description"] = description;
             
             NSString *customTypeTestFileName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:@"everything.txt"];
             
@@ -5406,11 +5362,11 @@
             NSString *title = @"CustomType Example";
             NSString *description = @"An example to demonstrate the creation of docs with custom types";
             NSString *fdkText = @"Custom text property";
-            NSArray *fdkTextMultipe = @[@"first", @"second", @"third"];
-            [props setObject:title forKey:@"cm:title"];
-            [props setObject:description forKey:@"cm:description"];
-            [props setObject:fdkText forKey:@"fdk:text"];
-            [props setObject:fdkTextMultipe forKey:@"fdk:textMultiple"];
+            NSArray *fdkTextMultiple = @[@"first", @"second", @"third"];
+            props[@"cm:title"] = title;
+            props[@"cm:description"] = description;
+            props[@"fdk:text"] = fdkText;
+            props[@"fdk:textMultiple"] = fdkTextMultiple;
             
             NSString *customTypeTestFileName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:@"everything.txt"];
             
@@ -5437,7 +5393,7 @@
                     STAssertTrue(document.contentLength > 10, @"expected content to be filled");
                     
                     // check custom properties
-                    AlfrescoProperty *fdkTextProperty = [document.properties objectForKey:@"fdk:text"];
+                    AlfrescoProperty *fdkTextProperty = document.properties[@"fdk:text"];
                     STAssertNotNil(fdkTextProperty, @"Expected to find the fdk:text property");
                     STAssertTrue([fdkTextProperty.value isEqualToString:fdkText],
                                  [NSString stringWithFormat:@"Expected fdk:text property to be %@ but it was %@", fdkText, fdkTextProperty.value]);
@@ -5453,13 +5409,13 @@
                     
                     // now update some custom properties
                     NSString *text = [NSString stringWithFormat:@"Text %i", arc4random()%10];
-                    NSNumber *number = [NSNumber numberWithInt:arc4random()%512];
-                    NSArray *multipe = @[@"first", @"second", @"third", @"fourth"];
+                    NSNumber *number = @(arc4random()%512);
+                    NSArray *multiple = @[@"first", @"second", @"third", @"fourth"];
                     
                     NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:2];
-                    [propDict setObject:text forKey:@"fdk:text"];
-                    [propDict setObject:number forKey:@"fdk:int"];
-                    [propDict setObject:multipe forKey:@"fdk:textMultiple"];
+                    propDict[@"fdk:text"] = text;
+                    propDict[@"fdk:int"] = number;
+                    propDict[@"fdk:textMultiple"] = multiple;
                     [self.dfService updatePropertiesOfNode:document properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *updateError) {
                         
                         if (nil == updatedNode)
@@ -5476,9 +5432,9 @@
                             
                             // check the updated properties
                             NSDictionary *updatedProps = updatedDocument.properties;
-                            AlfrescoProperty *updatedText = [updatedProps objectForKey:@"fdk:text"];
-                            AlfrescoProperty *updatedNumber = [updatedProps objectForKey:@"fdk:int"];
-                            AlfrescoProperty *updatedMultiValued = [updatedProps objectForKey:@"fdk:textMultiple"];
+                            AlfrescoProperty *updatedText = updatedProps[@"fdk:text"];
+                            AlfrescoProperty *updatedNumber = updatedProps[@"fdk:int"];
+                            AlfrescoProperty *updatedMultiValued = updatedProps[@"fdk:textMultiple"];
                             STAssertNotNil(updatedText, @"Expected to find the updated fdk:text property");
                             STAssertNotNil(updatedNumber, @"Expected to find the updated fdk:int property");
                             STAssertNotNil(updatedMultiValued, @"Expected to find the updated fdk:textMultiple property");

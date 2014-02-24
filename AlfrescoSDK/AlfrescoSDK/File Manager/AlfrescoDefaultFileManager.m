@@ -86,10 +86,9 @@
     
     if (attributes)
     {
-        alfrescoAttributeDictionary = [NSDictionary dictionaryWithObjectsAndKeys:[attributes objectForKey:NSFileSize], kAlfrescoFileSize,
-                                       [attributes objectForKey:NSFileModificationDate], kAlfrescoFileLastModification,
-                                       [NSNumber numberWithBool:isDir], kAlfrescoIsFolder,
-                                       nil];
+        alfrescoAttributeDictionary = @{kAlfrescoFileSize: attributes[NSFileSize],
+                                       kAlfrescoFileLastModification: attributes[NSFileModificationDate],
+                                       kAlfrescoIsFolder: @(isDir)};
     }
     
     return alfrescoAttributeDictionary;
@@ -115,7 +114,7 @@
     }
     
     NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[NSURL URLWithString:[directory stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
-                                                        includingPropertiesForKeys:[NSArray arrayWithObjects:NSURLNameKey, nil]
+                                                        includingPropertiesForKeys:@[NSURLNameKey]
                                                                            options:options
                                                                       errorHandler:^BOOL(NSURL *url, NSError *fileError) {
                                                                           AlfrescoLogDebug(@"Error retrieving contents of the URL: %@ with the error: %@", [url absoluteString], [fileError localizedDescription]);

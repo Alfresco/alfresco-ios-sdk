@@ -178,7 +178,7 @@
         }
         return nil;
     }
-    if([[jsonSite valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+    if([[jsonSite valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
     {
         //        *outError = [AlfrescoErrors createAlfrescoErrorWithCode:kAlfrescoErrorCodeSites withDetailedDescription:@"Parse result is no sites"];
         return nil;
@@ -225,7 +225,7 @@
     NSArray *strings = [originalIdentifier componentsSeparatedByString:@";"];
     if (strings.count > 1)
     {
-        return (NSString *)[strings objectAtIndex:0];
+        return (NSString *)strings[0];
     }
     return originalIdentifier;
 }
@@ -256,7 +256,7 @@
         conversionError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:parseError andAlfrescoErrorCode:errorCode];
         return parseBlock(jsonResponseObject, conversionError);
     }
-    if ([[jsonResponseObject valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+    if ([[jsonResponseObject valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
     {
         conversionError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:parseError andAlfrescoErrorCode:errorCode];
         return parseBlock(jsonResponseObject, conversionError);
@@ -268,7 +268,7 @@
 + (NSDictionary *)paginationJSONFromOldAPIData:(NSData *)data error:(NSError **)outError
 {
     return [self parseJSONData:data notFoundErrorCode:kAlfrescoErrorCodeJSONParsingNilData parseBlock:^id(id jsonObject, NSError *parseError) {
-        NSDictionary *pagingDictionary = [(NSDictionary *) jsonObject objectForKey:kAlfrescoWorkflowLegacyJSONPagination];
+        NSDictionary *pagingDictionary = ((NSDictionary *) jsonObject)[kAlfrescoWorkflowLegacyJSONPagination];
         return pagingDictionary;
     }];
 }
@@ -279,9 +279,9 @@
         NSDictionary *parsedDictionary = (NSDictionary *)jsonObject;
         
         BOOL hasMoreItems = NO;
-        NSNumber *totalItems = [parsedDictionary objectForKey:kAlfrescoLegacyJSONTotal];
-        NSInteger skipCount = [[parsedDictionary objectForKey:kAlfrescoLegacyJSONSkipCount] integerValue];
-        NSInteger pageCount = [[parsedDictionary objectForKey:kAlfrescoLegacyJSONMaxItems] integerValue];
+        NSNumber *totalItems = parsedDictionary[kAlfrescoLegacyJSONTotal];
+        NSInteger skipCount = [parsedDictionary[kAlfrescoLegacyJSONSkipCount] integerValue];
+        NSInteger pageCount = [parsedDictionary[kAlfrescoLegacyJSONMaxItems] integerValue];
         
         if ((pageCount + skipCount) < totalItems.integerValue)
         {
@@ -289,8 +289,8 @@
         }
         
         NSMutableDictionary *pagingDictionary = [NSMutableDictionary dictionary];
-        [pagingDictionary setObject:totalItems forKey:kAlfrescoLegacyJSONTotal];
-        [pagingDictionary setObject:[NSNumber numberWithBool:hasMoreItems] forKey:kAlfrescoLegacyJSONHasMoreItems];
+        pagingDictionary[kAlfrescoLegacyJSONTotal] = totalItems;
+        pagingDictionary[kAlfrescoLegacyJSONHasMoreItems] = @(hasMoreItems);
         
         return pagingDictionary;
     }];

@@ -65,7 +65,7 @@
                     {
                         BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.testSearchFileName array:array];
                         AlfrescoLogDebug(@"Search Term: %@", searchTerm);
-                        AlfrescoLogDebug(@"Results array size is: %i, and the first object is: %@", [array count], [[array objectAtIndex:0] name]);
+                        AlfrescoLogDebug(@"Results array size is: %i, and the first object is: %@", [array count], [array[0] name]);
                         STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
                         self.lastTestSuccessful = arrayContainsTestFile;
                     }

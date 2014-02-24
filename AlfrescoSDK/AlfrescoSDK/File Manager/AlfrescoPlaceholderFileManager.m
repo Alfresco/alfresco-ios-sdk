@@ -27,7 +27,7 @@
 - (id)init
 {
     NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
-    NSString *customFileManagerClassString = [infoPlist objectForKey:kAlfrescoFileManagerClass];
+    NSString *customFileManagerClassString = infoPlist[kAlfrescoFileManagerClass];
     if (customFileManagerClassString)
     {
         Class customFileManagerClass = NSClassFromString((NSString *)customFileManagerClassString);

@@ -139,7 +139,7 @@
                 NSArray *workflowDefinitions = [self.workflowObjectConverter workflowDefinitionsFromLegacyJSONData:data session:self.session conversionError:&conversionError];
                 if (workflowDefinitions.count > 0)
                 {
-                    AlfrescoWorkflowProcessDefinition *processDefinition = [workflowDefinitions objectAtIndex:0];
+                    AlfrescoWorkflowProcessDefinition *processDefinition = workflowDefinitions[0];
                     completionBlock(processDefinition, conversionError);
                 }
                 else

@@ -280,16 +280,16 @@
         AlfrescoFolder *sessionRootFolder = [self.currentSession rootFolder];
         
         STAssertNotNil(sessionRootFolder, @"Expected the root folder in the session not to be nil");
-        STAssertNotNil([[[sessionRootFolder properties] objectForKey:@"cmis:path"] value], @"Expected the path to the root folder not to be nil");
-        STAssertNotNil([[[sessionRootFolder properties] objectForKey:@"cmis:objectId"] value], @"Expected the objectId not to be nil");
-        STAssertNotNil([[[sessionRootFolder properties] objectForKey:@"cmis:objectTypeId"] value], @"Expected the objectTypeId not to be nil");
-        STAssertTrue([[[[sessionRootFolder properties] objectForKey:@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"], @"Expected the objectTypeID to be a cmis folder type");
+        STAssertNotNil([[sessionRootFolder properties][@"cmis:path"] value], @"Expected the path to the root folder not to be nil");
+        STAssertNotNil([[sessionRootFolder properties][@"cmis:objectId"] value], @"Expected the objectId not to be nil");
+        STAssertNotNil([[sessionRootFolder properties][@"cmis:objectTypeId"] value], @"Expected the objectTypeId not to be nil");
+        STAssertTrue([[[sessionRootFolder properties][@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"], @"Expected the objectTypeID to be a cmis folder type");
         
         if (sessionRootFolder &&
-            [[[sessionRootFolder properties] objectForKey:@"cmis:path"] value] &&
-            [[[sessionRootFolder properties] objectForKey:@"cmis:objectId"] value] &&
-            [[[sessionRootFolder properties] objectForKey:@"cmis:objectTypeId"] value] &&
-            [[[[sessionRootFolder properties] objectForKey:@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"])
+            [[sessionRootFolder properties][@"cmis:path"] value] &&
+            [[sessionRootFolder properties][@"cmis:objectId"] value] &&
+            [[sessionRootFolder properties][@"cmis:objectTypeId"] value] &&
+            [[[sessionRootFolder properties][@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"])
         {
             self.lastTestSuccessful = YES;
         }
@@ -361,8 +361,8 @@
     {
         // add a value to the current session
         NSString *key = @"testAddParameterToSession";
-        NSNumber *firstValue = [NSNumber numberWithInt:100];
-        NSNumber *secondValue = [NSNumber numberWithInt:200];
+        NSNumber *firstValue = @100;
+        NSNumber *secondValue = @200;
         int expectedReturnValue = [secondValue intValue];
         
         // add first object followed by the overwriting one
@@ -674,16 +674,16 @@
         
         NSString *accessToken = @"6dbe853d-8390-4a69-b3d5-20e2125fb6e4";
         NSString *refreshToken = @"087ed018-c29e-4b69-8c94-95805dd03a4f";
-        NSNumber *expiresIn = [NSNumber numberWithInt:3600];
+        NSNumber *expiresIn = @3600;
         NSString *tokenType = @"Bearer";
         NSString *scope = @"pub_api";
         
-        [dictionary setObject:accessToken forKey:kAlfrescoJSONAccessToken];
-        [dictionary setObject:refreshToken forKey:kAlfrescoJSONRefreshToken];
+        dictionary[kAlfrescoJSONAccessToken] = accessToken;
+        dictionary[kAlfrescoJSONRefreshToken] = refreshToken;
         
-        [dictionary setObject:expiresIn forKey:kAlfrescoJSONExpiresIn];
-        [dictionary setObject:tokenType forKey:kAlfrescoJSONTokenType];
-        [dictionary setObject:scope forKey:kAlfrescoJSONScope];
+        dictionary[kAlfrescoJSONExpiresIn] = expiresIn;
+        dictionary[kAlfrescoJSONTokenType] = tokenType;
+        dictionary[kAlfrescoJSONScope] = scope;
         
         AlfrescoOAuthData *origOAuthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirect jsonDictionary:dictionary];
         NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:origOAuthData];
@@ -724,7 +724,7 @@
                                                     STAssertTrue(array.count > 0, @"Expected more than 0 documents");
                                                     if (array.count > 0)
                                                     {
-                                                        request = [weakDfService retrieveContentOfDocument:[array objectAtIndex:0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
+                                                        request = [weakDfService retrieveContentOfDocument:array[0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
                                                                    {
                                                                        if (nil == contentFile)
                                                                        {

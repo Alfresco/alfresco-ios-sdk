@@ -26,6 +26,8 @@
 #import "CMISSession.h"
 #import "CMISFolder.h"
 
+#define BOOL_TO_STRING(x) (x ? @"YES" : @"NO")
+
 #define TIMEINTERVAL 120
 #define TIMEGAP 5
 typedef void (^AlfrescoTestBlock)(void);

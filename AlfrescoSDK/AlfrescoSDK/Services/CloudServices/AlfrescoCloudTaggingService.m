@@ -213,7 +213,7 @@ completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
     if (1 == tags.count)
     {
         NSMutableDictionary *tagDictionary = [NSMutableDictionary dictionary];
-        [tagDictionary setValue:[tags objectAtIndex:0] forKey:kAlfrescoJSONTag];
+        [tagDictionary setValue:tags[0] forKey:kAlfrescoJSONTag];
         
         jsonData = [NSJSONSerialization dataWithJSONObject:tagDictionary options:0 error:&jsonError];
     }
