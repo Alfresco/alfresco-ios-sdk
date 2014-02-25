@@ -49,21 +49,16 @@
     return nil;
 }
 
-- (AlfrescoRequest *)updateProfile:(NSDictionary *)properties completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                        completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (AlfrescoRequest *)search:(NSString *)filter completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
-{
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-- (AlfrescoRequest *)search:(NSString *)filter
-         WithListingContext:(AlfrescoListingContext *)listingContext
-            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                         listingContext:(AlfrescoListingContext *)listingContext
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;

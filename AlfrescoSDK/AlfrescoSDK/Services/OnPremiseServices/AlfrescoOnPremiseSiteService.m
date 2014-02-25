@@ -567,14 +567,14 @@
                               completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
-    return [self retrieveMembersOfSite:site listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+    return [self retrieveAllMembersOfSite:site listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
         completionBlock(pagingResult.objects, error);
     }];
 }
 
-- (AlfrescoRequest *)retrieveMembersOfSite:(AlfrescoSite *)site
-                            listingContext:(AlfrescoListingContext *)listingContext
-                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAllMembersOfSite:(AlfrescoSite *)site
+                               listingContext:(AlfrescoListingContext *)listingContext
+                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -614,12 +614,12 @@
 }
 
 - (AlfrescoRequest *)searchMembersOfSite:(AlfrescoSite *)site
-                             usingFilter:(NSString *)filter
+                                keywords:(NSString *)keywords
                           listingContext:(AlfrescoListingContext *)listingContext
                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
-    [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
+    [AlfrescoErrors assertArgumentNotNil:keywords argumentName:@"keywords"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     if (nil == listingContext)
@@ -629,7 +629,7 @@
     
     NSString *requestString =  [kAlfrescoOnPremiseJoinPublicSiteAPI stringByAppendingString:kAlfrescoOnPremiseSiteMembershipFilter];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.identifier];
-    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:filter];
+    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:keywords];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];

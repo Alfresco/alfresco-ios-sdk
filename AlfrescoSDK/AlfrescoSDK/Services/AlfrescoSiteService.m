@@ -147,16 +147,16 @@
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveMembersOfSite:(AlfrescoSite *)site
-                            listingContext:(AlfrescoListingContext *)listingContext
-                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAllMembersOfSite:(AlfrescoSite *)site
+                               listingContext:(AlfrescoListingContext *)listingContext
+                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
 - (AlfrescoRequest *)searchMembersOfSite:(AlfrescoSite *)site
-                             usingFilter:(NSString *)filter
+                                keywords:(NSString *)keywords
                           listingContext:(AlfrescoListingContext *)listingContext
                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {

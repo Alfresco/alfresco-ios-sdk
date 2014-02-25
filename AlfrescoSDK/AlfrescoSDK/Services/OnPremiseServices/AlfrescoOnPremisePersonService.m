@@ -142,55 +142,16 @@
     return alfrescoRequest;
 }
 
-- (AlfrescoRequest *)updateProfile:(NSDictionary *)properties completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    /*
-    [AlfrescoErrors assertArgumentNotNil:properties argumentName:@"properties"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    
-    NSData *bodyData = [self jsonDataForUpdatingProfile:[self propertiesWithOnPremiseKeys:properties]];
-    AlfrescoLogDebug(@"body json: %@", [[NSString alloc] initWithData:bodyData encoding:NSUTF8StringEncoding]);
-    
-    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url
-                                                session:self.session
-                                            requestBody:bodyData
-                                                 method:kAlfrescoHTTPPut
-                                        alfrescoRequest:alfrescoRequest
-                                        completionBlock:^(NSData *responseData, NSError *error) {
-                                            if (nil == responseData)
-                                            {
-                                                completionBlock(nil, error);
-                                            }
-                                            else
-                                            {
-                                                AlfrescoLogDebug(@"Person: %@", [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
-                                                NSError *conversionError = nil;
-                                                AlfrescoPerson *person = [self alfrescoPersonFromJSONData:responseData error:&conversionError];
-                                                completionBlock(person, conversionError);
-                                            }
-                                        }];
-    return alfrescoRequest;
-     */
-    return nil;
+    return [self searchPeople:keywords completionBlock:completionBlock];
 }
 
-- (AlfrescoRequest *)search:(NSString *)filter completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                         listingContext:(AlfrescoListingContext *)listingContext
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    return [self searchPeople:filter completionBlock:completionBlock];
-}
-
-- (AlfrescoRequest *)search:(NSString *)filter
-         WithListingContext:(AlfrescoListingContext *)listingContext
-            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
+    [AlfrescoErrors assertArgumentNotNil:keywords argumentName:@"keywords"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     if (nil == listingContext)
@@ -198,7 +159,7 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    AlfrescoRequest *request = [self searchPeople:filter completionBlock:^(NSArray *array, NSError *error) {
+    AlfrescoRequest *request = [self searchPeople:keywords completionBlock:^(NSArray *array, NSError *error) {
         
         AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:array listingContext:listingContext];
         completionBlock(pagingResult, error);
@@ -206,9 +167,11 @@
     return request;
 }
 
-- (AlfrescoRequest *)searchPeople:(NSString *)filter completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+#pragma mark - private methods
+
+- (AlfrescoRequest *)searchPeople:(NSString *)keywords completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSString *requestString = [kAlfrescoOnPremisePersonSearchAPI stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:filter];
+    NSString *requestString = [kAlfrescoOnPremisePersonSearchAPI stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:keywords];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -229,7 +192,6 @@
     return alfrescoRequest;
 }
 
-#pragma mark - private methods
 - (AlfrescoPerson *)alfrescoPersonFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
 {
     NSMutableDictionary *jsonPersonDictionary = [self extractJsonDictionaryFromData:data error:outError];
