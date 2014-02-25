@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -151,51 +151,41 @@
     
     NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
     NSString *completeTaskIdentifier = [workflowEnginePrefix stringByAppendingString:task.identifier];
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:completeTaskIdentifier];
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    NSDictionary *requestDictionary = @{kAlfrescoLegacyAPIWorkflowItemKind : kAlfrescoLegacyAPIWorkflowItemTypeTask,
+                                        kAlfrescoLegacyAPIWorkflowItemID : completeTaskIdentifier,
+                                        kAlfrescoLegacyAPIWorkflowFields : @[kAlfrescoLegacyAPIWorkflowPackageItems]};
+    NSError *jsonParseError = nil;
+    NSData *containerRequestData = [NSJSONSerialization dataWithJSONObject:requestDictionary options:0 error:&jsonParseError];
+    
+    if (jsonParseError)
+    {
+        AlfrescoLogDebug(@"Unable to parse data in selector - %@", NSStringFromSelector(_cmd));
+    }
+    
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyAPIWorkflowTaskAttachments];
     
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *taskError) {
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:containerRequestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *attachmentRefError) {
         if (!data)
         {
-            completionBlock(nil, taskError);
+            completionBlock(nil, attachmentRefError);
         }
         else
         {
-            NSError *conversionError = nil;
-            NSString *containerRef = [self.workflowObjectConverter attachmentContainerNodeRefFromLegacyJSONData:data conversionError:&conversionError];
+            NSError *nodeIdentifierError = nil;
+            NSArray *nodeIdentifiers = [self.workflowObjectConverter attachmentIdentifiersFromLegacyJSONData:data conversionError:&nodeIdentifierError];
             
-            NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyAPIWorkflowTaskAttachments];
-            
-            NSDictionary *containerRequest = @{kAlfrescoJSONItems : @[containerRef], kAlfrescoWorkflowLegacyJSONItemValue : kAlfrescoJSONNodeRef};
-            NSError *jsonParseError = nil;
-            NSData *containerRequestData = [NSJSONSerialization dataWithJSONObject:containerRequest options:0 error:&jsonParseError];
-            
-            if (jsonParseError)
+            if (nodeIdentifiers)
             {
-                AlfrescoLogDebug(@"Unable to parse data in selector - %@", NSStringFromSelector(_cmd));
+                [self retrieveAlfrescoNodes:nodeIdentifiers completionBlock:completionBlock];
             }
-            
-            [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:containerRequestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-                if (error)
-                {
-                    completionBlock(nil, error);
-                }
-                else
-                {
-                    NSError *nodeIdentifierError = nil;
-                    NSArray *nodeIdentifiers = [self.workflowObjectConverter attachmentIdentifiersFromLegacyJSONData:data conversionError:&nodeIdentifierError];
-                    
-                    if (nodeIdentifiers)
-                    {
-                        [self retrieveAlfrescoNodes:nodeIdentifiers completionBlock:completionBlock];
-                    }
-                }
-            }];
+            else
+            {
+                completionBlock(nil, nil);
+            }
         }
     }];
-    
     return request;
 }
 
@@ -214,7 +204,7 @@
     if (self.session.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
     {
         [requestBody setObject:kAlfrescoWorkflowLegacyJSONNext forKey:kAlfrescoWorkflowLegacyJSONBPMTransition];
-
+        
         [requestBody setObject:kAlfrescoWorkflowLegacyJSONCompleted forKey:kAlfrescoWorkflowLegacyJSONBPMStatus];
         
         if ([task.processDefinitionIdentifier isEqualToString:kAlfrescoWorkflowReviewAndApprove])
@@ -237,7 +227,7 @@
         {
             [requestBody setObject:@"" forKey:kAlfrescoWorkflowLegacyJSONBPMTransition];
         }
-
+        
         [requestBody setObject:kAlfrescoWorkflowLegacyJSONCompleted forKey:kAlfrescoWorkflowLegacyJSONBPMStatus];
         
         if ([[properties allKeys] containsObject:kAlfrescoTaskComment])
@@ -356,7 +346,7 @@
 
 - (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-     return [self updateAttachments:@[node] onTask:task addition:NO completionBlock:completionBlock];
+    return [self updateAttachments:@[node] onTask:task addition:NO completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)removeVariables:(NSArray *)variablesKeys forTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
@@ -411,22 +401,30 @@
 - (void)retrieveAlfrescoNodes:(NSArray *)alfrescoNodeIdentifiers completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     __block NSMutableArray *alfrescoNodes = [NSMutableArray arrayWithCapacity:alfrescoNodeIdentifiers.count];
-    __block NSInteger callBacks = 0;
     
-    for (NSString *nodeIdentifier in alfrescoNodeIdentifiers)
+    if (alfrescoNodeIdentifiers.count > 0)
     {
-        [self.documentService retrieveNodeWithIdentifier:nodeIdentifier completionBlock:^(AlfrescoNode *node, NSError *error) {
-            callBacks++;
-            if (node)
-            {
-                [alfrescoNodes addObject:node];
-            }
-            
-            if (callBacks == alfrescoNodeIdentifiers.count)
-            {
-                completionBlock(alfrescoNodes, nil);
-            }
-        }];
+        __block NSInteger callBacks = 0;
+        
+        for (NSString *nodeIdentifier in alfrescoNodeIdentifiers)
+        {
+            [self.documentService retrieveNodeWithIdentifier:nodeIdentifier completionBlock:^(AlfrescoNode *node, NSError *error) {
+                callBacks++;
+                if (node)
+                {
+                    [alfrescoNodes addObject:node];
+                }
+                
+                if (callBacks == alfrescoNodeIdentifiers.count)
+                {
+                    completionBlock(alfrescoNodes, nil);
+                }
+            }];
+        }
+    }
+    else
+    {
+        completionBlock(alfrescoNodes, nil);
     }
 }
 
