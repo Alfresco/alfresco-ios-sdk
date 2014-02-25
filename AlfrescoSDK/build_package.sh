@@ -25,7 +25,7 @@ if [ -d $PACKAGE_DIR ]
 then
   rm -R $PACKAGE_DIR
 fi
-mkdir $PACKAGE_DIR
+mkdir -p $PACKAGE_DIR
 
 echo "Preparing binary package..."
 
