@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -250,18 +250,12 @@
             if ([jsonObject isKindOfClass:[NSDictionary class]])
             {
                 NSDictionary *jsonResponseDictionary = (NSDictionary *)jsonObject;
-                NSArray *itemsArray = [[jsonResponseDictionary valueForKey:kAlfrescoWorkflowLegacyJSONData] valueForKey:kAlfrescoJSONItems];
+                NSString *itemIdentifiersString = [[[jsonResponseDictionary valueForKey:kAlfrescoWorkflowLegacyJSONData] valueForKey:kAlfrescoWorkflowLegacyJSONFormData] valueForKey:kAlfrescoWorkflowLegacyJSONBPMProcessAttachments];
                 
-                if (itemsArray)
+                if (itemIdentifiersString.length > 0)
                 {
-                    for (NSDictionary *item in itemsArray)
-                    {
-                        NSString *nodeIdentifier = [item objectForKey:kAlfrescoJSONNodeRef];
-                        if (nodeIdentifier)
-                        {
-                            [nodeRefIdentifiers addObject:nodeIdentifier];
-                        }
-                    }
+                    NSArray *allNodeIdentifiers = [itemIdentifiersString componentsSeparatedByString:@","];
+                    [nodeRefIdentifiers addObjectsFromArray:allNodeIdentifiers];
                 }
             }
             else
