@@ -544,8 +544,8 @@
                          {
                              // we found the user we expected, now retrieve with paging
                              AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1];
-                             [self.siteService retrieveMembersOfSite:site listingContext:paging
-                                                     completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                             [self.siteService retrieveAllMembersOfSite:site listingContext:paging
+                                                        completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
                                  if (pagingResult == nil)
                                  {
                                      self.lastTestSuccessful = NO;
@@ -622,7 +622,7 @@
              }
              else
              {
-                 [self.siteService searchMembersOfSite:site usingFilter:self.userName listingContext:nil
+                 [self.siteService searchMembersOfSite:site keywords:self.userName listingContext:nil
                                            completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
                          if (pagingResult == nil)
                          {

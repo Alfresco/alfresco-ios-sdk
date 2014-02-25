@@ -174,23 +174,23 @@
 - (AlfrescoRequest *)retrieveAllMembersOfSite:(AlfrescoSite *)site
                               completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
-/** Returns a paged list of site members.
+/** Returns a paged list of all members for a site.
  @param site - site from which members are retrieved
  @param listingContext - The listing context with a paging definition that's used to retrieve members.
  @param completionBlock - contains Array of person objects that are members of the site if successful, or nil if not.
  */
-- (AlfrescoRequest *)retrieveMembersOfSite:(AlfrescoSite *)site
-                            listingContext:(AlfrescoListingContext *)listingContext
-                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+- (AlfrescoRequest *)retrieveAllMembersOfSite:(AlfrescoSite *)site
+                               listingContext:(AlfrescoListingContext *)listingContext
+                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
-/** Returns a paged list of site members that respect the filter.
+/** Returns a paged list of site members that respect the keyword.
  @param site - site from which members are retrieved
- @param usingFilter - filter that needs to be applied to search query.
+ @param keywords - space delimited keywords that needs to be applied to search query.
  @param listingContext - The listing context with a paging definition that's used to retrieve members.
  @param completionBlock - contains Array of person objects that are members of the site if successful, or nil if not.
  */
 - (AlfrescoRequest *)searchMembersOfSite:(AlfrescoSite *)site
-                             usingFilter:(NSString *)filter
+                                keywords:(NSString *)keywords
                           listingContext:(AlfrescoListingContext *)listingContext
                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
