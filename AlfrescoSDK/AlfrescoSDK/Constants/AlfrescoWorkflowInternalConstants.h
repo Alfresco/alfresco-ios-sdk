@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -81,6 +81,11 @@ extern NSString * const kAlfrescoPublicAPIWorkflowTaskStateCompleted;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskStateClaimed;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskStateUnclaimed;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskStateResolved;
+extern NSString * const kAlfrescoLegacyAPIWorkflowItemKind;
+extern NSString * const kAlfrescoLegacyAPIWorkflowItemTypeTask;
+extern NSString * const kAlfrescoLegacyAPIWorkflowItemID;
+extern NSString * const kAlfrescoLegacyAPIWorkflowFields;
+extern NSString * const kAlfrescoLegacyAPIWorkflowPackageItems;
 
 // Person nodeRef
 extern NSString * const kAlfrescoLegacyAPIPersonNodeRef;
@@ -147,6 +152,7 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAssignee;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAssignees;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessSendEmailNotification;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessDueDate;
+extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachments;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsAdd;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsRemove;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessApprovalRate;
@@ -166,6 +172,7 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONDueAt;
 extern NSString * const kAlfrescoWorkflowLegacyJSONPriority;
 extern NSString * const kAlfrescoWorkflowLegacyJSONDescription;
 extern NSString * const kAlfrescoWorkflowLegacyJSONInitiator;
+extern NSString * const kAlfrescoWorkflowLegacyJSONFormData;
 
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableName;
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableType;

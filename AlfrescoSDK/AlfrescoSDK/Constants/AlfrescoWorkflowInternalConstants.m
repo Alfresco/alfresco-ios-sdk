@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -66,7 +66,7 @@ NSString * const kAlfrescoPublicAPIWorkflowProcessWhereParameter = @"where";
 // Tasks
 NSString * const kAlfrescoLegacyAPIWorkflowTasks = @"task-instances";
 NSString * const kAlfrescoLegacyAPIWorkflowSingleTask = @"task-instances/{taskId}";
-NSString * const kAlfrescoLegacyAPIWorkflowTaskAttachments = @"forms/picker/items";
+NSString * const kAlfrescoLegacyAPIWorkflowTaskAttachments = @"formdefinitions";
 NSString * const kAlfrescoLegacyAPIWorkflowTaskFormProcessor = @"task/{taskId}/formprocessor";
 NSString * const kAlfrescoPublicAPIWorkflowTasks = @"tasks";
 NSString * const kAlfrescoPublicAPIWorkflowSingleTask = @"tasks/{taskId}";
@@ -81,6 +81,11 @@ NSString * const kAlfrescoPublicAPIWorkflowTaskStateClaimed = @"claimed";
 NSString * const kAlfrescoPublicAPIWorkflowTaskStateUnclaimed = @"unclaimed";
 NSString * const kAlfrescoPublicAPIWorkflowTaskStateResolved = @"resolved";
 NSString * const kAlfrescoPublicAPIWorkflowTaskAssignee = @"assignee";
+NSString * const kAlfrescoLegacyAPIWorkflowItemKind = @"itemKind";
+NSString * const kAlfrescoLegacyAPIWorkflowItemTypeTask = @"task";
+NSString * const kAlfrescoLegacyAPIWorkflowItemID = @"itemId";
+NSString * const kAlfrescoLegacyAPIWorkflowFields = @"fields";
+NSString * const kAlfrescoLegacyAPIWorkflowPackageItems = @"packageItems";
 
 // Person nodeRef
 NSString * const kAlfrescoLegacyAPIPersonNodeRef = @"forms/picker/authority/children?selectableType=cm:person&searchTerm={personID}&size=1";
@@ -147,6 +152,7 @@ NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAssignee = @"assoc_bpm_ass
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAssignees = @"assoc_bpm_assignees_added";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessSendEmailNotification = @"prop_bpm_sendEMailNotifications";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessDueDate = @"prop_bpm_workflowDueDate";
+NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachments = @"assoc_packageItems";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsAdd = @"assoc_packageItems_added";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsRemove = @"assoc_packageItems_removed";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessApprovalRate = @"prop_wf_requiredApprovePercent";
@@ -166,6 +172,7 @@ NSString * const kAlfrescoWorkflowLegacyJSONDueAt = @"dueDate";
 NSString * const kAlfrescoWorkflowLegacyJSONPriority = @"priority";
 NSString * const kAlfrescoWorkflowLegacyJSONDescription = @"description";
 NSString * const kAlfrescoWorkflowLegacyJSONInitiator = @"initiator";
+NSString * const kAlfrescoWorkflowLegacyJSONFormData = @"formData";
 
 NSString * const kAlfrescoWorkflowPublicJSONVariableName = @"name";
 NSString * const kAlfrescoWorkflowPublicJSONVariableType = @"type";
