@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -61,7 +61,7 @@ static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
     {
         NSDictionary *entry = [properties objectForKey:kAlfrescoWorkflowPublicJSONEntry];
         self.identifier = [entry objectForKey:kAlfrescoWorkflowPublicJSONIdentifier];
-        self.name = [entry objectForKey:kAlfrescoWorkflowPublicJSONName];
+        self.name = [entry objectForKey:kAlfrescoWorkflowPublicJSONTitle];
         self.processDescription = [entry objectForKey:kAlfrescoWorkflowPublicJSONDescription];
         self.version = [entry objectForKey:kAlfrescoWorkflowPublicJSONVersion];
     }
@@ -69,7 +69,7 @@ static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
     {
         NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
         self.identifier = [[properties objectForKey:kAlfrescoJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.name = [[properties objectForKey:kAlfrescoWorkflowLegacyJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.name = [properties objectForKey:kAlfrescoWorkflowLegacyJSONTitle];
         self.processDescription = [properties objectForKey:kAlfrescoWorkflowLegacyJSONDescription];
         self.version = [properties objectForKey:kAlfrescoWorkflowPublicJSONVersion];
     }
@@ -79,7 +79,7 @@ static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
 {
     [aCoder encodeInteger:kWorkflowProcessDefinitionModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoWorkflowPublicJSONIdentifier];
-    [aCoder encodeObject:self.name forKey:kAlfrescoWorkflowPublicJSONName];
+    [aCoder encodeObject:self.name forKey:kAlfrescoWorkflowPublicJSONTitle];
     [aCoder encodeObject:self.processDescription forKey:kAlfrescoWorkflowPublicJSONDescription];
     [aCoder encodeObject:self.version forKey:kAlfrescoWorkflowPublicJSONVersion];
 }
@@ -89,9 +89,9 @@ static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
     self = [super init];
     if (self)
     {
-//        NSInteger version = [aDecoder decodeIntegerForKey:NSStringFromClass([self class])];
+        //        NSInteger version = [aDecoder decodeIntegerForKey:NSStringFromClass([self class])];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONIdentifier];
-        self.name = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONName];
+        self.name = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONTitle];
         self.processDescription = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONDescription];
         self.version = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONVersion];
     }

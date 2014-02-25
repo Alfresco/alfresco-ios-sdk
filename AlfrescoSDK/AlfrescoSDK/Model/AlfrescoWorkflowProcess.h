@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -32,7 +32,7 @@
 @property (nonatomic, strong, readonly) NSString *identifier;
 @property (nonatomic, strong, readonly) NSString *processDefinitionIdentifier;
 @property (nonatomic, strong, readonly) NSString *processDefinitionKey;
-@property (nonatomic, strong, readonly) NSString *title;
+@property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSDate *startedAt;
 @property (nonatomic, strong, readonly) NSDate *endedAt;
 @property (nonatomic, strong, readonly) NSDate *dueAt;
