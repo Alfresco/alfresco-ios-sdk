@@ -46,8 +46,8 @@
                                       completionBlock:^(id<AlfrescoSession> session, NSError *error){
                                           if (error != nil)
                                           {
-                                              STAssertNotNil(error, @"Expected an invalid credentials error to be thrown");
-                                              STAssertNil(session, @"Expected a session not to be created");
+                                              XCTAssertNotNil(error, @"Expected an invalid credentials error to be thrown");
+                                              XCTAssertNil(session, @"Expected a session not to be created");
                                               NSLog(@"Desc: %@, Reason: %@", [error localizedDescription], [error localizedFailureReason]);
                                               self.lastTestSuccessful = YES;
                                           }
@@ -58,12 +58,12 @@
                                           self.callbackCompleted = YES;
                                       }];
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication succeeded with invalid credentials");
+            XCTAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication succeeded with invalid credentials");
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -105,12 +105,12 @@
                         AlfrescoLogDebug(@"createdAt: %@", network.createdAt);
                         AlfrescoLogDebug(@"\n\n");
                         
-                        STAssertTrue(network.isHomeNetwork, @"network is home network");
-                        STAssertNotNil(network.createdAt, @"createdAt property is set");
+                        XCTAssertTrue(network.isHomeNetwork, @"network is home network");
+                        XCTAssertNotNil(network.createdAt, @"createdAt property is set");
                     }
                     self.callbackCompleted = YES;
                 }
-                STAssertTrue(self.lastTestSuccessful, @"Unable to retrieve networks for the current cloud session");
+                XCTAssertTrue(self.lastTestSuccessful, @"Unable to retrieve networks for the current cloud session");
             }];
         }
         
@@ -132,8 +132,8 @@
             
             NSArray *allParameters = [self.currentSession allParameterKeys];
             
-            STAssertNotNil(allParameters, @"Expected parameters not to be nil");
-            STAssertTrue([allParameters count] >= 1, @"Expected atleast one paramenter to be returned");
+            XCTAssertNotNil(allParameters, @"Expected parameters not to be nil");
+            XCTAssertTrue([allParameters count] >= 1, @"Expected atleast one paramenter to be returned");
             
             // get the size of the parameters array
             NSUInteger originalNumberOfParameterKeys = [allParameters count];
@@ -141,7 +141,7 @@
             // attempt to remove non existant parameter
             [self.currentSession removeParameter:nonExistantKeyToRemove];
             
-            STAssertTrue(originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count], @"Removing a non existant parameter seems to have alterered the state of the session's parameters");
+            XCTAssertTrue(originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count], @"Removing a non existant parameter seems to have alterered the state of the session's parameters");
             
             // if they are the same. nothing was removed
             if (originalNumberOfParameterKeys == [[self.currentSession allParameterKeys] count])
@@ -153,12 +153,12 @@
                 self.lastTestSuccessful = NO;
             }
             
-            STAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
+            XCTAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -172,8 +172,8 @@
     if (self.setUpSuccess)
     {
         NSURL *sessionBaseURL = [self.currentSession baseUrl];
-        STAssertNotNil(sessionBaseURL, @"Expected the base url in the session not to be nil");
-        STAssertNotNil(self.server, @"The server base url is nil");
+        XCTAssertNotNil(sessionBaseURL, @"Expected the base url in the session not to be nil");
+        XCTAssertNotNil(self.server, @"The server base url is nil");
         NSLog(@"Session Base URL is: %@ \nServer is: %@", sessionBaseURL, self.server);
         
         NSString *urlToTest = nil;
@@ -186,8 +186,8 @@
             urlToTest = [NSString stringWithFormat:@"%@://%@", [sessionBaseURL scheme], [sessionBaseURL host]];
         }
         
-        STAssertNotNil(urlToTest, @"The url to test is nil");
-        STAssertTrue([self.server isEqualToString:urlToTest], @"Expected the baseURL in the session to be the same as that used to create the session");
+        XCTAssertNotNil(urlToTest, @"The url to test is nil");
+        XCTAssertTrue([self.server isEqualToString:urlToTest], @"Expected the baseURL in the session to be the same as that used to create the session");
         
         if ([self.server isEqualToString:urlToTest])
         {
@@ -197,11 +197,11 @@
         {
             self.lastTestSuccessful = NO;
         }
-        STAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
+        XCTAssertTrue(self.lastTestSuccessful, @"Session base URL did not match that used in the creation of the session");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -214,9 +214,9 @@
     if (self.setUpSuccess)
     {
         NSString *sessionPersonalIdentifier = [self.currentSession personIdentifier];
-        STAssertNotNil(sessionPersonalIdentifier, @"Personal Identifier in the session is nil");
-        STAssertNotNil(self.userName, @"Username is nil");
-        STAssertTrue([self.userName isEqualToString:sessionPersonalIdentifier], @"The appropriate person identifer for the logged in user was not returned");
+        XCTAssertNotNil(sessionPersonalIdentifier, @"Personal Identifier in the session is nil");
+        XCTAssertNotNil(self.userName, @"Username is nil");
+        XCTAssertTrue([self.userName isEqualToString:sessionPersonalIdentifier], @"The appropriate person identifer for the logged in user was not returned");
         
         if ([self.userName isEqualToString:sessionPersonalIdentifier])
         {
@@ -226,11 +226,11 @@
         {
             self.lastTestSuccessful = NO;
         }
-        STAssertTrue(self.lastTestSuccessful, @"OnPremise Session did not return the appropriate personal identifier");
+        XCTAssertTrue(self.lastTestSuccessful, @"OnPremise Session did not return the appropriate personal identifier");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -247,11 +247,11 @@
         NSInteger expectedMaxItems = 50;
         NSInteger expectedSkipCount = 0;
         
-        STAssertNotNil(defaultListingContext, @"Expected a default listing context within the current session");
-        STAssertNil(defaultListingContext.sortProperty, @"Expected the default sort property to be nil");
-        STAssertTrue(defaultListingContext.sortAscending, @"Expected the default sort to be set to ascending, instead got descending");
-        STAssertTrue(defaultListingContext.maxItems == expectedMaxItems, @"Expected the default max items to be set to %i instead got %i", expectedMaxItems, defaultListingContext.maxItems);
-        STAssertTrue(defaultListingContext.skipCount == expectedSkipCount, @"Expected the default skip count to be %i, instead got %i", expectedSkipCount, defaultListingContext.skipCount);
+        XCTAssertNotNil(defaultListingContext, @"Expected a default listing context within the current session");
+        XCTAssertNil(defaultListingContext.sortProperty, @"Expected the default sort property to be nil");
+        XCTAssertTrue(defaultListingContext.sortAscending, @"Expected the default sort to be set to ascending, instead got descending");
+        XCTAssertTrue(defaultListingContext.maxItems == expectedMaxItems, @"Expected the default max items to be set to %i instead got %i", expectedMaxItems, defaultListingContext.maxItems);
+        XCTAssertTrue(defaultListingContext.skipCount == expectedSkipCount, @"Expected the default skip count to be %i, instead got %i", expectedSkipCount, defaultListingContext.skipCount);
         
         if (!defaultListingContext.sortProperty && defaultListingContext.sortAscending && defaultListingContext.maxItems == 50 && defaultListingContext.skipCount == 0)
         {
@@ -261,11 +261,11 @@
         {
             self.lastTestSuccessful = NO;
         }
-        STAssertTrue(self.lastTestSuccessful, @"The session's default listing context state was not as expected");
+        XCTAssertTrue(self.lastTestSuccessful, @"The session's default listing context state was not as expected");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -279,11 +279,11 @@
     {
         AlfrescoFolder *sessionRootFolder = [self.currentSession rootFolder];
         
-        STAssertNotNil(sessionRootFolder, @"Expected the root folder in the session not to be nil");
-        STAssertNotNil([[sessionRootFolder properties][@"cmis:path"] value], @"Expected the path to the root folder not to be nil");
-        STAssertNotNil([[sessionRootFolder properties][@"cmis:objectId"] value], @"Expected the objectId not to be nil");
-        STAssertNotNil([[sessionRootFolder properties][@"cmis:objectTypeId"] value], @"Expected the objectTypeId not to be nil");
-        STAssertTrue([[[sessionRootFolder properties][@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"], @"Expected the objectTypeID to be a cmis folder type");
+        XCTAssertNotNil(sessionRootFolder, @"Expected the root folder in the session not to be nil");
+        XCTAssertNotNil([[sessionRootFolder properties][@"cmis:path"] value], @"Expected the path to the root folder not to be nil");
+        XCTAssertNotNil([[sessionRootFolder properties][@"cmis:objectId"] value], @"Expected the objectId not to be nil");
+        XCTAssertNotNil([[sessionRootFolder properties][@"cmis:objectTypeId"] value], @"Expected the objectTypeId not to be nil");
+        XCTAssertTrue([[[sessionRootFolder properties][@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"], @"Expected the objectTypeID to be a cmis folder type");
         
         if (sessionRootFolder &&
             [[sessionRootFolder properties][@"cmis:path"] value] &&
@@ -297,11 +297,11 @@
         {
             self.lastTestSuccessful = NO;
         }
-        STAssertTrue(self.lastTestSuccessful, @"The session's root folder did not return correct values");
+        XCTAssertTrue(self.lastTestSuccessful, @"The session's root folder did not return correct values");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -315,22 +315,22 @@
 
 //        AlfrescoRepositorySession *currentSession = self.currentSession;
         
-        STAssertNotNil(self.currentSession.personIdentifier, @"Expected the personal identifier to not be nil before disconnection");
-        STAssertNotNil(self.currentSession.repositoryInfo, @"Expected the repository info to not be nil before disconnection");
-        STAssertNotNil(self.currentSession.baseUrl, @"Expected the base URL to not be nil before disconnection");
-        STAssertNotNil(self.currentSession.rootFolder, @"Expected the root folder to not be nil before disconnection");
-        STAssertNotNil(self.currentSession.defaultListingContext, @"Expected the default listing context to not be nil before disconnection");
+        XCTAssertNotNil(self.currentSession.personIdentifier, @"Expected the personal identifier to not be nil before disconnection");
+        XCTAssertNotNil(self.currentSession.repositoryInfo, @"Expected the repository info to not be nil before disconnection");
+        XCTAssertNotNil(self.currentSession.baseUrl, @"Expected the base URL to not be nil before disconnection");
+        XCTAssertNotNil(self.currentSession.rootFolder, @"Expected the root folder to not be nil before disconnection");
+        XCTAssertNotNil(self.currentSession.defaultListingContext, @"Expected the default listing context to not be nil before disconnection");
         
         
         
         // disconnect the session
         [self.currentSession disconnect];
         
-        STAssertNil(self.currentSession.personIdentifier, @"Expected the personal identifier to to be cleared out after disconnection");
-        STAssertNil(self.currentSession.repositoryInfo, @"Expected the repository info to to be cleared out after disconnection");
-        STAssertNil(self.currentSession.baseUrl, @"Expected the base URL to to be cleared out after disconnection");
-        STAssertNil(self.currentSession.rootFolder, @"Expected the root folder to to be cleared out after disconnection");
-        STAssertNil(self.currentSession.defaultListingContext, @"Expected the default listing context to to be cleared out after disconnection");
+        XCTAssertNil(self.currentSession.personIdentifier, @"Expected the personal identifier to to be cleared out after disconnection");
+        XCTAssertNil(self.currentSession.repositoryInfo, @"Expected the repository info to to be cleared out after disconnection");
+        XCTAssertNil(self.currentSession.baseUrl, @"Expected the base URL to to be cleared out after disconnection");
+        XCTAssertNil(self.currentSession.rootFolder, @"Expected the root folder to to be cleared out after disconnection");
+        XCTAssertNil(self.currentSession.defaultListingContext, @"Expected the default listing context to to be cleared out after disconnection");
         
         if (!self.currentSession.personIdentifier &&
             !self.currentSession.repositoryInfo &&
@@ -345,7 +345,7 @@
             self.lastTestSuccessful = NO;
         }
         
-        STAssertTrue(self.lastTestSuccessful, @"The session did not clear out the session variables after disconnection");
+        XCTAssertTrue(self.lastTestSuccessful, @"The session did not clear out the session variables after disconnection");
     }];
 }
  */
@@ -368,12 +368,12 @@
         // add first object followed by the overwriting one
         [self.currentSession setObject:firstValue forParameter:key];
         
-        STAssertNotNil([self.currentSession objectForParameter:key], @"The session does not contain any value for the key %@", key);
+        XCTAssertNotNil([self.currentSession objectForParameter:key], @"The session does not contain any value for the key %@", key);
         
         [self.currentSession setObject:secondValue forParameter:key];
         
-        STAssertNotNil([self.currentSession objectForParameter:key], @"The session does not contain any value for the key %@", key);
-        STAssertTrue([[self.currentSession objectForParameter:key] intValue] == expectedReturnValue, @"Expected the value for the parameter %@ to be %i, but instead got back %i", key, expectedReturnValue, [[self.currentSession objectForParameter:key] intValue]);
+        XCTAssertNotNil([self.currentSession objectForParameter:key], @"The session does not contain any value for the key %@", key);
+        XCTAssertTrue([[self.currentSession objectForParameter:key] intValue] == expectedReturnValue, @"Expected the value for the parameter %@ to be %i, but instead got back %i", key, expectedReturnValue, [[self.currentSession objectForParameter:key] intValue]);
         
         if ([[self.currentSession objectForParameter:key] intValue] == expectedReturnValue)
         {
@@ -383,11 +383,11 @@
         {
             self.lastTestSuccessful = NO;
         }
-        STAssertTrue(self.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
+        XCTAssertTrue(self.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -413,14 +413,14 @@
         
         [self.currentSession setObject:listingContextObject forParameter:key];
         
-        STAssertNotNil([self.currentSession objectForParameter:key], @"The session does not contain any value for the key %@", key);
+        XCTAssertNotNil([self.currentSession objectForParameter:key], @"The session does not contain any value for the key %@", key);
         
         // Attempt to retrieve the item set
         AlfrescoListingContext *returnedListingContextObject = (AlfrescoListingContext *)[self.currentSession objectForParameter:key];
         
-        STAssertNotNil(returnedListingContextObject, @"Expected a listing object to be returned for the key: %@", key);
-        STAssertTrue(returnedListingContextObject.maxItems == expectedMaxItems, @"Expected the max items in the listing context stored in the session to return %i, but instead got %i", expectedMaxItems, returnedListingContextObject.maxItems);
-        STAssertTrue(returnedListingContextObject.skipCount == expectedSkipCount, @"Expected the skip count in the listing context stored in the session to return %i, but instead got %i", expectedSkipCount, returnedListingContextObject.skipCount);
+        XCTAssertNotNil(returnedListingContextObject, @"Expected a listing object to be returned for the key: %@", key);
+        XCTAssertTrue(returnedListingContextObject.maxItems == expectedMaxItems, @"Expected the max items in the listing context stored in the session to return %i, but instead got %i", expectedMaxItems, returnedListingContextObject.maxItems);
+        XCTAssertTrue(returnedListingContextObject.skipCount == expectedSkipCount, @"Expected the skip count in the listing context stored in the session to return %i, but instead got %i", expectedSkipCount, returnedListingContextObject.skipCount);
         
         NSArray *allParamKeys = [self.currentSession allParameterKeys];
         BOOL availableInSession = [allParamKeys containsObject:key];
@@ -432,7 +432,7 @@
             
             id removedObject = [self.currentSession objectForParameter:key];
             
-            STAssertNil(removedObject, @"The object should have been removed from the parameters");
+            XCTAssertNil(removedObject, @"The object should have been removed from the parameters");
             
             if (!removedObject)
             {
@@ -443,11 +443,11 @@
         {
             self.lastTestSuccessful = NO;
         }
-        STAssertTrue(self.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
+        XCTAssertTrue(self.lastTestSuccessful, @"The session did not overwrite the value for an existing key");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -463,7 +463,7 @@
         
         id returnedObject = [self.currentSession objectForParameter:key];
         
-        STAssertNil(returnedObject, @"There is no key value pair in the parameters for the current session with the key %@, however, an object was returned from objectForParameter:", key);
+        XCTAssertNil(returnedObject, @"There is no key value pair in the parameters for the current session with the key %@, however, an object was returned from objectForParameter:", key);
         
         if (!returnedObject)
         {
@@ -473,11 +473,11 @@
         {
             self.lastTestSuccessful = NO;
         }
-        STAssertTrue(self.lastTestSuccessful, @"The session does not contain an object for the key provided, but still returned a value");
+        XCTAssertTrue(self.lastTestSuccessful, @"The session does not contain an object for the key provided, but still returned a value");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -502,23 +502,23 @@
         id alfrescoSessionKey_after = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
         id alfrescoExtractMetadata_after = [self.currentSession objectForParameter:kAlfrescoMetadataExtraction];
         
-        STAssertEqualObjects([self.currentSession objectForParameter:@"firstParam"], test[@"firstParam"], @"Testing if param was added to session and has expected value");
-        STAssertEqualObjects([self.currentSession objectForParameter:@"secondParam"], test[@"secondParam"], @"Testing if param was added to session and has expected value");
-        STAssertEqualObjects([self.currentSession objectForParameter:@"thirdParam"], test[@"thirdParam"], @"Testing if param was added to session and has expected value");
+        XCTAssertEqualObjects([self.currentSession objectForParameter:@"firstParam"], test[@"firstParam"], @"Testing if param was added to session and has expected value");
+        XCTAssertEqualObjects([self.currentSession objectForParameter:@"secondParam"], test[@"secondParam"], @"Testing if param was added to session and has expected value");
+        XCTAssertEqualObjects([self.currentSession objectForParameter:@"thirdParam"], test[@"thirdParam"], @"Testing if param was added to session and has expected value");
         
-        STAssertEqualObjects(alfrescoAuthenticationProviderObject_before, alfrescoAuthenticationProviderObject_after, @"checking session authentication provider parameter before adding dictionary parameters and after");
-        STAssertEqualObjects(alfrescoGenerateThumbnails_before, alfrescoGenerateThumbnails_after, @"checking generate thumbnails session parameter before adding dictionary parameters and after");
-        STAssertEqualObjects(alfrescoSessionKey_before, alfrescoSessionKey_after, @"checking session key parameter before adding dictionary parameters and after");
-        STAssertEqualObjects(alfrescoExtractMetadata_before, alfrescoExtractMetadata_after, @"checking extract metadata parameter before adding dictionary parameters and after");
+        XCTAssertEqualObjects(alfrescoAuthenticationProviderObject_before, alfrescoAuthenticationProviderObject_after, @"checking session authentication provider parameter before adding dictionary parameters and after");
+        XCTAssertEqualObjects(alfrescoGenerateThumbnails_before, alfrescoGenerateThumbnails_after, @"checking generate thumbnails session parameter before adding dictionary parameters and after");
+        XCTAssertEqualObjects(alfrescoSessionKey_before, alfrescoSessionKey_after, @"checking session key parameter before adding dictionary parameters and after");
+        XCTAssertEqualObjects(alfrescoExtractMetadata_before, alfrescoExtractMetadata_after, @"checking extract metadata parameter before adding dictionary parameters and after");
         
         self.lastTestSuccessful = YES;
         
         
-        STAssertTrue(self.lastTestSuccessful, @"Added all the objects from the given dictionary to the session. Checked that the parameters / values are as desired");
+        XCTAssertTrue(self.lastTestSuccessful, @"Added all the objects from the given dictionary to the session. Checked that the parameters / values are as desired");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -536,17 +536,17 @@
         
         NSDictionary *test_after = [self.currentSession objectForParameter:@"test_dict"];
         
-        STAssertNotNil(test_after, @"checking if added dictionary exists in session parameters");
-        STAssertTrue([[test_after allKeys] count] == 0, @"dictionary count should be zero as added dictionary was empty");
+        XCTAssertNotNil(test_after, @"checking if added dictionary exists in session parameters");
+        XCTAssertTrue([[test_after allKeys] count] == 0, @"dictionary count should be zero as added dictionary was empty");
         
         self.lastTestSuccessful = YES;
         
         
-        STAssertTrue(self.lastTestSuccessful, @"Adding empty dictionary, empty list is returned");
+        XCTAssertTrue(self.lastTestSuccessful, @"Adding empty dictionary, empty list is returned");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -570,18 +570,18 @@
         id alfrescoSessionCMISSession_after = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
         id alfrescoAuthenticationProvider_after = [self.currentSession objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
         
-        STAssertNotNil(alfrescoSessionCMISSession_after, @"The CMIS Session should not be nil");
-        STAssertEqualObjects(alfrescoSessionCMISSession_before, alfrescoSessionCMISSession_after, @"The CMIS Session has been modified");
-        STAssertNotNil(alfrescoAuthenticationProvider_after, @"The authentication provider should not be nil");
-        STAssertEqualObjects(alfrescoAuthenticationProvider_before, alfrescoAuthenticationProvider_after, @"The authentication provider has been modified");
+        XCTAssertNotNil(alfrescoSessionCMISSession_after, @"The CMIS Session should not be nil");
+        XCTAssertEqualObjects(alfrescoSessionCMISSession_before, alfrescoSessionCMISSession_after, @"The CMIS Session has been modified");
+        XCTAssertNotNil(alfrescoAuthenticationProvider_after, @"The authentication provider should not be nil");
+        XCTAssertEqualObjects(alfrescoAuthenticationProvider_before, alfrescoAuthenticationProvider_after, @"The authentication provider has been modified");
         
         self.lastTestSuccessful = YES;
         
-        STAssertTrue(self.lastTestSuccessful, @"Internal Parameter is not removed, Returns previous value");
+        XCTAssertTrue(self.lastTestSuccessful, @"Internal Parameter is not removed, Returns previous value");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -597,39 +597,39 @@
         {
             AlfrescoRepositoryInfo *sessionRepositoryInfo = [self.currentSession repositoryInfo];
             
-            STAssertNotNil(sessionRepositoryInfo, @"Expected the session repositary information to not be nil");
-            STAssertNotNil(sessionRepositoryInfo.name, @"Expected the name of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.identifier, @"Expected the identifier of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.summary, @"Expected the summary of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.edition, @"Expected the edition of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.majorVersion, @"Expected the major version of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.minorVersion, @"Expected the minor version of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.buildNumber, @"Expected the build number of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.version, @"Expected the version of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.capabilities, @"Expected the capabilities of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo, @"Expected the session repositary information to not be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.name, @"Expected the name of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.identifier, @"Expected the identifier of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.summary, @"Expected the summary of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.edition, @"Expected the edition of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.majorVersion, @"Expected the major version of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.minorVersion, @"Expected the minor version of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.buildNumber, @"Expected the build number of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.version, @"Expected the version of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.capabilities, @"Expected the capabilities of the repository not to be nil");
             
             BOOL isRunningOnVersion4 = [sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike];
             
-            STAssertTrue([sessionRepositoryInfo.edition isEqualToString:@"Enterprise"] || [sessionRepositoryInfo.edition isEqualToString:@"Community"], @"Expected the edition to be Enterprise or Community but it is %@", sessionRepositoryInfo.edition);
+            XCTAssertTrue([sessionRepositoryInfo.edition isEqualToString:@"Enterprise"] || [sessionRepositoryInfo.edition isEqualToString:@"Community"], @"Expected the edition to be Enterprise or Community but it is %@", sessionRepositoryInfo.edition);
             
             if (isRunningOnVersion4)
             {
-                STAssertTrue([sessionRepositoryInfo.majorVersion intValue] == 4, @"Expected the major version to be 4");
+                XCTAssertTrue([sessionRepositoryInfo.majorVersion intValue] == 4, @"Expected the major version to be 4");
                 
-                STAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 0, @"Expected the minor version to be 0 or more");
+                XCTAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 0, @"Expected the minor version to be 0 or more");
                 
-                STAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 4 of the OnPremise server should support the like capability");
-                STAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 4 of the OnPremise server should support comments count capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 4 of the OnPremise server should support the like capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 4 of the OnPremise server should support comments count capability");
             }
             else
             {
-                STAssertTrue([sessionRepositoryInfo.majorVersion intValue] == 3, @"Expected the major version to be 3");
+                XCTAssertTrue([sessionRepositoryInfo.majorVersion intValue] == 3, @"Expected the major version to be 3");
                 
-                STAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 4, @"Expected the minor version to be 4 or more");
+                XCTAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 4, @"Expected the minor version to be 4 or more");
                 
-                STAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 3 of the OnPremise server should not support the like capability");
-                STAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 3 of the OnPremise server should not support comments count capability");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 3 of the OnPremise server should not support the like capability");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 3 of the OnPremise server should not support comments count capability");
             }
             
             self.lastTestSuccessful = YES;
@@ -639,26 +639,26 @@
             // CURRENTLY WILL FAIL - MOBSDK-392
             AlfrescoRepositoryInfo *sessionRepositoryInfo = [self.currentSession repositoryInfo];
             
-            STAssertNotNil(sessionRepositoryInfo, @"Expected the session repositary information to not be nil");
-            STAssertNotNil(sessionRepositoryInfo.name, @"Expected the name of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.identifier, @"Expected the identifier of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.summary, @"Expected the summary of the repository not to be nil");
-            STAssertNotNil(sessionRepositoryInfo.capabilities, @"Expected the capabilities of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo, @"Expected the session repositary information to not be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.name, @"Expected the name of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.identifier, @"Expected the identifier of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.summary, @"Expected the summary of the repository not to be nil");
+            XCTAssertNotNil(sessionRepositoryInfo.capabilities, @"Expected the capabilities of the repository not to be nil");
             
-            STAssertTrue([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCloud], @"Expected the edition to be cloud edition, but instead got %@", sessionRepositoryInfo.edition);
+            XCTAssertTrue([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCloud], @"Expected the edition to be cloud edition, but instead got %@", sessionRepositoryInfo.edition);
             
-            STAssertNil(sessionRepositoryInfo.majorVersion, @"Expected the major version of the repository item to be nil, instead got back %@", sessionRepositoryInfo.majorVersion);
-            STAssertNil(sessionRepositoryInfo.minorVersion, @"Expected the minor version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.minorVersion);
-            STAssertNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.maintenanceVersion);
-            STAssertNil(sessionRepositoryInfo.version, @"Expected the version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.version);
+            XCTAssertNil(sessionRepositoryInfo.majorVersion, @"Expected the major version of the repository item to be nil, instead got back %@", sessionRepositoryInfo.majorVersion);
+            XCTAssertNil(sessionRepositoryInfo.minorVersion, @"Expected the minor version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.minorVersion);
+            XCTAssertNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.maintenanceVersion);
+            XCTAssertNil(sessionRepositoryInfo.version, @"Expected the version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.version);
             
             self.lastTestSuccessful = YES;
         }
-        STAssertTrue(self.lastTestSuccessful, @"The session does not contain valid respository information");
+        XCTAssertTrue(self.lastTestSuccessful, @"The session does not contain valid respository information");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -689,18 +689,18 @@
         NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:origOAuthData];
         
         AlfrescoOAuthData *archivedOAuthData = [NSKeyedUnarchiver unarchiveObjectWithData:archivedData];
-        STAssertTrue([apiKey isEqualToString:archivedOAuthData.apiKey], @"apiKey should be the same but we got %@", archivedOAuthData.apiKey);
-        STAssertTrue([secretKey isEqualToString:archivedOAuthData.secretKey], @"secretKey should be the same but we got %@", archivedOAuthData.secretKey);
-        STAssertTrue([redirect isEqualToString:archivedOAuthData.redirectURI], @"redirect should be the same but we got %@", archivedOAuthData.redirectURI);
-        STAssertTrue([accessToken isEqualToString:archivedOAuthData.accessToken], @"accessToken should be the same but we got %@", archivedOAuthData.accessToken);
-        STAssertTrue([refreshToken isEqualToString:archivedOAuthData.refreshToken], @"refreshToken should be the same but we got %@", archivedOAuthData.refreshToken);
-        STAssertTrue([tokenType isEqualToString:archivedOAuthData.tokenType], @"tokenType should be the same but we got %@", archivedOAuthData.tokenType);
-        STAssertTrue([scope isEqualToString:archivedOAuthData.scope], @"scope should be the same but we got %@", archivedOAuthData.scope);
-        STAssertEquals(3600, [archivedOAuthData.expiresIn intValue], @"Expires in should be 3600, but instead it is %d",[archivedOAuthData.expiresIn intValue]);
+        XCTAssertTrue([apiKey isEqualToString:archivedOAuthData.apiKey], @"apiKey should be the same but we got %@", archivedOAuthData.apiKey);
+        XCTAssertTrue([secretKey isEqualToString:archivedOAuthData.secretKey], @"secretKey should be the same but we got %@", archivedOAuthData.secretKey);
+        XCTAssertTrue([redirect isEqualToString:archivedOAuthData.redirectURI], @"redirect should be the same but we got %@", archivedOAuthData.redirectURI);
+        XCTAssertTrue([accessToken isEqualToString:archivedOAuthData.accessToken], @"accessToken should be the same but we got %@", archivedOAuthData.accessToken);
+        XCTAssertTrue([refreshToken isEqualToString:archivedOAuthData.refreshToken], @"refreshToken should be the same but we got %@", archivedOAuthData.refreshToken);
+        XCTAssertTrue([tokenType isEqualToString:archivedOAuthData.tokenType], @"tokenType should be the same but we got %@", archivedOAuthData.tokenType);
+        XCTAssertTrue([scope isEqualToString:archivedOAuthData.scope], @"scope should be the same but we got %@", archivedOAuthData.scope);
+        XCTAssertEqual(3600, [archivedOAuthData.expiresIn intValue], @"Expires in should be 3600, but instead it is %d",[archivedOAuthData.expiresIn intValue]);
      }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -721,7 +721,7 @@
                                                 }
                                                 else
                                                 {
-                                                    STAssertTrue(array.count > 0, @"Expected more than 0 documents");
+                                                    XCTAssertTrue(array.count > 0, @"Expected more than 0 documents");
                                                     if (array.count > 0)
                                                     {
                                                         request = [weakDfService retrieveContentOfDocument:array[0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
@@ -730,7 +730,7 @@
                                                                        {
                                                                            self.lastTestSuccessful = YES;
                                                                            /// The CMIS error code for cancelled requests is kCMISErrorCodeCancelled = 6
-                                                                           STAssertEquals([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %d", kAlfrescoErrorCodeNetworkRequestCancelled, [error code]);
+                                                                           XCTAssertEqual([error code], kAlfrescoErrorCodeNetworkRequestCancelled, @"The expected error code is %d, but instead we get %d", kAlfrescoErrorCodeNetworkRequestCancelled, [error code]);
                                                                        }
                                                                        else
                                                                        {
@@ -738,15 +738,15 @@
                                                                            self.lastTestFailureMessage = @"Request should have been cancelled. Instead we get a valid content file back";
                                                                            // Assert File exists and check file length
                                                                            NSString *filePath = [contentFile.fileUrl path];
-                                                                           STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
+                                                                           XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"File does not exist");
                                                                            NSError *error;
                                                                            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
-                                                                           STAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
-                                                                           STAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %f kb", [fileAttributes fileSize]/1024.0);
+                                                                           XCTAssertNil(error, @"Could not verify attributes of file %@: %@", filePath, [error description]);
+                                                                           XCTAssertTrue([fileAttributes fileSize] > 100, @"Expected a file large than 100 bytes, but found one of %f kb", [fileAttributes fileSize]/1024.0);
                                                                            
                                                                            // Nice boys clean up after themselves
                                                                            [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
-                                                                           STAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
+                                                                           XCTAssertNil(error, @"Could not remove file %@: %@", filePath, [error description]);
                                                                        }
                                                                        
                                                                        self.callbackCompleted = YES;
@@ -770,11 +770,11 @@
                                                 
                                             }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

@@ -77,7 +77,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     if (nil == environment)
     {
         AlfrescoLogDebug(@"ERROR: No test environment config specified.");
-        STFail(@"FATAL: No test environment specified. Check TEST_SERVER parameter and ~/ios-sdk-test-config/test-servers.plist");
+        XCTFail(@"FATAL: No test environment specified. Check TEST_SERVER parameter and ~/ios-sdk-test-config/test-servers.plist");
         exit(EXIT_FAILURE);
     }
     else
@@ -174,7 +174,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         
         [self waitUntilCompleteWithFixedTimeInterval];
     }
-    STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
 }
 
 + (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename
@@ -222,8 +222,8 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         }
         else
         {
-            STAssertNotNil(document, @"document should not be nil");
-            STAssertTrue([document.type isEqualToString:@"cm:content"], @"The test document should be of type cm:content but it is %@", document.type);
+            XCTAssertNotNil(document, @"document should not be nil");
+            XCTAssertTrue([document.type isEqualToString:@"cm:content"], @"The test document should be of type cm:content but it is %@", document.type);
             self.lastTestSuccessful = YES;
             self.testAlfrescoDocument = document;
             self.callbackCompleted = YES;
@@ -234,7 +234,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     }];
     
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"uploadTestDocument failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"uploadTestDocument failed");
     return success;
 }
 
@@ -273,7 +273,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         }];
     }
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
     return success;
 }
 
@@ -314,7 +314,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
                                   }
                                   else
                                   {
-                                      STAssertNotNil(session,@"Session should not be nil");
+                                      XCTAssertNotNil(session,@"Session should not be nil");
                                       self.lastTestSuccessful = YES;
                                       self.currentSession = session;
                                       self.callbackCompleted = YES;
@@ -325,7 +325,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     
     
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication failed");
     return success;
 }
 
@@ -364,7 +364,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         else
         {
             AlfrescoLogDebug(@"*** Cloud session is NOT nil ***");
-//            STAssertNotNil(cloudSession, @"Cloud session should not be nil");
+//            XCTAssertNotNil(cloudSession, @"Cloud session should not be nil");
             self.lastTestSuccessful = YES;
             self.currentSession = cloudSession;
             self.callbackCompleted = YES;
@@ -374,7 +374,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     
 
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
     return success;
 }
 
@@ -415,7 +415,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         }
     }];
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"Failure to retrieve test folder");
+    XCTAssertTrue(self.lastTestSuccessful, @"Failure to retrieve test folder");
     return success;
 }
 
@@ -441,7 +441,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     do {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
     } while ([timeoutDate timeIntervalSinceNow] > 0 );
-//    STAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEGAP);
+//    XCTAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEGAP);
 }
 
 - (void)waitUntilCompleteWithFixedTimeInterval
@@ -452,7 +452,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         do {
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
         } while (!self.callbackCompleted && [timeoutDate timeIntervalSinceNow] > 0 );
-        STAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEINTERVAL);
+        XCTAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEINTERVAL);
     }
 }
 

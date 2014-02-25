@@ -54,8 +54,8 @@
                 }
                 else
                 {
-                    STAssertNotNil(array, @"array should not be nil");
-                    STAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d", array.count);
+                    XCTAssertNotNil(array, @"array should not be nil");
+                    XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d", array.count);
                     if (array.count == 0)
                     {
                         self.lastTestSuccessful = NO;
@@ -66,7 +66,7 @@
                         BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.testSearchFileName array:array];
                         AlfrescoLogDebug(@"Search Term: %@", searchTerm);
                         AlfrescoLogDebug(@"Results array size is: %i, and the first object is: %@", [array count], [array[0] name]);
-                        STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
+                        XCTAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
                         self.lastTestSuccessful = arrayContainsTestFile;
                     }
                 }
@@ -74,12 +74,12 @@
             }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -107,21 +107,21 @@
                 }
                 else
                 {
-                    STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                    STAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result but got %d", pagingResult.objects.count);
-                    STAssertTrue(pagingResult.objects.count > 0, @"number of objects found in current page should be more than 0, but we got %d", pagingResult.objects.count);
+                    XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                    XCTAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result but got %d", pagingResult.objects.count);
+                    XCTAssertTrue(pagingResult.objects.count > 0, @"number of objects found in current page should be more than 0, but we got %d", pagingResult.objects.count);
                     self.lastTestSuccessful = YES;
                 }
                 self.callbackCompleted = YES;
             }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -148,8 +148,8 @@
                  else
                  {
                      AlfrescoLogDebug(@"search result array contains %d entries", array.count);
-                     STAssertNotNil(array, @"array should not be nil");
-                     STAssertTrue(array.count >= 1, @"expected at least 1 search results but got %d",array.count);
+                     XCTAssertNotNil(array, @"array should not be nil");
+                     XCTAssertTrue(array.count >= 1, @"expected at least 1 search results but got %d",array.count);
                      if(array.count == 0)
                      {
                          self.lastTestSuccessful = NO;
@@ -158,7 +158,7 @@
                      else
                      {
                          BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.testSearchFileName array:array];
-                         STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
+                         XCTAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
                          
                          self.lastTestSuccessful = arrayContainsTestFile;
                      }
@@ -168,12 +168,12 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -202,20 +202,20 @@
                 else
                 {
                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
-                    STAssertNotNil(array, @"array should not be nil");
-                    STAssertTrue(array.count > 0, @"expected >0 search results for OnPremise but got back %d",array.count);
+                    XCTAssertNotNil(array, @"array should not be nil");
+                    XCTAssertTrue(array.count > 0, @"expected >0 search results for OnPremise but got back %d",array.count);
                     self.lastTestSuccessful = YES;
                 }
                 self.callbackCompleted = YES;
                 
             }];
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -242,8 +242,8 @@
                 else
                 {
                     AlfrescoLogDebug(@"search result array contains %d entries", array.count);
-                    STAssertNotNil(array, @"array should not be nil");
-                    STAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d",array.count);
+                    XCTAssertNotNil(array, @"array should not be nil");
+                    XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got %d",array.count);
                     if (array.count == 0)
                     {
                         self.lastTestSuccessful = NO;
@@ -252,7 +252,7 @@
                     else
                     {
                         BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.fixedFileName array:array];
-                        STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
+                        XCTAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
                         
                         self.lastTestSuccessful = arrayContainsTestFile;
                     }
@@ -261,12 +261,12 @@
                 
             }];
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -295,8 +295,8 @@
                  else
                  {
                      AlfrescoLogDebug(@"search result array contains %d entries", array.count);
-                     STAssertNotNil(array, @"array should not be nil");
-                     STAssertTrue(array.count >= 1, @"expected at least 1 search result but got back %d", array.count);
+                     XCTAssertNotNil(array, @"array should not be nil");
+                     XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got back %d", array.count);
                      if(array.count == 0)
                      {
                          self.lastTestSuccessful = NO;
@@ -305,7 +305,7 @@
                      else
                      {
                          BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.testSearchFileName array:array];
-                         STAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
+                         XCTAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
                          
                          self.lastTestSuccessful = arrayContainsTestFile;
                      }
@@ -315,13 +315,13 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -350,8 +350,8 @@
                 else
                 {
                     AlfrescoLogDebug(@"search result array contains %d entries", pagingResult.objects.count);
-                    STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                    STAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result");
+                    XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                    XCTAssertTrue(pagingResult.objects.count >= 1, @"expected at least 1 search result");
                     self.lastTestSuccessful = YES;
                 }
                 self.callbackCompleted = YES;
@@ -359,12 +359,12 @@
             }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -375,25 +375,25 @@
         AlfrescoKeywordSearchOptions *searchOptions = nil;
         
         searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:YES includeContent:YES];
-        STAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
-        STAssertTrue(searchOptions.exactMatch, @"Expected the exact match to be true");
-        STAssertTrue(searchOptions.includeContent, @"Expected the include content property to be true");
+        XCTAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
+        XCTAssertTrue(searchOptions.exactMatch, @"Expected the exact match to be true");
+        XCTAssertTrue(searchOptions.includeContent, @"Expected the include content property to be true");
         
         searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:NO includeContent:YES folder:self.currentSession.rootFolder includeDescendants:YES];
-        STAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
-        STAssertFalse(searchOptions.exactMatch, @"Expected the exact match to be false");
-        STAssertTrue(searchOptions.includeContent, @"Expected the include content to be true");
-        STAssertTrue([searchOptions.folder isEqual:self.currentSession.rootFolder], @"Expected the folder to be that of the the sessions root folder");
-        STAssertTrue(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
+        XCTAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
+        XCTAssertFalse(searchOptions.exactMatch, @"Expected the exact match to be false");
+        XCTAssertTrue(searchOptions.includeContent, @"Expected the include content to be true");
+        XCTAssertTrue([searchOptions.folder isEqual:self.currentSession.rootFolder], @"Expected the folder to be that of the the sessions root folder");
+        XCTAssertTrue(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
         
         searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithFolder:self.currentSession.rootFolder includeDescendants:NO];
-        STAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
-        STAssertTrue([searchOptions.folder isEqual:self.currentSession.rootFolder], @"Expected the folder to be that of the the sessions root folder");
-        STAssertFalse(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
+        XCTAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
+        XCTAssertTrue([searchOptions.folder isEqual:self.currentSession.rootFolder], @"Expected the folder to be that of the the sessions root folder");
+        XCTAssertFalse(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -419,8 +419,8 @@
                 }
                 else
                 {
-                    STAssertNotNil(resultsArray, @"The results array returned was nil");
-                    STAssertTrue([resultsArray count] >= 1, @"Expected the results array to have atleast one result, instead got back %i", [resultsArray count]);
+                    XCTAssertNotNil(resultsArray, @"The results array returned was nil");
+                    XCTAssertTrue([resultsArray count] >= 1, @"Expected the results array to have atleast one result, instead got back %i", [resultsArray count]);
                     
                     self.lastTestSuccessful = YES;
                 }
@@ -428,12 +428,12 @@
             }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -463,16 +463,16 @@
                 }
                 else
                 {
-                    STAssertNotNil(pagingResult, @"Paging result was nil");
-                    STAssertTrue([pagingResult.objects count] >= 1, @"Expected the results to contain atleast one result, but instead got back %i", [pagingResult.objects count]);
+                    XCTAssertNotNil(pagingResult, @"Paging result was nil");
+                    XCTAssertTrue([pagingResult.objects count] >= 1, @"Expected the results to contain atleast one result, but instead got back %i", [pagingResult.objects count]);
                     
                     if (pagingResult.hasMoreItems)
                     {
-                        STAssertTrue([pagingResult.objects count] == MaxItems, @"Expected the objects array to contain %d objects, instead we got back %i", MaxItems, [pagingResult.objects count]);
+                        XCTAssertTrue([pagingResult.objects count] == MaxItems, @"Expected the objects array to contain %d objects, instead we got back %i", MaxItems, [pagingResult.objects count]);
                     }
                     else
                     {
-                        STAssertTrue([pagingResult.objects count] <= MaxItems, @"Expected back %d items or less in the search result, instead got back %i", MaxItems, [pagingResult.objects count]);
+                        XCTAssertTrue([pagingResult.objects count] <= MaxItems, @"Expected back %d items or less in the search result, instead got back %i", MaxItems, [pagingResult.objects count]);
                     }
                     
                     self.lastTestSuccessful = YES;
@@ -481,12 +481,12 @@
             }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

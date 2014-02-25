@@ -21,8 +21,8 @@
 /** AlfrescoWorkflowInfoTest
  */
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface AlfrescoWorkflowInfoTest : SenTestCase
+@interface AlfrescoWorkflowInfoTest : XCTestCase
 
 @end

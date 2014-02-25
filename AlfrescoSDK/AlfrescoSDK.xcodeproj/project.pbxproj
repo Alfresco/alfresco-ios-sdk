@@ -15,6 +15,7 @@
 		08FC13FA1754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13F81754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m */; };
 		08FC13FF1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13FD1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m */; };
 		08FC14041754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */; };
+		2746C3FE18BB78C600DD8DDF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2746C3FD18BB78C600DD8DDF /* XCTest.framework */; };
 		275C6C32187F087400346323 /* AlfrescoCloudWorkflowProcessService.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C6C30187F087400346323 /* AlfrescoCloudWorkflowProcessService.m */; };
 		275C6C36187F099900346323 /* AlfrescoCloudWorkflowTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C6C34187F099900346323 /* AlfrescoCloudWorkflowTask.m */; };
 		27786B86178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27786B84178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m */; };
@@ -116,7 +117,6 @@
 		4E9E21E716F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E9E21E516F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.m */; };
 		4EA177EC15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA177EA15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.m */; };
 		4EA6D4EA15D2B444004059AF /* AlfrescoSortingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA6D4E815D2B444004059AF /* AlfrescoSortingUtils.m */; };
-		4EB076A915B00D8E00DF7DED /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB076A815B00D8E00DF7DED /* SenTestingKit.framework */; };
 		4EB076AC15B00D8E00DF7DED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0769A15B00D8E00DF7DED /* Foundation.framework */; };
 		4EB076B515B00D8E00DF7DED /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EB076B315B00D8E00DF7DED /* InfoPlist.strings */; };
 		4EB077A615B00EE800DF7DED /* AlfrescoErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0771615B00EE700DF7DED /* AlfrescoErrors.m */; };
@@ -302,6 +302,7 @@
 		2719ECD5176A29D200A6F3DD /* AlfrescoTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlfrescoTestMacros.h; sourceTree = "<group>"; };
 		273E3E61177DEB0D00E1AE0F /* CMISStandardAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISStandardAuthenticationProvider.h; sourceTree = "<group>"; };
 		273E3E62177DEB0D00E1AE0F /* CMISStandardUntrustedSSLAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISStandardUntrustedSSLAuthenticationProvider.h; sourceTree = "<group>"; };
+		2746C3FD18BB78C600DD8DDF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		275C6C2F187F087400346323 /* AlfrescoCloudWorkflowProcessService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudWorkflowProcessService.h; path = CloudServices/AlfrescoCloudWorkflowProcessService.h; sourceTree = "<group>"; };
 		275C6C30187F087400346323 /* AlfrescoCloudWorkflowProcessService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCloudWorkflowProcessService.m; path = CloudServices/AlfrescoCloudWorkflowProcessService.m; sourceTree = "<group>"; };
 		275C6C33187F099900346323 /* AlfrescoCloudWorkflowTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudWorkflowTask.h; path = CloudServices/AlfrescoCloudWorkflowTask.h; sourceTree = "<group>"; };
@@ -399,8 +400,7 @@
 		4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.0-debug.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAlfrescoSDKv1.3.0-debug.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB0769A15B00D8E00DF7DED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4EB0769E15B00D8E00DF7DED /* AlfrescoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "AlfrescoSDK-Prefix.pch"; sourceTree = "<group>"; };
-		4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfrescoSDKTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4EB076A815B00D8E00DF7DED /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfrescoSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB076B215B00D8E00DF7DED /* AlfrescoSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AlfrescoSDKTests-Info.plist"; sourceTree = "<group>"; };
 		4EB076B415B00D8E00DF7DED /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4EB0771515B00EE700DF7DED /* AlfrescoErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoErrors.h; sourceTree = "<group>"; };
@@ -659,9 +659,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2746C3FE18BB78C600DD8DDF /* XCTest.framework in Frameworks */,
 				73971AB016ADA0100056031F /* libz.dylib in Frameworks */,
 				4EB0781115B0129B00DF7DED /* MobileCoreServices.framework in Frameworks */,
-				4EB076A915B00D8E00DF7DED /* SenTestingKit.framework in Frameworks */,
 				4EB076AC15B00D8E00DF7DED /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -814,7 +814,7 @@
 			isa = PBXGroup;
 			children = (
 				4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.0-debug.a */,
-				4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.octest */,
+				4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -822,12 +822,12 @@
 		4EB0769915B00D8E00DF7DED /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2746C3FD18BB78C600DD8DDF /* XCTest.framework */,
 				4EB0781015B0129B00DF7DED /* MobileCoreServices.framework */,
 				4EB0780E15B0127900DF7DED /* SystemConfiguration.framework */,
 				4EB0780C15B0126000DF7DED /* UIKit.framework */,
 				4EB0780A15B0123A00DF7DED /* libz.dylib */,
 				4EB0769A15B00D8E00DF7DED /* Foundation.framework */,
-				4EB076A815B00D8E00DF7DED /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1254,8 +1254,8 @@
 			);
 			name = AlfrescoSDKTests;
 			productName = AlfrescoSDKTests;
-			productReference = 4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -1548,15 +1548,14 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION)-debug.a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = AdHoc;
 		};
@@ -1676,15 +1675,14 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION)-debug.a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1694,15 +1692,14 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION)-debug.a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

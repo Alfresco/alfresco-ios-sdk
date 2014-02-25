@@ -63,10 +63,10 @@
     session = [[AlfrescoCloudSession alloc] init];
 
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    STAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set always for Cloud [Note: Invalid combination]");
+    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set always for Cloud [Note: Invalid combination]");
 
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    STAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set always for Cloud");
+    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set always for Cloud");
 
     // Enterprise 3.4
     repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @3,
@@ -76,10 +76,10 @@
     [session performSelector:setRepositoryInfo withObject:repositoryInfo];
 
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4EE and JBPM");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4EE and JBPM");
 
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4EE and Activiti [Note: Invalid combination]");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4EE and Activiti [Note: Invalid combination]");
 
     // Enterprise 4.2
     repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @4,
@@ -89,10 +89,10 @@
     [session performSelector:setRepositoryInfo withObject:repositoryInfo];
 
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.2EE and JBPM");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.2EE and JBPM");
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    STAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v4.2EE and Activiti");
+    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v4.2EE and Activiti");
 
     // Enterprise 5.1 (randomly chosen)
     repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @5,
@@ -102,10 +102,10 @@
     [session performSelector:setRepositoryInfo withObject:repositoryInfo];
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v5.1EE and JBPM");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v5.1EE and JBPM");
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    STAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v5.1EE and Activiti");
+    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v5.1EE and Activiti");
 
     // Community 3.4.e
     repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @3,
@@ -116,10 +116,10 @@
     [session performSelector:setRepositoryInfo withObject:repositoryInfo];
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4.e and JBPM");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4.e and JBPM");
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4.e and Activiti [Note: Invalid combination]");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4.e and Activiti [Note: Invalid combination]");
     
     // Community 4.2.e
     repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @4,
@@ -130,11 +130,11 @@
     [session performSelector:setRepositoryInfo withObject:repositoryInfo];
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.2.e and JBPM");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.2.e and JBPM");
     
     // Note: Even though 4.2.e does support the Public API, the SDK does not perform checks on the maintenance version number
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should be set for v4.2.e and Activiti");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should be set for v4.2.e and Activiti");
 
     // Community 4.3.a
     repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @4,
@@ -145,10 +145,10 @@
     [session performSelector:setRepositoryInfo withObject:repositoryInfo];
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.3.a and JBPM");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.3.a and JBPM");
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    STAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v4.3.a and Activiti");
+    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v4.3.a and Activiti");
 
     // Community 5.3.e (randomly chosen)
     repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @5,
@@ -159,10 +159,10 @@
     [session performSelector:setRepositoryInfo withObject:repositoryInfo];
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    STAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v5.3.e and JBPM");
+    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v5.3.e and JBPM");
     
     workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    STAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v5.3.e and Activiti");
+    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v5.3.e and Activiti");
 
 #pragma clang diagnostic pop
 }

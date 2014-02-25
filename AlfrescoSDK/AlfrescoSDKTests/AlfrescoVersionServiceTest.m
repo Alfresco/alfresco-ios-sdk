@@ -55,8 +55,8 @@
                       }
                       else
                       {
-                          STAssertNotNil(array, @"array should not be nil");
-                          STAssertTrue(array.count == 1, @"expected 1 version");
+                          XCTAssertNotNil(array, @"array should not be nil");
+                          XCTAssertTrue(array.count == 1, @"expected 1 version");
                           AlfrescoNode * temp = array[0];
                           
                           NSLog(@"Temp.name =  %@", temp.name);
@@ -73,11 +73,11 @@
          ];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -118,7 +118,7 @@
                           }
                           else
                           {
-                              STAssertNotNil(array, @"array should not be nil");
+                              XCTAssertNotNil(array, @"array should not be nil");
                               
                               __block BOOL versionCommentRetrieved = NO;
                               
@@ -134,7 +134,7 @@
                                }
                                ];
                               
-                              STAssertTrue(versionCommentRetrieved, @"version comment was retrieved successfully");
+                              XCTAssertTrue(versionCommentRetrieved, @"version comment was retrieved successfully");
                               
                               self.lastTestSuccessful = YES;
                           }
@@ -148,12 +148,12 @@
              ];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -190,9 +190,9 @@
                       }
                       else
                       {
-                          STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                          STAssertTrue(pagingResult.objects.count == 1, @"expected 1 version, but got %d",pagingResult.objects.count);
-                          STAssertTrue(pagingResult.totalItems >= 1, @"expected at least 1 version in total");
+                          XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                          XCTAssertTrue(pagingResult.objects.count == 1, @"expected 1 version, but got %d",pagingResult.objects.count);
+                          XCTAssertTrue(pagingResult.totalItems >= 1, @"expected at least 1 version in total");
                           
                           self.lastTestSuccessful = YES;
                       }
@@ -205,11 +205,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -219,7 +219,7 @@
     {
         if (!self.isCloud)
         {
-            STAssertTrue(YES, @"");
+            XCTAssertTrue(YES, @"");
         }
         else
         {
@@ -251,8 +251,8 @@
                           }
                           else
                           {
-                              STAssertNotNil(array, @"array should not be nil");
-                              STAssertTrue(array.count == 1, @"expected 1 version");
+                              XCTAssertNotNil(array, @"array should not be nil");
+                              XCTAssertTrue(array.count == 1, @"expected 1 version");
                               NSString *versionLabel = document.versionLabel;
                               [documentService retrieveContentOfDocument:document completionBlock:^(AlfrescoContentFile *content, NSError *error){
                                   if (nil == content)
@@ -288,7 +288,7 @@
                                                   }
                                                   else
                                                   {
-                                                      STAssertTrue(versions.count == 2, @"the versions count should have been incremented to 2. Instead we got %d", versions.count);
+                                                      XCTAssertTrue(versions.count == 2, @"the versions count should have been incremented to 2. Instead we got %d", versions.count);
                                                       self.lastTestSuccessful = YES;
                                                       BOOL foundPreviousVersion = NO;
                                                       AlfrescoDocument *lastDocument = nil;
@@ -302,10 +302,10 @@
                                                           {
                                                               lastDocument = doc;
                                                               BOOL hasHigherVersion = [AlfrescoVersionServiceTest isHigherVersionLabel:doc.versionLabel previousLabel:versionLabel];
-                                                              STAssertTrue(hasHigherVersion, @"The version label of the latest doc should be higher than the previous one");
+                                                              XCTAssertTrue(hasHigherVersion, @"The version label of the latest doc should be higher than the previous one");
                                                           }
                                                       }
-                                                      STAssertTrue(foundPreviousVersion, @"The array of document versions should still contain the previous version, but doesn't");
+                                                      XCTAssertTrue(foundPreviousVersion, @"The array of document versions should still contain the previous version, but doesn't");
                                                       if (nil != lastDocument)
                                                       {
                                                           [documentService retrieveContentOfDocument:lastDocument completionBlock:^(AlfrescoContentFile *content, NSError *contentError){
@@ -318,16 +318,16 @@
                                                               {
                                                                   NSError *fileError = nil;
                                                                   NSDictionary *fileDict = [[NSFileManager defaultManager] attributesOfItemAtPath:[content.fileUrl path] error:&fileError];
-                                                                  STAssertNil(fileError, @"expected no error with getting file attributes for content file at path %@",[content.fileUrl path]);
+                                                                  XCTAssertNil(fileError, @"expected no error with getting file attributes for content file at path %@",[content.fileUrl path]);
                                                                   unsigned long long size = [[fileDict valueForKey:NSFileSize] unsignedLongLongValue];
-                                                                  STAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu",size);
+                                                                  XCTAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu",size);
                                                                   NSError *checkError = nil;
                                                                   NSString *checkContentString = [NSString stringWithContentsOfFile:[content.fileUrl path]
                                                                                                                            encoding:NSUTF8StringEncoding
                                                                                                                               error:&checkError];
                                                                   
                                                                   NSDate *earlierDate = [createdAt earlierDate:lastDocument.modifiedAt];
-                                                                  STAssertTrue([earlierDate isEqualToDate:createdAt], @"The modified Date should come AFTER the original date");
+                                                                  XCTAssertTrue([earlierDate isEqualToDate:createdAt], @"The modified Date should come AFTER the original date");
                                                                   if (nil == checkContentString)
                                                                   {
                                                                       self.lastTestSuccessful = NO;
@@ -335,7 +335,7 @@
                                                                   }
                                                                   else
                                                                   {
-                                                                      STAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content, instead we get %@",updatedContent);
+                                                                      XCTAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content, instead we get %@",updatedContent);
                                                                       self.lastTestSuccessful = YES;
                                                                   }
                                                                   
@@ -370,13 +370,13 @@
              ];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
             
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

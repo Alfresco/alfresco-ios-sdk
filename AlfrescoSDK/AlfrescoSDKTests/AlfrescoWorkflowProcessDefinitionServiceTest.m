@@ -50,8 +50,8 @@
             }
             else
             {
-                STAssertNotNil(array, @"array should not be nil");
-                STAssertTrue(array.count > 1, @"Array should contain more than 1 process");
+                XCTAssertNotNil(array, @"array should not be nil");
+                XCTAssertTrue(array.count > 1, @"Array should contain more than 1 process");
                 
                 self.lastTestSuccessful = YES;
             }
@@ -59,11 +59,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -86,13 +86,13 @@
             }
             else
             {
-                STAssertNotNil(pagingResult, @"Paging result should not be nil");
-                STAssertTrue(pagingResult.objects.count > 1, @"Paging result should contain more than 1 process");
-                STAssertTrue(pagingResult.objects.count == maxItemsToRetrieve, @"Paging result should be %i, instead got back %i", maxItemsToRetrieve, pagingResult.objects.count);
+                XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
+                XCTAssertTrue(pagingResult.objects.count > 1, @"Paging result should contain more than 1 process");
+                XCTAssertTrue(pagingResult.objects.count == maxItemsToRetrieve, @"Paging result should be %i, instead got back %i", maxItemsToRetrieve, pagingResult.objects.count);
                 
                 // COMMENTED OUT FOR NOW - LOOK INTO WHY MORE ITEMS ARE BEING RETRIEVED
-//                STAssertTrue(pagingResult.totalItems == maxItemsToRetrieve, @"Paging result should be %i, instead got back %i", maxItemsToRetrieve, pagingResult.totalItems);
-//                STAssertFalse(pagingResult.hasMoreItems, @"The hasMoreItems flag should be false");
+//                XCTAssertTrue(pagingResult.totalItems == maxItemsToRetrieve, @"Paging result should be %i, instead got back %i", maxItemsToRetrieve, pagingResult.totalItems);
+//                XCTAssertFalse(pagingResult.hasMoreItems, @"The hasMoreItems flag should be false");
 
                 self.lastTestSuccessful = YES;
             }
@@ -100,11 +100,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -120,7 +120,7 @@
             {
                 if (error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported)
                 {
-                    STAssertEqualObjects(error.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Error description should be %@, but instead got back %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, error.localizedDescription);
+                    XCTAssertEqualObjects(error.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Error description should be %@, but instead got back %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, error.localizedDescription);
                     self.lastTestSuccessful = YES;
                 }
                 else
@@ -132,7 +132,7 @@
             }
             else
             {
-                STAssertNotNil(processDefinition, @"array should not be nil");
+                XCTAssertNotNil(processDefinition, @"array should not be nil");
                 
                 // check values of each property
                 
@@ -142,11 +142,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -169,17 +169,17 @@
 //                }
 //                else
 //                {
-//                    STAssertNotNil(dictionary, @"Returned object should not be nil");
+//                    XCTAssertNotNil(dictionary, @"Returned object should not be nil");
 //                    
 //                    self.lastTestSuccessful = YES;
 //                }
 //            }
 //            else
 //            {
-//                STAssertNil(dictionary, @"Returned dictionary was expected to be nil");
-//                STAssertNotNil(error, @"Expected an error to be returned");
-//                STAssertTrue(error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected error code: %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported);
-//                STAssertTrue([error.localizedDescription isEqualToString:kAlfrescoErrorDescriptionWorkflowFunctionNotSupported], @"Expected error description: %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported);
+//                XCTAssertNil(dictionary, @"Returned dictionary was expected to be nil");
+//                XCTAssertNotNil(error, @"Expected an error to be returned");
+//                XCTAssertTrue(error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected error code: %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported);
+//                XCTAssertTrue([error.localizedDescription isEqualToString:kAlfrescoErrorDescriptionWorkflowFunctionNotSupported], @"Expected error description: %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported);
 //                
 //                self.lastTestSuccessful = YES;
 //            }
@@ -187,7 +187,7 @@
 //        }];
 //        
 //        [self waitUntilCompleteWithFixedTimeInterval];
-//        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+//        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
 //    }
 //    else
 //    {

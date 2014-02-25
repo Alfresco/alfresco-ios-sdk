@@ -53,8 +53,8 @@
             }
             else
             {
-                STAssertNotNil(array, @"array should not be nil");
-                STAssertTrue(array.count > 1, @"Array should contain more than 1 process");
+                XCTAssertNotNil(array, @"array should not be nil");
+                XCTAssertTrue(array.count > 1, @"Array should contain more than 1 process");
                 
                 // TODO
                 
@@ -65,11 +65,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -90,9 +90,9 @@
             }
             else
             {
-                STAssertNotNil(pagingResult, @"Paging result should not be nil");
-                STAssertTrue(pagingResult.objects.count == 1, @"PagingResult objects should contain 1 process");
-                STAssertTrue(pagingResult.hasMoreItems, @"PagingResult should contain more objects");
+                XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
+                XCTAssertTrue(pagingResult.objects.count == 1, @"PagingResult objects should contain 1 process");
+                XCTAssertTrue(pagingResult.hasMoreItems, @"PagingResult should contain more objects");
                 
                 // TODO
                 
@@ -102,11 +102,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -125,8 +125,8 @@
             }
             else
             {
-                STAssertNotNil(array, @"array should not be nil");
-                STAssertTrue(array.count >= 1, @"Array should contain more than or 1 process");
+                XCTAssertNotNil(array, @"array should not be nil");
+                XCTAssertTrue(array.count >= 1, @"Array should contain more than or 1 process");
                 
                 // TODO
                 
@@ -137,11 +137,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -160,8 +160,8 @@
             }
             else
             {
-                STAssertNotNil(array, @"array should not be nil");
-                STAssertTrue(array.count >= 1, @"Array should contain more than or 1 process");
+                XCTAssertNotNil(array, @"array should not be nil");
+                XCTAssertTrue(array.count >= 1, @"Array should contain more than or 1 process");
                 
                 // TODO
                 
@@ -172,11 +172,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -197,9 +197,9 @@
             }
             else
             {
-                STAssertNotNil(pagingResult, @"Paging result should not be nil");
-                STAssertTrue(pagingResult.objects.count > 1, @"PagingResult objects should contain more than 1 process");
-                STAssertTrue(pagingResult.hasMoreItems, @"PagingResult should contain more objects");
+                XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
+                XCTAssertTrue(pagingResult.objects.count > 1, @"PagingResult objects should contain more than 1 process");
+                XCTAssertTrue(pagingResult.hasMoreItems, @"PagingResult should contain more objects");
                 
                 // TODO
                 
@@ -209,11 +209,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -234,8 +234,8 @@
             }
             else
             {
-                STAssertNotNil(createdProcess, @"Process should not be nil");
-                STAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
+                XCTAssertNotNil(createdProcess, @"Process should not be nil");
+                XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
                 [self.processesService retrieveProcessWithIdentifier:createdProcess.identifier completionBlock:^(AlfrescoWorkflowProcess *process, NSError *error) {
                     if (error)
@@ -246,11 +246,11 @@
                     }
                     else
                     {
-                        STAssertNotNil(process.processDefinitionIdentifier, @"Process definition identifier should not be nil");
-                        STAssertNotNil(process.startedAt, @"Process started at date should not be nil");
+                        XCTAssertNotNil(process.processDefinitionIdentifier, @"Process definition identifier should not be nil");
+                        XCTAssertNotNil(process.startedAt, @"Process started at date should not be nil");
                         
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                            STAssertTrue(succeeded, @"Deletion flag should be true");
+                            XCTAssertTrue(succeeded, @"Deletion flag should be true");
                             self.lastTestSuccessful = succeeded;
                             self.callbackCompleted = YES;
                         }];
@@ -259,11 +259,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -286,22 +286,22 @@
             }
             else
             {
-                STAssertNotNil(createdProcess, @"Process should not be nil");
-                STAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
+                XCTAssertNotNil(createdProcess, @"Process should not be nil");
+                XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
                 [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                    STAssertTrue(succeeded, @"Deletion flag should be true");
+                    XCTAssertTrue(succeeded, @"Deletion flag should be true");
                     self.lastTestSuccessful = succeeded;
                     self.callbackCompleted = YES;
                 }];
             }
         }];        
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -323,8 +323,8 @@
             }
             else
             {
-                STAssertNotNil(createdProcess, @"Process should not be nil");
-                STAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
+                XCTAssertNotNil(createdProcess, @"Process should not be nil");
+                XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
                 [self.processesService retrieveProcessImage:createdProcess completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveImageError) {
                     if (retrieveImageError)
@@ -337,10 +337,10 @@
                         }
                         else
                         {
-                            STAssertNil(contentFile, @"Content file should be nil");
-                            STAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
-                            STAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
-                            STAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, retrieveImageError.code);
+                            XCTAssertNil(contentFile, @"Content file should be nil");
+                            XCTAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
+                            XCTAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
+                            XCTAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, retrieveImageError.code);
                      
                             self.lastTestSuccessful = YES;
                             self.callbackCompleted = YES;
@@ -348,12 +348,12 @@
                     }
                     else
                     {
-                        STAssertNotNil(contentFile, @"Content file should not be nil");
+                        XCTAssertNotNil(contentFile, @"Content file should not be nil");
                         BOOL fileExists = [[AlfrescoFileManager sharedManager] fileExistsAtPath:contentFile.fileUrl.path];
-                        STAssertTrue(fileExists, @"The image does not exist at the path");
+                        XCTAssertTrue(fileExists, @"The image does not exist at the path");
                      
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                            STAssertTrue(succeeded, @"Deletion flag should be true");
+                            XCTAssertTrue(succeeded, @"Deletion flag should be true");
                             self.lastTestSuccessful = succeeded;
                             self.callbackCompleted = YES;
                         }];
@@ -362,11 +362,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -388,8 +388,8 @@
             }
             else
             {
-                STAssertNotNil(createdProcess, @"Process should not be nil");
-                STAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
+                XCTAssertNotNil(createdProcess, @"Process should not be nil");
+                XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
@@ -410,10 +410,10 @@
                         }
                         else
                         {
-                            STAssertFalse(succeeded, @"Success flag should be false.");
-                            STAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
-                            STAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
-                            STAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, retrieveImageError.code);
+                            XCTAssertFalse(succeeded, @"Success flag should be false.");
+                            XCTAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
+                            XCTAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
+                            XCTAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, retrieveImageError.code);
                         
                             self.lastTestSuccessful = YES;
                             self.callbackCompleted = YES;
@@ -423,22 +423,22 @@
                     {
                         if (self.currentSession.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
                         {
-                            STAssertTrue(succeeded, @"The completion of the file writing did not complete");
+                            XCTAssertTrue(succeeded, @"The completion of the file writing did not complete");
                             BOOL fileExists = [[AlfrescoFileManager sharedManager] fileExistsAtPath:filePath];
-                            STAssertTrue(fileExists, @"The image does not exist at the path");
+                            XCTAssertTrue(fileExists, @"The image does not exist at the path");
                             
                             [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                                STAssertTrue(succeeded, @"Deletion flag should be true");
+                                XCTAssertTrue(succeeded, @"Deletion flag should be true");
                                 self.lastTestSuccessful = succeeded;
                                 self.callbackCompleted = YES;
                             }];
                         }
                         else
                         {
-                            STAssertFalse(succeeded, @"Success flag should be false.");
-                            STAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
-                            STAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
-                            STAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, retrieveImageError.code);
+                            XCTAssertFalse(succeeded, @"Success flag should be false.");
+                            XCTAssertNotNil(retrieveImageError, @"Retrieving image on JBPM engine should have thrown an error");
+                            XCTAssertEqualObjects(retrieveImageError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, retrieveImageError.localizedDescription);
+                            XCTAssertTrue(retrieveImageError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, retrieveImageError.code);
                             
                             self.lastTestSuccessful = YES;
                             self.callbackCompleted = YES;
@@ -448,11 +448,11 @@
             }
         }];        
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -474,8 +474,8 @@
             }
             else
             {
-                STAssertNotNil(createdProcess, @"Process should not be nil");
-                STAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
+                XCTAssertNotNil(createdProcess, @"Process should not be nil");
+                XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
                 [self.processesService retrieveAllTasksForProcess:createdProcess completionBlock:^(NSArray *array, NSError *retrieveTasksError) {
                     if (retrieveTasksError)
@@ -486,11 +486,11 @@
                     }
                     else
                     {
-                        STAssertNotNil(array, @"array should not be nil");
-                        STAssertTrue(array.count > 0, @"Array should contain more than or atleast 1 task");
+                        XCTAssertNotNil(array, @"array should not be nil");
+                        XCTAssertTrue(array.count > 0, @"Array should contain more than or atleast 1 task");
                         
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                            STAssertTrue(succeeded, @"Deletion flag should be true");
+                            XCTAssertTrue(succeeded, @"Deletion flag should be true");
                             self.lastTestSuccessful = succeeded;
                             self.callbackCompleted = YES;
                         }];
@@ -499,11 +499,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -550,8 +550,8 @@
         }
         else
         {
-            STAssertNotNil(processDefinition, @"Process definition should not be nil");
-            STAssertNotNil(processDefinition.identifier, @"Process definition identifier should not be nil");
+            XCTAssertNotNil(processDefinition, @"Process definition should not be nil");
+            XCTAssertNotNil(processDefinition.identifier, @"Process definition identifier should not be nil");
             
             createProcessWithDefinition(processDefinition);
         }

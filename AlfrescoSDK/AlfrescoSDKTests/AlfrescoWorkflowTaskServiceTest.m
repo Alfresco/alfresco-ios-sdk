@@ -56,8 +56,8 @@
             }
             else
             {
-                STAssertNotNil(array, @"array should not be nil");
-                STAssertTrue(array.count > 1, @"Array should contain more than 1 process");
+                XCTAssertNotNil(array, @"array should not be nil");
+                XCTAssertTrue(array.count > 1, @"Array should contain more than 1 process");
                 
                 // TODO
                 
@@ -68,11 +68,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -93,8 +93,8 @@
             }
             else
             {
-                STAssertNotNil(pagingResult, @"The paging result should not be nil");
-                STAssertTrue(pagingResult.objects.count <= 10, @"The paging result brought back more than 10 items");
+                XCTAssertNotNil(pagingResult, @"The paging result should not be nil");
+                XCTAssertTrue(pagingResult.objects.count <= 10, @"The paging result brought back more than 10 items");
                 
                 self.lastTestSuccessful = YES;
             }
@@ -102,11 +102,11 @@
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -134,8 +134,8 @@
                     }
                     else
                     {
-                        STAssertNotNil(array, @"Returned array should not be nil");
-                        STAssertTrue(array.count > 0, @"Tasks array should contain atleast one task");
+                        XCTAssertNotNil(array, @"Returned array should not be nil");
+                        XCTAssertTrue(array.count > 0, @"Tasks array should contain atleast one task");
                         
                         // TODO
                         
@@ -149,11 +149,11 @@
             
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -181,15 +181,15 @@
                     }
                     else
                     {
-                        STAssertEqualObjects(task.identifier, retrievedTask.identifier, @"The task identifier property does not match");
-                        STAssertEqualObjects(task.processIdentifier, retrievedTask.processIdentifier, @"The task processIdentifier property does not match");
-                        STAssertEqualObjects(task.processDefinitionIdentifier, retrievedTask.processDefinitionIdentifier, @"The task processDefinitionIdentifier property does not match");
-                        STAssertEqualObjects(task.startedAt, retrievedTask.startedAt, @"The task startedAt property does not match");
-                        STAssertEqualObjects(task.endedAt, retrievedTask.endedAt, @"The task endedAt property does not match");
-                        STAssertEqualObjects(task.dueAt, retrievedTask.dueAt, @"The task dueAt property does not match");
-                        STAssertEqualObjects(task.taskDescription, retrievedTask.taskDescription, @"The task taskDescription property does not match");
-                        STAssertEqualObjects(task.priority, retrievedTask.priority, @"The task priority property does not match");
-                        STAssertEqualObjects(task.assigneeIdentifier, retrievedTask.assigneeIdentifier, @"The task assigneeIdentifier property does not match");
+                        XCTAssertEqualObjects(task.identifier, retrievedTask.identifier, @"The task identifier property does not match");
+                        XCTAssertEqualObjects(task.processIdentifier, retrievedTask.processIdentifier, @"The task processIdentifier property does not match");
+                        XCTAssertEqualObjects(task.processDefinitionIdentifier, retrievedTask.processDefinitionIdentifier, @"The task processDefinitionIdentifier property does not match");
+                        XCTAssertEqualObjects(task.startedAt, retrievedTask.startedAt, @"The task startedAt property does not match");
+                        XCTAssertEqualObjects(task.endedAt, retrievedTask.endedAt, @"The task endedAt property does not match");
+                        XCTAssertEqualObjects(task.dueAt, retrievedTask.dueAt, @"The task dueAt property does not match");
+                        XCTAssertEqualObjects(task.taskDescription, retrievedTask.taskDescription, @"The task taskDescription property does not match");
+                        XCTAssertEqualObjects(task.priority, retrievedTask.priority, @"The task priority property does not match");
+                        XCTAssertEqualObjects(task.assigneeIdentifier, retrievedTask.assigneeIdentifier, @"The task assigneeIdentifier property does not match");
                         
                         [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                             self.lastTestSuccessful = succeeded;
@@ -200,11 +200,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -226,7 +226,7 @@
             }
             else
             {
-                STAssertNotNil(person, @"Person should not be nil");
+                XCTAssertNotNil(person, @"Person should not be nil");
                 
                 [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
                     if (creationError)
@@ -246,11 +246,11 @@
                             }
                             else
                             {
-                                STAssertNotNil(assignedTask, @"Updated task should not be nil");
+                                XCTAssertNotNil(assignedTask, @"Updated task should not be nil");
                                 NSLog(@"%@ %@", newAssignee, task.assigneeIdentifier);
                                 
                                 // Commented out - KNOWN BUG IN JSON RESPONSE FROM SERVER - Public API (See ALF-20568)
-//                                STAssertTrue([task.assigneeIdentifier isEqualToString:newAssignee], @"The new assignee identifier has not been updated");
+//                                XCTAssertTrue([task.assigneeIdentifier isEqualToString:newAssignee], @"The new assignee identifier has not been updated");
                                 
                                 [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                                     self.lastTestSuccessful = succeeded;
@@ -263,11 +263,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -296,7 +296,7 @@
                     else
                     {
                         // RESPONSE NOT UPDATED WITH CORRECT VALUES
-//                        STAssertNil(unclaimedTask.assigneeIdentifier, @"Assignee Identifier should be nil");
+//                        XCTAssertNil(unclaimedTask.assigneeIdentifier, @"Assignee Identifier should be nil");
                         
                         [self.taskService claimTask:unclaimedTask completionBlock:^(AlfrescoWorkflowTask *claimedTask, NSError *claimingError) {
                             if (claimingError)
@@ -307,7 +307,7 @@
                             }
                             else
                             {
-                                STAssertTrue([claimedTask.assigneeIdentifier isEqualToString:self.currentSession.personIdentifier], @"The task has not been successfully claimed");
+                                XCTAssertTrue([claimedTask.assigneeIdentifier isEqualToString:self.currentSession.personIdentifier], @"The task has not been successfully claimed");
                                 
                                 [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                                     self.lastTestSuccessful = succeeded;
@@ -320,11 +320,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -352,7 +352,7 @@
                     }
                     else
                     {
-                        STAssertNotNil(completedTask, @"Returned task should not be nil");
+                        XCTAssertNotNil(completedTask, @"Returned task should not be nil");
                         
                         [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                             self.lastTestSuccessful = succeeded;
@@ -363,11 +363,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -397,7 +397,7 @@
                     }
                     else
                     {
-                        STAssertNotNil(task, @"Returned task should not be nil");
+                        XCTAssertNotNil(task, @"Returned task should not be nil");
                         
                         [weakSelf.taskService retrieveAttachmentsForTask:task completionBlock:^(NSArray *array, NSError *retrieveError) {
                             if (retrieveError)
@@ -408,14 +408,14 @@
                             }
                             else
                             {
-                                STAssertNotNil(array, @"Returned array should not be nil");
-                                STAssertTrue(array.count > 0, @"Array should contain more than one item");
+                                XCTAssertNotNil(array, @"Returned array should not be nil");
+                                XCTAssertTrue(array.count > 0, @"Array should contain more than one item");
                                 
                                 AlfrescoDocument *document = array[0];
                                 
                                 [weakSelf.taskService removeAttachment:document fromTask:task completionBlock:^(BOOL removalSuccess, NSError *removeAttachmentError) {
-                                    STAssertTrue(removalSuccess, @"The removal of the attachment did not return true");
-                                    STAssertNil(removeAttachmentError, @"The returned error should be nil");
+                                    XCTAssertTrue(removalSuccess, @"The removal of the attachment did not return true");
+                                    XCTAssertNil(removeAttachmentError, @"The returned error should be nil");
                                         
                                     [weakSelf deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                                         weakSelf.lastTestSuccessful = succeeded;
@@ -429,11 +429,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -463,12 +463,12 @@
                         }
                         else
                         {
-                            STAssertNotNil(resolvedTask, @"The resolved task should not be nil");
+                            XCTAssertNotNil(resolvedTask, @"The resolved task should not be nil");
                             
                             /**
                              * MJH: Removed 08/Jan/2014 as Public API does not return endedAt property for task updates (as per API docs)
                              *
-                            STAssertNotNil(resolvedTask.endedAt, @"The resolved tasks endedAt property should not be nil");
+                            XCTAssertNotNil(resolvedTask.endedAt, @"The resolved tasks endedAt property should not be nil");
                              */
                             
                             // TODO
@@ -481,10 +481,10 @@
                     }
                     else
                     {
-                        STAssertNil(resolvedTask, @"Resolved task should be nil");
-                        STAssertNotNil(resolveError, @"Resolving using the Old API should have thrown an error");
-                        STAssertEqualObjects(resolveError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, resolveError.localizedDescription);
-                        STAssertTrue(resolveError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, resolveError.code);
+                        XCTAssertNil(resolvedTask, @"Resolved task should be nil");
+                        XCTAssertNotNil(resolveError, @"Resolving using the Old API should have thrown an error");
+                        XCTAssertEqualObjects(resolveError.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Expected the error description to be - %@, instead got back an error description of - %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, resolveError.localizedDescription);
+                        XCTAssertTrue(resolveError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected the error code %i, instead got back %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported, resolveError.code);
                         
                         self.lastTestSuccessful = YES;
                         self.callbackCompleted = YES;
@@ -493,11 +493,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

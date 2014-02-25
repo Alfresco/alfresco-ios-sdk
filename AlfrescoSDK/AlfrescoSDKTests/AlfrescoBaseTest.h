@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "AlfrescoTestMacros.h"
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
@@ -34,7 +34,7 @@ typedef void (^AlfrescoTestBlock)(void);
 typedef void (^CMISTestBlock)(void);
 typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
 
-@interface AlfrescoBaseTest : SenTestCase
+@interface AlfrescoBaseTest : XCTestCase
 
 @property (nonatomic, assign) BOOL callbackCompleted;
 @property (nonatomic, assign) BOOL lastTestSuccessful;
