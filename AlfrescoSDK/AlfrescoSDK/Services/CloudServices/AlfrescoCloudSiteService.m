@@ -591,14 +591,14 @@
                               completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
-    return [self retrieveMembersOfSite:site listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+    return [self retrieveAllMembersOfSite:site listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
         completionBlock(pagingResult.objects, error);
     }];
 }
 
-- (AlfrescoRequest *)retrieveMembersOfSite:(AlfrescoSite *)site
-                            listingContext:(AlfrescoListingContext *)listingContext
-                           completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveAllMembersOfSite:(AlfrescoSite *)site
+                               listingContext:(AlfrescoListingContext *)listingContext
+                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -611,6 +611,8 @@
     NSString *requestString = [kAlfrescoCloudSiteMembersAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
                                                                                       withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
+    
+    [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     __weak typeof(self) weakSelf = self;
@@ -639,12 +641,12 @@
 }
 
 - (AlfrescoRequest *)searchMembersOfSite:(AlfrescoSite *)site
-                             usingFilter:(NSString *)filter
+                                keywords:(NSString *)keywords
                           listingContext:(AlfrescoListingContext *)listingContext
                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
-    [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
+    [AlfrescoErrors assertArgumentNotNil:keywords argumentName:@"keywords"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     if (nil == listingContext)
@@ -670,7 +672,7 @@
             if (conversionError == nil)
             {
                 // do manual filtering of users until the Cloud supports it
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(identifier contains[cd] %@) OR (fullName contains [cd] %@)", filter, filter];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(identifier contains[cd] %@) OR (fullName contains [cd] %@)", keywords, keywords];
                 NSArray *filteredMembers = [members filteredArrayUsingPredicate:predicate];
                 
                 // apply paging

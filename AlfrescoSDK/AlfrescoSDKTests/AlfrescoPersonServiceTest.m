@@ -169,15 +169,34 @@
  */
 - (void)testSearchPeople
 {
-    /**
-     * Removed from cloud 03/Dec/2013 - Internal APIs no longer supported on Cloud R32
-     */
-    if (!self.isCloud)
+    if (self.setUpSuccess)
     {
-        if (self.setUpSuccess)
+        self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
+        
+        if (self.isCloud)
         {
-            self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
-            [self.personService search:self.userName completionBlock:^(NSArray *array, NSError *error) {
+            @try
+            {
+                [self.personService searchWithKeywords:self.userName completionBlock:nil];
+                
+                // if we get here the exception was not thrown
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = @"Expected an exception to be thrown as searchWithKeywords is not implemented on the Cloud";
+            }
+            @catch (NSException *exception)
+            {
+                self.lastTestSuccessful = YES;
+            }
+            @finally
+            {
+                self.callbackCompleted = YES;
+            }
+            
+            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
+        else
+        {
+            [self.personService searchWithKeywords:self.userName completionBlock:^(NSArray *array, NSError *error) {
                  if (nil == array)
                  {
                      self.lastTestSuccessful = NO;
@@ -211,47 +230,6 @@
             
             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
-        else
-        {
-            STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
-        }
-    }
-}
-
-/**
- * Disabled until the implementation on AlfrescoPersonService is complete
- */
-- (void)DISABLED_testUpdateProfile_DISABLED
-{
-    if (self.setUpSuccess)
-    {
-        self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
-        
-        NSString *jobTitle = @"Software Engineer";
-        NSString *location = @"London";
-        NSString *description = @"Developing people APIs";
-
-        NSDictionary *newProperties = @{kAlfrescoPersonPropertyJobTitle: jobTitle, kAlfrescoPersonPropertyLocation: location, kAlfrescoPersonPropertyDescription: description};
-
-        [self.personService updateProfile:newProperties completionBlock:^(AlfrescoPerson *person, NSError *error) {
-            if (nil == person)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = @"Failed to retrieve person.";
-            }
-            else
-            {
-                STAssertTrue([person.jobTitle isEqualToString:jobTitle],@"person.jobTitle is %@ but should be %@", person.jobTitle, jobTitle);
-                STAssertTrue([person.location isEqualToString:location],@"person.location is %@ but should be %@", person.location, location);
-                STAssertTrue([person.description isEqualToString:description],@"person.description is %@ but should be %@", person.description, description);
-                
-                self.lastTestSuccessful = YES;
-            }
-            self.callbackCompleted = YES;
-        }];
-        [self waitUntilCompleteWithFixedTimeInterval];
-        
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {

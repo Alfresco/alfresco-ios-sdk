@@ -27,6 +27,8 @@
 #import "AlfrescoNetworkProvider.h"
 #import "AlfrescoLog.h"
 
+NSString * const kAlfrescoSearchNotImplemented = @"searchWithKeywords is not implemented as Alfresco in the Cloud does not have this capability";
+
 @interface AlfrescoCloudPersonService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
@@ -101,111 +103,18 @@
     }];    
 }
 
-- (AlfrescoRequest *)updateProfile:(NSDictionary *)properties completionBlock:(AlfrescoPersonCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    /*
-    [AlfrescoErrors assertArgumentNotNil:properties argumentName:@"properties"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    NSString *requestString = [kAlfrescoCloudInternalAPIPath stringByAppendingString:kAlfrescoCloudPersonAPI];
-    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
-    
-    NSData *bodyData = [self jsonDataForUpdatingProfile:[self propertiesWithCloudKeys:properties]];
-    AlfrescoLogDebug(@"body json: %@", [[NSString alloc] initWithData:bodyData encoding:NSUTF8StringEncoding]);
-    
-    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url
-                                                session:self.session
-                                            requestBody:bodyData
-                                                 method:kAlfrescoHTTPPut
-                                        alfrescoRequest:alfrescoRequest
-                                        completionBlock:^(NSData *responseData, NSError *error) {
-                                            if (nil == responseData)
-                                            {
-                                                completionBlock(nil, error);
-                                            }
-                                            else
-                                            {
-                                                AlfrescoLogDebug(@"person: %@", [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
-                                                NSError *conversionError = nil;
-                                                AlfrescoPerson *person = [self alfrescoPersonFromJSONData:responseData error:&conversionError];
-                                                completionBlock(person, conversionError);
-                                            }
-                                        }];
-    return alfrescoRequest;
-    */
-    return nil;
+    NSException *exception = [NSException exceptionWithName:NSGenericException reason:kAlfrescoSearchNotImplemented userInfo:nil];
+    @throw exception;
 }
 
-- (AlfrescoRequest *)search:(NSString *)filter completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                         listingContext:(AlfrescoListingContext *)listingContext
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    /**
-     * Removed 03/Dec/2013 - Internal APIs no longer supported on Cloud
-     *
-    [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    return [self searchPeople:filter withListingContext:nil completionBlock:completionBlock];
-     */
-    return nil;
-}
-
-- (AlfrescoRequest *)search:(NSString *)filter
-         WithListingContext:(AlfrescoListingContext *)listingContext
-            completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
-{
-    /**
-     * Removed 03/Dec/2013 - Internal APIs no longer supported on Cloud
-     *
-    [AlfrescoErrors assertArgumentNotNil:filter argumentName:@"filter"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    if (nil == listingContext)
-    {
-        listingContext = self.session.defaultListingContext;
-    }
-    
-    AlfrescoRequest *request = [self searchPeople:filter withListingContext:listingContext completionBlock:^(NSArray *array, NSError *error) {
-        
-        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:array listingContext:listingContext];
-        completionBlock(pagingResult, nil);
-    }];
-    return request;
-     */
-    return nil;
-}
-
-- (AlfrescoRequest *)searchPeople:(NSString *)filter
-               withListingContext:(AlfrescoListingContext *)listingContext
-                  completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
-{
-    /**
-     * Removed 03/Dec/2013 - Internal APIs no longer supported on Cloud
-     *
-    NSString *requestString = [kAlfrescoCloudInternalAPIPath stringByAppendingString:kAlfrescoCloudPersonSearchAPI];
-    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:filter];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString listingContext:listingContext];
-    
-    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url
-                                                session:self.session
-                                        alfrescoRequest:alfrescoRequest
-                                        completionBlock:^(NSData *responseData, NSError *error){
-                                            if (nil == responseData)
-                                            {
-                                                completionBlock(nil, error);
-                                            }
-                                            else
-                                            {
-                                                NSError *conversionError = nil;
-                                                NSArray *people = [self peopleArrayFromJSONData:responseData error:&conversionError];
-                                                completionBlock(people, conversionError);
-                                            }
-                                        }];
-    return alfrescoRequest;
-     */
-    return nil;
+    NSException *exception = [NSException exceptionWithName:NSGenericException reason:kAlfrescoSearchNotImplemented userInfo:nil];
+    @throw exception;
 }
 
 #pragma mark - private methods
