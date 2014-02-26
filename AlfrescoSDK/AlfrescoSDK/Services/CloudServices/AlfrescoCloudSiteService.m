@@ -612,8 +612,6 @@
                                                                                       withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     
-    [AlfrescoLog sharedInstance].logLevel = AlfrescoLogLevelTrace;
-    
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
