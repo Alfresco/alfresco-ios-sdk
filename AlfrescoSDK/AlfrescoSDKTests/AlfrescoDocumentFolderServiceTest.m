@@ -3542,20 +3542,21 @@
                     NSInteger hour = [components hour];
                     NSInteger minute = [components minute];
                     NSInteger second = [components second];
+                    
                     NSNumber *imagePixelXDimension = @(arc4random()%512);
                     NSNumber *imagePixelYDimension = @(arc4random()%382);
-                    NSDecimalNumber *imageExposureTime =[NSDecimalNumber decimalNumberWithDecimal:[@((arc4random()%100)/100.0) decimalValue]];
-                    NSDecimalNumber *imageFNumber = [NSDecimalNumber decimalNumberWithDecimal:[@((arc4random()%100)/100.0) decimalValue]];
+                    NSNumber *imageExposureTime = @((arc4random()%100)/100.0);
+                    NSNumber *imageFNumber = @((arc4random()%100)/100.0);
                     NSNumber *imageFlash = @YES;
-                    NSDecimalNumber *imageFocalLength = [NSDecimalNumber decimalNumberWithDecimal:[@((arc4random()%100)/100.0) decimalValue]];
+                    NSNumber *imageFocalLength = @((arc4random()%100)/100.0);
                     NSString *imageISOSpeedRating = [NSString stringWithFormat:@"ISO Setting %i", arc4random()%2000];
                     NSString *imageManufacturer = [NSString stringWithFormat:@"Nikon %i", arc4random()%1000];
-                    NSString *imageModel = [NSString stringWithFormat:@"D Series %i", arc4random()%999];;
-                    NSString *imageSoftware = [NSString stringWithFormat:@"Photoshop %i", arc4random()%10];;
+                    NSString *imageModel = [NSString stringWithFormat:@"D Series %i", arc4random()%999];
+                    NSString *imageSoftware = [NSString stringWithFormat:@"Photoshop %i", arc4random()%10];
                     NSNumber *imageOrientation = @(arc4random()%1);
                     NSNumber *imageXResolution = @(arc4random()%512);
                     NSNumber *imageYResolution = @(arc4random()%382);
-                    NSString *imageResolutionUnit = [NSString stringWithFormat:@"ISO Setting %i", arc4random()%5000];;
+                    NSString *imageResolutionUnit = [NSString stringWithFormat:@"ISO Setting %i", arc4random()%5000];
                     
                     // create property
                     NSMutableDictionary *properties = [NSMutableDictionary dictionary];
@@ -3578,7 +3579,8 @@
                     properties[@"exif:resolutionUnit"] = imageResolutionUnit;
                     
                     [weakFolderService updatePropertiesOfNode:node properties:properties completionBlock:^(AlfrescoNode *modifiedNode, NSError *modifiedError) {
-                        if (modifiedNode == nil || modifiedError != nil) {
+                        if (modifiedNode == nil || modifiedError != nil)
+                        {
                             self.lastTestSuccessful = NO;
                             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [modifiedError localizedDescription], [modifiedError localizedFailureReason]];
                             self.callbackCompleted = YES;
@@ -3591,51 +3593,59 @@
                             // check the properties were changed
                             NSDictionary *modifiedProperties = modifiedNode.properties;
                             
-                            AlfrescoProperty *modifiedDateTimeOriginal = modifiedProperties[@"exif:dateTimeOriginal"];
-                            AlfrescoProperty *modifiedImagePixelXDimension = modifiedProperties[@"exif:pixelXDimension"];
-                            AlfrescoProperty *modifiedImagePixelYDimension = modifiedProperties[@"exif:pixelYDimension"];
-                            AlfrescoProperty *modifiedImageExposureTime = modifiedProperties[@"exif:exposureTime"];
-                            AlfrescoProperty *modifiedImageFNumber = modifiedProperties[@"exif:fNumber"];
-                            AlfrescoProperty *modifiedImageFlash = modifiedProperties[@"exif:flash"];
-                            AlfrescoProperty *modifiedImageFocalLength = modifiedProperties[@"exif:focalLength"];
-                            AlfrescoProperty *modifiedImageISOSpeedRating= modifiedProperties[@"exif:isoSpeedRatings"];
-                            AlfrescoProperty *modifiedImageManufacturer = modifiedProperties[@"exif:manufacturer"];
-                            AlfrescoProperty *modifiedImageModel = modifiedProperties[@"exif:model"];
-                            AlfrescoProperty *modifiedImageSoftware = modifiedProperties[@"exif:software"];
-                            AlfrescoProperty *modifiedImageOrientation = modifiedProperties[@"exif:orientation"];
-                            AlfrescoProperty *modifiedImageXResolution = modifiedProperties[@"exif:xResolution"];
-                            AlfrescoProperty *modifiedImageYResolution = modifiedProperties[@"exif:yResolution"];
-                            AlfrescoProperty *modifiedImageResolutionUnit = modifiedProperties[@"exif:resolutionUnit"];
-                            
-                            //exif
-                            NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:modifiedDateTimeOriginal.value];
+                            NSDate *modifiedDateTimeOriginal = ((AlfrescoProperty *)modifiedProperties[@"exif:dateTimeOriginal"]).value;
+                            NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:modifiedDateTimeOriginal];
                             NSInteger modifiedDay = [components day];
                             NSInteger modifiedMonth = [components month];
                             NSInteger modifiedYear = [components year];
                             NSInteger modifiedHour = [components hour];
                             NSInteger modifiedMinute = [components minute];
                             NSInteger modifiedSecond = [components second];
+                            
+                            NSNumber *modifiedImagePixelXDimension = ((AlfrescoProperty *)modifiedProperties[@"exif:pixelXDimension"]).value;
+                            NSNumber *modifiedImagePixelYDimension = ((AlfrescoProperty *)modifiedProperties[@"exif:pixelYDimension"]).value;
+                            NSNumber *modifiedImageExposureTime = ((AlfrescoProperty *)modifiedProperties[@"exif:exposureTime"]).value;
+                            NSNumber *modifiedImageFNumber = ((AlfrescoProperty *)modifiedProperties[@"exif:fNumber"]).value;
+                            NSNumber *modifiedImageFlash = ((AlfrescoProperty *)modifiedProperties[@"exif:flash"]).value;
+                            NSNumber *modifiedImageFocalLength = ((AlfrescoProperty *)modifiedProperties[@"exif:focalLength"]).value;
+                            NSString *modifiedImageISOSpeedRating= ((AlfrescoProperty *)modifiedProperties[@"exif:isoSpeedRatings"]).value;
+                            NSString *modifiedImageManufacturer = ((AlfrescoProperty *)modifiedProperties[@"exif:manufacturer"]).value;
+                            NSString *modifiedImageModel = ((AlfrescoProperty *)modifiedProperties[@"exif:model"]).value;
+                            NSString *modifiedImageSoftware = ((AlfrescoProperty *)modifiedProperties[@"exif:software"]).value;
+                            NSNumber *modifiedImageOrientation = ((AlfrescoProperty *)modifiedProperties[@"exif:orientation"]).value;
+                            NSNumber *modifiedImageXResolution = ((AlfrescoProperty *)modifiedProperties[@"exif:xResolution"]).value;
+                            NSNumber *modifiedImageYResolution = ((AlfrescoProperty *)modifiedProperties[@"exif:yResolution"]).value;
+                            NSString *modifiedImageResolutionUnit = ((AlfrescoProperty *)modifiedProperties[@"exif:resolutionUnit"]).value;
+                            
+                            //exif
                             XCTAssertTrue(modifiedDay == day, @"Day: modified %ld differs from original %ld", (long)modifiedDay, (long)day);
                             XCTAssertTrue(modifiedMonth == month, @"Month: modified %ld differs from original %ld", (long)modifiedMonth, (long)month);
                             XCTAssertTrue(modifiedYear == year, @"Year: modified %ld differs from original %ld", (long)modifiedYear, (long)year);
                             XCTAssertTrue(modifiedHour == hour, @"Hour: modified %ld differs from original %ld", (long)modifiedHour, (long)hour);
                             XCTAssertTrue(modifiedMinute == minute, @"Minute: modified %ld differs from original %ld", (long)modifiedMinute, (long)minute);
                             XCTAssertTrue(modifiedSecond == second, @"Second: modified %ld differs from original %ld", (long)modifiedSecond, (long)second);
+                            XCTAssertTrue([modifiedImagePixelXDimension isEqualToNumber:imagePixelXDimension], @"Pixel X Dimension: modified %@ differs from original %@", modifiedImagePixelXDimension, imagePixelXDimension);
+                            XCTAssertTrue([modifiedImagePixelYDimension isEqualToNumber:imagePixelYDimension], @"Pixel Y Dimension: modified %@ differs from original %@", modifiedImagePixelYDimension, imagePixelYDimension);
                             
-                            XCTAssertTrue([modifiedImagePixelXDimension.value isEqualToNumber:imagePixelXDimension], @"Pixel X Dimension: modified %@ differs from original %@", modifiedImagePixelXDimension.value, imagePixelXDimension);
-                            XCTAssertTrue([modifiedImagePixelYDimension.value isEqualToNumber:imagePixelYDimension], @"Pixel Y Dimension: modified %@ differs from original %@", modifiedImagePixelYDimension.value, imagePixelYDimension);
-                            XCTAssertTrue([modifiedImageExposureTime.value isEqualToNumber:imageExposureTime], @"Exposure Time: modified %@ differs from original %@", modifiedImageExposureTime.value, imageExposureTime);
-                            XCTAssertTrue([modifiedImageFNumber.value isEqualToNumber:imageFNumber], @"F Number: modified %@ differs from original %@", modifiedImageFNumber.value, imageFNumber);
-                            XCTAssertTrue([modifiedImageFlash.value isEqualToNumber:imageFlash], @"Flash: modified %@ differs from original %@", BOOL_TO_STRING(modifiedImageFlash.value), BOOL_TO_STRING(imageFocalLength));
-                            XCTAssertTrue([modifiedImageFocalLength.value isEqualToNumber:imageFocalLength], @"Focal Length: modified %@ differs from original %@", modifiedImageFocalLength.value, imageFocalLength);
-                            XCTAssertTrue([modifiedImageISOSpeedRating.value isEqualToString:imageISOSpeedRating], @"ISO Speed Rating: modified %@ differs from original %@", modifiedImageISOSpeedRating.value, imageISOSpeedRating);
-                            XCTAssertTrue([modifiedImageManufacturer.value isEqualToString:imageManufacturer], @"Manufacturer: modified %@ differs from original %@", modifiedImageManufacturer.value, imageManufacturer);
-                            XCTAssertTrue([modifiedImageModel.value isEqualToString:imageModel], @"Model: modified %@ differs from original %@", modifiedImageModel.value, imageModel);
-                            XCTAssertTrue([modifiedImageSoftware.value isEqualToString:imageSoftware], @"Software: modified %@ differs from original %@", modifiedImageSoftware.value, imageSoftware);
-                            XCTAssertTrue([modifiedImageOrientation.value isEqualToNumber:imageOrientation], @"Orientation: modified %@ differs from original %@", modifiedImageOrientation.value, imageOrientation);
-                            XCTAssertTrue([modifiedImageXResolution.value isEqualToNumber:imageXResolution], @"X Resolution: modified %@ differs from original %@", modifiedImageXResolution.value, imageXResolution);
-                            XCTAssertTrue([modifiedImageYResolution.value isEqualToNumber:imageYResolution], @"Y Resolution: modified %@ differs from original %@", modifiedImageYResolution.value, imageYResolution);
-                            XCTAssertTrue([modifiedImageResolutionUnit.value isEqualToString:imageResolutionUnit], @"Resolution Unit: modified %@ differs from original %@", modifiedImageResolutionUnit.value, imageResolutionUnit);
+                            BOOL exposureMatch = [[NSString stringWithFormat:@"%.2f", [modifiedImageExposureTime doubleValue]] isEqualToString:[NSString stringWithFormat:@"%.2f", [imageExposureTime doubleValue]]];
+                            XCTAssertTrue(exposureMatch, @"Exposure Time: modified %@ differs from original %@", modifiedImageExposureTime, imageExposureTime);
+                            
+                            BOOL fNumberMatch = [[NSString stringWithFormat:@"%.2f", [modifiedImageFNumber doubleValue]] isEqualToString:[NSString stringWithFormat:@"%.2f", [imageFNumber doubleValue]]];
+                            XCTAssertTrue(fNumberMatch, @"F Number: modified %@ differs from original %@", modifiedImageFNumber, imageFNumber);
+                            
+                            XCTAssertTrue([modifiedImageFlash isEqualToNumber:imageFlash], @"Flash: modified %@ differs from original %@", BOOL_TO_STRING(modifiedImageFlash), BOOL_TO_STRING(imageFocalLength));
+                            
+                            BOOL focalLengthMatch = [[NSString stringWithFormat:@"%.2f", [modifiedImageFocalLength doubleValue]] isEqualToString:[NSString stringWithFormat:@"%.2f", [imageFocalLength doubleValue]]];
+                            XCTAssertTrue(focalLengthMatch, @"Focal Length: modified %@ differs from original %@", modifiedImageFocalLength, imageFocalLength);
+                            
+                            XCTAssertTrue([modifiedImageISOSpeedRating isEqualToString:imageISOSpeedRating], @"ISO Speed Rating: modified %@ differs from original %@", modifiedImageISOSpeedRating, imageISOSpeedRating);
+                            XCTAssertTrue([modifiedImageManufacturer isEqualToString:imageManufacturer], @"Manufacturer: modified %@ differs from original %@", modifiedImageManufacturer, imageManufacturer);
+                            XCTAssertTrue([modifiedImageModel isEqualToString:imageModel], @"Model: modified %@ differs from original %@", modifiedImageModel, imageModel);
+                            XCTAssertTrue([modifiedImageSoftware isEqualToString:imageSoftware], @"Software: modified %@ differs from original %@", modifiedImageSoftware, imageSoftware);
+                            XCTAssertTrue([modifiedImageOrientation isEqualToNumber:imageOrientation], @"Orientation: modified %@ differs from original %@", modifiedImageOrientation, imageOrientation);
+                            XCTAssertTrue([modifiedImageXResolution isEqualToNumber:imageXResolution], @"X Resolution: modified %@ differs from original %@", modifiedImageXResolution, imageXResolution);
+                            XCTAssertTrue([modifiedImageYResolution isEqualToNumber:imageYResolution], @"Y Resolution: modified %@ differs from original %@", modifiedImageYResolution, imageYResolution);
+                            XCTAssertTrue([modifiedImageResolutionUnit isEqualToString:imageResolutionUnit], @"Resolution Unit: modified %@ differs from original %@", modifiedImageResolutionUnit, imageResolutionUnit);
                             
                             self.lastTestSuccessful = YES;
                         }
