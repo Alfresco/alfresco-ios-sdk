@@ -79,12 +79,21 @@
             propertyData.queryName = [propertyExtension.attributes objectForKey:kCMISAtomEntryQueryName];
             propertyData.type = [CMISAtomParserUtil atomPubTypeToInternalType:propertyExtension.name];
 
-            CMISExtensionElement *valueExtensionElement = [propertyExtension.children objectAtIndex:0];
-            if (valueExtensionElement.value)
+            
+            // MOBSDK-616: multi-valued aspect properties will have multiple children, not just one!
+            NSMutableArray *propertyValues = [NSMutableArray array];
+            for (CMISExtensionElement *valueExtensionElement in propertyExtension.children)
             {
-                NSMutableArray *propertyValue = [NSMutableArray array];
-                [CMISAtomParserUtil parsePropertyValue:valueExtensionElement.value propertyType:propertyExtension.name addToArray:propertyValue];
-                propertyData.values = (NSArray *)propertyValue;
+                if (valueExtensionElement.value)
+                {
+                    [CMISAtomParserUtil parsePropertyValue:valueExtensionElement.value propertyType:propertyExtension.name addToArray:propertyValues];
+                }
+            }
+            
+            // if there were values add them to the property data object
+            if (propertyValues.count > 0)
+            {
+                propertyData.values = (NSArray *)propertyValues;
             }
 
             [cmisObject.properties addProperty:propertyData];

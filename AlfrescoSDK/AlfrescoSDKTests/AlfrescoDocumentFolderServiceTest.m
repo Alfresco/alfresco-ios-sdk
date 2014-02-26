@@ -26,6 +26,7 @@
 #import "AlfrescoContentStream.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoRepositorySession.h"
+#import "AlfrescoTaggingService.h"
 
 @implementation AlfrescoDocumentFolderServiceTest
 /*
@@ -5341,8 +5342,6 @@
             NSString *description = @"An example to demonstrate the creation of docs with custom types";
             [props setObject:title forKey:@"cm:title"];
             [props setObject:description forKey:@"cm:description"];
-            // provide the objectTypeId so we can specify the custom type
-            //            [props setObject:@"fdk:everything" forKey:kCMISPropertyObjectTypeId];
             
             NSString *customTypeTestFileName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:@"everything.txt"];
             
@@ -5395,7 +5394,6 @@
     }
 }
 
-// TODO: Re-enable this test when MOBSDK-482 is implemented.
 /*
  */
 - (void)testUpdatePropertiesForDocumentWithCustomType
@@ -5407,10 +5405,12 @@
             NSMutableDictionary *props = [NSMutableDictionary dictionary];
             NSString *title = @"CustomType Example";
             NSString *description = @"An example to demonstrate the creation of docs with custom types";
+            NSString *fdkText = @"Custom text property";
+            NSArray *fdkTextMultipe = @[@"first", @"second", @"third"];
             [props setObject:title forKey:@"cm:title"];
             [props setObject:description forKey:@"cm:description"];
-            // provide the objectTypeId so we can specify the custom type
-            //            [props setObject:@"fdk:everything" forKey:kCMISPropertyObjectTypeId];
+            [props setObject:fdkText forKey:@"fdk:text"];
+            [props setObject:fdkTextMultipe forKey:@"fdk:textMultiple"];
             
             NSString *customTypeTestFileName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:@"everything.txt"];
             
@@ -5430,17 +5430,36 @@
                 }
                 else
                 {
+                    // check builtin properties
                     STAssertNotNil(document.identifier, @"document identifier should be filled");
                     STAssertTrue([document.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect");
                     STAssertTrue([document.name isEqualToString:customTypeTestFileName], @"document name is incorrect");
                     STAssertTrue(document.contentLength > 10, @"expected content to be filled");
                     
+                    // check custom properties
+                    AlfrescoProperty *fdkTextProperty = [document.properties objectForKey:@"fdk:text"];
+                    STAssertNotNil(fdkTextProperty, @"Expected to find the fdk:text property");
+                    STAssertTrue([fdkTextProperty.value isEqualToString:fdkText],
+                                 [NSString stringWithFormat:@"Expected fdk:text property to be %@ but it was %@", fdkText, fdkTextProperty.value]);
+                    
+                    AlfrescoProperty *fdkTextMultipleProperty = document.properties[@"fdk:textMultiple"];
+                    STAssertNotNil(fdkTextMultipleProperty, @"Expected to find fdk:textMultiple property");
+                    STAssertTrue(fdkTextMultipleProperty.isMultiValued, @"Expected fdk:textMultiple to be a multi valued property");
+                    STAssertTrue([fdkTextMultipleProperty.value isKindOfClass:[NSArray class]], @"Expected the fdk:textMultiple property value to be an array");
+                    NSArray *values = (NSArray *)fdkTextMultipleProperty.value;
+                    STAssertTrue(values.count == 3, @"Expected 3 values for the fdk:textMultiple property but there were %d", values.count);
+                    NSString *firstValue = [values firstObject];
+                    STAssertTrue([firstValue isEqualToString:@"first"], @"Expected first value for the fdk:textMultiple property to be 'first' but it was '%@'", firstValue);
+                    
+                    // now update some custom properties
                     NSString *text = [NSString stringWithFormat:@"Text %i", arc4random()%10];
                     NSNumber *number = [NSNumber numberWithInt:arc4random()%512];
+                    NSArray *multipe = @[@"first", @"second", @"third", @"fourth"];
                     
                     NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:2];
                     [propDict setObject:text forKey:@"fdk:text"];
                     [propDict setObject:number forKey:@"fdk:int"];
+                    [propDict setObject:multipe forKey:@"fdk:textMultiple"];
                     [self.dfService updatePropertiesOfNode:document properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *updateError) {
                         
                         if (nil == updatedNode)
@@ -5459,9 +5478,17 @@
                             NSDictionary *updatedProps = updatedDocument.properties;
                             AlfrescoProperty *updatedText = [updatedProps objectForKey:@"fdk:text"];
                             AlfrescoProperty *updatedNumber = [updatedProps objectForKey:@"fdk:int"];
+                            AlfrescoProperty *updatedMultiValued = [updatedProps objectForKey:@"fdk:textMultiple"];
+                            STAssertNotNil(updatedText, @"Expected to find the updated fdk:text property");
+                            STAssertNotNil(updatedNumber, @"Expected to find the updated fdk:int property");
+                            STAssertNotNil(updatedMultiValued, @"Expected to find the updated fdk:textMultiple property");
                             STAssertTrue([updatedText.value isEqualToString:text], @"Updated fdk:text property is incorrect");
                             STAssertTrue([updatedNumber.value isEqualToNumber:number], @"Updated fdk:int property is incorrect");
+                            STAssertTrue(updatedMultiValued.isMultiValued, @"Expected fdk:textMultiple to still be a multi valued property");
+                            NSArray *updatedValues = (NSArray *)updatedMultiValued.value;
+                            STAssertTrue(updatedValues.count == 4, @"Expected 4 values for the fdk:textMultiple property but there were %d", updatedValues.count);
                             
+                            // delete the test document
                             [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
                              {
                                  if (!success)
@@ -5477,69 +5504,11 @@
                              }];
                         }
                     }];
-                    
-                    // delete the test document
                 }
             } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
             
             [self waitUntilCompleteWithFixedTimeInterval];
             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-            /*
-             self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-             __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
-             
-             // Locate the document named custom-type.txt in the root folder (should be of type fdk:everything)
-             [self.dfService retrieveNodeWithFolderPath:@"custom-type.txt" relativeToFolder:self.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error){
-             
-             if (nil == node)
-             {
-             self.lastTestSuccessful = NO;
-             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             self.callbackCompleted = YES;
-             }
-             else
-             {
-             STAssertTrue(node.isDocument, @"Expecting to find a document node");
-             STAssertTrue([node.name isEqualToString:@"custom-type.txt"], @"Expecting to find a node named everything but found a node named %@", node.name);
-             STAssertTrue([node.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect. Expected fdk:everything but got back %@", node.type);
-             
-             NSString *text = [NSString stringWithFormat:@"Text %i", arc4random()%10];
-             NSNumber *number = [NSNumber numberWithInt:arc4random()%512];
-             
-             NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:2];
-             [propDict setObject:text forKey:@"fdk:text"];
-             [propDict setObject:number forKey:@"fdk:int"];
-             
-             [weakDfService updatePropertiesOfNode:node properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error) {
-             
-             if (nil == updatedNode)
-             {
-             self.lastTestSuccessful = NO;
-             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-             AlfrescoDocument *updatedDocument = (AlfrescoDocument *)updatedNode;
-             STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
-             STAssertTrue([updatedDocument.type isEqualToString:@"fdk:everything"], @"Custom type is incorrect. Expected fdk:everything but got back %@", updatedDocument.type);
-             
-             // check the updated properties
-             NSDictionary *updatedProps = updatedDocument.properties;
-             AlfrescoProperty *updatedText = [updatedProps objectForKey:@"fdk:text"];
-             AlfrescoProperty *updatedNumber = [updatedProps objectForKey:@"fdk:int"];
-             STAssertTrue([updatedText.value isEqualToString:text], @"Updated fdk:text property is incorrect");
-             STAssertTrue([updatedNumber.value isEqualToNumber:number], @"Updated fdk:int property is incorrect");
-             
-             self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-             }];
-             }
-             }];
-             
-             [self waitUntilCompleteWithFixedTimeInterval];
-             STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-             */
         }
     }
     else
@@ -5984,6 +5953,63 @@
                         self.callbackCompleted = YES;
                     }];
                 }
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+/**
+ Test to validate fix for MOBSDK-616
+ */
+- (void)testMultiValuedAspectProperties
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        AlfrescoTaggingService *taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
+        
+        // tag the test document with 3 tags
+        NSArray *tags = @[@"one", @"two", @"three"];
+        [taggingService addTags:tags toNode:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, NSError *taggingError) {
+            if (!succeeded)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [taggingError localizedDescription], [taggingError localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // retrieve the test document again
+                [self.dfService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *retrieveError) {
+                    if (node == nil)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveError localizedDescription], [retrieveError localizedFailureReason]];
+                    }
+                    else
+                    {
+                        STAssertNotNil(node, @"node should not be nil");
+                        
+                        // retrieve the cm:taggable property and check it is multivalued
+                        AlfrescoProperty *taggable = node.properties[@"cm:taggable"];
+                        STAssertNotNil(taggable, @"Expected to find the cm:taggable property");
+                        STAssertTrue(taggable.isMultiValued, @"Expected the cm:taggable to be multi valued");
+                        
+                        // check there are 3 values
+                        NSArray *values = (NSArray *)taggable.value;
+                        STAssertTrue(values.count == 3, @"Expected to find 3 values but found %d", values.count);
+                        
+                        self.lastTestSuccessful = YES;
+                    }
+                    self.callbackCompleted = YES;
+                }];
             }
         }];
         
