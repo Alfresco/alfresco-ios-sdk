@@ -97,6 +97,7 @@ extern NSString * const kAlfrescoWorkflowNodeRefPrefix;
 // JSON
 extern NSString * const kAlfrescoWorkflowPublicJSONEntry;
 extern NSString * const kAlfrescoWorkflowPublicJSONIdentifier;
+extern NSString * const kAlfrescoWorkflowPublicJSONKey;
 extern NSString * const kAlfrescoWorkflowPublicJSONName;
 extern NSString * const kAlfrescoWorkflowPublicJSONTitle;
 extern NSString * const kAlfrescoWorkflowPublicJSONDescription;

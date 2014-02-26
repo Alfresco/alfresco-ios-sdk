@@ -97,6 +97,7 @@ NSString * const kAlfrescoWorkflowNodeRefPrefix = @"workspace://SpacesStore/";
 // JSON
 NSString * const kAlfrescoWorkflowPublicJSONEntry = @"entry";
 NSString * const kAlfrescoWorkflowPublicJSONIdentifier = @"id";
+NSString * const kAlfrescoWorkflowPublicJSONKey = @"key";
 NSString * const kAlfrescoWorkflowPublicJSONName = @"name";
 NSString * const kAlfrescoWorkflowPublicJSONTitle = @"title";
 NSString * const kAlfrescoWorkflowPublicJSONDescription = @"description";

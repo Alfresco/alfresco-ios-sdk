@@ -365,7 +365,7 @@
             completionBlock(nil, requestConversionError);
         }
         
-        NSString *completeProcessDefinitionIdentifier = [NSString stringWithFormat:@"%@%@", [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine], processDefinition.name];
+        NSString *completeProcessDefinitionIdentifier = [NSString stringWithFormat:@"%@%@", [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine], processDefinition.key];
         NSString *requestString = [kAlfrescoLegacyAPIWorkflowFormProcessor stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:completeProcessDefinitionIdentifier];
         NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
         
