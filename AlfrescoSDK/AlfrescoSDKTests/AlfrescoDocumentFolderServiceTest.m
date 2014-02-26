@@ -5383,7 +5383,7 @@
                     XCTAssertTrue(fdkTextMultipleProperty.isMultiValued, @"Expected fdk:textMultiple to be a multi valued property");
                     XCTAssertTrue([fdkTextMultipleProperty.value isKindOfClass:[NSArray class]], @"Expected the fdk:textMultiple property value to be an array");
                     NSArray *values = (NSArray *)fdkTextMultipleProperty.value;
-                    XCTAssertTrue(values.count == 3, @"Expected 3 values for the fdk:textMultiple property but there were %d", values.count);
+                    XCTAssertTrue(values.count == 3, @"Expected 3 values for the fdk:textMultiple property but there were %lu", (unsigned long)values.count);
                     NSString *firstValue = [values firstObject];
                     XCTAssertTrue([firstValue isEqualToString:@"first"], @"Expected first value for the fdk:textMultiple property to be 'first' but it was '%@'", firstValue);
                     
@@ -5422,7 +5422,7 @@
                             XCTAssertTrue([updatedNumber.value isEqualToNumber:number], @"Updated fdk:int property is incorrect");
                             XCTAssertTrue(updatedMultiValued.isMultiValued, @"Expected fdk:textMultiple to still be a multi valued property");
                             NSArray *updatedValues = (NSArray *)updatedMultiValued.value;
-                            XCTAssertTrue(updatedValues.count == 4, @"Expected 4 values for the fdk:textMultiple property but there were %d", updatedValues.count);
+                            XCTAssertTrue(updatedValues.count == 4, @"Expected 4 values for the fdk:textMultiple property but there were %lu", (unsigned long)updatedValues.count);
                             
                             // delete the test document
                             [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
@@ -5940,7 +5940,7 @@
                         
                         // check there are 3 values
                         NSArray *values = (NSArray *)taggable.value;
-                        XCTAssertTrue(values.count == 3, @"Expected to find 3 values but found %d", values.count);
+                        XCTAssertTrue(values.count == 3, @"Expected to find 3 values but found %lu", (unsigned long)values.count);
                         
                         self.lastTestSuccessful = YES;
                     }
