@@ -26,7 +26,7 @@
 @interface CMISAtomPubBaseService (Protected)
 
 /** retrieve object from cache
- * completionBlock returns the object (as id) or nil if unsuccessul
+ * completionBlock returns the object (as id) or nil if unsuccessful
  */
 - (void)retrieveFromCache:(NSString *)cacheKey
               cmisRequest:(CMISRequest *)cmisRequest
@@ -51,7 +51,7 @@
                completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
 
 /** Full-blown object retrieval version 
- * completionBlock returns CMISObjectData instance or nil if unsuccessul
+ * completionBlock returns CMISObjectData instance or nil if unsuccessful
  */
 - (void)retrieveObjectInternal:(NSString *)objectId
                  returnVersion:(CMISReturnVersion)cmisReturnVersion
@@ -65,7 +65,7 @@
                completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
 
 /** retrieve object for a given path name
- * completionBlock returns CMISObjectData instance or nil if unsuccessul
+ * completionBlock returns CMISObjectData instance or nil if unsuccessful
  */
 - (void)retrieveObjectByPathInternal:(NSString *)path
                               filter:(NSString *)filter

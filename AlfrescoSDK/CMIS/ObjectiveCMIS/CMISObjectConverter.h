@@ -20,7 +20,6 @@
 #import <Foundation/Foundation.h>
 #import "CMISObject.h"
 #import "CMISObjectData.h"
-#import "CMISCollection.h"
 
 @class CMISSession;
 
@@ -28,8 +27,8 @@
 
 - (id)initWithSession:(CMISSession *)session;
 
-- (CMISObject *)convertObject:(CMISObjectData *)objectData;
-- (CMISCollection *)convertObjects:(NSArray *)objects;
+- (void)convertObject:(CMISObjectData *)objectData completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
+- (void)convertObjects:(NSArray *)objectDatas completionBlock:(void (^)(NSArray *objects, NSError *error))completionBlock;
 
 /**
  * Converts the given dictionary of properties, where the key is the property id and the value

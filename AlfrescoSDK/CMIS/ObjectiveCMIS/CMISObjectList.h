@@ -46,6 +46,6 @@
  * The value in the parameter MAY NOT be accurate the next time the client retrieves the result set
  * or the next page in the result set.
 */
-@property NSInteger numItems;
+@property int numItems;
 
 @end

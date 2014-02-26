@@ -26,7 +26,7 @@
 @protocol CMISRepositoryInfoParserDelegate <NSObject>
 @required
 /// parses repository info delegate method
-- (void)repositoryInfoParser:(CMISRepositoryInfoParser *)epositoryInfoParser didFinishParsingRepositoryInfo:(CMISRepositoryInfo *)repositoryInfo;
+- (void)repositoryInfoParser:(CMISRepositoryInfoParser *)repositoryInfoParser didFinishParsingRepositoryInfo:(CMISRepositoryInfo *)repositoryInfo;
 @end
 
 

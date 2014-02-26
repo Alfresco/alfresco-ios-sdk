@@ -26,7 +26,7 @@
 
 @property (nonatomic, strong) NSArray *resultArray;
 @property BOOL hasMoreItems;
-@property NSInteger numItems;
+@property int numItems;
 
 @end
 
@@ -42,14 +42,14 @@ typedef void (^CMISFetchNextPageBlock)(int skipCount, int maxItems, CMISFetchNex
 
 @property (nonatomic, strong, readonly) NSArray *resultArray;
 @property (readonly) BOOL hasMoreItems;
-@property (readonly) NSInteger numItems;
+@property (readonly) int numItems;
 
 /**
  * completionBlock returns paged results or nil if unsuccessful
  */
 + (void)pagedResultUsingFetchBlock:(CMISFetchNextPageBlock)fetchNextPageBlock
-                   limitToMaxItems:(NSInteger)maxItems
-                startFromSkipCount:(NSInteger)skipCount
+                   limitToMaxItems:(int)maxItems
+                startFromSkipCount:(int)skipCount
                    completionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
 /**

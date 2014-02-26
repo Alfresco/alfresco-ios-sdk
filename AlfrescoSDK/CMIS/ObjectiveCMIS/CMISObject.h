@@ -36,6 +36,7 @@
 @property (nonatomic, strong, readonly) NSDate *lastModificationDate;
 @property (nonatomic, strong, readonly) NSString *objectType;
 @property (nonatomic, strong, readonly) NSString *changeToken;
+@property (nonatomic, strong, readonly) CMISTypeDefinition *typeDefinition;
 //@property (nonatomic, strong, readonly) CMISBaseTypeId *baseTypeId;
 //@property (nonatomic, strong, readonly) CMISObjectType *baseType;
 //@property (nonatomic, strong, readonly) CMISObjectType *type;
@@ -48,6 +49,12 @@
  * initialise CMISObject with data and session
  */
 - (id)initWithObjectData:(CMISObjectData *)objectData session:(CMISSession *)session;
+
+/**
+ * set the typeDefinition property initally
+ */
+- (void)fetchTypeDefinitionWithCompletionBlock:(void (^)(NSError *error))completionBlock;
+
 
 /**
  * Updates the properties that are provided.

@@ -156,6 +156,10 @@ extern NSString * const kCMISCoreInherited;
 extern NSString * const kCMISCoreRequired;
 extern NSString * const kCMISCoreOrderable;
 extern NSString * const kCMISCoreOpenChoice;
+extern NSString * const kCMISCoreVersionable;
+extern NSString * const kCMISCoreContentStreamAllowed;
+extern NSString * const kCMISCoreAllowed;
+extern NSString * const kCMISCoreNotAllowed;
 
 extern NSString * const kCMISCorePropertyStringDefinition;
 extern NSString * const kCMISCorePropertyIdDefinition;

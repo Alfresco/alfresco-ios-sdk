@@ -39,7 +39,7 @@
 /**
  * Number of items will be returned when executing a query.
  */
-@property (readonly) NSInteger numItems;
+@property (readonly) int numItems;
 
 /// designated initialiser
 - (id)initWithData:(NSData*)feedData;

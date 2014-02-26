@@ -48,13 +48,13 @@
 - (CMISRequest*)retrieveAllVersionsWithOperationContext:(CMISOperationContext *)operationContext completionBlock:(void (^)(CMISCollection *collection, NSError *error))completionBlock;
 
 /**
- * Retrieves the lastest version of this document.
+ * Retrieves the latest version of this document.
  * The completionBlock returns the CMIS document or nil if unsuccessful
  */
 - (CMISRequest*)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
 
 /**
- * Retrieves the lastest version of this document with paging options.
+ * Retrieves the latest version of this document with paging options.
  * The completionBlock returns the CMIS document or nil if unsuccessful
  */
 - (CMISRequest*)retrieveObjectOfLatestVersionWithMajorVersion:(BOOL)major

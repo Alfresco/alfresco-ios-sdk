@@ -38,7 +38,7 @@
 - (id)initWithCmisObjectData:(CMISObjectData *)cmisObjectData session:(CMISSession *)session;
 
 /**
- * Convience method for the initializer.
+ * Convenience method for the initializer.
  */
 + (CMISQueryResult *)queryResultUsingCmisObjectData:(CMISObjectData *)cmisObjectData session:(CMISSession *)session;
 

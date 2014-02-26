@@ -20,31 +20,31 @@
 #import <Foundation/Foundation.h>
 
 // Binding type
-typedef enum 
+typedef NS_ENUM(NSInteger, CMISBindingType)
 {
     CMISBindingTypeAtomPub,
     CMISBindingTypeCustom
-} CMISBindingType;
+};
 
 // Base type
-typedef enum
+typedef NS_ENUM(NSInteger, CMISBaseType)
 {
     CMISBaseTypeDocument,
     CMISBaseTypeFolder,
     CMISBaseTypeRelationship,
     CMISBaseTypePolicy
-} CMISBaseType;
+};
 
-typedef enum
+typedef NS_ENUM(NSInteger, CMISIncludeRelationship)
 {
     CMISIncludeRelationshipNone,
     CMISIncludeRelationshipSource,
     CMISIncludeRelationshipTarget,
     CMISIncludeRelationshipBoth
-} CMISIncludeRelationship;
+};
 
 // Property types
-typedef enum
+typedef NS_ENUM(NSInteger, CMISPropertyType)
 {
     CMISPropertyTypeBoolean = 0,
     CMISPropertyTypeId,
@@ -54,26 +54,26 @@ typedef enum
     CMISPropertyTypeHtml,
     CMISPropertyTypeString,
     CMISPropertyTypeUri
-} CMISPropertyType;
+};
 
 // Property cardinality options
-typedef enum
+typedef NS_ENUM(NSInteger, CMISCardinality)
 {
     CMISCardinalitySingle,
     CMISCardinalityMulti
-} CMISCardinality;
+};
 
 // Property updatability options
-typedef enum
+typedef NS_ENUM(NSInteger, CMISUpdatability)
 {
     CMISUpdatabilityReadOnly,
     CMISUpdatabilityReadWrite,
     CMISUpdatabilityWhenCheckedOut,
     CMISUpdatabilityOnCreate
-} CMISUpdatability;
+};
 
 // Allowable action type
-typedef enum
+typedef NS_ENUM(NSInteger, CMISActionType)
 {
     CMISActionCanDeleteObject,
     CMISActionCanUpdateProperties,
@@ -104,7 +104,7 @@ typedef enum
     CMISActionCanGetRenditions,
     CMISActionCanGetACL,
     CMISActionCanApplyACL
-} CMISActionType;
+};
 
 // AllowableAction String Array, the objects defined MUST be in the same order as those in enum CMISActionType
 #define CMISAllowableActionsArray @"canDeleteObject", @"canUpdateProperties", @"canGetProperties", \
@@ -116,7 +116,7 @@ typedef enum
     @"canCreateRelationship", @"canDeleteTree", @"canGetRenditions", @"canGetACL", @"canApplyACL", nil
 
 // Extension Levels
-typedef enum
+typedef NS_ENUM(NSInteger, CMISExtensionLevel)
 {
     CMISExtensionLevelObject,
     CMISExtensionLevelProperties,
@@ -124,15 +124,23 @@ typedef enum
     // TODO expose the remaining extensions as they are implemented
     // CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
 
-} CMISExtensionLevel;
+};
 
 // UnfileObject
-typedef enum
+typedef NS_ENUM(NSInteger, CMISUnfileObject)
 {
     CMISUnfile,
     CMISDeleteSingleFiled,
     CMISDelete,  // default
-} CMISUnfileObject;
+};
+
+// ContentStreamAllowed
+typedef NS_ENUM(NSInteger, CMISContentStreamAllowedType)
+{
+    CMISContentStreamNotAllowed,
+    CMISContentStreamAllowed,
+    CMISContentStreamRequired
+};
 
 @interface CMISEnums : NSObject 
 
