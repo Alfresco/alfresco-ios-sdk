@@ -418,7 +418,7 @@
             NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
             [self favoritesArrayWithData:data completionBlock:^(NSArray *favorites, NSError *conversionError) {
                 
-                if (error)
+                if (conversionError)
                 {
                     [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
                 }
@@ -462,7 +462,11 @@
                         }
                         if (usePaging)
                         {
-                            AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:resultsArray hasMoreItems:hasMoreFavorites totalItems:totalFavorites];
+                            // paging result needs to be built with the listing context in mind, however we already
+                            // retrieved paged results above but then corrupted them by retrieving the full array from
+                            // the cache! For now return the correct number of results requested, but there's a danger
+                            // the hasMoreItems flag will be incorrect.
+                            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:resultsArray listingContext:listingContext];
                             pagingCompletionBlock(pagingResult, nil);
                         }
                         else
