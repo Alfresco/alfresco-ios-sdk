@@ -30,6 +30,7 @@
 @interface AlfrescoWorkflowProcessDefinition : NSObject <NSCoding>
 
 @property (nonatomic, strong, readonly) NSString *identifier;
+@property (nonatomic, strong, readonly) NSString *key;
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) NSString *processDescription;
 @property (nonatomic, strong, readonly) NSNumber *version;
