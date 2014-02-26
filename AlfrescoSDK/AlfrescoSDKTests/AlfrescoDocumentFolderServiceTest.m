@@ -4053,16 +4053,14 @@
             if (contentFile == nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
                 self.callbackCompleted = YES;
             }
             else
             {
                 STAssertNotNil(contentFile,@"created content file should not be nil");
                 NSError *fileError = nil;
-                //                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
                 STAssertNil(fileError, @"expected no error in getting file attributes for contentfile at path %@",[contentFile.fileUrl path]);
-                //                unsigned long long size = [[fileAttributes valueForKey:NSFileSize] unsignedLongLongValue];
                 NSError *readError = nil;
                 
                 __block NSString *stringContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path] encoding:NSUTF8StringEncoding error:&readError];
@@ -4070,7 +4068,7 @@
                 if (stringContent == nil)
                 {
                     self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
                     self.callbackCompleted = YES;
                 }
                 else
@@ -4078,57 +4076,58 @@
                     __block NSString *updatedContent = [NSString stringWithFormat:@"%@ - and we added some double byte characters ありがと　にほんご", stringContent];
                     NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
                     __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:contentFile.mimeType];
+
                     [weakDfService updateContentOfDocument:self.testAlfrescoDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error) {
-                        
                         if (updatedDocument == nil)
                         {
                             self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                            self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
                             self.callbackCompleted = YES;
                         }
                         else
                         {
-                            STAssertNotNil(updatedDocument.identifier, @"document identifier should be filled");
-                            STAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
+                            STAssertNotNil(updatedDocument.identifier, @"Updated document identifier is nil");
+                            STAssertTrue(updatedDocument.contentLength > 100, @"Content length is not > 100 - actual value %llu", updatedDocument.contentLength);
                             
                             [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *error){
                                 if (checkContentFile == nil)
                                 {
                                     self.lastTestSuccessful = NO;
-                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"#4 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
                                 }
                                 else
                                 {
                                     NSError *fileError = nil;
                                     NSDictionary *fileDict = [[NSFileManager defaultManager] attributesOfItemAtPath:[checkContentFile.fileUrl path] error:&fileError];
-                                    STAssertNil(fileError, @"expected no error with getting file attributes for content file at path %@",[checkContentFile.fileUrl path]);
+                                    STAssertNil(fileError, @"File attributes request for content file at path %@ returned error %@ - %@", [checkContentFile.fileUrl path], [fileError localizedDescription], [fileError localizedFailureReason]);
                                     unsigned long long size = [[fileDict valueForKey:NSFileSize] unsignedLongLongValue];
-                                    STAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu",size);
+                                    STAssertTrue(size > 0, @"checkContentFile length should be > 0 - actual value %llu", size);
                                     NSError *checkError = nil;
                                     NSString *checkContentString = [NSString stringWithContentsOfFile:[checkContentFile.fileUrl path] encoding:NSUTF8StringEncoding error:&checkError];
                                     if (checkContentString == nil)
                                     {
                                         self.lastTestSuccessful = NO;
-                                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [checkError localizedDescription], [checkError localizedFailureReason]];
+                                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#5 %@ - %@", [checkError localizedDescription], [checkError localizedFailureReason]];
                                     }
                                     else
                                     {
-                                        STAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content %@, instead we get %@",updatedContent, checkContentString);
+                                        STAssertTrue([checkContentString isEqualToString:updatedContent],@"Expected content [%@] differs actual string [%@]", updatedContent, checkContentString);
                                         self.lastTestSuccessful = YES;
                                     }
                                     
                                 }
                                 self.callbackCompleted = YES;
-                            } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
+                            } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+                                AlfrescoLogDebug(@"#3 Progress %llu/%llu", bytesTransferred, bytesTotal);
+                            }];
                         }
-                    } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
-                        AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                    } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+                        AlfrescoLogDebug(@"#2 Progress %llu/%llu", bytesTransferred, bytesTotal);
                     }];
                 }
             }
-            
-        } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long totalBytes) {
-            
+        } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+            AlfrescoLogDebug(@"#1 Progress %llu/%llu", bytesTransferred, bytesTotal);
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
