@@ -54,7 +54,7 @@
 // Location of the person
 @property (nonatomic, strong, readonly) NSString *location;
 
-// Summury / Description of the person
+// Summary / Description of the person
 @property (nonatomic, strong, readonly) NSString *description;
 
 // Telephone number of the person

@@ -20,21 +20,12 @@
 #import "CMISDocument.h"
 #import "CMISSession.h"
 #import "CMISQueryResult.h"
-#import "CMISObjectConverter.h"
-#import "CMISEnums.h"
+#import "AlfrescoCMISObjectConverter.h"
 #import "CMISConstants.h"
-#import "CMISQueryResult.h"
-#import "AlfrescoActivityEntry.h"
-#import "AlfrescoComment.h"
 #import "AlfrescoProperty.h"
-#import "AlfrescoPermissions.h"
-#import "AlfrescoErrors.h"
 #import <objc/runtime.h>
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoRepositoryCapabilities.h"
-#import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
-#import "AlfrescoCMISUtil.h"
 #import "AlfrescoCMISFolder.h"
 #import "AlfrescoCMISDocument.h"
 
@@ -50,14 +41,7 @@
     if (self = [super init])
     {
         self.session = session;
-        if ([self.session isKindOfClass:[AlfrescoCloudSession class]])
-        {
-            self.isCloud = YES;
-        }
-        else
-        {
-            self.isCloud = NO;
-        }
+        self.isCloud = [self.session isKindOfClass:[AlfrescoCloudSession class]];
     }
     
     return self;
@@ -72,52 +56,52 @@
     NSString *version = cmisSession.repositoryInfo.productVersion;
     NSArray *versionArray = [version componentsSeparatedByString:@"."];
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSNumber *majorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:0]];
-    NSNumber *minorVersionNumber = [formatter numberFromString:[versionArray objectAtIndex:1]];
-    NSArray *buildArray = [[versionArray objectAtIndex:2] componentsSeparatedByString:@"("];
-    NSNumber *maintenanceVersion = [formatter numberFromString:[[buildArray objectAtIndex:0] stringByReplacingOccurrencesOfString:@" " withString:@""]];
-    NSString *buildNumber =  [[buildArray objectAtIndex:1] stringByReplacingOccurrencesOfString:@")" withString:@""];   
+    NSNumber *majorVersionNumber = [formatter numberFromString:versionArray[0]];
+    NSNumber *minorVersionNumber = [formatter numberFromString:versionArray[1]];
+    NSArray *buildArray = [versionArray[2] componentsSeparatedByString:@"("];
+    NSNumber *maintenanceVersion = [formatter numberFromString:[buildArray[0] stringByReplacingOccurrencesOfString:@" " withString:@""]];
+    NSString *buildNumber =  [buildArray[1] stringByReplacingOccurrencesOfString:@")" withString:@""];   
     
 
     
     NSMutableDictionary *capabilities = [NSMutableDictionary dictionary];
     if (self.isCloud)
     {
-        [repoDictionary setObject:kAlfrescoRepositoryEditionCloud forKey:kAlfrescoRepositoryEdition];
-        [repoDictionary setObject:identifier forKey:kAlfrescoRepositoryIdentifier];
-        [repoDictionary setObject:summary forKey:kAlfrescoRepositorySummary];
-        [repoDictionary setObject:productName forKey:kAlfrescoRepositoryName];
+        repoDictionary[kAlfrescoRepositoryEdition] = kAlfrescoRepositoryEditionCloud;
+        repoDictionary[kAlfrescoRepositoryIdentifier] = identifier;
+        repoDictionary[kAlfrescoRepositorySummary] = summary;
+        repoDictionary[kAlfrescoRepositoryName] = productName;
         
-        [capabilities setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoCapabilityLike];
-        [capabilities setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoCapabilityCommentsCount];
+        [capabilities setValue:@YES forKey:kAlfrescoCapabilityLike];
+        [capabilities setValue:@YES forKey:kAlfrescoCapabilityCommentsCount];
     }
     else
     {
-        [repoDictionary setObject:productName forKey:kAlfrescoRepositoryName];
+        repoDictionary[kAlfrescoRepositoryName] = productName;
         if ([productName rangeOfString:kAlfrescoRepositoryEditionCommunity].location != NSNotFound)
         {
-            [repoDictionary setObject:kAlfrescoRepositoryEditionCommunity forKey:kAlfrescoRepositoryEdition];
+            repoDictionary[kAlfrescoRepositoryEdition] = kAlfrescoRepositoryEditionCommunity;
         }
         else
         {
-            [repoDictionary setObject:kAlfrescoRepositoryEditionEnterprise forKey:kAlfrescoRepositoryEdition];
+            repoDictionary[kAlfrescoRepositoryEdition] = kAlfrescoRepositoryEditionEnterprise;
         }
-        [repoDictionary setObject:identifier forKey:kAlfrescoRepositoryIdentifier];
-        [repoDictionary setObject:summary forKey:kAlfrescoRepositorySummary];
-        [repoDictionary setObject:version forKey:kAlfrescoRepositoryVersion];
-        [repoDictionary setObject:majorVersionNumber forKey:kAlfrescoRepositoryMajorVersion];
-        [repoDictionary setObject:minorVersionNumber forKey:kAlfrescoRepositoryMinorVersion];
-        [repoDictionary setObject:maintenanceVersion forKey:kAlfrescoRepositoryMaintenanceVersion];
-        [repoDictionary setObject:buildNumber forKey:kAlfrescoRepositoryBuildNumber];
+        repoDictionary[kAlfrescoRepositoryIdentifier] = identifier;
+        repoDictionary[kAlfrescoRepositorySummary] = summary;
+        repoDictionary[kAlfrescoRepositoryVersion] = version;
+        repoDictionary[kAlfrescoRepositoryMajorVersion] = majorVersionNumber;
+        repoDictionary[kAlfrescoRepositoryMinorVersion] = minorVersionNumber;
+        repoDictionary[kAlfrescoRepositoryMaintenanceVersion] = maintenanceVersion;
+        repoDictionary[kAlfrescoRepositoryBuildNumber] = buildNumber;
         if ([majorVersionNumber intValue] < 4)
         {
-            [capabilities setValue:[NSNumber numberWithBool:NO] forKey:kAlfrescoCapabilityLike];
-            [capabilities setValue:[NSNumber numberWithBool:NO] forKey:kAlfrescoCapabilityCommentsCount];
+            [capabilities setValue:@NO forKey:kAlfrescoCapabilityLike];
+            [capabilities setValue:@NO forKey:kAlfrescoCapabilityCommentsCount];
         }
         else
         {
-            [capabilities setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoCapabilityLike];
-            [capabilities setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoCapabilityCommentsCount];
+            [capabilities setValue:@YES forKey:kAlfrescoCapabilityLike];
+            [capabilities setValue:@YES forKey:kAlfrescoCapabilityCommentsCount];
         }
     }
 
@@ -215,9 +199,9 @@
     
     [properties setValue:cmisDocument.creationDate forKey:kCMISPropertyCreationDate];
     [properties setValue:cmisDocument.lastModificationDate forKey:kCMISPropertyModificationDate];
-    NSNumber *length = [NSNumber numberWithUnsignedLongLong:cmisDocument.contentStreamLength];
+    NSNumber *length = @(cmisDocument.contentStreamLength);
     [properties setValue:length forKey:kCMISPropertyContentStreamLength];
-    NSNumber *isLatest = [NSNumber numberWithBool:cmisDocument.isLatestVersion];
+    NSNumber *isLatest = @(cmisDocument.isLatestVersion);
     [properties setValue:isLatest forKey:kCMISPropertyIsLatestVersion];
     
     return [[AlfrescoDocument alloc] initWithProperties:properties];
@@ -236,20 +220,20 @@
     {
         NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
         NSString *propertyStringType = propData.identifier;
-        NSNumber *propTypeIndex = [NSNumber numberWithInt:[AlfrescoCMISToAlfrescoObjectConverter typeForCMISProperty:propertyStringType]];
+        NSNumber *propTypeIndex = @([AlfrescoCMISToAlfrescoObjectConverter typeForCMISProperty:propertyStringType]);
         [propertyDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
         if(propData.values != nil && propData.values.count > 1)
         {
-            [propertyDictionary setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoPropertyIsMultiValued];
+            [propertyDictionary setValue:@YES forKey:kAlfrescoPropertyIsMultiValued];
             [propertyDictionary setValue:propData.values forKey:kAlfrescoPropertyValue];
         }
         else 
         {
-            [propertyDictionary setValue:[NSNumber numberWithBool:NO] forKey:kAlfrescoPropertyIsMultiValued];
+            [propertyDictionary setValue:@NO forKey:kAlfrescoPropertyIsMultiValued];
             [propertyDictionary setValue:propData.firstValue forKey:kAlfrescoPropertyValue];
         }
         AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
-        [alfPropertiesDict setObject:alfProperty forKey:propData.identifier];
+        alfPropertiesDict[propData.identifier] = alfProperty;
     }
     
     [propertyDictionary setValue:alfPropertiesDict forKey:kAlfrescoNodeProperties];
@@ -323,9 +307,7 @@
 - (AlfrescoNode *)nodeFromCMISObjectData:(CMISObjectData *)cmisObjectData
 {
     CMISSession *cmisSession = [self.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-//    CMISObjectConverter *cmisObjectConverter = [[CMISObjectConverter alloc] initWithSession:cmisSession];
-    
-    CMISObject *cmisObject = [cmisSession.objectConverter convertObject:cmisObjectData];
+    CMISObject *cmisObject = [cmisSession.objectConverter convertObjectInternal:cmisObjectData];
     return [self nodeFromCMISObject:cmisObject];
 }
 
@@ -337,9 +319,8 @@
     data.baseType = CMISBaseTypeDocument;
     data.properties = cmisQueryResult.properties;
     data.allowableActions = cmisQueryResult.allowableActions;
-//    CMISObjectConverter *cmisObjectConverter = [[CMISObjectConverter alloc] initWithSession:cmisSession];
     
-    CMISObject *cmisObject = [cmisSession.objectConverter convertObject:data];
+    CMISObject *cmisObject = [cmisSession.objectConverter convertObjectInternal:data];
     return (AlfrescoDocument *)[self nodeFromCMISObject:cmisObject];
 }
 

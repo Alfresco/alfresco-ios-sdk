@@ -105,7 +105,7 @@
             }
             else
             {
-                CMISRendition *thumbnailRendition = (CMISRendition *)[renditions objectAtIndex:0];
+                CMISRendition *thumbnailRendition = (CMISRendition *)renditions[0];
                 AlfrescoLogDebug(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@",renditions.count, thumbnailRendition.renditionDocumentId);
                 NSString *tmpFileName = [[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingFormat:@"%@.png",node.name];
                 AlfrescoLogDebug(@"************* DOWNLOADING TO FILE %@",tmpFileName);
@@ -170,7 +170,7 @@
             }
             else
             {
-                CMISRendition *thumbnailRendition = (CMISRendition *)[renditions objectAtIndex:0];
+                CMISRendition *thumbnailRendition = (CMISRendition *)renditions[0];
                 AlfrescoLogDebug(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@", renditions.count, thumbnailRendition.renditionDocumentId);
                 request.httpRequest = [thumbnailRendition downloadRenditionContentToOutputStream:outputStream completionBlock:^(NSError *downloadError) {
                     if (downloadError)
@@ -522,17 +522,17 @@
 - (NSData *)jsonDataForAddingFavorite:(AlfrescoNode *)node
 {
     NSString *nodeIdWithoutVersionNumber = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
-    NSDictionary *nodeId = [NSDictionary dictionaryWithObject:nodeIdWithoutVersionNumber forKey:kAlfrescoJSONGUID];
+    NSDictionary *nodeId = @{kAlfrescoJSONGUID: nodeIdWithoutVersionNumber};
     NSDictionary *fileFolder = nil;
     if (node.isDocument)
     {
-        fileFolder = [NSDictionary dictionaryWithObject:nodeId forKey:kAlfrescoJSONFile];
+        fileFolder = @{kAlfrescoJSONFile: nodeId};
     }
     else
     {
-        fileFolder = [NSDictionary dictionaryWithObject:nodeId forKey:kAlfrescoJSONFolder];
+        fileFolder = @{kAlfrescoJSONFolder: nodeId};
     }
-    NSDictionary *jsonDict = [NSDictionary dictionaryWithObject:fileFolder forKey:kAlfrescoJSONTarget];
+    NSDictionary *jsonDict = @{kAlfrescoJSONTarget: fileFolder};
     NSError *error = nil;
     return [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&error];
 }

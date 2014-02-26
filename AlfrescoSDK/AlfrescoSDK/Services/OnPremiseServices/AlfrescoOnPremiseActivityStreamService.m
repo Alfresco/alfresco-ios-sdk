@@ -24,7 +24,6 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import <objc/runtime.h>
-#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremiseActivityStreamService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -188,13 +187,13 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeActivityStream];
         return nil;
     }
-    if ([jsonActivityStreamArray isKindOfClass:[NSArray class]] == NO)
+    if (![jsonActivityStreamArray isKindOfClass:[NSArray class]])
     {
-        if([jsonActivityStreamArray isKindOfClass:[NSDictionary class]] == YES &&
-           [[jsonActivityStreamArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+        if ([jsonActivityStreamArray isKindOfClass:[NSDictionary class]] &&
+           [[jsonActivityStreamArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
         {
             // no results found
-            return [NSArray array];
+            return @[];
         }
         else
         {

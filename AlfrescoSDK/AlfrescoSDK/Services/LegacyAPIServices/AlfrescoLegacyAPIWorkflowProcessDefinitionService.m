@@ -26,7 +26,6 @@
 #import "AlfrescoLegacyAPIWorkflowProcessDefinitionService.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoNetworkProvider.h"
-#import "AlfrescoRequest.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
@@ -139,7 +138,7 @@
                 NSArray *workflowDefinitions = [self.workflowObjectConverter workflowDefinitionsFromLegacyJSONData:data session:self.session conversionError:&conversionError];
                 if (workflowDefinitions.count > 0)
                 {
-                    AlfrescoWorkflowProcessDefinition *processDefinition = [workflowDefinitions objectAtIndex:0];
+                    AlfrescoWorkflowProcessDefinition *processDefinition = workflowDefinitions[0];
                     completionBlock(processDefinition, conversionError);
                 }
                 else

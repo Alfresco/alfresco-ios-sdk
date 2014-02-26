@@ -131,11 +131,8 @@ static NSInteger kSiteModelVersion = 1;
 
 - (BOOL)isEqual:(id)object
 {
-    if (self == object)
-    {
-        return YES;
-    }
-    return ([object isKindOfClass:[AlfrescoSite class]] && ([[object identifier] isEqualToString:_identifier] || [[object shortName] isEqualToString:_shortName]));
+    return (self == object) ||
+        ([object isKindOfClass:[AlfrescoSite class]] && ([[object identifier] isEqualToString:_identifier] || [[object shortName] isEqualToString:_shortName]));
 }
 
 - (void)changeMemberState:(NSNumber *)state

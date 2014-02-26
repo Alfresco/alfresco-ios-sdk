@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoRatingServiceTest.h"
-#import "AlfrescoRepositoryCapabilities.h"
 
 @implementation AlfrescoRatingServiceTest
 /*
@@ -45,13 +44,13 @@
                  }
                  else
                  {
-                     STAssertTrue([count intValue] == 0, @"Retrieve like count: expected like count of 0 but got count %d",[count intValue]);
+                     XCTAssertTrue([count intValue] == 0, @"Retrieve like count: expected like count of 0 but got count %d",[count intValue]);
                      self.lastTestSuccessful = YES;
                  }
                  self.callbackCompleted = YES;
              }];
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {
@@ -60,7 +59,7 @@
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -99,7 +98,7 @@
                           }
                           else
                           {
-                              STAssertTrue([count intValue] == 1, @"Retrieve like count: expected like count of 1 but got count %d",[count intValue]);
+                              XCTAssertTrue([count intValue] == 1, @"Retrieve like count: expected like count of 1 but got count %d",[count intValue]);
                               
                               [self.ratingService unlikeNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
                                {
@@ -121,7 +120,7 @@
                                             }
                                             else
                                             {
-                                                STAssertTrue([count intValue] == 0, @"Retrieve like count: expected like count of 0 but got count %d", [count intValue]);
+                                                XCTAssertTrue([count intValue] == 0, @"Retrieve like count: expected like count of 0 but got count %d", [count intValue]);
                                                 self.lastTestSuccessful = YES;
                                             }
                                             self.callbackCompleted = YES;
@@ -138,7 +137,7 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {
@@ -147,7 +146,7 @@
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -177,7 +176,7 @@
                  }
                  else
                  {
-                     STAssertFalse(isLiked, @"expected false");
+                     XCTAssertFalse(isLiked, @"expected false");
                      
                      [self.ratingService likeNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
                       {
@@ -200,7 +199,7 @@
                                    }
                                    else
                                    {
-                                       STAssertTrue(succeeded, @"expected true");
+                                       XCTAssertTrue(succeeded, @"expected true");
                                        
                                        [self.ratingService unlikeNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error)
                                         {
@@ -228,7 +227,7 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {
@@ -237,7 +236,7 @@
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

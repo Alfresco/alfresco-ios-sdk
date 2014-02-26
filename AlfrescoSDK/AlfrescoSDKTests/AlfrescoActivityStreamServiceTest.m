@@ -17,8 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoActivityStreamServiceTest.h"
-#import "AlfrescoActivityEntry.h"
-#import "AlfrescoSiteService.h"
 #import "AlfrescoLog.h"
 
 @implementation AlfrescoActivityStreamServiceTest
@@ -45,9 +43,9 @@
              }
              else
              {
-                 STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                 STAssertTrue(pagingResult.objects.count > 1, @"expected more than 1 activity entries, but got %d", pagingResult.objects.count);
-                 STAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
+                 XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                 XCTAssertTrue(pagingResult.objects.count > 1, @"expected more than 1 activity entries, but got %lu", (unsigned long)pagingResult.objects.count);
+                 XCTAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
                  
                  self.lastTestSuccessful = YES;
              }
@@ -55,11 +53,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 /*
@@ -81,16 +79,16 @@
              }
              else
              {
-                 STAssertNotNil(array, @"array should not be nil");
-                 STAssertTrue(array.count > 0, @"expected activity entries");
+                 XCTAssertNotNil(array, @"array should not be nil");
+                 XCTAssertTrue(array.count > 0, @"expected activity entries");
                  
                  for (AlfrescoActivityEntry *entry in array) {
-                     STAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
-                     STAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
-                     STAssertNotNil(entry.identifier, @"identifier should not be nil");
-                     STAssertNotNil(entry.siteShortName, @"site should not be nil");
-                     STAssertNotNil(entry.type, @"type should not be nil");
-                     STAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
+                     XCTAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
+                     XCTAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
+                     XCTAssertNotNil(entry.identifier, @"identifier should not be nil");
+                     XCTAssertNotNil(entry.siteShortName, @"site should not be nil");
+                     XCTAssertNotNil(entry.type, @"type should not be nil");
+                     XCTAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
                  }
                  
                  self.lastTestSuccessful = YES;
@@ -100,11 +98,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -128,16 +126,16 @@
              }
              else
              {
-                 STAssertNotNil(array, @"array should not be nil");
-                 STAssertTrue(array.count > 0, @"expected activity entries");
+                 XCTAssertNotNil(array, @"array should not be nil");
+                 XCTAssertTrue(array.count > 0, @"expected activity entries");
                  
                  for (AlfrescoActivityEntry *entry in array) {
-                     STAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
-                     STAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
-                     STAssertNotNil(entry.identifier, @"identifier should not be nil");
-                     STAssertNotNil(entry.siteShortName, @"site should not be nil");
-                     STAssertNotNil(entry.type, @"type should not be nil");
-                     STAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
+                     XCTAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
+                     XCTAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
+                     XCTAssertNotNil(entry.identifier, @"identifier should not be nil");
+                     XCTAssertNotNil(entry.siteShortName, @"site should not be nil");
+                     XCTAssertNotNil(entry.type, @"type should not be nil");
+                     XCTAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
                  }
                  
                  self.lastTestSuccessful = YES;
@@ -147,11 +145,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -175,9 +173,9 @@
              }
              else
              {
-                 STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                 STAssertTrue(pagingResult.objects.count > 0, @"expected at least 1 activity entries");
-                 STAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
+                 XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                 XCTAssertTrue(pagingResult.objects.count > 0, @"expected at least 1 activity entries");
+                 XCTAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
                  
                  self.lastTestSuccessful = YES;
              }
@@ -186,11 +184,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -226,17 +224,17 @@
                       }
                       else
                       {
-                          STAssertNotNil(array, @"array should not be nil");
+                          XCTAssertNotNil(array, @"array should not be nil");
                           AlfrescoLogDebug(@"activity stream for site returns array count = %d",array.count);
-                          STAssertTrue(array.count >= 0, @"site may have more than 0 entries");
+                          XCTAssertTrue(array.count >= 0, @"site may have more than 0 entries");
                           
                           for (AlfrescoActivityEntry *entry in array) {
-                              STAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
-                              STAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
-                              STAssertNotNil(entry.identifier, @"identifier should not be nil");
-                              STAssertNotNil(entry.siteShortName, @"site should not be nil");
-                              STAssertNotNil(entry.type, @"type should not be nil");
-                              STAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
+                              XCTAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
+                              XCTAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
+                              XCTAssertNotNil(entry.identifier, @"identifier should not be nil");
+                              XCTAssertNotNil(entry.siteShortName, @"site should not be nil");
+                              XCTAssertNotNil(entry.type, @"type should not be nil");
+                              XCTAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
                           }
                           
                           self.lastTestSuccessful = YES;
@@ -249,11 +247,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -291,8 +289,8 @@
                       else
                       {
                           AlfrescoLogDebug(@"activity stream for site returns paging results count = %d",pagingResult.objects.count);
-                          STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                          STAssertTrue(pagingResult.objects.count <= 5, @"the returned objects count should be up to 5");
+                          XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                          XCTAssertTrue(pagingResult.objects.count <= 5, @"the returned objects count should be up to 5");
                           
                           self.lastTestSuccessful = YES;
                       }
@@ -304,11 +302,11 @@
          }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

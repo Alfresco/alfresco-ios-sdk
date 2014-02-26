@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "AlfrescoTestMacros.h"
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
@@ -26,22 +26,18 @@
 #import "CMISSession.h"
 #import "CMISFolder.h"
 
-#define TIMEINTERVAL 120
-#define TIMEGAP 5
-typedef void (^AlfrescoTestBlock)(void);
-typedef void (^CMISTestBlock)(void);
-typedef void (^AlfrescoSessionTestBlock)(id<AlfrescoSession> session);
+#define BOOL_TO_STRING(x) (x ? @"YES" : @"NO")
 
-@interface AlfrescoBaseTest : SenTestCase
+#define TIMEINTERVAL 120
+
+@interface AlfrescoBaseTest : XCTestCase
 
 @property (nonatomic, assign) BOOL callbackCompleted;
 @property (nonatomic, assign) BOOL lastTestSuccessful;
 @property (nonatomic, strong) NSString *lastTestFailureMessage;
 @property (nonatomic, strong) AlfrescoDocument *testAlfrescoDocument;
-@property (nonatomic, strong) AlfrescoDocumentFolderService *alfrescoDocumentFolderService;
 @property (nonatomic, strong) AlfrescoFolder *currentRootFolder;
 @property (nonatomic, strong) AlfrescoFolder *testDocFolder;
-@property (nonatomic, strong) AlfrescoFolder *testChildFolder;
 @property (nonatomic, strong) NSString *unitTestFolder;
 @property (nonatomic, strong) id<AlfrescoSession> currentSession;
 // Test environment parameters

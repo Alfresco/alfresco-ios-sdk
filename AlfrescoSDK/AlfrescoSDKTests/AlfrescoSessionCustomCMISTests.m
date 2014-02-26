@@ -17,13 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoSessionCustomCMISTests.h"
-#import "AlfrescoListingContext.h"
-#import "AlfrescoOAuthData.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoDocumentFolderService.h"
-#import "AlfrescoRequest.h"
-#import "AlfrescoErrors.h"
-#import "AlfrescoLog.h"
 
 @implementation AlfrescoSessionCustomCMISTests
 
@@ -70,13 +64,13 @@
                 }
                 else
                 {
-                    STAssertTrue(0 < children.count, @"we should have more than one element in the children's array");
+                    XCTAssertTrue(0 < children.count, @"we should have more than one element in the children's array");
                     CMISSession *cmisSession = [self.currentSession objectForParameter:kAlfrescoSessionKeyCmisSession];
                     if (cmisSession)
                     {
                         CMISSessionParameters *parameters = cmisSession.sessionParameters;
                         NSString *atomPubUrl = [parameters.atomPubUrl absoluteString];
-                        STAssertFalse(NSNotFound == [atomPubUrl rangeOfString:kAlfrescoOnPremiseCMISPath].location, @"should have found the /service/cmis string in atomPubURl");
+                        XCTAssertFalse(NSNotFound == [atomPubUrl rangeOfString:kAlfrescoOnPremiseCMISPath].location, @"should have found the /service/cmis string in atomPubURl");
                         
                     }
                     self.lastTestSuccessful = YES;
@@ -84,12 +78,12 @@
                 }
             }];
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

@@ -17,12 +17,8 @@
  ******************************************************************************/
 
 #import "AlfrescoBaseTest.h"
-#import "AlfrescoContentFile.h"
-#import "AlfrescoInternalConstants.h"
-#import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoLog.h"
 #import "CMISConstants.h"
-#import "CMISDocument.h"
 
 // kAlfrescoTestServersConfigDirectory is expected to be found in the user's home folder.
 // Note: the entry in userhome can be a symbolic link created via "ln -s"
@@ -67,30 +63,23 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     
     NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
     NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
-    NSDictionary *allEnvironments = [plistContents objectForKey:@"environments"];
+    NSDictionary *allEnvironments = plistContents[@"environments"];
     if (nil != allEnvironments)
     {
         AlfrescoLogDebug(@"TEST_SERVER specified as: %@", testServer);
-        environment = (NSDictionary *)[allEnvironments objectForKey:testServer];
+        environment = (NSDictionary *)allEnvironments[testServer];
     }
 
     if (nil == environment)
     {
         AlfrescoLogDebug(@"ERROR: No test environment config specified.");
-        STFail(@"FATAL: No test environment specified. Check TEST_SERVER parameter and ~/ios-sdk-test-config/test-servers.plist");
+        XCTFail(@"FATAL: No test environment specified. Check TEST_SERVER parameter and ~/ios-sdk-test-config/test-servers.plist");
         exit(EXIT_FAILURE);
     }
     else
     {
         self.server = [environment valueForKey:@"server"];
-        if ([[environment allKeys] containsObject:@"isCloud"])
-        {
-            self.isCloud = [[environment valueForKey:@"isCloud"] boolValue];
-        }
-        else
-        {
-            self.isCloud = NO;
-        }
+        self.isCloud = [[environment allKeys] containsObject:@"isCloud"] && [[environment valueForKey:@"isCloud"] boolValue];
         self.userName = [environment valueForKey:@"username"];
         self.firstName = [environment valueForKey:@"firstName"];
         self.testSiteName = [environment valueForKey:@"testSite"];
@@ -161,7 +150,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
             {
                 self.testAlfrescoDocument = nil;
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete test document. Error message %@ and code %d",[error localizedDescription], [error code]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete test document. Error message %@ and code %ld",[error localizedDescription], (long)[error code]];
                 self.callbackCompleted = YES;
             }
             else
@@ -174,7 +163,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         
         [self waitUntilCompleteWithFixedTimeInterval];
     }
-    STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
 }
 
 + (NSString *)addTimeStampToFileOrFolderName:(NSString *)filename
@@ -206,10 +195,10 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"text/plain"];
     NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
-    [props setObject:[kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"] forKey:kCMISPropertyObjectTypeId];
-    [props setObject:@"test file description" forKey:@"cm:description"];
-    [props setObject:@"test file title" forKey:@"cm:title"];
-    [props setObject:@"test author" forKey:@"cm:author"];
+    props[kCMISPropertyObjectTypeId] = [kCMISPropertyObjectTypeIdValueDocument stringByAppendingString:@",P:cm:titled,P:cm:author"];
+    props[@"cm:description"] = @"test file description";
+    props[@"cm:title"] = @"test file title";
+    props[@"cm:author"] = @"test author";
 
     __block BOOL success = NO;
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
@@ -222,8 +211,8 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         }
         else
         {
-            STAssertNotNil(document, @"document should not be nil");
-            STAssertTrue([document.type isEqualToString:@"cm:content"], @"The test document should be of type cm:content but it is %@", document.type);
+            XCTAssertNotNil(document, @"document should not be nil");
+            XCTAssertTrue([document.type isEqualToString:@"cm:content"], @"The test document should be of type cm:content but it is %@", document.type);
             self.lastTestSuccessful = YES;
             self.testAlfrescoDocument = document;
             self.callbackCompleted = YES;
@@ -234,7 +223,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     }];
     
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"uploadTestDocument failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"uploadTestDocument failed");
     return success;
 }
 
@@ -260,7 +249,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
             {
                 self.testAlfrescoDocument = nil;
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete test document. Error message %@ and code %d",[error localizedDescription], [error code]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete test document. Error message %@ and code %ld",[error localizedDescription], (unsigned long)[error code]];
                 self.callbackCompleted = YES;
             }
             else
@@ -273,7 +262,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         }];
     }
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"removeTestDocument failed");
     return success;
 }
 
@@ -299,7 +288,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     {
         parameters = [NSMutableDictionary dictionary];
     }
-    [parameters setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoAllowUntrustedSSLCertificate];
+    [parameters setValue:@YES forKey:kAlfrescoAllowUntrustedSSLCertificate];
     
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.server]
                                      username:self.userName
@@ -314,7 +303,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
                                   }
                                   else
                                   {
-                                      STAssertNotNil(session,@"Session should not be nil");
+                                      XCTAssertNotNil(session,@"Session should not be nil");
                                       self.lastTestSuccessful = YES;
                                       self.currentSession = session;
                                       self.callbackCompleted = YES;
@@ -325,7 +314,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     
     
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication failed");
     return success;
 }
 
@@ -342,7 +331,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     }
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:self.server forKey:@"org.alfresco.mobile.internal.session.cloud.url"];
-    [parameters setValue:[NSNumber numberWithBool:YES] forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
+    [parameters setValue:@YES forKey:@"org.alfresco.mobile.internal.session.cloud.basic"];
     [parameters setValue:self.userName forKey:@"org.alfresco.mobile.internal.session.username"];
     [parameters setValue:self.password forKey:@"org.alfresco.mobile.internal.session.password"];
     
@@ -351,7 +340,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
      *        doesn't allow SSL connections to be made. Apple Bug rdar://10406441 and rdar://8385355
      *        (latter can be viewed at http://openradar.appspot.com/8385355 )
      */
-    [parameters setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoAllowUntrustedSSLCertificate];
+    [parameters setValue:@YES forKey:kAlfrescoAllowUntrustedSSLCertificate];
     
     [AlfrescoCloudSession connectWithOAuthData:nil parameters:parameters completionBlock:^(id<AlfrescoSession> cloudSession, NSError *error){
         if (nil == cloudSession)
@@ -364,7 +353,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         else
         {
             AlfrescoLogDebug(@"*** Cloud session is NOT nil ***");
-//            STAssertNotNil(cloudSession, @"Cloud session should not be nil");
+//            XCTAssertNotNil(cloudSession, @"Cloud session should not be nil");
             self.lastTestSuccessful = YES;
             self.currentSession = cloudSession;
             self.callbackCompleted = YES;
@@ -374,12 +363,9 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     
 
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"Cloud authentication failed");
     return success;
 }
-
-
-
 
 
 /*
@@ -415,7 +401,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         }
     }];
     [self waitUntilCompleteWithFixedTimeInterval];
-    STAssertTrue(self.lastTestSuccessful, @"Failure to retrieve test folder");
+    XCTAssertTrue(self.lastTestSuccessful, @"Failure to retrieve test folder");
     return success;
 }
 
@@ -435,14 +421,6 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     self.testImageFile = textContentFile;
 }
 
-- (void)waitAtTheEnd
-{
-    NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:TIMEGAP];
-    do {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
-    } while ([timeoutDate timeIntervalSinceNow] > 0 );
-//    STAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEGAP);
-}
 
 - (void)waitUntilCompleteWithFixedTimeInterval
 {
@@ -452,23 +430,8 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         do {
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeoutDate];
         } while (!self.callbackCompleted && [timeoutDate timeIntervalSinceNow] > 0 );
-        STAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEINTERVAL);
+        XCTAssertTrue(self.callbackCompleted, @"TIME OUT: callback did not complete within %d seconds", TIMEINTERVAL);
     }
-}
-
-- (void)removePreExistingUnitTestFolder
-{
-    AlfrescoDocumentFolderService *dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-    __weak AlfrescoDocumentFolderService *weakDocumentService = dfService;
-    
-    [dfService retrieveNodeWithFolderPath:self.unitTestFolder relativeToFolder:self.currentSession.rootFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
-        if (node)
-        {
-            [weakDocumentService deleteNode:node completionBlock:^(BOOL succeeded, NSError *error) {
-                // intentionally do nothing
-            }];
-        }
-    }];
 }
 
 @end

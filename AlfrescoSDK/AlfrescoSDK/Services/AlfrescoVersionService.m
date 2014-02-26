@@ -24,7 +24,6 @@
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
-#import "AlfrescoErrors.h"
 #import "AlfrescoCMISUtil.h"
 
 @interface AlfrescoVersionService ()
@@ -47,7 +46,7 @@
         self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
         self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         self.defaultSortKey = kAlfrescoSortByName;
-        self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt, nil];
+        self.supportedSortKeys = @[kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt];
     }
     return self;
 }

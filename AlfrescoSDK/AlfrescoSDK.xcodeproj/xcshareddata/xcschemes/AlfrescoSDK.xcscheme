@@ -29,7 +29,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4EB076A615B00D8E00DF7DED"
-               BuildableName = "AlfrescoSDKTests.octest"
+               BuildableName = "AlfrescoSDKTests.xctest"
                BlueprintName = "AlfrescoSDKTests"
                ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
             </BuildableReference>
@@ -47,7 +47,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4EB076A615B00D8E00DF7DED"
-               BuildableName = "AlfrescoSDKTests.octest"
+               BuildableName = "AlfrescoSDKTests.xctest"
                BlueprintName = "AlfrescoSDKTests"
                ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
             </BuildableReference>

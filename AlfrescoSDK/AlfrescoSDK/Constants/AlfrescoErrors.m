@@ -96,7 +96,7 @@ NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task 
     }
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
     [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
-    [errorInfo setObject:error forKey:NSUnderlyingErrorKey];
+    errorInfo[NSUnderlyingErrorKey] = error;
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
 }
 

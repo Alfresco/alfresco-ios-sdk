@@ -52,7 +52,7 @@
     return self;
 }
 
-- (CMISObject *)convertObject:(CMISObjectData *)objectData
+- (CMISObject *)convertObjectInternal:(CMISObjectData *)objectData
 {
     CMISObject *object = nil;
 
@@ -68,13 +68,20 @@
     return object;
 }
 
+- (void)convertObject:(CMISObjectData *)objectData completionBlock:(void (^)(CMISObject *, NSError *))completionBlock
+{
+    if (completionBlock)
+    {
+        completionBlock([self convertObjectInternal:objectData], nil);
+    }
+}
 
 
 
 - (void)convertProperties:(NSDictionary *)properties forObjectTypeId:(NSString *)objectTypeId completionBlock:(void (^)(CMISProperties *, NSError *))completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:properties argumentName:@"properties"];
-    NSObject *objectTypeIdValue = [properties objectForKey:kCMISPropertyObjectTypeId];
+    NSObject *objectTypeIdValue = properties[kCMISPropertyObjectTypeId];
     NSString *objectTypeIdString = nil;
     
     if ([objectTypeIdValue isKindOfClass:[NSString class]])
@@ -114,7 +121,7 @@
             // Loop over all provided properties and put them in the right dictionary
             for (NSString *propertyId in properties)
             {
-                id propertyValue = [properties objectForKey:propertyId];
+                id propertyValue = properties[propertyId];
                 
                 if ([propertyId isEqualToString:kCMISPropertyObjectTypeId])
                 {
@@ -122,24 +129,24 @@
                 }
                 else if ([mainTypeDefinition propertyDefinitionForId:propertyId])
                 {
-                    [typeProperties setObject:propertyValue forKey:propertyId];
+                    typeProperties[propertyId] = propertyValue;
                 }
                 else
                 {
-                    [aspectProperties setObject:propertyValue forKey:propertyId];
+                    aspectProperties[propertyId] = propertyValue;
                     
                     // Find matching property definition
                     BOOL matchingPropertyDefinitionFound = NO;
                     uint index = 0;
                     while (!matchingPropertyDefinitionFound && index < aspectTypes.count)
                     {
-                        CMISTypeDefinition *aspectType = [aspectTypes objectAtIndex:index];
+                        CMISTypeDefinition *aspectType = aspectTypes[index];
                         if (aspectType.propertyDefinitions != nil)
                         {
                             CMISPropertyDefinition *aspectPropertyDefinition = [aspectType propertyDefinitionForId:propertyId];
                             if (aspectPropertyDefinition != nil)
                             {
-                                [aspectPropertyDefinitions setObject:aspectPropertyDefinition forKey:propertyId];
+                                aspectPropertyDefinitions[propertyId] = aspectPropertyDefinition;
                                 matchingPropertyDefinitionFound = YES;
                             }
                         }
@@ -173,7 +180,7 @@
                 
                 for (NSString *propertyId in aspectProperties)
                 {
-                    CMISPropertyDefinition *aspectPropertyDefinition = [aspectPropertyDefinitions objectForKey:propertyId];
+                    CMISPropertyDefinition *aspectPropertyDefinition = aspectPropertyDefinitions[propertyId];
                     if (aspectPropertyDefinition == nil)
                     {
                         NSError *typeError = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeInvalidArgument
@@ -213,10 +220,10 @@
                     }
                     
                     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-                    [attributes setObject:aspectPropertyDefinition.id forKey:@"propertyDefinitionId"];
+                    attributes[@"propertyDefinitionId"] = aspectPropertyDefinition.id;
                     
                     NSMutableArray *propertyValues = [NSMutableArray array];
-                    id value = [aspectProperties objectForKey:propertyId];
+                    id value = aspectProperties[propertyId];
                     if (value != nil)
                     {
                         NSString *stringValue = nil;
@@ -265,7 +272,7 @@
                                                                                  namespaceUri:@"http://www.alfresco.org" attributes:nil children:propertyExtensions]];
             }
             // Cmis doesn't understand aspects, so we must replace the objectTypeId if needed
-            if ([typeProperties objectForKey:kCMISPropertyObjectTypeId] != nil)
+            if (typeProperties[kCMISPropertyObjectTypeId] != nil)
             {
                 [typeProperties setValue:mainTypeDefinition.id forKey:kCMISPropertyObjectTypeId];
             }
@@ -279,7 +286,7 @@
                 {
                     if (alfrescoExtensions.count > 0)
                     {
-                        result.extensions = [NSArray arrayWithObject:[[CMISExtensionElement alloc] initNodeWithName:@"setAspects"
+                        result.extensions = @[[[CMISExtensionElement alloc] initNodeWithName:@"setAspects"
                                                                                                        namespaceUri:@"http://www.alfresco.org" attributes:nil children:alfrescoExtensions]];
                     }
                     completionBlock(result, nil);

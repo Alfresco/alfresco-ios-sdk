@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoKeywordSearchOptions.h"
-#import "AlfrescoInternalConstants.h"
 
 static NSUInteger kKeywordSearchModelVersion = 1;
 
@@ -43,7 +42,7 @@ static NSUInteger kKeywordSearchModelVersion = 1;
 
 - (id)initWithExactMatch:(BOOL)exactMatch includeAll:(BOOL)includeAll
 {
-    self = [self initWithExactMatch:NO includeContent:NO folder:nil includeDescendants:YES];
+    self = [self initWithExactMatch:exactMatch includeContent:NO folder:nil includeDescendants:YES];
     if (self)
     {
         self.includeAll = includeAll;

@@ -205,7 +205,7 @@
 
 - (void)logMessage:(NSString *)message forLogLevel:(AlfrescoLogLevel)logLevel
 {
-    NSString *callingMethod = [self methodNameFromCallStack:[[NSThread callStackSymbols] objectAtIndex:2]];
+    NSString *callingMethod = [self methodNameFromCallStack:[NSThread callStackSymbols][2]];
     NSLog(@"%@ %@ %@", [self stringForLogLevel:logLevel], callingMethod, message);
 }
 

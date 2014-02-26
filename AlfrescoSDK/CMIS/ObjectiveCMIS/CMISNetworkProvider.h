@@ -14,12 +14,13 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISProperties.h"
-typedef enum {
+typedef NS_ENUM(NSInteger, CMISHttpRequestMethod)
+{
     HTTP_GET,
     HTTP_POST,
     HTTP_PUT,
     HTTP_DELETE
-} CMISHttpRequestMethod;
+};
 
 @class CMISBindingSession, CMISRequest, CMISHttpResponse;
 
@@ -102,7 +103,7 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
  * @param inputStream the stream pointing to the source to be uploaded. Must be an instance or extension of NSInputStream
  * @param headers any additional headers to be used in the request (maybe nil)
  * @param bytesExpected the size of the content to be uploaded
- * @param cmisRequest will be used to set the cancellable request to the one created by the invode method
+ * @param cmisRequest will be used to set the cancellable request to the one created by the invoked method
  * @param cmisProperties 
  * @param mimeType
  * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise

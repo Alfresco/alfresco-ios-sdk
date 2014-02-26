@@ -29,10 +29,7 @@
     {
         return [[AlfrescoPlaceholderFileManager alloc] init];
     }
-    else
-    {
-        return [super alloc];
-    }
+    return [super alloc];
 }
 
 + (id)sharedManager

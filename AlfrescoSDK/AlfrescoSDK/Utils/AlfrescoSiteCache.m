@@ -137,7 +137,7 @@
             {
                 for (AlfrescoSite *site in self.favoriteSiteData)
                 {
-                    AlfrescoSite *cachedSite = [self.internalSiteCache objectForKey:site.shortName];
+                    AlfrescoSite *cachedSite = (self.internalSiteCache)[site.shortName];
                     if (cachedSite != nil)
                     {
                         // if site is already cached just update favorite flag
@@ -154,7 +154,7 @@
             {
                 for (NSString *siteShortName in self.favoriteSiteData)
                 {
-                    AlfrescoSite *cachedSite = [self.internalSiteCache objectForKey:siteShortName];
+                    AlfrescoSite *cachedSite = (self.internalSiteCache)[siteShortName];
                     if (cachedSite != nil)
                     {
                         // if site is already cached just update favorite flag
@@ -178,7 +178,7 @@
             {
                 for (AlfrescoSite *site in self.pendingSiteData)
                 {
-                    AlfrescoSite *cachedSite = [self.internalSiteCache objectForKey:site.shortName];
+                    AlfrescoSite *cachedSite = (self.internalSiteCache)[site.shortName];
                     if (cachedSite != nil)
                     {
                         // if site is already cached just update pending flag
@@ -209,7 +209,7 @@
             NSString *siteName = nil;
             for (int i = 0; i < namesOfMissingSites.count; i++)
             {
-                siteName = [namesOfMissingSites objectAtIndex:i];
+                siteName = namesOfMissingSites[i];
                 
                 AlfrescoLogDebug(@"Fetching site data for site: %@", siteName);
                 [self.delegate retrieveDataForSiteWithShortName:siteName completionBlock:^(AlfrescoSite *site, NSError *error) {
@@ -275,7 +275,7 @@
 - (void)cacheSite:(AlfrescoSite *)site
 {
     // add the site to the internal cache with it's current state
-    [self.internalSiteCache setObject:site forKey:site.identifier];
+    (self.internalSiteCache)[site.identifier] = site;
     
     AlfrescoLogTrace(@"Cached site: %@", site.shortName);
 }
@@ -288,14 +288,14 @@
     [self updateFavoriteStateForSite:site state:favorite];
     
     // add the site to the internal cache
-    [self.internalSiteCache setObject:site forKey:site.identifier];
+    (self.internalSiteCache)[site.identifier] = site;
     
     AlfrescoLogTrace(@"Cached site: %@", site.shortName);
 }
 
 - (AlfrescoSite *)siteWithShortName:(NSString *)shortName
 {
-    return [self.internalSiteCache objectForKey:shortName];
+    return (self.internalSiteCache)[shortName];
 }
 
 #pragma clang diagnostic push
@@ -304,19 +304,19 @@
 - (void)updateMemberStateForSite:(AlfrescoSite *)site state:(BOOL)state
 {
     SEL changeMemberStateSelector = sel_registerName("changeMemberState:");
-    [site performSelector:changeMemberStateSelector withObject:[NSNumber numberWithBool:state]];
+    [site performSelector:changeMemberStateSelector withObject:@(state)];
 }
 
 - (void)updatePendingStateForSite:(AlfrescoSite *)site state:(BOOL)state
 {
     SEL changePendingStateSelector = sel_registerName("changePendingState:");
-    [site performSelector:changePendingStateSelector withObject:[NSNumber numberWithBool:state]];
+    [site performSelector:changePendingStateSelector withObject:@(state)];
 }
 
 - (void)updateFavoriteStateForSite:(AlfrescoSite *)site state:(BOOL)state
 {
     SEL changeFavoriteStateSelector = sel_registerName("changeFavoriteState:");
-    [site performSelector:changeFavoriteStateSelector withObject:[NSNumber numberWithBool:state]];
+    [site performSelector:changeFavoriteStateSelector withObject:@(state)];
 }
 
 #pragma clang diagnostic pop

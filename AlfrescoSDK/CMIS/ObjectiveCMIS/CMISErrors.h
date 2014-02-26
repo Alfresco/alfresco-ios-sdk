@@ -25,7 +25,7 @@
 
 /** error codes defined in CMIS
  */
-typedef enum
+typedef NS_ENUM(NSInteger, CMISErrorCodes)
 {
     //error range for basic errors - not covered in the spec but
     // present in the OpenCMIS Java lib
@@ -67,7 +67,7 @@ typedef enum
     kCMISErrorCodeUpdateConflict = 518,
     kCMISErrorCodeVersioning = 519
     
-}CMISErrorCodes;
+};
 
 
 extern NSString * const kCMISErrorDomainName;

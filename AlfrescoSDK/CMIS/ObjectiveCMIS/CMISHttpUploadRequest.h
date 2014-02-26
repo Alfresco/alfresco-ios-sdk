@@ -25,14 +25,14 @@
 @property (nonatomic, readonly) unsigned long long bytesUploaded;
 
 /**
- * starts a URL request with a provided input stream. The input stream provided will be used directly to send the data upstrean.
+ * starts a URL request with a provided input stream. The input stream provided will be used directly to send the data upstream.
  * For this the class sets the HTTPBodyStream property (method) to this input stream. No base64 encoding will be done using this method.
  * completionBlock returns CMISHttpResponse instance or nil if unsuccessful
  */
 + (id)startRequest:(NSMutableURLRequest *)urlRequest
                             httpMethod:(CMISHttpRequestMethod)httpRequestMethod
                            inputStream:(NSInputStream*)inputStream
-                               headers:(NSDictionary*)addionalHeaders
+                               headers:(NSDictionary*)additionalHeaders
                          bytesExpected:(unsigned long long)bytesExpected
                 authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
                        completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
@@ -48,7 +48,7 @@
 + (id)startRequest:(NSMutableURLRequest *)urlRequest
         httpMethod:(CMISHttpRequestMethod)httpRequestMethod
        inputStream:(NSInputStream*)sourceInputStream
-           headers:(NSDictionary*)addionalHeaders
+           headers:(NSDictionary*)additionalHeaders
      bytesExpected:(unsigned long long)bytesExpected
 authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
     cmisProperties:(CMISProperties *)cmisProperties

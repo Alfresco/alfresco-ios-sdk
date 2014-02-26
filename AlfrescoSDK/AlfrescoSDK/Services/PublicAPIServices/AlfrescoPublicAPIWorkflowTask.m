@@ -28,7 +28,6 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoWorkflowTask.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoWorkflowObjectConverter.h"
@@ -320,7 +319,7 @@
     NSArray *allParameterKeys = [requestDictionary allKeys];
     for (int i = 0; i < allParameterKeys.count; i++)
     {
-        NSString *key = [allParameterKeys objectAtIndex:i];
+        NSString *key = allParameterKeys[i];
         [requestParametersString appendString:key];
         if (i != (allParameterKeys.count - 1))
         {

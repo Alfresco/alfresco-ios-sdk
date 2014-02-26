@@ -16,7 +16,7 @@
  * Default logging level
  *
  * The default logging level is Info for release builds and Debug for debug builds.
- * This can easily be overriden in your app's .pch file, e.g.
+ * This can easily be overridden in your app's .pch file, e.g.
  *     #define CMIS_LOG_LEVEL CMISLogLevelTrace
  */
 #if !defined(CMISLogError)

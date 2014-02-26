@@ -68,7 +68,7 @@
 /**
  Retrieves an array of AlfrescoNode's for a specific task. If there are no attachments, nil is returned in the completion block.
  
- @param task The task for which attachements should be retrieved
+ @param task The task for which attachments should be retrieved
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;

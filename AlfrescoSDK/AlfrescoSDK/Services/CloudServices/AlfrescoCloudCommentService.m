@@ -24,10 +24,7 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
-#import "AlfrescoNetworkProvider.h"
-#import "AlfrescoLog.h"
 #import <objc/runtime.h>
-#import "AlfrescoObjectConverter.h"
 
 @interface AlfrescoCloudCommentService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;

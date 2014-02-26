@@ -45,11 +45,11 @@
                  }
                  else
                  {
-                     STAssertTrue(array.count > 0, @"expected tag response");
+                     XCTAssertTrue(array.count > 0, @"expected tag response");
                      for (AlfrescoTag *tag in array)
                      {
-                         STAssertNotNil(tag.identifier, @"Tag identifier should not be nil");
-                         STAssertNotNil(tag.value, @"Tag value should not be nil");
+                         XCTAssertNotNil(tag.identifier, @"Tag identifier should not be nil");
+                         XCTAssertNotNil(tag.value, @"Tag value should not be nil");
                      }
                      self.lastTestSuccessful = YES;
                  }
@@ -57,12 +57,12 @@
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -89,21 +89,21 @@
                  }
                  else
                  {
-                     STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                     STAssertTrue(pagingResult.objects.count == 2, @"expected 2 tag responses");
-                     STAssertTrue(pagingResult.totalItems > 2, @"expected multiple tags in total");
+                     XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                     XCTAssertTrue(pagingResult.objects.count == 2, @"expected 2 tag responses");
+                     XCTAssertTrue(pagingResult.totalItems > 2, @"expected multiple tags in total");
                      self.lastTestSuccessful = YES;
                  }
                  self.callbackCompleted = YES;
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -129,19 +129,19 @@
                  }
                  else
                  {
-                     STAssertTrue(array.count == 0, @"expected no tags for the newly uploaded file, but we got %d ",array.count);
+                     XCTAssertTrue(array.count == 0, @"expected no tags for the newly uploaded file, but we got %lu", (unsigned long)array.count);
                      self.lastTestSuccessful = YES;
                  }
                  self.callbackCompleted = YES;
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -170,20 +170,20 @@
                  }
                  else
                  {
-                     STAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                     STAssertTrue(pagingResult.objects.count == 0, @"expected no tag response for newly uploaded file but got %d",pagingResult.objects.count);
+                     XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                     XCTAssertTrue(pagingResult.objects.count == 0, @"expected no tag response for newly uploaded file but got %lu", (unsigned long)pagingResult.objects.count);
                      self.lastTestSuccessful = YES;
                  }
                  self.callbackCompleted = YES;
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -199,7 +199,7 @@
         {
             self.taggingService = [[AlfrescoTaggingService alloc] initWithSession:self.currentSession];
             
-            NSArray *testtags = [NSArray arrayWithObject:@"test"];
+            NSArray *testtags = @[@"test"];
             
             __weak typeof(self) weakSelf = self;
             [self.taggingService addTags:testtags toNode:self.testAlfrescoDocument completionBlock:^(BOOL success, NSError *error) {
@@ -212,7 +212,7 @@
                  else
                  {
                      weakSelf.lastTestSuccessful = YES;
-                     STAssertTrueWeakSelf(success, @"a dummy test to see if we still have the retain cycle problem");
+                     XCTAssertTrueWeakSelf(success, @"a dummy test to see if we still have the retain cycle problem");
                      [weakSelf.taggingService retrieveTagsForNode:weakSelf.testAlfrescoDocument completionBlock:^(NSArray *tags, NSError *error){
                          if (nil == tags)
                          {
@@ -221,10 +221,9 @@
                          }
                          else
                          {
-                             int count = tags.count;
-                             STAssertNotNilWeakSelf(tags, @"tags should not be nil");
-                             STAssertTrueWeakSelf(count > 0, @"Count should be > 0, and is in fact %d",count);
-                             NSString *testTag = [testtags objectAtIndex:0];
+                             XCTAssertNotNilWeakSelf(tags, @"tags should not be nil");
+                             XCTAssertTrueWeakSelf(tags.count > 0, @"Count should be > 0, and is in fact %lu", (unsigned long)tags.count);
+                             NSString *testTag = testtags[0];
                              BOOL found = NO;
                              for (AlfrescoTag *tag in tags)
                              {
@@ -234,23 +233,21 @@
                                      break;
                                  }
                              }
-                             STAssertTrueWeakSelf(found, @"We should have found the tag %@", testTag);
+                             XCTAssertTrueWeakSelf(found, @"We should have found the tag %@", testTag);
                              weakSelf.lastTestSuccessful = YES;
                          }
                          weakSelf.callbackCompleted = YES;
                      }];
                  }
-                 
-                 
              }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

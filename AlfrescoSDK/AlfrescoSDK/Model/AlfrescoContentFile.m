@@ -18,8 +18,6 @@
 
 #import "AlfrescoContentFile.h"
 #import <MobileCoreServices/MobileCoreServices.h>
-#import "AlfrescoErrors.h"
-#import <math.h>
 #import "AlfrescoFileManager.h"
 #import "AlfrescoConstants.h"
 

@@ -16,10 +16,10 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "AlfrescoLog.h"
 
-@interface AlfrescoLogTest : SenTestCase
+@interface AlfrescoLogTest : XCTestCase
 
 @property (nonatomic, assign) AlfrescoLogLevel initialLogLevel;
 

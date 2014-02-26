@@ -24,8 +24,6 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoTag.h"
-#import "AlfrescoObjectConverter.h"
-#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremiseTaggingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -234,10 +232,10 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
         return nil;
     }
-    if ([jsonTagArray isKindOfClass:[NSArray class]] == NO)
+    if (![jsonTagArray isKindOfClass:[NSArray class]])
     {
-        if([jsonTagArray isKindOfClass:[NSDictionary class]] == YES &&
-           [[jsonTagArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+        if ([jsonTagArray isKindOfClass:[NSDictionary class]] &&
+            [[jsonTagArray valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
         {
             // no results found
             *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeTagging];

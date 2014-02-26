@@ -48,7 +48,7 @@
     }
     AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:children
                                                                         hasMoreItems:cmisResult.hasMoreItems
-                                                                          totalItems:cmisResult.numItems];
+                                                                          totalItems:(int)cmisResult.numItems];
     return pagingResult;
 }
 

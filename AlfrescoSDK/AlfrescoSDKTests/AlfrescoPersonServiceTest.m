@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoPersonServiceTest.h"
-#import "AlfrescoContentFile.h"
 
 @implementation AlfrescoPersonServiceTest
 
@@ -39,14 +38,14 @@
              }
              else
              {
-                 STAssertNotNil(person,@"Person should not be nil");
-                 STAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
-                 STAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
-                 STAssertNotNil(person.lastName, @"Persons last name should not be nil");
-                 STAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
+                 XCTAssertNotNil(person,@"Person should not be nil");
+                 XCTAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
+                 XCTAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
+                 XCTAssertNotNil(person.lastName, @"Persons last name should not be nil");
+                 XCTAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
                  if (person.avatarIdentifier)
                  {
-                     STAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
+                     XCTAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
                  }
                  self.lastTestSuccessful = YES;
              }
@@ -54,11 +53,11 @@
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
         
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -90,11 +89,11 @@
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
         
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -121,9 +120,9 @@
              }
              else
              {
-                 STAssertNotNil(person,@"Person should not be nil");
-                 STAssertTrue([self.userName isEqualToString:person.identifier], @"person.username is %@ but should be %@", person.identifier, self.userName);
-                 STAssertTrue([self.firstName isEqualToString:person.firstName], @"person.username is %@ but should be %@", person.firstName, self.firstName);
+                 XCTAssertNotNil(person,@"Person should not be nil");
+                 XCTAssertTrue([self.userName isEqualToString:person.identifier], @"person.username is %@ but should be %@", person.identifier, self.userName);
+                 XCTAssertTrue([self.firstName isEqualToString:person.firstName], @"person.username is %@ but should be %@", person.firstName, self.firstName);
                  
                  [self.personService retrieveAvatarForPerson:person completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
                   {
@@ -136,14 +135,14 @@
                       {
                           NSError *fileError = nil;
                           NSDictionary *dict = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
-                          STAssertNil(fileError, @"expected to get no error in getting attributes for file at path %@", [contentFile.fileUrl path]);
+                          XCTAssertNil(fileError, @"expected to get no error in getting attributes for file at path %@", [contentFile.fileUrl path]);
                           unsigned long long size = [[dict valueForKey:NSFileSize] unsignedLongLongValue];
-                          STAssertTrue(size > 100, @"data should be filled with at least 100 bytes. Instead we got %llu", size);
+                          XCTAssertTrue(size > 100, @"data should be filled with at least 100 bytes. Instead we got %llu", size);
                           /*
                            mimeType is not a reliable test here. For OnPremise we set the mimeType after downloading the image. For Cloud however, we do not
                            know the mimeType, neither can we deduce it from the filename (as the image is simply called 'avatar')
-                           STAssertNotNil(contentFile.mimeType, @"mimetype should not be nil");
-                           STAssertFalse([contentFile.mimeType length] == 0, @"mimetype should not have a length of 0");
+                           XCTAssertNotNil(contentFile.mimeType, @"mimetype should not be nil");
+                           XCTAssertFalse([contentFile.mimeType length] == 0, @"mimetype should not have a length of 0");
                            */
                           
                           self.lastTestSuccessful = YES;
@@ -156,11 +155,11 @@
         
         
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -192,7 +191,7 @@
                 self.callbackCompleted = YES;
             }
             
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
         else
         {
@@ -204,7 +203,7 @@
                  }
                  else
                  {
-                     STAssertNotNil(array,@"Array should not be nil");
+                     XCTAssertNotNil(array,@"Array should not be nil");
                      // Might get multiple search results, so enumerate and find the one we're looking for
                      __block AlfrescoPerson *person = nil;
                      [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -214,13 +213,13 @@
                              *stop = YES;
                          }
                      }];
-                     STAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
-                     STAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
-                     STAssertNotNil(person.lastName, @"Persons last name should not be nil");
-                     STAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
+                     XCTAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
+                     XCTAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
+                     XCTAssertNotNil(person.lastName, @"Persons last name should not be nil");
+                     XCTAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
                      if (person.avatarIdentifier)
                      {
-                         STAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
+                         XCTAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
                      }
                      self.lastTestSuccessful = YES;
                  }
@@ -228,12 +227,12 @@
              }];
             [self waitUntilCompleteWithFixedTimeInterval];
             
-            STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 

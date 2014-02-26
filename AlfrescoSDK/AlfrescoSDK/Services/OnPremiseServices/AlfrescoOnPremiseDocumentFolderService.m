@@ -446,7 +446,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeFavorites];
         return nil;
     }
-    if ([favoritesObject isKindOfClass:[NSDictionary class]] == NO)
+    if (![favoritesObject isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -546,17 +546,17 @@
         
         NSDictionary *favoriteKeyComponentDictionaries = nil;
         
-        int lastKeyComponentIndex = favoriteKeyComponents.count - 1;
-        for (int i = lastKeyComponentIndex; i >= 0; i--)
+        NSInteger lastKeyComponentIndex = favoriteKeyComponents.count - 1;
+        for (NSInteger i = lastKeyComponentIndex; i >= 0; i--)
         {
-            NSString *keyComponent = [favoriteKeyComponents objectAtIndex:i];
+            NSString *keyComponent = favoriteKeyComponents[i];
             if ([keyComponent isEqualToString:kAlfrescoJSONFavorites])
             {
-                favoriteKeyComponentDictionaries = [NSDictionary dictionaryWithObject:joinedFavoriteIdentifiers forKey:keyComponent];
+                favoriteKeyComponentDictionaries = @{keyComponent: joinedFavoriteIdentifiers};
             }
             else if (favoriteKeyComponentDictionaries)
             {
-                favoriteKeyComponentDictionaries = [NSDictionary dictionaryWithObject:favoriteKeyComponentDictionaries forKey:keyComponent];
+                favoriteKeyComponentDictionaries = @{keyComponent: favoriteKeyComponentDictionaries};
             }
         }
         

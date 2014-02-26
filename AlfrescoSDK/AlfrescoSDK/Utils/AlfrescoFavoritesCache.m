@@ -26,9 +26,9 @@
 @property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteDocuments;
 @property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteFolders;
 @property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteNodes;
-@property (nonatomic, assign, readwrite) NSInteger totalDocuments;
-@property (nonatomic, assign, readwrite) NSInteger totatlFolders;
-@property (nonatomic, assign, readwrite) NSInteger totalNodes;
+@property (nonatomic, assign, readwrite) int totalDocuments;
+@property (nonatomic, assign, readwrite) int totalFolders;
+@property (nonatomic, assign, readwrite) int totalNodes;
 @end
 
 @implementation AlfrescoFavoritesCache
@@ -104,7 +104,7 @@
     }
     else
     {
-        [self.favoritesCache replaceObjectAtIndex:foundIndex withObject:node];
+        (self.favoritesCache)[foundIndex] = node;
     }
 }
 
@@ -122,7 +122,7 @@
             break;
         case AlfrescoFavoriteFolder:
             self.hasMoreFavoriteFolders = hasMoreFavorites;
-            self.totatlFolders = totalFavorites;
+            self.totalFolders = totalFavorites;
             break;
         case AlfrescoFavoriteNode:
             self.hasMoreFavoriteNodes = hasMoreFavorites;

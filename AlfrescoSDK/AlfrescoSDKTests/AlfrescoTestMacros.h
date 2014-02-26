@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -16,77 +16,81 @@
  *  limitations under the License.
  ******************************************************************************/
 
-/* A Copy of STAssertTrue that references "weakSelf" in place of "self" to avoid block retain cycle issues
- 
- " Generates a failure when expression evaluates to false.
- _{expr    The expression that is tested.}
- _{description A format string as in the printf() function. Can be nil or
- an empty string but must be present.}
- _{... A variable number of arguments to the format string. Can be absent.}
- "*/
-#define STAssertTrueWeakSelf(expr, description, ...) \
-do { \
-    BOOL _evaluatedExpression = (expr);\
-    if (!_evaluatedExpression) {\
-        NSString *_expression = [NSString stringWithUTF8String:#expr];\
-        [weakSelf failWithException:([NSException failureInCondition:_expression \
-            isTrue:NO \
-            inFile:[NSString stringWithUTF8String:__FILE__] \
-            atLine:__LINE__ \
-            withDescription:@"%@", STComposeString(description, ##__VA_ARGS__)])]; \
+
+#define _XCTRegisterFailureWeakSelf(condition, format...) \
+({ \
+    _XCTFailureHandler(weakSelf, YES, __FILE__, __LINE__, condition, @"" format); \
+})
+
+
+
+/* A Copy of XCTAssertTrue that references "weakSelf" in place of "self" to avoid block retain cycle issues */
+
+/// \def XCTAssertTrueWeakSelf(expression, format...)
+/// \brief Generates a failure when expression evaluates to false.
+/// \param expression The expression that is tested.
+/// \param format An NSString object that contains a printf-style string containing an error message describing the failure condition and placeholders for the arguments.
+/// \param ... The arguments displayed in the format string.
+#define XCTAssertTrueWeakSelf(expression, format...) \
+    _XCTPrimitiveAssertTrueWeakSelf(expression, ## format)
+
+#define _XCTPrimitiveAssertTrueWeakSelf(expression, format...) \
+({ \
+    @try { \
+        BOOL _evaluatedExpression = !!(expression); \
+        if (!_evaluatedExpression) { \
+        _XCTRegisterFailureWeakSelf(_XCTFailureDescription(_XCTAssertion_True, 0, @#expression),format); \
+        } \
     } \
-} while (0)
+    @catch (id exception) { \
+        _XCTRegisterFailureWeakSelf(_XCTFailureDescription(_XCTAssertion_True, 1, @#expression, [exception reason]),format); \
+    }\
+})
 
 
-/* A Copy of STAssertFalse that references "weakSelf" in place of "self" to avoid block retain cycle issues
- 
- "Generates a failure when the expression evaluates to true.
- _{expr    The expression that is tested.}
- _{description A format string as in the printf() function. Can be nil or
- an empty string but must be present.}
- _{... A variable number of arguments to the format string. Can be absent.}
- "*/
-#define STAssertFalseWeakSelf(expr, description, ...) \
-do { \
-    BOOL _evaluatedExpression = (expr);\
-    if (_evaluatedExpression) {\
-        NSString *_expression = [NSString stringWithUTF8String:#expr];\
-        [weakSelf failWithException:([NSException failureInCondition:_expression \
-            isTrue:YES \
-            inFile:[NSString stringWithUTF8String:__FILE__] \
-            atLine:__LINE__ \
-            withDescription:@"%@", STComposeString(description, ##__VA_ARGS__)])]; \
+/* A Copy of XCTAssertFalse that references "weakSelf" in place of "self" to avoid block retain cycle issues */
+
+/// \def XCTAssertFalseWeakSelf(expression, format...)
+/// \brief Generates a failure when the expression evaluates to true.
+/// \param expression The expression that is tested.
+/// \param format An NSString object that contains a printf-style string containing an error message describing the failure condition and placeholders for the arguments.
+/// \param ... The arguments displayed in the format string.
+#define XCTAssertFalseWeakSelf(expression, format...) \
+    _XCTPrimitiveAssertFalseWeakSelf(expression, ## format)
+
+#define _XCTPrimitiveAssertFalseWeakSelf(expression, format...) \
+({ \
+    @try { \
+        BOOL _evaluatedExpression = !!(expression); \
+        if (_evaluatedExpression) { \
+            _XCTRegisterFailureWeakSelf(_XCTFailureDescription(_XCTAssertion_False, 0, @#expression),format); \
+        } \
     } \
-} while (0)
+    @catch (id exception) { \
+        _XCTRegisterFailureWeakSelf(_XCTFailureDescription(_XCTAssertion_False, 1, @#expression, [exception reason]),format); \
+    }\
+})
 
 
-/* A Copy of STAssertNotNil that references "weakSelf" in place of "self" to avoid block retain cycle issues
- 
- " Generates a failure when a1 is nil.
- _{a1    An object.}
- _{description A format string as in the printf() function. Can be nil or
- an empty string but must be present.}
- _{... A variable number of arguments to the format string. Can be absent.}
- "*/
-#define STAssertNotNilWeakSelf(a1, description, ...) \
-do { \
-    @try {\
+/* A Copy of XCTAssertNotNil that references "weakSelf" in place of "self" to avoid block retain cycle issues */
+
+/// \def XCTAssertNotNilWeakSelf(a1, format...)
+/// \brief Generates a failure when a1 is nil.
+/// \param a1 The object that is tested.
+/// \param format An NSString object that contains a printf-style string containing an error message describing the failure condition and placeholders for the arguments.
+/// \param ... The arguments displayed in the format string.
+#define XCTAssertNotNilWeakSelf(a1, format...) \
+    _XCTPrimitiveAssertNotNilWeakSelf(a1, ## format)
+
+#define _XCTPrimitiveAssertNotNilWeakSelf(a1, format...) \
+({ \
+    @try { \
         id a1value = (a1); \
         if (a1value == nil) { \
-            NSString *_a1 = [NSString stringWithUTF8String:#a1]; \
-            NSString *_expression = [NSString stringWithFormat:@"((%@) != nil)", _a1]; \
-            [weakSelf failWithException:([NSException failureInCondition:_expression \
-                isTrue:NO \
-                inFile:[NSString stringWithUTF8String:__FILE__] \
-                atLine:__LINE__ \
-                withDescription:@"%@", STComposeString(description, ##__VA_ARGS__)])]; \
+            _XCTRegisterFailureWeakSelf(_XCTFailureDescription(_XCTAssertion_NotNil, 0, @#a1),format); \
         } \
     }\
-    @catch (id anException) {\
-        [weakSelf failWithException:([NSException failureInRaise:[NSString stringWithFormat:@"(%s) != nil fails", #a1] \
-            exception:anException \
-            inFile:[NSString stringWithUTF8String:__FILE__] \
-            atLine:__LINE__ \
-            withDescription:@"%@", STComposeString(description, ##__VA_ARGS__)])]; \
+    @catch (id exception) { \
+        _XCTRegisterFailureWeakSelf(_XCTFailureDescription(_XCTAssertion_NotNil, 1, @#a1, [exception reason]),format); \
     }\
-} while(0)
+})

@@ -23,7 +23,6 @@
 #import "CMISConstants.h"
 #import "CMISDocument.h"
 #import "CMISSession.h"
-#import "CMISDiscoveryService.h"
 #import "CMISPagedResult.h"
 #import "CMISObjectList.h"
 #import "CMISQueryResult.h"
@@ -51,7 +50,7 @@
         self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
         self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         self.defaultSortKey = kAlfrescoSortByName;
-        self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt, nil];
+        self.supportedSortKeys = @[kAlfrescoSortByName, kAlfrescoSortByTitle, kAlfrescoSortByDescription, kAlfrescoSortByCreatedAt, kAlfrescoSortByModifiedAt];
     }
     return self;
 }
@@ -74,8 +73,8 @@
          relationships:CMISIncludeRelationshipBoth
          renditionFilter:nil
          includeAllowableActions:YES
-         maxItems:[NSNumber numberWithInt:self.session.defaultListingContext.maxItems]
-         skipCount:[NSNumber numberWithInt:self.session.defaultListingContext.skipCount]
+         maxItems:@(self.session.defaultListingContext.maxItems)
+         skipCount:@(self.session.defaultListingContext.skipCount)
          completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
@@ -122,8 +121,8 @@
                                                                  relationships:CMISIncludeRelationshipBoth
                                                                renditionFilter:nil
                                                        includeAllowableActions:YES
-                                                                      maxItems:[NSNumber numberWithInt:listingContext.maxItems]
-                                                                     skipCount:[NSNumber numberWithInt:listingContext.skipCount]
+                                                                      maxItems:@(listingContext.maxItems)
+                                                                     skipCount:@(listingContext.skipCount)
                                                                completionBlock:^(CMISObjectList *objectList, NSError *error){
              if (nil == objectList)
              {
@@ -142,7 +141,7 @@
                                                                     supportedKeys:self.supportedSortKeys
                                                                        defaultKey:self.defaultSortKey
                                                                         ascending:listingContext.sortAscending];
-                 AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:objectList.hasMoreItems totalItems:sortedArray.count];
+                 AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:objectList.hasMoreItems totalItems:(int)sortedArray.count];
                  completionBlock(pagingResult, nil);
              }
              

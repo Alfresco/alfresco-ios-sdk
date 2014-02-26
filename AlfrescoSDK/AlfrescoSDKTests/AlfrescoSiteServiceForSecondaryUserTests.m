@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoSiteServiceForSecondaryUserTests.h"
-#import "AlfrescoSite.h"
 
 @implementation AlfrescoSiteServiceForSecondaryUserTests
 
@@ -55,7 +54,7 @@
         [self.siteService retrieveSiteWithShortName:self.testSiteName completionBlock:^(AlfrescoSite *remoteSite, NSError *error) {
             if (remoteSite == nil)
             {
-                STAssertNil(remoteSite,@ "if failure, the site %@ should be nil", self.testSiteName);
+                XCTAssertNil(remoteSite,@ "if failure, the site %@ should be nil", self.testSiteName);
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                 self.callbackCompleted = YES;
@@ -72,10 +71,10 @@
                     }
                     else
                     {
-                        STAssertTrueWeakSelf([favSite.identifier isEqualToString:weakSelf.testSiteName], @"The favorite site should be %@ - but received %@", weakSelf.testSiteName, favSite.identifier);
-                        STAssertTrueWeakSelf(favSite.isFavorite, @"site %@ should be set to isFavorite", favSite.identifier);
-                        STAssertTrueWeakSelf(favSite.isPendingMember == remoteSite.isPendingMember, @"pending state should be the same for favourited site");
-                        STAssertTrueWeakSelf(favSite.isMember == remoteSite.isMember, @"member state should be the same for favourited site");
+                        XCTAssertTrueWeakSelf([favSite.identifier isEqualToString:weakSelf.testSiteName], @"The favorite site should be %@ - but received %@", weakSelf.testSiteName, favSite.identifier);
+                        XCTAssertTrueWeakSelf(favSite.isFavorite, @"site %@ should be set to isFavorite", favSite.identifier);
+                        XCTAssertTrueWeakSelf(favSite.isPendingMember == remoteSite.isPendingMember, @"pending state should be the same for favourited site");
+                        XCTAssertTrueWeakSelf(favSite.isMember == remoteSite.isMember, @"member state should be the same for favourited site");
                         [weakSelf.siteService removeFavoriteSite:favSite completionBlock:^(AlfrescoSite *unFavSite, NSError *unFavError){
                             if (nil == unFavSite)
                             {
@@ -85,10 +84,10 @@
                             }
                             else
                             {
-                                STAssertTrueWeakSelf([unFavSite.identifier isEqualToString:weakSelf.testSiteName], @"The favorite site should be %@ - but instead we got %@", weakSelf.testSiteName, favSite.identifier);
-                                STAssertFalseWeakSelf(unFavSite.isFavorite, @"site %@ should no longer be a favorite",unFavSite.identifier);
-                                STAssertTrueWeakSelf(unFavSite.isPendingMember == remoteSite.isPendingMember, @"pending state should be the same for unfavourited site");
-                                STAssertTrueWeakSelf(unFavSite.isMember == remoteSite.isMember, @"member state should be the same for unfavourited site");
+                                XCTAssertTrueWeakSelf([unFavSite.identifier isEqualToString:weakSelf.testSiteName], @"The favorite site should be %@ - but instead we got %@", weakSelf.testSiteName, favSite.identifier);
+                                XCTAssertFalseWeakSelf(unFavSite.isFavorite, @"site %@ should no longer be a favorite",unFavSite.identifier);
+                                XCTAssertTrueWeakSelf(unFavSite.isPendingMember == remoteSite.isPendingMember, @"pending state should be the same for unfavourited site");
+                                XCTAssertTrueWeakSelf(unFavSite.isMember == remoteSite.isMember, @"member state should be the same for unfavourited site");
                                 weakSelf.lastTestSuccessful = YES;
                                 weakSelf.callbackCompleted = YES;
                             }
@@ -99,11 +98,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }
@@ -116,7 +115,7 @@
         [self.siteService retrieveSiteWithShortName:self.testModeratedSiteName completionBlock:^(AlfrescoSite *modSite, NSError *error) {
             if (nil == modSite)
             {
-                STAssertNil(modSite,@"if failure, the site object should be nil");
+                XCTAssertNil(modSite,@"if failure, the site object should be nil");
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                 self.callbackCompleted = YES;
@@ -124,15 +123,15 @@
             else
             {
                 BOOL isCorrectName = [modSite.identifier isEqualToString:self.moderatedSiteName];
-                STAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.moderatedSiteName, modSite.identifier);
+                XCTAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.moderatedSiteName, modSite.identifier);
                 BOOL isMember = modSite.isMember;
                 BOOL isPendingMember = modSite.isPendingMember;
                 BOOL isFavorite = modSite.isFavorite;
-                STAssertFalse(isPendingMember, @"We should not have it marked as pending just yet");
+                XCTAssertFalse(isPendingMember, @"We should not have it marked as pending just yet");
                 [self.siteService joinSite:modSite completionBlock:^(AlfrescoSite *requestedSite, NSError *requestError) {
                     if (nil == requestedSite)
                     {
-                        STAssertNil(requestedSite,@"if failure, the requestedSite object should be nil");
+                        XCTAssertNil(requestedSite,@"if failure, the requestedSite object should be nil");
                         self.lastTestSuccessful = NO;
                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [requestError localizedDescription], [requestError localizedFailureReason]];
                         self.callbackCompleted = YES;
@@ -142,10 +141,10 @@
                         BOOL isCorrectName = [requestedSite.identifier isEqualToString:self.moderatedSiteName];
                         BOOL reqIsMember = requestedSite.isMember;
                         BOOL reqIsFavorite = requestedSite.isFavorite;
-                        STAssertTrue(reqIsMember == isMember, @"the membership state of requested site should not have changed");
-                        STAssertTrue(reqIsFavorite == isFavorite, @"the favourite state of requested site should not have changed");
-                        STAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.moderatedSiteName, requestedSite.identifier);
-                        STAssertTrue(requestedSite.isPendingMember, @"Site should be in state isPendingMember - but appears to be not");
+                        XCTAssertTrue(reqIsMember == isMember, @"the membership state of requested site should not have changed");
+                        XCTAssertTrue(reqIsFavorite == isFavorite, @"the favourite state of requested site should not have changed");
+                        XCTAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.moderatedSiteName, requestedSite.identifier);
+                        XCTAssertTrue(requestedSite.isPendingMember, @"Site should be in state isPendingMember - but appears to be not");
                         [self.siteService retrievePendingSitesWithCompletionBlock:^(NSArray *pendingSites, NSError *retrieveError) {
                             if (nil == pendingSites)
                             {
@@ -155,11 +154,11 @@
                             }
                             else
                             {
-                                STAssertTrue(0 < pendingSites.count, @"We should have at least 1 requested site in the array, instead we got %d", pendingSites.count);
+                                XCTAssertTrue(0 < pendingSites.count, @"We should have at least 1 requested site in the array, instead we got %lu", (unsigned long)pendingSites.count);
                                 [self.siteService cancelPendingJoinRequestForSite:requestedSite completionBlock:^(AlfrescoSite *cancelledSite, NSError *cancelError) {
                                     if (nil == cancelledSite)
                                     {
-                                        STAssertNil(cancelledSite,@"if failure, the cancelledSite object should be nil");
+                                        XCTAssertNil(cancelledSite,@"if failure, the cancelledSite object should be nil");
                                         self.lastTestSuccessful = NO;
                                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [cancelError localizedDescription], [cancelError localizedFailureReason]];
                                         self.callbackCompleted = YES;
@@ -167,10 +166,10 @@
                                     else
                                     {
                                         BOOL isCorrectName = [requestedSite.identifier isEqualToString:self.moderatedSiteName];
-                                        STAssertTrue(cancelledSite.isMember == isMember, @"the membership state of cancelled site should not have changed");
-                                        STAssertTrue(cancelledSite.isFavorite == isFavorite, @"the favourite state of cancelled site should not have changed");
-                                        STAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.moderatedSiteName, modSite.identifier);
-                                        STAssertFalse(cancelledSite.isPendingMember, @"Site should NOT be in state isPendingMember - but appears to be still in this state");
+                                        XCTAssertTrue(cancelledSite.isMember == isMember, @"the membership state of cancelled site should not have changed");
+                                        XCTAssertTrue(cancelledSite.isFavorite == isFavorite, @"the favourite state of cancelled site should not have changed");
+                                        XCTAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.moderatedSiteName, modSite.identifier);
+                                        XCTAssertFalse(cancelledSite.isPendingMember, @"Site should NOT be in state isPendingMember - but appears to be still in this state");
                                         self.lastTestSuccessful = YES;
                                         self.callbackCompleted = YES;
                                     }
@@ -182,11 +181,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
 
@@ -198,7 +197,7 @@
         [self.siteService retrieveSiteWithShortName:self.testSiteName completionBlock:^(AlfrescoSite *modSite, NSError *error) {
             if (nil == modSite)
             {
-                STAssertNil(modSite,@"if failure, the site object should be nil");
+                XCTAssertNil(modSite,@"if failure, the site object should be nil");
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                 self.callbackCompleted = YES;
@@ -206,11 +205,11 @@
             else
             {
                 BOOL isCorrectName = [modSite.identifier isEqualToString:self.testSiteName];
-                STAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.testSiteName, modSite.identifier);
+                XCTAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.testSiteName, modSite.identifier);
                 [self.siteService joinSite:modSite completionBlock:^(AlfrescoSite *requestedSite, NSError *requestError){
                     if (nil == requestedSite)
                     {
-                        STAssertNil(requestedSite,@"if failure, the requestedSite object should be nil");
+                        XCTAssertNil(requestedSite,@"if failure, the requestedSite object should be nil");
                         self.lastTestSuccessful = NO;
                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [requestError localizedDescription], [requestError localizedFailureReason]];
                         self.callbackCompleted = YES;
@@ -218,14 +217,14 @@
                     else
                     {
                         BOOL isCorrectName = [modSite.identifier isEqualToString:self.testSiteName];
-                        STAssertTrue(requestedSite.isFavorite == modSite.isFavorite, @"favorite state of joined site should be the same");
-                        STAssertTrue(requestedSite.isPendingMember == modSite.isPendingMember, @"pending state of joined site should be the same");
-                        STAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.testSiteName, modSite.identifier);
-                        STAssertTrue(requestedSite.isMember, @"Site should be in state isMember - but appears to be not");
+                        XCTAssertTrue(requestedSite.isFavorite == modSite.isFavorite, @"favorite state of joined site should be the same");
+                        XCTAssertTrue(requestedSite.isPendingMember == modSite.isPendingMember, @"pending state of joined site should be the same");
+                        XCTAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.testSiteName, modSite.identifier);
+                        XCTAssertTrue(requestedSite.isMember, @"Site should be in state isMember - but appears to be not");
                         [self.siteService leaveSite:requestedSite completionBlock:^(AlfrescoSite *noMemberSite, NSError *noMemberError) {
                             if (nil == noMemberSite)
                             {
-                                STAssertNil(noMemberSite,@"if failure, the noMemberSite object should be nil");
+                                XCTAssertNil(noMemberSite,@"if failure, the noMemberSite object should be nil");
                                 self.lastTestSuccessful = NO;
                                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [noMemberError localizedDescription], [noMemberError localizedFailureReason]];
                                 self.callbackCompleted = YES;
@@ -233,10 +232,10 @@
                             else
                             {
                                 BOOL isCorrectName = [modSite.identifier isEqualToString:self.testSiteName];
-                                STAssertTrue(noMemberSite.isFavorite == modSite.isFavorite, @"favorite state of left site should be the same");
-                                STAssertTrue(noMemberSite.isPendingMember == modSite.isPendingMember, @"pending state of left site should be the same");
-                                STAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.testSiteName, noMemberSite.identifier);
-                                STAssertFalse(noMemberSite.isMember, @"Site should NOT be in state isMember - but appears to be still in this state");
+                                XCTAssertTrue(noMemberSite.isFavorite == modSite.isFavorite, @"favorite state of left site should be the same");
+                                XCTAssertTrue(noMemberSite.isPendingMember == modSite.isPendingMember, @"pending state of left site should be the same");
+                                XCTAssertTrue(isCorrectName, @"the site should be equal to %@, but instead we got %@", self.testSiteName, noMemberSite.identifier);
+                                XCTAssertFalse(noMemberSite.isMember, @"Site should NOT be in state isMember - but appears to be still in this state");
                                 self.lastTestSuccessful = YES;
                                 self.callbackCompleted = YES;
                             }
@@ -246,11 +245,11 @@
             }
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
-        STAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {
-        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
     
 }

@@ -15,6 +15,7 @@
 		08FC13FA1754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13F81754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m */; };
 		08FC13FF1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13FD1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m */; };
 		08FC14041754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */; };
+		2746C3FE18BB78C600DD8DDF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2746C3FD18BB78C600DD8DDF /* XCTest.framework */; };
 		275C6C32187F087400346323 /* AlfrescoCloudWorkflowProcessService.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C6C30187F087400346323 /* AlfrescoCloudWorkflowProcessService.m */; };
 		275C6C36187F099900346323 /* AlfrescoCloudWorkflowTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 275C6C34187F099900346323 /* AlfrescoCloudWorkflowTask.m */; };
 		27786B86178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27786B84178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m */; };
@@ -116,7 +117,6 @@
 		4E9E21E716F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E9E21E516F9FF420012FA53 /* AlfrescoOnPremiseJoinSiteRequest.m */; };
 		4EA177EC15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA177EA15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.m */; };
 		4EA6D4EA15D2B444004059AF /* AlfrescoSortingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA6D4E815D2B444004059AF /* AlfrescoSortingUtils.m */; };
-		4EB076A915B00D8E00DF7DED /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB076A815B00D8E00DF7DED /* SenTestingKit.framework */; };
 		4EB076AC15B00D8E00DF7DED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0769A15B00D8E00DF7DED /* Foundation.framework */; };
 		4EB076B515B00D8E00DF7DED /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EB076B315B00D8E00DF7DED /* InfoPlist.strings */; };
 		4EB077A615B00EE800DF7DED /* AlfrescoErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0771615B00EE700DF7DED /* AlfrescoErrors.m */; };
@@ -302,6 +302,7 @@
 		2719ECD5176A29D200A6F3DD /* AlfrescoTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlfrescoTestMacros.h; sourceTree = "<group>"; };
 		273E3E61177DEB0D00E1AE0F /* CMISStandardAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISStandardAuthenticationProvider.h; sourceTree = "<group>"; };
 		273E3E62177DEB0D00E1AE0F /* CMISStandardUntrustedSSLAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISStandardUntrustedSSLAuthenticationProvider.h; sourceTree = "<group>"; };
+		2746C3FD18BB78C600DD8DDF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		275C6C2F187F087400346323 /* AlfrescoCloudWorkflowProcessService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudWorkflowProcessService.h; path = CloudServices/AlfrescoCloudWorkflowProcessService.h; sourceTree = "<group>"; };
 		275C6C30187F087400346323 /* AlfrescoCloudWorkflowProcessService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCloudWorkflowProcessService.m; path = CloudServices/AlfrescoCloudWorkflowProcessService.m; sourceTree = "<group>"; };
 		275C6C33187F099900346323 /* AlfrescoCloudWorkflowTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudWorkflowTask.h; path = CloudServices/AlfrescoCloudWorkflowTask.h; sourceTree = "<group>"; };
@@ -399,8 +400,7 @@
 		4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.0-debug.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAlfrescoSDKv1.3.0-debug.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB0769A15B00D8E00DF7DED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4EB0769E15B00D8E00DF7DED /* AlfrescoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "AlfrescoSDK-Prefix.pch"; sourceTree = "<group>"; };
-		4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfrescoSDKTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4EB076A815B00D8E00DF7DED /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfrescoSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB076B215B00D8E00DF7DED /* AlfrescoSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AlfrescoSDKTests-Info.plist"; sourceTree = "<group>"; };
 		4EB076B415B00D8E00DF7DED /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4EB0771515B00EE700DF7DED /* AlfrescoErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoErrors.h; sourceTree = "<group>"; };
@@ -659,9 +659,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2746C3FE18BB78C600DD8DDF /* XCTest.framework in Frameworks */,
 				73971AB016ADA0100056031F /* libz.dylib in Frameworks */,
 				4EB0781115B0129B00DF7DED /* MobileCoreServices.framework in Frameworks */,
-				4EB076A915B00D8E00DF7DED /* SenTestingKit.framework in Frameworks */,
 				4EB076AC15B00D8E00DF7DED /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -814,7 +814,7 @@
 			isa = PBXGroup;
 			children = (
 				4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.0-debug.a */,
-				4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.octest */,
+				4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -822,12 +822,12 @@
 		4EB0769915B00D8E00DF7DED /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2746C3FD18BB78C600DD8DDF /* XCTest.framework */,
 				4EB0781015B0129B00DF7DED /* MobileCoreServices.framework */,
 				4EB0780E15B0127900DF7DED /* SystemConfiguration.framework */,
 				4EB0780C15B0126000DF7DED /* UIKit.framework */,
 				4EB0780A15B0123A00DF7DED /* libz.dylib */,
 				4EB0769A15B00D8E00DF7DED /* Foundation.framework */,
-				4EB076A815B00D8E00DF7DED /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1254,8 +1254,8 @@
 			);
 			name = AlfrescoSDKTests;
 			productName = AlfrescoSDKTests;
-			productReference = 4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -1310,7 +1310,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# [JORAM] Added check for variable: when running a regular build in XCode, this causes not to trigger the universal lib building.\n\necho \"BUILD_UNIVERSAL_LIB =  $BUILD_UNIVERSAL_LIB\"\nif [ -z $BUILD_UNIVERSAL_LIB ]\nthen\necho \"Not building universal lib\"\nexit 0\nelse\necho \"Building universal lib\"\nfi\n\n# --------------------------------------------------------------------------------------------------------------------------------------------------------\n#\n# Following code is integral from http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\n#\n# Version 2.0 (updated for Xcode 4, with some fixes)\n# Changes:\n#    - Works with xcode 4, even when running xcode 3 projects (Workarounds for apple bugs)\n#    - Faster / better: only runs lipo once, instead of once per recursion\n#    - Added some debugging statemetns that can be switched on/off by changing the DEBUG_THIS_SCRIPT variable to \"true\"\n#    - Fixed some typos\n#\n# Purpose:\n#   Create a static library for iPhone from within XCode\n#   Because Apple staff DELIBERATELY broke Xcode to make this impossible from the GUI (Xcode 3.2.3 specifically states this in the Release notes!)\n#   ...no, I don't understand why they did this!\n#\n# Author: Adam Martin - http://twitter.com/redglassesapps\n# Based on: original script from Eonil (main changes: Eonil's script WILL NOT WORK in Xcode GUI - it WILL CRASH YOUR COMPUTER)\n#\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\n\n#################[ Tests: helps workaround any future bugs in Xcode ]########\n#\nDEBUG_THIS_SCRIPT=\"true\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\n\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"XCode has selected SDK: ${PLATFORM_NAME} with version: ${SDK_VERSION} (although back-targetting: ${IPHONEOS_DEPLOYMENT_TARGET})\"\necho \"...therefore, OTHER_SDK_TO_BUILD = ${OTHER_SDK_TO_BUILD}\"\n#\n#####################[ end of part 1 ]##################\n\n#####################[ part 2 ]##################\n#\n# IF this is the original invocation, invoke WHATEVER other builds are required\n#\n# Xcode is already building ONE target...\n#\n# ...but this is a LIBRARY, so Apple is wrong to set it to build just one.\n# ...we need to build ALL targets\n# ...we MUST NOT re-build the target that is ALREADY being built: Xcode WILL CRASH YOUR COMPUTER if you try this (infinite recursion!)\n#\n#\n# So: build ONLY the missing platforms/configurations.\n\nif [ \"true\" == ${ALREADYINVOKED:-false} ]\nthen\necho \"RECURSION: I am NOT the root invocation, so I'm NOT going to recurse\"\nelse\n# CRITICAL:\n# Prevent infinite recursion (Xcode sucks)\nexport ALREADYINVOKED=\"true\"\n\necho \"RECURSION: I am the root ... recursing all missing build targets NOW...\"\necho \"RECURSION: ...about to invoke: xcodebuild -configuration \\\"${CONFIGURATION}\\\" -target \\\"${TARGET_NAME}\\\" -sdk \\\"${OTHER_SDK_TO_BUILD}\\\" clean ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO\"\nxcodebuild -configuration \"${CONFIGURATION}\" -target \"${TARGET_NAME}\" -sdk \"${OTHER_SDK_TO_BUILD}\" clean ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\nACTION=\"build\"\n\n#Merge all platform binaries as a fat binary for each configurations.\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"\"\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\necho \"\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${EXECUTABLE_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${EXECUTABLE_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${EXECUTABLE_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${EXECUTABLE_NAME}\"\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\nif [ -d \"${CURRENTCONFIG_DEVICE_DIR}/include\" ]\nthen\nmkdir -p \"${CREATING_UNIVERSAL_DIR}\"\ncp -R \"${CURRENTCONFIG_DEVICE_DIR}/include\" \"${CREATING_UNIVERSAL_DIR}\"\nfi\nfi\n";
+			shellScript = "# [JORAM] Added check for variable: when running a regular build in XCode, this causes not to trigger the universal lib building.\n\necho \"BUILD_UNIVERSAL_LIB =  $BUILD_UNIVERSAL_LIB\"\nif [ -z $BUILD_UNIVERSAL_LIB ]\nthen\necho \"Not building universal lib\"\nexit 0\nelse\necho \"Building universal lib\"\nfi\n\n# --------------------------------------------------------------------------------------------------------------------------------------------------------\n#\n# Following code is integral from http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\n#\n# Version 2.0 (updated for Xcode 4, with some fixes)\n# Changes:\n#    - Works with xcode 4, even when running xcode 3 projects (Workarounds for apple bugs)\n#    - Faster / better: only runs lipo once, instead of once per recursion\n#    - Added some debugging statemetns that can be switched on/off by changing the DEBUG_THIS_SCRIPT variable to \"true\"\n#    - Fixed some typos\n#\n# Purpose:\n#   Create a static library for iPhone from within XCode\n#   Because Apple staff DELIBERATELY broke Xcode to make this impossible from the GUI (Xcode 3.2.3 specifically states this in the Release notes!)\n#   ...no, I don't understand why they did this!\n#\n# Author: Adam Martin - http://twitter.com/redglassesapps\n# Based on: original script from Eonil (main changes: Eonil's script WILL NOT WORK in Xcode GUI - it WILL CRASH YOUR COMPUTER)\n#\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\n\n#################[ Tests: helps workaround any future bugs in Xcode ]########\n#\nDEBUG_THIS_SCRIPT=\"true\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\n\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"XCode has selected SDK: ${PLATFORM_NAME} with version: ${SDK_VERSION} (although back-targetting: ${IPHONEOS_DEPLOYMENT_TARGET})\"\necho \"...therefore, OTHER_SDK_TO_BUILD = ${OTHER_SDK_TO_BUILD}\"\n#\n#####################[ end of part 1 ]##################\n\n#####################[ part 2 ]##################\n#\n# IF this is the original invocation, invoke WHATEVER other builds are required\n#\n# Xcode is already building ONE target...\n#\n# ...but this is a LIBRARY, so Apple is wrong to set it to build just one.\n# ...we need to build ALL targets\n# ...we MUST NOT re-build the target that is ALREADY being built: Xcode WILL CRASH YOUR COMPUTER if you try this (infinite recursion!)\n#\n#\n# So: build ONLY the missing platforms/configurations.\n\nif [ \"true\" == ${ALREADYINVOKED:-false} ]\nthen\necho \"RECURSION: I am NOT the root invocation, so I'm NOT going to recurse\"\nelse\n# CRITICAL:\n# Prevent infinite recursion (Xcode sucks)\nexport ALREADYINVOKED=\"true\"\n\necho \"RECURSION: I am the root ... recursing all missing build targets NOW...\"\necho \"RECURSION: ...about to invoke: xcodebuild -configuration \\\"${CONFIGURATION}\\\" -target \\\"${TARGET_NAME}\\\" -sdk \\\"${OTHER_SDK_TO_BUILD}\\\" clean ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO\"\nxcodebuild -configuration \"${CONFIGURATION}\" -target \"${TARGET_NAME}\" -sdk \"${OTHER_SDK_TO_BUILD}\" clean ${ACTION} ONLY_ACTIVE_ARCH=NO RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\nACTION=\"build\"\n\n#Merge all platform binaries as a fat binary for each configurations.\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"\"\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\necho \"\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${EXECUTABLE_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${EXECUTABLE_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${EXECUTABLE_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${EXECUTABLE_NAME}\"\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\nif [ -d \"${CURRENTCONFIG_DEVICE_DIR}/include\" ]\nthen\nmkdir -p \"${CREATING_UNIVERSAL_DIR}\"\ncp -R \"${CURRENTCONFIG_DEVICE_DIR}/include\" \"${CREATING_UNIVERSAL_DIR}\"\nfi\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1495,6 +1495,7 @@
 			baseConfigurationReference = 27D85CA017D7E3FC009D15C4 /* AlfrescoSDK.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1512,7 +1513,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_AFTER_BUILD = NO;
@@ -1528,7 +1529,6 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/AlfrescoSDK/CMIS\"",
 					"\"$(SRCROOT)/CMIS\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1548,15 +1548,14 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
-				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION)-debug.a";
+				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION).a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = AdHoc;
 		};
@@ -1565,6 +1564,7 @@
 			baseConfigurationReference = 27D85CA017D7E3FC009D15C4 /* AlfrescoSDK.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1588,7 +1588,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1601,6 +1601,7 @@
 			baseConfigurationReference = 27D85CA017D7E3FC009D15C4 /* AlfrescoSDK.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1618,7 +1619,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_AFTER_BUILD = NO;
@@ -1634,7 +1635,6 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/AlfrescoSDK/CMIS\"",
 					"\"$(SRCROOT)/CMIS\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1656,7 +1656,6 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/AlfrescoSDK/CMIS\"",
 					"\"$(SRCROOT)/CMIS\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1676,15 +1675,14 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION)-debug.a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1694,15 +1692,14 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
-				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION)-debug.a";
+				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION).a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_AFTER_BUILD = NO;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

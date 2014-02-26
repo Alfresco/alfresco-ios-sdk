@@ -23,7 +23,6 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
-#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremisePersonService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -205,7 +204,7 @@
 {
     NSMutableDictionary *jsonPeopleDictionary = [self extractJsonDictionaryFromData:data error:outError];
     
-    NSArray *peopleProperties = [jsonPeopleDictionary objectForKey:kAlfrescoJSONPeople];
+    NSArray *peopleProperties = jsonPeopleDictionary[kAlfrescoJSONPeople];
     NSMutableArray *people = [[NSMutableArray alloc] init];
     
     for (NSDictionary *personProperties in peopleProperties)
@@ -241,7 +240,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodePerson];
         return nil;
     }
-    if ([[jsonDictionary valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+    if ([[jsonDictionary valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
     {
         // no person found
         if (nil == *outError)
@@ -255,7 +254,7 @@
         }
         return nil;
     }
-    if (NO == [jsonDictionary isKindOfClass:[NSDictionary class]])
+    if (![jsonDictionary isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -306,7 +305,7 @@
     
     for (NSString *key in propertyKeys)
     {
-        NSString *mappedKey = [mappedOnPremiseKeys objectForKey:key];
+        NSString *mappedKey = mappedOnPremiseKeys[key];
         if (mappedKey)
         {
             [updatedProperties setValue:properties[key] forKey:mappedKey];

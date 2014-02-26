@@ -27,7 +27,7 @@ extern NSString * const kCMISPropertyCreatedBy;
 extern NSString * const kCMISPropertyCreationDate;
 extern NSString * const kCMISPropertyModifiedBy;
 extern NSString * const kCMISPropertyModificationDate;
-extern NSString * const kCMISProperyContentStreamId;
+extern NSString * const kCMISPropertyContentStreamId;
 extern NSString * const kCMISPropertyContentStreamFileName;
 extern NSString * const kCMISPropertyContentStreamLength;
 extern NSString * const kCMISPropertyContentStreamMediaType;

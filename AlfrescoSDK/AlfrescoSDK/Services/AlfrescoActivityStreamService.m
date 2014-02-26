@@ -19,7 +19,6 @@
 #import "AlfrescoActivityStreamService.h"
 #import "AlfrescoPlaceholderActivityStreamService.h"
 
-
 @implementation AlfrescoActivityStreamService
 
 + (id)alloc
@@ -28,10 +27,7 @@
     {
         return [AlfrescoPlaceholderActivityStreamService alloc];
     }
-    else
-    {
-        return [super alloc];
-    }
+    return [super alloc];
 }
 
 - (id)initWithSession:(id<AlfrescoSession>)session

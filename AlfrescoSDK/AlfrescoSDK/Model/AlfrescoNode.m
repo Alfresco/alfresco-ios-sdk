@@ -19,15 +19,7 @@
 #import "AlfrescoNode.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoInternalConstants.h"
-#import "CMISObject.h"
-#import "CMISDocument.h"
-#import "CMISSession.h"
-#import "CMISQueryResult.h"
-#import "CMISObjectConverter.h"
-#import "CMISEnums.h"
 #import "CMISConstants.h"
-#import "CMISQueryResult.h"
-
 
 static NSInteger kNodeModelVersion = 1;
 NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey";
@@ -163,7 +155,7 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 
 - (id)propertyValueWithName:(NSString *)propertyName
 {
-    AlfrescoProperty *property = [self.properties objectForKey:propertyName];
+    AlfrescoProperty *property = (self.properties)[propertyName];
     id value;
     if(property != nil)
     {

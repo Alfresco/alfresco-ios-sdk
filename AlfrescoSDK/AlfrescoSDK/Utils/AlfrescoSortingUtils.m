@@ -36,7 +36,7 @@
         NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:key
                                                                      ascending:isAscending
                                                                       selector:@selector(compare:)];
-        NSArray *sortArray = [NSArray arrayWithObject:descriptor];
+        NSArray *sortArray = @[descriptor];
         return [array sortedArrayUsingDescriptors:sortArray];
     }
     else
@@ -44,7 +44,7 @@
         NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:key
                                                                      ascending:isAscending
                                                                       selector:@selector(localizedCaseInsensitiveCompare:)];
-        NSArray *sortArray = [NSArray arrayWithObject:descriptor];
+        NSArray *sortArray = @[descriptor];
         return [array sortedArrayUsingDescriptors:sortArray];
     }
 }
@@ -69,7 +69,7 @@
         NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:sortKey
                                                                      ascending:isAscending
                                                                       selector:@selector(compare:)];
-        NSArray *sortArray = [NSArray arrayWithObject:descriptor];
+        NSArray *sortArray = @[descriptor];
         return [array sortedArrayUsingDescriptors:sortArray];
     }
     else
@@ -77,7 +77,7 @@
         NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:sortKey
                                                                      ascending:isAscending
                                                                       selector:@selector(localizedCaseInsensitiveCompare:)];
-        NSArray *sortArray = [NSArray arrayWithObject:descriptor];
+        NSArray *sortArray = @[descriptor];
         return [array sortedArrayUsingDescriptors:sortArray];
     }
 }

@@ -17,17 +17,14 @@
  ******************************************************************************/
 
 #import "AlfrescoOnPremiseSiteService.h"
-#import "AlfrescoPersonService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
-#import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoSortingUtils.h"
-#import "AlfrescoNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoSiteCache.h"
 #import "AlfrescoOnPremiseJoinSiteRequest.h"
@@ -65,7 +62,7 @@
             self.authenticationProvider = (AlfrescoBasicAuthenticationProvider *)authenticationObject;
         }
         self.defaultSortKey = kAlfrescoSortByTitle;
-        self.supportedSortKeys = [NSArray arrayWithObjects:kAlfrescoSortByTitle, kAlfrescoSortByShortname, nil];
+        self.supportedSortKeys = @[kAlfrescoSortByTitle, kAlfrescoSortByShortname];
         self.joinRequests = [NSMutableArray array];
 
         id cachedObj = [self.session objectForParameter:kAlfrescoSessionSitesCache];
@@ -330,7 +327,7 @@
                 NSArray *containerArray = [jsonContainer valueForKey:kAlfrescoJSONContainers];
                 if ( nil != containerArray && containerArray.count > 0)
                 {
-                    folderId = [[containerArray objectAtIndex:0] valueForKey:kAlfrescoJSONNodeRef];
+                    folderId = [containerArray[0] valueForKey:kAlfrescoJSONNodeRef];
                 }
                 if (nil != folderId)
                 {
@@ -508,7 +505,7 @@
         completionBlock(nil, error);
         return nil;
     }
-    __block AlfrescoOnPremiseJoinSiteRequest *foundRequest = [foundRequests objectAtIndex:0];
+    __block AlfrescoOnPremiseJoinSiteRequest *foundRequest = foundRequests[0];
     NSString *requestString = [kAlfrescoOnPremiseCancelJoinRequestsAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
                                                                                                   withString:site.identifier];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoInviteId withString:foundRequest.identifier];
@@ -672,7 +669,7 @@
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         
-        // if person is not member : the request returns error and data is nil so its difficult to differenciate if request failed or person is not member
+        // if person is not member : the request returns error and data is nil so its difficult to differentiate if request failed or person is not member
         if (error)
         {
             completionBlock(YES, NO, nil);
@@ -709,7 +706,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([jsonRequestObj isKindOfClass:[NSDictionary class]] == NO)
+    if (![jsonRequestObj isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -730,7 +727,7 @@
         return nil;
     }
     
-    id dataObj = [jsonDict objectForKey:kAlfrescoJSONData];
+    id dataObj = jsonDict[kAlfrescoJSONData];
     if (![dataObj isKindOfClass:[NSDictionary class]])
     {
         NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
@@ -765,7 +762,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([jsonRequestObj isKindOfClass:[NSDictionary class]] == NO)
+    if (![jsonRequestObj isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -786,7 +783,7 @@
         return nil;
     }
     
-    id dataObj = [jsonDict objectForKey:kAlfrescoJSONData];
+    id dataObj = jsonDict[kAlfrescoJSONData];
     if (![dataObj isKindOfClass:[NSArray class]])
     {
         NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData];
@@ -824,12 +821,12 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([jsonSiteArray isKindOfClass:[NSArray class]] == NO)
+    if (![jsonSiteArray isKindOfClass:[NSArray class]])
     {
-        if([jsonSiteArray isKindOfClass:[NSDictionary class]] == YES && [[jsonSiteArray valueForKeyPath:@"status.code"] isEqualToNumber:[NSNumber numberWithInt:404]])
+        if ([jsonSiteArray isKindOfClass:[NSDictionary class]] && [[jsonSiteArray valueForKeyPath:@"status.code"] isEqualToNumber:@404])
         {
             // no results found
-            return [NSArray array];
+            return @[];
         }
         else
         {
@@ -876,7 +873,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([jsonSite isKindOfClass:[NSDictionary class]] == NO)
+    if (![jsonSite isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -889,7 +886,7 @@
         }
         return nil;
     }
-    if([[jsonSite valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:[NSNumber numberWithInt:404]])
+    if([[jsonSite valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
     {
         //empty/non existent site - should this happen? error message?
         return nil;
@@ -901,22 +898,22 @@
 {
     // construct a properties object representing the site to create
     NSMutableDictionary *siteProperties = [NSMutableDictionary dictionaryWithCapacity:8];
-    [siteProperties setObject:folder.name forKey:kAlfrescoJSONShortname];
+    siteProperties[kAlfrescoJSONShortname] = folder.name;
     
     if (folder.summary != nil)
     {
-        [siteProperties setObject:folder.summary forKey:kAlfrescoJSONDescription];
+        siteProperties[kAlfrescoJSONDescription] = folder.summary;
     }
     
     if (folder.title != nil)
     {
-        [siteProperties setObject:folder.title forKey:kAlfrescoJSONTitle];
+        siteProperties[kAlfrescoJSONTitle] = folder.title;
     }
     
-    AlfrescoProperty *visibilityProperty = [folder.properties objectForKey:@"st:siteVisibility"];
+    AlfrescoProperty *visibilityProperty = (folder.properties)[@"st:siteVisibility"];
     if (visibilityProperty != nil)
     {
-        [siteProperties setObject:visibilityProperty.value forKey:kAlfrescoJSONVisibility];
+        siteProperties[kAlfrescoJSONVisibility] = visibilityProperty.value;
     }
     
     // return a newly created site node
@@ -997,7 +994,7 @@
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;
     }
-    if ([favoriteSitesObject isKindOfClass:[NSDictionary class]] == NO)
+    if (![favoriteSitesObject isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
         {
@@ -1047,8 +1044,8 @@
 
 - (NSData *)jsonDataForJoiningPublicSite:(NSString *)personId
 {
-    NSDictionary *personDict = [NSDictionary dictionaryWithObject:personId forKey:kAlfrescoJSONUserName];
-    NSDictionary *jsonDict = [NSDictionary dictionaryWithObjects:@[kAlfrescoSiteConsumer,personDict] forKeys:@[kAlfrescoJSONRole, kAlfrescoJSONPerson]];
+    NSDictionary *personDict = @{kAlfrescoJSONUserName: personId};
+    NSDictionary *jsonDict = @{kAlfrescoJSONRole: kAlfrescoSiteConsumer, kAlfrescoJSONPerson: personDict};
     NSError *error = nil;
     return [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&error];
 }
@@ -1059,21 +1056,19 @@
     {
         comment = @"";
     }
-    NSDictionary *jsonDict = [NSDictionary dictionaryWithObjects:@[kAlfrescoModerated, personId, comment, kAlfrescoSiteConsumer ]
-                                                         forKeys:@[kAlfrescoJSONInvitationType, kAlfrescoJSONInviteeUsername, kAlfrescoJSONInviteeComments, kAlfrescoJSONInviteeRolename]];
+    NSDictionary *jsonDict = @{kAlfrescoJSONInvitationType: kAlfrescoModerated, kAlfrescoJSONInviteeUsername: personId, kAlfrescoJSONInviteeComments: comment, kAlfrescoJSONInviteeRolename: kAlfrescoSiteConsumer};
     NSError *error = nil;
     return [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&error];
 }
 
 - (NSData *)jsonDataForFavoriteSites:(NSString *)siteId addFavorite:(BOOL)addFavorite
 {
-    NSDictionary *favorite = [NSDictionary dictionaryWithObject:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:addFavorite]
-                                                                                            forKey:siteId] forKey:kAlfrescoJSONFavorites];
-    NSDictionary *sites = [NSDictionary dictionaryWithObject:favorite forKey:kAlfrescoJSONSites];
-    NSDictionary *share = [NSDictionary dictionaryWithObject:sites forKey:kAlfrescoJSONShare];
-    NSDictionary *alfresco = [NSDictionary dictionaryWithObject:share forKey:kAlfrescoJSONAlfresco];
+    NSDictionary *favorite = @{kAlfrescoJSONFavorites: @{siteId: @(addFavorite)}};
+    NSDictionary *sites = @{kAlfrescoJSONSites: favorite};
+    NSDictionary *share = @{kAlfrescoJSONShare: sites};
+    NSDictionary *alfresco = @{kAlfrescoJSONAlfresco: share};
     
-    NSDictionary *jsonDict = [NSDictionary dictionaryWithObject:alfresco forKey:kAlfrescoJSONOrg];
+    NSDictionary *jsonDict = @{kAlfrescoJSONOrg: alfresco};
     NSError *error = nil;
     return [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&error];
 }

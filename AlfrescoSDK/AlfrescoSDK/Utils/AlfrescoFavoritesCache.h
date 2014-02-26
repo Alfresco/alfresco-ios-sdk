@@ -21,22 +21,22 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoSession.h"
 
-typedef enum
+typedef NS_ENUM(NSInteger, AlfrescoFavoriteType)
 {
     AlfrescoFavoriteDocument = 0,
     AlfrescoFavoriteFolder,
     AlfrescoFavoriteNode,
     
-} AlfrescoFavoriteType;
+};
 
 @interface AlfrescoFavoritesCache : NSObject
 
 @property (nonatomic, assign, readonly) BOOL hasMoreFavoriteDocuments;
 @property (nonatomic, assign, readonly) BOOL hasMoreFavoriteFolders;
 @property (nonatomic, assign, readonly) BOOL hasMoreFavoriteNodes;
-@property (nonatomic, assign, readonly) NSInteger totalDocuments;
-@property (nonatomic, assign, readonly) NSInteger totalFolders;
-@property (nonatomic, assign, readonly) NSInteger totalNodes;
+@property (nonatomic, assign, readonly) int totalDocuments;
+@property (nonatomic, assign, readonly) int totalFolders;
+@property (nonatomic, assign, readonly) int totalNodes;
 /**
  initialiser
  */

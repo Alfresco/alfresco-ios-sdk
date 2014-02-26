@@ -30,7 +30,7 @@
 @interface AlfrescoWorkflowProcessDefinitionService : NSObject
 
 /**---------------------------------------------------------------------------------------
- * @name Initialialisation methods
+ * @name Initialisation methods
  *  ---------------------------------------------------------------------------------------
  */
 
@@ -54,7 +54,7 @@
 - (AlfrescoRequest *)retrieveAllProcessDefinitionsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /**
- Retrieves a paged result of all process defintions in accordance to a listing context.
+ Retrieves a paged result of all process definitions in accordance to a listing context.
  
  @param listingContext The listing context with a paging definition that's used to retrieve process definitions
  @param completionBlock The block that's called with the operation completes

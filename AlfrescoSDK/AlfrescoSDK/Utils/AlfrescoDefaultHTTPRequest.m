@@ -127,7 +127,7 @@
         if (self.outputStream)
         {
             uint8_t *readBytes = (uint8_t *)[data bytes];
-            int data_length = [data length];
+            NSUInteger data_length = [data length];
             uint8_t buffer[data_length];
             (void)memcpy(buffer, readBytes, data_length);
             [self.outputStream write:(const uint8_t *)buffer maxLength:data_length];

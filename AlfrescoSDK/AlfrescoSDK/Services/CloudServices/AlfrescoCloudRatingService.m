@@ -23,8 +23,6 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
-#import "AlfrescoNetworkProvider.h"
-#import "AlfrescoLog.h"
 #import <objc/runtime.h>
 
 @interface AlfrescoCloudRatingService ()
@@ -154,7 +152,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSMutableDictionary *likeDict = [NSMutableDictionary dictionaryWithCapacity:2];
-    [likeDict setValue:[NSNumber numberWithBool:YES] forKey:kAlfrescoJSONMyRating];
+    [likeDict setValue:@YES forKey:kAlfrescoJSONMyRating];
     [likeDict setValue:kAlfrescoJSONLikes forKey:kAlfrescoJSONIdentifier];
     
     NSString *requestString = [kAlfrescoCloudRatingsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef

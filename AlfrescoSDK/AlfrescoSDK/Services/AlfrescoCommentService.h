@@ -32,7 +32,7 @@
 @interface AlfrescoCommentService : NSObject
 
 /**---------------------------------------------------------------------------------------
- * @name Initialialisation methods
+ * @name Initialisation methods
  *  ---------------------------------------------------------------------------------------
  */
 

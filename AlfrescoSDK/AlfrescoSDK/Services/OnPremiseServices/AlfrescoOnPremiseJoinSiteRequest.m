@@ -49,15 +49,15 @@
         NSArray *allKeys = [properties allKeys];
         if ([allKeys containsObject:kAlfrescoJSONResourceName])
         {
-            self.shortName = [properties objectForKey:kAlfrescoJSONResourceName];
+            self.shortName = properties[kAlfrescoJSONResourceName];
         }
         if ([allKeys containsObject:kAlfrescoJSONInviteId])
         {
-            self.identifier = [properties objectForKey:kAlfrescoJSONInviteId];
+            self.identifier = properties[kAlfrescoJSONInviteId];
         }
         if ([allKeys containsObject:kAlfrescoJSONInviteeComments])
         {
-            self.message = [properties objectForKey:kAlfrescoJSONInviteeComments];
+            self.message = properties[kAlfrescoJSONInviteeComments];
         }        
     }
     return self;

@@ -31,8 +31,8 @@
 @property (nonatomic, strong) NSString *renditionFilterString;
 @property (nonatomic, strong) NSString *orderBy;
 @property (nonatomic, assign) BOOL includePathSegments;
-@property (nonatomic, assign) NSInteger maxItemsPerPage;
-@property (nonatomic, assign) NSInteger skipCount;
+@property (nonatomic, assign) int maxItemsPerPage;
+@property (nonatomic, assign) int skipCount;
 
 /**
  * creates a default operationContext instance. The defaults are

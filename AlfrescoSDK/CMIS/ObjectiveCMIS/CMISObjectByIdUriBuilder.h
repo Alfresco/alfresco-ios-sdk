@@ -22,13 +22,13 @@
 #import "CMISEnums.h"
 
 
-typedef enum
+typedef NS_ENUM(NSInteger, CMISReturnVersion)
 {
     NOT_PROVIDED,
     THIS,
     LATEST,
     LATEST_MAJOR
-} CMISReturnVersion;
+};
 
 @interface CMISObjectByIdUriBuilder : NSObject
 

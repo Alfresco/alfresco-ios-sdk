@@ -18,7 +18,6 @@
 
 #import "AlfrescoOAuthData.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoErrors.h"
 
 @interface AlfrescoOAuthData ()
 @property (nonatomic, strong, readwrite) NSString           * accessToken;
@@ -126,23 +125,23 @@
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     if (nil != accessToken)
     {
-        [dictionary setObject:accessToken forKey:kAlfrescoJSONAccessToken];
+        dictionary[kAlfrescoJSONAccessToken] = accessToken;
     }
     if (nil != refreshToken)
     {
-        [dictionary setObject:refreshToken forKey:kAlfrescoJSONRefreshToken];
+        dictionary[kAlfrescoJSONRefreshToken] = refreshToken;
     }
     if (nil != expiresIn)
     {
-        [dictionary setObject:expiresIn forKey:kAlfrescoJSONExpiresIn];
+        dictionary[kAlfrescoJSONExpiresIn] = expiresIn;
     }
     if (nil != tokenType)
     {
-        [dictionary setObject:tokenType forKey:kAlfrescoJSONTokenType];
+        dictionary[kAlfrescoJSONTokenType] = tokenType;
     }
     if (nil != scope)
     {
-        [dictionary setObject:scope forKey:kAlfrescoJSONScope];
+        dictionary[kAlfrescoJSONScope] = scope;
     }
     
     if (0 < dictionary.count)

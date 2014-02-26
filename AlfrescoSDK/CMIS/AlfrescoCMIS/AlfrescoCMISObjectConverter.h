@@ -27,5 +27,9 @@
 #import "CMISObjectConverter.h"
 
 
+@interface CMISObjectConverter (Alfresco)
+- (CMISObject *)convertObjectInternal:(CMISObjectData *)objectData;
+@end
+
 @interface AlfrescoCMISObjectConverter : CMISObjectConverter
 @end

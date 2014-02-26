@@ -32,7 +32,7 @@
 @interface AlfrescoSearchService : NSObject
 
 /**---------------------------------------------------------------------------------------
- * @name Initialialisation
+ * @name Initialisation
  *  ---------------------------------------------------------------------------------------
  */
 
@@ -49,7 +49,7 @@
 
 /** Performs a search based on the search statement and given query language. Query language can be either
  CMIS SQL. For this a valid CMIS SQL statement needs to be passed to the method.
- The alternative is to use a space delimeted keyword string
+ The alternative is to use a space delimited keyword string
  
  @param statement the search statement.
  @param language the query language to be used.

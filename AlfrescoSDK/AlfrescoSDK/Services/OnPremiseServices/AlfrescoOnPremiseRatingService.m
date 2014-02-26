@@ -20,12 +20,10 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
-#import "AlfrescoRepositoryInfo.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoObjectConverter.h"
 #import <objc/runtime.h>
-#import "AlfrescoNetworkProvider.h"
 
 @interface AlfrescoOnPremiseRatingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -95,7 +93,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSMutableDictionary *likeDict = [NSMutableDictionary dictionaryWithCapacity:2];
-    [likeDict setValue:[NSNumber numberWithInt:1] forKey:kAlfrescoJSONRating];
+    [likeDict setValue:@1 forKey:kAlfrescoJSONRating];
     [likeDict setValue:kAlfrescoJSONLikesRatingScheme forKey:kAlfrescoJSONRatingScheme];
     
     NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
