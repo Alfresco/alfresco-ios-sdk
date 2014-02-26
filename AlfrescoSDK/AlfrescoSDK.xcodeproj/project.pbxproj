@@ -1554,7 +1554,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
-				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION)-debug.a";
+				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION).a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = AdHoc;
@@ -1698,7 +1698,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
-				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION)-debug.a";
+				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDKv$(ALFRESCO_SDK_VERSION).a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

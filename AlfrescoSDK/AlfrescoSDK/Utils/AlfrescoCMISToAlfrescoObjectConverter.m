@@ -20,7 +20,7 @@
 #import "CMISDocument.h"
 #import "CMISSession.h"
 #import "CMISQueryResult.h"
-#import "CMISObjectConverter.h"
+#import "AlfrescoCMISObjectConverter.h"
 #import "CMISConstants.h"
 #import "AlfrescoProperty.h"
 #import <objc/runtime.h>
@@ -307,9 +307,7 @@
 - (AlfrescoNode *)nodeFromCMISObjectData:(CMISObjectData *)cmisObjectData
 {
     CMISSession *cmisSession = [self.session objectForParameter:kAlfrescoSessionKeyCmisSession];
-//    CMISObjectConverter *cmisObjectConverter = [[CMISObjectConverter alloc] initWithSession:cmisSession];
-    
-    CMISObject *cmisObject = [cmisSession.objectConverter convertObject:cmisObjectData];
+    CMISObject *cmisObject = [cmisSession.objectConverter convertObjectInternal:cmisObjectData];
     return [self nodeFromCMISObject:cmisObject];
 }
 
@@ -321,9 +319,8 @@
     data.baseType = CMISBaseTypeDocument;
     data.properties = cmisQueryResult.properties;
     data.allowableActions = cmisQueryResult.allowableActions;
-//    CMISObjectConverter *cmisObjectConverter = [[CMISObjectConverter alloc] initWithSession:cmisSession];
     
-    CMISObject *cmisObject = [cmisSession.objectConverter convertObject:data];
+    CMISObject *cmisObject = [cmisSession.objectConverter convertObjectInternal:data];
     return (AlfrescoDocument *)[self nodeFromCMISObject:cmisObject];
 }
 

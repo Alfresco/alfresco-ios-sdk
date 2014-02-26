@@ -52,7 +52,7 @@
     return self;
 }
 
-- (CMISObject *)convertObject:(CMISObjectData *)objectData
+- (CMISObject *)convertObjectInternal:(CMISObjectData *)objectData
 {
     CMISObject *object = nil;
 
@@ -68,6 +68,13 @@
     return object;
 }
 
+- (void)convertObject:(CMISObjectData *)objectData completionBlock:(void (^)(CMISObject *, NSError *))completionBlock
+{
+    if (completionBlock)
+    {
+        completionBlock([self convertObjectInternal:objectData], nil);
+    }
+}
 
 
 
