@@ -716,7 +716,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __block NSString *description = @"";
         __block NSString *title = @"";
-        __block NSString *name = @"NameWIth.and\and/and?and\"and*<and>and|and!";
+        __block NSString *name = @"NameWIth.and\\and/and?and\"and*<and>and|and!";
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:2];
         props[@"cm:description"] = description;
         props[@"cm:title"] = title;
