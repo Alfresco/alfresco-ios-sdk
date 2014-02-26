@@ -36,7 +36,7 @@ cp README $PACKAGE_DIR
 echo "Building static library..."
 
 export BUILD_UNIVERSAL_LIB='TRUE'
-xcodebuild -project AlfrescoSDK.xcodeproj -target AlfrescoSDK -configuration Debug clean build
+xcodebuild -project AlfrescoSDK.xcodeproj -target AlfrescoSDK -configuration Debug ONLY_ACTIVE_ARCH=NO clean build
 xcodebuild -project AlfrescoSDK.xcodeproj -target AlfrescoSDK -configuration Release clean build
 
 cp -R build/Debug-universal/* $PACKAGE_DIR
