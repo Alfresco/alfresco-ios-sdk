@@ -161,7 +161,7 @@ NSString * const kAlfrescoSDKSamplesSSLValidation = @"sslvalidation";
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    int tag = textField.tag;
+    NSInteger tag = textField.tag;
     NSUserDefaults *defaultSettings = [NSUserDefaults standardUserDefaults];
     
     switch (tag)

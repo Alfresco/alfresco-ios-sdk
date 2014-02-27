@@ -87,7 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				27B19F0A18935C86005C6BBD /* libAlfrescoSDKv1.3.0-debug.a */,
-				27B19F0C18935C86005C6BBD /* AlfrescoSDKTests.octest */,
+				27B19F0C18935C86005C6BBD /* AlfrescoSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -219,10 +219,10 @@
 			remoteRef = 27B19F0918935C86005C6BBD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		27B19F0C18935C86005C6BBD /* AlfrescoSDKTests.octest */ = {
+		27B19F0C18935C86005C6BBD /* AlfrescoSDKTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = AlfrescoSDKTests.octest;
+			path = AlfrescoSDKTests.xctest;
 			remoteRef = 27B19F0B18935C86005C6BBD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -346,6 +346,7 @@
 		82FC413115E7AC7D0081888D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HelloRepo/HelloRepo-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -354,12 +355,12 @@
 					"$(CONFIGURATION_BUILD_DIR)",
 				);
 				INFOPLIST_FILE = "HelloRepo/HelloRepo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"\"$(CONFIGURATION_BUILD_DIR)/libAlfrescoSDKv1.3.0-debug.a\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -367,6 +368,7 @@
 		82FC413215E7AC7D0081888D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HelloRepo/HelloRepo-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -375,12 +377,12 @@
 					"$(CONFIGURATION_BUILD_DIR)",
 				);
 				INFOPLIST_FILE = "HelloRepo/HelloRepo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"\"$(CONFIGURATION_BUILD_DIR)/libAlfrescoSDKv1.3.0.a\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

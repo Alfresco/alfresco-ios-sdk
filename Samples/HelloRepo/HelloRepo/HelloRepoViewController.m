@@ -143,7 +143,7 @@
         }
         else
         {
-            NSLog(@"Retrieved root folder with %d children", array.count);
+            NSLog(@"Retrieved root folder with %lu children", (unsigned long)array.count);
             weakSelf.nodes = [NSArray arrayWithArray:array];
             // Note the UI must only be updated on the main thread
             dispatch_async(dispatch_get_main_queue(), ^{
