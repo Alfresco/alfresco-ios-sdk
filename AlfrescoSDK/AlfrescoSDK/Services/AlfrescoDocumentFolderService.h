@@ -533,4 +533,9 @@
 - (AlfrescoRequest *)refreshNode:(AlfrescoNode *)node
                  completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
+/**
+ Clears any cached state the service has.
+ */
+- (void)clear;
+
 @end

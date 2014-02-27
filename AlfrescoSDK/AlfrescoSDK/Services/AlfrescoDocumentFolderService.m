@@ -1491,4 +1491,10 @@
     return request;
 }
 
+- (void)clear
+{
+    [self.favoritesCache clear];
+}
+
+
 @end
