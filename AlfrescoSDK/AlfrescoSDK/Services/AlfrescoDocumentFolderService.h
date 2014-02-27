@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -534,8 +534,8 @@
                  completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
 /**
- clears the Favorites cache
+ Clears any cached state the service has.
  */
-- (void)clearFavoritesCache;
+- (void)clear;
 
 @end

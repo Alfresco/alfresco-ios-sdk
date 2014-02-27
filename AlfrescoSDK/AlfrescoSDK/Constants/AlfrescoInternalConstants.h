@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -343,3 +343,25 @@ extern NSString * const kAlfrescoCMISNetworkProvider;
 extern NSString * const kAlfrescoPropertyTypeFolder;
 extern NSString * const kAlfrescoPropertyTypeDocument;
 extern NSString * const kAlfrescoPropertyAspect;
+
+extern NSString * const kAlfrescoPersonPropertyFirstName;
+extern NSString * const kAlfrescoPersonPropertyLastName;
+extern NSString * const kAlfrescoPersonPropertyJobTitle;
+extern NSString * const kAlfrescoPersonPropertyLocation;
+extern NSString * const kAlfrescoPersonPropertyDescription;
+extern NSString * const kAlfrescoPersonPropertyTelephoneNumber;
+extern NSString * const kAlfrescoPersonPropertyMobileNumber;
+extern NSString * const kAlfrescoPersonPropertyEmail;
+extern NSString * const kAlfrescoPersonPropertySkypeId;
+extern NSString * const kAlfrescoPersonPropertyInstantMessageId;
+extern NSString * const kAlfrescoPersonPropertyGoogleId;
+extern NSString * const kAlfrescoPersonPropertyStatus;
+extern NSString * const kAlfrescoPersonPropertyStatusTime;
+extern NSString * const kAlfrescoPersonPropertyCompanyName;
+extern NSString * const kAlfrescoPersonPropertyCompanyAddressLine1;
+extern NSString * const kAlfrescoPersonPropertyCompanyAddressLine2;
+extern NSString * const kAlfrescoPersonPropertyCompanyAddressLine3;
+extern NSString * const kAlfrescoPersonPropertyCompanyPostcode;
+extern NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber;
+extern NSString * const kAlfrescoPersonPropertyCompanyFaxNumber;
+extern NSString * const kAlfrescoPersonPropertyCompanyEmail;
