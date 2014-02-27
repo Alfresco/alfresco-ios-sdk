@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -77,7 +77,6 @@
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property BOOL isUsingBaseAuthenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
-@property (nonatomic, strong, readwrite) AlfrescoWorkflowInfo *workflowInfo;
 @end
 
 
@@ -437,7 +436,8 @@
     params.authenticationProvider = passthroughAuthProvider;
     
     // use activiti by default on cloud
-    self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
+    // TODO: expose the workflow info via repository capabilities
+//    self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
@@ -598,7 +598,8 @@ This authentication method authorises the user to access the home network assign
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
 
     // use activiti by default on cloud
-    self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
+    // TODO: expose the workflow info via repository capabilities
+//    self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
 
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params

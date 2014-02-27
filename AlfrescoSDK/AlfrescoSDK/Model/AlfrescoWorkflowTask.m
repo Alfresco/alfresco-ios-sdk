@@ -24,7 +24,6 @@
  */
 
 #import "AlfrescoWorkflowTask.h"
-#import "AlfrescoSession.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoWorkflowUtils.h"
 
@@ -32,7 +31,6 @@ static NSInteger kWorkflowTaskModelVersion = 1;
 
 @interface AlfrescoWorkflowTask ()
 
-@property (nonatomic, weak, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSDateFormatter *dateFormatter;
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *processIdentifier;
@@ -49,14 +47,13 @@ static NSInteger kWorkflowTaskModelVersion = 1;
 
 @implementation AlfrescoWorkflowTask
 
-- (id)initWithProperties:(NSDictionary *)properties session:(id<AlfrescoSession>)session
+- (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super init];
     if (self)
     {
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setDateFormat:kAlfrescoISO8601DateStringFormat];
-        self.session = session;
         [self setupProperties:properties];
     }
     return self;
@@ -64,9 +61,11 @@ static NSInteger kWorkflowTaskModelVersion = 1;
 
 - (void)setupProperties:(NSDictionary *)properties
 {
-    if (self.session.workflowInfo.publicAPI)
+    NSDictionary *entry = properties[kAlfrescoWorkflowPublicJSONEntry];
+    
+    // if the entry object is present the data has come from the public API
+    if (entry != nil)
     {
-        NSDictionary *entry = properties[kAlfrescoCloudJSONEntry];
         self.identifier = entry[kAlfrescoWorkflowPublicJSONIdentifier];
         self.processIdentifier = entry[kAlfrescoWorkflowPublicJSONProcessID];
         self.processDefinitionIdentifier = entry[kAlfrescoWorkflowPublicJSONProcessDefinitionID];
@@ -83,8 +82,6 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         NSDictionary *taskProperties = properties[kAlfrescoWorkflowLegacyJSONProperties];
         NSDictionary *workflowInstance = properties[kAlfrescoWorkflowLegacyJSONWorkflowInstance];
         
-        NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-        
         if ([taskProperties[kAlfrescoWorkflowLegacyJSONBPMTaskID] isKindOfClass:[NSNumber class]])
         {
             self.identifier = [taskProperties[kAlfrescoWorkflowLegacyJSONBPMTaskID] stringValue];
@@ -93,8 +90,8 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         {
             self.identifier = taskProperties[kAlfrescoWorkflowLegacyJSONBPMTaskID];
         }
-        self.processIdentifier = [workflowInstance[kAlfrescoWorkflowLegacyJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.processDefinitionIdentifier = [workflowInstance[kAlfrescoWorkflowLegacyJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.processIdentifier = workflowInstance[kAlfrescoWorkflowLegacyJSONIdentifier];
+        self.processDefinitionIdentifier = workflowInstance[kAlfrescoWorkflowLegacyJSONName];
         self.name = taskProperties[kAlfrescoWorkflowLegacyJSONBPMDescription];
         if (taskProperties[kAlfrescoWorkflowLegacyJSONBPMStartedAt] != [NSNull null])
         {

@@ -25,13 +25,15 @@
 
 #import "AlfrescoWorkflowObjectConverter.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoSession.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoWorkflowProcessDefinition.h"
+#import "AlfrescoWorkflowProcess.h"
+#import "AlfrescoWorkflowTask.h"
 #import "AlfrescoWorkflowVariable.h"
 
 @implementation AlfrescoWorkflowObjectConverter
 
-- (NSArray *)workflowDefinitionsFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
+- (NSArray *)workflowDefinitionsFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -48,19 +50,19 @@
             {
                 for (NSDictionary *entryDictionary in processDataResponseObject)
                 {
-                    [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:entryDictionary session:session]];
+                    [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:entryDictionary]];
                 }
             }
             else if ([processDataResponseObject isKindOfClass:[NSDictionary class]])
             {
-                [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:processDataResponseObject session:session]];
+                [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:processDataResponseObject]];
             }
             return workflowDefinitions;
         }
     }];
 }
 
-- (NSArray *)workflowDefinitionsFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
+- (NSArray *)workflowDefinitionsFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -75,7 +77,7 @@
             NSArray *processArray = [listDictionary valueForKey:kAlfrescoWorkflowPublicJSONEntries];
             for (NSDictionary *entryDictionary in processArray)
             {
-                [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:entryDictionary session:session]];
+                [workflowDefinitions addObject:[[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:entryDictionary]];
             }
             
             return workflowDefinitions;
@@ -83,7 +85,7 @@
     }];
 }
 
-- (NSArray *)workflowProcessesFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
+- (NSArray *)workflowProcessesFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -100,12 +102,12 @@
             {
                 for (NSDictionary *entryDictionary in processDataResponseObject)
                 {
-                    [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                    [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary]];
                 }
             }
             else if ([processDataResponseObject isKindOfClass:[NSDictionary class]])
             {
-                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:processDataResponseObject session:session]];
+                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:processDataResponseObject]];
             }
             
             return workflowProcesses;
@@ -113,7 +115,7 @@
     }];
 }
 
-- (NSArray *)workflowProcessesFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
+- (NSArray *)workflowProcessesFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoProcessFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -131,12 +133,12 @@
                 NSArray *processArray = [listDictionary valueForKey:kAlfrescoWorkflowPublicJSONEntries];
                 for (NSDictionary *entryDictionary in processArray)
                 {
-                    [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary session:session]];
+                    [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:entryDictionary]];
                 }
             }
             else
             {
-                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:jsonObject session:session]];
+                [workflowProcesses addObject:[[AlfrescoWorkflowProcess alloc] initWithProperties:jsonObject]];
             }
             
             return workflowProcesses;
@@ -144,7 +146,7 @@
     }];
 }
 
-- (NSArray *)workflowTasksFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
+- (NSArray *)workflowTasksFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -158,14 +160,14 @@
             NSArray *processArray = [jsonObject valueForKey:kAlfrescoWorkflowLegacyJSONData];
             for (NSDictionary *entryDictionary in processArray)
             {
-                [workflowTasks addObject:[[AlfrescoWorkflowTask alloc] initWithProperties:entryDictionary session:session]];
+                [workflowTasks addObject:[[AlfrescoWorkflowTask alloc] initWithProperties:entryDictionary]];
             }
             return workflowTasks;
         }
     }];
 }
 
-- (NSArray *)workflowTasksFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error
+- (NSArray *)workflowTasksFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
         if (parseError)
@@ -180,7 +182,7 @@
             NSArray *processArray = [listDictionary valueForKey:kAlfrescoWorkflowPublicJSONEntries];
             for (NSDictionary *entryDictionary in processArray)
             {
-                [workflowTasks addObject:[[AlfrescoWorkflowTask alloc] initWithProperties:entryDictionary session:session]];
+                [workflowTasks addObject:[[AlfrescoWorkflowTask alloc] initWithProperties:entryDictionary]];
             }
             return workflowTasks;
         }

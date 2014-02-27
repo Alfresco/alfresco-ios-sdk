@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -67,7 +67,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowDefinitionsFromPublicJSONData:data session:self.session conversionError:&conversionError];
+            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowDefinitionsFromPublicJSONData:data conversionError:&conversionError];
             completionBlock(workflowDefinitions, conversionError);
         }
     }];
@@ -94,7 +94,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowDefinitionsFromPublicJSONData:data session:self.session conversionError:&conversionError];
+            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowDefinitionsFromPublicJSONData:data conversionError:&conversionError];
             NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
             AlfrescoPagingResult *pagingResult = nil;
             if (pagingInfo)
@@ -134,7 +134,7 @@
             }
             else
             {
-                AlfrescoWorkflowProcessDefinition *processDefinition = [[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:jsonResponseDictionary session:self.session];
+                AlfrescoWorkflowProcessDefinition *processDefinition = [[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:jsonResponseDictionary];
                 completionBlock(processDefinition, error);
             }
         }

@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -72,7 +72,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowTasks = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data session:self.session conversionError:&conversionError];
+            NSArray *workflowTasks = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data conversionError:&conversionError];
             completionBlock(workflowTasks, conversionError);
         }
     }];
@@ -99,7 +99,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data session:self.session conversionError:&conversionError];;
+            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data conversionError:&conversionError];;
             NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
             AlfrescoPagingResult *pagingResult = nil;
             if (pagingInfo)
@@ -139,7 +139,7 @@
             }
             else
             {
-                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject session:self.session];
+                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject];
                 completionBlock(task, conversionError);
             }
 
@@ -357,7 +357,7 @@
             }
             else
             {
-                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject session:self.session];
+                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject];
                 completionBlock(task, conversionError);
             }
         }

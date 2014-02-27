@@ -40,7 +40,6 @@
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
-@property (nonatomic, strong, readwrite) AlfrescoWorkflowInfo *workflowInfo;
 
 - (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
 - (AlfrescoRequest *)authenticateWithUsername:(NSString *)username
@@ -267,7 +266,8 @@
                     else
                     {
                         AlfrescoWorkflowEngineType workflowEngine = [self determineWorkflowEngineFromJSONData:data];
-                        self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:workflowEngine];
+                        // TODO: expose the workflow info via repository capabilities
+//                        self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:workflowEngine];
                         completionBlock(self, workflowError);
                     }
                     

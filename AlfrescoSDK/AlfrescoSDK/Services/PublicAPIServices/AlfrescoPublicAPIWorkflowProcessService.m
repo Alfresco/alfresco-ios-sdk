@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -103,7 +103,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowProcesses = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data session:self.session conversionError:&conversionError];
+            NSArray *workflowProcesses = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data conversionError:&conversionError];
             completionBlock(workflowProcesses, conversionError);
         }
     }];
@@ -142,7 +142,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data session:self.session conversionError:&conversionError];
+            NSArray *workflowDefinitions = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data conversionError:&conversionError];
             NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
             AlfrescoPagingResult *pagingResult = nil;
             if (pagingInfo)
@@ -175,7 +175,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowProcesses = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data session:self.session conversionError:&conversionError];
+            NSArray *workflowProcesses = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data conversionError:&conversionError];
             if (conversionError)
             {
                 completionBlock(nil, conversionError);
@@ -222,7 +222,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data session:self.session conversionError:&conversionError];
+            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data conversionError:&conversionError];
             
             if (error)
             {
@@ -392,7 +392,7 @@
             }
             else
             {
-                AlfrescoWorkflowProcess *process = [[AlfrescoWorkflowProcess alloc] initWithProperties:(NSDictionary *)workflowProcessesDictionary session:self.session];
+                AlfrescoWorkflowProcess *process = [[AlfrescoWorkflowProcess alloc] initWithProperties:(NSDictionary *)workflowProcessesDictionary];
                 completionBlock(process, conversionError);
             }
         }

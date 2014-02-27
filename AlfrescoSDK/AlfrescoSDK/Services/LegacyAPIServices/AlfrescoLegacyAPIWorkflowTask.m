@@ -73,7 +73,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data session:self.session conversionError:&conversionError];
+            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data conversionError:&conversionError];
             completionBlock(tasks, conversionError);
         }
     }];
@@ -100,7 +100,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowTasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data session:self.session conversionError:&conversionError];
+            NSArray *workflowTasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data conversionError:&conversionError];
             NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromOldAPIData:data error:&conversionError];
             int total = [[pagingInfo valueForKey:kAlfrescoWorkflowLegacyJSONTotalItems] intValue];
             int maxItems = [[pagingInfo valueForKey:kAlfrescoWorkflowLegacyJSONMaxItems] intValue];
@@ -117,9 +117,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     [AlfrescoErrors assertArgumentNotNil:taskIdentifier argumentName:@"taskIdentifier"];
     
-    NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-    NSString *completeTaskIdentifier = [workflowEnginePrefix stringByAppendingString:taskIdentifier];
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:completeTaskIdentifier];
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:taskIdentifier];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
@@ -135,7 +133,7 @@
             id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
             
             NSDictionary *entry = ((NSDictionary *)responseObject)[kAlfrescoWorkflowLegacyJSONData];
-            AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry session:self.session];
+            AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry];
             completionBlock(task, conversionError);
         }
     }];
@@ -149,11 +147,8 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
     
-    NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-    NSString *completeTaskIdentifier = [workflowEnginePrefix stringByAppendingString:task.identifier];
-    
     NSDictionary *requestDictionary = @{kAlfrescoLegacyAPIWorkflowItemKind : kAlfrescoLegacyAPIWorkflowItemTypeTask,
-                                        kAlfrescoLegacyAPIWorkflowItemID : completeTaskIdentifier,
+                                        kAlfrescoLegacyAPIWorkflowItemID : task.identifier,
                                         kAlfrescoLegacyAPIWorkflowFields : @[kAlfrescoLegacyAPIWorkflowPackageItems]};
     NSError *jsonParseError = nil;
     NSData *containerRequestData = [NSJSONSerialization dataWithJSONObject:requestDictionary options:0 error:&jsonParseError];
@@ -201,7 +196,7 @@
     
     [requestBody addEntriesFromDictionary:properties];
     
-    if (self.session.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
+    if (self.session.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
     {
         requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = kAlfrescoWorkflowLegacyJSONNext;
         requestBody[kAlfrescoWorkflowLegacyJSONBPMStatus] = kAlfrescoWorkflowLegacyJSONCompleted;
@@ -216,7 +211,7 @@
             requestBody[kAlfrescoWorkflowLegacyJSONBPMComment] = properties[kAlfrescoTaskComment];
         }
     }
-    else if (self.session.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeJBPM)
+    else if (self.session.repositoryInfo.capabilities.doesSupportJBPMWorkflowEngine)
     {
         if ([task.processDefinitionIdentifier isEqualToString:kAlfrescoWorkflowReviewAndApprove])
         {
@@ -240,9 +235,7 @@
         return nil;
     }
     
-    NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-    NSString *taskIdentifier = [workflowEnginePrefix stringByAppendingString:task.identifier];
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTaskFormProcessor stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:taskIdentifier];
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTaskFormProcessor stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
@@ -273,11 +266,9 @@
             {
                 NSString *completedString = ((NSDictionary *)responseObject)[@"persistedObject"];
                 NSArray *separatedStrings = [completedString componentsSeparatedByString:@","];
-                NSString *createdTaskID = [[separatedStrings[0] componentsSeparatedByString:@"$"] lastObject];
+                NSString *createdTaskID = separatedStrings[0];
                 
-                NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-                NSString *completeTaskIdentifier = [workflowEnginePrefix stringByAppendingString:createdTaskID];
-                NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:completeTaskIdentifier];
+                NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:createdTaskID];
                 
                 NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
                 
@@ -292,7 +283,7 @@
                         id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
                         
                         NSDictionary *entry = ((NSDictionary *) responseObject)[kAlfrescoWorkflowLegacyJSONData];
-                        AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry session:self.session];
+                        AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry];
                         completionBlock(task, conversionError);
                     }
                 }];
@@ -362,9 +353,7 @@
     [AlfrescoErrors assertArgumentNotNil:requestDictionary argumentName:@"requestDictionary"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-    NSString *taskIdentifier = [workflowEnginePrefix stringByAppendingString:task.identifier];
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:taskIdentifier];
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
@@ -389,7 +378,7 @@
             id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
             
             NSDictionary *entry = ((NSDictionary *) responseObject)[kAlfrescoWorkflowLegacyJSONData];
-            AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry session:self.session];
+            AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry];
             completionBlock(task, conversionError);
         }
     }];
@@ -467,9 +456,7 @@
     NSDictionary *requestBody = @{attachmentKey : nodeReferences};
     
     // build URL
-    NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-    NSString *completeTaskID = [workflowEnginePrefix stringByAppendingString:task.identifier];
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTaskFormProcessor stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:completeTaskID];
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTaskFormProcessor stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     

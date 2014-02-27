@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -25,21 +25,19 @@
 
 #import "AlfrescoObjectConverter.h"
 
-@protocol AlfrescoSession;
-
 @interface AlfrescoWorkflowObjectConverter : AlfrescoObjectConverter
 
 // process definitions
-- (NSArray *)workflowDefinitionsFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
-- (NSArray *)workflowDefinitionsFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
+- (NSArray *)workflowDefinitionsFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error;
+- (NSArray *)workflowDefinitionsFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error;
 
 // processes
-- (NSArray *)workflowProcessesFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
-- (NSArray *)workflowProcessesFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
+- (NSArray *)workflowProcessesFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error;
+- (NSArray *)workflowProcessesFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error;
 
 // tasks
-- (NSArray *)workflowTasksFromLegacyJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
-- (NSArray *)workflowTasksFromPublicJSONData:(NSData *)jsonData session:(id<AlfrescoSession>)session conversionError:(NSError **)error;
+- (NSArray *)workflowTasksFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error;
+- (NSArray *)workflowTasksFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error;
 
 // variables
 - (NSArray *)workflowVariablesFromArray:(NSArray *)variables;

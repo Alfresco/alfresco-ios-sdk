@@ -99,6 +99,9 @@ extern NSString * const kAlfrescoSortByDescription;
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoCapabilityLike;
 extern NSString * const kAlfrescoCapabilityCommentsCount;
+extern NSString * const kAlfrescoCapabilityPublicAPI;
+extern NSString * const kAlfrescoCapabilityActivitiWorkflowEngine;
+extern NSString * const kAlfrescoCapabilityJBPMWorkflowEngine;
 
 /**---------------------------------------------------------------------------------------
  * @name File Attribute Constants
