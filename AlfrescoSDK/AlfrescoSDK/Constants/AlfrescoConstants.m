@@ -71,31 +71,6 @@ NSString * const kAlfrescoNetworkProvider = @"org.alfresco.mobile.session.networ
 NSString * const kAlfrescoCMISBindingURL = @"org.alfresco.mobile.session.cmisbindingurl";
 
 /**
- Person Profile Constants 
- */
-NSString * const kAlfrescoPersonPropertyFirstName = @"firstName";
-NSString * const kAlfrescoPersonPropertyLastName = @"lastName";
-NSString * const kAlfrescoPersonPropertyJobTitle = @"jobTitle";
-NSString * const kAlfrescoPersonPropertyLocation = @"location";
-NSString * const kAlfrescoPersonPropertyDescription = @"description";
-NSString * const kAlfrescoPersonPropertyTelephoneNumber = @"telephone";
-NSString * const kAlfrescoPersonPropertyMobileNumber = @"mobile";
-NSString * const kAlfrescoPersonPropertyEmail = @"email";
-NSString * const kAlfrescoPersonPropertySkypeId = @"skypeId";
-NSString * const kAlfrescoPersonPropertyInstantMessageId = @"instantmessageId";
-NSString * const kAlfrescoPersonPropertyGoogleId = @"googleUsername";
-NSString * const kAlfrescoPersonPropertyStatus = @"userStatus";
-NSString * const kAlfrescoPersonPropertyStatusTime = @"userStatusTime";
-NSString * const kAlfrescoPersonPropertyCompanyName = @"companyName";
-NSString * const kAlfrescoPersonPropertyCompanyAddressLine1 = @"companyAddressLine1";
-NSString * const kAlfrescoPersonPropertyCompanyAddressLine2 = @"companyAddressLine2";
-NSString * const kAlfrescoPersonPropertyCompanyAddressLine3 = @"companyAddressLine3";
-NSString * const kAlfrescoPersonPropertyCompanyPostcode = @"companyPostcode";
-NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber = @"companyTelephoneNumber";
-NSString * const kAlfrescoPersonPropertyCompanyFaxNumber = @"companyFaxNumber";
-NSString * const kAlfrescoPersonPropertyCompanyEmail = @"companyEmail";
-
-/**
  Workflow Task Constants
  */
 NSString * const kAlfrescoTaskComment = @"org.alfresco.mobile.task.comment";

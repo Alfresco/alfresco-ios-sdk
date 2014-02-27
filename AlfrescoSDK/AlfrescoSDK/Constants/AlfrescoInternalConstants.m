@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -377,4 +377,27 @@ NSString * const kAlfrescoPropertyTypeFolder = @"F:";
 NSString * const kAlfrescoPropertyTypeDocument = @"D:";
 NSString * const kAlfrescoPropertyAspect = @"P:";
 
-
+/**
+ Person Profile Constants
+ */
+NSString * const kAlfrescoPersonPropertyFirstName = @"firstName";
+NSString * const kAlfrescoPersonPropertyLastName = @"lastName";
+NSString * const kAlfrescoPersonPropertyJobTitle = @"jobTitle";
+NSString * const kAlfrescoPersonPropertyLocation = @"location";
+NSString * const kAlfrescoPersonPropertyDescription = @"description";
+NSString * const kAlfrescoPersonPropertyTelephoneNumber = @"telephone";
+NSString * const kAlfrescoPersonPropertyMobileNumber = @"mobile";
+NSString * const kAlfrescoPersonPropertyEmail = @"email";
+NSString * const kAlfrescoPersonPropertySkypeId = @"skypeId";
+NSString * const kAlfrescoPersonPropertyInstantMessageId = @"instantmessageId";
+NSString * const kAlfrescoPersonPropertyGoogleId = @"googleUsername";
+NSString * const kAlfrescoPersonPropertyStatus = @"userStatus";
+NSString * const kAlfrescoPersonPropertyStatusTime = @"userStatusTime";
+NSString * const kAlfrescoPersonPropertyCompanyName = @"companyName";
+NSString * const kAlfrescoPersonPropertyCompanyAddressLine1 = @"companyAddressLine1";
+NSString * const kAlfrescoPersonPropertyCompanyAddressLine2 = @"companyAddressLine2";
+NSString * const kAlfrescoPersonPropertyCompanyAddressLine3 = @"companyAddressLine3";
+NSString * const kAlfrescoPersonPropertyCompanyPostcode = @"companyPostcode";
+NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber = @"companyTelephoneNumber";
+NSString * const kAlfrescoPersonPropertyCompanyFaxNumber = @"companyFaxNumber";
+NSString * const kAlfrescoPersonPropertyCompanyEmail = @"companyEmail";

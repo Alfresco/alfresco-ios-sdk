@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -55,7 +55,7 @@
 @property (nonatomic, strong, readonly) NSString *location;
 
 // Summary / Description of the person
-@property (nonatomic, strong, readonly) NSString *description;
+@property (nonatomic, strong, readonly) NSString *summary;
 
 // Telephone number of the person
 @property (nonatomic, strong, readonly) NSString *telephoneNumber;

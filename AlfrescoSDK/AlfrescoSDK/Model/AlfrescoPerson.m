@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -29,7 +29,7 @@ static NSInteger kPersonModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSString *avatarIdentifier;
 @property (nonatomic, strong, readwrite) NSString *jobTitle;
 @property (nonatomic, strong, readwrite) NSString *location;
-@property (nonatomic, strong, readwrite) NSString *description;
+@property (nonatomic, strong, readwrite) NSString *summary;
 @property (nonatomic, strong, readwrite) NSString *telephoneNumber;
 @property (nonatomic, strong, readwrite) NSString *mobileNumber;
 @property (nonatomic, strong, readwrite) NSString *email;
@@ -42,67 +42,6 @@ static NSInteger kPersonModelVersion = 1;
 @end
 
 @implementation AlfrescoPerson
-
-
-///Cloud
-/*
- AlfrescoPerson *alfPerson = [[AlfrescoPerson alloc] init];
- alfPerson.identifier = [personDict valueForKey:kAlfrescoJSONIdentifier];
- alfPerson.firstName = [personDict valueForKey:kAlfrescoJSONFirstName];
- alfPerson.lastName = [personDict valueForKey:kAlfrescoJSONLastName];
- if (alfPerson.lastName != nil && alfPerson.lastName.length > 0)
- {
- if (alfPerson.firstName != nil && alfPerson.firstName.length > 0)
- {
- alfPerson.fullName = [NSString stringWithFormat:@"%@ %@", alfPerson.firstName, alfPerson.lastName];
- }
- else
- {
- alfPerson.fullName = alfPerson.lastName;
- }
- }
- else if (alfPerson.firstName != nil && alfPerson.firstName.length > 0)
- {
- alfPerson.fullName = alfPerson.firstName;
- }
- else
- {
- alfPerson.fullName = alfPerson.identifier;
- }
- alfPerson.avatarIdentifier = [personDict valueForKey:kAlfrescoJSONAvatarId];
- */
-
-///OnPremise
-/*
- - (AlfrescoPerson *)personFromJSON:(NSDictionary *)personDict
- {
- AlfrescoPerson *alfPerson = [[AlfrescoPerson alloc] init];
- alfPerson.identifier = [personDict valueForKey:kAlfrescoJSONUserName];
- alfPerson.firstName = [personDict valueForKey:kAlfrescoJSONFirstName];
- alfPerson.lastName = [personDict valueForKey:kAlfrescoJSONLastName];
- if (alfPerson.lastName != nil && alfPerson.lastName.length > 0)
- {
- if (alfPerson.firstName != nil && alfPerson.firstName.length > 0)
- {
- alfPerson.fullName = [NSString stringWithFormat:@"%@ %@", alfPerson.firstName, alfPerson.lastName];
- }
- else
- {
- alfPerson.fullName = alfPerson.lastName;
- }
- }
- else if (alfPerson.firstName != nil && alfPerson.firstName.length > 0)
- {
- alfPerson.fullName = alfPerson.firstName;
- }
- else
- {
- alfPerson.fullName = alfPerson.identifier;
- }
- alfPerson.avatarIdentifier = [personDict valueForKey:kAlfrescoJSONAvatar];
- return alfPerson;
- }
- */
 
 - (id)initWithProperties:(NSDictionary *)properties
 {
@@ -160,9 +99,9 @@ static NSInteger kPersonModelVersion = 1;
     {
         self.jobTitle = [self valueForProperty:kAlfrescoJSONJobTitle inProperties:properties];
     }
-    if (!self.description)
+    if (!self.summary)
     {
-        self.description = [self valueForProperty:kAlfrescoJSONPersonDescription inProperties:properties];
+        self.summary = [self valueForProperty:kAlfrescoJSONPersonDescription inProperties:properties];
     }
     if (!self.skypeId)
     {
@@ -188,9 +127,9 @@ static NSInteger kPersonModelVersion = 1;
     {
         self.jobTitle = [self valueForProperty:kAlfrescoCloudJSONJobTitle inProperties:properties];
     }
-    if (!self.description)
+    if (!self.summary)
     {
-        self.description = [self valueForProperty:kAlfrescoJSONDescription inProperties:properties];
+        self.summary = [self valueForProperty:kAlfrescoJSONDescription inProperties:properties];
     }
     if (!self.skypeId)
     {
@@ -227,7 +166,7 @@ static NSInteger kPersonModelVersion = 1;
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
     [aCoder encodeObject:self.jobTitle forKey:kAlfrescoCloudJSONJobTitle];
     [aCoder encodeObject:self.location forKey:kAlfrescoJSONLocation];
-    [aCoder encodeObject:self.description forKey:kAlfrescoJSONDescription];
+    [aCoder encodeObject:self.summary forKey:kAlfrescoJSONDescription];
     [aCoder encodeObject:self.telephoneNumber forKey:kAlfrescoJSONTelephoneNumber];
     [aCoder encodeObject:self.mobileNumber forKey:kAlfrescoJSONMobileNumber];
     [aCoder encodeObject:self.skypeId forKey:kAlfrescoJSONSkypeId];
@@ -253,7 +192,7 @@ static NSInteger kPersonModelVersion = 1;
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
         self.jobTitle = [aDecoder decodeObjectForKey:kAlfrescoCloudJSONJobTitle];
         self.location = [aDecoder decodeObjectForKey:kAlfrescoJSONLocation];
-        self.description = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
+        self.summary = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
         self.telephoneNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONTelephoneNumber];
         self.mobileNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONMobileNumber];
         self.skypeId = [aDecoder decodeObjectForKey:kAlfrescoJSONSkypeId];

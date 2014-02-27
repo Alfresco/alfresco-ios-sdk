@@ -117,31 +117,6 @@ extern NSString * const kAlfrescoConnectUsingClientSSLCertificate;
 extern NSString * const kAlfrescoClientCertificateCredentials;
 
 /**---------------------------------------------------------------------------------------
- * @name Person Profile Constants 
- --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoPersonPropertyFirstName;
-extern NSString * const kAlfrescoPersonPropertyLastName;
-extern NSString * const kAlfrescoPersonPropertyJobTitle;
-extern NSString * const kAlfrescoPersonPropertyLocation;
-extern NSString * const kAlfrescoPersonPropertyDescription;
-extern NSString * const kAlfrescoPersonPropertyTelephoneNumber;
-extern NSString * const kAlfrescoPersonPropertyMobileNumber;
-extern NSString * const kAlfrescoPersonPropertyEmail;
-extern NSString * const kAlfrescoPersonPropertySkypeId;
-extern NSString * const kAlfrescoPersonPropertyInstantMessageId;
-extern NSString * const kAlfrescoPersonPropertyGoogleId;
-extern NSString * const kAlfrescoPersonPropertyStatus;
-extern NSString * const kAlfrescoPersonPropertyStatusTime;
-extern NSString * const kAlfrescoPersonPropertyCompanyName;
-extern NSString * const kAlfrescoPersonPropertyCompanyAddressLine1;
-extern NSString * const kAlfrescoPersonPropertyCompanyAddressLine2;
-extern NSString * const kAlfrescoPersonPropertyCompanyAddressLine3;
-extern NSString * const kAlfrescoPersonPropertyCompanyPostcode;
-extern NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber;
-extern NSString * const kAlfrescoPersonPropertyCompanyFaxNumber;
-extern NSString * const kAlfrescoPersonPropertyCompanyEmail;
-
-/**---------------------------------------------------------------------------------------
  * @name Workflow Constants
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoTaskComment;
