@@ -244,7 +244,7 @@
         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell viewWithTag:2];
         [activityIndicator startAnimating];
         int maxItems = self.listingContext.maxItems;
-        int skipCount = self.displayItemsCount;
+        int skipCount = (int)self.displayItemsCount;
         self.listingContext = nil;
         self.listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:skipCount];
         [self loadChildrenForCurrentPage:activityIndicator];
