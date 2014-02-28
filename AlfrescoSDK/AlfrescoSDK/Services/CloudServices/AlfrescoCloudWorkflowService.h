@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,14 +18,14 @@
  *****************************************************************************
  */
 
-/** AlfrescoPublicAPIWorkflowProcessService
+/** AlfrescoCloudWorkflowService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import <Foundation/Foundation.h>
-#import "AlfrescoWorkflowProcessService.h"
+#import "AlfrescoWorkflowService.h"
+#import "AlfrescoPublicAPIWorkflowService.h"
 
-@interface AlfrescoPublicAPIWorkflowProcessService : AlfrescoWorkflowProcessService
+@interface AlfrescoCloudWorkflowService : AlfrescoPublicAPIWorkflowService
 
 @end

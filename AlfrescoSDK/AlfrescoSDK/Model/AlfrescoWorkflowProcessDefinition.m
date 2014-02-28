@@ -25,14 +25,11 @@
 
 #import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoSession.h"
-#import "AlfrescoWorkflowUtils.h"
 
 static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
 
 @interface AlfrescoWorkflowProcessDefinition ()
 
-@property (nonatomic, weak, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *key;
 @property (nonatomic, strong, readwrite) NSString *name;
@@ -43,12 +40,11 @@ static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
 
 @implementation AlfrescoWorkflowProcessDefinition
 
-- (id)initWithProperties:(NSDictionary *)properties session:(id<AlfrescoSession>)session
+- (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super init];
     if (self)
     {
-        self.session = session;
         [self setupProperties:properties];
     }
     return self;
@@ -58,9 +54,11 @@ static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
 
 - (void)setupProperties:(NSDictionary *)properties
 {
-    if (self.session.workflowInfo.publicAPI)
+    NSDictionary *entry = properties[kAlfrescoWorkflowPublicJSONEntry];
+    
+    // if the entry object is present the data has come from the public API
+    if (entry != nil)
     {
-        NSDictionary *entry = properties[kAlfrescoWorkflowPublicJSONEntry];
         self.identifier = entry[kAlfrescoWorkflowPublicJSONIdentifier];
         self.key = entry[kAlfrescoWorkflowPublicJSONKey];
         self.name = entry[kAlfrescoWorkflowPublicJSONTitle];
@@ -69,9 +67,8 @@ static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
     }
     else
     {
-        NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-        self.identifier = [properties[kAlfrescoJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.key = [properties[kAlfrescoWorkflowLegacyJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.identifier = properties[kAlfrescoJSONIdentifier];
+        self.key = properties[kAlfrescoWorkflowLegacyJSONName];
         self.name = properties[kAlfrescoWorkflowLegacyJSONTitle];
         self.processDescription = properties[kAlfrescoWorkflowLegacyJSONDescription];
         self.version = properties[kAlfrescoWorkflowPublicJSONVersion];

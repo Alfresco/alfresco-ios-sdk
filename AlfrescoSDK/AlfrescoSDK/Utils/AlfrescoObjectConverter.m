@@ -230,6 +230,15 @@
     return originalIdentifier;
 }
 
++ (NSString *)nodeGUIDFromNodeIdentifier:(NSString *)nodeIdentifier
+{
+    NSString *nodeGUID = [nodeIdentifier stringByReplacingOccurrencesOfString:kAlfrescoWorkflowNodeRefPrefix withString:@""];
+    NSRange range = [nodeGUID rangeOfString:@";" options:NSBackwardsSearch];
+    nodeGUID = [nodeGUID substringToIndex:range.location];
+    
+    return nodeGUID;
+}
+
 + (id)parseJSONData:(NSData *)jsonData notFoundErrorCode:(AlfrescoErrorCodes)errorCode parseBlock:(id (^)(id jsonObject, NSError *parseError))parseBlock
 {
     NSError *conversionError = nil;

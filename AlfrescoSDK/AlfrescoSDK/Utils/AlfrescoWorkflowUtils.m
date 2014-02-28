@@ -28,36 +28,26 @@
 
 @implementation AlfrescoWorkflowUtils
 
-+ (NSString *)prefixForActivitiEngineType:(AlfrescoWorkflowEngineType)engineType
++ (BOOL)isActivitiProcess:(AlfrescoWorkflowProcess *)process
 {
-    NSString *returnString = nil;
-    switch (engineType)
-    {
-        case AlfrescoWorkflowEngineTypeJBPM:
-        {
-            returnString = kAlfrescoWorkflowJBPMEnginePrefix;
-        }
-        break;
-            
-        case AlfrescoWorkflowEngineTypeActiviti:
-        {
-            returnString = kAlfrescoWorkflowActivitiEnginePrefix;
-        }
-        break;
-            
-        default:
-            break;
-    }
-    return returnString;
+    return [process.identifier rangeOfString:kAlfrescoWorkflowActivitiEnginePrefix].location != NSNotFound;
 }
 
-+ (NSString *)nodeGUIDFromNodeIdentifier:(NSString *)nodeIdentifier
++ (BOOL)isActivitiTask:(AlfrescoWorkflowTask *)task
 {
-    NSString *nodeGUID = [nodeIdentifier stringByReplacingOccurrencesOfString:kAlfrescoWorkflowNodeRefPrefix withString:@""];
-    NSRange range = [nodeGUID rangeOfString:@";" options:NSBackwardsSearch];
-    nodeGUID = [nodeGUID substringToIndex:range.location];
-    
-    return nodeGUID;
+    return [task.identifier rangeOfString:kAlfrescoWorkflowActivitiEnginePrefix].location != NSNotFound;
 }
+
++ (BOOL)isJBPMProcess:(AlfrescoWorkflowProcess *)process
+{
+    return [process.identifier rangeOfString:kAlfrescoWorkflowJBPMEnginePrefix].location != NSNotFound;
+}
+
++ (BOOL)isJBPMTask:(AlfrescoWorkflowTask *)task
+{
+    return [task.identifier rangeOfString:kAlfrescoWorkflowJBPMEnginePrefix].location != NSNotFound;
+}
+
+
 
 @end

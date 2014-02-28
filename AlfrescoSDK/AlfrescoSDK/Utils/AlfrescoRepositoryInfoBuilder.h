@@ -18,33 +18,22 @@
  *****************************************************************************
  */
 
-/** AlfrescoCloudWorkflowProcessService
+/** AlfrescoRepositoryInfoBuilder
  
- Author: Mike Hatfield (Alfresco)
+ Author: Gavin Cornwell (Alfresco)
  */
 
-#import "AlfrescoCloudWorkflowProcessService.h"
-#import "AlfrescoInternalConstants.h"
-#import "AlfrescoSession.h"
+#import <Foundation/Foundation.h>
+#import "AlfrescoRepositoryInfo.h"
+#import "CMISSession.h"
 
-@interface AlfrescoCloudWorkflowProcessService ()
+@interface AlfrescoRepositoryInfoBuilder : NSObject
 
-@property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
-@property (nonatomic, strong, readwrite) NSString *baseApiUrl;
+@property (nonatomic, assign) BOOL isCloud;
+@property (nonatomic, strong) CMISSession *cmisSession;
+@property (nonatomic, strong) NSData *workflowDefinitionData;
 
-@end
-
-@implementation AlfrescoCloudWorkflowProcessService
-
-- (id)initWithSession:(id<AlfrescoSession>)session
-{
-    self = [super initWithSession:session];
-    if (self)
-    {
-        self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudWorkflowBaseURL];
-    }
-    return self;
-}
+// Builds an AlfrescoRepositoryInfo object using the currently held information.
+- (AlfrescoRepositoryInfo *)repositoryInfoFromCurrentState;
 
 @end

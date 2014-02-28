@@ -28,6 +28,7 @@
 #import "AlfrescoLog.h"
 #import <objc/runtime.h>
 #import "AlfrescoURLUtils.h"
+#import "AlfrescoRepositoryInfoBuilder.h"
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -36,11 +37,11 @@
 @property (nonatomic, strong, readwrite) NSString *personIdentifier;
 
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
+@property (nonatomic, strong, readwrite) AlfrescoRepositoryInfoBuilder *repositoryInfoBuilder;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) AlfrescoListingContext *defaultListingContext;
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
-@property (nonatomic, strong, readwrite) AlfrescoWorkflowInfo *workflowInfo;
 
 - (id)initWithUrl:(NSURL *)url parameters:(NSDictionary *)parameters;
 - (AlfrescoRequest *)authenticateWithUsername:(NSString *)username
@@ -165,6 +166,8 @@
         
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
+        self.repositoryInfoBuilder = [[AlfrescoRepositoryInfoBuilder alloc] init];
+        self.repositoryInfoBuilder.isCloud = NO;
     }
     
     return self;
@@ -266,8 +269,14 @@
                     }
                     else
                     {
-                        AlfrescoWorkflowEngineType workflowEngine = [self determineWorkflowEngineFromJSONData:data];
-                        self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:workflowEngine];
+                        // store the retrieved workflow definition data
+                        self.repositoryInfoBuilder.workflowDefinitionData = data;
+                        
+                        // build the repositoryInfo object
+                        self.repositoryInfo = [self.repositoryInfoBuilder repositoryInfoFromCurrentState];
+                        self.repositoryInfoBuilder = nil;
+                        
+                        // call the original completion block
                         completionBlock(self, workflowError);
                     }
                     
@@ -311,13 +320,12 @@
                 else
                 {
                     self.personIdentifier = username;
-                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
-                    self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:v3Session];
 
                     // Workaround for MNT-6405: Malformed cmis:productName in some v4 instances
                     v3RepositoryProductName = v3Session.repositoryInfo.productName;
                     
-                    NSString *version = self.repositoryInfo.version;
+                    NSString *version = v3Session.repositoryInfo.productVersion;
+                    //NSString *version = self.repositoryInfo.version;
                     NSArray *versionArray = [version componentsSeparatedByString:@"."];
                     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
                     NSNumber *majorVersionNumber = [formatter numberFromString:versionArray[0]];
@@ -363,8 +371,7 @@
                                                                                                         andPassword:password];
     
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
-    self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:session];
+    self.repositoryInfoBuilder.cmisSession = session;
 }
 
 - (NSArray *)allParameterKeys
@@ -437,24 +444,6 @@
         }
     }];
     [self.sessionCache removeAllObjects];
-}
-
-- (AlfrescoWorkflowEngineType)determineWorkflowEngineFromJSONData:(NSData *)jsonData
-{
-    AlfrescoWorkflowEngineType workflowEngine = AlfrescoWorkflowEngineTypeUnknown;
-    
-    NSString *responseDictionaryString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    
-    if ([responseDictionaryString rangeOfString:@"jbpm$"].location != NSNotFound)
-    {
-        workflowEngine = AlfrescoWorkflowEngineTypeJBPM;
-    }
-    else if ([responseDictionaryString rangeOfString:@"activiti$"].location != NSNotFound)
-    {
-        workflowEngine = AlfrescoWorkflowEngineTypeActiviti;
-    }
-    
-    return workflowEngine;
 }
 
 + (NSNumber *)majorVersionFromString:(NSString *)versionString
