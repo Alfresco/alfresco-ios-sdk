@@ -28,11 +28,11 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoURLUtils.h"
-#import "AlfrescoWorkflowUtils.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoWorkflowObjectConverter.h"
+#import "AlfrescoWorkflowUtils.h"
 
 @interface AlfrescoLegacyAPIWorkflowTask ()
 
@@ -196,7 +196,7 @@
     
     [requestBody addEntriesFromDictionary:properties];
     
-    if (self.session.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+    if ([AlfrescoWorkflowUtils isActivitiTask:task])
     {
         requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = kAlfrescoWorkflowLegacyJSONNext;
         requestBody[kAlfrescoWorkflowLegacyJSONBPMStatus] = kAlfrescoWorkflowLegacyJSONCompleted;
@@ -211,7 +211,7 @@
             requestBody[kAlfrescoWorkflowLegacyJSONBPMComment] = properties[kAlfrescoTaskComment];
         }
     }
-    else if (self.session.repositoryInfo.capabilities.doesSupportJBPMWorkflowEngine)
+    else if ([AlfrescoWorkflowUtils isJBPMTask:task])
     {
         if ([task.processDefinitionIdentifier isEqualToString:kAlfrescoWorkflowReviewAndApprove])
         {
@@ -266,7 +266,7 @@
             {
                 NSString *completedString = ((NSDictionary *)responseObject)[@"persistedObject"];
                 NSArray *separatedStrings = [completedString componentsSeparatedByString:@","];
-                NSString *createdTaskID = separatedStrings[0];
+                NSString *createdTaskID = [[separatedStrings[0] componentsSeparatedByString:@"id="] lastObject];
                 
                 NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:createdTaskID];
                 

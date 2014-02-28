@@ -25,7 +25,6 @@
 
 #import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoWorkflowUtils.h"
 
 static NSInteger kWorkflowProcessDefinitionModelVersion = 1;
 

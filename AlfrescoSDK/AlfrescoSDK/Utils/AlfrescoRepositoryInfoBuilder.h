@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,11 +18,22 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowInfoTest
+/** AlfrescoRepositoryInfoBuilder
+ 
+ Author: Gavin Cornwell (Alfresco)
  */
 
-#import <XCTest/XCTest.h>
+#import <Foundation/Foundation.h>
+#import "AlfrescoRepositoryInfo.h"
+#import "CMISSession.h"
 
-@interface AlfrescoWorkflowInfoTest : XCTestCase
+@interface AlfrescoRepositoryInfoBuilder : NSObject
+
+@property (nonatomic, assign) BOOL isCloud;
+@property (nonatomic, strong) CMISSession *cmisSession;
+@property (nonatomic, strong) NSData *workflowDefinitionData;
+
+// Builds an AlfrescoRepositoryInfo object using the currently held information.
+- (AlfrescoRepositoryInfo *)repositoryInfoFromCurrentState;
 
 @end

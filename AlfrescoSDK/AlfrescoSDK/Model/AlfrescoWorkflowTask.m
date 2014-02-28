@@ -25,7 +25,6 @@
 
 #import "AlfrescoWorkflowTask.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoWorkflowUtils.h"
 
 static NSInteger kWorkflowTaskModelVersion = 1;
 
@@ -82,14 +81,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         NSDictionary *taskProperties = properties[kAlfrescoWorkflowLegacyJSONProperties];
         NSDictionary *workflowInstance = properties[kAlfrescoWorkflowLegacyJSONWorkflowInstance];
         
-        if ([taskProperties[kAlfrescoWorkflowLegacyJSONBPMTaskID] isKindOfClass:[NSNumber class]])
-        {
-            self.identifier = [taskProperties[kAlfrescoWorkflowLegacyJSONBPMTaskID] stringValue];
-        }
-        else
-        {
-            self.identifier = taskProperties[kAlfrescoWorkflowLegacyJSONBPMTaskID];
-        }
+        self.identifier = properties[kAlfrescoWorkflowLegacyJSONIdentifier];
         self.processIdentifier = workflowInstance[kAlfrescoWorkflowLegacyJSONIdentifier];
         self.processDefinitionIdentifier = workflowInstance[kAlfrescoWorkflowLegacyJSONName];
         self.name = taskProperties[kAlfrescoWorkflowLegacyJSONBPMDescription];

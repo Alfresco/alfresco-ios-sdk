@@ -33,8 +33,6 @@
 
 - (id)initWithSession:(id<AlfrescoSession>)session;
 
-- (AlfrescoRepositoryInfo *)repositoryInfoFromCMISSession:(CMISSession *)cmisSession;
-
 - (AlfrescoNode *)nodeFromCMISObject:(CMISObject *)cmisObject;
 
 - (AlfrescoNode *)nodeFromCMISObjectData:(CMISObjectData *)cmisObjectData;

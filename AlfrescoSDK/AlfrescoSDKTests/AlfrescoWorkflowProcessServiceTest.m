@@ -329,7 +329,7 @@
                 [self.processesService retrieveProcessImage:createdProcess completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveImageError) {
                     if (retrieveImageError)
                     {
-                        if (self.currentSession.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
+                        if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
                         {
                             self.lastTestSuccessful = NO;
                             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveImageError localizedDescription], [retrieveImageError localizedFailureReason]];
@@ -401,7 +401,7 @@
                 [self.processesService retrieveProcessImage:createdProcess outputStream:outputStream completionBlock:^(BOOL succeeded, NSError *retrieveImageError) {
                     if (retrieveImageError)
                     {
-                        if (self.currentSession.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
+                        if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
                         {
                         
                             self.lastTestSuccessful = NO;
@@ -421,7 +421,7 @@
                     }
                     else
                     {
-                        if (self.currentSession.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeActiviti)
+                        if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
                         {
                             XCTAssertTrue(succeeded, @"The completion of the file writing did not complete");
                             BOOL fileExists = [[AlfrescoFileManager sharedManager] fileExistsAtPath:filePath];
@@ -540,7 +540,7 @@
                                                  @"title" : @"Adhoc",
                                                  @"description" : @"Assign task to colleague",
                                                  @"version" : @"1"};
-                processDefinition = [[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:properties session:self.currentSession];
+                processDefinition = [[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:properties];
                 createProcessWithDefinition(processDefinition);
             }
             else

@@ -29,7 +29,6 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
-#import "AlfrescoWorkflowUtils.h"
 #import "AlfrescoWorkflowObjectConverter.h"
 
 @interface AlfrescoLegacyAPIWorkflowProcessDefinitionService ()

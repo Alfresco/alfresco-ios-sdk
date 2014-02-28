@@ -27,6 +27,7 @@
 #import "AlfrescoWorkflowTaskService.h"
 #import "AlfrescoWorkflowProcessService.h"
 #import "AlfrescoWorkflowProcessDefinitionService.h"
+#import "AlfrescoWorkflowUtils.h"
 #import "AlfrescoPersonService.h"
 #import "AlfrescoErrors.h"
 
@@ -453,7 +454,7 @@
             else
             {
                 [self.taskService resolveTask:task completionBlock:^(AlfrescoWorkflowTask *resolvedTask, NSError *resolveError) {
-                    if (self.currentSession.workflowInfo.publicAPI)
+                    if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
                     {
                         if (resolveError)
                         {
@@ -528,7 +529,7 @@
                             if (array.count > 0)
                             {
                                 AlfrescoWorkflowTask *returnedTask = nil;
-                                if (self.currentSession.workflowInfo.workflowEngine == AlfrescoWorkflowEngineTypeJBPM)
+                                if ([AlfrescoWorkflowUtils isJBPMProcess:process])
                                 {
                                     returnedTask = [array lastObject];
                                 }
@@ -558,7 +559,7 @@
                                              @"title" : @"Adhoc",
                                              @"description" : @"Assign task to colleague",
                                              @"version" : @"1"};
-                processDefinition = [[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:properties session:self.currentSession];
+                processDefinition = [[AlfrescoWorkflowProcessDefinition alloc] initWithProperties:properties];
                 createProcessAndTaskForDefinition(processDefinition);
             }
             else

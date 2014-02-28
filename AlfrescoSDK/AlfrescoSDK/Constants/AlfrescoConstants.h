@@ -160,10 +160,3 @@ extern NSString * const kAlfrescoWorkflowProcessPriority;
 extern NSString * const kAlfrescoWorkflowProcessSendEmailNotification;
 extern NSString * const kAlfrescoWorkflowProcessDueDate;
 extern NSString * const kAlfrescoWorkflowProcessApprovalRate;
-
-typedef NS_ENUM(NSInteger, AlfrescoWorkflowEngineType)
-{
-    AlfrescoWorkflowEngineTypeUnknown,
-    AlfrescoWorkflowEngineTypeJBPM,
-    AlfrescoWorkflowEngineTypeActiviti
-};

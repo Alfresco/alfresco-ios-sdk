@@ -31,7 +31,6 @@
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoWorkflowObjectConverter.h"
-#import "AlfrescoWorkflowUtils.h"
 
 @interface AlfrescoLegacyAPIWorkflowProcessService ()
 
@@ -376,7 +375,7 @@
                 {
                     NSString *completedString = ((NSDictionary *)responseObject)[@"persistedObject"];
                     NSArray *separatedStrings = [completedString componentsSeparatedByString:@","];
-                    NSString *createdProcessID = separatedStrings[0];
+                    NSString *createdProcessID = [[separatedStrings[0] componentsSeparatedByString:@"id="] lastObject];
                     
                     NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleInstance stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:createdProcessID];
                     

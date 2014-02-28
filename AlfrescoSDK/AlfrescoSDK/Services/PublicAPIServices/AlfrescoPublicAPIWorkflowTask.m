@@ -31,7 +31,6 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoWorkflowObjectConverter.h"
-#import "AlfrescoWorkflowUtils.h"
 
 @interface AlfrescoPublicAPIWorkflowTask ()
 
@@ -239,7 +238,7 @@
         AlfrescoNode *currentNode = (AlfrescoNode *)nodeObject;
         // this should be fixed in the workflow api to accept complete node refs
 //        [nodeRefs addObject:@{kAlfrescoJSONIdentifier : currentNode.identifier}];
-        [requestBody addObject:@{kAlfrescoJSONIdentifier : [AlfrescoWorkflowUtils nodeGUIDFromNodeIdentifier:currentNode.identifier]}];
+        [requestBody addObject:@{kAlfrescoJSONIdentifier : [AlfrescoObjectConverter nodeGUIDFromNodeIdentifier:currentNode.identifier]}];
     }
     
     NSError *requestConversionError = nil;
@@ -280,7 +279,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSString *requestString = [kAlfrescoPublicAPIWorkflowTaskSingleAttachment stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
-    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoItemID withString:[AlfrescoWorkflowUtils nodeGUIDFromNodeIdentifier:node.identifier]];
+    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoItemID withString:[AlfrescoObjectConverter nodeGUIDFromNodeIdentifier:node.identifier]];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
