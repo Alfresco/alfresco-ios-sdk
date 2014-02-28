@@ -35,7 +35,7 @@
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
                 
-        [self.workflowService retrieveAllProcessesWithCompletionBlock:^(NSArray *array, NSError *retrieveError) {
+        [self.workflowService retrieveProcessesWithCompletionBlock:^(NSArray *array, NSError *retrieveError) {
             if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
@@ -317,7 +317,7 @@
                 XCTAssertNotNil(createdProcess, @"Process should not be nil");
                 XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
-                [self.workflowService retrieveProcessImage:createdProcess completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveImageError) {
+                [self.workflowService retrieveImageForProcess:createdProcess completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveImageError) {
                     if (retrieveImageError)
                     {
                         if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
@@ -389,7 +389,7 @@
                 
                 NSOutputStream *outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:NO];
                 
-                [self.workflowService retrieveProcessImage:createdProcess outputStream:outputStream completionBlock:^(BOOL succeeded, NSError *retrieveImageError) {
+                [self.workflowService retrieveImageForProcess:createdProcess outputStream:outputStream completionBlock:^(BOOL succeeded, NSError *retrieveImageError) {
                     if (retrieveImageError)
                     {
                         if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
@@ -467,7 +467,7 @@
                 XCTAssertNotNil(createdProcess, @"Process should not be nil");
                 XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
-                [self.workflowService retrieveAllTasksForProcess:createdProcess completionBlock:^(NSArray *array, NSError *retrieveTasksError) {
+                [self.workflowService retrieveTasksForProcess:createdProcess completionBlock:^(NSArray *array, NSError *retrieveTasksError) {
                     if (retrieveTasksError)
                     {
                         self.lastTestSuccessful = NO;

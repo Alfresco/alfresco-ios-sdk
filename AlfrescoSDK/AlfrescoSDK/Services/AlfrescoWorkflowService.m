@@ -43,7 +43,7 @@
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveAllProcessDefinitionsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveProcessDefinitionsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -63,7 +63,7 @@
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveAllProcessesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveProcessesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -91,15 +91,30 @@
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveProcessWithIdentifier:(NSString *)processID
+- (AlfrescoRequest *)retrieveProcessWithIdentifier:(NSString *)processIdentifier
                                    completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveAllTasksForProcess:(AlfrescoWorkflowProcess *)process
-                                completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveImageForProcess:(AlfrescoWorkflowProcess *)process
+                             completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveImageForProcess:(AlfrescoWorkflowProcess *)process
+                                outputStream:(NSOutputStream *)outputStream
+                             completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process
+                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -113,22 +128,7 @@
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveProcessImage:(AlfrescoWorkflowProcess *)process
-                          completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
-{
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-- (AlfrescoRequest *)retrieveProcessImage:(AlfrescoWorkflowProcess *)process
-                             outputStream:(NSOutputStream *)outputStream
-                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
-{
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-- (AlfrescoRequest *)retrieveAllTasksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveTasksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -194,9 +194,9 @@
     return nil;
 }
 
-- (AlfrescoRequest *)assignTask:(AlfrescoWorkflowTask *)task
-                     toAssignee:(AlfrescoPerson *)assignee
-                completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
+- (AlfrescoRequest *)reassignTask:(AlfrescoWorkflowTask *)task
+                       toAssignee:(AlfrescoPerson *)assignee
+                  completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -209,25 +209,25 @@
     return nil;
 }
 
-- (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node
-                            toTask:(AlfrescoWorkflowTask *)task
-                   completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)addAttachmentToTask:(AlfrescoWorkflowTask *)task
+                              attachment:(AlfrescoNode *)node
+                         completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (AlfrescoRequest *)addAttachments:(NSArray *)nodeArray
-                             toTask:(AlfrescoWorkflowTask *)task
-                    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)addAttachmentsToTask:(AlfrescoWorkflowTask *)task
+                              attachments:(NSArray *)nodeArray
+                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node
-                             fromTask:(AlfrescoWorkflowTask *)task
-                      completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)removeAttachmentFromTask:(AlfrescoWorkflowTask *)task
+                                   attachment:(AlfrescoNode *)node
+                              completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;

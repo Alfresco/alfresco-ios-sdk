@@ -69,7 +69,7 @@
 
 #pragma mark - Retrieval methods
 
-- (AlfrescoRequest *)retrieveAllProcessDefinitionsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveProcessDefinitionsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
@@ -166,7 +166,7 @@
     return request;
 }
 
-- (AlfrescoRequest *)retrieveAllProcessesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveProcessesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     return [self retrieveProcessesInState:kAlfrescoWorkflowProcessStateAny completionBlock:completionBlock];
 }
@@ -250,13 +250,13 @@
     return request;
 }
 
-- (AlfrescoRequest *)retrieveProcessWithIdentifier:(NSString *)processID
+- (AlfrescoRequest *)retrieveProcessWithIdentifier:(NSString *)processIdentifier
                                    completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:processID argumentName:@"processID"];
+    [AlfrescoErrors assertArgumentNotNil:processIdentifier argumentName:@"processIdentifier"];
     
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleInstance stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:processID];
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleInstance stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:processIdentifier];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
@@ -277,8 +277,81 @@
     return request;
 }
 
-- (AlfrescoRequest *)retrieveAllTasksForProcess:(AlfrescoWorkflowProcess *)process
-                                completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveImageForProcess:(AlfrescoWorkflowProcess *)process
+                             completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    
+    if (self.session.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+    {
+        NSString *requestString = [kAlfrescoLegacyAPIWorkflowProcessDiagram stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+        NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+        
+        AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+        [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+            if (error)
+            {
+                completionBlock(nil, error);
+            }
+            else
+            {
+                AlfrescoContentFile *contentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"application/octet-stream"];
+                completionBlock(contentFile, error);
+            }
+        }];
+        return request;
+    }
+    else
+    {
+        NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
+        if (completionBlock != NULL)
+        {
+            completionBlock(nil, notSupportedError);
+        }
+        return nil;
+    }
+}
+
+- (AlfrescoRequest *)retrieveImageForProcess:(AlfrescoWorkflowProcess *)process
+                                outputStream:(NSOutputStream *)outputStream
+                             completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:outputStream argumentName:@"outputStream"];
+    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    
+    if (self.session.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+    {
+        NSString *requestString = [kAlfrescoLegacyAPIWorkflowProcessDiagram stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+        NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+        
+        AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+        [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request outputStream:outputStream completionBlock:^(NSData *data, NSError *error) {
+            if (error)
+            {
+                completionBlock(NO, error);
+            }
+            else
+            {
+                completionBlock(YES, error);
+            }
+        }];
+        return nil;
+    }
+    else
+    {
+        NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
+        if (completionBlock != NULL)
+        {
+            completionBlock(NO, notSupportedError);
+        }
+        return nil;
+    }
+}
+
+- (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process
+                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     return [self retrieveTasksForProcess:process inState:kAlfrescoWorkflowProcessStateAny completionBlock:completionBlock];
 }
@@ -320,80 +393,7 @@
     return request;
 }
 
-- (AlfrescoRequest *)retrieveProcessImage:(AlfrescoWorkflowProcess *)process
-                          completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
-    
-    if (self.session.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
-    {
-        NSString *requestString = [kAlfrescoLegacyAPIWorkflowProcessDiagram stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
-        NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-        
-        AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-        [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-            if (error)
-            {
-                completionBlock(nil, error);
-            }
-            else
-            {
-                AlfrescoContentFile *contentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"application/octet-stream"];
-                completionBlock(contentFile, error);
-            }
-        }];
-        return request;
-    }
-    else
-    {
-        NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
-        if (completionBlock != NULL)
-        {
-            completionBlock(nil, notSupportedError);
-        }
-        return nil;
-    }
-}
-
-- (AlfrescoRequest *)retrieveProcessImage:(AlfrescoWorkflowProcess *)process
-                             outputStream:(NSOutputStream *)outputStream
-                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:outputStream argumentName:@"outputStream"];
-    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
-    
-    if (self.session.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
-    {
-        NSString *requestString = [kAlfrescoLegacyAPIWorkflowProcessDiagram stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
-        NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-        
-        AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-        [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request outputStream:outputStream completionBlock:^(NSData *data, NSError *error) {
-            if (error)
-            {
-                completionBlock(NO, error);
-            }
-            else
-            {
-                completionBlock(YES, error);
-            }
-        }];
-        return nil;
-    }
-    else
-    {
-        NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
-        if (completionBlock != NULL)
-        {
-            completionBlock(NO, notSupportedError);
-        }
-        return nil;
-    }
-}
-
-- (AlfrescoRequest *)retrieveAllTasksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveTasksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
@@ -639,7 +639,7 @@
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     if (assignees)
     {
-        [self retrieveNodeRefIdentifiersForPersons:assignees completionBlock:^(NSArray *personNodeRefs, NSError *error) {
+        [self retrieveNodeRefIdentifiersForPeople:assignees completionBlock:^(NSArray *personNodeRefs, NSError *error) {
             NSString *assigneesAdded = nil;
             for (NSString *assigneeNodeRef in personNodeRefs)
             {
@@ -810,9 +810,9 @@
     return [self updateTaskState:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : [NSNull null]} completionBlock:completionBlock];
 }
 
-- (AlfrescoRequest *)assignTask:(AlfrescoWorkflowTask *)task
-                     toAssignee:(AlfrescoPerson *)assignee
-                completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
+- (AlfrescoRequest *)reassignTask:(AlfrescoWorkflowTask *)task
+                       toAssignee:(AlfrescoPerson *)assignee
+                  completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
     return [self updateTaskState:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : assignee.identifier} completionBlock:completionBlock];
 }
@@ -828,30 +828,30 @@
     return nil;
 }
 
-- (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node
-                            toTask:(AlfrescoWorkflowTask *)task
-                   completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)addAttachmentToTask:(AlfrescoWorkflowTask *)task
+                              attachment:(AlfrescoNode *)node
+                         completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    return [self updateAttachments:@[node] onTask:task addition:YES completionBlock:completionBlock];
+    return [self updateAttachmentsOnTask:task attachments:@[node] addition:YES completionBlock:completionBlock];
 }
 
-- (AlfrescoRequest *)addAttachments:(NSArray *)nodeArray
-                             toTask:(AlfrescoWorkflowTask *)task
-                    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)addAttachmentsToTask:(AlfrescoWorkflowTask *)task
+                              attachments:(NSArray *)nodeArray
+                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    return [self updateAttachments:nodeArray onTask:task addition:YES completionBlock:completionBlock];
+    return [self updateAttachmentsOnTask:task attachments:nodeArray addition:YES completionBlock:completionBlock];
 }
 
-- (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node
-                             fromTask:(AlfrescoWorkflowTask *)task
-                      completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)removeAttachmentFromTask:(AlfrescoWorkflowTask *)task
+                                   attachment:(AlfrescoNode *)node
+                              completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    return [self updateAttachments:@[node] onTask:task addition:NO completionBlock:completionBlock];
+    return [self updateAttachmentsOnTask:task attachments:@[node] addition:NO completionBlock:completionBlock];
 }
 
 #pragma mark - Private helper methods
 
-- (void)retrieveNodeRefIdentifiersForPersons:(NSArray *)assignees
+- (void)retrieveNodeRefIdentifiersForPeople:(NSArray *)assignees
                              completionBlock:(void (^)(NSArray *personNodeRefs, NSError *error))completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:assignees argumentName:@"assignees"];
@@ -982,10 +982,10 @@
     }
 }
 
-- (AlfrescoRequest *)updateAttachments:(NSArray *)nodeArray
-                                onTask:(AlfrescoWorkflowTask *)task
-                              addition:(BOOL)addition
-                       completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)updateAttachmentsOnTask:(AlfrescoWorkflowTask *)task
+                                 attachments:(NSArray *)nodeArray
+                                    addition:(BOOL)addition
+                             completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:nodeArray argumentName:@"nodeArray"];
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];

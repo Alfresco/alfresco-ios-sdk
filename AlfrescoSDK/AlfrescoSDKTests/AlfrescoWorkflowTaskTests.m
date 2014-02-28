@@ -36,7 +36,7 @@
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self.workflowService retrieveAllTasksWithCompletionBlock:^(NSArray *array, NSError *error) {
+        [self.workflowService retrieveTasksWithCompletionBlock:^(NSArray *array, NSError *error) {
             if (!array)
             {
                 self.lastTestSuccessful = NO;
@@ -114,7 +114,7 @@
             }
             else
             {
-                [self.workflowService retrieveAllTasksForProcess:process completionBlock:^(NSArray *array, NSError *retrieveTaskError) {
+                [self.workflowService retrieveTasksForProcess:process completionBlock:^(NSArray *array, NSError *retrieveTaskError) {
                     if (retrieveTaskError)
                     {
                         self.lastTestSuccessful = NO;
@@ -226,7 +226,7 @@
                     }
                     else
                     {
-                        [self.workflowService assignTask:task toAssignee:person completionBlock:^(AlfrescoWorkflowTask *assignedTask, NSError *assignError) {
+                        [self.workflowService reassignTask:task toAssignee:person completionBlock:^(AlfrescoWorkflowTask *assignedTask, NSError *assignError) {
                             if (assignError)
                             {
                                 self.lastTestSuccessful = NO;
@@ -377,7 +377,7 @@
             }
             else
             {
-                [weakSelf.workflowService addAttachments:@[self.testAlfrescoDocument] toTask:task completionBlock:^(BOOL succeeded, NSError *addError) {
+                [weakSelf.workflowService addAttachmentsToTask:task attachments:@[self.testAlfrescoDocument] completionBlock:^(BOOL succeeded, NSError *addError) {
                     if (addError)
                     {
                         weakSelf.lastTestSuccessful = NO;
@@ -402,7 +402,7 @@
                                 
                                 AlfrescoDocument *document = array[0];
                                 
-                                [weakSelf.workflowService removeAttachment:document fromTask:task completionBlock:^(BOOL removalSuccess, NSError *removeAttachmentError) {
+                                [weakSelf.workflowService removeAttachmentFromTask:task attachment:document completionBlock:^(BOOL removalSuccess, NSError *removeAttachmentError) {
                                     XCTAssertTrue(removalSuccess, @"The removal of the attachment did not return true");
                                     XCTAssertNil(removeAttachmentError, @"The returned error should be nil");
                                         
@@ -506,7 +506,7 @@
                 }
                 else
                 {
-                    [self.workflowService retrieveAllTasksForProcess:process completionBlock:^(NSArray *array, NSError *retrieveTaskError) {
+                    [self.workflowService retrieveTasksForProcess:process completionBlock:^(NSArray *array, NSError *retrieveTaskError) {
                         if (retrieveTaskError)
                         {
                             completionBlock(process, nil, retrieveTaskError);

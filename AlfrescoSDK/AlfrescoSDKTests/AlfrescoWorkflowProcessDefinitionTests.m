@@ -34,7 +34,7 @@
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self.workflowService retrieveAllProcessDefinitionsWithCompletionBlock:^(NSArray *array, NSError *error) {
+        [self.workflowService retrieveProcessDefinitionsWithCompletionBlock:^(NSArray *array, NSError *error) {
             if (!array)
             {
                 self.lastTestSuccessful = NO;
