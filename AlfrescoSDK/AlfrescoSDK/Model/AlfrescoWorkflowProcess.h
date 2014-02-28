@@ -25,8 +25,6 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol AlfrescoSession;
-
 @interface AlfrescoWorkflowProcess : NSObject
 
 @property (nonatomic, strong, readonly) NSString *identifier;
@@ -41,6 +39,6 @@
 @property (nonatomic, strong, readonly) NSString *initiatorUsername;
 @property (nonatomic, strong, readonly) NSArray *variables;
 
-- (id)initWithProperties:(NSDictionary *)properties session:(id<AlfrescoSession>)session;
+- (id)initWithProperties:(NSDictionary *)properties;
 
 @end

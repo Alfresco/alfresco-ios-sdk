@@ -18,13 +18,16 @@
  *****************************************************************************
  */
 
-/** AlfrescoCloudWorkflowTask
+/** AlfrescoWorkflowProcessDefinitionTests
  
- Author: Mike Hatfield (Alfresco)
+ Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoPublicAPIWorkflowTask.h"
+#import "AlfrescoBaseTest.h"
+#import "AlfrescoWorkflowService.h"
 
-@interface AlfrescoCloudWorkflowTask : AlfrescoPublicAPIWorkflowTask
+@interface AlfrescoWorkflowProcessDefinitionTests : AlfrescoBaseTest
+
+@property (nonatomic, strong) AlfrescoWorkflowService *workflowService;
 
 @end

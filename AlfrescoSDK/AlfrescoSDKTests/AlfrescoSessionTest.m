@@ -558,7 +558,7 @@
             
             BOOL isRunningOnVersion4 = [sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike];
             
-            XCTAssertTrue([sessionRepositoryInfo.edition isEqualToString:@"Enterprise"] || [sessionRepositoryInfo.edition isEqualToString:@"Community"], @"Expected the edition to be Enterprise or Community but it is %@", sessionRepositoryInfo.edition);
+            XCTAssertTrue([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] || [sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity], @"Expected the edition to be Enterprise or Community but it is %@", sessionRepositoryInfo.edition);
             
             if (isRunningOnVersion4)
             {
@@ -566,8 +566,35 @@
                 
                 XCTAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 0, @"Expected the minor version to be 0 or more");
                 
-                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 4 of the OnPremise server should support the like capability");
-                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 4 of the OnPremise server should support comments count capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike],
+                              @"Version 4 of the OnPremise server should support the like capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount],
+                              @"Version 4 of the OnPremise server should support comments count capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine],
+                              @"Version 4 of the OnPremise server should support the Activiti workflow engine");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine],
+                               @"Version 4 of the OnPremise server should not support the JBPM engine");
+                
+                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] &&
+                    [sessionRepositoryInfo.minorVersion intValue] == 0)
+                {
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 4.0 of the Enterprise server should not support the public API");
+                }
+                
+                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] &&
+                    [sessionRepositoryInfo.minorVersion intValue] >= 2)
+                {
+                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 4.2 or later of the Enterprise server should support the public API");
+                }
+                
+                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity] &&
+                         [sessionRepositoryInfo.minorVersion intValue] >= 3)
+                {
+                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 4.3 or later of the Community server should support the public API");
+                }
             }
             else
             {
@@ -577,13 +604,15 @@
                 
                 XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 3 of the OnPremise server should not support the like capability");
                 XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 3 of the OnPremise server should not support comments count capability");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI], @"Version 3 of the OnPremise server should not support the public API");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine], @"Version 3 of the OnPremise server should not support the Activiti workflow engine");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine], @"Version 3 of the OnPremise server should support the JBPM engine");
             }
             
             self.lastTestSuccessful = YES;
         }
         else
         {
-            // CURRENTLY WILL FAIL - MOBSDK-392
             AlfrescoRepositoryInfo *sessionRepositoryInfo = [self.currentSession repositoryInfo];
             
             XCTAssertNotNil(sessionRepositoryInfo, @"Expected the session repositary information to not be nil");
@@ -598,6 +627,14 @@
             XCTAssertNil(sessionRepositoryInfo.minorVersion, @"Expected the minor version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.minorVersion);
             XCTAssertNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.maintenanceVersion);
             XCTAssertNil(sessionRepositoryInfo.version, @"Expected the version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.version);
+            
+            // test capabilities
+            AlfrescoRepositoryCapabilities *capabilities = sessionRepositoryInfo.capabilities;
+            XCTAssertTrue(capabilities.doesSupportLikingNodes, @"Expected liking nodes to be supported");
+            XCTAssertTrue(capabilities.doesSupportCommentCounts, @"Expected comment counts to be supported");
+            XCTAssertTrue(capabilities.doesSupportPublicAPI, @"Expected the public API to be supported");
+            XCTAssertTrue(capabilities.doesSupportActivitiWorkflowEngine, @"Expected the Activiti workflow engine to be supported");
+            XCTAssertFalse(capabilities.doesSupportJBPMWorkflowEngine, @"Did not expect the JBPM workflow engine to be supported");
             
             self.lastTestSuccessful = YES;
         }

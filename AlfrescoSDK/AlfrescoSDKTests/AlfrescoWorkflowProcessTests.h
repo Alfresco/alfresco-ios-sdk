@@ -18,11 +18,16 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowInfoTest
+/** AlfrescoWorkflowProcessTests
+ 
+ Author: Tauseef Mughal (Alfresco)
  */
 
-#import <XCTest/XCTest.h>
+#import "AlfrescoBaseTest.h"
+#import "AlfrescoWorkflowService.h"
 
-@interface AlfrescoWorkflowInfoTest : XCTestCase
+@interface AlfrescoWorkflowProcessTests : AlfrescoBaseTest
+
+@property (nonatomic, strong) AlfrescoWorkflowService *workflowService;
 
 @end

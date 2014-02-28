@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -20,6 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoConstants.h"
+
 /** The AlfrescoRepositoryCapabilities are used as a property on AlfrescoRepositoryInfo.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
@@ -28,6 +29,9 @@
 @interface AlfrescoRepositoryCapabilities : NSObject <NSCoding>
 @property (nonatomic, assign, readonly) BOOL doesSupportLikingNodes;
 @property (nonatomic, assign, readonly) BOOL doesSupportCommentCounts;
+@property (nonatomic, assign, readonly) BOOL doesSupportPublicAPI;
+@property (nonatomic, assign, readonly) BOOL doesSupportActivitiWorkflowEngine;
+@property (nonatomic, assign, readonly) BOOL doesSupportJBPMWorkflowEngine;
 
 - (id)initWithProperties:(NSDictionary *)properties;
 
