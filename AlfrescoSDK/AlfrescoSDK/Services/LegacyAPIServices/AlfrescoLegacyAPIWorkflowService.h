@@ -18,29 +18,13 @@
  *****************************************************************************
  */
 
-/** AlfrescoPlaceholderWorkflowTaskService
+/** AlfrescoLegacyAPIWorkflowService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoPlaceholderWorkflowTaskService.h"
-#import "AlfrescoCloudSession.h"
-#import "AlfrescoCloudWorkflowTask.h"
-#import "AlfrescoLegacyAPIWorkflowTask.h"
+#import "AlfrescoWorkflowService.h"
 
-@implementation AlfrescoPlaceholderWorkflowTaskService
-
-- (id)initWithSession:(id<AlfrescoSession>)session
-{
-    if (session.repositoryInfo.capabilities.doesSupportPublicAPI)
-    {
-        if ([session isKindOfClass:[AlfrescoCloudSession class]])
-        {
-            return (id)[[AlfrescoCloudWorkflowTask alloc] initWithSession:session];
-        }
-        return (id)[[AlfrescoPublicAPIWorkflowTask alloc] initWithSession:session];
-    }
-    return (id)[[AlfrescoLegacyAPIWorkflowTask alloc] initWithSession:session];
-}
+@interface AlfrescoLegacyAPIWorkflowService : AlfrescoWorkflowService
 
 @end

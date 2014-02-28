@@ -18,13 +18,30 @@
  *****************************************************************************
  */
 
-/** AlfrescoCloudWorkflowProcessDefinitionService
+/** The AlfrescoPlaceholderWorkflowService
  
- Author: Mike Hatfield (Alfresco)
+ Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoPublicAPIWorkflowProcessDefinitionService.h"
+#import "AlfrescoPlaceholderWorkflowService.h"
+#import "AlfrescoCloudSession.h"
+#import "AlfrescoCloudWorkflowService.h"
+#import "AlfrescoPublicAPIWorkflowService.h"
+#import "AlfrescoLegacyAPIWorkflowService.h"
 
-@interface AlfrescoCloudWorkflowProcessDefinitionService : AlfrescoPublicAPIWorkflowProcessDefinitionService
+@implementation AlfrescoPlaceholderWorkflowService
+
+- (id)initWithSession:(id<AlfrescoSession>)session
+{
+    if (session.repositoryInfo.capabilities.doesSupportPublicAPI)
+    {
+        if ([session isKindOfClass:[AlfrescoCloudSession class]])
+        {
+            return (id)[[AlfrescoCloudWorkflowService alloc] initWithSession:session];
+        }
+        return (id)[[AlfrescoPublicAPIWorkflowService alloc] initWithSession:session];
+    }
+    return (id)[[AlfrescoLegacyAPIWorkflowService alloc] initWithSession:session];
+}
 
 @end

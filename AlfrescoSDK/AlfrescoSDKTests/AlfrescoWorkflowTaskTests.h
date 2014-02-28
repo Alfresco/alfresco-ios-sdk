@@ -18,14 +18,18 @@
  *****************************************************************************
  */
 
-/** AlfrescoPublicAPIWorkflowProcessService
+/** AlfrescoWorkflowTaskTests
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import <Foundation/Foundation.h>
-#import "AlfrescoWorkflowProcessService.h"
+#import "AlfrescoBaseTest.h"
+#import "AlfrescoWorkflowService.h"
+#import "AlfrescoPersonService.h"
 
-@interface AlfrescoPublicAPIWorkflowProcessService : AlfrescoWorkflowProcessService
+@interface AlfrescoWorkflowTaskTests : AlfrescoBaseTest
+
+@property (nonatomic, strong) AlfrescoWorkflowService *workflowService;
+@property (nonatomic, strong) AlfrescoPersonService *personService;
 
 @end

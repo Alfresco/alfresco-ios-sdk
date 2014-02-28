@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,33 +18,16 @@
  *****************************************************************************
  */
 
-/** AlfrescoCloudWorkflowProcessService
+/** AlfrescoWorkflowProcessTests
  
- Author: Mike Hatfield (Alfresco)
+ Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoCloudWorkflowProcessService.h"
-#import "AlfrescoInternalConstants.h"
-#import "AlfrescoSession.h"
+#import "AlfrescoBaseTest.h"
+#import "AlfrescoWorkflowService.h"
 
-@interface AlfrescoCloudWorkflowProcessService ()
+@interface AlfrescoWorkflowProcessTests : AlfrescoBaseTest
 
-@property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
-@property (nonatomic, strong, readwrite) NSString *baseApiUrl;
-
-@end
-
-@implementation AlfrescoCloudWorkflowProcessService
-
-- (id)initWithSession:(id<AlfrescoSession>)session
-{
-    self = [super initWithSession:session];
-    if (self)
-    {
-        self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudWorkflowBaseURL];
-    }
-    return self;
-}
+@property (nonatomic, strong) AlfrescoWorkflowService *workflowService;
 
 @end

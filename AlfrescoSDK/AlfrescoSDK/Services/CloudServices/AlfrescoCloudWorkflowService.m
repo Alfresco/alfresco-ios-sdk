@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,14 +18,33 @@
  *****************************************************************************
  */
 
-/** AlfrescoPlaceholderWorkflowTaskService
+/** AlfrescoCloudWorkflowService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import <Foundation/Foundation.h>
-#import "AlfrescoWorkflowTaskService.h"
+#import "AlfrescoCloudWorkflowService.h"
+#import "AlfrescoSession.h"
+#import "AlfrescoInternalConstants.h"
 
-@interface AlfrescoPlaceholderWorkflowTaskService : AlfrescoWorkflowTaskService
+@interface AlfrescoCloudWorkflowService ()
+
+@property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
+@property (nonatomic, strong, readwrite) NSString *baseApiUrl;
+
+@end
+
+@implementation AlfrescoCloudWorkflowService
+
+- (id)initWithSession:(id<AlfrescoSession>)session
+{
+    self = [super initWithSession:session];
+    if (self)
+    {
+        self.session = session;
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudWorkflowBaseURL];
+    }
+    return self;
+}
 
 @end

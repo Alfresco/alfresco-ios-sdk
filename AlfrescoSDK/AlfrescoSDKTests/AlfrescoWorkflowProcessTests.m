@@ -18,33 +18,24 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowProcessServiceTest
+/** AlfrescoWorkflowProcessTests
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoWorkflowProcessServiceTest.h"
-#import "AlfrescoWorkflowProcessService.h"
-#import "AlfrescoWorkflowProcessDefinitionService.h"
+#import "AlfrescoWorkflowProcessTests.h"
 #import "AlfrescoFileManager.h"
 #import "AlfrescoErrors.h"
 
-@interface AlfrescoWorkflowProcessServiceTest ()
-
-@property (nonatomic, strong) AlfrescoWorkflowProcessDefinitionService *processesDefinitionService;
-@property (nonatomic, strong) AlfrescoWorkflowProcessService *processesService;
-
-@end
-
-@implementation AlfrescoWorkflowProcessServiceTest
+@implementation AlfrescoWorkflowProcessTests
 
 - (void)testRetrieveAllProcesses
 {
     if (self.setUpSuccess)
     {
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
                 
-        [self.processesService retrieveAllProcessesWithCompletionBlock:^(NSArray *array, NSError *retrieveError) {
+        [self.workflowService retrieveAllProcessesWithCompletionBlock:^(NSArray *array, NSError *retrieveError) {
             if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
@@ -77,11 +68,11 @@
 {
     if (self.setUpSuccess)
     {
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
-        [self.processesService retrieveProcessesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
+        [self.workflowService retrieveProcessesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
             if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
@@ -114,9 +105,9 @@
 {
     if (self.setUpSuccess)
     {
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self.processesService retrieveProcessesInState:kAlfrescoWorkflowProcessStateActive completionBlock:^(NSArray *array, NSError *retrieveError) {
+        [self.workflowService retrieveProcessesInState:kAlfrescoWorkflowProcessStateActive completionBlock:^(NSArray *array, NSError *retrieveError) {
             if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
@@ -149,9 +140,9 @@
 {
     if (self.setUpSuccess)
     {
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self.processesService retrieveProcessesInState:kAlfrescoWorkflowProcessStateCompleted completionBlock:^(NSArray *array, NSError *retrieveError) {
+        [self.workflowService retrieveProcessesInState:kAlfrescoWorkflowProcessStateCompleted completionBlock:^(NSArray *array, NSError *retrieveError) {
             if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
@@ -184,11 +175,11 @@
 {
     if (self.setUpSuccess)
     {
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:0];
         
-        [self.processesService retrieveProcessesInState:kAlfrescoWorkflowProcessStateAny listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
+        [self.workflowService retrieveProcessesInState:kAlfrescoWorkflowProcessStateAny listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
             if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
@@ -221,7 +212,7 @@
 {
     if (self.setUpSuccess)
     {
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
@@ -237,7 +228,7 @@
                 XCTAssertNotNil(createdProcess, @"Process should not be nil");
                 XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
-                [self.processesService retrieveProcessWithIdentifier:createdProcess.identifier completionBlock:^(AlfrescoWorkflowProcess *process, NSError *error) {
+                [self.workflowService retrieveProcessWithIdentifier:createdProcess.identifier completionBlock:^(AlfrescoWorkflowProcess *process, NSError *error) {
                     if (error)
                     {
                         self.lastTestSuccessful = NO;
@@ -272,8 +263,8 @@
 {
     if (self.setUpSuccess)
     {
-        self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
@@ -309,8 +300,8 @@
 {
     if (self.setUpSuccess)
     {
-        self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
@@ -326,7 +317,7 @@
                 XCTAssertNotNil(createdProcess, @"Process should not be nil");
                 XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
-                [self.processesService retrieveProcessImage:createdProcess completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveImageError) {
+                [self.workflowService retrieveProcessImage:createdProcess completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveImageError) {
                     if (retrieveImageError)
                     {
                         if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
@@ -374,8 +365,8 @@
 {
     if (self.setUpSuccess)
     {
-        self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
@@ -398,7 +389,7 @@
                 
                 NSOutputStream *outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:NO];
                 
-                [self.processesService retrieveProcessImage:createdProcess outputStream:outputStream completionBlock:^(BOOL succeeded, NSError *retrieveImageError) {
+                [self.workflowService retrieveProcessImage:createdProcess outputStream:outputStream completionBlock:^(BOOL succeeded, NSError *retrieveImageError) {
                     if (retrieveImageError)
                     {
                         if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
@@ -460,8 +451,7 @@
 {
     if (self.setUpSuccess)
     {
-        self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
-        self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         NSString *processDefinitionID = @"activitiAdhoc:1:4";
         
@@ -477,7 +467,7 @@
                 XCTAssertNotNil(createdProcess, @"Process should not be nil");
                 XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
                 
-                [self.processesService retrieveAllTasksForProcess:createdProcess completionBlock:^(NSArray *array, NSError *retrieveTasksError) {
+                [self.workflowService retrieveAllTasksForProcess:createdProcess completionBlock:^(NSArray *array, NSError *retrieveTasksError) {
                     if (retrieveTasksError)
                     {
                         self.lastTestSuccessful = NO;
@@ -511,14 +501,14 @@
 
 - (void)createProcessUsingProcessDefinitionIdentifier:(NSString *)processDefinitionID assignees:(NSArray *)assignees variables:(NSDictionary *)variables attachements:(NSArray *)attachmentNodes completionBlock:(void (^)(AlfrescoWorkflowProcess *createdProcess, NSError *creationError))completionBlock
 {
-    self.processesDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
-    self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+    self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+    self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
     
-    [self.processesDefinitionService retrieveProcessDefinitionWithIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
+    [self.workflowService retrieveProcessDefinitionWithIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
         
         // define the process creation block
         void (^createProcessWithDefinition)(AlfrescoWorkflowProcessDefinition *definition) = ^(AlfrescoWorkflowProcessDefinition *definition) {
-            [self.processesService startProcessForProcessDefinition:definition assignees:assignees variables:variables attachments:attachmentNodes completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
+            [self.workflowService startProcessForProcessDefinition:definition assignees:assignees variables:variables attachments:attachmentNodes completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
                 if (startError)
                 {
                     completionBlock(nil, startError);
@@ -560,9 +550,9 @@
 
 - (void)deleteCreatedTestProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    self.processesService = [[AlfrescoWorkflowProcessService alloc] initWithSession:self.currentSession];
+    self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
     
-    [self.processesService deleteProcess:process completionBlock:^(BOOL succeeded, NSError *deleteError) {
+    [self.workflowService deleteProcess:process completionBlock:^(BOOL succeeded, NSError *deleteError) {
         completionBlock(succeeded, deleteError);
     }];
 }

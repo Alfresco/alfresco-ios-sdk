@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,34 +18,58 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowProcessService
+/** AlfrescoWorkflowService
  
  Author: Tauseef Mughal (Alfresco)
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoRequest.h"
 #import "AlfrescoConstants.h"
+#import "AlfrescoRequest.h"
 
-@class AlfrescoWorkflowProcessDefinition;
-
-@interface AlfrescoWorkflowProcessService : NSObject
+@interface AlfrescoWorkflowService : NSObject
 
 /**---------------------------------------------------------------------------------------
  * @name Initialisation methods
  *  ---------------------------------------------------------------------------------------
  */
 
-/** Initialises with a public or old API implementation
+/**
+ Initialises with a public or old API implementation
  
  @param session the AlfrescoSession to initialise the site service with
  */
 - (id)initWithSession:(id<AlfrescoSession>)session;
 
 /**---------------------------------------------------------------------------------------
- * @name Retrieval methods for the Alfresco Workflow Process Service
+ * @name Retrieval methods for the Alfresco Workflow Service
  *  ---------------------------------------------------------------------------------------
  */
+
+/**
+ Retrieves a list of all process definitions.
+ 
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveAllProcessDefinitionsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+/**
+ Retrieves a paged result of all process definitions in accordance to a listing context.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve process definitions
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveProcessDefinitionsWithListingContext:(AlfrescoListingContext *)listingContext
+                                                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+/**
+ Retrieves a process definition for a specific process identifier.
+ 
+ @param processDefinitionId The process definition identifier for the process definition to be retrieved
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveProcessDefinitionWithIdentifier:(NSString *)processDefinitionId
+                                             completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock;
 
 /**
  Retrieves a list of all processes.
@@ -125,8 +149,40 @@
  */
 - (AlfrescoRequest *)retrieveProcessImage:(AlfrescoWorkflowProcess *)process outputStream:(NSOutputStream *)outputStream completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
+/**
+ Retrieves a list of all tasks.
+ 
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveAllTasksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+/**
+ Retrieves a paged result of the tasks the authenticated user is allowed to see.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve the tasks
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveTasksWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+/**
+ Retrieves the task for a specific task identifier.
+ 
+ @param taskIdentifier The task identifier for the task to retrieve
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveTaskWithIdentifier:(NSString *)taskIdentifier completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
+
+/**
+ Retrieves an array of AlfrescoNode's for a specific task. If there are no attachments, nil is returned in the completion block.
+ 
+ @param task The task for which attachments should be retrieved
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+
 /**---------------------------------------------------------------------------------------
- * @name Add methods for the Alfresco Workflow Process Service
+ * @name Process management methods for the Alfresco Workflow Service
  *  ---------------------------------------------------------------------------------------
  */
 
@@ -141,11 +197,6 @@
  */
 - (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition assignees:(NSArray *)assignees variables:(NSDictionary *)variables attachments:(NSArray *)attachmentNodes completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
-/**---------------------------------------------------------------------------------------
- * @name Removal methods for the Alfresco Workflow Process Service
- *  ---------------------------------------------------------------------------------------
- */
-
 /**
  Deletes a process.
  
@@ -153,5 +204,81 @@
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)deleteProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+
+
+/**---------------------------------------------------------------------------------------
+ * @name Task management methods for the Alfresco Workflow Service
+ *  ---------------------------------------------------------------------------------------
+ */
+
+/**
+ Completes a given task.
+ 
+ @param task The task that should be marked as complete
+ @param properties Any properties to add to the task
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task properties:(NSDictionary *)properties completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
+
+/**
+ Claims the task for the authenticated user.
+ 
+ @param task The task to be claimed by the authenticated user
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)claimTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
+
+/**
+ Unclaims a task and sets the assignee to "Unassigned".
+ 
+ @param task The task the be unclaimed by the authenticated user
+ @param properties Any properties to add to the task before completion
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)unclaimTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
+
+/**
+ Assigns the given task to an assignee.
+ 
+ @param task The task to be assigned
+ @param assignee To whom the task should be assigned
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)assignTask:(AlfrescoWorkflowTask *)task toAssignee:(AlfrescoPerson *)assignee completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
+
+/**
+ Resolves the given task and assigns it back to the owner.
+ 
+ @param task The task which should be resolved
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)resolveTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
+
+/**
+ Adds a single attachment to a given task.
+ 
+ @param node The node that should be added to the task
+ @param task The task which the node should be attached
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)addAttachment:(AlfrescoNode *)node toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+
+/**
+ Adds an array of attachments to a given task.
+ 
+ @param nodeArray An array of AlfrescoNode's that should be added to the task
+ @param task The task to which the nodes should be attached
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)addAttachments:(NSArray *)nodeArray toTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+
+/**
+ Removes an attachment from a specific task.
+ 
+ @param node The node that should be removed from the task
+ @param task The task from which the node should be removed
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)removeAttachment:(AlfrescoNode *)node fromTask:(AlfrescoWorkflowTask *)task completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 @end

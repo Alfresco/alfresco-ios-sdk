@@ -18,29 +18,23 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowProcessDefinitionServiceTest
+/** AlfrescoWorkflowProcessDefinitionTests
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoWorkflowProcessDefinitionServiceTest.h"
+#import "AlfrescoWorkflowProcessDefinitionTests.h"
 #import "AlfrescoErrors.h"
 
-@interface AlfrescoWorkflowProcessDefinitionServiceTest ()
-
-@property (nonatomic, strong) AlfrescoWorkflowProcessDefinitionService *processDefinitionService;
-
-@end
-
-@implementation AlfrescoWorkflowProcessDefinitionServiceTest
+@implementation AlfrescoWorkflowProcessDefinitionTests
 
 - (void)testRetrieveAllProcessDefinitions
 {
     if (self.setUpSuccess)
     {
-        self.processDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self.processDefinitionService retrieveAllProcessDefinitionsWithCompletionBlock:^(NSArray *array, NSError *error) {
+        [self.workflowService retrieveAllProcessDefinitionsWithCompletionBlock:^(NSArray *array, NSError *error) {
             if (!array)
             {
                 self.lastTestSuccessful = NO;
@@ -73,10 +67,10 @@
         int maxItemsToRetrieve = 2;
         int skipCount = 2;
         
-        self.processDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:maxItemsToRetrieve skipCount:skipCount];
         
-        [self.processDefinitionService retrieveProcessDefinitionsWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        [self.workflowService retrieveProcessDefinitionsWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
             if (error)
             {
                 self.lastTestSuccessful = NO;
@@ -112,9 +106,9 @@
     if (self.setUpSuccess)
     {
         NSString *processID = @"activitiAdhoc:1:4";
-        self.processDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self.processDefinitionService retrieveProcessDefinitionWithIdentifier:processID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error) {
+        [self.workflowService retrieveProcessDefinitionWithIdentifier:processID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error) {
             if (error)
             {
                 if (error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported)
@@ -147,51 +141,6 @@
     {
         XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
-}
-
-- (void)testRetrieveFormModelByProcessID
-{
-    // Commented out by mhatfield on 25/Nov/2013 - unsupported in SDK 1.3
-//    if (self.setUpSuccess)
-//    {
-//        NSString *processID = @"activitiAdhoc:1:4";
-//        self.processDefinitionService = [[AlfrescoWorkflowProcessDefinitionService alloc] initWithSession:self.currentSession];
-//        
-//        [self.processDefinitionService retrieveFormModelForProcess:processID completionBlock:^(NSDictionary *dictionary, NSError *error) {
-//            if (self.currentSession.workflowInfo.publicAPI)
-//            {
-//                if (!dictionary)
-//                {
-//                    self.lastTestSuccessful = NO;
-//                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-//                    self.callbackCompleted = YES;
-//                }
-//                else
-//                {
-//                    XCTAssertNotNil(dictionary, @"Returned object should not be nil");
-//                    
-//                    self.lastTestSuccessful = YES;
-//                }
-//            }
-//            else
-//            {
-//                XCTAssertNil(dictionary, @"Returned dictionary was expected to be nil");
-//                XCTAssertNotNil(error, @"Expected an error to be returned");
-//                XCTAssertTrue(error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported, @"Expected error code: %i", kAlfrescoErrorCodeWorkflowFunctionNotSupported);
-//                XCTAssertTrue([error.localizedDescription isEqualToString:kAlfrescoErrorDescriptionWorkflowFunctionNotSupported], @"Expected error description: %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported);
-//                
-//                self.lastTestSuccessful = YES;
-//            }
-//            self.callbackCompleted = YES;
-//        }];
-//        
-//        [self waitUntilCompleteWithFixedTimeInterval];
-//        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-//    }
-//    else
-//    {
-//        STFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
-//    }
 }
 
 @end
