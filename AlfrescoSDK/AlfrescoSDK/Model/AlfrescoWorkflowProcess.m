@@ -25,8 +25,6 @@
 
 #import "AlfrescoWorkflowProcess.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoSession.h"
-#import "AlfrescoWorkflowUtils.h"
 #import "AlfrescoWorkflowObjectConverter.h"
 #import "AlfrescoWorkflowVariable.h"
 
@@ -34,7 +32,6 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 
 @interface AlfrescoWorkflowProcess ()
 
-@property (nonatomic, weak, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSDateFormatter *dateFormatter;
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *processDefinitionIdentifier;
@@ -52,14 +49,13 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 
 @implementation AlfrescoWorkflowProcess
 
-- (id)initWithProperties:(NSDictionary *)properties session:(id<AlfrescoSession>)session
+- (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super init];
     if (self)
     {
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setDateFormat:kAlfrescoISO8601DateStringFormat];
-        self.session = session;
         [self setupProperties:properties];
     }
     return self;
@@ -69,10 +65,11 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 
 - (void)setupProperties:(NSDictionary *)properties
 {
-    if (self.session.workflowInfo.publicAPI)
+    NSDictionary *entry = properties[kAlfrescoWorkflowPublicJSONEntry];
+    
+    // if the entry object is present the data has come from the public API
+    if (entry != nil)
     {
-        NSDictionary *entry = properties[kAlfrescoWorkflowPublicJSONEntry];
-        
         AlfrescoWorkflowObjectConverter *objectConverter = [[AlfrescoWorkflowObjectConverter alloc] init];
         NSArray *rawVariables = entry[kAlfrescoWorkflowPublicJSONProcessVariables];
         NSArray *convertedVariables = [objectConverter workflowVariablesFromArray:rawVariables];
@@ -99,10 +96,9 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     }
     else
     {
-        NSString *workflowEnginePrefix = [AlfrescoWorkflowUtils prefixForActivitiEngineType:self.session.workflowInfo.workflowEngine];
-        self.identifier = [properties[kAlfrescoWorkflowPublicJSONIdentifier] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.processDefinitionIdentifier = [[properties[kAlfrescoWorkflowLegacyJSONProcessDefinitionID] lastPathComponent] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
-        self.processDefinitionKey = [properties[kAlfrescoWorkflowLegacyJSONName] stringByReplacingOccurrencesOfString:workflowEnginePrefix withString:@""];
+        self.identifier = properties[kAlfrescoWorkflowPublicJSONIdentifier];
+        self.processDefinitionIdentifier = properties[kAlfrescoWorkflowLegacyJSONProcessDefinitionID];
+        self.processDefinitionKey = properties[kAlfrescoWorkflowLegacyJSONName];
         if (properties[kAlfrescoWorkflowLegacyJSONMessage] != [NSNull null])
         {
             self.name = properties[kAlfrescoWorkflowLegacyJSONMessage];

@@ -24,11 +24,19 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoConstants.h"
+#import "AlfrescoWorkflowProcess.h"
+#import "AlfrescoWorkflowTask.h"
 
 @interface AlfrescoWorkflowUtils : NSObject
 
-+ (NSString *)prefixForActivitiEngineType:(AlfrescoWorkflowEngineType)engineType;
-+ (NSString *)nodeGUIDFromNodeIdentifier:(NSString *)nodeIdentifier;
++ (BOOL)isActivitiProcess:(AlfrescoWorkflowProcess *)process;
+
++ (BOOL)isActivitiTask:(AlfrescoWorkflowTask *)task;
+
++ (BOOL)isJBPMProcess:(AlfrescoWorkflowProcess *)process;
+
++ (BOOL)isJBPMTask:(AlfrescoWorkflowTask *)task;
+
+
 
 @end

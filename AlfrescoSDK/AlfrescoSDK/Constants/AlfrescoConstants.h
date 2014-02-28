@@ -99,6 +99,9 @@ extern NSString * const kAlfrescoSortByDescription;
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoCapabilityLike;
 extern NSString * const kAlfrescoCapabilityCommentsCount;
+extern NSString * const kAlfrescoCapabilityPublicAPI;
+extern NSString * const kAlfrescoCapabilityActivitiWorkflowEngine;
+extern NSString * const kAlfrescoCapabilityJBPMWorkflowEngine;
 
 /**---------------------------------------------------------------------------------------
  * @name File Attribute Constants
@@ -132,10 +135,3 @@ extern NSString * const kAlfrescoWorkflowProcessPriority;
 extern NSString * const kAlfrescoWorkflowProcessSendEmailNotification;
 extern NSString * const kAlfrescoWorkflowProcessDueDate;
 extern NSString * const kAlfrescoWorkflowProcessApprovalRate;
-
-typedef NS_ENUM(NSInteger, AlfrescoWorkflowEngineType)
-{
-    AlfrescoWorkflowEngineTypeUnknown,
-    AlfrescoWorkflowEngineTypeJBPM,
-    AlfrescoWorkflowEngineTypeActiviti
-};
