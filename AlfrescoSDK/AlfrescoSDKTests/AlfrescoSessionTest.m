@@ -558,7 +558,7 @@
             
             BOOL isRunningOnVersion4 = [sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike];
             
-            XCTAssertTrue([sessionRepositoryInfo.edition isEqualToString:@"Enterprise"] || [sessionRepositoryInfo.edition isEqualToString:@"Community"], @"Expected the edition to be Enterprise or Community but it is %@", sessionRepositoryInfo.edition);
+            XCTAssertTrue([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] || [sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity], @"Expected the edition to be Enterprise or Community but it is %@", sessionRepositoryInfo.edition);
             
             if (isRunningOnVersion4)
             {
@@ -566,8 +566,35 @@
                 
                 XCTAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 0, @"Expected the minor version to be 0 or more");
                 
-                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 4 of the OnPremise server should support the like capability");
-                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 4 of the OnPremise server should support comments count capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike],
+                              @"Version 4 of the OnPremise server should support the like capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount],
+                              @"Version 4 of the OnPremise server should support comments count capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine],
+                              @"Version 4 of the OnPremise server should support the Activiti workflow engine");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine],
+                               @"Version 4 of the OnPremise server should not support the JBPM engine");
+                
+                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] &&
+                    [sessionRepositoryInfo.minorVersion intValue] == 0)
+                {
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 4.0 of the Enterprise server should not support the public API");
+                }
+                
+                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] &&
+                    [sessionRepositoryInfo.minorVersion intValue] >= 2)
+                {
+                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 4.2 or later of the Enterprise server should support the public API");
+                }
+                
+                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity] &&
+                         [sessionRepositoryInfo.minorVersion intValue] >= 3)
+                {
+                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 4.3 or later of the Community server should support the public API");
+                }
             }
             else
             {
@@ -577,13 +604,15 @@
                 
                 XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 3 of the OnPremise server should not support the like capability");
                 XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 3 of the OnPremise server should not support comments count capability");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI], @"Version 3 of the OnPremise server should not support the public API");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine], @"Version 3 of the OnPremise server should not support the Activiti workflow engine");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine], @"Version 3 of the OnPremise server should support the JBPM engine");
             }
             
             self.lastTestSuccessful = YES;
         }
         else
         {
-            // CURRENTLY WILL FAIL - MOBSDK-392
             AlfrescoRepositoryInfo *sessionRepositoryInfo = [self.currentSession repositoryInfo];
             
             XCTAssertNotNil(sessionRepositoryInfo, @"Expected the session repositary information to not be nil");
@@ -599,6 +628,14 @@
             XCTAssertNil(sessionRepositoryInfo.maintenanceVersion, @"Expected the maintenance version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.maintenanceVersion);
             XCTAssertNil(sessionRepositoryInfo.version, @"Expected the version of the repository item to be nil, but instead got %@", sessionRepositoryInfo.version);
             
+            // test capabilities
+            AlfrescoRepositoryCapabilities *capabilities = sessionRepositoryInfo.capabilities;
+            XCTAssertTrue(capabilities.doesSupportLikingNodes, @"Expected liking nodes to be supported");
+            XCTAssertTrue(capabilities.doesSupportCommentCounts, @"Expected comment counts to be supported");
+            XCTAssertTrue(capabilities.doesSupportPublicAPI, @"Expected the public API to be supported");
+            XCTAssertTrue(capabilities.doesSupportActivitiWorkflowEngine, @"Expected the Activiti workflow engine to be supported");
+            XCTAssertFalse(capabilities.doesSupportJBPMWorkflowEngine, @"Did not expect the JBPM workflow engine to be supported");
+            
             self.lastTestSuccessful = YES;
         }
         XCTAssertTrue(self.lastTestSuccessful, @"The session does not contain valid respository information");
@@ -608,138 +645,6 @@
         XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
-
-// TODO: refactor the old workflow info test below
-//- (void)testRepositoryCapabilities
-//{
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    /**
-     * Cloud Server:
-     *      Should always return PublicAPI flag set
-     *
-     * On Premise Servers:
-     *      For JBPM Workflow Engine types, should always return with flag unset
-     *      Enterprise: Version 4.2 and newer should have Public API flag set
-     *      Community: Version 4.3 and newer should have Public API flag set
-     *
-     * All other cases:
-     *      Public API flag should be unset
-     */
-    /*
-    id<AlfrescoSession> session = nil;
-    AlfrescoWorkflowInfo *workflowInfo = nil;
-    AlfrescoRepositoryInfo *repositoryInfo = nil;
-    SEL setRepositoryInfo = sel_registerName("setRepositoryInfo:");
-    
-    // Cloud
-    session = [[AlfrescoCloudSession alloc] init];
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set always for Cloud [Note: Invalid combination]");
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set always for Cloud");
-    
-    // Enterprise 3.4
-    repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @3,
-                                                                           kAlfrescoRepositoryMinorVersion : @4,
-                                                                           kAlfrescoRepositoryEdition : kAlfrescoRepositoryEditionEnterprise }];
-    session = [[AlfrescoRepositorySession alloc] init];
-    [session performSelector:setRepositoryInfo withObject:repositoryInfo];
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4EE and JBPM");
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4EE and Activiti [Note: Invalid combination]");
-    
-    // Enterprise 4.2
-    repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @4,
-                                                                           kAlfrescoRepositoryMinorVersion : @2,
-                                                                           kAlfrescoRepositoryEdition : kAlfrescoRepositoryEditionEnterprise }];
-    session = [[AlfrescoRepositorySession alloc] init];
-    [session performSelector:setRepositoryInfo withObject:repositoryInfo];
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.2EE and JBPM");
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v4.2EE and Activiti");
-    
-    // Enterprise 5.1 (randomly chosen)
-    repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @5,
-                                                                           kAlfrescoRepositoryMinorVersion : @1,
-                                                                           kAlfrescoRepositoryEdition : kAlfrescoRepositoryEditionEnterprise }];
-    session = [[AlfrescoRepositorySession alloc] init];
-    [session performSelector:setRepositoryInfo withObject:repositoryInfo];
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v5.1EE and JBPM");
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v5.1EE and Activiti");
-    
-    // Community 3.4.e
-    repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @3,
-                                                                           kAlfrescoRepositoryMinorVersion : @4,
-                                                                           kAlfrescoRepositoryMaintenanceVersion : @"e",
-                                                                           kAlfrescoRepositoryEdition : kAlfrescoRepositoryEditionCommunity }];
-    session = [[AlfrescoRepositorySession alloc] init];
-    [session performSelector:setRepositoryInfo withObject:repositoryInfo];
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4.e and JBPM");
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v3.4.e and Activiti [Note: Invalid combination]");
-    
-    // Community 4.2.e
-    repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @4,
-                                                                           kAlfrescoRepositoryMinorVersion : @2,
-                                                                           kAlfrescoRepositoryMaintenanceVersion : @"e",
-                                                                           kAlfrescoRepositoryEdition : kAlfrescoRepositoryEditionCommunity }];
-    session = [[AlfrescoRepositorySession alloc] init];
-    [session performSelector:setRepositoryInfo withObject:repositoryInfo];
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.2.e and JBPM");
-    
-    // Note: Even though 4.2.e does support the Public API, the SDK does not perform checks on the maintenance version number
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.2.e and Activiti");
-    
-    // Community 4.3.a
-    repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @4,
-                                                                           kAlfrescoRepositoryMinorVersion : @3,
-                                                                           kAlfrescoRepositoryMaintenanceVersion : @"a",
-                                                                           kAlfrescoRepositoryEdition : kAlfrescoRepositoryEditionCommunity }];
-    session = [[AlfrescoRepositorySession alloc] init];
-    [session performSelector:setRepositoryInfo withObject:repositoryInfo];
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v4.3.a and JBPM");
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v4.3.a and Activiti");
-    
-    // Community 5.3.e (randomly chosen)
-    repositoryInfo = [[AlfrescoRepositoryInfo alloc] initWithProperties:@{ kAlfrescoRepositoryMajorVersion : @5,
-                                                                           kAlfrescoRepositoryMinorVersion : @3,
-                                                                           kAlfrescoRepositoryMaintenanceVersion : @"e",
-                                                                           kAlfrescoRepositoryEdition : kAlfrescoRepositoryEditionCommunity }];
-    session = [[AlfrescoRepositorySession alloc] init];
-    [session performSelector:setRepositoryInfo withObject:repositoryInfo];
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeJBPM];
-    XCTAssertFalse(workflowInfo.publicAPI, @"Public API flag should not be set for v5.3.e and JBPM");
-    
-    workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:session workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    XCTAssertTrue(workflowInfo.publicAPI, @"Public API flag should be set for v5.3.e and Activiti");
-    
-#pragma clang diagnostic pop
-}
-*/
 
 - (void)testOAuthSerialization
 {

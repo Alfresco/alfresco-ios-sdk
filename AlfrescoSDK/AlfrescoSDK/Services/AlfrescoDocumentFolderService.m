@@ -1224,7 +1224,7 @@
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    AlfrescoLogDebug(@"-------- deleteNode %@ --------", node.name);
+
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     if ([node isKindOfClass:[AlfrescoDocument class]])
     {
