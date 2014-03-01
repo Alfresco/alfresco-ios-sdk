@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "RepositoryLoginViewController.h"
-#import "SamplesViewController.h"
 
 NSString * const kAlfrescoSDKSamplesHost = @"host";
 NSString * const kAlfrescoSDKSamplesUsername = @"username";

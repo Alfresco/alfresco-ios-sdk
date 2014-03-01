@@ -19,7 +19,6 @@
 #import "SamplesViewController.h"
 #import "FolderViewController.h"
 #import "SitesViewController.h"
-#import "ActivitiesTableViewController.h"
 
 @interface SamplesViewController ()
 @property (nonatomic, assign) BOOL connectionDetailsProvided;
