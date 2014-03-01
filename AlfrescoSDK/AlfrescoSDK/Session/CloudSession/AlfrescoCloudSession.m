@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -29,6 +29,7 @@
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
 #import <objc/runtime.h>
+#import "AlfrescoRepositoryInfoBuilder.h"
 
 @interface AlfrescoCloudSession ()
 
@@ -69,6 +70,7 @@
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionCache;
 @property (nonatomic, strong, readwrite) NSString *personIdentifier;
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
+@property (nonatomic, strong, readwrite) AlfrescoRepositoryInfoBuilder *repositoryInfoBuilder;
 @property (nonatomic, strong, readwrite) AlfrescoFolder *rootFolder;
 @property (nonatomic, strong, readwrite) NSString *emailAddress;
 @property (nonatomic, strong, readwrite) NSString *password;
@@ -77,7 +79,6 @@
 @property (nonatomic, strong, readwrite) id<AlfrescoNetworkProvider> networkProvider;
 @property BOOL isUsingBaseAuthenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
-@property (nonatomic, strong, readwrite) AlfrescoWorkflowInfo *workflowInfo;
 @end
 
 
@@ -259,11 +260,10 @@
                 if (newCMISSession)
                 {
                     [self setObject:newCMISSession forParameter:kAlfrescoSessionKeyCmisSession];
-                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
-                    self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:newCMISSession];
                     [newCMISSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
                         if (rootFolder)
                         {
+                            AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                             self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
                         }
                     }];
@@ -435,10 +435,7 @@
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
     params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     params.authenticationProvider = passthroughAuthProvider;
-    
-    // use activiti by default on cloud
-    self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-    
+
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
                                                                               alfrescoRequest:request
@@ -489,8 +486,7 @@
                 else
                 {
                     [self setObject:cmisSession forParameter:kAlfrescoSessionKeyCmisSession];
-                    AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
-                    self.repositoryInfo = [objectConverter repositoryInfoFromCMISSession:cmisSession];
+                    self.repositoryInfoBuilder.cmisSession = cmisSession;
                     alfrescoRequest.httpRequest = [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
                         if (nil == rootFolder)
                         {
@@ -501,9 +497,15 @@
                         }
                         else
                         {
+                            AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                             self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
                             if(completionBlock)
                             {
+                                // build the repositoryInfo object
+                                self.repositoryInfo = [self.repositoryInfoBuilder repositoryInfoFromCurrentState];
+                                self.repositoryInfoBuilder = nil;
+                                
+                                // call the original completion block
                                 completionBlock(self, nil);
                             }
                         }
@@ -597,9 +599,6 @@ This authentication method authorises the user to access the home network assign
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
 
-    // use activiti by default on cloud
-    self.workflowInfo = [[AlfrescoWorkflowInfo alloc] initWithSession:self workflowEngine:AlfrescoWorkflowEngineTypeActiviti];
-
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
                                                                               alfrescoRequest:request
@@ -652,6 +651,8 @@ This authentication method authorises the user to access the home network assign
                 
         // setup defaults
         self.defaultListingContext = [[AlfrescoListingContext alloc] init];
+        self.repositoryInfoBuilder = [[AlfrescoRepositoryInfoBuilder alloc] init];
+        self.repositoryInfoBuilder.isCloud = YES;
     }
     return self;
 }

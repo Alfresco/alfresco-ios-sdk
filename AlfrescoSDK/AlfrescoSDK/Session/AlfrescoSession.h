@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -22,7 +22,6 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoRepositoryInfo.h"
 #import "AlfrescoNetworkProvider.h"
-#import "AlfrescoWorkflowInfo.h"
 
 /** The AlfrescoSession category defines the properties made available for a session to an Alfresco repository.
  
@@ -55,9 +54,6 @@
 
 /// The network provider, if this is not provided, a default implementation is set
 @property (nonatomic, strong, readonly) id<AlfrescoNetworkProvider> networkProvider;
-
-/// Information describing the workflow engine and api to use
-@property (nonatomic, strong, readonly) AlfrescoWorkflowInfo *workflowInfo;
 
 
 /**---------------------------------------------------------------------------------------

@@ -18,24 +18,23 @@
  *****************************************************************************
  */
 
-/** AlfrescoCloudWorkflowProcessDefinitionService
+/** AlfrescoCloudWorkflowService
  
- Author: Mike Hatfield (Alfresco)
+ Author: Tauseef Mughal (Alfresco)
  */
 
-#import "AlfrescoCloudWorkflowProcessDefinitionService.h"
+#import "AlfrescoCloudWorkflowService.h"
 #import "AlfrescoSession.h"
 #import "AlfrescoInternalConstants.h"
 
-
-@interface AlfrescoCloudWorkflowProcessDefinitionService ()
+@interface AlfrescoCloudWorkflowService ()
 
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 
 @end
 
-@implementation AlfrescoCloudWorkflowProcessDefinitionService
+@implementation AlfrescoCloudWorkflowService
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {

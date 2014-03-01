@@ -25,8 +25,6 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol AlfrescoSession;
-
 @interface AlfrescoWorkflowTask : NSObject <NSCoding>
 
 @property (nonatomic, strong, readonly) NSString *identifier;
@@ -40,6 +38,6 @@
 @property (nonatomic, strong, readonly) NSNumber *priority;
 @property (nonatomic, strong, readonly) NSString *assigneeIdentifier;
 
-- (id)initWithProperties:(NSDictionary *)properties session:(id<AlfrescoSession>)session;
+- (id)initWithProperties:(NSDictionary *)properties;
 
 @end
