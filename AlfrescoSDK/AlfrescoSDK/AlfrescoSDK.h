@@ -66,7 +66,6 @@
 #import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoWorkflowProcess.h"
 #import "AlfrescoWorkflowTask.h"
-#import "AlfrescoContentStream.h"
 #import "AlfrescoSearchLanguage.h"
 
 /**
@@ -81,7 +80,7 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoCommentService.h"
 #import "AlfrescoActivityStreamService.h"
-#import "AlfrescoWorkflowServices.h"
+#import "AlfrescoWorkflowService.h"
 
 /**
  * Utils

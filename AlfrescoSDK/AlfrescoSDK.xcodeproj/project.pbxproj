@@ -16,6 +16,7 @@
 		08FC13FF1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13FD1754DE80001D4AB7 /* AlfrescoOnPremiseDocumentFolderService.m */; };
 		08FC14041754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */; };
 		2746C3FE18BB78C600DD8DDF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2746C3FD18BB78C600DD8DDF /* XCTest.framework */; };
+		274E4D4418C23F010081D8D4 /* AlfrescoWorkflowService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 580800BA18C0B0A0005D075A /* AlfrescoWorkflowService.h */; };
 		27786B86178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27786B84178DBB8600E78A5D /* AlfrescoUntrustedSSLHTTPRequest.m */; };
 		27786B88178DBC6E00E78A5D /* AlfrescoCMISPassThroughAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 278B2695177BAF4D0049C229 /* AlfrescoCMISPassThroughAuthenticationProvider.m */; };
 		279C02851892CA2700BC8628 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0769A15B00D8E00DF7DED /* Foundation.framework */; };
@@ -248,6 +249,7 @@
 				279C02B51892CE9E00BC8628 /* AlfrescoVersionService.h in CopyFiles */,
 				279C02B71892CEB200BC8628 /* AlfrescoWorkflowProcess.h in CopyFiles */,
 				279C02B81892CEB700BC8628 /* AlfrescoWorkflowProcessDefinition.h in CopyFiles */,
+				274E4D4418C23F010081D8D4 /* AlfrescoWorkflowService.h in CopyFiles */,
 				279C02BC1892CEEC00BC8628 /* AlfrescoWorkflowTask.h in CopyFiles */,
 				279C02BE1892CF0000BC8628 /* AlfrescoWorkflowVariable.h in CopyFiles */,
 			);
