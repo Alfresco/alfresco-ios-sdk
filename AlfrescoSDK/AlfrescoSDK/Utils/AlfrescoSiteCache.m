@@ -19,15 +19,12 @@
  */
 
 #import "AlfrescoSiteCache.h"
-#import "AlfrescoOnPremiseJoinSiteRequest.h"
-#import "AlfrescoInternalConstants.h"
 #import "AlfrescoLog.h"
 
 #define TIMEOUTINTERVAL 120
 
 @interface AlfrescoSiteCache ()
 @property (nonatomic, assign, readwrite) BOOL isCacheBuilt;
-@property (nonatomic, strong, readwrite) NSArray *allSites;
 @property (nonatomic, strong, readwrite) NSArray *memberSites;
 @property (nonatomic, strong, readwrite) NSArray *favoriteSites;
 @property (nonatomic, strong, readwrite) NSArray *pendingSites;

@@ -18,7 +18,6 @@
 
 #import "AlfrescoSiteServiceTest.h"
 #import "AlfrescoPersonService.h"
-#import "AlfrescoLog.h"
 
 @implementation AlfrescoSiteServiceTest
 

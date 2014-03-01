@@ -26,7 +26,6 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoLog.h"
-#import "AlfrescoSiteCache.h"
 #import "AlfrescoOnPremiseJoinSiteRequest.h"
 #import "AlfrescoProperty.h"
 

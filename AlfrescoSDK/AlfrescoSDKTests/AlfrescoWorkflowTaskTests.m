@@ -25,7 +25,6 @@
 
 #import "AlfrescoWorkflowTaskTests.h"
 #import "AlfrescoWorkflowUtils.h"
-#import "AlfrescoPersonService.h"
 #import "AlfrescoErrors.h"
 
 @implementation AlfrescoWorkflowTaskTests
