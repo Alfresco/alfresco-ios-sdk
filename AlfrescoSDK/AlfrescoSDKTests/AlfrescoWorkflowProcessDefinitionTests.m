@@ -25,6 +25,10 @@
 
 #import "AlfrescoWorkflowProcessDefinitionTests.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoLog.h"
+
+static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
+static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
 
 @implementation AlfrescoWorkflowProcessDefinitionTests
 
@@ -105,13 +109,18 @@
 {
     if (self.setUpSuccess)
     {
-        NSString *processID = @"activitiAdhoc:1:4";
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self.workflowService retrieveProcessDefinitionWithIdentifier:processID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error) {
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+        
+        [self.workflowService retrieveProcessDefinitionWithIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error) {
             if (error)
             {
-                if (error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported)
+                if (error.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported && [self.currentSession.repositoryInfo.majorVersion intValue] == 3)
                 {
                     XCTAssertEqualObjects(error.localizedDescription, kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, @"Error description should be %@, but instead got back %@", kAlfrescoErrorDescriptionWorkflowFunctionNotSupported, error.localizedDescription);
                     self.lastTestSuccessful = YES;
@@ -125,9 +134,9 @@
             }
             else
             {
-                XCTAssertNotNil(processDefinition, @"array should not be nil");
-                
-                // check values of each property
+                XCTAssertNotNil(processDefinition, @"processDefinition should not be nil");
+                XCTAssertTrue([processDefinition.identifier isEqualToString:processDefinitionID],
+                              @"Expected process definition identifier to be %@ but was %@", processDefinitionID, processDefinition.identifier);
                 
                 self.lastTestSuccessful = YES;
             }

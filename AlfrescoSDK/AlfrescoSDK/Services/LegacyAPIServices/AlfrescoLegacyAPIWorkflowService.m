@@ -130,7 +130,7 @@
     
     AlfrescoRequest *request = nil;
     
-    if (!self.session.repositoryInfo.capabilities.doesSupportLikingNodes)
+    if ([self.session.repositoryInfo.majorVersion intValue] <= 3)
     {
         NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
         completionBlock(nil, notSupportedError);

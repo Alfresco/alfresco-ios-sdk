@@ -27,6 +27,10 @@
 #import "AlfrescoWorkflowUtils.h"
 #import "AlfrescoErrors.h"
 
+static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
+static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
+static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
+
 @implementation AlfrescoWorkflowTaskTests
 
 - (void)testRetrieveAllTasks
@@ -104,7 +108,13 @@
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+        
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -151,7 +161,13 @@
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+        
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -216,7 +232,13 @@
             {
                 XCTAssertNotNil(person, @"Person should not be nil");
                 
-                [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+                NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+                if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                {
+                    processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+                }
+                
+                [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
                     if (creationError)
                     {
                         self.lastTestSuccessful = NO;
@@ -265,7 +287,13 @@
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+        
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -322,7 +350,13 @@
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+        
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -365,9 +399,15 @@
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+        
         __weak typeof(self) weakSelf = self;
         
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 weakSelf.lastTestSuccessful = NO;
@@ -430,8 +470,14 @@
     if (self.setUpSuccess)
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
             
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:@"activitiAdhoc:1:4" completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -541,7 +587,7 @@
             {
                 NSDictionary *properties = @{@"id" : @"jbpm$1",
                                              @"url" : @"api/workflow-definitions/jbpm$1",
-                                             @"name" : @"jbpm$wf:adhoc",
+                                             @"name" : kAlfrescoJBPMAdhocProcessDefinition,
                                              @"title" : @"Adhoc",
                                              @"description" : @"Assign task to colleague",
                                              @"version" : @"1"};
