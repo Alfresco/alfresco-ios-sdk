@@ -27,7 +27,7 @@ Alternatively, use one of the tags (https://github.com/Alfresco/alfresco-ios-sdk
 Known Issues
 ------------
 
-- MOBSDK-518 (https://issues.alfresco.com/jira/browse/MOBSDK-518): Updating document contents via iOS SDK for file created via SDK does not update the version number
+- Please refer to the MOBSDK project in Alfresco's JIRA issue tracker (https://issues.alfresco.com/jira/browse/MOBSDK)
 
 License
 -------
