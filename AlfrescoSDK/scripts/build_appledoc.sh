@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2005-2013 Alfresco Software Limited.
+# Copyright (C) 2005-2014 Alfresco Software Limited.
 #
 # This file is part of the Alfresco Mobile SDK.
 #
@@ -16,36 +16,34 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-source ./sdk_version.sh
+. ${ALFRESCO_SDK_SCRIPT:-$(dirname $0)}/common.sh
 
-ALFRESCO_SDK_HELP="AlfrescoSDKHelp"
+test -x "$APPLEDOC" || die 'Could not find appledoc in $PATH. Use "brew install appledoc"'
 
-# remove previous generated documentation
-if [ -d $ALFRESCO_SDK_HELP ]; then
-  rm -R $ALFRESCO_SDK_HELP
-fi
 
-# create directory
-mkdir $ALFRESCO_SDK_HELP
+# -----------------------------------------------------------------------------
+# Build documentation
+#
+cd $ALFRESCO_SDK_ROOT
 
-# Build documentation if appledoc is installed
-if type -p appledoc &>/dev/null; then
-    appledoc \
-    --project-name "AlfrescoSDK" \
-    --project-company "Alfresco" \
-    --company-id "com.alfresco" \
-    --output "$ALFRESCO_SDK_HELP" \
-    --exit-threshold 2 \
-    --ignore ".m" \
-    --ignore "build" \
-    --ignore "AlfrescoSDKTests" \
-    --ignore "CMIS" \
-    --keep-intermediate-files \
-    .
-    cd $ALFRESCO_SDK_HELP
-    mv docset com.alfresco.AlfrescoSDK.docset
-    jar cvf alfresco-ios-sdk-docset-$ALFRESCO_SDK_VERSION.zip com.alfresco.AlfrescoSDK.docset
-else
-    echo "appledoc: executable can not be found, you can find installation instructions at https://github.com/tomaz/appledoc"
-    echo "appledoc: Quick install via Homebrew: brew install appledoc"
-fi
+\rm -rf $ALFRESCO_SDK_DOCSET_BUILD
+mkdir $ALFRESCO_SDK_DOCSET_BUILD \
+  || die "Could not create directory $ALFRESCO_SDK_DOCSET_BUILD"
+
+$APPLEDOC \
+   --project-name $ALFRESCO_SDK_PRODUCT_NAME \
+   --project-company "Alfresco" \
+   --company-id "com.alfresco" \
+   --output $ALFRESCO_SDK_DOCSET_BUILD \
+   --exit-threshold 2 \
+   --ignore ".m" \
+   --ignore "build" \
+   --ignore "AlfrescoSDKTests" \
+   --ignore "CMIS" \
+   --keep-intermediate-files \
+   --no-install-docset \
+   . \
+   || die "appledoc failed to build documentation"
+
+cd $ALFRESCO_SDK_DOCSET_BUILD
+mv docset $ALFRESCO_SDK_DOCSET_NAME

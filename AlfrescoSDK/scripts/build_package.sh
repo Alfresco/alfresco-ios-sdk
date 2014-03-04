@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2005-2013 Alfresco Software Limited.
+# Copyright (C) 2005-2014 Alfresco Software Limited.
 #
 # This file is part of the Alfresco Mobile SDK.
 #
@@ -16,36 +16,90 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-source ./sdk_version.sh
+. ${ALFRESCO_SDK_SCRIPT:-$(dirname $0)}/common.sh
 
-ALFRESCO_SDK_PACKAGE=alfresco-ios-sdk-$ALFRESCO_SDK_VERSION.zip
-PACKAGE_DIR=build/Package
+# Package dir
+ALFRESCO_SDK_PACKAGE=$ALFRESCO_SDK_BUILD/Package
 
-if [ -d $PACKAGE_DIR ]
-then
-  rm -R $PACKAGE_DIR
-fi
-mkdir -p $PACKAGE_DIR
+test -d $ALFRESCO_SDK_PACKAGE \
+   || mkdir -p $ALFRESCO_SDK_PACKAGE \
+   || die "Could not create directory $ALFRESCO_SDK_PACKAGE"
 
-echo "Preparing binary package..."
 
-cp NOTICE $PACKAGE_DIR
-cp LICENSE $PACKAGE_DIR
-cp README $PACKAGE_DIR
+# -----------------------------------------------------------------------------
+# Script Parameters
+#
+underline=`tput smul`
+nounderline=`tput rmul`
+bold=`tput bold`
+normal=`tput sgr0`
 
-echo "Building static library..."
+usage () {
+   echo 
+   echo "usage: $(basename $0) [${bold}--no-docs${normal}] ${underline}build configuration${nounderline}"
+   echo "  --no-docs : Prevent appledoc generation"
+   echo "  build configuration : Specify Debug or Release. Note: defaults to Release"
+   echo
+   exit 1
+}
 
-export BUILD_UNIVERSAL_LIB='TRUE'
-xcodebuild -project AlfrescoSDK.xcodeproj -target AlfrescoSDK -configuration Debug ONLY_ACTIVE_ARCH=NO clean build
-xcodebuild -project AlfrescoSDK.xcodeproj -target AlfrescoSDK -configuration Release clean build
+# Script Defaults
+BUILD_CONFIGURATION=Release
+LIBRARY_SUFFIX=""
+GENERATE_DOCS="true"
 
-cp -R build/Debug-universal/* $PACKAGE_DIR
-cp build/Release-universal/*.a $PACKAGE_DIR
+for param in $*
+do
+   if [[ "$param" == "Debug" ]] ; then
+      BUILD_CONFIGURATION=Debug
+      LIBRARY_SUFFIX="-debug"
+   elif [[ "$param" == "--no-docs" ]] ; then
+      GENERATE_DOCS=""
+   elif [[ "$param" == "--help" ]] ; then
+      usage
+   fi
+done
 
-echo "Creating package..."
 
-pushd $PACKAGE_DIR
-jar cvf $ALFRESCO_SDK_PACKAGE *
+# -----------------------------------------------------------------------------
+# Build AlfrescoSDK.framework
+#
+ALFRESCO_SDK_FRAMEWORK_ZIP_NAME=alfresco-ios-sdk-$ALFRESCO_SDK_VERSION"$LIBRARY_SUFFIX".zip
+ALFRESCO_SDK_FRAMEWORK_ZIP=$ALFRESCO_SDK_PACKAGE/$ALFRESCO_SDK_FRAMEWORK_ZIP_NAME
+
+progress_message "Packaging framework to $ALFRESCO_SDK_FRAMEWORK_ZIP - $BUILD_CONFIGURATION configuration"
+
+# Build framework
+. $ALFRESCO_SDK_SCRIPT/build_framework.sh $BUILD_CONFIGURATION \
+   || die "AlfrescoSDK.framework failed to build."
+
+# Package framework
+\rm -rf $ALFRESCO_SDK_FRAMEWORK_ZIP
+pushd $ALFRESCO_SDK_ROOT
+zip $ALFRESCO_SDK_FRAMEWORK_ZIP README LICENSE NOTICE
+popd
+pushd $ALFRESCO_SDK_BUILD
+zip -gry $ALFRESCO_SDK_FRAMEWORK_ZIP $ALFRESCO_SDK_FRAMEWORK
 popd
 
-echo "done!"
+
+# -----------------------------------------------------------------------------
+# Generate documentation
+#
+ALFRESCO_SDK_DOCSET_ZIP_NAME=alfresco-ios-sdk-docset-$ALFRESCO_SDK_VERSION.zip
+ALFRESCO_SDK_DOCSET_ZIP=$ALFRESCO_SDK_PACKAGE/$ALFRESCO_SDK_DOCSET_ZIP_NAME
+
+if [[ "$GENERATE_DOCS" == "true" ]] ; then
+   progress_message "Packaging help to $ALFRESCO_SDK_DOCSET_ZIP"
+
+   # Build documentation
+   . $ALFRESCO_SDK_SCRIPT/build_appledoc.sh \
+      || die "Documentation failed to build."
+
+   # Package documentation
+   \rm -rf $ALFRESCO_SDK_DOCSET_ZIP
+   pushd $ALFRESCO_SDK_DOCSET_BUILD
+   zip -r $ALFRESCO_SDK_DOCSET_ZIP $ALFRESCO_SDK_DOCSET_NAME
+   popd
+
+fi
