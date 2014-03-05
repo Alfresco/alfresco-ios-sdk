@@ -51,6 +51,7 @@ NSString * const kAlfrescoLegacyAPIWorkflowFormProcessor = @"workflow/{processDe
 NSString * const kAlfrescoPublicAPIWorkflowProcesses = @"processes";
 NSString * const kAlfrescoPublicAPIWorkflowSingleProcess = @"processes/{processId}";
 NSString * const kAlfrescoPublicAPIWorkflowTasksForProcess = @"processes/{processId}/tasks";
+NSString * const kAlfrescoPublicAPIWorkflowAttachmentsForProcess = @"processes/{processId}/items";
 NSString * const kAlfrescoPublicAPIWorkflowProcessImage = @"processes/{processId}/image";
 
 // Workflows/Processes - Parameters

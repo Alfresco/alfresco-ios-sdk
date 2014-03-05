@@ -386,6 +386,39 @@
     return request;
 }
 
+- (AlfrescoRequest *)retrieveAttachmentsForProcess:(AlfrescoWorkflowProcess *)process
+                                   completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *requestString = [kAlfrescoPublicAPIWorkflowAttachmentsForProcess stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+    
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (error)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *attachmentIdentifiers = [self.workflowObjectConverter attachmentIdentifiersFromPublicJSONData:data conversionError:&conversionError];
+            if (conversionError)
+            {
+                completionBlock(nil, conversionError);
+            }
+            else
+            {
+                [self retrieveAlfrescoNodes:attachmentIdentifiers completionBlock:completionBlock];
+            }
+        }
+    }];
+    return request;
+}
+
 - (AlfrescoRequest *)retrieveTasksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];

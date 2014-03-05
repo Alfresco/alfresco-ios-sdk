@@ -393,6 +393,27 @@
     return request;
 }
 
+- (AlfrescoRequest *)retrieveAttachmentsForProcess:(AlfrescoWorkflowProcess *)process
+                                   completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    
+    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    request = [self retrieveTasksForProcess:process completionBlock:^(NSArray *array, NSError *error) {
+        if (error)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            AlfrescoWorkflowTask *firstTask = array[0];
+            request = [self retrieveAttachmentsForTask:firstTask completionBlock:completionBlock];
+        }
+    }];
+    return request;
+}
+
 - (AlfrescoRequest *)retrieveTasksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -562,13 +583,14 @@
         }
         
         AlfrescoNode *currentNode = (AlfrescoNode *)nodeObject;
+        NSString *cleanNodeRef = [AlfrescoObjectConverter nodeRefWithoutVersionID:currentNode.identifier];
         if (i == 0)
         {
-            documentsAdded = currentNode.identifier;
+            documentsAdded = cleanNodeRef;
         }
         else
         {
-            documentsAdded = [NSString stringWithFormat:@"%@,%@", documentsAdded, currentNode.identifier];
+            documentsAdded = [NSString stringWithFormat:@"%@,%@", documentsAdded, cleanNodeRef];
         }
     }
     

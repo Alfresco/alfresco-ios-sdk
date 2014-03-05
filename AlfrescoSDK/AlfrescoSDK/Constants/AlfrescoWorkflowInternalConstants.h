@@ -51,6 +51,7 @@ extern NSString * const kAlfrescoLegacyAPIWorkflowFormProcessor;
 extern NSString * const kAlfrescoPublicAPIWorkflowProcesses;
 extern NSString * const kAlfrescoPublicAPIWorkflowSingleProcess;
 extern NSString * const kAlfrescoPublicAPIWorkflowTasksForProcess;
+extern NSString * const kAlfrescoPublicAPIWorkflowAttachmentsForProcess;
 extern NSString * const kAlfrescoPublicAPIWorkflowProcessImage;
 
 // Workflows/Processes - Parameters
