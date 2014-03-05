@@ -518,6 +518,62 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
     }
 }
 
+- (void)testRetrieveAttachmentsForProcessWithAttachment
+{
+    if (self.setUpSuccess)
+    {
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+        
+        NSArray *attachmentArray = @[self.testAlfrescoDocument];
+        
+        [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:attachmentArray completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+            if (creationError)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [creationError localizedDescription], [creationError localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(createdProcess, @"Process should not be nil");
+                XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
+                
+                [self.workflowService retrieveAttachmentsForProcess:createdProcess completionBlock:^(NSArray *attachmentNodes, NSError *retrieveAttachmentsError) {
+                    if (retrieveAttachmentsError)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveAttachmentsError localizedDescription], [retrieveAttachmentsError localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertNotNil(attachmentNodes, @"array should not be nil");
+                        XCTAssertTrue(attachmentNodes.count == attachmentArray.count, @"Array should contain %d attachment(s)", attachmentArray.count);
+                        
+                        [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                            XCTAssertTrue(succeeded, @"Deletion flag should be true");
+                            self.lastTestSuccessful = succeeded;
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 #pragma mark - Private Functions
 
 - (void)createProcessUsingProcessDefinitionIdentifier:(NSString *)processDefinitionID assignees:(NSArray *)assignees variables:(NSDictionary *)variables attachements:(NSArray *)attachmentNodes completionBlock:(void (^)(AlfrescoWorkflowProcess *createdProcess, NSError *creationError))completionBlock

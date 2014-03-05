@@ -163,6 +163,15 @@
                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /**
+ Retrieves an array of AlfrescoNode's for a specific process. If there are no attachments, nil is returned in the completion block.
+ 
+ @param process The process for which attachment(s) should be retrieved
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveAttachmentsForProcess:(AlfrescoWorkflowProcess *)process
+                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+/**
  Retrieves a list of all tasks the authenticated user is allowed to see.
  
  @param completionBlock The block that's called with the operation completes
