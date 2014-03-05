@@ -568,7 +568,8 @@
         }
         
         AlfrescoNode *node = (AlfrescoNode *)attachmentNodeObject;
-        [nodeRefs addObject:node.identifier];
+        NSString *cleanNodeRef = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+        [nodeRefs addObject:cleanNodeRef];
     }
     
     if (nodeRefs.count > 0)
