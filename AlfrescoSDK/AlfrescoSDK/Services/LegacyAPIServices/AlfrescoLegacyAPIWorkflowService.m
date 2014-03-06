@@ -363,17 +363,8 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
     
-    NSString *queryString = nil;
-    if (state && ![state isEqualToString:kAlfrescoWorkflowProcessStateAny])
-    {
-        queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowTaskState : (self.publicToPrivateStateMappings)[state]}];
-    }
-    
+    NSString *legacyStateString = self.publicToPrivateStateMappings[state];
     NSString *requestString = [kAlfrescoLegacyAPIWorkflowTasksForInstance stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
-    if (queryString)
-    {
-        requestString = [requestString stringByAppendingString:queryString];
-    }
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
@@ -386,7 +377,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data conversionError:&conversionError];
+            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data inState:legacyStateString conversionError:&conversionError];
             completionBlock(tasks, conversionError);
         }
     }];

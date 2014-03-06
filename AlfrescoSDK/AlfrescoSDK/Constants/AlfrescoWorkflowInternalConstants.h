@@ -177,6 +177,7 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONPriority;
 extern NSString * const kAlfrescoWorkflowLegacyJSONDescription;
 extern NSString * const kAlfrescoWorkflowLegacyJSONInitiator;
 extern NSString * const kAlfrescoWorkflowLegacyJSONFormData;
+extern NSString * const kAlfrescoWorkflowLegacyJSONTasks;
 
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableName;
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableType;

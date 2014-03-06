@@ -167,6 +167,48 @@
     }];
 }
 
+- (NSArray *)workflowTasksFromLegacyJSONData:(NSData *)jsonData inState:(NSString *)state conversionError:(NSError **)error
+{
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
+        if (parseError)
+        {
+            *error = parseError;
+            return nil;
+        }
+        else
+        {
+            // determine filter
+            BOOL shouldFilter = NO;
+            NSPredicate *filterPredicate = nil;
+            if ([state isEqualToString:kAlfrescoLegacyAPIWorkflowStatusInProgress])
+            {
+                filterPredicate = [NSPredicate predicateWithFormat:@"endedAt == nil"];
+                shouldFilter = YES;
+            }
+            else if ([state isEqualToString:kAlfrescoLegacyAPIWorkflowStatusCompleted])
+            {
+                filterPredicate = [NSPredicate predicateWithFormat:@"endedAt != nil"];
+                shouldFilter = YES;
+            }
+            
+            NSMutableArray *workflowTasks = [NSMutableArray array];
+            NSArray *tasksArray = (jsonObject[kAlfrescoWorkflowLegacyJSONData])[kAlfrescoWorkflowLegacyJSONTasks];
+            for (NSDictionary *entryDictionary in tasksArray)
+            {
+                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entryDictionary];
+                [workflowTasks addObject:task];
+            }
+            
+            if (shouldFilter)
+            {
+                [workflowTasks filteredArrayUsingPredicate:filterPredicate];
+            }
+            
+            return workflowTasks;
+        }
+    }];
+}
+
 - (NSArray *)workflowTasksFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
