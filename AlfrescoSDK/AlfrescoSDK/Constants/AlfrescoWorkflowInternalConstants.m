@@ -45,7 +45,7 @@ NSString * const kAlfrescoPublicAPIWorkflowProcessDefinitionFormModel = @"proces
 // Workflows Instances/Processes
 NSString * const kAlfrescoLegacyAPIWorkflowInstances = @"workflow-instances";
 NSString * const kAlfrescoLegacyAPIWorkflowSingleInstance = @"workflow-instances/{processId}";
-NSString * const kAlfrescoLegacyAPIWorkflowTasksForInstance = @"workflow-instances/{processId}/task-instances";
+NSString * const kAlfrescoLegacyAPIWorkflowTasksForInstance = @"workflow-instances/{processId}?includeTasks=true";
 NSString * const kAlfrescoLegacyAPIWorkflowProcessDiagram = @"workflow-instances/{processId}/diagram";
 NSString * const kAlfrescoLegacyAPIWorkflowFormProcessor = @"workflow/{processDefinitionId}/formprocessor";
 NSString * const kAlfrescoPublicAPIWorkflowProcesses = @"processes";
@@ -177,6 +177,7 @@ NSString * const kAlfrescoWorkflowLegacyJSONPriority = @"priority";
 NSString * const kAlfrescoWorkflowLegacyJSONDescription = @"description";
 NSString * const kAlfrescoWorkflowLegacyJSONInitiator = @"initiator";
 NSString * const kAlfrescoWorkflowLegacyJSONFormData = @"formData";
+NSString * const kAlfrescoWorkflowLegacyJSONTasks = @"tasks";
 
 NSString * const kAlfrescoWorkflowPublicJSONVariableName = @"name";
 NSString * const kAlfrescoWorkflowPublicJSONVariableType = @"type";
