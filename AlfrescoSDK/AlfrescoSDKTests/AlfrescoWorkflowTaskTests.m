@@ -191,7 +191,7 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                         XCTAssertEqualObjects(task.startedAt, retrievedTask.startedAt, @"The task startedAt property does not match");
                         XCTAssertEqualObjects(task.endedAt, retrievedTask.endedAt, @"The task endedAt property does not match");
                         XCTAssertEqualObjects(task.dueAt, retrievedTask.dueAt, @"The task dueAt property does not match");
-                        XCTAssertEqualObjects(task.taskDescription, retrievedTask.taskDescription, @"The task taskDescription property does not match");
+                        XCTAssertEqualObjects(task.summary, retrievedTask.summary, @"The task summary property does not match");
                         XCTAssertEqualObjects(task.priority, retrievedTask.priority, @"The task priority property does not match");
                         XCTAssertEqualObjects(task.assigneeIdentifier, retrievedTask.assigneeIdentifier, @"The task assigneeIdentifier property does not match");
                         

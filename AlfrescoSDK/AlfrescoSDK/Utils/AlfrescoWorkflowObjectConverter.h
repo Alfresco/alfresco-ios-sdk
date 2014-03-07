@@ -41,7 +41,7 @@
 - (NSArray *)workflowTasksFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error;
 
 // variables
-- (NSArray *)workflowVariablesFromArray:(NSArray *)variables;
+- (NSDictionary *)workflowVariablesFromArray:(NSArray *)variables;
 - (NSArray *)workflowVariablesFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error;
 - (NSArray *)workflowVariablesFromLegacyProperties:(NSDictionary *)properties;
 

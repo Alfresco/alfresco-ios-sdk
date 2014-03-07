@@ -229,7 +229,7 @@
 }
 
 - (AlfrescoRequest *)addAttachmentToTask:(AlfrescoWorkflowTask *)task
-                              attachment:(AlfrescoNode *)node
+                              attachment:(AlfrescoDocument *)document
                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
@@ -237,7 +237,7 @@
 }
 
 - (AlfrescoRequest *)addAttachmentsToTask:(AlfrescoWorkflowTask *)task
-                              attachments:(NSArray *)nodeArray
+                              attachments:(NSArray *)documentArray
                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
@@ -245,7 +245,7 @@
 }
 
 - (AlfrescoRequest *)removeAttachmentFromTask:(AlfrescoWorkflowTask *)task
-                                   attachment:(AlfrescoNode *)node
+                                   attachment:(AlfrescoDocument *)document
                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];

@@ -76,10 +76,12 @@ NSString * const kAlfrescoCMISBindingURL = @"org.alfresco.mobile.session.cmisbin
 /**
  Workflow Task Constants
  */
-NSString * const kAlfrescoTaskComment = @"org.alfresco.mobile.task.comment";
-NSString * const kAlfrescoTaskReviewOutcome = @"org.alfresco.mobile.task.reviewoutcome";
-NSString * const kAlfrescoTaskApprove = @"Approve";
-NSString * const kAlfrescoTaskReject = @"Reject";
+NSString * const kAlfrescoWorkflowTaskComment = @"org.alfresco.mobile.task.comment";
+NSString * const kAlfrescoWorkflowTaskReviewOutcome = @"org.alfresco.mobile.task.reviewoutcome";
+
+NSString * const kAlfrescoWorkflowTaskTransitionApprove = @"Approve";
+NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";
+
 NSString * const kAlfrescoWorkflowProcessStateAny = @"org.alfresco.mobile.process.state.any";
 NSString * const kAlfrescoWorkflowProcessStateActive = @"org.alfresco.mobile.process.state.active";
 NSString * const kAlfrescoWorkflowProcessStateCompleted = @"org.alfresco.mobile.process.state.completed";

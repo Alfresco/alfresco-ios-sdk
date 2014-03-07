@@ -294,34 +294,34 @@
 /**
  Adds a single attachment to a given task.
  
- @param node The node that should be added to the task
  @param task The task which the node should be attached
+ @param document The document that should be added to the task
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)addAttachmentToTask:(AlfrescoWorkflowTask *)task
-                              attachment:(AlfrescoNode *)node
+                              attachment:(AlfrescoDocument *)document
                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 /**
  Adds an array of attachments to a given task.
  
- @param nodeArray An array of AlfrescoNode's that should be added to the task
  @param task The task to which the nodes should be attached
+ @param documentArray An array of AlfrescoDocuments's that should be added to the task
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)addAttachmentsToTask:(AlfrescoWorkflowTask *)task
-                              attachments:(NSArray *)nodeArray
+                              attachments:(NSArray *)documentArray
                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 /**
  Removes an attachment from a specific task.
  
- @param node The node that should be removed from the task
  @param task The task from which the node should be removed
+ @param document The document that should be removed from the task
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)removeAttachmentFromTask:(AlfrescoWorkflowTask *)task
-                                   attachment:(AlfrescoNode *)node
+                                   attachment:(AlfrescoDocument *)document
                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 @end

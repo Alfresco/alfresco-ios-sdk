@@ -122,10 +122,12 @@ extern NSString * const kAlfrescoClientCertificateCredentials;
 /**---------------------------------------------------------------------------------------
  * @name Workflow Constants
  --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoTaskComment;
-extern NSString * const kAlfrescoTaskReviewOutcome;
-extern NSString * const kAlfrescoTaskApprove;
-extern NSString * const kAlfrescoTaskReject;
+extern NSString * const kAlfrescoWorkflowTaskComment;
+extern NSString * const kAlfrescoWorkflowTaskReviewOutcome;
+
+extern NSString * const kAlfrescoWorkflowTaskTransitionApprove;
+extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
+
 extern NSString * const kAlfrescoWorkflowProcessStateAny;
 extern NSString * const kAlfrescoWorkflowProcessStateActive;
 extern NSString * const kAlfrescoWorkflowProcessStateCompleted;

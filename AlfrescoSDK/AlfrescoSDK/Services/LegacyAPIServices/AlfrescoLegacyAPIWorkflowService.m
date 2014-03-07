@@ -727,19 +727,19 @@
         
         if ([task.processDefinitionIdentifier isEqualToString:kAlfrescoWorkflowReviewAndApprove])
         {
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMReviewOutcome] = properties[kAlfrescoTaskReviewOutcome];
+            requestBody[kAlfrescoWorkflowLegacyJSONBPMReviewOutcome] = properties[kAlfrescoWorkflowTaskReviewOutcome];
         }
         
-        if ([[properties allKeys] containsObject:kAlfrescoTaskComment])
+        if ([[properties allKeys] containsObject:kAlfrescoWorkflowTaskComment])
         {
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMComment] = properties[kAlfrescoTaskComment];
+            requestBody[kAlfrescoWorkflowLegacyJSONBPMComment] = properties[kAlfrescoWorkflowTaskComment];
         }
     }
     else if ([AlfrescoWorkflowUtils isJBPMTask:task])
     {
         if ([task.processDefinitionIdentifier isEqualToString:kAlfrescoWorkflowReviewAndApprove])
         {
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = properties[kAlfrescoTaskReviewOutcome];
+            requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = properties[kAlfrescoWorkflowTaskReviewOutcome];
         }
         else
         {
@@ -748,9 +748,9 @@
         
         requestBody[kAlfrescoWorkflowLegacyJSONBPMStatus] = kAlfrescoWorkflowLegacyJSONCompleted;
         
-        if ([[properties allKeys] containsObject:kAlfrescoTaskComment])
+        if ([[properties allKeys] containsObject:kAlfrescoWorkflowTaskComment])
         {
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMComment] = properties[kAlfrescoTaskComment];
+            requestBody[kAlfrescoWorkflowLegacyJSONBPMComment] = properties[kAlfrescoWorkflowTaskComment];
         }
     }
     else
@@ -848,24 +848,24 @@
 }
 
 - (AlfrescoRequest *)addAttachmentToTask:(AlfrescoWorkflowTask *)task
-                              attachment:(AlfrescoNode *)node
+                              attachment:(AlfrescoDocument *)document
                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    return [self updateAttachmentsOnTask:task attachments:@[node] addition:YES completionBlock:completionBlock];
+    return [self updateAttachmentsOnTask:task attachments:@[document] addition:YES completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)addAttachmentsToTask:(AlfrescoWorkflowTask *)task
-                              attachments:(NSArray *)nodeArray
+                              attachments:(NSArray *)documentArray
                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    return [self updateAttachmentsOnTask:task attachments:nodeArray addition:YES completionBlock:completionBlock];
+    return [self updateAttachmentsOnTask:task attachments:documentArray addition:YES completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)removeAttachmentFromTask:(AlfrescoWorkflowTask *)task
-                                   attachment:(AlfrescoNode *)node
+                                   attachment:(AlfrescoDocument *)document
                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    return [self updateAttachmentsOnTask:task attachments:@[node] addition:NO completionBlock:completionBlock];
+    return [self updateAttachmentsOnTask:task attachments:@[document] addition:NO completionBlock:completionBlock];
 }
 
 #pragma mark - Private helper methods
@@ -1002,28 +1002,28 @@
 }
 
 - (AlfrescoRequest *)updateAttachmentsOnTask:(AlfrescoWorkflowTask *)task
-                                 attachments:(NSArray *)nodeArray
+                                 attachments:(NSArray *)documentArray
                                     addition:(BOOL)addition
                              completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:nodeArray argumentName:@"nodeArray"];
+    [AlfrescoErrors assertArgumentNotNil:documentArray argumentName:@"documentArray"];
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSString *nodeReferences = @"";
-    for (int i = 0; i < nodeArray.count; i++)
+    for (int i = 0; i < documentArray.count; i++)
     {
-        id nodeObject = nodeArray[i];
-        if (![nodeObject isKindOfClass:[AlfrescoNode class]])
+        id documentObject = documentArray[i];
+        if (![documentObject isKindOfClass:[AlfrescoDocument class]])
         {
             NSString *exceptionMessage = [NSString stringWithFormat:@"The node array passed into %@ should contain instances of %@, instead it contained instances of %@",
                                           NSStringFromSelector(_cmd),
-                                          NSStringFromClass([AlfrescoNode class]),
-                                          NSStringFromClass([nodeObject class])];
+                                          NSStringFromClass([AlfrescoDocument class]),
+                                          NSStringFromClass([documentObject class])];
             @throw [NSException exceptionWithName:@"Invaild parameters" reason:exceptionMessage userInfo:nil];
         }
         
-        AlfrescoNode *currentNode = (AlfrescoNode *)nodeObject;
+        AlfrescoDocument *currentNode = (AlfrescoDocument *)documentObject;
         
         // remove the version number
         NSRange range = [currentNode.identifier rangeOfString:@";" options:NSBackwardsSearch];

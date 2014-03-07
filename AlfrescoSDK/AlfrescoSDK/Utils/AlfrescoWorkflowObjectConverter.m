@@ -26,10 +26,10 @@
 #import "AlfrescoWorkflowObjectConverter.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoProperty.h"
 #import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoWorkflowProcess.h"
 #import "AlfrescoWorkflowTask.h"
-#import "AlfrescoWorkflowVariable.h"
 
 @implementation AlfrescoWorkflowObjectConverter
 
@@ -264,20 +264,31 @@
     }];
 }
 
-- (NSArray *)workflowVariablesFromArray:(NSArray *)variables
+- (NSDictionary *)workflowVariablesFromArray:(NSArray *)variables
 {
-    NSMutableArray *variableArray = nil;
+    NSMutableDictionary *variableDictionary = nil;
     if (variables)
     {
-        variableArray = [NSMutableArray arrayWithCapacity:variables.count];
+        variableDictionary = [NSMutableDictionary dictionaryWithCapacity:variables.count];
+        
+        for (NSDictionary *variableProperties in variables)
+        {
+            NSString *name = variableDictionary[kAlfrescoWorkflowPublicJSONVariableName];
+            NSString *type = variableDictionary[kAlfrescoWorkflowPublicJSONVariableType];
+            NSString *value = variableDictionary[kAlfrescoWorkflowPublicJSONVariableValue];
+            
+            NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionaryWithObject:type forKey:kAlfrescoPropertyType];
+            if (value != nil)
+            {
+                propertyDictionary[kAlfrescoPropertyValue] = value;
+            }
+            
+            AlfrescoProperty *variable = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
+            [variableDictionary setValue:variable forKey:name];
+        }
     }
-    
-    for (NSDictionary *variableProperties in variables)
-    {
-        AlfrescoWorkflowVariable *variable = [[AlfrescoWorkflowVariable alloc] initWithProperties:variableProperties];
-        [variableArray addObject:variable];
-    }
-    return variableArray;
+
+    return variableDictionary;
 }
 
 - (NSArray *)workflowVariablesFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error

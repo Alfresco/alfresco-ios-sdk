@@ -38,7 +38,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSDate *startedAt;
 @property (nonatomic, strong, readwrite) NSDate *endedAt;
 @property (nonatomic, strong, readwrite) NSDate *dueAt;
-@property (nonatomic, strong, readwrite) NSString *taskDescription;
+@property (nonatomic, strong, readwrite) NSString *summary;
 @property (nonatomic, strong, readwrite) NSNumber *priority;
 @property (nonatomic, strong, readwrite) NSString *assigneeIdentifier;
 
@@ -72,7 +72,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         self.startedAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONStartedAt]];
         self.endedAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONEndedAt]];
         self.dueAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONDueAt]];
-        self.taskDescription = entry[kAlfrescoWorkflowPublicJSONName];
+        self.summary = entry[kAlfrescoWorkflowPublicJSONName];
         self.priority = entry[kAlfrescoWorkflowPublicJSONPriority];
         self.assigneeIdentifier = entry[kAlfrescoWorkflowPublicJSONAssignee];
     }
@@ -97,7 +97,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         {
             self.dueAt = [self.dateFormatter dateFromString:taskProperties[kAlfrescoWorkflowLegacyJSONBPMDueAt]];
         }
-        self.taskDescription = taskProperties[kAlfrescoWorkflowLegacyJSONName];
+        self.summary = taskProperties[kAlfrescoWorkflowLegacyJSONName];
         self.priority = taskProperties[kAlfrescoWorkflowLegacyJSONBPMPriority];
         if (taskProperties[kAlfrescoWorkflowLegacyJSONOwner] != [NSNull null])
         {
@@ -116,7 +116,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
     [aCoder encodeObject:self.startedAt forKey:kAlfrescoWorkflowPublicJSONStartedAt];
     [aCoder encodeObject:self.endedAt forKey:kAlfrescoWorkflowPublicJSONEndedAt];
     [aCoder encodeObject:self.dueAt forKey:kAlfrescoWorkflowPublicJSONDueAt];
-    [aCoder encodeObject:self.taskDescription forKey:kAlfrescoWorkflowPublicJSONName];
+    [aCoder encodeObject:self.summary forKey:kAlfrescoWorkflowPublicJSONName];
     [aCoder encodeObject:self.priority forKey:kAlfrescoWorkflowPublicJSONPriority];
     [aCoder encodeObject:self.assigneeIdentifier forKey:kAlfrescoWorkflowPublicJSONAssignee];
 }
@@ -134,7 +134,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         self.startedAt = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONStartedAt];
         self.endedAt = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONEndedAt];
         self.dueAt = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONDueAt];
-        self.taskDescription = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONName];
+        self.summary = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONName];
         self.priority = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONPriority];
         self.assigneeIdentifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONAssignee];
     }

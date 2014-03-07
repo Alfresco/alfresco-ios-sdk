@@ -735,33 +735,33 @@
 }
 
 - (AlfrescoRequest *)addAttachmentToTask:(AlfrescoWorkflowTask *)task
-                              attachment:(AlfrescoNode *)node
+                              attachment:(AlfrescoDocument *)document
                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    return [self addAttachmentsToTask:task attachments:@[node] completionBlock:completionBlock];
+    return [self addAttachmentsToTask:task attachments:@[document] completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)addAttachmentsToTask:(AlfrescoWorkflowTask *)task
-                              attachments:(NSArray *)nodeArray
+                              attachments:(NSArray *)documentArray
                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:nodeArray argumentName:@"nodeArray"];
+    [AlfrescoErrors assertArgumentNotNil:documentArray argumentName:@"documentArray"];
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSMutableArray *requestBody = [NSMutableArray arrayWithCapacity:nodeArray.count];
-    for (id nodeObject in nodeArray)
+    NSMutableArray *requestBody = [NSMutableArray arrayWithCapacity:documentArray.count];
+    for (id documentObject in documentArray)
     {
-        if (![nodeObject isKindOfClass:[AlfrescoNode class]])
+        if (![documentObject isKindOfClass:[AlfrescoDocument class]])
         {
             NSString *exceptionMessage = [NSString stringWithFormat:@"The node array passed into %@ should contain instances of %@, instead it contained instances of %@",
                                           NSStringFromSelector(_cmd),
-                                          NSStringFromClass([AlfrescoNode class]),
-                                          NSStringFromClass([nodeObject class])];
+                                          NSStringFromClass([AlfrescoDocument class]),
+                                          NSStringFromClass([documentObject class])];
             @throw [NSException exceptionWithName:@"Invaild parameters" reason:exceptionMessage userInfo:nil];
         }
         
-        AlfrescoNode *currentNode = (AlfrescoNode *)nodeObject;
+        AlfrescoDocument *currentNode = (AlfrescoDocument *)documentObject;
         // this should be fixed in the workflow api to accept complete node refs
         //        [nodeRefs addObject:@{kAlfrescoJSONIdentifier : currentNode.identifier}];
         [requestBody addObject:@{kAlfrescoJSONIdentifier : [AlfrescoObjectConverter nodeGUIDFromNodeIdentifier:currentNode.identifier]}];
@@ -793,15 +793,15 @@
 }
 
 - (AlfrescoRequest *)removeAttachmentFromTask:(AlfrescoWorkflowTask *)task
-                                   attachment:(AlfrescoNode *)node
+                                   attachment:(AlfrescoDocument *)document
                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSString *requestString = [kAlfrescoPublicAPIWorkflowTaskSingleAttachment stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
-    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoItemID withString:[AlfrescoObjectConverter nodeGUIDFromNodeIdentifier:node.identifier]];
+    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoItemID withString:[AlfrescoObjectConverter nodeGUIDFromNodeIdentifier:document.identifier]];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
