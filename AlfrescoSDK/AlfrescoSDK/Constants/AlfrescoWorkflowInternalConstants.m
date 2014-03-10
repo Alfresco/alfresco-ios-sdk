@@ -53,6 +53,7 @@ NSString * const kAlfrescoPublicAPIWorkflowSingleProcess = @"processes/{processI
 NSString * const kAlfrescoPublicAPIWorkflowTasksForProcess = @"processes/{processId}/tasks";
 NSString * const kAlfrescoPublicAPIWorkflowAttachmentsForProcess = @"processes/{processId}/items";
 NSString * const kAlfrescoPublicAPIWorkflowProcessImage = @"processes/{processId}/image";
+NSString * const kAlfrescoPublicAPIWorkflowVariables = @"processes/{processId}/variables";
 
 // Workflows/Processes - Parameters
 NSString * const kAlfrescoWorkflowProcessStatus = @"status";
@@ -170,6 +171,10 @@ NSString * const kAlfrescoWorkflowLegacyJSONCompleted = @"Completed";
 NSString * const kAlfrescoWorkflowLegacyJSONItemValue = @"itemValueType";
 
 NSString * const kAlfrescoWorkflowLegacyJSONProcessDefinitionID = @"definitionUrl";
+NSString * const kAlfrescoWorkflowLegacyJSONDiagramURL = @"diagramUrl";
+NSString * const kAlfrescoWorkflowLegacyJSONStartInstance = @"startTaskInstanceId";
+NSString * const kAlfrescoWorkflowLegacyJSONDefinition = @"definition";
+NSString * const kAlfrescoWorkflowLegacyJSONUsername = @"userName";
 NSString * const kAlfrescoWorkflowLegacyJSONStartedAt = @"startDate";
 NSString * const kAlfrescoWorkflowLegacyJSONEndedAt = @"endDate";
 NSString * const kAlfrescoWorkflowLegacyJSONDueAt = @"dueDate";

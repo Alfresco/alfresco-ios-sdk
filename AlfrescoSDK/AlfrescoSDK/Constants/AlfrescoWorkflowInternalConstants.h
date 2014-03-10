@@ -53,6 +53,7 @@ extern NSString * const kAlfrescoPublicAPIWorkflowSingleProcess;
 extern NSString * const kAlfrescoPublicAPIWorkflowTasksForProcess;
 extern NSString * const kAlfrescoPublicAPIWorkflowAttachmentsForProcess;
 extern NSString * const kAlfrescoPublicAPIWorkflowProcessImage;
+extern NSString * const kAlfrescoPublicAPIWorkflowVariables;
 
 // Workflows/Processes - Parameters
 extern NSString * const kAlfrescoWorkflowProcessStatus;
@@ -170,6 +171,10 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONCompleted;
 extern NSString * const kAlfrescoWorkflowLegacyJSONItemValue;
 
 extern NSString * const kAlfrescoWorkflowLegacyJSONProcessDefinitionID;
+extern NSString * const kAlfrescoWorkflowLegacyJSONDiagramURL;
+extern NSString * const kAlfrescoWorkflowLegacyJSONStartInstance;
+extern NSString * const kAlfrescoWorkflowLegacyJSONDefinition;
+extern NSString * const kAlfrescoWorkflowLegacyJSONUsername;
 extern NSString * const kAlfrescoWorkflowLegacyJSONStartedAt;
 extern NSString * const kAlfrescoWorkflowLegacyJSONEndedAt;
 extern NSString * const kAlfrescoWorkflowLegacyJSONDueAt;

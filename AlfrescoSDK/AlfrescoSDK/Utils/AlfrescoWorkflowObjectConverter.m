@@ -146,6 +146,39 @@
     }];
 }
 
+- (NSArray *)workflowVariablesFromLegacyProperties:(NSDictionary *)properties
+{
+    NSMutableArray *variables = [NSMutableArray array];
+    
+    NSArray *excludeKeys = @[kAlfrescoWorkflowLegacyJSONProcessDefinitionID,
+                             kAlfrescoWorkflowLegacyJSONDiagramURL,
+                             kAlfrescoWorkflowLegacyJSONStartInstance,
+                             kAlfrescoWorkflowLegacyJSONDefinition];
+    
+    for (NSString *key in properties.allKeys)
+    {
+        if (properties[key] != [NSNull null] && ![excludeKeys containsObject:key])
+        {
+            NSString *name = key;
+            id value = properties[key];
+            NSString *type = NSStringFromClass([value class]);
+            
+            // get the username for the initiator dictionary
+            if ([key isEqualToString:kAlfrescoWorkflowLegacyJSONInitiator])
+            {
+                value = (properties[kAlfrescoWorkflowLegacyJSONInitiator])[kAlfrescoWorkflowLegacyJSONUsername];
+                type = NSStringFromClass([value class]);
+            }
+            
+            // mimic the public api response. This will be changed with MOBSDK-674, which will use AlfrescoProperty instead.
+            NSDictionary *variableDictionary = @{@"name" : name, @"type" : type, @"value" : value};
+            AlfrescoWorkflowVariable *variable = [[AlfrescoWorkflowVariable alloc] initWithProperties:variableDictionary];
+            [variables addObject:variable];
+        }
+    }
+    return variables;
+}
+
 - (NSArray *)workflowTasksFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error
 {
     return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeWorkflowNoTaskFound parseBlock:^id(id jsonObject, NSError *parseError) {
@@ -245,6 +278,29 @@
         [variableArray addObject:variable];
     }
     return variableArray;
+}
+
+- (NSArray *)workflowVariablesFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error
+{
+    return [[self class] parseJSONData:jsonData notFoundErrorCode:kAlfrescoErrorCodeJSONParsing parseBlock:^id(id jsonObject, NSError *parseError) {
+        if (parseError)
+        {
+            *error = parseError;
+            return nil;
+        }
+        else
+        {
+            NSMutableArray *workflowVariables = [NSMutableArray array];
+            NSDictionary *listDictionary = jsonObject[kAlfrescoWorkflowPublicJSONList];
+            NSArray *rawVariablesArray = listDictionary[kAlfrescoWorkflowPublicJSONEntries];
+            for (NSDictionary *entry in rawVariablesArray)
+            {
+                NSDictionary *variableProperties = entry[kAlfrescoWorkflowPublicJSONEntry];
+                [workflowVariables addObject:[[AlfrescoWorkflowVariable alloc] initWithProperties:variableProperties]];
+            }
+            return workflowVariables;
+        }
+    }];
 }
 
 - (NSString *)attachmentContainerNodeRefFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error
