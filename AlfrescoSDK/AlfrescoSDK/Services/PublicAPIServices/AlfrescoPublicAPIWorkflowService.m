@@ -194,9 +194,14 @@
     [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
+            // If the request fails, there is a possibility of ALF-20731 throwing an internal HTTP 500 status code on the server.
+            // As a result, we use a slower and network heavy fallback mechanism which first retrieves the processes and then the variables for each process.
             if (error.code == kAlfrescoErrorCodeHTTPResponse)
             {
-                alfrescoRequest = [self fallbackRetrieveProcessesInState:state completionBlock:completionBlock];
+                AlfrescoListingContext *listAllListingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+                alfrescoRequest = [self fallbackRetrieveProcessesInState:state listingContext:listAllListingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                    completionBlock(pagingResult.objects, error);
+                }];
             }
             else
             {
@@ -237,6 +242,8 @@
     [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
+            // If the request fails, there is a possibility of ALF-20731 throwing an internal HTTP 500 status code on the server.
+            // As a result, we use a slower and network heavy fallback mechanism which first retrieves the processes and then the variables for each process.
             if (error.code == kAlfrescoErrorCodeHTTPResponse)
             {
                 alfrescoRequest = [self fallbackRetrieveProcessesInState:state listingContext:listingContext completionBlock:completionBlock];
@@ -892,61 +899,6 @@
             {
                 AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject];
                 completionBlock(task, conversionError);
-            }
-        }
-    }];
-    return request;
-}
-
-- (AlfrescoRequest *)fallbackRetrieveProcessesInState:(NSString *)state completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    // Attempt to get all processes without variables
-    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)",
-                                      kAlfrescoWorkflowProcessStatus, (self.publicToPrivateStateMappings)[state]];
-    
-    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
-    NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
-    
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extensionURLString];
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *workflowProcesses = [self.workflowObjectConverter workflowProcessesFromPublicJSONData:data conversionError:&conversionError];
-            
-            // Get variables for each process
-            if (workflowProcesses.count > 0)
-            {
-                __block int callbacks = 0;
-                __block NSMutableArray *processesWithVariables = [NSMutableArray arrayWithCapacity:workflowProcesses.count];
-                
-                for (AlfrescoWorkflowProcess *process in workflowProcesses)
-                {
-                    [self retrieveVariablesForProcess:process completionBlock:^(AlfrescoWorkflowProcess *processWithVariables, NSError *variablesError) {
-                        callbacks++;
-                        if (processWithVariables)
-                        {
-                            [processesWithVariables addObject:processWithVariables];
-                        }
-                        
-                        if (callbacks == workflowProcesses.count)
-                        {
-                            completionBlock(processesWithVariables, variablesError);
-                        }
-                    }];
-                }
-            }
-            else
-            {
-                completionBlock(workflowProcesses, error);
             }
         }
     }];
