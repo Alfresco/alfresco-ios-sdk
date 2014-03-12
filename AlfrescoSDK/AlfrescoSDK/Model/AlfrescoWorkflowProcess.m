@@ -67,10 +67,11 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 {
     NSDictionary *entry = properties[kAlfrescoWorkflowPublicJSONEntry];
     
+    AlfrescoWorkflowObjectConverter *objectConverter = [[AlfrescoWorkflowObjectConverter alloc] init];
+    
     // if the entry object is present the data has come from the public API
     if (entry != nil)
     {
-        AlfrescoWorkflowObjectConverter *objectConverter = [[AlfrescoWorkflowObjectConverter alloc] init];
         NSArray *rawVariables = entry[kAlfrescoWorkflowPublicJSONProcessVariables];
         NSArray *convertedVariables = [objectConverter workflowVariablesFromArray:rawVariables];
         
@@ -119,6 +120,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.priority = properties[kAlfrescoWorkflowLegacyJSONPriority];
         NSDictionary *initiatorDictionary = properties[kAlfrescoWorkflowLegacyJSONInitiator];
         self.initiatorUsername = initiatorDictionary[kAlfrescoJSONUserName];
+        self.variables = [objectConverter workflowVariablesFromLegacyProperties:properties];
     }
 }
 
@@ -157,6 +159,23 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.variables = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONProcessVariables];
     }
     return self;
+}
+
+- (void)setVariables:(NSArray *)variables
+{
+    _variables = variables;
+    
+    // If on public API, set the name variable.
+    // No clean way to determine public or legacy API being used. Check to see if $ symbol exists.
+    if (!self.name && [self.identifier rangeOfString:@"$"].location == NSNotFound)
+    {
+        NSInteger indexOfTitleVariableObject = [[variables valueForKey:@"name"] indexOfObject:kAlfrescoWorkflowPublicBPMJSONProcessTitle];
+        AlfrescoWorkflowVariable *titleVariable = variables[indexOfTitleVariableObject];
+        if (titleVariable.value != [NSNull null])
+        {
+            self.name = (NSString *)titleVariable.value;
+        }
+    }
 }
 
 @end

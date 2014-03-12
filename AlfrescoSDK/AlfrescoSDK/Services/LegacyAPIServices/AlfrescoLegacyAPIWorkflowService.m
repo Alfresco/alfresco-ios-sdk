@@ -68,6 +68,7 @@
 }
 
 #pragma mark - Retrieval methods
+#pragma mark Process Definitions
 
 - (AlfrescoRequest *)retrieveProcessDefinitionsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
@@ -165,6 +166,8 @@
     }
     return request;
 }
+
+#pragma mark Processes
 
 - (AlfrescoRequest *)retrieveProcessesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
@@ -405,6 +408,8 @@
     return request;
 }
 
+#pragma mark Tasks
+
 - (AlfrescoRequest *)retrieveTasksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -532,7 +537,8 @@
     return request;
 }
 
-#pragma mark - Process management methods
+#pragma mark - Management methods
+#pragma mark Processes
 
 - (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition
                                             assignees:(NSArray *)assignees
@@ -704,7 +710,7 @@
     return request;
 }
 
-#pragma mark - Task management methods
+#pragma mark Tasks
 
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
                        properties:(NSDictionary *)properties

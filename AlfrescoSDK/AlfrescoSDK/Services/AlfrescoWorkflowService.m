@@ -43,6 +43,9 @@
     return nil;
 }
 
+#pragma mark - Retrieval methods
+#pragma mark Process Definitions
+
 - (AlfrescoRequest *)retrieveProcessDefinitionsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
@@ -62,6 +65,8 @@
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
+#pragma mark Processes
 
 - (AlfrescoRequest *)retrieveProcessesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
@@ -135,6 +140,8 @@
     return nil;
 }
 
+#pragma mark Tasks
+
 - (AlfrescoRequest *)retrieveTasksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
@@ -162,6 +169,9 @@
     return nil;
 }
 
+#pragma mark - Management methods
+#pragma mark Processes
+
 - (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition
                                             assignees:(NSArray *)assignees
                                             variables:(NSDictionary *)variables
@@ -178,6 +188,8 @@
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
+#pragma mark Tasks
 
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
                        properties:(NSDictionary *)properties

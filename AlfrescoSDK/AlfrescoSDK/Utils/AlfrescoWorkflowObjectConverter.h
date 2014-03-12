@@ -42,6 +42,8 @@
 
 // variables
 - (NSArray *)workflowVariablesFromArray:(NSArray *)variables;
+- (NSArray *)workflowVariablesFromPublicJSONData:(NSData *)jsonData conversionError:(NSError **)error;
+- (NSArray *)workflowVariablesFromLegacyProperties:(NSDictionary *)properties;
 
 // attachment identifiers
 - (NSString *)attachmentContainerNodeRefFromLegacyJSONData:(NSData *)jsonData conversionError:(NSError **)error;
