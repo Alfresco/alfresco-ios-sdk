@@ -67,7 +67,6 @@
 		279C02B71892CEB200BC8628 /* AlfrescoWorkflowProcess.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73D268E717D76CEA00C49848 /* AlfrescoWorkflowProcess.h */; };
 		279C02B81892CEB700BC8628 /* AlfrescoWorkflowProcessDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73D268E917D76CEB00C49848 /* AlfrescoWorkflowProcessDefinition.h */; };
 		279C02BC1892CEEC00BC8628 /* AlfrescoWorkflowTask.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73D268EB17D76CEC00C49848 /* AlfrescoWorkflowTask.h */; };
-		279C02BE1892CF0000BC8628 /* AlfrescoWorkflowVariable.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7384BE0917F5A6F200C6A54F /* AlfrescoWorkflowVariable.h */; };
 		4E0457C31608C124005A6C76 /* AlfrescoOAuthData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */; };
 		4E0C866D1612EB32008B71DB /* AlfrescoOAuthLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0C866B1612EB32008B71DB /* AlfrescoOAuthLoginViewController.m */; };
 		4E21EAE416DF88A800E3952C /* AlfrescoLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E21EAE216DF88A800E3952C /* AlfrescoLog.m */; };
@@ -168,7 +167,6 @@
 		733407C516BBCE9800AC3740 /* AlfrescoDefaultHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 733407C316BBCE9800AC3740 /* AlfrescoDefaultHTTPRequest.m */; };
 		737B2EE716B2AD1D00AB99EC /* AlfrescoURLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 737B2EE516B2AD1D00AB99EC /* AlfrescoURLUtils.m */; };
 		737B2EE916B2BAC600AB99EC /* AlfrescoDefaultFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 737B2EE816B2BAC600AB99EC /* AlfrescoDefaultFileManager.m */; };
-		7384BE0C17F5A6F200C6A54F /* AlfrescoWorkflowVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7384BE0A17F5A6F200C6A54F /* AlfrescoWorkflowVariable.m */; };
 		73971A9216AD5B700056031F /* AlfrescoFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 73971A8A16AD5B700056031F /* AlfrescoFileManager.m */; };
 		73971A9816AD5B700056031F /* AlfrescoPlaceholderFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 73971A9016AD5B700056031F /* AlfrescoPlaceholderFileManager.m */; };
 		73971AA116AD65F30056031F /* AlfrescoDefaultNetworkProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 73971A9D16AD65F30056031F /* AlfrescoDefaultNetworkProvider.m */; };
@@ -251,7 +249,6 @@
 				279C02B81892CEB700BC8628 /* AlfrescoWorkflowProcessDefinition.h in CopyFiles */,
 				274E4D4418C23F010081D8D4 /* AlfrescoWorkflowService.h in CopyFiles */,
 				279C02BC1892CEEC00BC8628 /* AlfrescoWorkflowTask.h in CopyFiles */,
-				279C02BE1892CF0000BC8628 /* AlfrescoWorkflowVariable.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,8 +482,6 @@
 		737B2EE416B2AD1D00AB99EC /* AlfrescoURLUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoURLUtils.h; sourceTree = "<group>"; };
 		737B2EE516B2AD1D00AB99EC /* AlfrescoURLUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoURLUtils.m; sourceTree = "<group>"; };
 		737B2EE816B2BAC600AB99EC /* AlfrescoDefaultFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoDefaultFileManager.m; sourceTree = "<group>"; };
-		7384BE0917F5A6F200C6A54F /* AlfrescoWorkflowVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowVariable.h; sourceTree = "<group>"; };
-		7384BE0A17F5A6F200C6A54F /* AlfrescoWorkflowVariable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoWorkflowVariable.m; sourceTree = "<group>"; };
 		73971A8916AD5B700056031F /* AlfrescoFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoFileManager.h; sourceTree = "<group>"; };
 		73971A8A16AD5B700056031F /* AlfrescoFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoFileManager.m; sourceTree = "<group>"; };
 		73971A8D16AD5B700056031F /* AlfrescoDefaultFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoDefaultFileManager.h; sourceTree = "<group>"; };
@@ -928,8 +923,6 @@
 				73D268E817D76CEB00C49848 /* AlfrescoWorkflowProcess.m */,
 				73D268EB17D76CEC00C49848 /* AlfrescoWorkflowTask.h */,
 				73D268EC17D76CED00C49848 /* AlfrescoWorkflowTask.m */,
-				7384BE0917F5A6F200C6A54F /* AlfrescoWorkflowVariable.h */,
-				7384BE0A17F5A6F200C6A54F /* AlfrescoWorkflowVariable.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1259,7 +1252,6 @@
 				4E90EE7615D25C3600302F5D /* AlfrescoPagingUtils.m in Sources */,
 				4E90EE7D15D25F9200302F5D /* AlfrescoConstants.m in Sources */,
 				4E90EE8815D2735000302F5D /* AlfrescoCloudSiteService.m in Sources */,
-				7384BE0C17F5A6F200C6A54F /* AlfrescoWorkflowVariable.m in Sources */,
 				4E90EE8C15D2736700302F5D /* AlfrescoPlaceholderSiteService.m in Sources */,
 				4EA6D4EA15D2B444004059AF /* AlfrescoSortingUtils.m in Sources */,
 				4EF1B71615D8F5E90038AB3F /* AlfrescoPlaceholderActivityStreamService.m in Sources */,
