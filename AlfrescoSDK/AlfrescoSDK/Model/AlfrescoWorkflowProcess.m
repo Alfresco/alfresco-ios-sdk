@@ -160,7 +160,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     return self;
 }
 
-- (void)setVariables:(NSArray *)variables
+- (void)setVariables:(NSDictionary *)variables
 {
     _variables = variables;
     
@@ -168,8 +168,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     // No clean way to determine public or legacy API being used. Check to see if $ symbol exists.
     if (!self.name && [self.identifier rangeOfString:@"$"].location == NSNotFound)
     {
-        NSInteger indexOfTitleVariableObject = [[variables valueForKey:@"name"] indexOfObject:kAlfrescoWorkflowPublicBPMJSONProcessTitle];
-        AlfrescoWorkflowVariable *titleVariable = variables[indexOfTitleVariableObject];
+        AlfrescoProperty *titleVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessTitle];
         if (titleVariable.value != [NSNull null])
         {
             self.name = (NSString *)titleVariable.value;

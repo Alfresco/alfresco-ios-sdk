@@ -26,6 +26,8 @@
 #import "AlfrescoWorkflowProcessTests.h"
 #import "AlfrescoFileManager.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoProperty.h"
+#import "AlfrescoWorkflowUtils.h"
 
 static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
@@ -247,6 +249,32 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                     {
                         XCTAssertNotNil(process.processDefinitionIdentifier, @"Process definition identifier should not be nil");
                         XCTAssertNotNil(process.startedAt, @"Process started at date should not be nil");
+                        
+                        NSDictionary *variables = process.variables;
+                        XCTAssertNotNil(variables, @"Expected to find a set of variables for the process");
+                        
+                        if ([AlfrescoWorkflowUtils isJBPMProcess:process])
+                        {
+                            AlfrescoProperty *priorityProperty = variables[@"priority"];
+                            XCTAssertNotNil(priorityProperty, @"Expected to find the priority process variable");
+                            XCTAssertTrue(priorityProperty.type == AlfrescoPropertyTypeInteger);
+                            
+                            AlfrescoProperty *descriptionProperty = variables[@"description"];
+                            XCTAssertNotNil(descriptionProperty, @"Expected to find the description process variable");
+                            XCTAssertTrue(descriptionProperty.type == AlfrescoPropertyTypeString);
+                        }
+                        else
+                        {
+                            AlfrescoProperty *priorityProperty = variables[@"bpm_priority"];
+                            XCTAssertNotNil(priorityProperty, @"Expected to find the bpm_priority process variable");
+                            XCTAssertTrue(priorityProperty.type == AlfrescoPropertyTypeInteger);
+                            
+                            AlfrescoProperty *statusProperty = variables[@"bpm_status"];
+                            XCTAssertNotNil(statusProperty, @"Expected to find the bpm_status process variable");
+                            XCTAssertTrue(statusProperty.type == AlfrescoPropertyTypeString);
+                            XCTAssertTrue([statusProperty.value isEqualToString:@"Not Yet Started"],
+                                          @"Expected status property to be 'Not Yet Started' but was %@", statusProperty.value);
+                        }
                         
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
                             XCTAssertTrue(succeeded, @"Deletion flag should be true");

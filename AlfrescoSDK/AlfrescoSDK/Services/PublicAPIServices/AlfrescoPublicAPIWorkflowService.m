@@ -30,7 +30,6 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoLog.h"
-#import "AlfrescoWorkflowVariable.h"
 
 @interface AlfrescoPublicAPIWorkflowService ()
 
@@ -987,7 +986,7 @@
         else
         {
             NSError *conversionError = nil;
-            NSArray *workflowVariables = [self.workflowObjectConverter workflowVariablesFromPublicJSONData:data conversionError:&conversionError];
+            NSDictionary *workflowVariables = [self.workflowObjectConverter workflowVariablesFromPublicJSONData:data conversionError:&conversionError];
             
             // set the readonly property using KVO
             [process setValue:workflowVariables forKey:@"variables"];

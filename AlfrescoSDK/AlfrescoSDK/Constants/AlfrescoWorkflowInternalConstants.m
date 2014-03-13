@@ -194,3 +194,11 @@ NSString * const kAlfrescoWorkflowPublicJSONVariableValue = @"value";
 NSString * const kAlfrescoWorkflowEngineType = @"workflowEngineType";
 NSString * const kAlfrescoWorkflowUsingPublicAPI = @"workflowPublicAPI";
 
+// Variable types
+NSString * const kAlfrescoWorkflowVariableTypeString = @"d:text";
+NSString * const kAlfrescoWorkflowVariableTypeInt = @"d:int";
+NSString * const kAlfrescoWorkflowVariableTypeBoolean = @"d:boolean";
+NSString * const kAlfrescoWorkflowVariableTypeDate = @"d:date";
+NSString * const kAlfrescoWorkflowVariableTypeDateTime = @"d:datetime";
+
+

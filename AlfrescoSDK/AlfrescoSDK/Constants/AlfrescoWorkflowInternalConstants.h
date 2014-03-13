@@ -190,3 +190,10 @@ extern NSString * const kAlfrescoWorkflowPublicJSONVariableValue;
 
 extern NSString * const kAlfrescoWorkflowEngineType;
 extern NSString * const kAlfrescoWorkflowUsingPublicAPI;
+
+// Variable types
+extern NSString * const kAlfrescoWorkflowVariableTypeString;
+extern NSString * const kAlfrescoWorkflowVariableTypeInt;
+extern NSString * const kAlfrescoWorkflowVariableTypeBoolean;
+extern NSString * const kAlfrescoWorkflowVariableTypeDate;
+extern NSString * const kAlfrescoWorkflowVariableTypeDateTime;
