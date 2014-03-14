@@ -95,6 +95,13 @@ extern NSString * const kAlfrescoSortByName;
 extern NSString * const kAlfrescoSortByDescription;
 
 /**---------------------------------------------------------------------------------------
+ * @name filter properties
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoFilterByWorkflowState;
+extern NSString * const kAlfrescoFilterValueWorkflowStateActive;
+extern NSString * const kAlfrescoFilterValueWorkflowStateCompleted;
+
+/**---------------------------------------------------------------------------------------
  * @name capability constants
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoCapabilityLike;
@@ -127,10 +134,6 @@ extern NSString * const kAlfrescoWorkflowTaskReviewOutcome;
 
 extern NSString * const kAlfrescoWorkflowTaskTransitionApprove;
 extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
-
-extern NSString * const kAlfrescoWorkflowProcessStateAny;
-extern NSString * const kAlfrescoWorkflowProcessStateActive;
-extern NSString * const kAlfrescoWorkflowProcessStateCompleted;
 
 extern NSString * const kAlfrescoWorkflowProcessDescription;
 extern NSString * const kAlfrescoWorkflowProcessPriority;

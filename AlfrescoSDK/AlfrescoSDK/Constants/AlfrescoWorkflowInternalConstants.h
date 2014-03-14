@@ -56,9 +56,10 @@ extern NSString * const kAlfrescoPublicAPIWorkflowProcessImage;
 extern NSString * const kAlfrescoPublicAPIWorkflowVariables;
 
 // Workflows/Processes - Parameters
-extern NSString * const kAlfrescoWorkflowProcessStatus;
+extern NSString * const kAlfrescoLegacyAPIWorkflowProcessState;
 extern NSString * const kAlfrescoLegacyAPIWorkflowStatusInProgress;
 extern NSString * const kAlfrescoLegacyAPIWorkflowStatusCompleted;
+extern NSString * const kAlfrescoPublicAPIWorkflowProcessStatus;
 extern NSString * const kAlfrescoPublicAPIWorkflowProcessWhereParameter;
 extern NSString * const kAlfrescoPublicAPIWorkflowProcessStatusAny;
 extern NSString * const kAlfrescoPublicAPIWorkflowProcessStatusActive;
@@ -197,3 +198,8 @@ extern NSString * const kAlfrescoWorkflowVariableTypeInt;
 extern NSString * const kAlfrescoWorkflowVariableTypeBoolean;
 extern NSString * const kAlfrescoWorkflowVariableTypeDate;
 extern NSString * const kAlfrescoWorkflowVariableTypeDateTime;
+
+// state
+extern NSString * const kAlfrescoWorkflowProcessStateAny;
+extern NSString * const kAlfrescoWorkflowProcessStateActive;
+extern NSString * const kAlfrescoWorkflowProcessStateCompleted;

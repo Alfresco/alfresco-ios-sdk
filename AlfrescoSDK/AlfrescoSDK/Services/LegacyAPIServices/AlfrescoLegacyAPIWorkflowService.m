@@ -171,86 +171,31 @@
 
 - (AlfrescoRequest *)retrieveProcessesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    return [self retrieveProcessesInState:kAlfrescoWorkflowProcessStateAny completionBlock:completionBlock];
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveProcessesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        completionBlock(pagingResult.objects, error);
+    }];
 }
 
 - (AlfrescoRequest *)retrieveProcessesWithListingContext:(AlfrescoListingContext *)listingContext
                                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    return [self retrieveProcessesInState:kAlfrescoWorkflowProcessStateAny listingContext:listingContext completionBlock:completionBlock];
-}
-
-- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state
-                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    NSString *state = kAlfrescoWorkflowProcessStateAny;
     
-    NSString *queryString = nil;
-    
-    if (state && ![state isEqualToString:kAlfrescoWorkflowProcessStateAny])
+    // for now map the new filter listing to the existing state constants (now internal) but these should be removed soon
+    if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowState])
     {
-        queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowProcessStatus : (self.publicToPrivateStateMappings)[state]}];
+        if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateCompleted])
+        {
+            state = kAlfrescoWorkflowProcessStateCompleted;
+        }
+        else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateActive])
+        {
+            state = kAlfrescoWorkflowProcessStateActive;
+        }
     }
     
-    NSString *requestString = (queryString) ? [kAlfrescoLegacyAPIWorkflowInstances stringByAppendingString:queryString] : kAlfrescoLegacyAPIWorkflowInstances;
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *processes = [self.workflowObjectConverter workflowProcessesFromLegacyJSONData:data conversionError:&conversionError];
-            completionBlock(processes, conversionError);
-        }
-    }];
-    return request;
-}
-
-- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state
-                               listingContext:(AlfrescoListingContext *)listingContext
-                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    NSString *queryString = nil;
-    
-    if (state && ![state isEqualToString:kAlfrescoWorkflowProcessStateAny])
-    {
-        queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowProcessStatus : (self.publicToPrivateStateMappings)[state]}];
-    }
-    
-    if (!listingContext)
-    {
-        listingContext = self.session.defaultListingContext;
-    }
-    
-    NSString *requestString = (queryString) ? [kAlfrescoLegacyAPIWorkflowInstances stringByAppendingString:queryString] : kAlfrescoLegacyAPIWorkflowInstances;
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *processes = [self.workflowObjectConverter workflowProcessesFromLegacyJSONData:data conversionError:&conversionError];
-            NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromOldAPIData:data error:&conversionError];
-            int total = [[pagingInfo valueForKey:kAlfrescoWorkflowLegacyJSONTotalItems] intValue];
-            int maxItems = [[pagingInfo valueForKey:kAlfrescoWorkflowLegacyJSONMaxItems] intValue];
-            BOOL hasMore = ((listingContext.skipCount + maxItems) < total);
-            AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:processes hasMoreItems:hasMore totalItems:total];
-            completionBlock(pagingResult, conversionError);
-        }
-    }];
-    return request;
+    return [self retrieveProcessesInState:state listingContext:listingContext completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)retrieveProcessWithIdentifier:(NSString *)processIdentifier
@@ -356,35 +301,43 @@
 - (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process
                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    return [self retrieveTasksForProcess:process inState:kAlfrescoWorkflowProcessStateAny completionBlock:completionBlock];
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveTasksForProcess:process listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        completionBlock(pagingResult.objects, error);
+    }];
 }
 
 - (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process
-                                     inState:(NSString *)state
-                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+                              listingContext:(AlfrescoListingContext *)listingContext
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    NSString *state = kAlfrescoWorkflowProcessStateAny;
     
-    NSString *legacyStateString = self.publicToPrivateStateMappings[state];
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTasksForInstance stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+    // for now map the new filter listing to the existing state constants (now internal) but these should be removed soon
+    if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowState])
+    {
+        if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateCompleted])
+        {
+            state = kAlfrescoWorkflowProcessStateCompleted;
+        }
+        else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateActive])
+        {
+            state = kAlfrescoWorkflowProcessStateActive;
+        }
+    }
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (!data)
+    // for now call the existing internal method, this needs to be replaced with a proper paging aware implementation
+    return [self retrieveTasksForProcess:process inState:state completionBlock:^(NSArray *array, NSError *error) {
+        // for now create paging result object from the given array
+        if (error)
         {
             completionBlock(nil, error);
         }
         else
         {
-            NSError *conversionError = nil;
-            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data inState:legacyStateString conversionError:&conversionError];
-            completionBlock(tasks, conversionError);
+            completionBlock([AlfrescoPagingUtils pagedResultFromArray:array listingContext:listingContext], nil);
         }
     }];
-    return request;
 }
 
 - (AlfrescoRequest *)retrieveAttachmentsForProcess:(AlfrescoWorkflowProcess *)process
@@ -1070,6 +1023,76 @@
         }
     }];
     
+    return request;
+}
+
+- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state
+                               listingContext:(AlfrescoListingContext *)listingContext
+                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *queryString = nil;
+    
+    if (state && ![state isEqualToString:kAlfrescoWorkflowProcessStateAny])
+    {
+        queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoLegacyAPIWorkflowProcessState : (self.publicToPrivateStateMappings)[state]}];
+    }
+    
+    if (!listingContext)
+    {
+        listingContext = self.session.defaultListingContext;
+    }
+    
+    NSString *requestString = (queryString) ? [kAlfrescoLegacyAPIWorkflowInstances stringByAppendingString:queryString] : kAlfrescoLegacyAPIWorkflowInstances;
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (error)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *processes = [self.workflowObjectConverter workflowProcessesFromLegacyJSONData:data conversionError:&conversionError];
+            NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromOldAPIData:data error:&conversionError];
+            int total = [[pagingInfo valueForKey:kAlfrescoWorkflowLegacyJSONTotalItems] intValue];
+            int maxItems = [[pagingInfo valueForKey:kAlfrescoWorkflowLegacyJSONMaxItems] intValue];
+            BOOL hasMore = ((listingContext.skipCount + maxItems) < total);
+            AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:processes hasMoreItems:hasMore totalItems:total];
+            completionBlock(pagingResult, conversionError);
+        }
+    }];
+    return request;
+}
+
+- (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process
+                                     inState:(NSString *)state
+                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    
+    NSString *legacyStateString = self.publicToPrivateStateMappings[state];
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTasksForInstance stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+    
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (!data)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data inState:legacyStateString conversionError:&conversionError];
+            completionBlock(tasks, conversionError);
+        }
+    }];
     return request;
 }
 

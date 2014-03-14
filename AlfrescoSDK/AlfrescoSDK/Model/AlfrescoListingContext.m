@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -28,6 +28,7 @@ static NSInteger kListingContextModelVersion = 1;
 @property (nonatomic, assign, readwrite) BOOL sortAscending;
 @property (nonatomic, assign, readwrite) int maxItems;
 @property (nonatomic, assign, readwrite) int skipCount;
+@property (nonatomic, strong, readwrite) AlfrescoListingFilter *listingFilter;
 @end
 
 @implementation AlfrescoListingContext
@@ -35,26 +36,45 @@ static NSInteger kListingContextModelVersion = 1;
 
 - (id)init
 {
-    return [self initWithMaxItems:DEFAULTMAXITEMS skipCount:DEFAULTSKIPCOUNT sortProperty:nil sortAscending:YES];
+    return [self initWithMaxItems:DEFAULTMAXITEMS skipCount:DEFAULTSKIPCOUNT
+                     sortProperty:nil sortAscending:YES listingFilter:nil];
 }
 
 - (id)initWithMaxItems:(int)maxItems
 {
-    return [self initWithMaxItems:maxItems skipCount:0 sortProperty:nil sortAscending:YES];
+    return [self initWithMaxItems:maxItems skipCount:DEFAULTSKIPCOUNT
+                     sortProperty:nil sortAscending:YES listingFilter:nil];
 }
 
 
 - (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount
 {
-    return [self initWithMaxItems:maxItems skipCount:skipCount sortProperty:nil sortAscending:YES];
+    return [self initWithMaxItems:maxItems skipCount:skipCount
+                     sortProperty:nil sortAscending:YES listingFilter:nil];
 }
 
 - (id)initWithSortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending
 {
-    return [self initWithMaxItems:DEFAULTMAXITEMS skipCount:DEFAULTSKIPCOUNT sortProperty:sortProperty sortAscending:sortAscending];
+    return [self initWithMaxItems:DEFAULTMAXITEMS skipCount:DEFAULTSKIPCOUNT
+                     sortProperty:sortProperty sortAscending:sortAscending listingFilter:nil];
 }
 
-- (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount sortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending
+- (id)initWithListingFilter:(AlfrescoListingFilter *)listingFilter
+{
+    return [self initWithMaxItems:DEFAULTMAXITEMS skipCount:DEFAULTSKIPCOUNT
+                     sortProperty:nil sortAscending:YES listingFilter:listingFilter];
+}
+
+- (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount
+          sortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending
+{
+    return [self initWithMaxItems:maxItems skipCount:skipCount
+                     sortProperty:sortProperty sortAscending:sortAscending listingFilter:nil];
+}
+
+- (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount
+          sortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending
+         listingFilter:(AlfrescoListingFilter *)listingFilter
 {
     self = [super init];
     if (self)
@@ -71,6 +91,15 @@ static NSInteger kListingContextModelVersion = 1;
             self.skipCount = skipCount;
         }
         self.sortAscending = sortAscending;
+        
+        if (listingFilter != nil)
+        {
+            self.listingFilter = listingFilter;
+        }
+        else
+        {
+            self.listingFilter = [AlfrescoListingFilter new];
+        }
     }
     return self;
     
@@ -83,6 +112,7 @@ static NSInteger kListingContextModelVersion = 1;
     [aCoder encodeInt:self.maxItems forKey:@"maxItems"];
     [aCoder encodeInt:self.skipCount forKey:@"skipCount"];
     [aCoder encodeBool:self.sortAscending forKey:@"sortAscending"];
+    [aCoder encodeObject:self.listingFilter forKey:@"listingFilter"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -96,6 +126,7 @@ static NSInteger kListingContextModelVersion = 1;
         self.sortProperty = [aDecoder decodeObjectForKey:@"sortProperty"];
         self.maxItems = [aDecoder decodeIntForKey:@"maxItems"];
         self.skipCount = [aDecoder decodeIntForKey:@"skipCount"];
+        self.listingFilter = [aDecoder decodeObjectForKey:@"listingFilter"];
     }
     return self;
 }

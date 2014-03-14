@@ -80,36 +80,13 @@
 
 /**
  Retrieves a paged result of processes in accordance to a listing context.
+ The listing filter mechanism on listing context can be used to filter the processes.
  
  @param listingContext The listing context with a paging definition that's used to retrieve the processes
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)retrieveProcessesWithListingContext:(AlfrescoListingContext *)listingContext
                                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
-
-/**
- Retrieves an array of processes that are in a given state.
- 
- Valid states can be found in AlfrescoConstants.h.
- 
- @param state State of the processes to retrieve
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state
-                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
-
-/**
- Retrieves a paged result of the of processes that are in a given state in accordance to the listing context provided.
- 
- Valid states can be found in AlfrescoConstants.h.
- 
- @param state State of the process to retrieve
- @param listingContext The listing context with a paging definition that's used to retrieve the processes
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state
-                               listingContext:(AlfrescoListingContext *)listingContext
-                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /**
  Retrieves a process for a given process identifier.
@@ -151,16 +128,16 @@
                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /**
- Retrieves an array of all tasks for the given process that the user is able to see which are in a specific state.
+ Retrieves paged results of all tasks for the given process that the user is able to see.
+ The listing filter mechanism on listing context can be used to filter the tasks.
  Tasks are returned if created by the user, or if the user is involved in the task.
  
  @param process The process for which task(s) should be retrieved
- @param state State of that task(s) to retrieve
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process
-                                     inState:(NSString *)status
-                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+                              listingContext:(AlfrescoListingContext *)listingContext
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /**
  Retrieves an array of AlfrescoNode's for a specific process. If there are no attachments, nil is returned in the completion block.
@@ -180,6 +157,7 @@
 
 /**
  Retrieves a paged result of the tasks the authenticated user is allowed to see.
+ The listing filter mechanism on listing context can be used to filter the tasks.
  
  @param listingContext The listing context with a paging definition that's used to retrieve the tasks
  @param completionBlock The block that's called with the operation completes

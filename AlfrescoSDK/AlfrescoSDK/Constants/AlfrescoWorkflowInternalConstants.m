@@ -56,9 +56,10 @@ NSString * const kAlfrescoPublicAPIWorkflowProcessImage = @"processes/{processId
 NSString * const kAlfrescoPublicAPIWorkflowVariables = @"processes/{processId}/variables";
 
 // Workflows/Processes - Parameters
-NSString * const kAlfrescoWorkflowProcessStatus = @"status";
-NSString * const kAlfrescoLegacyAPIWorkflowStatusInProgress = @"in_progress";
+NSString * const kAlfrescoLegacyAPIWorkflowProcessState = @"state";
+NSString * const kAlfrescoLegacyAPIWorkflowStatusInProgress = @"active";
 NSString * const kAlfrescoLegacyAPIWorkflowStatusCompleted = @"completed";
+NSString * const kAlfrescoPublicAPIWorkflowProcessStatus = @"status";
 NSString * const kAlfrescoPublicAPIWorkflowProcessStatusAny = @"any";
 NSString * const kAlfrescoPublicAPIWorkflowProcessStatusActive = @"active";
 NSString * const kAlfrescoPublicAPIWorkflowProcessStatusCompleted = @"completed";
@@ -201,4 +202,8 @@ NSString * const kAlfrescoWorkflowVariableTypeBoolean = @"d:boolean";
 NSString * const kAlfrescoWorkflowVariableTypeDate = @"d:date";
 NSString * const kAlfrescoWorkflowVariableTypeDateTime = @"d:datetime";
 
+// state
+NSString * const kAlfrescoWorkflowProcessStateAny = @"org.alfresco.mobile.process.state.any";
+NSString * const kAlfrescoWorkflowProcessStateActive = @"org.alfresco.mobile.process.state.active";
+NSString * const kAlfrescoWorkflowProcessStateCompleted = @"org.alfresco.mobile.process.state.completed";
 

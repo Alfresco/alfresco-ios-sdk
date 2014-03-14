@@ -81,21 +81,6 @@
     return nil;
 }
 
-- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state
-                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
-{
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state
-                               listingContext:(AlfrescoListingContext *)listingContext
-                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
-{
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
 - (AlfrescoRequest *)retrieveProcessWithIdentifier:(NSString *)processIdentifier
                                    completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
 {
@@ -126,8 +111,8 @@
 }
 
 - (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process
-                                     inState:(NSString *)status
-                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+                              listingContext:(AlfrescoListingContext *)listingContext
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
