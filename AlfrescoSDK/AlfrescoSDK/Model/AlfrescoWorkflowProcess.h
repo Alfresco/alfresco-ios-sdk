@@ -35,9 +35,9 @@
 @property (nonatomic, strong, readonly) NSDate *endedAt;
 @property (nonatomic, strong, readonly) NSDate *dueAt;
 @property (nonatomic, strong, readonly) NSNumber *priority;
-@property (nonatomic, strong, readonly) NSString *processDescription;
+@property (nonatomic, strong, readonly) NSString *summary;
 @property (nonatomic, strong, readonly) NSString *initiatorUsername;
-@property (nonatomic, strong, readonly) NSArray *variables;
+@property (nonatomic, strong, readonly) NSDictionary *variables;
 
 - (id)initWithProperties:(NSDictionary *)properties;
 

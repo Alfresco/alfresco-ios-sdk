@@ -34,7 +34,7 @@
 @property (nonatomic, strong, readonly) NSDate *startedAt;
 @property (nonatomic, strong, readonly) NSDate *endedAt;
 @property (nonatomic, strong, readonly) NSDate *dueAt;
-@property (nonatomic, strong, readonly) NSString *taskDescription;
+@property (nonatomic, strong, readonly) NSString *summary;
 @property (nonatomic, strong, readonly) NSNumber *priority;
 @property (nonatomic, strong, readonly) NSString *assigneeIdentifier;
 

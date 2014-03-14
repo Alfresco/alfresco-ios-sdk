@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -19,8 +19,10 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "AlfrescoListingFilter.h"
 
-/** The AlfrescoListingContext can be used to specify paging values.
+/** The AlfrescoListingContext can be used to specify paging and filter values.
+ If not provided maximum items will default to 50 and skip count will default to 0.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
  */
@@ -43,36 +45,62 @@
 /// Returns current skip count.
 @property (nonatomic, assign, readonly) int skipCount;
 
+
+/// Returns the listing filter.
+@property (nonatomic, strong, readonly) AlfrescoListingFilter *listingFilter;
+
 /**
- for this initialiser a skipCount 0, i.e. from the very first element on the server, will be returned.
- MaxItems may be -1 (which in general is interpreted by the server as All) or any positive number.
+ Creates and returns a listing context with a maximum number of items.
+ 
+ @param maxItems The maximum number of items to be returned, 0 or -1 will be interpreted as all items.
  */
 - (id)initWithMaxItems:(int)maxItems;
 
 /**
- In the context of this SDK, maxItems is the maximum number to be used in one listing. The skipCount is a multiple of
- maxItems. Hence skipCount 0 will return all items from 0 to maxItems - 1. skipCount 1 will return all items between
- maxItems and (maxItems * 2) - 1 - etc.
- @param maxItems - the maximum number of items to be used
- @param skipCount
+ Creates and returns a listing context with a maximum number of items after skipping the given number of items.
+ 
+ @param maxItems The maximum number of items to be returned, 0 or -1 will be interpreted as all items.
+ @param skipCount The number of items to skip before results are returned.
  */
 - (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount;
 
 /**
- In the context of this SDK, maxItems is the maximum number to be used in one listing. The skipCount is a multiple of
- maxItems. Hence skipCount 0 will return all items from 0 to maxItems - 1. skipCount 1 will return all items between
- maxItems and (maxItems * 2) - 1 - etc.
- @param maxItems - the maximum number of items to be used
- @param skipCount
- @param sortProperty - a string indicating which value should be used for sorting. A nil string (or invalid string) will result in  default sorting
- @param sortAscending
- */
-- (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount sortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending;
-
-/**
- @param sortProperty - a string indicating which value should be used for sorting. A nil string (or invalid string) will result in  default sorting
- @param sortAscending
+ Creates and returns a listing context with sorted items.
+ 
+ @param sortProperty A string indicating which value should be used for sorting. A nil string (or invalid string) will result in default sorting.
+ @param sortAscending Determines whether the sorting should be ascending.
  */
 - (id)initWithSortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending;
+
+/**
+ Creates and returns a listing context with filtered items.
+ 
+ @param listingFilter The filtering that must be applied to the returned items.
+ */
+- (id)initWithListingFilter:(AlfrescoListingFilter *)listingFilter;
+
+/**
+ Creates and returns a listing context with a maximum number of sorted items after skipping the given number of items.
+ 
+ @param maxItems The maximum number of items to be returned, 0 or -1 will be interpreted as all items.
+ @param skipCount The number of items to skip before results are returned.
+ @param sortProperty A string indicating which value should be used for sorting. A nil string (or invalid string) will result in default sorting.
+ @param sortAscending Determines whether the sorting should be ascending.
+ */
+- (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount
+          sortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending;
+
+/**
+ Creates and returns a listing context with a maximum number of sorted and filtered items after skipping the given number of items.
+
+ @param maxItems The maximum number of items to be returned, 0 or -1 will be interpreted as all items.
+ @param skipCount The number of items to skip before results are returned.
+ @param sortProperty A string indicating which value should be used for sorting. A nil string (or invalid string) will result in default sorting.
+ @param sortAscending Determines whether the sorting should be ascending.
+ @param listingFilter The filtering that must be applied to the returned items.
+ */
+- (id)initWithMaxItems:(int)maxItems skipCount:(int)skipCount
+          sortProperty:(NSString *)sortProperty sortAscending:(BOOL)sortAscending
+         listingFilter:(AlfrescoListingFilter *)listingFilter;
 
 @end

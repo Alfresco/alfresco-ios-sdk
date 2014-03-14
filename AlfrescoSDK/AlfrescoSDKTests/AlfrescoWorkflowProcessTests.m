@@ -26,6 +26,8 @@
 #import "AlfrescoWorkflowProcessTests.h"
 #import "AlfrescoFileManager.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoProperty.h"
+#import "AlfrescoWorkflowUtils.h"
 
 static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
@@ -111,7 +113,12 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self.workflowService retrieveProcessesInState:kAlfrescoWorkflowProcessStateActive completionBlock:^(NSArray *array, NSError *retrieveError) {
+        AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc]
+                                                initWithFilter:kAlfrescoFilterByWorkflowState value:kAlfrescoFilterValueWorkflowStateActive];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
+        
+        [self.workflowService retrieveProcessesWithListingContext:listingContext
+                                                  completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
             if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
@@ -120,10 +127,16 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
             }
             else
             {
+                XCTAssertNotNil(pagingResult, @"Expected a paging result to be returned");
+                NSArray *array = pagingResult.objects;
                 XCTAssertNotNil(array, @"array should not be nil");
-                XCTAssertTrue(array.count >= 1, @"Array should contain more than or 1 process");
+                XCTAssertTrue(array.count >= 1, @"Array should contain 1 or more process");
                 
-                // TODO
+                // check every process returned is active
+                for (AlfrescoWorkflowProcess *process in array)
+                {
+                    XCTAssertTrue(process.endedAt == nil, @"Only expected to get processes that are active but process %@ has an end date set", process.identifier);
+                }
                 
                 self.lastTestSuccessful = YES;
             }
@@ -146,7 +159,12 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        [self.workflowService retrieveProcessesInState:kAlfrescoWorkflowProcessStateCompleted completionBlock:^(NSArray *array, NSError *retrieveError) {
+        AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc]
+                                                initWithFilter:kAlfrescoFilterByWorkflowState value:kAlfrescoFilterValueWorkflowStateCompleted];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
+        
+        [self.workflowService retrieveProcessesWithListingContext:listingContext
+                                                  completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
             if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
@@ -155,10 +173,16 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
             }
             else
             {
+                XCTAssertNotNil(pagingResult, @"Expected a paging result to be returned");
+                NSArray *array = pagingResult.objects;
                 XCTAssertNotNil(array, @"array should not be nil");
-                XCTAssertTrue(array.count >= 1, @"Array should contain more than or 1 process");
+                XCTAssertTrue(array.count >= 1, @"Array should contain 1 or more processes");
                 
-                // TODO
+                // check every process returned is completed
+                for (AlfrescoWorkflowProcess *process in array)
+                {
+                    XCTAssertTrue(process.endedAt != nil, @"Only expected to get processes that are complete but process %@ does not have an end date set", process.identifier);
+                }
                 
                 self.lastTestSuccessful = YES;
             }
@@ -166,43 +190,6 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
             
         }];
         
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-    }
-    else
-    {
-        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
-    }
-}
-
-- (void)testRetrieveProcessesInStateWithListingContext
-{
-    if (self.setUpSuccess)
-    {
-        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
-        
-        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:0];
-        
-        [self.workflowService retrieveProcessesInState:kAlfrescoWorkflowProcessStateAny listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
-            if (retrieveError)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveError localizedDescription], [retrieveError localizedFailureReason]];
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
-                XCTAssertTrue(pagingResult.objects.count > 1, @"PagingResult objects should contain more than 1 process");
-                XCTAssertTrue(pagingResult.hasMoreItems, @"PagingResult should contain more objects");
-                
-                // TODO
-                
-                self.lastTestSuccessful = YES;
-                
-                self.callbackCompleted = YES;
-            }
-        }];
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
@@ -247,6 +234,33 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                     {
                         XCTAssertNotNil(process.processDefinitionIdentifier, @"Process definition identifier should not be nil");
                         XCTAssertNotNil(process.startedAt, @"Process started at date should not be nil");
+                        
+                        NSDictionary *variables = process.variables;
+                        XCTAssertNotNil(variables, @"Expected to find a set of variables for the process");
+                        
+                        if ([AlfrescoWorkflowUtils isJBPMProcess:process] ||
+                            !self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                        {
+                            AlfrescoProperty *priorityProperty = variables[@"priority"];
+                            XCTAssertNotNil(priorityProperty, @"Expected to find the priority process variable");
+                            XCTAssertTrue(priorityProperty.type == AlfrescoPropertyTypeInteger);
+                            
+                            AlfrescoProperty *descriptionProperty = variables[@"description"];
+                            XCTAssertNotNil(descriptionProperty, @"Expected to find the description process variable");
+                            XCTAssertTrue(descriptionProperty.type == AlfrescoPropertyTypeString);
+                        }
+                        else
+                        {
+                            AlfrescoProperty *priorityProperty = variables[@"bpm_priority"];
+                            XCTAssertNotNil(priorityProperty, @"Expected to find the bpm_priority process variable");
+                            XCTAssertTrue(priorityProperty.type == AlfrescoPropertyTypeInteger);
+                            
+                            AlfrescoProperty *statusProperty = variables[@"bpm_status"];
+                            XCTAssertNotNil(statusProperty, @"Expected to find the bpm_status process variable");
+                            XCTAssertTrue(statusProperty.type == AlfrescoPropertyTypeString);
+                            XCTAssertTrue([statusProperty.value isEqualToString:@"Not Yet Started"],
+                                          @"Expected status property to be 'Not Yet Started' but was %@", statusProperty.value);
+                        }
                         
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
                             XCTAssertTrue(succeeded, @"Deletion flag should be true");

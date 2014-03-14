@@ -31,6 +31,7 @@ typedef NS_ENUM(NSInteger, AlfrescoPropertyType)
     AlfrescoPropertyTypeId,
     AlfrescoPropertyTypeInteger,
     AlfrescoPropertyTypeDecimal,
+    AlfrescoPropertyTypeDate,
     AlfrescoPropertyTypeDateTime,
     AlfrescoPropertyTypeBoolean,
 };

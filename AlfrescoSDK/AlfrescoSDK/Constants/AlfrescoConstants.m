@@ -52,6 +52,13 @@ NSString * const kAlfrescoSortByName = @"name";
 NSString * const kAlfrescoSortByDescription = @"description";
 
 /**
+ Filtering constants
+ */
+NSString * const kAlfrescoFilterByWorkflowState = @"state";
+NSString * const kAlfrescoFilterValueWorkflowStateActive = @"active";
+NSString * const kAlfrescoFilterValueWorkflowStateCompleted = @"completed";
+
+/**
  Capabilities constants
  */
 NSString * const kAlfrescoCapabilityLike = @"CapabilityLike";
@@ -76,13 +83,11 @@ NSString * const kAlfrescoCMISBindingURL = @"org.alfresco.mobile.session.cmisbin
 /**
  Workflow Task Constants
  */
-NSString * const kAlfrescoTaskComment = @"org.alfresco.mobile.task.comment";
-NSString * const kAlfrescoTaskReviewOutcome = @"org.alfresco.mobile.task.reviewoutcome";
-NSString * const kAlfrescoTaskApprove = @"Approve";
-NSString * const kAlfrescoTaskReject = @"Reject";
-NSString * const kAlfrescoWorkflowProcessStateAny = @"org.alfresco.mobile.process.state.any";
-NSString * const kAlfrescoWorkflowProcessStateActive = @"org.alfresco.mobile.process.state.active";
-NSString * const kAlfrescoWorkflowProcessStateCompleted = @"org.alfresco.mobile.process.state.completed";
+NSString * const kAlfrescoWorkflowTaskComment = @"org.alfresco.mobile.task.comment";
+NSString * const kAlfrescoWorkflowTaskReviewOutcome = @"org.alfresco.mobile.task.reviewoutcome";
+
+NSString * const kAlfrescoWorkflowTaskTransitionApprove = @"Approve";
+NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";
 
 NSString * const kAlfrescoWorkflowProcessDescription = @"org.alfresco.mobile.process.create.description";
 NSString * const kAlfrescoWorkflowProcessPriority = @"org.alfresco.mobile.process.create.priority";

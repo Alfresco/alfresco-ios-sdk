@@ -80,36 +80,13 @@
 
 /**
  Retrieves a paged result of processes in accordance to a listing context.
+ The listing filter mechanism on listing context can be used to filter the processes.
  
  @param listingContext The listing context with a paging definition that's used to retrieve the processes
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)retrieveProcessesWithListingContext:(AlfrescoListingContext *)listingContext
                                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
-
-/**
- Retrieves an array of processes that are in a given state.
- 
- Valid states can be found in AlfrescoConstants.h.
- 
- @param state State of the processes to retrieve
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state
-                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
-
-/**
- Retrieves a paged result of the of processes that are in a given state in accordance to the listing context provided.
- 
- Valid states can be found in AlfrescoConstants.h.
- 
- @param state State of the process to retrieve
- @param listingContext The listing context with a paging definition that's used to retrieve the processes
- @param completionBlock The block that's called with the operation completes
- */
-- (AlfrescoRequest *)retrieveProcessesInState:(NSString *)state
-                               listingContext:(AlfrescoListingContext *)listingContext
-                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /**
  Retrieves a process for a given process identifier.
@@ -151,16 +128,16 @@
                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 /**
- Retrieves an array of all tasks for the given process that the user is able to see which are in a specific state.
+ Retrieves paged results of all tasks for the given process that the user is able to see.
+ The listing filter mechanism on listing context can be used to filter the tasks.
  Tasks are returned if created by the user, or if the user is involved in the task.
  
  @param process The process for which task(s) should be retrieved
- @param state State of that task(s) to retrieve
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process
-                                     inState:(NSString *)status
-                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+                              listingContext:(AlfrescoListingContext *)listingContext
+                             completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /**
  Retrieves an array of AlfrescoNode's for a specific process. If there are no attachments, nil is returned in the completion block.
@@ -180,6 +157,7 @@
 
 /**
  Retrieves a paged result of the tasks the authenticated user is allowed to see.
+ The listing filter mechanism on listing context can be used to filter the tasks.
  
  @param listingContext The listing context with a paging definition that's used to retrieve the tasks
  @param completionBlock The block that's called with the operation completes
@@ -294,34 +272,34 @@
 /**
  Adds a single attachment to a given task.
  
- @param node The node that should be added to the task
  @param task The task which the node should be attached
+ @param document The document that should be added to the task
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)addAttachmentToTask:(AlfrescoWorkflowTask *)task
-                              attachment:(AlfrescoNode *)node
+                              attachment:(AlfrescoDocument *)document
                          completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 /**
  Adds an array of attachments to a given task.
  
- @param nodeArray An array of AlfrescoNode's that should be added to the task
  @param task The task to which the nodes should be attached
+ @param documentArray An array of AlfrescoDocuments's that should be added to the task
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)addAttachmentsToTask:(AlfrescoWorkflowTask *)task
-                              attachments:(NSArray *)nodeArray
+                              attachments:(NSArray *)documentArray
                           completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 /**
  Removes an attachment from a specific task.
  
- @param node The node that should be removed from the task
  @param task The task from which the node should be removed
+ @param document The document that should be removed from the task
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)removeAttachmentFromTask:(AlfrescoWorkflowTask *)task
-                                   attachment:(AlfrescoNode *)node
+                                   attachment:(AlfrescoDocument *)document
                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 @end
