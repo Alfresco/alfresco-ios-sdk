@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -54,6 +54,7 @@
 #import "AlfrescoPagingResult.h"
 #import "AlfrescoNode.h"
 #import "AlfrescoListingContext.h"
+#import "AlfrescoListingFilter.h"
 #import "AlfrescoKeywordSearchOptions.h"
 #import "AlfrescoFolder.h"
 #import "AlfrescoDocument.h"
