@@ -18,6 +18,17 @@
 
 if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
 
+   # -----------------------------------------------------------------------------
+   # Script Parameters
+   #
+   BUILD_CONFIGURATION=Release
+   LIBRARY_SUFFIX=""
+   if [[ "$1" == "Debug" ]] ; then
+      BUILD_CONFIGURATION=Debug
+      LIBRARY_SUFFIX="-debug"
+   fi
+
+
    # ---------------------------------------------------------------------------
    # Build environment variables
    #
@@ -44,6 +55,18 @@ if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
    # Extracts the Alfresco SDK Version from the project's xcconfig file.
    ALFRESCO_SDK_VERSION=`sed -ne '/^ALFRESCO_SDK_VERSION=/s/.*=\([\^]*\)/\1/p' $ALFRESCO_SDK_SRC/AlfrescoSDK.xcconfig`
    echo Alfresco SDK Version detected: $ALFRESCO_SDK_VERSION
+
+   # The name of the Alfresco SDK for iOS static library
+   ALFRESCO_SDK_LIBRARY_NAME=lib"$ALFRESCO_SDK_PRODUCT_NAME"v"$ALFRESCO_SDK_VERSION""$LIBRARY_SUFFIX".a
+   
+   # The directory containing the public header files
+   ALFRESCO_SDK_HEADER_PATH=$ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-iphoneos
+
+   # The directory containing the universal static library
+   ALFRESCO_SDK_UNIVERSAL_LIBRARY_PATH=$ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-universal
+
+   # The path to the universal static library
+   ALFRESCO_SDK_UNIVERSAL_LIBRARY=$ALFRESCO_SDK_UNIVERSAL_LIBRARY_PATH/$ALFRESCO_SDK_LIBRARY_NAME
 
    # The name of the Alfresco SDK for iOS framework
    ALFRESCO_SDK_FRAMEWORK_NAME=$ALFRESCO_SDK_PRODUCT_NAME.framework

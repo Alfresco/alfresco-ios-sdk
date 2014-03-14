@@ -44,16 +44,11 @@ usage () {
 }
 
 # Script Defaults
-BUILD_CONFIGURATION=Release
-LIBRARY_SUFFIX=""
 GENERATE_DOCS="true"
 
 for param in $*
 do
-   if [[ "$param" == "Debug" ]] ; then
-      BUILD_CONFIGURATION=Debug
-      LIBRARY_SUFFIX="-debug"
-   elif [[ "$param" == "--no-docs" ]] ; then
+   if [[ "$param" == "--no-docs" ]] ; then
       GENERATE_DOCS=""
    elif [[ "$param" == "--help" ]] ; then
       usage
@@ -62,16 +57,35 @@ done
 
 
 # -----------------------------------------------------------------------------
-# Build AlfrescoSDK.framework
+# Build static library and AlfrescoSDK.framework
 #
-ALFRESCO_SDK_FRAMEWORK_ZIP_NAME=alfresco-ios-sdk-$ALFRESCO_SDK_VERSION"$LIBRARY_SUFFIX".zip
+
+# Build static library and framework
+. $ALFRESCO_SDK_SCRIPT/build_framework.sh $BUILD_CONFIGURATION \
+   || die "AlfrescoSDK.framework failed to build."
+
+ALFRESCO_SDK_LIBRARY_ZIP_NAME=alfresco-ios-sdk-library-$ALFRESCO_SDK_VERSION"$LIBRARY_SUFFIX".zip
+ALFRESCO_SDK_LIBRARY_ZIP=$ALFRESCO_SDK_PACKAGE/$ALFRESCO_SDK_LIBRARY_ZIP_NAME
+
+progress_message "Packaging static library to $ALFRESCO_SDK_LIBRARY_ZIP - $BUILD_CONFIGURATION configuration"
+
+# Package static library - text files, universal library, header files
+\rm -rf $ALFRESCO_SDK_LIBRARY_ZIP
+pushd $ALFRESCO_SDK_ROOT
+zip $ALFRESCO_SDK_LIBRARY_ZIP README LICENSE NOTICE
+popd
+pushd $ALFRESCO_SDK_UNIVERSAL_LIBRARY_PATH
+zip $ALFRESCO_SDK_LIBRARY_ZIP $ALFRESCO_SDK_LIBRARY_NAME
+popd
+pushd $ALFRESCO_SDK_HEADER_PATH
+zip -r $ALFRESCO_SDK_LIBRARY_ZIP include
+popd
+
+
+ALFRESCO_SDK_FRAMEWORK_ZIP_NAME=alfresco-ios-sdk-framework-$ALFRESCO_SDK_VERSION"$LIBRARY_SUFFIX".zip
 ALFRESCO_SDK_FRAMEWORK_ZIP=$ALFRESCO_SDK_PACKAGE/$ALFRESCO_SDK_FRAMEWORK_ZIP_NAME
 
 progress_message "Packaging framework to $ALFRESCO_SDK_FRAMEWORK_ZIP - $BUILD_CONFIGURATION configuration"
-
-# Build framework
-. $ALFRESCO_SDK_SCRIPT/build_framework.sh $BUILD_CONFIGURATION \
-   || die "AlfrescoSDK.framework failed to build."
 
 # Package framework
 \rm -rf $ALFRESCO_SDK_FRAMEWORK_ZIP
@@ -79,7 +93,7 @@ pushd $ALFRESCO_SDK_ROOT
 zip $ALFRESCO_SDK_FRAMEWORK_ZIP README LICENSE NOTICE
 popd
 pushd $ALFRESCO_SDK_BUILD
-zip -gry $ALFRESCO_SDK_FRAMEWORK_ZIP $ALFRESCO_SDK_FRAMEWORK
+zip -gry $ALFRESCO_SDK_FRAMEWORK_ZIP $ALFRESCO_SDK_FRAMEWORK_NAME
 popd
 
 
