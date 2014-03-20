@@ -36,6 +36,9 @@ static NSInteger kDocumentModelVersion = 1;
 
 @implementation AlfrescoDocument
 
+@synthesize isFolder;
+@synthesize isDocument;
+
 - (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super initWithProperties:properties];
