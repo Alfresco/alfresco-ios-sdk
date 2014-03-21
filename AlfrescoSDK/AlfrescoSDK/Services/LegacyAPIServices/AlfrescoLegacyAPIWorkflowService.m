@@ -678,7 +678,7 @@
         requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = kAlfrescoWorkflowLegacyJSONNext;
         requestBody[kAlfrescoWorkflowLegacyJSONBPMStatus] = kAlfrescoWorkflowLegacyJSONCompleted;
         
-        if ([task.processDefinitionIdentifier isEqualToString:kAlfrescoWorkflowReviewAndApprove])
+        if ([task.processDefinitionIdentifier rangeOfString:kAlfrescoWorkflowReviewAndApprove options:NSCaseInsensitiveSearch].location != NSNotFound)
         {
             requestBody[kAlfrescoWorkflowLegacyJSONBPMReviewOutcome] = properties[kAlfrescoWorkflowTaskReviewOutcome];
         }

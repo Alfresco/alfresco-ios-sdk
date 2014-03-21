@@ -80,17 +80,11 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.processDefinitionKey = entry[kAlfrescoWorkflowPublicJSONProcessDefinitionKey];
         if (convertedVariables)
         {
-            AlfrescoProperty *titleVariable = convertedVariables[kAlfrescoWorkflowPublicBPMJSONProcessTitle];
-            if (titleVariable.value != [NSNull null])
-            {
-                self.name = (NSString *)titleVariable.value;
-            }
+            [self setPropertiesFromVariables:convertedVariables];
         }
         self.startedAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONStartedAt]];
         self.endedAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONEndedAt]];
-        self.dueAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONDueAt]];
         self.summary = entry[kAlfrescoWorkflowPublicJSONDescription];
-        self.priority = entry[kAlfrescoWorkflowPublicJSONPriority];
         self.initiatorUsername = entry[kAlfrescoWorkflowPublicJSONStartUserID];
         self.variables = convertedVariables;
     }
@@ -160,6 +154,8 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     return self;
 }
 
+#pragma mark - Private Functions
+
 - (void)setVariables:(NSDictionary *)variables
 {
     _variables = variables;
@@ -168,11 +164,28 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     // No clean way to determine public or legacy API being used. Check to see if $ symbol exists.
     if (!self.name && [self.identifier rangeOfString:@"$"].location == NSNotFound)
     {
-        AlfrescoProperty *titleVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessTitle];
-        if (titleVariable.value != [NSNull null])
-        {
-            self.name = (NSString *)titleVariable.value;
-        }
+        [self setPropertiesFromVariables:variables];
+    }
+}
+
+- (void)setPropertiesFromVariables:(NSDictionary *)variables
+{
+    AlfrescoProperty *titleVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessTitle];
+    if (titleVariable.value != [NSNull null])
+    {
+        self.name = (NSString *)titleVariable.value;
+    }
+    
+    AlfrescoProperty *priorityVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessPriority];
+    if (priorityVariable.value != [NSNull null])
+    {
+        self.priority = (NSNumber *)priorityVariable.value;
+    }
+    
+    AlfrescoProperty *dueDateVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessDueDate];
+    if (dueDateVariable.value != [NSNull null])
+    {
+        self.dueAt = [self.dateFormatter dateFromString:dueDateVariable.value];
     }
 }
 
