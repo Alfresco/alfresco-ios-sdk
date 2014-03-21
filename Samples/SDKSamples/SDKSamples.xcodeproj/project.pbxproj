@@ -424,7 +424,7 @@
 		829C562B155DB8F6004EE3C2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Alfresco;
 			};
 			buildConfigurationList = 829C562E155DB8F6004EE3C2 /* Build configuration list for PBXProject "SDKSamples" */;
@@ -664,7 +664,6 @@
 		829C5656155DB8F6004EE3C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SDKSamples/SDKSamples-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -686,7 +685,6 @@
 		829C5657155DB8F6004EE3C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SDKSamples/SDKSamples-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
