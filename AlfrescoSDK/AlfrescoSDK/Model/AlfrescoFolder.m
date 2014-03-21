@@ -28,8 +28,8 @@ static NSInteger kFolderModelVersion = 1;
 
 @implementation AlfrescoFolder
 
-@synthesize isFolder;
-@synthesize isDocument;
+@dynamic isFolder;
+@dynamic isDocument;
 
 - (id)initWithProperties:(NSDictionary *)properties
 {
