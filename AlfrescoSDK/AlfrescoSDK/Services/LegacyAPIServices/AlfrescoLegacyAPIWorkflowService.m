@@ -615,7 +615,14 @@
             NSString *assigneesAdded = nil;
             for (NSString *assigneeNodeRef in personNodeRefs)
             {
-                assigneesAdded = [NSString stringWithFormat:@"%@,%@", assigneesAdded, assigneeNodeRef];
+                if (!assigneesAdded)
+                {
+                    assigneesAdded = assigneeNodeRef;
+                }
+                else
+                {
+                    assigneesAdded = [NSString stringWithFormat:@"%@,%@", assigneesAdded, assigneeNodeRef];
+                }
             }
             
             if (assignees.count == 1)
