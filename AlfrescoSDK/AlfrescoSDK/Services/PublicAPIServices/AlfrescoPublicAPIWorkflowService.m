@@ -361,7 +361,7 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)", kAlfrescoPublicAPIWorkflowTaskAssignee, self.session.personIdentifier];
+    NSString *whereParameterString = [NSString stringWithFormat:@"(%@='%@')", kAlfrescoPublicAPIWorkflowTaskAssignee, self.session.personIdentifier];
     
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
     NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowTasks stringByAppendingString:queryString];
@@ -394,7 +394,7 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)", kAlfrescoPublicAPIWorkflowTaskAssignee, self.session.personIdentifier];
+    NSString *whereParameterString = [NSString stringWithFormat:@"(%@='%@')", kAlfrescoPublicAPIWorkflowTaskAssignee, self.session.personIdentifier];
     
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
     NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowTasks stringByAppendingString:queryString];
