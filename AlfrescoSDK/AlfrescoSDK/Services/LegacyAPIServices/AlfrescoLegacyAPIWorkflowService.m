@@ -612,19 +612,8 @@
     if (assignees)
     {
         [self retrieveNodeRefIdentifiersForPeople:assignees completionBlock:^(NSArray *personNodeRefs, NSError *error) {
-            NSString *assigneesAdded = nil;
-            for (NSString *assigneeNodeRef in personNodeRefs)
-            {
-                if (!assigneesAdded)
-                {
-                    assigneesAdded = assigneeNodeRef;
-                }
-                else
-                {
-                    assigneesAdded = [NSString stringWithFormat:@"%@,%@", assigneesAdded, assigneeNodeRef];
-                }
-            }
-            
+            NSString *assigneesAdded = [personNodeRefs componentsJoinedByString:@","];
+
             if (assignees.count == 1)
             {
                 [requestBody setValue:assigneesAdded forKey:kAlfrescoWorkflowLegacyJSONBPMProcessAssignee];
