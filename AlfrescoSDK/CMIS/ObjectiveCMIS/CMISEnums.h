@@ -120,9 +120,10 @@ typedef NS_ENUM(NSInteger, CMISExtensionLevel)
 {
     CMISExtensionLevelObject,
     CMISExtensionLevelProperties,
-    CMISExtensionLevelAllowableActions
+    CMISExtensionLevelAllowableActions,
+    CMISExtensionLevelAcl
     // TODO expose the remaining extensions as they are implemented
-    // CMISExtensionLevelAcl, CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
+    // CMISExtensionLevelPolicies, CMISExtensionLevelChangeEvent
 
 };
 

@@ -146,6 +146,31 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
 
 
 /**
+ * Invoke method used for downloads,
+ * @param url the RESTful API URL to be used
+ * @param httpRequestMethod
+ * @param session
+ * @param outputStream the stream pointing to the destination. Must be an instance or extension of NSOutputStream
+ * @param bytesExpected the size of the content to be downloaded
+ * @param offset the offset of the stream or null to read the stream from the beginning
+ * @param legnth the maximum length of the stream or null to read to the end of the stream
+ * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
+ * @param progressBlock
+ * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled
+ */
+- (void)invoke:(NSURL *)url
+    httpMethod:(CMISHttpRequestMethod)httpRequestMethod
+       session:(CMISBindingSession *)session
+  outputStream:(NSOutputStream *)outputStream
+ bytesExpected:(unsigned long long)bytesExpected
+        offset:(NSDecimalNumber*)offset
+        length:(NSDecimalNumber*)length
+   cmisRequest:(CMISRequest *)cmisRequest
+completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
+ progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+
+/**
  * Convenience GET invoke method
  * @param url the RESTful API URL to be used
  * @param session

@@ -443,7 +443,7 @@
     id favoritesObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if(error)
     {
-        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeFavorites];
+        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsing];
         return nil;
     }
     if (![favoritesObject isKindOfClass:[NSDictionary class]])

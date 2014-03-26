@@ -17,6 +17,8 @@
  ******************************************************************************/
 
 #import "AlfrescoVersionServiceTest.h"
+#import "AlfrescoLog.h"
+#import "AlfrescoErrors.h"
 
 @implementation AlfrescoVersionServiceTest
 
@@ -317,9 +319,9 @@
                                                               {
                                                                   NSError *fileError = nil;
                                                                   NSDictionary *fileDict = [[NSFileManager defaultManager] attributesOfItemAtPath:[content.fileUrl path] error:&fileError];
-                                                                  XCTAssertNil(fileError, @"expected no error with getting file attributes for content file at path %@",[content.fileUrl path]);
+                                                                  XCTAssertNil(fileError, @"expected no error with getting file attributes for content file at path %@", [content.fileUrl path]);
                                                                   unsigned long long size = [[fileDict valueForKey:NSFileSize] unsignedLongLongValue];
-                                                                  XCTAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu",size);
+                                                                  XCTAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu", size);
                                                                   NSError *checkError = nil;
                                                                   NSString *checkContentString = [NSString stringWithContentsOfFile:[content.fileUrl path]
                                                                                                                            encoding:NSUTF8StringEncoding
@@ -334,7 +336,7 @@
                                                                   }
                                                                   else
                                                                   {
-                                                                      XCTAssertTrue([checkContentString isEqualToString:updatedContent],@"We should get back the updated content, instead we get %@",updatedContent);
+                                                                      XCTAssertTrue([checkContentString isEqualToString:updatedContent], @"We should get back the updated content, instead we get %@", checkContentString);
                                                                       self.lastTestSuccessful = YES;
                                                                   }
                                                                   
@@ -379,7 +381,163 @@
     }
 }
 
+- (void)testCheckoutCheckin
+{
+    if (self.setUpSuccess)
+    {
+        self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
+        
+        // capture current version
+        NSString *startingVersionLabel = self.testAlfrescoDocument.versionLabel;
+        
+        [self.versionService checkoutDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoDocument *checkedOutDocument, NSError *checkoutError) {
+            if (checkedOutDocument == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"Checkout Error: %@ - %@", [checkoutError localizedDescription], [checkoutError localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // create some content to checkin with
+                NSString *updatedContent = @"This should be the v1.1 content.";
+                NSString *versionComment = @"Version 1.1";
+                NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
+                AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"text/plain"];
+                
+                [self.versionService checkinDocument:checkedOutDocument asMajorVersion:NO contentFile:updatedContentFile
+                                          properties:nil comment:versionComment completionBlock:^(AlfrescoDocument *checkedInDocument, NSError *checkinError) {
+                                              if (checkedInDocument == nil)
+                                              {
+                                                  self.lastTestSuccessful = NO;
+                                                  self.lastTestFailureMessage = [NSString stringWithFormat:@"Checkin Error: %@ - %@", [checkoutError localizedDescription], [checkoutError localizedFailureReason]];
+                                                  self.callbackCompleted = YES;
+                                              }
+                                              else
+                                              {
+                                                  // check version label
+                                                  XCTAssertFalse([checkedInDocument.versionLabel isEqualToString:startingVersionLabel],
+                                                                 @"Expected version label to change but it was: %@", checkedInDocument.versionLabel);
+                                                  XCTAssertTrue([checkedInDocument.versionLabel isEqualToString:@"1.1"],
+                                                                @"Expected version label to be 1.1 but it was: %@", checkedInDocument.versionLabel);
+                                                  XCTAssertTrue([checkedInDocument.versionComment isEqualToString:versionComment],
+                                                                @"Expected version comment to be %@ but it was: %@", versionComment, checkedInDocument.versionComment);
+                                                  XCTAssertTrue(checkedInDocument.isLatestVersion, @"Expected document to be the latest version");
+                                                  
+                                                  // check content got updated
+                                                  AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+                                                  [documentService retrieveContentOfDocument:checkedInDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveError) {
+                                                      if (contentFile == nil)
+                                                      {
+                                                          self.lastTestSuccessful = NO;
+                                                          self.lastTestFailureMessage = [NSString stringWithFormat:@"Retrieve Error: %@ - %@", [checkoutError localizedDescription], [checkoutError localizedFailureReason]];
+                                                          self.callbackCompleted = YES;
+                                                      }
+                                                      else
+                                                      {
+                                                          NSError *fileError = nil;
+                                                          NSDictionary *fileDict = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentFile.fileUrl path] error:&fileError];
+                                                          XCTAssertNil(fileError, @"Expected no error with getting file attributes for content file at path %@", [contentFile.fileUrl path]);
+                                                          unsigned long long size = [[fileDict valueForKey:NSFileSize] unsignedLongLongValue];
+                                                          XCTAssertTrue(size > 0, @"checkContentFile length should be greater than 0. We got %llu", size);
+                                                          NSError *contentError = nil;
+                                                          NSString *checkedInContent = [NSString stringWithContentsOfFile:[contentFile.fileUrl path]
+                                                                                                                 encoding:NSUTF8StringEncoding
+                                                                                                                    error:&contentError];
+                                                          
+                                                          if (nil == checkedInContent)
+                                                          {
+                                                              self.lastTestSuccessful = NO;
+                                                              self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [contentError localizedDescription], [contentError localizedFailureReason]];
+                                                          }
+                                                          else
+                                                          {
+                                                              XCTAssertTrue([checkedInContent isEqualToString:updatedContent],
+                                                                            @"Expected to get back the updated content, instead we got: %@", checkedInContent);
+                                                              self.lastTestSuccessful = YES;
+                                                          }
+                                                          
+                                                          self.callbackCompleted = YES;
+                                                      }
+                                                  } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
+                                                      AlfrescoLogDebug(@"content retrieval progress %i/%i", bytesDownloaded, bytesTotal);
+                                                  }];
+                                              }
+                                          } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
+                                              AlfrescoLogDebug(@"checkin progress %i/%i", bytesUploaded, bytesTotal);
+                                          }];
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
 
+- (void)testCancelCheckout
+{
+    if (self.setUpSuccess)
+    {
+        self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
+        
+        [self.versionService checkoutDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoDocument *checkedOutDocument, NSError *checkoutError) {
+            if (checkedOutDocument == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"Checkout Error: %@ - %@", [checkoutError localizedDescription], [checkoutError localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // remember the nodeIdentifier of the private working copy
+                NSString *pwcNodeIdentifier = checkedOutDocument.identifier;
+                
+                // cancel the checkout
+                [self.versionService cancelCheckoutOfDocument:checkedOutDocument completionBlock:^(BOOL succeeded, NSError *cancelCheckoutError) {
+                    if(succeeded)
+                    {
+                        // ensure the private working copy has been deleted
+                        AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+                        [documentService retrieveNodeWithIdentifier:pwcNodeIdentifier completionBlock:^(AlfrescoNode *node, NSError *retrieveError) {
+                            if (node != nil)
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.lastTestFailureMessage = @"Expected the private working copy to have been deleted";
+                                self.callbackCompleted = YES;
+                            }
+                            else
+                            {
+                                XCTAssertNotNil(retrieveError, @"Expected the retrieveError object to be returned");
+                                XCTAssertTrue(retrieveError.code == kAlfrescoErrorCodeRequestedNodeNotFound,
+                                              @"Expected error code to be 2 (kAlfrescoErrorCodeRequestedNodeNotFound) but was %ld", (long)retrieveError.code);
+
+                                self.lastTestSuccessful = YES;
+                                self.callbackCompleted = YES;
+                            }
+                        }];
+                    }
+                    else
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"Cancel Checkout Error: %@ - %@", [cancelCheckoutError localizedDescription], [cancelCheckoutError localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                }];
+            }
+        }];
+         
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
 
 + (BOOL)isHigherVersionLabel:(NSString *)lastVersionLabel previousLabel:(NSString *)previousLabel
 {

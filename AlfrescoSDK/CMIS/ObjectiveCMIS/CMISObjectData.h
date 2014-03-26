@@ -23,6 +23,7 @@
 #import "CMISAllowableActions.h"
 #import "CMISLinkRelations.h"
 #import "CMISExtensionData.h"
+#import "CMISAcl.h"
 
 @class CMISRenditionData;
 
@@ -34,6 +35,7 @@
 @property (nonatomic, strong) CMISLinkRelations *linkRelations;
 @property (nonatomic, strong) NSURL *contentUrl;
 @property (nonatomic, strong) CMISAllowableActions *allowableActions;
+@property (nonatomic, strong) CMISAcl *acl;
 @property (nonatomic, strong) NSArray *renditions; // An array containing CMISRenditionData objects
 
 @end

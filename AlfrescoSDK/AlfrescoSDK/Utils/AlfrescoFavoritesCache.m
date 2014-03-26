@@ -118,15 +118,15 @@
     {
         case AlfrescoFavoriteDocument:
             self.hasMoreFavoriteDocuments = hasMoreFavorites;
-            self.totalDocuments = totalFavorites;
+            self.totalDocuments = (int)totalFavorites;
             break;
         case AlfrescoFavoriteFolder:
             self.hasMoreFavoriteFolders = hasMoreFavorites;
-            self.totalFolders = totalFavorites;
+            self.totalFolders = (int)totalFavorites;
             break;
         case AlfrescoFavoriteNode:
             self.hasMoreFavoriteNodes = hasMoreFavorites;
-            self.totalNodes = totalFavorites;
+            self.totalNodes = (int)totalFavorites;
             break;
     }
     

@@ -93,4 +93,26 @@
                 cmisRequest:(CMISRequest *)cmisRequest
             completionBlock:(void (^)(NSString *link, NSError *error))completionBlock;
 
+/**
+ Generates and sends an atom entry to the given link url
+ */
+- (void)sendAtomEntryXmlToLink:(NSString *)link
+             httpRequestMethod:(CMISHttpRequestMethod)httpRequestMethod
+                    properties:(CMISProperties *)properties
+                   cmisRequest:(CMISRequest *)request
+               completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
+
+/**
+ Generates and sends an atom entry (including content) to the given link url
+ */
+- (void)sendAtomEntryXmlToLink:(NSString *)link
+             httpRequestMethod:(CMISHttpRequestMethod)httpRequestMethod
+                    properties:(CMISProperties *)properties
+            contentInputStream:(NSInputStream *)contentInputStream
+               contentMimeType:(NSString *)contentMimeType
+                 bytesExpected:(unsigned long long)bytesExpected
+                   cmisRequest:(CMISRequest*)request
+               completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock
+                 progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long))progressBlock;
+
 @end

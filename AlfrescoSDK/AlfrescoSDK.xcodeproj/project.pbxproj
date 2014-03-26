@@ -474,6 +474,13 @@
 		580800CF18C0DCD0005D075A /* AlfrescoWorkflowProcessTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoWorkflowProcessTests.m; sourceTree = "<group>"; };
 		580800D018C0DCD0005D075A /* AlfrescoWorkflowTaskTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowTaskTests.h; sourceTree = "<group>"; };
 		580800D118C0DCD0005D075A /* AlfrescoWorkflowTaskTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoWorkflowTaskTests.m; sourceTree = "<group>"; };
+		58B9C8EB18E30692001D5C1B /* CMISAce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAce.h; sourceTree = "<group>"; };
+		58B9C8EC18E30692001D5C1B /* CMISAceParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAceParser.h; sourceTree = "<group>"; };
+		58B9C8ED18E30692001D5C1B /* CMISAcl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAcl.h; sourceTree = "<group>"; };
+		58B9C8EE18E30692001D5C1B /* CMISAclParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAclParser.h; sourceTree = "<group>"; };
+		58B9C8EF18E30692001D5C1B /* CMISDocumentTypeDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISDocumentTypeDefinition.h; sourceTree = "<group>"; };
+		58B9C8F018E30692001D5C1B /* CMISPrincipal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISPrincipal.h; sourceTree = "<group>"; };
+		58B9C8F118E30692001D5C1B /* CMISPrincipalParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISPrincipalParser.h; sourceTree = "<group>"; };
 		58E3B6E018D30BC500360B6A /* AlfrescoListingFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoListingFilter.h; sourceTree = "<group>"; };
 		58E3B6E118D30BC500360B6A /* AlfrescoListingFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoListingFilter.m; sourceTree = "<group>"; };
 		58F4645F18BF6B9300C8A28D /* AlfrescoRepositoryInfoBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRepositoryInfoBuilder.h; sourceTree = "<group>"; };
@@ -1036,6 +1043,13 @@
 		73CB831816C4187500B780A6 /* ObjectiveCMIS */ = {
 			isa = PBXGroup;
 			children = (
+				58B9C8EB18E30692001D5C1B /* CMISAce.h */,
+				58B9C8EC18E30692001D5C1B /* CMISAceParser.h */,
+				58B9C8ED18E30692001D5C1B /* CMISAcl.h */,
+				58B9C8EE18E30692001D5C1B /* CMISAclParser.h */,
+				58B9C8EF18E30692001D5C1B /* CMISDocumentTypeDefinition.h */,
+				58B9C8F018E30692001D5C1B /* CMISPrincipal.h */,
+				58B9C8F118E30692001D5C1B /* CMISPrincipalParser.h */,
 				273E3E61177DEB0D00E1AE0F /* CMISStandardAuthenticationProvider.h */,
 				273E3E62177DEB0D00E1AE0F /* CMISStandardUntrustedSSLAuthenticationProvider.h */,
 				4EA2AE4616DE25DE0053D05D /* CMISLog.h */,

@@ -22,6 +22,8 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoDocument.h"
 #import "AlfrescoRequest.h"
+#import "AlfrescoContentStream.h"
+
 /** The AlfrescoVersionService provides ways to get all versions of a specific document.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
@@ -62,5 +64,36 @@
 - (AlfrescoRequest *)retrieveAllVersionsOfDocument:(AlfrescoDocument *)document
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
+
+
+- (AlfrescoRequest *)retrieveLatestVersionOfDocument:(AlfrescoDocument *)document
+                                     completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock;
+
+
+- (AlfrescoRequest *)checkoutDocument:(AlfrescoDocument *)document
+                      completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock;
+
+
+- (AlfrescoRequest *)cancelCheckoutOfDocument:(AlfrescoDocument *)document
+                              completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+
+
+- (AlfrescoRequest *)checkinDocument:(AlfrescoDocument *)document
+                      asMajorVersion:(BOOL)majorVersion
+                         contentFile:(AlfrescoContentFile *)file
+                          properties:(NSDictionary *)properties
+                             comment:(NSString *)comment
+                     completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                       progressBlock:(AlfrescoProgressBlock)progressBlock;
+
+
+- (AlfrescoRequest *)checkinDocument:(AlfrescoDocument *)document
+                      asMajorVersion:(BOOL)majorVersion
+                       contentStream:(AlfrescoContentStream *)contentStream
+                          properties:(NSDictionary *)properties
+                             comment:(NSString *)comment
+                     completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
+                       progressBlock:(AlfrescoProgressBlock)progressBlock;
+
 
 @end
