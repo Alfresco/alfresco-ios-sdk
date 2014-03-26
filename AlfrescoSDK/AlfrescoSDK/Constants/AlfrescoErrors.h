@@ -83,13 +83,13 @@ typedef NS_ENUM(NSInteger, AlfrescoErrorCodes)
     kAlfrescoErrorCodeRatings = 1000,
     kAlfrescoErrorCodeRatingsNoRatings = 1001,
     
-    kAlfrescoErrorCodeFavorites = 1100,
+    kAlfrescoErrorCodeWorkflow = 1100,
+    kAlfrescoErrorCodeWorkflowFunctionNotSupported = 1101,
+    kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound = 1102,
+    kAlfrescoErrorCodeWorkflowNoProcessFound = 1103,
+    kAlfrescoErrorCodeWorkflowNoTaskFound = 1104,
     
-    kAlfrescoErrorCodeWorkflowFunctionNotSupported = 2000,
-    kAlfrescoErrorCodeWorkflowNoProcessDefinitionFound = 2001,
-    kAlfrescoErrorCodeWorkflowNoProcessFound = 2002,
-    kAlfrescoErrorCodeWorkflowNoTaskFound = 2003
-    
+    kAlfrescoErrorCodeVersion = 1200
 };
 
 extern NSString * const kAlfrescoErrorDomainName;
@@ -133,7 +133,6 @@ extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNoThumbnail;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists;
 extern NSString * const kAlfrescoErrorDescriptionDocumentFolderFailedToConvertNode;
 
-
 extern NSString * const kAlfrescoErrorDescriptionTagging;
 extern NSString * const kAlfrescoErrorDescriptionTaggingNoTags;
 
@@ -146,10 +145,13 @@ extern NSString * const kAlfrescoErrorDescriptionSearch;
 extern NSString * const kAlfrescoErrorDescriptionRatings;
 extern NSString * const kAlfrescoErrorDescriptionRatingsNoRatings;
 
+extern NSString * const kAlfrescoErrorDescriptionWorkflow;
 extern NSString * const kAlfrescoErrorDescriptionWorkflowFunctionNotSupported;
 extern NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessDefinitionFound;
 extern NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessFound;
 extern NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound;
+
+extern NSString * const kAlfrescoErrorDescriptionVersion;
 
 
 /** AlfrescoErrors is used in case an error occurs when executing an operation against the Alfresco repository.

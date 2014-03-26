@@ -60,9 +60,6 @@ NSString * const kAlfrescoErrorDescriptionDocumentFolderNoParent = @"Document Fo
 NSString * const kAlfrescoErrorDescriptionDocumentFolderWrongNodeType = @"Document Folder Service Error: wrong node type. Expected either folder or document.";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNodeAlreadyExists = @"Node already exists";
 NSString * const kAlfrescoErrorDescriptionDocumentFolderFailedToConvertNode = @"Node could not be converted to an Alfresco object";
-
-
-
 NSString * const kAlfrescoErrorDescriptionDocumentFolderNoThumbnail = @"Document Folder Service Error: No Thumbnail found for document/folder.";
 
 NSString * const kAlfrescoErrorDescriptionTagging = @"Tagging Service Error";
@@ -77,10 +74,14 @@ NSString * const kAlfrescoErrorDescriptionSearch = @"Search Service Error";
 NSString * const kAlfrescoErrorDescriptionRatings = @"Ratings Service Error";
 NSString * const kAlfrescoErrorDescriptionRatingsNoRatings = @"No Ratings found";
 
-NSString * const kAlfrescoErrorDescriptionWorkflowFunctionNotSupported = @"Function not supported on this version of Alfresco";
+NSString * const kAlfrescoErrorDescriptionWorkflow = @"Workflow Service Error";
+NSString * const kAlfrescoErrorDescriptionWorkflowFunctionNotSupported = @"Workflow function not supported on this version of Alfresco.";
 NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessDefinitionFound = @"Workflow Process Definition Service Error: No workflow process definitions were found.";
 NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessFound = @"Workflow Process Service Error: No workflow processes were found.";
 NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task Service Error: No workflow tasks were found.";
+
+NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
+
 
 @implementation AlfrescoErrors
 
@@ -325,6 +326,9 @@ NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task 
         case kAlfrescoErrorCodeRatingsNoRatings:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionRatingsNoRatings;
             break;
+        case kAlfrescoErrorCodeWorkflow:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionWorkflow;
+            break;
         case kAlfrescoErrorCodeWorkflowFunctionNotSupported:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionWorkflowFunctionNotSupported;
             break;
@@ -336,6 +340,9 @@ NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task 
             break;
         case kAlfrescoErrorCodeWorkflowNoTaskFound:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionWorkflowNoTaskFound;
+            break;
+        case kAlfrescoErrorCodeVersion:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionVersion;
             break;
         default:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionUnknown;

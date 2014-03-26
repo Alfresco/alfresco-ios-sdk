@@ -32,6 +32,28 @@
 @property (nonatomic, strong) NSString *productVersion;
 @property (nonatomic, strong) NSString *vendorName;
 
+/**
+ * Returns principal ID for an anonymous user (any authenticated user). This
+ * principal ID is supposed to be used in an Ace.
+ *
+ * @return the principal ID for an anonymous user or {@code null} if the
+ *         repository does not support anonymous users
+ *
+ * @cmis 1.0
+ */
+@property (nonatomic, strong) NSString *principalIdAnonymous;
+
+/**
+ * Returns principal ID for unauthenticated user (guest user). This
+ * principal ID is supposed to be used in an Ace.
+ *
+ * @return the principal ID for unauthenticated user or {@code null} if the
+ *         repository does not support unauthenticated users
+ *
+ * @cmis 1.0
+ */
+@property (nonatomic, strong) NSString *principalIdAnyone;
+
 // TODO the repositoryCapabilities property is currently not types.  
 /**  CMISRepositoryCapabilities needs to be created and replace the raw NSDictionary object
  * that is currently being set from the CMISRepositoryInfoParser

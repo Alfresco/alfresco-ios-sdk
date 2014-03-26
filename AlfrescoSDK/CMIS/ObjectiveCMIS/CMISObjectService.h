@@ -65,6 +65,20 @@
 
 /**
  * Gets the content stream for the specified Document object, or gets a rendition stream for a specified
+ * rendition of a document or folder object. Downloads the content to a local file.
+ * completionBlock returns objectData for object or nil if unsuccessful
+ * Provides options to resume download
+ */
+- (CMISRequest*)downloadContentOfObject:(NSString *)objectId
+                               streamId:(NSString *)streamId
+                                 toFile:(NSString *)filePath
+                                 offset:(NSDecimalNumber*)offset
+                                 length:(NSDecimalNumber*)length
+                        completionBlock:(void (^)(NSError *error))completionBlock
+                          progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+/**
+ * Gets the content stream for the specified Document object, or gets a rendition stream for a specified
  * rendition of a document or folder object. Downloads the content to an output stream.
  * completionBlock returns objectData for object or nil if unsuccessful
  */
@@ -73,6 +87,21 @@
                          toOutputStream:(NSOutputStream *)outputStream
                         completionBlock:(void (^)(NSError *error))completionBlock
                           progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+/**
+ * Gets the content stream for the specified Document object, or gets a rendition stream for a specified
+ * rendition of a document or folder object. Downloads the content to an output stream.
+ * completionBlock returns objectData for object or nil if unsuccessful
+ * Provides options to resume download
+ */
+- (CMISRequest*)downloadContentOfObject:(NSString *)objectId
+                               streamId:(NSString *)streamId
+                         toOutputStream:(NSOutputStream *)outputStream
+                                 offset:(NSDecimalNumber*)offset
+                                 length:(NSDecimalNumber*)length
+                        completionBlock:(void (^)(NSError *error))completionBlock
+                          progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
 
 /**
  * Deletes the content stream for the specified document object.

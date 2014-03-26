@@ -160,11 +160,36 @@
                               progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
 /**
+* Downloads the content of object with the provided object id to the given path.
+* completionBlock NSError will be nil if successful
+* Provides options to resume download
+*/
+- (CMISRequest*)downloadContentOfCMISObject:(NSString *)objectId
+                                     toFile:(NSString *)filePath
+                                     offset:(NSDecimalNumber*)offset
+                                     length:(NSDecimalNumber*)length
+                            completionBlock:(void (^)(NSError *error))completionBlock
+                              progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+/**
  * Downloads the content of object with the provided object id to the given stream.
  * completionBlock NSError will be nil if successful
  */
 - (CMISRequest*)downloadContentOfCMISObject:(NSString *)objectId
                              toOutputStream:(NSOutputStream*)outputStream
+                            completionBlock:(void (^)(NSError *error))completionBlock
+                              progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+
+/**
+ * Downloads the content of object with the provided object id to the given stream.
+ * completionBlock NSError will be nil if successful
+ * Provides options to resume download
+ */
+- (CMISRequest*)downloadContentOfCMISObject:(NSString *)objectId
+                             toOutputStream:(NSOutputStream *)outputStream
+                                     offset:(NSDecimalNumber*)offset
+                                     length:(NSDecimalNumber*)length
                             completionBlock:(void (^)(NSError *error))completionBlock
                               progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 

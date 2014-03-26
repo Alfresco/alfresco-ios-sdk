@@ -568,7 +568,7 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                     else
                     {
                         XCTAssertNotNil(attachmentNodes, @"array should not be nil");
-                        XCTAssertTrue(attachmentNodes.count == attachmentArray.count, @"Array should contain %d attachment(s)", attachmentArray.count);
+                        XCTAssertTrue(attachmentNodes.count == attachmentArray.count, @"Array should contain %lu attachment(s)", (unsigned long)attachmentArray.count);
                         
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
                             XCTAssertTrue(succeeded, @"Deletion flag should be true");

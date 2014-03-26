@@ -47,9 +47,16 @@ extern NSString * const kCMISAtomEntryValueTrue;
 extern NSString * const kCMISAtomEntryContent;
 extern NSString * const kCMISAtomEntrySrc;
 extern NSString * const kCMISAtomEntryAllowableActions;
+extern NSString * const kCMISAtomEntryAcl;
+extern NSString * const kCMISAtomEntryExactACL;
+extern NSString * const kCMISAtomEntryPermission;
+extern NSString * const kCMISAtomEntryPrincipal;
+extern NSString * const kCMISAtomEntryPrincipalId;
+extern NSString * const kCMISAtomEntryDirect;
 
 // Collections
 extern NSString * const kCMISAtomCollectionQuery;
+extern NSString * const kCMISAtomCollectionCheckedout;
 
 // Links
 extern NSString * const kCMISLinkRelationDown;
@@ -59,6 +66,7 @@ extern NSString * const kCMISLinkRelationFolderTree;
 extern NSString * const kCMISLinkVersionHistory;
 extern NSString * const kCMISLinkEditMedia;
 extern NSString * const kCMISLinkRelationNext;
+extern NSString * const kCMISLinkRelationWorkingCopy;
 
 // URL parameters
 extern NSString * const kCMISParameterChangeToken;
@@ -77,7 +85,13 @@ extern NSString * const kCMISParameterAllVersions;
 extern NSString * const kCMISParameterContinueOnFailure;
 extern NSString * const kCMISParameterUnfileObjects;
 extern NSString * const kCMISParameterRelativePathSegment;
+extern NSString * const kCMISParameterMajor;
+extern NSString * const kCMISParameterCheckin;
+extern NSString * const kCMISParameterCheckinComment;
 
+// Parameter Values
+extern NSString * const kCMISParameterValueTrue;
+extern NSString * const kCMISParameterValueFalse;
 
 // Namespaces
 extern NSString * const kCMISNamespaceCmis;
@@ -178,6 +192,7 @@ extern NSString * const kCMISCoreHeight;
 extern NSString * const kCMISCoreWidth;
 extern NSString * const kCMISCoreTitle;
 extern NSString * const kCMISCoreRenditionDocumentId;
+extern NSString * const kCMISCoreRelationship;
 
 // URI Templates
 extern NSString * const kCMISUriTemplateObjectById;

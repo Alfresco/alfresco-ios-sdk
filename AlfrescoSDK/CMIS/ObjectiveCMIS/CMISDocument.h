@@ -79,6 +79,29 @@
                                 progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
 /**
+ * Downloads the content to a local file and returns the filepath.
+ * completionBlock will return NSError nil if successful
+ * Provides options to resume download
+ */
+- (CMISRequest*)downloadContentToFile:(NSString *)filePath
+                               offset:(NSDecimalNumber*)offset
+                               length:(NSDecimalNumber*)length
+                      completionBlock:(void (^)(NSError *error))completionBlock
+                        progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+
+/**
+ * Downloads the content to an outputstream and returns the handle to the http request in order to allow cancellation.
+ * completionBlock will return NSError nil if successful
+ * Provides options to resume download
+ */
+- (CMISRequest*)downloadContentToOutputStream:(NSOutputStream *)outputStream
+                                       offset:(NSDecimalNumber*)offset
+                                       length:(NSDecimalNumber*)length
+                              completionBlock:(void (^)(NSError *error))completionBlock
+                                progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
+/**
  * Changes the content of this document to the content of the given file.
  *
  * Optional overwrite flag: If TRUE (default), then the Repository MUST replace the existing content stream for the
@@ -119,5 +142,38 @@
  * completionBlock return true if successful
  */
 - (CMISRequest*)deleteAllVersionsWithCompletionBlock:(void (^)(BOOL documentDeleted, NSError *error))completionBlock;
+
+/**
+ * Checkout the document and return the PWC via the completion block
+ */
+- (CMISRequest*)checkOutWithCompletionBlock:(void (^)(CMISDocument *privateWorkingCopy, NSError *error))completionBlock;
+
+/**
+ * Cancel checkout if this is a PWC
+ */
+- (CMISRequest*)cancelCheckOutWithCompletionBlock:(void (^)(BOOL checkoutCancelled, NSError *error))completionBlock;
+
+/**
+ * Checkin this PWC from a specified file path and return the checked-in document
+ */
+- (CMISRequest*)checkInAsMajorVersion:(BOOL)majorVersion
+                             filePath:(NSString *)filePath
+                             mimeType:(NSString *)mimeType
+                           properties:(CMISProperties *)properties
+                       checkinComment:(NSString *)checkinComment
+                      completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock
+                        progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
+
+/**
+ * Checkin this PWC from a specified input stream and return the checked-in document
+ */
+- (CMISRequest*)checkInAsMajorVersion:(BOOL)majorVersion
+                          inputStream:(NSInputStream *)inputStream
+                        bytesExpected:(unsigned long long)bytesExpected
+                             mimeType:(NSString *)mimeType
+                           properties:(CMISProperties *)properties
+                       checkinComment:(NSString *)checkinComment
+                      completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock
+                        progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
 @end

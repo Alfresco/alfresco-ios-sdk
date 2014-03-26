@@ -41,4 +41,17 @@
                          completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
                            progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
+/** starts a URL request for download with a given offset and or length. Data are written to the provided output stream
+ * completionBlock returns a CMISHttpResponse object or nil if unsuccessful
+ */
++ (id)startRequest:(NSMutableURLRequest *)urlRequest
+                              httpMethod:(CMISHttpRequestMethod)httpRequestMethod
+                            outputStream:(NSOutputStream*)outputStream
+                           bytesExpected:(unsigned long long)bytesExpected
+                                  offset:(NSDecimalNumber*)offset
+                                  length:(NSDecimalNumber*)length
+                  authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
+                         completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
+                           progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
+
 @end
