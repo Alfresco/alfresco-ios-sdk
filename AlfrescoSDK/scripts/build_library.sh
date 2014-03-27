@@ -33,7 +33,7 @@ test -d $ALFRESCO_SDK_BUILD \
 #
 # Arguments:
 #    platform, i.e. "iphoneos" or "iphonesimulator"
-#    baseSDK, i.e. "7.0"
+#    baseSDK, e.g. "7.0" or "" for latest
 function xcode_build_target() {
    $XCODEBUILD \
       -project $ALFRESCO_SDK_PRODUCT_NAME.xcodeproj \
