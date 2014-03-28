@@ -84,11 +84,7 @@
     {
         return [self retrieveAvatarForPersonV3x:person completionBlock:completionBlock];
     }
-    else
-    {
-        return [self retrieveAvatarForPersonV4x:person completionBlock:completionBlock];
-    }
-
+    return [self retrieveAvatarForPersonV4x:person completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)retrieveAvatarForPersonV4x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
