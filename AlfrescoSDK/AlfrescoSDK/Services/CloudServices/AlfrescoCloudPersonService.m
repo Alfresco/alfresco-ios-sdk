@@ -89,16 +89,20 @@ NSString * const kAlfrescoSearchNotImplemented = @"searchWithKeywords is not imp
         return nil;
     }
     AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-    return [docService retrieveNodeWithIdentifier:person.avatarIdentifier
-                                  completionBlock:^(AlfrescoNode *node, NSError *error){
-         
-        [docService
-         retrieveContentOfDocument:(AlfrescoDocument *)node
-         completionBlock:^(AlfrescoContentFile *avatarFile, NSError *avatarError){
-             completionBlock(avatarFile, avatarError);
-         } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal){}];
-         
-    }];    
+    return [docService retrieveNodeWithIdentifier:person.avatarIdentifier completionBlock:^(AlfrescoNode *node, NSError *error) {
+        if (error || !node)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            [docService retrieveContentOfDocument:(AlfrescoDocument *)node completionBlock:^(AlfrescoContentFile *avatarFile, NSError *avatarError) {
+                completionBlock(avatarFile, avatarError);
+            } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
+                // Progress not monitored
+            }];
+        }
+    }];
 }
 
 - (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
