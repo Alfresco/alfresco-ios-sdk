@@ -41,6 +41,7 @@
 @property (nonatomic, strong, readwrite) NSDictionary *publicToPrivateStateMappings;
 @property (nonatomic, strong, readwrite) NSDictionary *publicToPrivateVariableMappings;
 @property (nonatomic, strong, readwrite) AlfrescoWorkflowObjectConverter *workflowObjectConverter;
+@property (nonatomic, strong, readwrite) NSDateFormatter *dateFormatter;
 
 @end
 
@@ -55,6 +56,8 @@
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyAPIWorkflowBaseURL];
         self.workflowObjectConverter = [[AlfrescoWorkflowObjectConverter alloc] init];
         self.documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:session];
+        self.dateFormatter = [[NSDateFormatter alloc] init];
+        [self.dateFormatter setDateFormat:kAlfrescoISO8601DateStringFormat];
         self.publicToPrivateStateMappings = @{kAlfrescoWorkflowProcessStateActive : kAlfrescoLegacyAPIWorkflowStatusInProgress,
                                               kAlfrescoWorkflowProcessStateCompleted : kAlfrescoLegacyAPIWorkflowStatusCompleted};
         self.publicToPrivateVariableMappings = @{kAlfrescoWorkflowProcessDescription : kAlfrescoWorkflowLegacyJSONBPMProcessDescription,
@@ -504,19 +507,50 @@
     
     NSMutableDictionary *requestBody = [NSMutableDictionary dictionary];
     
+    // variables
     NSArray *allVariableKeys = [variables allKeys];
-    for (id keyObject in allVariableKeys)
+    for (int i = 0; i < allVariableKeys.count; i++)
     {
-        NSString *key = (NSString *)keyObject;
+        NSString *key = allVariableKeys[i];
+        id valueForCurrentKey = variables[key];
+        
+        // remap to expected values
+        id remapValue = variables[key];
+        if ([valueForCurrentKey isKindOfClass:[NSNumber class]])
+        {
+            if (strcmp([valueForCurrentKey objCType], @encode(BOOL)) == 0)
+            {
+                remapValue = ([valueForCurrentKey boolValue]) ? @"true" : @"false";
+            }
+            else if (strcmp([valueForCurrentKey objCType], @encode(int)) == 0)
+            {
+                remapValue = [NSString stringWithFormat:@"%i", [(NSNumber *)valueForCurrentKey intValue]];
+            }
+        }
+        else if ([valueForCurrentKey isKindOfClass:[NSDate class]])
+        {
+            NSString *formattedDateString = [self.dateFormatter stringFromDate:valueForCurrentKey];
+            
+            // GMT gets a "Z" suffix instead of a time offset
+            if (![formattedDateString hasSuffix:@"Z"])
+            {
+                // hack to get timezone as +02:00 instead of +0200
+                formattedDateString = [NSString stringWithFormat:@"%@:%@", [formattedDateString substringToIndex:formattedDateString.length -2], [formattedDateString substringFromIndex:formattedDateString.length - 2]];
+            }
+            
+            remapValue = formattedDateString;
+        }
+        
+        // remap the keys
         NSString *mappedPrivateKey = (self.publicToPrivateVariableMappings)[key];
         
         if (mappedPrivateKey)
         {
-            [requestBody setValue:variables[key] forKey:mappedPrivateKey];
+            requestBody[mappedPrivateKey] = remapValue;
         }
         else
         {
-            [requestBody setValue:variables[key] forKey:key];
+            requestBody[key] = remapValue;
         }
     }
     
@@ -657,6 +691,40 @@
         }
     }];
     return request;
+}
+- (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition
+                                                 name:(NSString *)name
+                                             priority:(NSNumber *)priority
+                                              dueDate:(NSDate *)dueDate
+                                sendEmailNotification:(NSNumber *)sendEmail
+                                            assignees:(NSArray *)assignees
+                                            variables:(NSDictionary *)variables
+                                          attachments:(NSArray *)attachmentNodes
+                                      completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
+{
+    NSMutableDictionary *populatedVariables = [NSMutableDictionary dictionaryWithDictionary:(variables) ? variables : @{}];
+    
+    if (name)
+    {
+        populatedVariables[kAlfrescoWorkflowProcessDescription] = name;
+    }
+    
+    if (priority)
+    {
+        populatedVariables[kAlfrescoWorkflowProcessPriority] = priority;
+    }
+    
+    if (dueDate)
+    {
+        populatedVariables[kAlfrescoWorkflowProcessDueDate] = dueDate;
+    }
+    
+    if (sendEmail)
+    {
+        populatedVariables[kAlfrescoWorkflowProcessSendEmailNotification] = sendEmail;
+    }
+    
+    return [self startProcessForProcessDefinition:processDefinition assignees:assignees variables:populatedVariables attachments:attachmentNodes completionBlock:completionBlock];
 }
 
 #pragma mark Tasks

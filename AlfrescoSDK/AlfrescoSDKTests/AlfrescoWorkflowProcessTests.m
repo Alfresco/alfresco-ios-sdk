@@ -28,6 +28,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoWorkflowUtils.h"
+#import "AlfrescoInternalConstants.h"
 
 static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
@@ -312,6 +313,79 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                 }];
             }
         }];        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testStartProcessForDefinitionWithConvenienceMethod
+{
+    if (self.setUpSuccess)
+    {
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+
+        [self.workflowService retrieveProcessDefinitionWithIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
+            if (retrieveError)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveError localizedDescription], [retrieveError localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // Process name
+                NSString *processName = [NSString stringWithFormat:@"MOBSDK Test Process - %@", [NSDate date]];
+                // priority - Randomised
+                NSNumber *priority = [NSNumber numberWithInt:(arc4random() % 3) + 1];
+                // due date - Between 1 and 7 days from today.
+                NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
+                dayComponent.day = ((arc4random() % 7) + 1);
+                
+                NSCalendar *theCalendar = [NSCalendar currentCalendar];
+                NSDate *dueDate = [theCalendar dateByAddingComponents:dayComponent toDate:[NSDate date] options:0];
+                
+                NSNumber *sendEmailNotification = @YES;
+                
+                [self.workflowService startProcessForProcessDefinition:processDefinition name:processName priority:priority dueDate:dueDate sendEmailNotification:sendEmailNotification assignees:nil variables:nil attachments:@[self.testAlfrescoDocument] completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+                    if (creationError)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [creationError localizedDescription], [creationError localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertTrue([createdProcess.name isEqualToString:processName], @"The process summary should be %@, but got back %@", processName, createdProcess.name);
+                        XCTAssertTrue(createdProcess.priority.intValue == priority.integerValue, @"The priority should be %i, but got back %i", priority.intValue, createdProcess.priority.intValue);
+
+                        // Should get back an ISO8601 format date, even if a standard date was passed in
+                        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                        [formatter setDateFormat:kAlfrescoISO8601DateStringFormat];
+                        
+                        NSDate *isoDateReturned = [formatter dateFromString:[formatter stringFromDate:dueDate]];
+                        
+                        XCTAssertTrue([createdProcess.dueAt isEqualToDate:isoDateReturned], @"The due date should be %@, but got back %@", isoDateReturned, createdProcess.dueAt);
+                        
+                        [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                            XCTAssertTrue(succeeded, @"Deletion flag should be true");
+                            self.lastTestSuccessful = succeeded;
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+        }];
+        
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
