@@ -5476,16 +5476,23 @@
             {
                 // Should also get a cancellation error code
                 XCTAssertEqual(error.localizedDescription, kAlfrescoErrorDescriptionNetworkRequestCancelled, @"Expected cancellation error description, not \"%@\"", error.localizedDescription);
-                self.lastTestSuccessful = YES;
                 
                 // Try to clean-up as it's possible the folder will have got created anyway
                 [self.dfService retrieveNodeWithFolderPath:folderName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
                     if (nil != node)
                     {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = @"Folder creation was cancelled but the folder was created on the server";
+                        
                         // delete the folder to clean up
                         [self.dfService deleteNode:node completionBlock:^(BOOL success, NSError *error) {
                             self.callbackCompleted = YES;
                         }];
+                    }
+                    else
+                    {
+                        self.lastTestSuccessful = YES;
+                        self.callbackCompleted = YES;
                     }
                 }];
             }
@@ -5534,12 +5541,21 @@
             {
                 // Should also get a cancellation error code
                 XCTAssertEqual(error.localizedDescription, kAlfrescoErrorDescriptionNetworkRequestCancelled, @"Expected cancellation error description, not \"%@\"", error.localizedDescription);
-                self.lastTestSuccessful = YES;
 
                 // Try to clean-up as it's possible the document will have got created anyway
                 [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
+                    if (node == nil)
+                    {
+                        // test is successful if the document was not created on the server
+                        self.lastTestSuccessful = YES;
+                        self.callbackCompleted = YES;
+                    }
                     if (nil != node)
                     {
+                        // mark test as failed as
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = @"Document creation was cancelled but the document was created on the server";
+                        
                         // delete the document to clean up
                         [self.dfService deleteNode:node completionBlock:^(BOOL success, NSError *error) {
                             self.callbackCompleted = YES;
@@ -5563,7 +5579,7 @@
                 }];
             }
         } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
-            // No-op
+            AlfrescoLogDebug(@"progress %i/%i", bytesTransferred, bytesTotal);
         }];
         
         // immediately cancel the document creation request
