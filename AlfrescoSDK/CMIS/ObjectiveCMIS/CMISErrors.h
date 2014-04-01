@@ -79,6 +79,7 @@ extern NSString * const kCMISErrorDescriptionProxyAuthentication;
 extern NSString * const kCMISErrorDescriptionUnauthorized;
 extern NSString * const kCMISErrorDescriptionNoRootFolderFound;
 extern NSString * const kCMISErrorDescriptionRepositoryNotFound;
+extern NSString * const kCMISErrorDescriptionCancelled;
 //General errors as defined in 2.2.1.4.1 of spec
 extern NSString * const kCMISErrorDescriptionInvalidArgument;
 extern NSString * const kCMISErrorDescriptionObjectNotFound;
