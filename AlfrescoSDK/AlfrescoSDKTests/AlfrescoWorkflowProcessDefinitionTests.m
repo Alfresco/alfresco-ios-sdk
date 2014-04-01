@@ -29,6 +29,7 @@
 
 static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
+static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiAdhoc";
 
 @implementation AlfrescoWorkflowProcessDefinitionTests
 
@@ -141,6 +142,44 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdho
                 self.lastTestSuccessful = YES;
             }
             self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveProcessDefinitionByKey
+{
+    if (self.setUpSuccess)
+    {
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        NSString *processDefinitionKey = kAlfrescoActivitiAdhocProcessDefinitionKey;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionKey = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinitionKey];
+        }
+        
+        [self.workflowService retrieveProcessDefinitionWithKey:processDefinitionKey completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error) {
+            if (error)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(processDefinition, @"The returned process definition should not be nil");
+                XCTAssertTrue([processDefinition.key isEqualToString:processDefinitionKey], @"The process definition key should be %@, but instead got back %@", processDefinitionKey, processDefinition.key);
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];

@@ -72,6 +72,15 @@
                                              completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock;
 
 /**
+ Retrieves a process definition for a specific process identifier.
+ 
+ @param key The process definition key for the process definition to be retrieved
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)retrieveProcessDefinitionWithKey:(NSString *)key
+                                      completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock;
+
+/**
  Retrieves a list of all processes.
  
  @param completionBlock The block that's called with the operation completes
