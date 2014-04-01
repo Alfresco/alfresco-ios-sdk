@@ -119,16 +119,7 @@
     NSDictionary *processedProperties = [self propertiesForName:folderName properties:properties type:type aspects:aspects isFolder:YES];
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [self.cmisSession createFolder:processedProperties inFolder:folder.identifier completionBlock:^(NSString *folderRef, NSError *error){
-        if (request.isCancelled)
-        {
-            if (nil == error)
-            {
-                // Request was cancelled too late to generate a cancellation error code, so create one now
-                error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeCancelled detailedDescription:@"Request was cancelled"];
-            }
-            completionBlock(nil, [AlfrescoCMISUtil alfrescoErrorWithCMISError:error]);
-        }
-        else if (nil != folderRef)
+        if (nil != folderRef)
         {
             request = [self retrieveNodeWithIdentifier:folderRef completionBlock:^(AlfrescoNode *node, NSError *error) {
                 completionBlock((AlfrescoFolder *)node, error);
@@ -210,16 +201,7 @@
     NSDictionary *processedProperties = [self propertiesForName:documentName properties:properties type:type aspects:aspects isFolder:NO];
     __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [self.cmisSession createDocumentFromFilePath:[file.fileUrl path] mimeType:file.mimeType properties:processedProperties inFolder:folder.identifier completionBlock:^(NSString *identifier, NSError *error){
-        if (request.isCancelled)
-        {
-            if (nil == error)
-            {
-                // Request was cancelled too late to generate a cancellation error code, so create one now
-                error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeCancelled detailedDescription:@"Request was cancelled"];
-            }
-            completionBlock(nil, [AlfrescoCMISUtil alfrescoErrorWithCMISError:error]);
-        }
-        else if (nil == identifier)
+        if (nil == identifier)
         {
             NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
             completionBlock(nil, alfrescoError);
@@ -320,16 +302,7 @@
                                                                  inFolder:folder.identifier
                                                             bytesExpected:contentStream.length
                                                           completionBlock:^(NSString *objectId, NSError *error) {
-        if (request.isCancelled)
-        {
-            if (nil == error)
-            {
-                // Request was cancelled too late to generate a cancellation error code, so create one now
-                error = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeCancelled detailedDescription:@"Request was cancelled"];
-            }
-            completionBlock(nil, [AlfrescoCMISUtil alfrescoErrorWithCMISError:error]);
-        }
-        else if (nil == objectId)
+        if (nil == objectId)
         {
             NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
             completionBlock(nil, alfrescoError);
