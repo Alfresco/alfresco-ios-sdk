@@ -27,8 +27,10 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoLog.h"
 
+static NSString * const kAlfrescoJBPMPrefix = @"jbpm$";
 static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
+static NSString * const kAlfrescoJBPMAdhocProcessDefinitionKey = @"wf:adhoc";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiAdhoc";
 
 @implementation AlfrescoWorkflowProcessDefinitionTests
@@ -162,7 +164,14 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
         NSString *processDefinitionKey = kAlfrescoActivitiAdhocProcessDefinitionKey;
         if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
         {
-            processDefinitionKey = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinitionKey];
+            if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+            {
+                processDefinitionKey = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinitionKey];
+            }
+            else if (self.currentSession.repositoryInfo.capabilities.doesSupportJBPMWorkflowEngine)
+            {
+                processDefinitionKey = [kAlfrescoJBPMPrefix stringByAppendingString:kAlfrescoJBPMAdhocProcessDefinitionKey];
+            }
         }
         
         [self.workflowService retrieveProcessDefinitionWithKey:processDefinitionKey completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error) {
