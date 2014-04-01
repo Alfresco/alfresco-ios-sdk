@@ -522,9 +522,9 @@
             {
                 remapValue = ([valueForCurrentKey boolValue]) ? @"true" : @"false";
             }
-            else if (strcmp([valueForCurrentKey objCType], @encode(int)) == 0)
+            else
             {
-                remapValue = [NSString stringWithFormat:@"%i", [(NSNumber *)valueForCurrentKey intValue]];
+                remapValue = [NSString stringWithFormat:@"%@", valueForCurrentKey];
             }
         }
         else if ([valueForCurrentKey isKindOfClass:[NSDate class]])
