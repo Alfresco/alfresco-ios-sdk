@@ -30,9 +30,11 @@
 #import "AlfrescoWorkflowUtils.h"
 #import "AlfrescoInternalConstants.h"
 
+static NSString * const kAlfrescoJBPMPrefix = @"jbpm$";
 static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
-static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
+static NSString * const kAlfrescoJBPMAdhocProcessDefinitionKey = @"wf:adhoc";
+static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiAdhoc";
 
 @implementation AlfrescoWorkflowProcessTests
 
@@ -328,13 +330,21 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        NSString *processDefinitionKey = kAlfrescoActivitiAdhocProcessDefinitionKey;
         if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
         {
-            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+            if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+            {
+                processDefinitionKey = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinitionKey];
+            }
+            else if (self.currentSession.repositoryInfo.capabilities.doesSupportJBPMWorkflowEngine)
+            {
+                processDefinitionKey = [kAlfrescoJBPMPrefix stringByAppendingString:kAlfrescoJBPMAdhocProcessDefinitionKey];
+            }
         }
-
-        [self.workflowService retrieveProcessDefinitionWithIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
+        
+        // retrieveProcessForIdentifier:completionBlock: not supported on jbpm
+        [self.workflowService retrieveProcessDefinitionWithKey:processDefinitionKey completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
             if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
@@ -367,10 +377,15 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                     {
                         XCTAssertTrue([createdProcess.name isEqualToString:processName], @"The process summary should be %@, but got back %@", processName, createdProcess.name);
                         XCTAssertTrue(createdProcess.priority.intValue == priority.integerValue, @"The priority should be %i, but got back %i", priority.intValue, createdProcess.priority.intValue);
-
+                        
                         // Should get back an ISO8601 format date, even if a standard date was passed in
                         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                         [formatter setDateFormat:kAlfrescoISO8601DateStringFormat];
+                        // drop the milliseconds on JBPM
+                        if (self.currentSession.repositoryInfo.capabilities.doesSupportJBPMWorkflowEngine)
+                        {
+                            [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZ"];
+                        }
                         
                         NSDate *isoDateReturned = [formatter dateFromString:[formatter stringFromDate:dueDate]];
                         
@@ -690,7 +705,7 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
             {
                 NSDictionary *properties = @{@"id" : @"jbpm$1",
                                                  @"url" : @"api/workflow-definitions/jbpm$1",
-                                                 @"name" : kAlfrescoJBPMAdhocProcessDefinition,
+                                                 @"name" : [kAlfrescoJBPMPrefix stringByAppendingString:kAlfrescoJBPMAdhocProcessDefinitionKey],
                                                  @"title" : @"Adhoc",
                                                  @"description" : @"Assign task to colleague",
                                                  @"version" : @"1"};
