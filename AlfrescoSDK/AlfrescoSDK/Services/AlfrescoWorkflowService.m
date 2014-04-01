@@ -167,6 +167,20 @@
     return nil;
 }
 
+- (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition
+                                                 name:(NSString *)name
+                                             priority:(NSNumber *)priority
+                                              dueDate:(NSDate *)dueDate
+                                sendEmailNotification:(NSNumber *)sendEmail
+                                            assignees:(NSArray *)assignees
+                                            variables:(NSDictionary *)variables
+                                          attachments:(NSArray *)attachmentNodes
+                                      completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (AlfrescoRequest *)deleteProcess:(AlfrescoWorkflowProcess *)process
                    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {

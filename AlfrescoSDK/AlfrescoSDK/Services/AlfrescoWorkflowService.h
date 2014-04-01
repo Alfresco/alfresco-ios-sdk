@@ -205,6 +205,29 @@
                                       completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
 /**
+ A convenience method that creates and returns a process for a given process definition. This method takes an number of predefined variables.
+ 
+ @param processDefinition The process definition the process should be modeled on
+ @param name (optional) A descripton of the process to be created
+ @param priority (optional) The priority level of the process to be created
+ @param dueDate (optional) The due date of the process to be created
+ @param sendEmail (optional) Whather email notifications should be sent
+ @param assignees (optional) An array of AlfrescoPerson's to assign to the task. If this is left blank, the process will be assigned to the creator
+ @param variables (optional) A dictionary of process variables to add at the start of the process. Variable keys must be the same as those defined in the workflow model definition in the repository
+ @param attachments (optional) An array of AlfrescoNode's to add to the process
+ @param completionBlock The block that's called with the operation completes
+ */
+- (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition
+                                                 name:(NSString *)name
+                                             priority:(NSNumber *)priority
+                                              dueDate:(NSDate *)dueDate
+                                sendEmailNotification:(NSNumber *)sendEmail
+                                            assignees:(NSArray *)assignees
+                                            variables:(NSDictionary *)variables
+                                          attachments:(NSArray *)attachmentNodes
+                                      completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
+
+/**
  Deletes a process.
  
  @param process The process to delete
