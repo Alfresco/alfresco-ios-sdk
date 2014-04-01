@@ -66,6 +66,32 @@
     return nil;
 }
 
+- (AlfrescoRequest *)retrieveProcessDefinitionWithKey:(NSString *)key
+                                      completionBlock:(AlfrescoProcessDefinitionCompletionBlock)completionBlock
+{
+    return [self retrieveProcessDefinitionsWithCompletionBlock:^(NSArray *processDefinitionsArray, NSError *error) {
+        if (error)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            AlfrescoWorkflowProcessDefinition *processDefinition = nil;
+            
+            for (AlfrescoWorkflowProcessDefinition *definition in processDefinitionsArray)
+            {
+                if ([definition.key isEqualToString:key])
+                {
+                    processDefinition = definition;
+                    break;
+                }
+            }
+            
+            completionBlock(processDefinition, nil);
+        }
+    }];
+}
+
 #pragma mark Processes
 
 - (AlfrescoRequest *)retrieveProcessesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
