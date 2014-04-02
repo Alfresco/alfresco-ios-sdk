@@ -81,6 +81,23 @@ NSString * const kAlfrescoNetworkProvider = @"org.alfresco.mobile.session.networ
 NSString * const kAlfrescoCMISBindingURL = @"org.alfresco.mobile.session.cmisbindingurl";
 
 /**
+ Model Constants
+ */
+NSString * const kAlfrescoContentModelTypeContent = @"cm:content";
+NSString * const kAlfrescoContentModelTypeFolder = @"cm:folder";
+
+NSString * const kAlfrescoContentModelAspectTitled = @"cm:titled";
+NSString * const kAlfrescoContentModelAspectAuthor = @"cm:author";
+NSString * const kAlfrescoContentModelAspectGeographic = @"cm:geographic";
+
+NSString * const kAlfrescoContentModelPropertyName = @"cm:name";
+NSString * const kAlfrescoContentModelPropertyTitle = @"cm:title";
+NSString * const kAlfrescoContentModelPropertyDescription = @"cm:description";
+NSString * const kAlfrescoContentModelPropertyAuthor = @"cm:author";
+NSString * const kAlfrescoContentModelPropertyLatitude = @"cm:latitude";
+NSString * const kAlfrescoContentModelPropertyLongitude = @"cm:longitude";
+
+/**
  Workflow Task Constants
  */
 NSString * const kAlfrescoWorkflowTaskComment = @"org.alfresco.mobile.task.comment";

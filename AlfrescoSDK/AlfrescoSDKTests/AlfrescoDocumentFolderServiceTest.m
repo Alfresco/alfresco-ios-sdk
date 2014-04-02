@@ -120,7 +120,7 @@
             {
                 XCTAssertNotNil(folder, @"Folder should not be nil");
                 XCTAssertTrue([folder.name isEqualToString:folderName], @"Folder name: %@ does not match %@", folder.name, folderName);
-                XCTAssertTrue([folder.type isEqualToString:kAlfrescoTypeFolder], @"Folder type: %@ does not match %@", folder.type, kAlfrescoTypeFolder);
+                XCTAssertTrue([folder.type isEqualToString:kAlfrescoContentModelTypeFolder], @"Folder type: %@ does not match %@", folder.type, kAlfrescoContentModelTypeFolder);
                 
                 // check the properties were added at creation time
                 NSDictionary *newFolderProps = folder.properties;
@@ -1012,7 +1012,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
-        properties[kCMISPropertyObjectTypeId] = [kAlfrescoTypeContent stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        properties[kCMISPropertyObjectTypeId] = [kAlfrescoContentModelTypeContent stringByAppendingString:@",P:cm:titled,P:cm:author"];
         properties[@"cm:description"] = @"Test Description";
         properties[@"cm:title"] = @"Test Title";
         properties[@"cm:author"] = @"Test Author";
@@ -1062,7 +1062,7 @@
                                    {
                                        XCTAssertNotNil(document, @"document should not be nil");
                                        XCTAssertTrue([document.name isEqualToString:documentName], @"folder name should be %@ but instead we got %@",documentName, document.name);
-                                       XCTAssertTrue([document.type isEqualToString:kAlfrescoTypeContent], @"object type should be cm:content but instead we got %@", document.type);
+                                       XCTAssertTrue([document.type isEqualToString:kAlfrescoContentModelTypeContent], @"object type should be cm:content but instead we got %@", document.type);
                                        // check the properties were added at creation time
                                        NSDictionary *newFolderProps = document.properties;
                                        AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
@@ -2339,7 +2339,7 @@
                           self.callbackCompleted = YES;
                           
                       } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
-                          AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                          AlfrescoLogDebug(@"progress %llu/%llu", bytesDownloaded, bytesTotal);
                       }];
                  }
                  else
@@ -2625,17 +2625,17 @@
                                  }
                                  self.callbackCompleted = YES;
                              } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
-                                 AlfrescoLogDebug(@"progress %i/%i", bytesTransferred, bytesTotal);
+                                 AlfrescoLogDebug(@"progress %llu/%llu", bytesTransferred, bytesTotal);
                              }];
                          }
                      } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
-                         AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                         AlfrescoLogDebug(@"progress %llu/%llu", bytesDownloaded, bytesTotal);
                      }];
                 }
             }
             
         } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
-            AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
+            AlfrescoLogDebug(@"progress %llu/%llu", bytesDownloaded, bytesTotal);
         }];
         
         
@@ -2900,10 +2900,11 @@
                  propDict[@"cm:description"] = @"updated description";
                  propDict[@"cm:title"] = @"updated title";
                  propDict[@"cm:author"] = @"updated author";
+                 propDict[@"cm:latitude"] = @(51.52255);
+                 propDict[@"cm:longitude"] = @(-0.71670);
                  
                  [weakDfService updatePropertiesOfNode:self.testAlfrescoDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error)
                   {
-                      
                       if (nil == updatedNode)
                       {
                           self.lastTestSuccessful = NO;
@@ -2917,6 +2918,18 @@
                           XCTAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
                           XCTAssertTrue([updatedDocument.type isEqualToString:@"cm:content"], @"type should be cm:content, but is %@", updatedDocument.type);
                           
+                          if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
+                          {
+                              XCTAssertTrue(updatedNode.aspects.count == 4,
+                                            @"Expected updated node to have 4 aspects but there were %lu", (unsigned long)updatedNode.aspects.count);
+                          }
+                          else
+                          {
+                              // there's no sys:localized on 3.x servers
+                              XCTAssertTrue(updatedNode.aspects.count == 3,
+                                            @"Expected updated node to have 3 aspects but there were %lu", (unsigned long)updatedNode.aspects.count);
+                          }
+                          
                           // check the updated properties
                           NSDictionary *updatedProps = updatedDocument.properties;
                           AlfrescoProperty *updatedDescription = updatedProps[@"cm:description"];
@@ -2925,6 +2938,13 @@
                           XCTAssertTrue([updatedDescription.value isEqualToString:@"updated description"], @"Updated description is incorrect");
                           XCTAssertTrue([updatedTitle.value isEqualToString:@"updated title"], @"Updated title is incorrect");
                           XCTAssertTrue([updatedAuthor.value isEqualToString:@"updated author"], @"Updated author is incorrect");
+                          
+                          NSNumber *updatedLatitude = ((AlfrescoProperty *)updatedProps[@"cm:latitude"]).value;
+                          NSNumber *updatedLongitude = ((AlfrescoProperty *)updatedProps[@"cm:longitude"]).value;
+                          BOOL latitudeMatch = [[NSString stringWithFormat:@"%.2f", [updatedLatitude doubleValue]] isEqualToString:[NSString stringWithFormat:@"%.2f", 51.52255]];
+                          BOOL longitudeMatch = [[NSString stringWithFormat:@"%.2f", [updatedLongitude doubleValue]] isEqualToString:[NSString stringWithFormat:@"%.2f", -0.71670]];
+                          XCTAssertTrue(latitudeMatch, @"Expected latitude to be 51.52255 but was %@", updatedLatitude);
+                          XCTAssertTrue(longitudeMatch, @"Expected latitude to be -0.71670 but was %@", updatedLongitude);
                           
                           id propertyValue = [updatedDocument propertyValueWithName:kCMISPropertyName];
                           if ([propertyValue isKindOfClass:[NSString class]])
@@ -3725,7 +3745,7 @@
                 
                 for (NSString *aspectName in documentAspects)
                 {
-                    XCTAssertFalse([aspectName hasPrefix:@"P:"], @"The aspect %@ has a prefix of P: which is not as expected", aspectName);
+                    XCTAssertFalse([aspectName hasPrefix:kAlfrescoCMISAspectPrefix], @"The aspect %@ has a prefix of P: which is not as expected", aspectName);
                 }
                 
                 XCTAssertTrue([document hasAspectWithName:@"cm:titled"], @"The document should have the title aspect associated to it");
@@ -5259,7 +5279,7 @@
                             }];
                         }
                     } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
-                        AlfrescoLogDebug(@"progress %i/%i", bytesDownloaded, bytesTotal);
+                        AlfrescoLogDebug(@"progress %llu/%llu", bytesDownloaded, bytesTotal);
                     }];
                 }
             }
@@ -5579,7 +5599,7 @@
                 }];
             }
         } progressBlock:^(unsigned long long bytesTransferred, unsigned long long bytesTotal) {
-            AlfrescoLogDebug(@"progress %i/%i", bytesTransferred, bytesTotal);
+            AlfrescoLogDebug(@"progress %llu/%llu", bytesTransferred, bytesTotal);
         }];
         
         // immediately cancel the document creation request

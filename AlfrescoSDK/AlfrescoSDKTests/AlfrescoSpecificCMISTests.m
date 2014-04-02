@@ -23,6 +23,7 @@
 #import "CMISDateUtil.h"
 #import "AlfrescoCMISDocument.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoCMISUtil.h"
 
 // TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
 
@@ -188,118 +189,6 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     }
 }
 
-/*
-- (void)testUpdateDocumentDescription
-{
-    [self runCMISTest:^
-    {
-        NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
-        NSURL *fileUrl = [NSURL URLWithString:filePath];
-        NSString *documentName = [AlfrescoBaseTest testFileNameFromFilename:[fileUrl lastPathComponent]];
-        NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
-        [documentProperties setObject:documentName forKey:kCMISPropertyName];
-        
-        NSMutableString *objectTypeId = [[NSMutableString alloc] init];
-        [objectTypeId appendString:@"cmis:document"];
-        [objectTypeId appendFormat:@", P:cm:titled"];
-        
-        [documentProperties setObject:objectTypeId forKey:kCMISPropertyObjectTypeId];
-        [self.cmisRootFolder createDocumentFromFilePath:filePath withMimeType:@"text/plain" withProperties:documentProperties completionBlock:^(NSString *objectId, NSError *error){
-            if (nil == objectId)
-            {
-                self.lastTestSuccessful = NO;
-                self.callbackCompleted = YES;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-            }
-            else
-            {
-                [self.cmisSession retrieveObject:objectId completionBlock:^(CMISObject *cmisObject, NSError *objError){
-                    if (nil == cmisObject)
-                    {
-                        self.lastTestSuccessful = NO;
-                        self.callbackCompleted = YES;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [objError localizedDescription], [objError localizedFailureReason]];
-                    }
-                    else
-                    {
-                        CMISDocument *doc = (CMISDocument *)cmisObject;
-                        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-                        NSString *description = @"This is a jolly good description!";
-                        [properties setObject:description forKey:@"cm:description"];
-                        [documentProperties setObject:@"cmis:document, P:cm:titled" forKey:kCMISPropertyObjectTypeId];
-                        
-                        [self.cmisSession.objectConverter convertProperties:properties forObjectTypeId:cmisObject.objectType completionBlock:^(CMISProperties *convertedProps, NSError *convError){
-                            if (nil == convertedProps)
-                            {
-                                self.lastTestSuccessful = NO;
-                                self.callbackCompleted = YES;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [convError localizedDescription], [convError localizedFailureReason]];
-                            }
-                            else
-                            {
-                                CMISProperties *updatedProperties = [[CMISProperties alloc] init];
-                                NSEnumerator *enumerator = [convertedProps.propertiesDictionary keyEnumerator];
-                                for (NSString *cmisKey in enumerator)
-                                {
-                                    if (![cmisKey isEqualToString:kCMISPropertyObjectTypeId])
-                                    {
-                                        CMISPropertyData *propData = [convertedProps.propertiesDictionary objectForKey:cmisKey];
-                                        [updatedProperties addProperty:propData];
-                                    }
-                                }
-                                updatedProperties.extensions = convertedProps.extensions;
-                                CMISStringInOutParameter *inOut = [CMISStringInOutParameter inOutParameterUsingInParameter:cmisObject.identifier];
-                                [self.cmisSession.binding.objectService updatePropertiesForObject:inOut withProperties:updatedProperties withChangeToken:nil completionBlock:^(NSError *updError){
-                                    if (updError)
-                                    {
-                                        self.lastTestSuccessful = NO;
-                                        self.callbackCompleted = YES;
-                                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [convError localizedDescription], [convError localizedFailureReason]];
-                                    }
-                                    else
-                                    {
-                                        [self.cmisSession retrieveObject:cmisObject.identifier completionBlock:^(CMISObject *updatedObj, NSError *retrError){
-                                            if (nil == updatedObj)
-                                            {
-                                                self.lastTestSuccessful = NO;
-                                                self.callbackCompleted = YES;
-                                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrError localizedDescription], [retrError localizedFailureReason]];
-                                            }
-                                            else
-                                            {
-                                                CMISDocument *doc = (CMISDocument *)updatedObj;
-                                                [self verifyDocument:doc hasExtensionProperty:@"cm:description" withValue:description];
-                                                [doc deleteAllVersionsWithCompletionBlock:^(BOOL documentDeleted, NSError *deleteError){
-                                                    if (deleteError)
-                                                    {
-                                                        self.lastTestSuccessful = NO;
-                                                        self.callbackCompleted = YES;
-                                                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
-                                                    }
-                                                    else
-                                                    {
-                                                        self.lastTestSuccessful = YES;
-                                                        self.callbackCompleted = YES;
-                                                    }
-                                                }];
-                                                
-                                            }
-                                        }];
-                                    }
-                                }];
-                            }
-                        }];
-                        
-                    }
-                }];
-            }
-        } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal){}];
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"testUpdateDocumentDescription failed");
-
-    }];
-}
-*/
 - (void)testRetrieveExifDataUsingExtensions
 {
     if (self.setUpSuccess)
@@ -367,91 +256,6 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
-
-/*
-- (void)testUpdateExifData
-{
-    [self runCMISTest:^
-    {
-        NSString *originalModelName = @"E950";
-
-        NSDate *originalDate = [[CMISDateUtil defaultDateFormatter] dateFromString:@"2012-10-19T00:00:00.000Z"];
-        NSDate *now = [NSDate date];
-        NSString *testFilePath = [self.testFolderPathName stringByAppendingPathComponent:@"image-with-exif.jpg"];
- 
-        [self.cmisSession retrieveObjectByPath:testFilePath completionBlock:^(CMISObject *cmisObject, NSError *error){
-            if (nil == cmisObject)
-            {
-                self.lastTestSuccessful = NO;
-                self.callbackCompleted = YES;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-            }
-            else
-            {
-                CMISDocument *document = (CMISDocument *)cmisObject;
-                [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:originalModelName];
-                [self verifyDocument:document hasExtensionProperty:@"exif:pixelYDimension" withValue:@"600"];
-                [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
-                [self verifyDocument:document hasExtensionProperty:@"exif:dateTimeOriginal" withValue:[[CMISDateUtil defaultDateFormatter] stringFromDate:originalDate]];
-
-                
-                NSMutableDictionary *properties = [NSMutableDictionary dictionary];
-                NSString *newModelName = @"Ultimate Flash Model 101";
-                [properties setValue:newModelName forKey:@"exif:model"];
-                [properties setValue:[NSNumber numberWithInt:101] forKey:@"exif:pixelYDimension"];
-                [properties setValue:[NSNumber numberWithBool:YES] forKey:@"exif:flash"];
-                [properties setValue:now forKey:@"exif:dateTimeOriginal"];
-                
-                [document updateProperties:properties completionBlock:^(CMISObject *updatedObject, NSError *updateError){
-                    if (nil == updatedObject)
-                    {
-                        self.lastTestSuccessful = NO;
-                        self.callbackCompleted = YES;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [updateError localizedDescription], [updateError localizedFailureReason]];
-                    }
-                    else
-                    {
-                        [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:newModelName];
-                        [self verifyDocument:document hasExtensionProperty:@"exif:pixelYDimension" withValue:@"101"];
-                        [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"true"];
-                        [self verifyDocument:document hasExtensionProperty:@"exif:dateTimeOriginal" withValue:[[CMISDateUtil defaultDateFormatter] stringFromDate:now]];
-                        
-                        NSMutableDictionary *resetProperties = [NSMutableDictionary dictionary];
-                        [resetProperties setValue:originalModelName forKey:@"exif:model"];
-                        [resetProperties setValue:[NSNumber numberWithInt:600] forKey:@"exif:pixelYDimension"];
-                        [resetProperties setValue:[NSNumber numberWithBool:NO] forKey:@"exif:flash"];
-                        [resetProperties setValue:originalDate forKey:@"exif:dateTimeOriginal"];
-                        
-                        CMISDocument *updatedDoc = (CMISDocument *)updatedObject;
-                        [updatedDoc updateProperties:resetProperties completionBlock:^(CMISObject *resetObj, NSError *resetError){
-                            if (nil == resetObj)
-                            {
-                                self.lastTestSuccessful = NO;
-                                self.callbackCompleted = YES;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [resetError localizedDescription], [resetError localizedFailureReason]];
-                            }
-                            else
-                            {
-                                
-                                self.lastTestSuccessful = YES;
-                                [self verifyDocument:document hasExtensionProperty:@"exif:model" withValue:originalModelName];
-                                [self verifyDocument:document hasExtensionProperty:@"exif:pixelYDimension" withValue:@"600"];
-                                [self verifyDocument:document hasExtensionProperty:@"exif:flash" withValue:@"false"];
-                                [self verifyDocument:document hasExtensionProperty:@"exif:dateTimeOriginal" withValue:[[CMISDateUtil defaultDateFormatter] stringFromDate:originalDate]];
-                                self.callbackCompleted = YES;
-                            }
-                        }];
-                    }
-                }];
-                
-            }
-        }];
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"testUpdateExifData failed");
-        
-    }];
-}
-*/
  
 - (void)testCreateDocumentWithExif
 {
@@ -656,53 +460,102 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     }
 }
 
-//- (void)testCreateDocumentWithJapaneseProperties
-//{
-//    [self runTest:^
-//    {
-//        NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
-//
-//        NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
-//        [documentProperties setObject:@"cmis:document, P:cm:titled, P:cm:author" forKey:kCMISPropertyObjectTypeId];
-//
-//        NSString *documentName = @"ラヂオコmプタ";
-//        [documentProperties setObject:documentName forKey:kCMISPropertyName];
-//
-//        NSString *title = @"わさび";
-//        [documentProperties setObject:title forKey:@"cm:title"];
-//
-//        NSString *description = @"ありがと　にほんご";
-//        [documentProperties setObject:description forKey:@"cm:description"];
-//
-//        // Upload test file
-//        __block NSString *objectId = nil;
-//        [self.testFolder createDocumentFromFilePath:filePath
-//                withMimeType:@"text/plain"
-//                withProperties:documentProperties
-//                completionBlock: ^ (NSString *newObjectId)
-//                {
-//                    XCTAssertNotNil(newObjectId, @"Object id should not be nil");
-//                    objectId = newObjectId;
-//                    self.callbackCompleted = YES;
-//                }
-//                failureBlock: ^ (NSError *failureError)
-//                {
-//                    XCTAssertNil(failureError, @"Got error while uploading document: %@", [failureError description]);
-//                }
-//                progressBlock:nil];
-//
-//        [self waitForCompletion:60];
-//
-//        NSError *error = nil;
-//        CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
-//        XCTAssertNil(error, @"Got error while creating document: %@", [error description]);
-//        XCTAssertEquals([document.properties propertyValueForId:@"cm:title"], title, @"Expected %@, but was %@", [document.properties propertyValueForId:@"cm:title"], title);
-//        XCTAssertEquals([document.properties propertyValueForId:@"cm:description"], description, @"Expected %@, but was %@", [document.properties propertyValueForId:@"cm:description"], description);
-//
-//        // Clean up
-//        [self deleteDocumentAndVerify:document];
-//    }];
-//}
+- (void)testObjectTypeIdHelper
+{
+    NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+    
+    // test just the folder parameter being set
+    NSString *objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:nil aspects:nil folder:YES];
+    XCTAssertTrue([objectTypeId isEqualToString:kCMISPropertyObjectTypeIdValueFolder],
+                  @"Expected objectTypeId to be %@ but it was %@", kCMISPropertyObjectTypeIdValueFolder, objectTypeId);
+    
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:nil aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:kCMISPropertyObjectTypeIdValueDocument],
+                  @"Expected objectTypeId to be %@ but it was %@", kCMISPropertyObjectTypeIdValueDocument, objectTypeId);
+    
+    // test just cm:content as type
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:kAlfrescoContentModelTypeContent aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:kCMISPropertyObjectTypeIdValueDocument],
+                  @"Expected objectTypeId to be %@ but it was %@", kCMISPropertyObjectTypeIdValueDocument, objectTypeId);
+    
+    // test just cm:folder as type
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:kAlfrescoContentModelTypeFolder aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:kCMISPropertyObjectTypeIdValueFolder],
+                  @"Expected objectTypeId to be %@ but it was %@", kCMISPropertyObjectTypeIdValueFolder, objectTypeId);
+    
+    // test just cmis:document as type
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:kCMISPropertyObjectTypeIdValueDocument aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:kCMISPropertyObjectTypeIdValueDocument],
+                  @"Expected objectTypeId to be %@ but it was %@", kCMISPropertyObjectTypeIdValueDocument, objectTypeId);
+    
+    // test just cmis:folder as type
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:kCMISPropertyObjectTypeIdValueFolder aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:kCMISPropertyObjectTypeIdValueFolder],
+                  @"Expected objectTypeId to be %@ but it was %@", kCMISPropertyObjectTypeIdValueFolder, objectTypeId);
+    
+    // test just custom type
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:@"fdk:everything" aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"D:fdk:everything"],
+                  @"Expected objectTypeId to be D:fdk:everything but it was %@", objectTypeId);
+    
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:@"st:site" aspects:nil folder:YES];
+    XCTAssertTrue([objectTypeId isEqualToString:@"F:st:site"],
+                  @"Expected objectTypeId to be F:st:site but it was %@", objectTypeId);
+    
+    // test just aspects
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:nil aspects:@[kAlfrescoContentModelAspectTitled, kAlfrescoContentModelAspectAuthor] folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:titled,P:cm:author"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:titled,P:cm:author but it was %@", objectTypeId);
+    
+    // test aspect and type
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:kAlfrescoContentModelTypeFolder aspects:@[kAlfrescoContentModelAspectTitled] folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:folder,P:cm:titled"],
+                  @"Expected objectTypeId to be cmis:folder,P:cm:titled but it was %@", objectTypeId);
+    
+    // test custom type and aspect
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:@"fdk:everything" aspects:@[kAlfrescoContentModelAspectTitled] folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"D:fdk:everything,P:cm:titled"],
+                  @"Expected objectTypeId to be D:fdk:everything,P:cm:titled but it was %@", objectTypeId);
+    
+    // test cmis:objectTypeId already being set i.e. no adverse effects
+    properties[kCMISPropertyObjectTypeId] = @"cmis:document,P:cm:titled";
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties type:nil aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:titled"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:titled but it was %@", objectTypeId);
+    
+    // test cmis:objectTypeId already being set (to Alfresco type) plus a given aspect
+    properties[kCMISPropertyObjectTypeId] = @"cm:content,P:cm:titled";
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties type:nil aspects:@[kAlfrescoContentModelAspectAuthor] folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:titled,P:cm:author"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:titled,P:cm:author but it was %@", objectTypeId);
+    
+    // test aspects being applied by their presence in the dictionary
+    properties[kAlfrescoContentModelPropertyTitle] = @"A Title";
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties type:kAlfrescoContentModelTypeContent aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:titled"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:titled but it was %@", objectTypeId);
+    
+    properties[kAlfrescoContentModelPropertyLatitude] = @(51.52255);
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties type:kAlfrescoContentModelTypeContent aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:titled,P:cm:geographic"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:titled,P:cm:geographic but it was %@", objectTypeId);
+    
+    // test aspects being applied by their presence in the dictionary and given as a parameter
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties type:kAlfrescoContentModelTypeContent aspects:@[kAlfrescoContentModelAspectAuthor] folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:author,P:cm:titled,P:cm:geographic"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:author,P:cm:titled,P:cm:geographic but it was %@", objectTypeId);
+    
+    // test that we don't get duplicated aspects or system aspects
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties
+                                                                 type:kAlfrescoContentModelTypeContent
+                                                              aspects:@[kAlfrescoContentModelAspectTitled,
+                                                                        kAlfrescoContentModelAspectAuthor,
+                                                                        kAlfrescoContentModelAspectGeographic,
+                                                                        kAlfrescoSystemModelAspectLocalized]
+                                                               folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:titled,P:cm:author,P:cm:geographic"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:titled,P:cm:author,P:cm:geographic but it was %@", objectTypeId);
+}
 
 #pragma mark Helper methods
 
@@ -761,57 +614,5 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     XCTAssertTrue([valueElement.value isEqual:expectedValue],
         @"Document property '%@' value does not match: was %@ but expected %@", expectedProperty, valueElement.value, expectedValue);
 }
-
-/*
-- (CMISDocument *)uploadTestFileWithAspects:(NSArray *)aspectTypeIds
-{
-    // Set properties on test file
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"test_file.txt" ofType:nil];
-    NSString *documentName = [NSString stringWithFormat:@"test_file_%@.txt", [self stringFromCurrentDate]];
-    NSMutableDictionary *documentProperties = [NSMutableDictionary dictionary];
-    [documentProperties setObject:documentName forKey:kCMISPropertyName];
-
-    NSMutableString *objectTypeId = [[NSMutableString alloc] init];
-    [objectTypeId appendString:@"cmis:document"];
-    for (NSString *aspectTypeId in aspectTypeIds)
-    {
-        [objectTypeId appendFormat:@", %@", aspectTypeId];
-    }
-    [documentProperties setObject:objectTypeId forKey:kCMISPropertyObjectTypeId];
-
-    // Upload test file
-    __block NSInteger previousUploadedBytes = -1;
-    __block NSString *objectId = nil;
-    [self.testFolder createDocumentFromFilePath:filePath
-            withMimeType:@"text/plain"
-            withProperties:documentProperties
-            completionBlock: ^ (NSString *newObjectId)
-            {
-                XCTAssertNotNil(newObjectId, @"Object id should not be nil");
-                objectId = newObjectId;
-                self.callbackCompleted = YES;
-            }
-            failureBlock: ^ (NSError *failureError)
-            {
-                XCTAssertNil(failureError, @"Got error while uploading document: %@", [failureError description]);
-            }
-            progressBlock: ^ (NSInteger uploadedBytes, NSInteger totalBytes)
-            {
-                XCTAssertTrue(uploadedBytes > previousUploadedBytes, @"no progress");
-                previousUploadedBytes = uploadedBytes;
-            }];
-
-    [self waitUntilCompleteWithFixedTimeInterval];
-
-    NSError *error = nil;
-    CMISDocument *document = (CMISDocument *) [self.session retrieveObject:objectId error:&error];
-    XCTAssertNil(error, @"Got error while creating document: %@", [error description]);
-    XCTAssertNotNil(objectId, @"Object id received should be non-nil");
-    XCTAssertNotNil(document, @"Retrieved document should not be nil");
-
-    return document;
-}
-*/
-
 
 @end

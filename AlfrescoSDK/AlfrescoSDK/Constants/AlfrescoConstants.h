@@ -80,7 +80,7 @@ extern NSString * const kAlfrescoMetadataExtraction;
 extern NSString * const kAlfrescoThumbnailCreation;
 
 /**---------------------------------------------------------------------------------------
- * @name thumbnail constant (for OnPremise services)
+ * @name thumbnail constant
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoThumbnailRendition;
 
@@ -127,6 +127,23 @@ extern NSString * const kAlfrescoConnectUsingClientSSLCertificate;
 extern NSString * const kAlfrescoClientCertificateCredentials;
 
 /**---------------------------------------------------------------------------------------
+ * @name Model Constants
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoContentModelTypeContent;
+extern NSString * const kAlfrescoContentModelTypeFolder;
+
+extern NSString * const kAlfrescoContentModelAspectTitled;
+extern NSString * const kAlfrescoContentModelAspectAuthor;
+extern NSString * const kAlfrescoContentModelAspectGeographic;
+
+extern NSString * const kAlfrescoContentModelPropertyName;
+extern NSString * const kAlfrescoContentModelPropertyTitle;
+extern NSString * const kAlfrescoContentModelPropertyDescription;
+extern NSString * const kAlfrescoContentModelPropertyAuthor;
+extern NSString * const kAlfrescoContentModelPropertyLatitude;
+extern NSString * const kAlfrescoContentModelPropertyLongitude;
+
+/**---------------------------------------------------------------------------------------
  * @name Workflow Constants
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoWorkflowTaskComment;
@@ -140,3 +157,9 @@ extern NSString * const kAlfrescoWorkflowProcessPriority;
 extern NSString * const kAlfrescoWorkflowProcessSendEmailNotification;
 extern NSString * const kAlfrescoWorkflowProcessDueDate;
 extern NSString * const kAlfrescoWorkflowProcessApprovalRate;
+
+
+
+
+
+

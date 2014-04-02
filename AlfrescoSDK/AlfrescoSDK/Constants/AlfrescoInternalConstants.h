@@ -24,18 +24,21 @@
 extern NSString * const kAlfrescoClassVersion;
 
 extern NSString * const kAlfrescoISO8601DateStringFormat;
+
 extern NSString * const kAlfrescoCMISPropertyTypeInt;
 extern NSString * const kAlfrescoCMISPropertyTypeBoolean;
 extern NSString * const kAlfrescoCMISPropertyTypeDatetime;
 extern NSString * const kAlfrescoCMISPropertyTypeDecimal;
 extern NSString * const kAlfrescoCMISPropertyTypeId;
-extern NSString * const kAlfrescoCMISSessionMode;
+extern NSString * const kAlfrescoCMISNetworkProvider;
+extern NSString * const kAlfrescoCMISModelPrefix;
+extern NSString * const kAlfrescoCMISFolderTypePrefix;
+extern NSString * const kAlfrescoCMISDocumentTypePrefix;
+extern NSString * const kAlfrescoCMISAspectPrefix;
 
-extern NSString * const kAlfrescoPropertyName;
-extern NSString * const kAlfrescoPropertyTitle;
-extern NSString * const kAlfrescoPropertyDescription;
-extern NSString * const kAlfrescoTypeContent;
-extern NSString * const kAlfrescoTypeFolder;
+extern NSString * const kAlfrescoContentModelPrefix;
+extern NSString * const kAlfrescoSystemModelPrefix;
+extern NSString * const kAlfrescoSystemModelAspectLocalized;
 
 extern NSString * const kAlfrescoRepositoryName;
 extern NSString * const kAlfrescoRepositoryEdition;
@@ -339,10 +342,6 @@ extern NSString * const kAlfrescoHTTPPOST;
 extern NSString * const kAlfrescoHTTPPut;
 
 extern NSString * const kAlfrescoFileManagerClass;
-extern NSString * const kAlfrescoCMISNetworkProvider;
-extern NSString * const kAlfrescoPropertyTypeFolder;
-extern NSString * const kAlfrescoPropertyTypeDocument;
-extern NSString * const kAlfrescoPropertyAspect;
 
 extern NSString * const kAlfrescoPersonPropertyFirstName;
 extern NSString * const kAlfrescoPersonPropertyLastName;

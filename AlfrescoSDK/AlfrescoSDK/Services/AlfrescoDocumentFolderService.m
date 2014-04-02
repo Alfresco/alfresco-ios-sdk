@@ -89,9 +89,6 @@
     return [self createFolderWithName:folderName inParentFolder:folder properties:properties aspects:nil type:nil completionBlock:completionBlock];
 }
 
-/**
- TODO needs to be fully implemented
- */
 - (AlfrescoRequest *)createFolderWithName:(NSString *)folderName
                            inParentFolder:(AlfrescoFolder *)folder
                                properties:(NSDictionary *)properties
@@ -101,9 +98,6 @@
     return [self createFolderWithName:folderName inParentFolder:folder properties:properties aspects:aspects type:nil completionBlock:completionBlock];
 }
 
-/**
- TODO needs to be fully implemented
- */
 - (AlfrescoRequest *)createFolderWithName:(NSString *)folderName
                            inParentFolder:(AlfrescoFolder *)folder
                                properties:(NSDictionary *)properties
@@ -134,9 +128,6 @@
     return request;
 }
 
-
-
-
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
                                 contentFile:(AlfrescoContentFile *)file
@@ -154,9 +145,6 @@
                           progressBlock:progressBlock];
 }
 
-/**
- TODO needs to be fully implemented
- */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
                                 contentFile:(AlfrescoContentFile *)file
@@ -175,13 +163,6 @@
                           progressBlock:progressBlock];
 }
 
-
-
-
-
-/**
- TODO needs to be fully implemented
- */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
                                 contentFile:(AlfrescoContentFile *)file
@@ -236,7 +217,6 @@
     return request;
 }
 
-
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
                               contentStream:(AlfrescoContentStream *)contentStream
@@ -255,9 +235,6 @@
                           progressBlock:progressBlock];
 }
 
-/**
- TODO needs to be fully implemented
- */
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
                               contentStream:(AlfrescoContentStream *)contentStream
@@ -276,9 +253,7 @@
                           progressBlock:progressBlock];
 }
 
-/**
- TODO needs to be fully implemented
- */
+
 - (AlfrescoRequest *)createDocumentWithName:(NSString *)documentName
                              inParentFolder:(AlfrescoFolder *)folder
                               contentStream:(AlfrescoContentStream *)contentStream
@@ -1059,135 +1034,55 @@
 {
     [AlfrescoErrors assertArgumentNotNil:properties argumentName:@"properties"];
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
-    [AlfrescoErrors assertArgumentNotNil:node.identifier argumentName:@"node.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSMutableDictionary *cmisProperties = [NSMutableDictionary dictionaryWithDictionary:properties];
-    if ([[properties allKeys] containsObject:kAlfrescoPropertyName])
-    {
-        NSString *name = [properties valueForKey:kAlfrescoPropertyName];
-        AlfrescoLogDebug(@"updatePropertiesOfNode contains key %@ with value %@",kAlfrescoPropertyName, name );
-        [cmisProperties setValue:name forKey:@"cmis:name"];
-        [cmisProperties removeObjectForKey:kAlfrescoPropertyName];
-    }
+    // remember the versionSeriesId of the node
+    NSString *versionSeriesId = [node propertyValueWithName:kCMISPropertyVersionSeriesId];
     
-    if (![[cmisProperties allKeys] containsObject:@"cmis:name"])
-    {
-        AlfrescoLogDebug(@"updatePropertiesOfNode we do NOT have a cmis:name property. so let's set it now to the node name");
-        [cmisProperties setValue:node.name forKey:@"cmis:name"];
-    }
-    
-    NSString *cmisNodeType = node.type;
-    if ([node.type hasPrefix:kAlfrescoTypeContent])
-    {
-        cmisNodeType = kCMISPropertyObjectTypeIdValueDocument;
-    }
-    else if ([node.type hasPrefix:kAlfrescoTypeFolder])
-    {
-        cmisNodeType = kCMISPropertyObjectTypeIdValueFolder;
-    }
-    
-    NSString *objectTypeId = properties[kCMISPropertyObjectTypeId];
-    if (nil != objectTypeId)
-    {
-        if ([objectTypeId rangeOfString:kAlfrescoTypeFolder].location != NSNotFound)
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [AlfrescoCMISUtil preparePropertiesForUpdate:properties node:node cmisSession:self.cmisSession
+                                 completionBlock:^(CMISProperties *cmisProperties, NSError *prepareError) {
+        if (cmisProperties == nil)
         {
-            objectTypeId = [objectTypeId stringByReplacingOccurrencesOfString:kAlfrescoTypeFolder withString:kCMISPropertyObjectTypeIdValueFolder];
-        }
-        else if ([objectTypeId rangeOfString:kAlfrescoTypeContent].location != NSNotFound)
-        {
-            objectTypeId = [objectTypeId stringByReplacingOccurrencesOfString:kAlfrescoTypeContent withString:kCMISPropertyObjectTypeIdValueDocument];            
-        }
-        [cmisProperties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
-    }
-    else if (objectTypeId == nil && [cmisNodeType hasPrefix:@"cmis:"])
-    {
-        objectTypeId = cmisNodeType;
-        
-        // iterate around the aspects the node has and append them (expect system aspects)
-        for (NSString *aspectName in node.aspects)
-        {
-            if (![aspectName hasPrefix:@"sys:"])
-            {
-                objectTypeId = [objectTypeId stringByAppendingFormat:@",P:%@", aspectName];
-            }
-        }
-        
-        AlfrescoLogDebug(@"cmis:objectTypeId = %@", objectTypeId);
-        
-        // set the fully qualified objectTypeId
-        [cmisProperties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
-    }
-    
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    request.httpRequest = [self.cmisSession retrieveObject:node.identifier completionBlock:^(CMISObject *cmisObject, NSError *error){
-        if (nil == cmisObject)
-        {
-            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:prepareError];
             completionBlock(nil, alfrescoError);
         }
         else
         {
-            [self.cmisSession.objectConverter
-             convertProperties:cmisProperties
-             forObjectTypeId:cmisObject.objectType
-             completionBlock:^(CMISProperties *convertedProperties, NSError *conversionError){
-                 if (nil == convertedProperties)
-                 {
-                     NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:conversionError];
-                     completionBlock(nil, alfrescoError);
-                 }
-                 else
-                 {
-                     CMISProperties *updatedProperties = [[CMISProperties alloc] init];
-                     NSEnumerator *enumerator = [convertedProperties.propertiesDictionary keyEnumerator];
-                     for (NSString *cmisKey in enumerator)
-                     {
-                         if (![cmisKey isEqualToString:kCMISPropertyObjectTypeId])
-                         {
-                             CMISPropertyData *propData = (convertedProperties.propertiesDictionary)[cmisKey];
-                             [updatedProperties addProperty:propData];
-                         }
-                     }
-                     updatedProperties.extensions = convertedProperties.extensions;
-                     
-                     CMISStringInOutParameter *inOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:cmisObject.identifier];
-                     request.httpRequest = [self.cmisSession.binding.objectService
-                                            updatePropertiesForObject:inOutParam
-                                            properties:updatedProperties
-                                            changeToken:nil
-                                            completionBlock:^(NSError *updateError){
-                                                if (nil != updateError)
-                                                {
-                                                    NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:updateError];
-                                                    completionBlock(nil, alfrescoError);
-                                                }
-                                                else
-                                                {
-                                                    NSString *versionSeriesId = [cmisObject.properties propertyValueForId:@"cmis:versionSeriesId"];
-                                                    request.httpRequest = [self.cmisSession retrieveObject:versionSeriesId completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError){
-                                                        if (nil == updatedCMISObject)
-                                                        {
-                                                            completionBlock(nil, retrievalError);
-                                                        }
-                                                        else
-                                                        {
-                                                            AlfrescoNode *resultNode = [self.objectConverter nodeFromCMISObject:updatedCMISObject];
-                                                            NSError *conversionError = nil;
-                                                            if (nil == resultNode)
-                                                            {
-                                                                conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
-                                                            }
-                                                            completionBlock(resultNode, conversionError);
-                                                        }
-                                                    }];
-                                                }
-                                            }];
-                 }
-             }];
-            
+            CMISStringInOutParameter *inOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:node.identifier];
+            request.httpRequest = [self.cmisSession.binding.objectService
+                                   updatePropertiesForObject:inOutParam
+                                   properties:cmisProperties
+                                   changeToken:nil
+                                   completionBlock:^(NSError *updateError){
+                                       if (nil != updateError)
+                                       {
+                                           NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:updateError];
+                                           completionBlock(nil, alfrescoError);
+                                       }
+                                       else
+                                       {
+                                           request.httpRequest = [self.cmisSession retrieveObject:versionSeriesId completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError) {
+                                               if (nil == updatedCMISObject)
+                                               {
+                                                   completionBlock(nil, retrievalError);
+                                               }
+                                               else
+                                               {
+                                                   AlfrescoNode *resultNode = [self.objectConverter nodeFromCMISObject:updatedCMISObject];
+                                                   NSError *conversionError = nil;
+                                                   if (nil == resultNode)
+                                                   {
+                                                       conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
+                                                   }
+                                                   completionBlock(resultNode, conversionError);
+                                               }
+                                           }];
+                                       }
+                                   }];
         }
     }];
+
     return request;
 }
 
@@ -1305,17 +1200,17 @@
     NSMutableString *propertyString = [NSMutableString string];
     if (isFolder)
     {
-        [propertyString appendString:kAlfrescoPropertyTypeFolder];
+        [propertyString appendString:kAlfrescoCMISFolderTypePrefix];
     }
     else
     {
-        [propertyString appendString:kAlfrescoPropertyTypeDocument];
+        [propertyString appendString:kAlfrescoCMISDocumentTypePrefix];
     }
     [propertyString appendString:type];
     [propertyString appendString:@","];
     for (NSString *aspect in aspects)
     {
-        [propertyString appendString:kAlfrescoPropertyAspect];
+        [propertyString appendString:kAlfrescoCMISAspectPrefix];
         [propertyString appendString:aspect];
         [propertyString appendString:@","];
     }
@@ -1329,64 +1224,23 @@
                            isFolder:(BOOL)isFolder
 {
     NSMutableDictionary *processedProperties = [NSMutableDictionary dictionary];
+    
+    // make sure the cmis:name property is present
     if (nil != properties)
     {
         [processedProperties addEntriesFromDictionary:properties];
     }
     [processedProperties setValue:name forKey:kCMISPropertyName];
     
-    NSMutableString *objectTypeId = [NSMutableString string];
-    
-    if (nil != type)
+    // make sure the cm:titled aspect is always applied
+    NSMutableArray *modifiedAspects = [NSMutableArray arrayWithArray:aspects];
+    if (![modifiedAspects containsObject:kAlfrescoContentModelAspectTitled])
     {
-        NSString *customType = (isFolder) ? @"F:" : @"D:";
-        [objectTypeId appendString:customType];
-        [objectTypeId appendString:type];
-        NSString *description = [processedProperties valueForKey:kAlfrescoPropertyDescription];
-        NSString *title = [processedProperties valueForKey:kAlfrescoPropertyTitle];
-        if (nil != title || nil != description)
-        {
-            [objectTypeId appendString:@", P:cm:titled"];
-        }
-    }
-    else
-    {
-        NSString *objectTypeIdValue = [processedProperties valueForKey:kCMISPropertyObjectTypeId];
-        if (nil == objectTypeIdValue)
-        {
-            NSString *typeDefinition = (isFolder) ? kCMISPropertyObjectTypeIdValueFolder : kCMISPropertyObjectTypeIdValueDocument;
-            [objectTypeId appendString:typeDefinition];
-            [objectTypeId appendString:@", P:cm:titled"];
-        }
-        else
-        {
-            if ([objectTypeIdValue rangeOfString:kAlfrescoTypeContent].location != NSNotFound)
-            {
-                NSString *cmisDocumentTypeValue = [objectTypeIdValue stringByReplacingOccurrencesOfString:kAlfrescoTypeContent withString:kCMISPropertyObjectTypeIdValueDocument];
-                [objectTypeId appendString:cmisDocumentTypeValue];
-            }
-            else if ([objectTypeIdValue rangeOfString:kAlfrescoTypeFolder].location != NSNotFound)
-            {
-                NSString *cmisFolderTypeValue = [objectTypeIdValue stringByReplacingOccurrencesOfString:kAlfrescoTypeFolder withString:kCMISPropertyObjectTypeIdValueFolder];
-                [objectTypeId appendString:cmisFolderTypeValue];                
-            }
-            else
-            {
-                [objectTypeId appendString:objectTypeIdValue];                
-            }
-        }
+        [modifiedAspects addObject:kAlfrescoContentModelAspectTitled];
     }
     
-    if (nil != aspects)
-    {
-        [aspects enumerateObjectsUsingBlock:^(NSString *aspect, NSUInteger index, BOOL *stop){
-            if (![aspect hasPrefix:@"sys:"])
-            {
-                [objectTypeId appendString:[NSString stringWithFormat:@", P:%@", aspect]];
-            }
-        }];
-    }
-    
+    // prepare the objectTypeId
+    NSString *objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:processedProperties type:type aspects:aspects folder:isFolder];
     [processedProperties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
     
     return processedProperties;

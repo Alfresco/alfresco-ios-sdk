@@ -18,6 +18,7 @@
 
 #import "AlfrescoNode.h"
 #import "AlfrescoProperty.h"
+#import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
 #import "CMISConstants.h"
 
@@ -97,13 +98,13 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
         self.modifiedAt = [properties valueForKey:kCMISPropertyModificationDate];
     }
     
-    if ([[properties allKeys] containsObject:kAlfrescoPropertyTitle])
+    if ([[properties allKeys] containsObject:kAlfrescoContentModelPropertyTitle])
     {
-        self.title = [properties valueForKey:kAlfrescoPropertyTitle];
+        self.title = [properties valueForKey:kAlfrescoContentModelPropertyTitle];
     }
-    if ([[properties allKeys] containsObject:kAlfrescoPropertyDescription])
+    if ([[properties allKeys] containsObject:kAlfrescoContentModelPropertyDescription])
     {
-        self.summary = [properties valueForKey:kAlfrescoPropertyDescription];
+        self.summary = [properties valueForKey:kAlfrescoContentModelPropertyDescription];
     }
     if ([[properties allKeys] containsObject:kAlfrescoNodeAspects])
     {
@@ -120,8 +121,8 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     [aCoder encodeInteger:kNodeModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.identifier forKey:kCMISPropertyObjectId];
     [aCoder encodeObject:self.name forKey:kCMISPropertyName];
-    [aCoder encodeObject:self.title forKey:kAlfrescoPropertyTitle];
-    [aCoder encodeObject:self.summary forKey:kAlfrescoPropertyDescription];
+    [aCoder encodeObject:self.title forKey:kAlfrescoContentModelPropertyTitle];
+    [aCoder encodeObject:self.summary forKey:kAlfrescoContentModelPropertyDescription];
     [aCoder encodeObject:self.type forKey:kCMISPropertyObjectTypeId];
     [aCoder encodeObject:self.createdAt forKey:kCMISPropertyCreationDate];
     [aCoder encodeObject:self.createdBy forKey:kCMISPropertyCreatedBy];
@@ -140,8 +141,8 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 //        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.identifier = [aDecoder decodeObjectForKey:kCMISPropertyObjectId];
         self.name = [aDecoder decodeObjectForKey:kCMISPropertyName];
-        self.title = [aDecoder decodeObjectForKey:kAlfrescoPropertyTitle];
-        self.summary = [aDecoder decodeObjectForKey:kAlfrescoPropertyDescription];
+        self.title = [aDecoder decodeObjectForKey:kAlfrescoContentModelPropertyTitle];
+        self.summary = [aDecoder decodeObjectForKey:kAlfrescoContentModelPropertyDescription];
         self.type = [aDecoder decodeObjectForKey:kCMISPropertyObjectTypeId];
         self.createdAt = [aDecoder decodeObjectForKey:kCMISPropertyCreationDate];
         self.createdBy = [aDecoder decodeObjectForKey:kCMISPropertyCreatedBy];
