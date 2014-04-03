@@ -23,16 +23,7 @@
 
 static NSInteger kListingContextModelVersion = 1;
 
-@interface AlfrescoListingContext ()
-@property (nonatomic, strong, readwrite) NSString *sortProperty;
-@property (nonatomic, assign, readwrite) BOOL sortAscending;
-@property (nonatomic, assign, readwrite) int maxItems;
-@property (nonatomic, assign, readwrite) int skipCount;
-@property (nonatomic, strong, readwrite) AlfrescoListingFilter *listingFilter;
-@end
-
 @implementation AlfrescoListingContext
-
 
 - (id)init
 {

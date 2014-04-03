@@ -31,23 +31,23 @@
 
 
 /// Returns the sorting field for the list.
-@property (nonatomic, strong, readonly) NSString *sortProperty;
+@property (nonatomic, strong) NSString *sortProperty;
 
 
 /// Returns the sorting direction.
-@property (nonatomic, assign, readonly) BOOL sortAscending;
+@property (nonatomic, assign) BOOL sortAscending;
 
 
 /// Returns the maximum items within the list.
-@property (nonatomic, assign, readonly) int maxItems;
+@property (nonatomic, assign) int maxItems;
 
 
 /// Returns current skip count.
-@property (nonatomic, assign, readonly) int skipCount;
+@property (nonatomic, assign) int skipCount;
 
 
 /// Returns the listing filter.
-@property (nonatomic, strong, readonly) AlfrescoListingFilter *listingFilter;
+@property (nonatomic, strong) AlfrescoListingFilter *listingFilter;
 
 /**
  Creates and returns a listing context with a maximum number of items.

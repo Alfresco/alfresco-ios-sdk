@@ -537,7 +537,10 @@
                                      if (allSiteMembers.count == 1)
                                      {
                                          // we know there is only one result, check paging result is correct
-                                         XCTAssertTrue(pagingResult.totalItems == 1, @"Expecting the paging totalItems count to be 1 but it was: %d", pagingResult.totalItems);
+                                         if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                                         {
+                                             XCTAssertTrue(pagingResult.totalItems == 1, @"Expecting the paging totalItems count to be 1 but it was: %d", pagingResult.totalItems);
+                                         }
                                          XCTAssertFalse(pagingResult.hasMoreItems, @"Expected the paging result to indicate there were no more items");
                                          
                                          // we know there is only one member so check it's the correct one
