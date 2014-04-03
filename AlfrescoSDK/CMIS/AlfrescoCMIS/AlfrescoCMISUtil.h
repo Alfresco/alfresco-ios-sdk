@@ -22,8 +22,9 @@
 // AlfrescoCMISUtil 
 //
 #import <Foundation/Foundation.h>
+#import "AlfrescoNode.h"
 
-@class CMISObject;
+@class CMISObject, CMISProperties, CMISSession;
 
 
 @interface AlfrescoCMISUtil : NSObject
@@ -39,5 +40,21 @@
  maps CMIS errors to Alfresco Errors
  */
 + (NSError *)alfrescoErrorWithCMISError:(NSError *)cmisError;
+
+/**
+ * Prepares the CMIS objectTypeId property for the given set of properties.
+ */
++ (NSString *)prepareObjectTypeIdForProperties:(NSDictionary *)alfrescoProperties
+                                          type:(NSString *)type
+                                       aspects:(NSArray *)aspects
+                                        folder:(BOOL)folder;
+
+/**
+ * Prepares the given dictionary of Alfresco properties for update via CMIS
+ */
++ (void)preparePropertiesForUpdate:(NSDictionary *)alfrescoProperties
+                              node:(AlfrescoNode *)node
+                       cmisSession:(CMISSession *)cmisSession
+                   completionBlock:(void (^)(CMISProperties *cmisProperties, NSError *error))completionBlock;
 
 @end

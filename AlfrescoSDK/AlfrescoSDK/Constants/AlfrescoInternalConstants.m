@@ -25,6 +25,7 @@
 NSString * const kAlfrescoClassVersion = @"alfresco.classVersion";
 
 NSString * const kAlfrescoISO8601DateStringFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZ";
+
 /**
  CMIS constants
  */
@@ -33,16 +34,18 @@ NSString * const kAlfrescoCMISPropertyTypeBoolean = @"boolean";
 NSString * const kAlfrescoCMISPropertyTypeDatetime = @"datetime";
 NSString * const kAlfrescoCMISPropertyTypeDecimal = @"decimal";
 NSString * const kAlfrescoCMISPropertyTypeId = @"id";
-NSString * const kAlfrescoCMISSessionMode = @"alfresco";
+NSString * const kAlfrescoCMISNetworkProvider = @"org.alfresco.mobile.internal.session.cmis.networkprovider";
+NSString * const kAlfrescoCMISModelPrefix = @"cmis:";
+NSString * const kAlfrescoCMISFolderTypePrefix = @"F:";
+NSString * const kAlfrescoCMISDocumentTypePrefix = @"D:";
+NSString * const kAlfrescoCMISAspectPrefix = @"P:";
 
 /**
  Content Model constants
  */
-NSString * const kAlfrescoPropertyName = @"cm:name";
-NSString * const kAlfrescoPropertyTitle = @"cm:title";
-NSString * const kAlfrescoPropertyDescription = @"cm:description";
-NSString * const kAlfrescoTypeContent = @"cm:content";
-NSString * const kAlfrescoTypeFolder = @"cm:folder";
+NSString * const kAlfrescoContentModelPrefix = @"cm:";
+NSString * const kAlfrescoSystemModelPrefix = @"sys:";
+NSString * const kAlfrescoSystemModelAspectLocalized = @"sys:localized";
 
 /**
  Property name constants
@@ -372,10 +375,6 @@ NSString * const kAlfrescoHTTPPOST = @"POST";
 NSString * const kAlfrescoHTTPPut = @"PUT";
 
 NSString * const kAlfrescoFileManagerClass = @"AlfrescoFileManagerClassName";
-NSString * const kAlfrescoCMISNetworkProvider = @"org.alfresco.mobile.internal.session.cmis.networkprovider";
-NSString * const kAlfrescoPropertyTypeFolder = @"F:";
-NSString * const kAlfrescoPropertyTypeDocument = @"D:";
-NSString * const kAlfrescoPropertyAspect = @"P:";
 
 /**
  Person Profile Constants

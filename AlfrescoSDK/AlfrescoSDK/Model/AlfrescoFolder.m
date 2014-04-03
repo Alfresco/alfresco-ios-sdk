@@ -47,8 +47,8 @@ static NSInteger kFolderModelVersion = 1;
     [super encodeWithCoder:aCoder];
 
     [aCoder encodeInteger:kFolderModelVersion forKey:NSStringFromClass([self class])];
-    [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
-    [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
+    [aCoder encodeBool:self.isFolder forKey:kAlfrescoCMISFolderTypePrefix];
+    [aCoder encodeBool:self.isDocument forKey:kAlfrescoCMISDocumentTypePrefix];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -59,8 +59,8 @@ static NSInteger kFolderModelVersion = 1;
     {
         //uncomment this line if you need to check the model version
 //        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
-        self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeFolder];
-        self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeDocument];
+        self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoCMISFolderTypePrefix];
+        self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoCMISDocumentTypePrefix];
     }
     return self;
 }

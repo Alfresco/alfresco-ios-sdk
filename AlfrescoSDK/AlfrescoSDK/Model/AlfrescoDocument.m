@@ -68,8 +68,8 @@ static NSInteger kDocumentModelVersion = 1;
     [super encodeWithCoder:aCoder];
     
     [aCoder encodeInteger:kDocumentModelVersion forKey:NSStringFromClass([self class])];
-    [aCoder encodeBool:self.isFolder forKey:kAlfrescoPropertyTypeFolder];
-    [aCoder encodeBool:self.isDocument forKey:kAlfrescoPropertyTypeDocument];
+    [aCoder encodeBool:self.isFolder forKey:kAlfrescoCMISFolderTypePrefix];
+    [aCoder encodeBool:self.isDocument forKey:kAlfrescoCMISDocumentTypePrefix];
     [aCoder encodeBool:self.isLatestVersion forKey:kCMISPropertyIsLatestVersion];
     [aCoder encodeInt64:self.contentLength forKey:kCMISPropertyContentStreamLength];
     [aCoder encodeObject:self.contentMimeType forKey:kCMISPropertyContentStreamMediaType];
@@ -85,8 +85,8 @@ static NSInteger kDocumentModelVersion = 1;
     {
         //uncomment this line if you need to check the model version
 //        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
-        self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeFolder];
-        self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoPropertyTypeDocument];
+        self.isFolder = [aDecoder decodeBoolForKey:kAlfrescoCMISFolderTypePrefix];
+        self.isDocument = [aDecoder decodeBoolForKey:kAlfrescoCMISDocumentTypePrefix];
         self.isLatestVersion = [aDecoder decodeBoolForKey:kCMISPropertyIsLatestVersion];
         self.contentLength = [aDecoder decodeInt64ForKey:kCMISPropertyContentStreamLength];
         self.contentMimeType = [aDecoder decodeObjectForKey:kCMISPropertyContentStreamMediaType];

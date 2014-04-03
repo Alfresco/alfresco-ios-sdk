@@ -32,6 +32,7 @@
 #import "CMISDateUtil.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoConstants.h"
+#import "AlfrescoInternalConstants.h"
 
 @interface AlfrescoCMISObjectConverter ()
 - (void)retrieveAspectTypeDefinitionsFromObjectID:(NSString *)objectID completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
@@ -303,7 +304,7 @@
     CMISTypeDefinition *typeDefinition = nil;
     for (CMISTypeDefinition * type in typeArray)
     {
-        if ([type.id hasPrefix:@"cmis:"] || [type.id hasPrefix:@"D:"] || [type.id hasPrefix:@"F:"])
+        if ([type.id hasPrefix:kAlfrescoCMISModelPrefix] || [type.id hasPrefix:kAlfrescoCMISDocumentTypePrefix] || [type.id hasPrefix:kAlfrescoCMISFolderTypePrefix])
         {
             typeDefinition = type;
             break;
@@ -317,7 +318,7 @@
     NSMutableArray *aspects = [NSMutableArray array];
     for (CMISTypeDefinition * type in typeArray)
     {
-        if (![type.id hasPrefix:@"cmis:"] && ![type.id hasPrefix:@"D:"] && ![type.id hasPrefix:@"F:"])
+        if (![type.id hasPrefix:kAlfrescoCMISModelPrefix] && ![type.id hasPrefix:kAlfrescoCMISDocumentTypePrefix] && ![type.id hasPrefix:kAlfrescoCMISFolderTypePrefix])
         {
             [aspects addObject:type];
         }
