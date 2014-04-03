@@ -2919,17 +2919,12 @@
                           XCTAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
                           XCTAssertTrue([updatedDocument.type isEqualToString:@"cm:content"], @"type should be cm:content, but is %@", updatedDocument.type);
                           
-                          if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
-                          {
-                              XCTAssertTrue(updatedNode.aspects.count == 4,
-                                            @"Expected updated node to have 4 aspects but there were %lu", (unsigned long)updatedNode.aspects.count);
-                          }
-                          else
-                          {
-                              // there's no sys:localized on 3.x servers
-                              XCTAssertTrue(updatedNode.aspects.count == 3,
-                                            @"Expected updated node to have 3 aspects but there were %lu", (unsigned long)updatedNode.aspects.count);
-                          }
+                          // check all the expected aspects are there, should be at least 3
+                          XCTAssertTrue(updatedNode.aspects.count >= 3,
+                                        @"Expected updated node to have at least 3 aspects but there were %lu", (unsigned long)updatedNode.aspects.count);
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectTitled], @"Expected updated node to have the cm:titled aspect");
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectAuthor], @"Expected updated node to have the cm:author aspect");
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectGeographic], @"Expected updated node to have the cm:geopraphic aspect");
                           
                           // check the updated properties
                           NSDictionary *updatedProps = updatedDocument.properties;
