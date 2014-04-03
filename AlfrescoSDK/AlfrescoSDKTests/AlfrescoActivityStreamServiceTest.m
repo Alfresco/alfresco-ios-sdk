@@ -34,23 +34,22 @@
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:10 skipCount:0];
         
         // retrieve activity stream - there must be at least one site-based activity (e.g. document uploaded)
-        [self.activityStreamService retrieveActivityStreamWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-         {
-             if (nil == pagingResult)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                 XCTAssertTrue(pagingResult.objects.count > 1, @"expected more than 1 activity entries, but got %lu", (unsigned long)pagingResult.objects.count);
-                 XCTAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
-                 
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-         }];
+        [self.activityStreamService retrieveActivityStreamWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                XCTAssertTrue(pagingResult.objects.count > 1, @"expected more than 1 activity entries, but got %lu", (unsigned long)pagingResult.objects.count);
+                XCTAssertTrue(pagingResult.totalItems > 0 || pagingResult.totalItems == -1, @"expected activity entries");
+                
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -70,32 +69,35 @@
         self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
         
         // retrieve activity stream - there must be at least one site-based activity (e.g. document uploaded)
-        [self.activityStreamService retrieveActivityStreamWithCompletionBlock:^(NSArray *array, NSError *error)
-         {
-             if (nil == array)
-             {
-                 self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-             }
-             else
-             {
-                 XCTAssertNotNil(array, @"array should not be nil");
-                 XCTAssertTrue(array.count > 0, @"expected activity entries");
-                 
-                 for (AlfrescoActivityEntry *entry in array) {
-                     XCTAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
-                     XCTAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
-                     XCTAssertNotNil(entry.identifier, @"identifier should not be nil");
-                     XCTAssertNotNil(entry.siteShortName, @"site should not be nil");
-                     XCTAssertNotNil(entry.type, @"type should not be nil");
-                     XCTAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
-                 }
-                 
-                 self.lastTestSuccessful = YES;
-             }
-             self.callbackCompleted = YES;
-             
-         }];
+        [self.activityStreamService retrieveActivityStreamWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (nil == array)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+            }
+            else
+            {
+                XCTAssertNotNil(array, @"array should not be nil");
+                XCTAssertTrue(array.count > 0, @"expected activity entries");
+                
+                for (AlfrescoActivityEntry *entry in array)
+                {
+                    XCTAssertNotNil(entry.type, @"type should not be nil");
+                    XCTAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
+                    XCTAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
+                    XCTAssertNotNil(entry.identifier, @"identifier should not be nil");
+                    if ([self isSiteIdExpectedForActivity:entry])
+                    {
+                        XCTAssertNotNil(entry.siteShortName, @"site should not be nil");
+                    }
+                    XCTAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
+                }
+                
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+            
+        }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -133,7 +135,10 @@
                      XCTAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
                      XCTAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
                      XCTAssertNotNil(entry.identifier, @"identifier should not be nil");
-                     XCTAssertNotNil(entry.siteShortName, @"site should not be nil");
+                     if ([self isSiteIdExpectedForActivity:entry])
+                     {
+                         XCTAssertNotNil(entry.siteShortName, @"site should not be nil");
+                     }
                      XCTAssertNotNil(entry.type, @"type should not be nil");
                      XCTAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
                  }
@@ -232,7 +237,10 @@
                               XCTAssertNotNil(entry.createdBy, @"createdBy user ID should not be nil");
                               XCTAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"post date should be a NSDate");
                               XCTAssertNotNil(entry.identifier, @"identifier should not be nil");
-                              XCTAssertNotNil(entry.siteShortName, @"site should not be nil");
+                              if ([self isSiteIdExpectedForActivity:entry])
+                              {
+                                  XCTAssertNotNil(entry.siteShortName, @"site should not be nil");
+                              }
                               XCTAssertNotNil(entry.type, @"type should not be nil");
                               XCTAssertTrue([entry.data isKindOfClass:[NSDictionary class]], @"data should be a NSDictionary");
                           }
@@ -310,6 +318,17 @@
     }
 }
 
+#pragma mark - Test Utility methods
 
+- (BOOL)isSiteIdExpectedForActivity:(AlfrescoActivityEntry *)activity
+{
+    // PublicAPI doesn't respond with siteId for certain activities
+    if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI &&
+        [@[@"org.alfresco.site.user-left", @"org.alfresco.site.user-joined"] containsObject:activity.type])
+    {
+        return NO;
+    }
+    return YES;
+}
 
 @end
