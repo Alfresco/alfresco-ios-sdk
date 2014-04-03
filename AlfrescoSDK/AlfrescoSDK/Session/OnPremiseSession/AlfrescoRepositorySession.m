@@ -353,11 +353,11 @@
                     NSString *version = v3Session.repositoryInfo.productVersion;
                     NSArray *versionArray = [version componentsSeparatedByString:@"."];
                     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-                    NSNumber *majorVersionNumber = [formatter numberFromString:versionArray[0]];
-                    NSNumber *minorVersionNumber = [formatter numberFromString:versionArray[1]];
+                    int majorVersion = [[formatter numberFromString:versionArray[0]] intValue];
+                    int minorVersion = [[formatter numberFromString:versionArray[1]] intValue];
                     AlfrescoLogDebug(@"session connected with user %@, repo version is %@", username, version);
 
-                    if ([majorVersionNumber intValue] >= 4 && !useCustomBinding)
+                    if (majorVersion >= 4 && !useCustomBinding)
                     {
                         // We'll intercept the v4 request completion to be able to fallback to v3
                         void (^v4sessionInterceptCompletionBlock)(CMISSession *session, NSError *error) = ^void(CMISSession *session, NSError *error) {
@@ -375,7 +375,7 @@
                         };
 
                         // PublicAPI is potentially viable for version 4.2 and newer
-                        if ([minorVersionNumber intValue] >= 2)
+                        if ((majorVersion == 4 && minorVersion >= 2) || (majorVersion > 4))
                         {
                             // Try to create a PublicAPI-based session
                             void (^publicAPISessionInterceptCompletionBlock)(CMISSession *session, NSError *error) = ^void(CMISSession *session, NSError *error) {
