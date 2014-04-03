@@ -80,22 +80,24 @@
             AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:2 skipCount:1];
             
             // get tags
-            [self.taggingService retrieveAllTagsWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
-             {
-                 if (nil == pagingResult)
-                 {
-                     self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                 }
-                 else
-                 {
-                     XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
-                     XCTAssertTrue(pagingResult.objects.count == 2, @"expected 2 tag responses");
-                     XCTAssertTrue(pagingResult.totalItems > 2, @"expected multiple tags in total");
-                     self.lastTestSuccessful = YES;
-                 }
-                 self.callbackCompleted = YES;
-             }];
+            [self.taggingService retrieveAllTagsWithListingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                if (nil == pagingResult)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
+                else
+                {
+                    XCTAssertNotNil(pagingResult, @"pagingResult should not be nil");
+                    XCTAssertTrue(pagingResult.objects.count == 2, @"expected 2 tag responses");
+                    if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                    {
+                        XCTAssertTrue(pagingResult.totalItems > 2, @"expected multiple tags in total");
+                    }
+                    self.lastTestSuccessful = YES;
+                }
+                self.callbackCompleted = YES;
+            }];
             
             [self waitUntilCompleteWithFixedTimeInterval];
             XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);

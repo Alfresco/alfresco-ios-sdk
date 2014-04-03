@@ -18,9 +18,9 @@
  *****************************************************************************
  */
 
-#import <Foundation/Foundation.h>
-#import "AlfrescoPublicAPIActivityStreamService.h"
+#import "AlfrescoSiteService.h"
+#import "AlfrescoSiteCache.h"
 
-@interface AlfrescoCloudActivityStreamService : AlfrescoPublicAPIActivityStreamService
+@interface AlfrescoPublicAPISiteService : AlfrescoSiteService <AlfrescoSiteCacheDataDelegate>
 
 @end

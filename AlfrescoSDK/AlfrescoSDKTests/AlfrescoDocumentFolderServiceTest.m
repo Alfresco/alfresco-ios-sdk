@@ -23,6 +23,7 @@
 #import "CMISConstants.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoTaggingService.h"
+#import "AlfrescoVersionService.h"
 
 @implementation AlfrescoDocumentFolderServiceTest
 /*
@@ -5968,19 +5969,20 @@
             }
             else
             {
-                // retrieve the test document again
-                [self.dfService retrieveNodeWithIdentifier:self.testAlfrescoDocument.identifier completionBlock:^(AlfrescoNode *node, NSError *retrieveError) {
-                    if (node == nil)
+                // retrieve the latest version of the test document
+                AlfrescoVersionService *versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
+                [versionService retrieveLatestVersionOfDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoDocument *document, NSError *retrieveError) {
+                    if (document == nil)
                     {
                         self.lastTestSuccessful = NO;
                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveError localizedDescription], [retrieveError localizedFailureReason]];
                     }
                     else
                     {
-                        XCTAssertNotNil(node, @"node should not be nil");
+                        XCTAssertNotNil(document, @"document should not be nil");
                         
                         // retrieve the cm:taggable property and check it is multivalued
-                        AlfrescoProperty *taggable = node.properties[@"cm:taggable"];
+                        AlfrescoProperty *taggable = document.properties[@"cm:taggable"];
                         XCTAssertNotNil(taggable, @"Expected to find the cm:taggable property");
                         XCTAssertTrue(taggable.isMultiValued, @"Expected the cm:taggable to be multi valued");
                         

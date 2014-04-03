@@ -551,7 +551,10 @@
                                      else
                                      {
                                          // we know there are more results, check paging result is correct
-                                         XCTAssertTrue(pagingResult.totalItems == allSiteMembers.count, @"Expecting the paging totalItems count to be the same as the number of site members: %lu", (unsigned long)allSiteMembers.count);
+                                         if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                                         {
+                                             XCTAssertTrue(pagingResult.totalItems == allSiteMembers.count, @"Expecting the paging totalItems count to be the same as the number of site members: %lu", (unsigned long)allSiteMembers.count);
+                                         }
                                          XCTAssertTrue(pagingResult.hasMoreItems, @"Expected the paging result to indicate there were more items");
                                          
                                          // make sure the object type is correct

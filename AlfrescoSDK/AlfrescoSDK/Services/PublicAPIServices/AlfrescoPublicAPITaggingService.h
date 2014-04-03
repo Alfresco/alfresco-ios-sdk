@@ -19,8 +19,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoPublicAPIActivityStreamService.h"
+#import "AlfrescoTaggingService.h"
 
-@interface AlfrescoCloudActivityStreamService : AlfrescoPublicAPIActivityStreamService
+@interface AlfrescoPublicAPITaggingService : AlfrescoTaggingService
 
 @end

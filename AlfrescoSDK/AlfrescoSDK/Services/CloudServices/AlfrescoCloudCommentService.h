@@ -19,8 +19,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoCommentService.h"
+#import "AlfrescoPublicAPICommentService.h"
 
-@interface AlfrescoCloudCommentService : AlfrescoCommentService
+@interface AlfrescoCloudCommentService : AlfrescoPublicAPICommentService
 
 @end

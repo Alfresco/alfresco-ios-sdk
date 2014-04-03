@@ -73,7 +73,7 @@
         return nil;
     }
     
-    id listObject = [jsonDictionary valueForKey:kAlfrescoCloudJSONList];
+    id listObject = [jsonDictionary valueForKey:kAlfrescoPublicAPIJSONList];
     if (![listObject isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
@@ -99,7 +99,7 @@
     {
         return nil;
     }
-    id paginationObj = [list valueForKey:kAlfrescoCloudJSONPagination];
+    id paginationObj = [list valueForKey:kAlfrescoPublicAPIJSONPagination];
     if (![paginationObj isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
@@ -124,7 +124,7 @@
     {
         return nil;
     }
-    id entries = [list valueForKey:kAlfrescoCloudJSONEntries];
+    id entries = [list valueForKey:kAlfrescoPublicAPIJSONEntries];
     if (![entries isKindOfClass:[NSArray class]])
     {
         if (nil == *outError)
@@ -198,7 +198,7 @@
         return nil;
     }
     NSDictionary *jsonDict = (NSDictionary *)jsonDictObj;
-    NSDictionary *entryDict = [jsonDict valueForKey:kAlfrescoCloudJSONEntry];
+    NSDictionary *entryDict = [jsonDict valueForKey:kAlfrescoPublicAPIJSONEntry];
     if (nil == entryDict)
     {
         if (nil == *outError)

@@ -19,8 +19,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoDocumentFolderService.h"
+#import "AlfrescoPublicAPIDocumentFolderService.h"
 
-@interface AlfrescoCloudDocumentFolderService : AlfrescoDocumentFolderService
+@interface AlfrescoCloudDocumentFolderService : AlfrescoPublicAPIDocumentFolderService
 
 @end

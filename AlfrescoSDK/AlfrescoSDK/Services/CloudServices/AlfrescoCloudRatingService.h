@@ -19,8 +19,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoRatingService.h"
+#import "AlfrescoPublicAPIRatingService.h"
 
-@interface AlfrescoCloudRatingService : AlfrescoRatingService
+@interface AlfrescoCloudRatingService : AlfrescoPublicAPIRatingService
 
 @end
