@@ -73,7 +73,7 @@
     {
         parameterString = @"&";
     }
-    NSString *parameterExtension = [kAlfrescoCloudPagingAPIParameters stringByReplacingOccurrencesOfString:kAlfrescoMaxItems
+    NSString *parameterExtension = [kAlfrescoPublicAPIPagingParameters stringByReplacingOccurrencesOfString:kAlfrescoMaxItems
                                                                                                 withString:[NSString stringWithFormat:@"%d",listingContext.maxItems]];
     
     parameterExtension = [parameterExtension stringByReplacingOccurrencesOfString:kAlfrescoSkipCount

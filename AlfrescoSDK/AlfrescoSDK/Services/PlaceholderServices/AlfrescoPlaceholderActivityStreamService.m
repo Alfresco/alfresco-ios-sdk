@@ -26,15 +26,15 @@
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
-    if ([session isKindOfClass:[AlfrescoRepositorySession class]])
+    if (session.repositoryInfo.capabilities.doesSupportPublicAPI)
     {
-        return (id)[[AlfrescoOnPremiseActivityStreamService alloc] initWithSession:session];
+        if ([session isKindOfClass:[AlfrescoCloudSession class]])
+        {
+            return (id)[[AlfrescoCloudActivityStreamService alloc] initWithSession:session];
+        }
+        return (id)[[AlfrescoPublicAPIActivityStreamService alloc] initWithSession:session];
     }
-    if ([session isKindOfClass:[AlfrescoCloudSession class]])
-    {
-        return (id)[[AlfrescoCloudActivityStreamService alloc] initWithSession:session];
-    }
-    return nil;
+    return (id)[[AlfrescoOnPremiseActivityStreamService alloc] initWithSession:session];
 }
 
 @end

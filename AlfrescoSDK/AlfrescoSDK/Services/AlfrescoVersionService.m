@@ -21,6 +21,7 @@
 #import "CMISVersioningService.h"
 #import "CMISDocument.h"
 #import "CMISSession.h"
+#import "CMISOperationContext.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
@@ -133,10 +134,34 @@
 - (AlfrescoRequest *)retrieveLatestVersionOfDocument:(AlfrescoDocument *)document
                                      completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
 {
-    completionBlock(nil, nil);
-    return nil;
+    [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
+    [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
+    request.httpRequest = [self.cmisSession.binding.versioningService retrieveObjectOfLatestVersion:document.identifier
+                                                                                              major:NO
+                                                                                             filter:operationContext.filterString
+                                                                                      relationships:operationContext.relationships
+                                                                                   includePolicyIds:operationContext.includePolicies
+                                                                                    renditionFilter:operationContext.renditionFilterString
+                                                                                         includeACL:operationContext.includeACLs
+                                                                            includeAllowableActions:operationContext.includeAllowableActions
+                                                                                    completionBlock:^(CMISObjectData *objectData, NSError *error) {
+        if (nil == objectData)
+        {
+            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+            completionBlock(nil, alfrescoError);
+        }
+        else
+        {
+            AlfrescoDocument *alfrescoDocument = (AlfrescoDocument *)[self.objectConverter nodeFromCMISObjectData:objectData];
+            completionBlock(alfrescoDocument, nil);
+        }
+    }];
+    return request;
 }
-
 
 - (AlfrescoRequest *)checkoutDocument:(AlfrescoDocument *)document
                       completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock

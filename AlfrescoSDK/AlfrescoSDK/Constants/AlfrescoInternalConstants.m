@@ -76,7 +76,7 @@ NSString * const kAlfrescoCommentId = @"{commentID}";
 NSString * const kAlfrescoRenditionId = @"{renditionID}";
 NSString * const kAlfrescoSkipCountRequest = @"{skipCount}";
 NSString * const kAlfrescoMaxItemsRequest = @"{maxItems}";
-NSString * const kAlfrescoOnNodeRefURL = @"workspace://SpacesStore/{nodeRef}";
+NSString * const kAlfrescoNodeRefURL = @"workspace://SpacesStore/{nodeRef}";
 NSString * const kAlfrescoNode = @"node";
 NSString * const kAlfrescoDefaultMimeType = @"application/octet-stream";
 NSString * const kAlfrescoAspects = @"aspects";
@@ -184,56 +184,62 @@ NSString * const kAlfrescoOnPremiseFavoriteFolders = @"org.alfresco.share.folder
 NSString * const kAlfrescoOnPremiseFavoriteDocumentsAPI = @"/people/{personID}/preferences?pf=org.alfresco.share.documents.favourites";
 NSString * const kAlfrescoOnPremiseFavoriteFoldersAPI = @"/people/{personID}/preferences?pf=org.alfresco.share.folders.favourites";
 /**
+ Public API constants
+ */
+NSString * const kAlfrescoPublicAPICMISPath = @"/api/-default-/public/cmis/versions/1.0/atom";
+NSString * const kAlfrescoPublicAPIPath  = @"/api/-default-/public/alfresco/versions/1/";
+NSString * const kAlfrescoDocumentLibrary =@"documentLibrary";
+NSString * const kAlfrescoPublicAPISite = @"sites";
+NSString * const kAlfrescoPublicAPISiteForPerson = @"people/{personID}/sites";
+NSString * const kAlfrescoPublicAPIFavoriteSiteForPerson = @"people/{personID}/favorite-sites";
+NSString * const kAlfrescoPublicAPISiteForShortname = @"sites/{siteID}";
+NSString * const kAlfrescoPublicAPISiteContainers = @"sites/{siteID}/containers";
+NSString * const kAlfrescoPublicAPIActivities = @"people/{personID}/activities";
+NSString * const kAlfrescoPublicAPIActivitiesForSite = @"people/{personID}/activities?siteId={siteID}";
+NSString * const kAlfrescoPublicAPIRatings = @"nodes/{nodeRef}/ratings";
+NSString * const kAlfrescoPublicAPILikesRatingScheme = @"node/{nodeRef}/ratings/likesRatingScheme";
+NSString * const kAlfrescoPublicAPIComments = @"nodes/{nodeRef}/comments";
+NSString * const kAlfrescoPublicAPICommentForNode = @"nodes/{nodeRef}/comments/{commentID}";
+NSString * const kAlfrescoPublicAPITags = @"tags";
+NSString * const kAlfrescoPublicAPITagsForNode = @"nodes/{nodeRef}/tags";
+NSString * const kAlfrescoPublicAPIPerson = @"people/{personID}";
+NSString * const kAlfrescoPublicAPIPersonSearch = @"people?filter={filter}";
+
+NSString * const kAlfrescoPublicAPIAddFavoriteSite = @"people/-me-/favorites";
+NSString * const kAlfrescoPublicAPIRemoveFavoriteSite = @"people/-me-/favorites/{siteGUID}";
+NSString * const kAlfrescoPublicAPIJoinSite = @"people/-me-/site-membership-requests";
+NSString * const kAlfrescoPublicAPICancelJoinRequests = @"people/-me-/site-membership-requests/{siteID}";
+NSString * const kAlfrescoPublicAPILeaveSite = @"sites/{siteID}/members/{personID}";
+NSString * const kAlfrescoPublicAPIPagingParameters = @"maxItems={maxItems}&skipCount={skipCount}";
+NSString * const kAlfrescoPublicAPISiteMembers = @"sites/{siteID}/members";
+
+NSString * const kAlfrescoPublicAPIFavoriteDocuments = @"people/{personID}/favorites?where=(EXISTS(target/file))";
+NSString * const kAlfrescoPublicAPIFavoriteFolders = @"people/{personID}/favorites?where=(EXISTS(target/folder))";
+NSString * const kAlfrescoPublicAPIFavoritesAll = @"people/{personID}/favorites?where=(EXISTS(target/file) OR EXISTS(target/folder))";
+NSString * const kAlfrescoPublicAPIFavorite = @"people/{personID}/favorites/{nodeRef}";
+NSString * const kAlfrescoPublicAPIAddFavorite = @"people/-me-/favorites";
+
+/**
  Cloud constants     
  */
 NSString * const kAlfrescoCloudURL = @"https://api.alfresco.com";
+NSString * const kAlfrescoCloudDefaultRedirectURI = @"http://www.alfresco.com/mobile-auth-callback.html";
 NSString * const kAlfrescoCloudCMISPath = @"/public/cmis/versions/1.0/atom";
 NSString * const kAlfrescoCloudAPIPath  = @"/public/alfresco/versions/1/";
-NSString * const kAlfrescoDocumentLibrary =@"documentLibrary";
 NSString * const kAlfrescoHomeNetworkType = @"homeNetwork";
-NSString * const kAlfrescoCloudSiteAPI = @"sites";
-NSString * const kAlfrescoCloudSiteForPersonAPI = @"people/{personID}/sites";
-NSString * const kAlfrescoCloudFavoriteSiteForPersonAPI = @"people/{personID}/favorite-sites";
-NSString * const kAlfrescoCloudSiteForShortnameAPI = @"sites/{siteID}";
-NSString * const kAlfrescoCloudSiteContainersAPI = @"sites/{siteID}/containers";
-NSString * const kAlfrescoCloudActivitiesAPI = @"people/{personID}/activities";
-NSString * const kAlfrescoCloudActivitiesForSiteAPI = @"people/{personID}/activities?siteId={siteID}";
-NSString * const kAlfrescoCloudRatingsAPI = @"nodes/{nodeRef}/ratings";
-NSString * const kAlfrescoCloudLikesRatingSchemeAPI = @"node/{nodeRef}/ratings/likesRatingScheme";
-NSString * const kAlfrescoCloudCommentsAPI = @"nodes/{nodeRef}/comments";
-NSString * const kAlfrescoCloudCommentForNodeAPI = @"nodes/{nodeRef}/comments/{commentID}";
-NSString * const kAlfrescoCloudTagsAPI = @"tags";
-NSString * const kAlfrescoCloudTagsForNodeAPI = @"nodes/{nodeRef}/tags";
-NSString * const kAlfrescoCloudPersonAPI = @"people/{personID}";
-NSString * const kAlfrescoCloudPersonSearchAPI = @"people?filter={filter}";
-NSString * const kAlfrescoCloudDefaultRedirectURI = @"http://www.alfresco.com/mobile-auth-callback.html";
-
-NSString * const kAlfrescoCloudAddFavoriteSiteAPI = @"people/-me-/favorites";
-NSString * const kAlfrescoCloudRemoveFavoriteSiteAPI = @"people/-me-/favorites/{siteGUID}";
-NSString * const kAlfrescoCloudJoinSiteAPI = @"people/-me-/site-membership-requests";
-NSString * const kAlfrescoCloudCancelJoinRequestsAPI = @"people/-me-/site-membership-requests/{siteID}";
-NSString * const kAlfrescoCloudLeaveSiteAPI = @"sites/{siteID}/members/{personID}";
-NSString * const kAlfrescoCloudPagingAPIParameters = @"maxItems={maxItems}&skipCount={skipCount}";
-NSString * const kAlfrescoCloudSiteMembersAPI = @"sites/{siteID}/members";
-
-NSString * const kAlfrescoCloudFavoriteDocumentsAPI = @"people/{personID}/favorites?where=(EXISTS(target/file))";
-NSString * const kAlfrescoCloudFavoriteFoldersAPI = @"people/{personID}/favorites?where=(EXISTS(target/folder))";
-NSString * const kAlfrescoCloudFavoritesAllAPI = @"people/{personID}/favorites?where=(EXISTS(target/file) OR EXISTS(target/folder))";
-NSString * const kAlfrescoCloudFavorite = @"people/{personID}/favorites/{nodeRef}";
-NSString * const kAlfrescoCloudAddFavoriteAPI = @"people/-me-/favorites";
 
 /**
  JSON Constants
  */
-NSString * const kAlfrescoCloudJSONList = @"list";
-NSString * const kAlfrescoCloudJSONPagination = @"pagination";
-NSString * const kAlfrescoCloudJSONCount = @"count";
-NSString * const kAlfrescoCloudJSONHasMoreItems = @"hasMoreItems";
-NSString * const kAlfrescoCloudJSONTotalItems = @"totalItems";
-NSString * const kAlfrescoCloudJSONSkipCount = @"skipCount";
-NSString * const kAlfrescoCloudJSONMaxItems = @"maxItems";
-NSString * const kAlfrescoCloudJSONEntries = @"entries";
-NSString * const kAlfrescoCloudJSONEntry = @"entry";
+NSString * const kAlfrescoPublicAPIJSONList = @"list";
+NSString * const kAlfrescoPublicAPIJSONPagination = @"pagination";
+NSString * const kAlfrescoPublicAPIJSONCount = @"count";
+NSString * const kAlfrescoPublicAPIJSONHasMoreItems = @"hasMoreItems";
+NSString * const kAlfrescoPublicAPIJSONTotalItems = @"totalItems";
+NSString * const kAlfrescoPublicAPIJSONSkipCount = @"skipCount";
+NSString * const kAlfrescoPublicAPIJSONMaxItems = @"maxItems";
+NSString * const kAlfrescoPublicAPIJSONEntries = @"entries";
+NSString * const kAlfrescoPublicAPIJSONEntry = @"entry";
 NSString * const kAlfrescoJSONIdentifier = @"id";
 NSString * const kAlfrescoJSONStatusCode = @"status.code";
 NSString * const kAlfrescoJSONActivityPostDate = @"postDate";
@@ -306,7 +312,7 @@ NSString * const kAlfrescoJSONAvatarId = @"avatarId";
 NSString * const kAlfrescoJSONAuthority = @"authority";
 
 NSString * const kAlfrescoJSONJobTitle = @"jobtitle";
-NSString * const kAlfrescoCloudJSONJobTitle = @"jobTitle";
+NSString * const kAlfrescoPublicAPIJSONJobTitle = @"jobTitle";
 NSString * const kAlfrescoJSONLocation = @"location";
 NSString * const kAlfrescoJSONPersonDescription = @"persondescription";
 NSString * const kAlfrescoJSONTelephoneNumber = @"telephone";

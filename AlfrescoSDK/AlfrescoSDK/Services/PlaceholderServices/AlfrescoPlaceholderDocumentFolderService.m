@@ -28,15 +28,15 @@
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
-    if ([session isKindOfClass:[AlfrescoRepositorySession class]])
+    if (session.repositoryInfo.capabilities.doesSupportPublicAPI)
     {
-        return (id)[[AlfrescoOnPremiseDocumentFolderService alloc] initWithSession:session];
+        if ([session isKindOfClass:[AlfrescoCloudSession class]])
+        {
+            return (id)[[AlfrescoCloudDocumentFolderService alloc] initWithSession:session];
+        }
+        return (id)[[AlfrescoPublicAPIDocumentFolderService alloc] initWithSession:session];
     }
-    if ([session isKindOfClass:[AlfrescoCloudSession class]])
-    {
-        return (id)[[AlfrescoCloudDocumentFolderService alloc] initWithSession:session];
-    }
-    return nil;
+    return (id)[[AlfrescoOnPremiseDocumentFolderService alloc] initWithSession:session];
 }
 
 @end

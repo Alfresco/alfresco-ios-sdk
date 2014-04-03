@@ -432,7 +432,7 @@
     AlfrescoCMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[AlfrescoCMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
 
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
-    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
+    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoPublicAPICMISPath];
     params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     params.authenticationProvider = passthroughAuthProvider;
 
@@ -589,7 +589,7 @@ This authentication method authorises the user to access the home network assign
     self.password = password;
     self.personIdentifier = emailAddress;
     
-    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
+    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoPublicAPICMISPath];
 
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     params.username = emailAddress;
@@ -741,7 +741,7 @@ This authentication method authorises the user to access the home network assign
         return nil;
     }
     
-    id listObject = [jsonDictionary valueForKey:kAlfrescoCloudJSONList];
+    id listObject = [jsonDictionary valueForKey:kAlfrescoPublicAPIJSONList];
     if (![listObject isKindOfClass:[NSDictionary class]])
     {
         if (nil == *outError)
@@ -756,7 +756,7 @@ This authentication method authorises the user to access the home network assign
         return nil;
     }
     
-    id entries = [listObject valueForKey:kAlfrescoCloudJSONEntries];
+    id entries = [listObject valueForKey:kAlfrescoPublicAPIJSONEntries];
     if (![entries isKindOfClass:[NSArray class]])
     {
         if (nil == *outError)
@@ -790,7 +790,7 @@ This authentication method authorises the user to access the home network assign
     
     for (NSDictionary *entryDict in entriesArray)
     {
-        NSDictionary *individualEntry = [entryDict valueForKey:kAlfrescoCloudJSONEntry];
+        NSDictionary *individualEntry = [entryDict valueForKey:kAlfrescoPublicAPIJSONEntry];
         [resultsArray addObject:[self networkFromJSON:individualEntry]];
     }
     return resultsArray;

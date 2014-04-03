@@ -26,15 +26,15 @@
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
-    if ([session isKindOfClass:[AlfrescoRepositorySession class]])
+    if (session.repositoryInfo.capabilities.doesSupportPublicAPI)
     {
-        return (id)[[AlfrescoOnPremiseTaggingService alloc] initWithSession:session];
+        if ([session isKindOfClass:[AlfrescoCloudSession class]])
+        {
+            return (id)[[AlfrescoCloudTaggingService alloc] initWithSession:session];
+        }
+        return (id)[[AlfrescoPublicAPITaggingService alloc] initWithSession:session];
     }
-    if ([session isKindOfClass:[AlfrescoCloudSession class]])
-    {
-        return (id)[[AlfrescoCloudTaggingService alloc] initWithSession:session];
-    }
-    return nil;
+    return (id)[[AlfrescoOnPremiseTaggingService alloc] initWithSession:session];
 }
 
 @end
