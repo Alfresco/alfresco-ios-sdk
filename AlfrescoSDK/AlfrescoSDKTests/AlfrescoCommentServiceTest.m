@@ -419,7 +419,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
             {
                 XCTAssertTrueWeakSelf([comment.content isEqualToString:content], @"comment should be %@, but received %@", content, comment.content);
                 XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName], @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
-                if (!weakSelf.isCloud)
+                if (!weakSelf.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
                 {
                     XCTAssertTrueWeakSelf([comment.title isEqualToString:title], @"comment title should be %@, but received %@", title, comment.title);
                 }
@@ -438,7 +438,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                         {
                             AlfrescoComment *retrievedComment = (AlfrescoComment *)array[0];
                             XCTAssertTrueWeakSelf([retrievedComment.content isEqualToString:content], @"comment should be %@, but received %@", content, retrievedComment.content);
-                            if (!weakSelf.isCloud)
+                            if (!weakSelf.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
                             {
                                 XCTAssertTrueWeakSelf([retrievedComment.title isEqualToString:title], @"comment title should be %@, but received %@", title, retrievedComment.title);
                             }
@@ -498,7 +498,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
             {
                 XCTAssertTrueWeakSelf([comment.content isEqualToString:content], @"comment should be %@, but received %@", content, comment.content);
                 XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName], @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
-                if (!weakSelf.isCloud)
+                if (!weakSelf.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
                 {
                     XCTAssertTrueWeakSelf([comment.title isEqualToString:title], @"comment title should be %@, but received %@", title, comment.title);
                 }
@@ -517,7 +517,7 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                         {
                             AlfrescoComment *retrievedComment = (AlfrescoComment *)array[0];
                             XCTAssertTrueWeakSelf([retrievedComment.content isEqualToString:content], @"comment should be %@, but received %@", content, retrievedComment.content);
-                            if (!weakSelf.isCloud)
+                            if (!weakSelf.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
                             {
                                 XCTAssertTrueWeakSelf([retrievedComment.title isEqualToString:title], @"comment title should be %@, but received %@", title, retrievedComment.title);
                             }
