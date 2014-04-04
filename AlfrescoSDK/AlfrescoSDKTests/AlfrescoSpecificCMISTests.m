@@ -504,8 +504,8 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     
     // test just aspects
     objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:nil aspects:@[kAlfrescoContentModelAspectTitled, kAlfrescoContentModelAspectAuthor] folder:NO];
-    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:titled,P:cm:author"],
-                  @"Expected objectTypeId to be cmis:document,P:cm:titled,P:cm:author but it was %@", objectTypeId);
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:author,P:cm:titled"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:author,P:cm:titled but it was %@", objectTypeId);
     
     // test aspect and type
     objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:kAlfrescoContentModelTypeFolder aspects:@[kAlfrescoContentModelAspectTitled] folder:NO];
@@ -540,10 +540,16 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:titled,P:cm:geographic"],
                   @"Expected objectTypeId to be cmis:document,P:cm:titled,P:cm:geographic but it was %@", objectTypeId);
     
+    properties[kAlfrescoContentModelPropertyManufacturer] = @"Canon";
+    properties[kAlfrescoContentModelPropertyArtist] = @"Leftfield";
+    objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties type:kAlfrescoContentModelTypeContent aspects:nil folder:NO];
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:exif:exif"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:exif:exif but it was %@", objectTypeId);
+    
     // test aspects being applied by their presence in the dictionary and given as a parameter
     objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties type:kAlfrescoContentModelTypeContent aspects:@[kAlfrescoContentModelAspectAuthor] folder:NO];
-    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:author,P:cm:titled,P:cm:geographic"],
-                  @"Expected objectTypeId to be cmis:document,P:cm:author,P:cm:titled,P:cm:geographic but it was %@", objectTypeId);
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:cm:author,P:exif:exif"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:cm:author,P:exif:exif but it was %@", objectTypeId);
     
     // test that we don't get duplicated aspects or system aspects
     objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties
@@ -553,8 +559,8 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                                                                         kAlfrescoContentModelAspectGeographic,
                                                                         kAlfrescoSystemModelAspectLocalized]
                                                                folder:NO];
-    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:titled,P:cm:author,P:cm:geographic"],
-                  @"Expected objectTypeId to be cmis:document,P:cm:titled,P:cm:author,P:cm:geographic but it was %@", objectTypeId);
+    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:cm:author,P:exif:exif"],
+                  @"Expected objectTypeId to be cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:cm:author,P:exif:exif but it was %@", objectTypeId);
 }
 
 #pragma mark Helper methods

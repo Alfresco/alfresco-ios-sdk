@@ -2898,11 +2898,15 @@
                  __block NSString *propertyObjectTestValue = @"version-download-test-updated.txt";
                  NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:8];
                  propDict[kCMISPropertyName] = propertyObjectTestValue;
-                 propDict[@"cm:description"] = @"updated description";
-                 propDict[@"cm:title"] = @"updated title";
-                 propDict[@"cm:author"] = @"updated author";
-                 propDict[@"cm:latitude"] = @(51.52255);
-                 propDict[@"cm:longitude"] = @(-0.71670);
+                 propDict[kAlfrescoContentModelPropertyDescription] = @"updated description";
+                 propDict[kAlfrescoContentModelPropertyTitle] = @"updated title";
+                 propDict[kAlfrescoContentModelPropertyAuthor] = @"updated author";
+                 propDict[kAlfrescoContentModelPropertyLatitude] = @(51.52255);
+                 propDict[kAlfrescoContentModelPropertyLongitude] = @(-0.71670);
+                 propDict[kAlfrescoContentModelPropertyManufacturer] = @"Canon";
+                 propDict[kAlfrescoContentModelPropertyModel] = @"1100D";
+                 propDict[kAlfrescoContentModelPropertyArtist] = @"Leftfield";
+                 propDict[kAlfrescoContentModelPropertyAlbum] = @"Leftism";
                  
                  [weakDfService updatePropertiesOfNode:self.testAlfrescoDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error)
                   {
@@ -2919,12 +2923,14 @@
                           XCTAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
                           XCTAssertTrue([updatedDocument.type isEqualToString:@"cm:content"], @"type should be cm:content, but is %@", updatedDocument.type);
                           
-                          // check all the expected aspects are there, should be at least 3
-                          XCTAssertTrue(updatedNode.aspects.count >= 3,
-                                        @"Expected updated node to have at least 3 aspects but there were %lu", (unsigned long)updatedNode.aspects.count);
+                          // check all the expected aspects are there, should be at least 5
+                          XCTAssertTrue(updatedNode.aspects.count >= 5,
+                                        @"Expected updated node to have at least 5 aspects but there were %lu", (unsigned long)updatedNode.aspects.count);
                           XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectTitled], @"Expected updated node to have the cm:titled aspect");
                           XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectAuthor], @"Expected updated node to have the cm:author aspect");
                           XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectGeographic], @"Expected updated node to have the cm:geopraphic aspect");
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectExif], @"Expected updated node to have the exif:exif aspect");
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectAudio], @"Expected updated node to have the audio:audio aspect");
                           
                           // check the updated properties
                           NSDictionary *updatedProps = updatedDocument.properties;
@@ -2941,6 +2947,15 @@
                           BOOL longitudeMatch = [[NSString stringWithFormat:@"%.2f", [updatedLongitude doubleValue]] isEqualToString:[NSString stringWithFormat:@"%.2f", -0.71670]];
                           XCTAssertTrue(latitudeMatch, @"Expected latitude to be 51.52255 but was %@", updatedLatitude);
                           XCTAssertTrue(longitudeMatch, @"Expected latitude to be -0.71670 but was %@", updatedLongitude);
+                          
+                          AlfrescoProperty *updatedManufacturer = updatedProps[kAlfrescoContentModelPropertyManufacturer];
+                          AlfrescoProperty *updatedModel = updatedProps[kAlfrescoContentModelPropertyModel];
+                          AlfrescoProperty *updatedArtist = updatedProps[kAlfrescoContentModelPropertyArtist];
+                          AlfrescoProperty *updatedAlbum = updatedProps[kAlfrescoContentModelPropertyAlbum];
+                          XCTAssertTrue([updatedManufacturer.value isEqualToString:@"Canon"], @"Expected manufacturer property to be Canon but was %@", updatedManufacturer.value);
+                          XCTAssertTrue([updatedModel.value isEqualToString:@"1100D"], @"Expected model property to be 1100D but was %@", updatedModel.value);
+                          XCTAssertTrue([updatedArtist.value isEqualToString:@"Leftfield"], @"Expected artist property to be Leftfield but was %@", updatedArtist.value);
+                          XCTAssertTrue([updatedAlbum.value isEqualToString:@"Leftism"], @"Expected album property to be Leftism but was %@", updatedAlbum.value);
                           
                           id propertyValue = [updatedDocument propertyValueWithName:kCMISPropertyName];
                           if ([propertyValue isKindOfClass:[NSString class]])

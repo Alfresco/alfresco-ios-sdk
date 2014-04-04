@@ -64,7 +64,8 @@
 
     // start the daisy chained methods to collect all the data required to build the initial caches
     AlfrescoLogDebug(@"Requesting member site data from delegate");
-    __block AlfrescoRequest *request = [self.delegate retrieveMemberSiteDataWithCompletionBlock:^(NSArray *memberData, NSError *error) {
+    AlfrescoRequest *request = [AlfrescoRequest new];
+    request = [self.delegate retrieveMemberSiteDataWithCompletionBlock:^(NSArray *memberData, NSError *error) {
         if (memberData != nil)
         {
             // store member site data
@@ -72,7 +73,7 @@
             
             // get favorite data
             AlfrescoLogDebug(@"Requesting favorite site data from delegate");
-            request = [self.delegate retrieveFavoriteSiteDataWithCompletionBlock:^(NSArray *favoriteData, NSError *error) {
+            AlfrescoRequest *favoritesRequest = [self.delegate retrieveFavoriteSiteDataWithCompletionBlock:^(NSArray *favoriteData, NSError *error) {
                 if (favoriteData != nil)
                 {
                     // store favorite site data
@@ -80,7 +81,7 @@
                     
                     // get pending data
                     AlfrescoLogDebug(@"Requesting pending site data from delegate");
-                    request = [self.delegate retrievePendingSiteDataWithCompletionBlock:^(NSArray *pendingData, NSError *error) {
+                    AlfrescoRequest *pendingRequest = [self.delegate retrievePendingSiteDataWithCompletionBlock:^(NSArray *pendingData, NSError *error) {
                         if (pendingData != nil)
                         {
                             // store the pending data
@@ -94,12 +95,16 @@
                             completionBlock(NO, error);
                         }
                     }];
+                    
+                    request.httpRequest = pendingRequest.httpRequest;
                 }
                 else
                 {
                     completionBlock(NO, error);
                 }
             }];
+            
+            request.httpRequest = favoritesRequest.httpRequest;
         }
         else
         {

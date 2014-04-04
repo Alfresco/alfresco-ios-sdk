@@ -405,6 +405,9 @@
                 NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
                 AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"text/plain"];
                 
+                // sleep for a couple of seconds before checking back in
+                [NSThread sleepForTimeInterval:2.0];
+                
                 [self.versionService checkinDocument:checkedOutDocument asMajorVersion:NO contentFile:updatedContentFile
                                           properties:nil comment:versionComment completionBlock:^(AlfrescoDocument *checkedInDocument, NSError *checkinError) {
                                               if (checkedInDocument == nil)

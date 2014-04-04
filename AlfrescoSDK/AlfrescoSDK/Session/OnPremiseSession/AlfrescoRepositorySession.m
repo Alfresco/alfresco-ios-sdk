@@ -244,7 +244,7 @@
         publicAPIparams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
     }
 
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [CMISSession arrayOfRepositories:v3params completionBlock:^(NSArray *repositories, NSError *error) {
         if (nil == repositories)
         {

@@ -74,7 +74,7 @@
     [AlfrescoErrors assertArgumentNotNil:renditionName argumentName:@"renditionName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
     operationContext.renditionFilterString = @"*";
     request.httpRequest = [self.cmisSession retrieveObject:node.identifier operationContext:operationContext completionBlock:^(CMISObject *cmisObject, NSError *error) {
@@ -153,7 +153,7 @@
     [AlfrescoErrors assertArgumentNotNil:outputStream argumentName:@"outputStream"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
     operationContext.renditionFilterString = @"*";
     request.httpRequest = [self.cmisSession retrieveObject:node.identifier operationContext:operationContext completionBlock:^(CMISObject *cmisObject, NSError *error) {

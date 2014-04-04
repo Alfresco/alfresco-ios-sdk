@@ -135,6 +135,8 @@ extern NSString * const kAlfrescoContentModelTypeFolder;
 extern NSString * const kAlfrescoContentModelAspectTitled;
 extern NSString * const kAlfrescoContentModelAspectAuthor;
 extern NSString * const kAlfrescoContentModelAspectGeographic;
+extern NSString * const kAlfrescoContentModelAspectExif;
+extern NSString * const kAlfrescoContentModelAspectAudio;
 
 extern NSString * const kAlfrescoContentModelPropertyName;
 extern NSString * const kAlfrescoContentModelPropertyTitle;
@@ -142,6 +144,32 @@ extern NSString * const kAlfrescoContentModelPropertyDescription;
 extern NSString * const kAlfrescoContentModelPropertyAuthor;
 extern NSString * const kAlfrescoContentModelPropertyLatitude;
 extern NSString * const kAlfrescoContentModelPropertyLongitude;
+extern NSString * const kAlfrescoContentModelPropertyDateTimeOriginal;
+extern NSString * const kAlfrescoContentModelPropertyPixelXDimension;
+extern NSString * const kAlfrescoContentModelPropertyPixelYDimension;
+extern NSString * const kAlfrescoContentModelPropertyExposureTime;
+extern NSString * const kAlfrescoContentModelPropertyFNumber;
+extern NSString * const kAlfrescoContentModelPropertyFlash;
+extern NSString * const kAlfrescoContentModelPropertyFocalLength;
+extern NSString * const kAlfrescoContentModelPropertyISOSpeedRating;
+extern NSString * const kAlfrescoContentModelPropertyManufacturer;
+extern NSString * const kAlfrescoContentModelPropertyModel;
+extern NSString * const kAlfrescoContentModelPropertySoftware;
+extern NSString * const kAlfrescoContentModelPropertyOrientation;
+extern NSString * const kAlfrescoContentModelPropertyXResolution;
+extern NSString * const kAlfrescoContentModelPropertyYResolution;
+extern NSString * const kAlfrescoContentModelPropertyResolutionUnit;
+extern NSString * const kAlfrescoContentModelPropertyAlbum;
+extern NSString * const kAlfrescoContentModelPropertyArtist;
+extern NSString * const kAlfrescoContentModelPropertyComposer;
+extern NSString * const kAlfrescoContentModelPropertyEngineer;
+extern NSString * const kAlfrescoContentModelPropertyGenre;
+extern NSString * const kAlfrescoContentModelPropertyTrackNumber;
+extern NSString * const kAlfrescoContentModelPropertyReleaseDate;
+extern NSString * const kAlfrescoContentModelPropertySampleRate;
+extern NSString * const kAlfrescoContentModelPropertySampleType;
+extern NSString * const kAlfrescoContentModelPropertyChannelType;
+extern NSString * const kAlfrescoContentModelPropertyCompressor;
 
 /**---------------------------------------------------------------------------------------
  * @name Workflow Constants
