@@ -1240,9 +1240,9 @@
     
     // make sure the cm:titled aspect is always applied
     NSMutableArray *modifiedAspects = [NSMutableArray arrayWithArray:aspects];
-    if (![modifiedAspects containsObject:kAlfrescoContentModelAspectTitled])
+    if (![modifiedAspects containsObject:kAlfrescoModelAspectTitled])
     {
-        [modifiedAspects addObject:kAlfrescoContentModelAspectTitled];
+        [modifiedAspects addObject:kAlfrescoModelAspectTitled];
     }
     
     // prepare the objectTypeId
