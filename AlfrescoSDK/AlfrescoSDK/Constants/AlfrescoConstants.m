@@ -83,19 +83,47 @@ NSString * const kAlfrescoCMISBindingURL = @"org.alfresco.mobile.session.cmisbin
 /**
  Model Constants
  */
-NSString * const kAlfrescoContentModelTypeContent = @"cm:content";
-NSString * const kAlfrescoContentModelTypeFolder = @"cm:folder";
+NSString * const kAlfrescoModelTypeContent = @"cm:content";
+NSString * const kAlfrescoModelTypeFolder = @"cm:folder";
 
-NSString * const kAlfrescoContentModelAspectTitled = @"cm:titled";
-NSString * const kAlfrescoContentModelAspectAuthor = @"cm:author";
-NSString * const kAlfrescoContentModelAspectGeographic = @"cm:geographic";
+NSString * const kAlfrescoModelAspectTitled = @"cm:titled";
+NSString * const kAlfrescoModelAspectAuthor = @"cm:author";
+NSString * const kAlfrescoModelAspectGeographic = @"cm:geographic";
+NSString * const kAlfrescoModelAspectExif = @"exif:exif";
+NSString * const kAlfrescoModelAspectAudio = @"audio:audio";
 
-NSString * const kAlfrescoContentModelPropertyName = @"cm:name";
-NSString * const kAlfrescoContentModelPropertyTitle = @"cm:title";
-NSString * const kAlfrescoContentModelPropertyDescription = @"cm:description";
-NSString * const kAlfrescoContentModelPropertyAuthor = @"cm:author";
-NSString * const kAlfrescoContentModelPropertyLatitude = @"cm:latitude";
-NSString * const kAlfrescoContentModelPropertyLongitude = @"cm:longitude";
+NSString * const kAlfrescoModelPropertyName = @"cm:name";
+NSString * const kAlfrescoModelPropertyTitle = @"cm:title";
+NSString * const kAlfrescoModelPropertyDescription = @"cm:description";
+NSString * const kAlfrescoModelPropertyAuthor = @"cm:author";
+NSString * const kAlfrescoModelPropertyLatitude = @"cm:latitude";
+NSString * const kAlfrescoModelPropertyLongitude = @"cm:longitude";
+NSString * const kAlfrescoModelPropertyExifDateTimeOriginal = @"exif:dateTimeOriginal";
+NSString * const kAlfrescoModelPropertyExifPixelXDimension = @"exif:pixelXDimension";
+NSString * const kAlfrescoModelPropertyExifPixelYDimension = @"exif:pixelYDimension";
+NSString * const kAlfrescoModelPropertyExifExposureTime = @"exif:exposureTime";
+NSString * const kAlfrescoModelPropertyExifFNumber = @"exif:fNumber";
+NSString * const kAlfrescoModelPropertyExifFlash = @"exif:flash";
+NSString * const kAlfrescoModelPropertyExifFocalLength = @"exif:focalLength";
+NSString * const kAlfrescoModelPropertyExifISOSpeedRating = @"exif:isoSpeedRatings";
+NSString * const kAlfrescoModelPropertyExifManufacturer = @"exif:manufacturer";
+NSString * const kAlfrescoModelPropertyExifModel = @"exif:model";
+NSString * const kAlfrescoModelPropertyExifSoftware = @"exif:software";
+NSString * const kAlfrescoModelPropertyExifOrientation = @"exif:orientation";
+NSString * const kAlfrescoModelPropertyExifXResolution = @"exif:xResolution";
+NSString * const kAlfrescoModelPropertyExifYResolution = @"exif:yResolution";
+NSString * const kAlfrescoModelPropertyExifResolutionUnit = @"exif:resolutionUnit";
+NSString * const kAlfrescoModelPropertyAudioAlbum = @"audio:album";
+NSString * const kAlfrescoModelPropertyAudioArtist = @"audio:artist";
+NSString * const kAlfrescoModelPropertyAudioComposer = @"audio:composer";
+NSString * const kAlfrescoModelPropertyAudioEngineer = @"audio:engineer";
+NSString * const kAlfrescoModelPropertyAudioGenre = @"audio:genre";
+NSString * const kAlfrescoModelPropertyAudioTrackNumber = @"audio:trackNumber";
+NSString * const kAlfrescoModelPropertyAudioReleaseDate = @"audio:releaseDate";
+NSString * const kAlfrescoModelPropertyAudioSampleRate = @"audio:sampleRate";
+NSString * const kAlfrescoModelPropertyAudioSampleType = @"audio:sampleType";
+NSString * const kAlfrescoModelPropertyAudioChannelType = @"audio:channelType";
+NSString * const kAlfrescoModelPropertyAudioCompressor = @"audio:compressor";
 
 /**
  Workflow Task Constants

@@ -98,13 +98,13 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
         self.modifiedAt = [properties valueForKey:kCMISPropertyModificationDate];
     }
     
-    if ([[properties allKeys] containsObject:kAlfrescoContentModelPropertyTitle])
+    if ([[properties allKeys] containsObject:kAlfrescoModelPropertyTitle])
     {
-        self.title = [properties valueForKey:kAlfrescoContentModelPropertyTitle];
+        self.title = [properties valueForKey:kAlfrescoModelPropertyTitle];
     }
-    if ([[properties allKeys] containsObject:kAlfrescoContentModelPropertyDescription])
+    if ([[properties allKeys] containsObject:kAlfrescoModelPropertyDescription])
     {
-        self.summary = [properties valueForKey:kAlfrescoContentModelPropertyDescription];
+        self.summary = [properties valueForKey:kAlfrescoModelPropertyDescription];
     }
     if ([[properties allKeys] containsObject:kAlfrescoNodeAspects])
     {
@@ -121,8 +121,8 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
     [aCoder encodeInteger:kNodeModelVersion forKey:NSStringFromClass([self class])];
     [aCoder encodeObject:self.identifier forKey:kCMISPropertyObjectId];
     [aCoder encodeObject:self.name forKey:kCMISPropertyName];
-    [aCoder encodeObject:self.title forKey:kAlfrescoContentModelPropertyTitle];
-    [aCoder encodeObject:self.summary forKey:kAlfrescoContentModelPropertyDescription];
+    [aCoder encodeObject:self.title forKey:kAlfrescoModelPropertyTitle];
+    [aCoder encodeObject:self.summary forKey:kAlfrescoModelPropertyDescription];
     [aCoder encodeObject:self.type forKey:kCMISPropertyObjectTypeId];
     [aCoder encodeObject:self.createdAt forKey:kCMISPropertyCreationDate];
     [aCoder encodeObject:self.createdBy forKey:kCMISPropertyCreatedBy];
@@ -141,8 +141,8 @@ NSString * const kAlfrescoPermissionsObjectKey = @"AlfrescoPermissionsObjectKey"
 //        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
         self.identifier = [aDecoder decodeObjectForKey:kCMISPropertyObjectId];
         self.name = [aDecoder decodeObjectForKey:kCMISPropertyName];
-        self.title = [aDecoder decodeObjectForKey:kAlfrescoContentModelPropertyTitle];
-        self.summary = [aDecoder decodeObjectForKey:kAlfrescoContentModelPropertyDescription];
+        self.title = [aDecoder decodeObjectForKey:kAlfrescoModelPropertyTitle];
+        self.summary = [aDecoder decodeObjectForKey:kAlfrescoModelPropertyDescription];
         self.type = [aDecoder decodeObjectForKey:kCMISPropertyObjectTypeId];
         self.createdAt = [aDecoder decodeObjectForKey:kCMISPropertyCreationDate];
         self.createdBy = [aDecoder decodeObjectForKey:kCMISPropertyCreatedBy];

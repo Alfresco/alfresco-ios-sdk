@@ -70,7 +70,7 @@
     }
     if (![objectType isEqualToString:emptyString])
     {
-        NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueFolder withString:kAlfrescoContentModelTypeFolder];
+        NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueFolder withString:kAlfrescoModelTypeFolder];
         [properties setValue:[AlfrescoCMISToAlfrescoObjectConverter propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
@@ -113,7 +113,7 @@
     }
     if (![objectType isEqualToString:emptyString])
     {
-        NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueDocument withString:kAlfrescoContentModelTypeContent];
+        NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueDocument withString:kAlfrescoModelTypeContent];
         [properties setValue:[AlfrescoCMISToAlfrescoObjectConverter propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
@@ -186,15 +186,15 @@
                 NSString *correctedString = [AlfrescoCMISToAlfrescoObjectConverter propertyValueWithoutPrecursor:type];
                 [strippedAspectTypes addObject:correctedString];
             }
-            NSString *title = [folder.properties propertyValueForId:kAlfrescoContentModelPropertyTitle];
+            NSString *title = [folder.properties propertyValueForId:kAlfrescoModelPropertyTitle];
             if (![title isEqualToString:@"(null)"])
             {
-                [propertyDictionary setValue:title forKey:kAlfrescoContentModelPropertyTitle];
+                [propertyDictionary setValue:title forKey:kAlfrescoModelPropertyTitle];
             }
-            NSString *description = [folder.properties propertyValueForId:kAlfrescoContentModelPropertyDescription];
+            NSString *description = [folder.properties propertyValueForId:kAlfrescoModelPropertyDescription];
             if (![description isEqualToString:@"(null)"])
             {
-                [propertyDictionary setValue:description forKey:kAlfrescoContentModelPropertyDescription];
+                [propertyDictionary setValue:description forKey:kAlfrescoModelPropertyDescription];
             }
             [propertyDictionary setValue:strippedAspectTypes forKey:kAlfrescoNodeAspects];
         }
@@ -212,15 +212,15 @@
                 NSString *correctedString = [AlfrescoCMISToAlfrescoObjectConverter propertyValueWithoutPrecursor:type];
                 [strippedAspectTypes addObject:correctedString];
             }
-            NSString *title = [document.properties propertyValueForId:kAlfrescoContentModelPropertyTitle];
+            NSString *title = [document.properties propertyValueForId:kAlfrescoModelPropertyTitle];
             if (![title isEqualToString:@"(null)"])
             {
-                [propertyDictionary setValue:title forKey:kAlfrescoContentModelPropertyTitle];
+                [propertyDictionary setValue:title forKey:kAlfrescoModelPropertyTitle];
             }
-            NSString *description = [document.properties propertyValueForId:kAlfrescoContentModelPropertyDescription];
+            NSString *description = [document.properties propertyValueForId:kAlfrescoModelPropertyDescription];
             if (![description isEqualToString:@"(null)"])
             {
-                [propertyDictionary setValue:description forKey:kAlfrescoContentModelPropertyDescription];
+                [propertyDictionary setValue:description forKey:kAlfrescoModelPropertyDescription];
             }
             
             [propertyDictionary setValue:strippedAspectTypes forKey:kAlfrescoNodeAspects];

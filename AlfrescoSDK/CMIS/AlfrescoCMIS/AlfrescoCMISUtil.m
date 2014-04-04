@@ -41,6 +41,53 @@
 
 @implementation AlfrescoCMISUtil
 
+static NSSet *titledAspectProperties;
+static NSSet *geographicAspectProperties;
+static NSSet *exifAspectProperties;
+static NSSet *audioAspectProperties;
+
++ (void)initialize
+{
+    // initialise all the aspect sets
+    if (self == [AlfrescoCMISUtil class])
+    {
+        // unfortunately there isn't a literal syntax for creating NSSet, yet!
+        titledAspectProperties = [[NSSet alloc] initWithObjects:kAlfrescoModelPropertyTitle,
+                                  kAlfrescoModelPropertyDescription, nil];
+        
+        geographicAspectProperties = [[NSSet alloc] initWithObjects:kAlfrescoModelPropertyLatitude,
+                                  kAlfrescoModelPropertyLongitude, nil];
+        
+        exifAspectProperties = [[NSSet alloc] initWithObjects:kAlfrescoModelPropertyExifDateTimeOriginal,
+                                kAlfrescoModelPropertyExifPixelXDimension,
+                                kAlfrescoModelPropertyExifPixelYDimension,
+                                kAlfrescoModelPropertyExifExposureTime,
+                                kAlfrescoModelPropertyExifFNumber,
+                                kAlfrescoModelPropertyExifFlash,
+                                kAlfrescoModelPropertyExifFocalLength,
+                                kAlfrescoModelPropertyExifISOSpeedRating,
+                                kAlfrescoModelPropertyExifManufacturer,
+                                kAlfrescoModelPropertyExifModel,
+                                kAlfrescoModelPropertyExifSoftware,
+                                kAlfrescoModelPropertyExifOrientation,
+                                kAlfrescoModelPropertyExifXResolution,
+                                kAlfrescoModelPropertyExifYResolution,
+                                kAlfrescoModelPropertyExifResolutionUnit, nil];
+        
+        audioAspectProperties = [[NSSet alloc] initWithObjects:kAlfrescoModelPropertyAudioAlbum,
+                                 kAlfrescoModelPropertyAudioArtist,
+                                 kAlfrescoModelPropertyAudioComposer,
+                                 kAlfrescoModelPropertyAudioEngineer,
+                                 kAlfrescoModelPropertyAudioGenre,
+                                 kAlfrescoModelPropertyAudioTrackNumber,
+                                 kAlfrescoModelPropertyAudioReleaseDate,
+                                 kAlfrescoModelPropertyAudioSampleRate,
+                                 kAlfrescoModelPropertyAudioSampleType,
+                                 kAlfrescoModelPropertyAudioChannelType,
+                                 kAlfrescoModelPropertyAudioCompressor, nil];
+     }
+}
+
 + (NSMutableArray *)processExtensionElementsForObject:(CMISObject *)cmisObject
 {
     NSArray *alfrescoExtensions = [cmisObject extensionsForExtensionLevel:CMISExtensionLevelProperties];
@@ -191,11 +238,11 @@
     if (type != nil)
     {
         // first check whether it's one of the base Alfresco types
-        if ([type isEqualToString:kAlfrescoContentModelTypeContent])
+        if ([type isEqualToString:kAlfrescoModelTypeContent])
         {
             cmisTypeId = kCMISPropertyObjectTypeIdValueDocument;
         }
-        else if ([type isEqualToString:kAlfrescoContentModelTypeFolder])
+        else if ([type isEqualToString:kAlfrescoModelTypeFolder])
         {
             cmisTypeId = kCMISPropertyObjectTypeIdValueFolder;
         }
@@ -232,13 +279,13 @@
         else
         {
             // swap any use of the Alfresco base types with the CMIS equivalent
-            if ([providedObjectTypeId rangeOfString:kAlfrescoContentModelTypeFolder].location != NSNotFound)
+            if ([providedObjectTypeId rangeOfString:kAlfrescoModelTypeFolder].location != NSNotFound)
             {
-                cmisTypeId = [providedObjectTypeId stringByReplacingOccurrencesOfString:kAlfrescoContentModelTypeFolder withString:kCMISPropertyObjectTypeIdValueFolder];
+                cmisTypeId = [providedObjectTypeId stringByReplacingOccurrencesOfString:kAlfrescoModelTypeFolder withString:kCMISPropertyObjectTypeIdValueFolder];
             }
-            else if ([providedObjectTypeId rangeOfString:kAlfrescoContentModelTypeContent].location != NSNotFound)
+            else if ([providedObjectTypeId rangeOfString:kAlfrescoModelTypeContent].location != NSNotFound)
             {
-                cmisTypeId = [providedObjectTypeId stringByReplacingOccurrencesOfString:kAlfrescoContentModelTypeContent withString:kCMISPropertyObjectTypeIdValueDocument];
+                cmisTypeId = [providedObjectTypeId stringByReplacingOccurrencesOfString:kAlfrescoModelTypeContent withString:kCMISPropertyObjectTypeIdValueDocument];
             }
             else
             {
@@ -252,46 +299,44 @@
     NSMutableString *objectTypeId = [NSMutableString stringWithString:cmisTypeId];
     
     // process aspects
-    NSMutableArray *aspectsToAdd = [NSMutableArray arrayWithArray:aspects];
+    NSMutableSet *aspectsSet = [NSMutableSet setWithArray:aspects];
     
     // go through the properties looking for well known aspect properties
-    // whilst the list is small look for them individually, once the list is longer we'll loop
     if (alfrescoProperties != nil)
     {
-        // titled aspect
-        if (alfrescoProperties[kAlfrescoContentModelPropertyTitle] != nil ||
-            alfrescoProperties[kAlfrescoContentModelPropertyDescription] != nil)
-        {
-            if (![aspectsToAdd containsObject:kAlfrescoContentModelAspectTitled])
+        [alfrescoProperties enumerateKeysAndObjectsUsingBlock:^(NSString *propertyName, id propertyValue, BOOL *stop) {
+            // check for author property
+            if ([propertyName isEqualToString:kAlfrescoModelPropertyAuthor])
             {
-                [aspectsToAdd addObject:kAlfrescoContentModelAspectTitled];
+                [aspectsSet addObject:kAlfrescoModelAspectAuthor];
             }
-        }
-        
-        // author aspect
-        if (alfrescoProperties[kAlfrescoContentModelPropertyAuthor] != nil)
-        {
-            if (![aspectsToAdd containsObject:kAlfrescoContentModelAspectAuthor])
+            else
             {
-                [aspectsToAdd addObject:kAlfrescoContentModelAspectAuthor];
+                // check the aspect sets, if the property is found, add the corresponding aspect to the list
+                if ([titledAspectProperties containsObject:propertyName])
+                {
+                    [aspectsSet addObject:kAlfrescoModelAspectTitled];
+                }
+                else if ([exifAspectProperties containsObject:propertyName])
+                {
+                    [aspectsSet addObject:kAlfrescoModelAspectExif];
+                }
+                else if ([geographicAspectProperties containsObject:propertyName])
+                {
+                    [aspectsSet addObject:kAlfrescoModelAspectGeographic];
+                }
+                else if ([audioAspectProperties containsObject:propertyName])
+                {
+                    [aspectsSet addObject:kAlfrescoModelAspectAudio];
+                }
             }
-        }
-        
-        // geogrpahic aspect
-        if (alfrescoProperties[kAlfrescoContentModelPropertyLatitude] != nil ||
-            alfrescoProperties[kAlfrescoContentModelPropertyLongitude] != nil)
-        {
-            if (![aspectsToAdd containsObject:kAlfrescoContentModelAspectGeographic])
-            {
-                [aspectsToAdd addObject:kAlfrescoContentModelAspectGeographic];
-            }
-        }
+        }];
     }
     
     // append aspects, if required
-    if (aspectsToAdd.count > 0)
+    if (aspectsSet.count > 0)
     {
-        [aspectsToAdd enumerateObjectsUsingBlock:^(NSString *aspect, NSUInteger index, BOOL *stop){
+        [aspectsSet enumerateObjectsUsingBlock:^(NSString *aspect, BOOL *stop){
             // ignore any system aspects
             if (![aspect hasPrefix:kAlfrescoSystemModelPrefix])
             {
@@ -314,11 +359,11 @@
 {
     // swap the cm:name for cmis:name, if present
     NSMutableDictionary *cmisProperties = [NSMutableDictionary dictionaryWithDictionary:alfrescoProperties];
-    if ([[alfrescoProperties allKeys] containsObject:kAlfrescoContentModelPropertyName])
+    if ([[alfrescoProperties allKeys] containsObject:kAlfrescoModelPropertyName])
     {
-        NSString *name = [alfrescoProperties valueForKey:kAlfrescoContentModelPropertyName];
+        NSString *name = [alfrescoProperties valueForKey:kAlfrescoModelPropertyName];
         [cmisProperties setValue:name forKey:kCMISPropertyName];
-        [cmisProperties removeObjectForKey:kAlfrescoContentModelPropertyName];
+        [cmisProperties removeObjectForKey:kAlfrescoModelPropertyName];
     }
     
     // make sure there is a cmis:name property present

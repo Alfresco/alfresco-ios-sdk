@@ -387,7 +387,8 @@
     self.baseUrl = [NSURL URLWithString:baseURL];
     self.baseURLWithoutNetwork = [self.baseUrl copy];
     _oauthData = oauthData; ///setting oauthData only via instance variable. The setter method recreates a CMIS session and this shouldn't be used here.
-    __block AlfrescoRequest *request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
+    AlfrescoRequest *request = [AlfrescoRequest new];
+    request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
         if (nil == networks)
         {
             completionBlock(nil, error);
@@ -402,9 +403,10 @@
             }
             else
             {
-                request = [self authenticateWithOAuthData:oauthData
-                                                  network:networkToConnectIdentifier
-                                          completionBlock:completionBlock];
+                AlfrescoRequest *authRequest = [self authenticateWithOAuthData:oauthData
+                                                                       network:networkToConnectIdentifier
+                                                               completionBlock:completionBlock];
+                request.httpRequest = authRequest.httpRequest;
             }
         }
     }];
@@ -542,7 +544,8 @@ This authentication method authorises the user to access the home network assign
     self.emailAddress = emailAddress;
     self.password = password;
     self.personIdentifier = emailAddress;
-    __block AlfrescoRequest *request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
+    AlfrescoRequest *request = [AlfrescoRequest new];
+    request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
         if (nil == networks)
         {
             completionBlock(nil, error);
@@ -557,10 +560,11 @@ This authentication method authorises the user to access the home network assign
             }
             else
             {
-                request = [self authenticateWithEmailAddress:emailAddress
-                                                    password:password
-                                                     network:homeNetwork.identifier
-                                             completionBlock:completionBlock];
+                AlfrescoRequest *authRequest = [self authenticateWithEmailAddress:emailAddress
+                                                                         password:password
+                                                                          network:homeNetwork.identifier
+                                                                  completionBlock:completionBlock];
+                request.httpRequest = authRequest.httpRequest;
             }
         }
     }];

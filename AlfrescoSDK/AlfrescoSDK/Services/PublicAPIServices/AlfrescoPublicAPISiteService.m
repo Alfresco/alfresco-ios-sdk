@@ -97,14 +97,15 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    __block AlfrescoRequest *request = nil;
+    AlfrescoRequest *request = nil;
     if (!self.siteCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
         request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
-                request = [weakSelf fetchAllSitesWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:completionBlock];
+                AlfrescoRequest *fetchRequest = [weakSelf fetchAllSitesWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:completionBlock];
+                request.httpRequest = fetchRequest.httpRequest;
             }
             else
             {
@@ -226,7 +227,7 @@
     [AlfrescoErrors assertArgumentNotNil:siteShortName argumentName:@"siteShortName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __block AlfrescoRequest *request = nil;
+    AlfrescoRequest *request = nil;
     if (!self.siteCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
@@ -242,7 +243,7 @@
                 else
                 {
                     // site not cached yet, retrieve it
-                    request = [weakSelf retrieveDataForSiteWithShortName:siteShortName completionBlock:^(AlfrescoSite *site, NSError *error) {
+                    AlfrescoRequest *retrieveRequest = [weakSelf retrieveDataForSiteWithShortName:siteShortName completionBlock:^(AlfrescoSite *site, NSError *error) {
                         if (site != nil)
                         {
                             // cache the retrieved site
@@ -254,6 +255,8 @@
                             completionBlock(nil, error);
                         }
                     }];
+                    
+                    request.httpRequest = retrieveRequest.httpRequest;
                 }
             }
             else
@@ -300,7 +303,7 @@
     
     NSString *requestString = [kAlfrescoPublicAPISiteContainers stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:siteShortName];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     __weak typeof(self) weakSelf = self;
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
@@ -339,7 +342,7 @@
                 else
                 {
                     AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:weakSelf.session];
-                    request = [docService retrieveNodeWithIdentifier:folderId completionBlock:^(AlfrescoNode *node, NSError *nodeError){
+                    AlfrescoRequest *retrieveRequest = [docService retrieveNodeWithIdentifier:folderId completionBlock:^(AlfrescoNode *node, NSError *nodeError){
                         if (nil == node)
                         {
                             completionBlock(nil, nodeError);
@@ -350,6 +353,7 @@
                         }
                     }];
                     
+                    request.httpRequest = retrieveRequest.httpRequest;
                 }
                 
             }
@@ -1131,7 +1135,7 @@
 - (AlfrescoRequest *)fetchAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
                                      completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    __block AlfrescoRequest *request = nil;
+    AlfrescoRequest *request = nil;
     __weak typeof(self) weakSelf = self;
     
     // define completion block to fetch the sites
@@ -1183,7 +1187,8 @@
         request = [self fetchSitesRootFolderWithCompletionBlock:^(AlfrescoFolder *sitesFolder, NSError *error) {
             if (sitesFolder != nil)
             {
-                request = fetchSites(sitesFolder);
+                AlfrescoRequest *fetchRequest = fetchSites(sitesFolder);
+                request.httpRequest = fetchRequest.httpRequest;
             }
             else
             {

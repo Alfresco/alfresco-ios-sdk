@@ -349,7 +349,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
     
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request = [self retrieveTasksForProcess:process completionBlock:^(NSArray *array, NSError *error) {
         if (error)
         {
@@ -358,7 +358,8 @@
         else
         {
             AlfrescoWorkflowTask *firstTask = array[0];
-            request = [self retrieveAttachmentsForTask:firstTask completionBlock:completionBlock];
+            AlfrescoRequest *retrieveRequest = [self retrieveAttachmentsForTask:firstTask completionBlock:completionBlock];
+            request.httpRequest = retrieveRequest.httpRequest;
         }
     }];
     return request;
@@ -469,7 +470,7 @@
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyAPIWorkflowTaskAttachments];
     
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:containerRequestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *attachmentRefError) {
         if (!data)
         {
@@ -642,7 +643,7 @@
     };
     
     // assignees
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     if (assignees)
     {
         [self retrieveNodeRefIdentifiersForPeople:assignees completionBlock:^(NSArray *personNodeRefs, NSError *error) {
@@ -789,7 +790,7 @@
         return nil;
     }
     
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {

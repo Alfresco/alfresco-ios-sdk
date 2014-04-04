@@ -395,6 +395,8 @@
     
 
 /** Updates a document with the contents of a local file.
+ Versioning is not guaranteed with this method, if the document is versioned on the server the update will generate
+ a new minor version. If a new version is required use the checkout and checkin methods in AlfrescoVersionService.
  
  @param document The document that needs to be updated.
  @param contentFile The Alfresco Content File to be updated.
@@ -407,7 +409,9 @@
                              completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                                progressBlock:(AlfrescoProgressBlock)progressBlock;
 
-/** Updates a document with the contents of a local file.
+/** Updates a document with the contents of a local stream.
+ Versioning is not guaranteed with this method, if the document is versioned on the server the update will generate
+ a new minor version. If a new version is required use the checkout and checkin methods in AlfrescoVersionService.
  
  @param document The document that needs to be updated.
  @param contentStream An instance of AlfrescoContent stream to be used for data access.
@@ -422,6 +426,8 @@
 
 
 /** Updates the properties of a specific node.
+ Versioning is not guaranteed with this method, if the repository is configured to version on property changes the update will generate
+ a new minor version. If a new version is required use the checkout and checkin methods in AlfrescoVersionService.
  
  @param node The node that needs to be updated.
  @param properties The properties that need to be updated for the given node.

@@ -104,14 +104,15 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    __block AlfrescoRequest *request = nil;
+    AlfrescoRequest *request = nil;
     if (!self.siteCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
         request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
-                request = [weakSelf fetchAllSitesWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:completionBlock];
+                AlfrescoRequest *fetchRequest = [weakSelf fetchAllSitesWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:completionBlock];
+                request.httpRequest = fetchRequest.httpRequest;
             }
             else
             {
@@ -234,7 +235,7 @@
     [AlfrescoErrors assertArgumentNotNil:siteShortName argumentName:@"siteShortName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    __block AlfrescoRequest *request = nil;
+    AlfrescoRequest *request = nil;
     if (!self.siteCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
@@ -250,7 +251,7 @@
                 else
                 {
                     // site not cached yet, retrieve it
-                    request = [weakSelf retrieveDataForSiteWithShortName:siteShortName completionBlock:^(AlfrescoSite *site, NSError *error) {
+                    AlfrescoRequest *retrieveRequest = [weakSelf retrieveDataForSiteWithShortName:siteShortName completionBlock:^(AlfrescoSite *site, NSError *error) {
                         if (site != nil)
                         {
                             // cache the retrieved site
@@ -262,6 +263,8 @@
                             completionBlock(nil, error);
                         }
                     }];
+                    
+                    request.httpRequest = retrieveRequest.httpRequest;
                 }
             }
             else
@@ -310,7 +313,7 @@
     __block AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
     NSString *requestString = [kAlfrescoOnPremiseSiteDoclibAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:siteShortName];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
@@ -330,10 +333,12 @@
                 }
                 if (nil != folderId)
                 {
-                    request = [docService retrieveNodeWithIdentifier:folderId completionBlock:^(AlfrescoNode *node, NSError *nodeError){
+                    AlfrescoRequest *retrieveRequest = [docService retrieveNodeWithIdentifier:folderId completionBlock:^(AlfrescoNode *node, NSError *nodeError){
                         completionBlock((AlfrescoFolder *)node, nodeError);
                         docService = nil;
                     }];
+                    
+                    request.httpRequest = retrieveRequest.httpRequest;
                 }
                 else
                 {
@@ -1251,7 +1256,7 @@
 - (AlfrescoRequest *)fetchAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
                                                 completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    __block AlfrescoRequest *request = nil;
+    AlfrescoRequest *request = nil;
     __weak typeof(self) weakSelf = self;
     
     // define completion block to fetch the sites
@@ -1303,7 +1308,8 @@
         request = [self fetchSitesRootFolderWithCompletionBlock:^(AlfrescoFolder *sitesFolder, NSError *error) {
             if (sitesFolder != nil)
             {
-                request = fetchSites(sitesFolder);
+                AlfrescoRequest *fetchRequest = fetchSites(sitesFolder);
+                request.httpRequest = fetchRequest.httpRequest;
             }
             else
             {
@@ -1321,11 +1327,10 @@
 
 - (AlfrescoRequest *)fetchSitesRootFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
-    AlfrescoRequest *request = nil;
     AlfrescoDocumentFolderService *docFolderSvc = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
     __weak typeof(self) weakSelf = self;
     
-    request = [docFolderSvc retrieveChildrenInFolder:self.session.rootFolder completionBlock:^(NSArray *children, NSError *error) {
+    return [docFolderSvc retrieveChildrenInFolder:self.session.rootFolder completionBlock:^(NSArray *children, NSError *error) {
         if (children != nil)
         {
             // iterate round the results until we find the folder with a type of "st:sites"
@@ -1350,8 +1355,6 @@
             completionBlock(nil, error);
         }
     }];
-    
-    return request;
 }
 
 @end

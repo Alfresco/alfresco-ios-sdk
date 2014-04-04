@@ -206,7 +206,7 @@
     NSString *requestString = [kAlfrescoPublicAPIWorkflowSingleProcess stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:processIdentifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
-    __block AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
@@ -223,7 +223,8 @@
             else
             {
                 AlfrescoWorkflowProcess *process = workflowProcesses[0];
-                request = [self retrieveVariablesForProcess:process completionBlock:completionBlock];
+                AlfrescoRequest *retrieveRequest = [self retrieveVariablesForProcess:process completionBlock:completionBlock];
+                request.httpRequest = retrieveRequest.httpRequest;
             }
         }
     }];
@@ -993,15 +994,16 @@
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extensionURLString listingContext:listingContext];
     
-    __block AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:nil method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
             // If the request fails, there is a possibility of ALF-20731 throwing an internal HTTP 500 status code on the server.
             // As a result, we use a slower and network heavy fallback mechanism which first retrieves the processes and then the variables for each process.
             if (error.code == kAlfrescoErrorCodeHTTPResponse)
             {
-                alfrescoRequest = [self fallbackRetrieveProcessesInState:state listingContext:listingContext completionBlock:completionBlock];
+                AlfrescoRequest *retrieveRequest = [self fallbackRetrieveProcessesInState:state listingContext:listingContext completionBlock:completionBlock];
+                request.httpRequest = retrieveRequest.httpRequest;
             }
             else
             {
@@ -1032,7 +1034,7 @@
         }
     }];
     
-    return alfrescoRequest;
+    return request;
 }
 
 - (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process

@@ -129,19 +129,47 @@ extern NSString * const kAlfrescoClientCertificateCredentials;
 /**---------------------------------------------------------------------------------------
  * @name Model Constants
  --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoContentModelTypeContent;
-extern NSString * const kAlfrescoContentModelTypeFolder;
+extern NSString * const kAlfrescoModelTypeContent;
+extern NSString * const kAlfrescoModelTypeFolder;
 
-extern NSString * const kAlfrescoContentModelAspectTitled;
-extern NSString * const kAlfrescoContentModelAspectAuthor;
-extern NSString * const kAlfrescoContentModelAspectGeographic;
+extern NSString * const kAlfrescoModelAspectTitled;
+extern NSString * const kAlfrescoModelAspectAuthor;
+extern NSString * const kAlfrescoModelAspectGeographic;
+extern NSString * const kAlfrescoModelAspectExif;
+extern NSString * const kAlfrescoModelAspectAudio;
 
-extern NSString * const kAlfrescoContentModelPropertyName;
-extern NSString * const kAlfrescoContentModelPropertyTitle;
-extern NSString * const kAlfrescoContentModelPropertyDescription;
-extern NSString * const kAlfrescoContentModelPropertyAuthor;
-extern NSString * const kAlfrescoContentModelPropertyLatitude;
-extern NSString * const kAlfrescoContentModelPropertyLongitude;
+extern NSString * const kAlfrescoModelPropertyName;
+extern NSString * const kAlfrescoModelPropertyTitle;
+extern NSString * const kAlfrescoModelPropertyDescription;
+extern NSString * const kAlfrescoModelPropertyAuthor;
+extern NSString * const kAlfrescoModelPropertyLatitude;
+extern NSString * const kAlfrescoModelPropertyLongitude;
+extern NSString * const kAlfrescoModelPropertyExifDateTimeOriginal;
+extern NSString * const kAlfrescoModelPropertyExifPixelXDimension;
+extern NSString * const kAlfrescoModelPropertyExifPixelYDimension;
+extern NSString * const kAlfrescoModelPropertyExifExposureTime;
+extern NSString * const kAlfrescoModelPropertyExifFNumber;
+extern NSString * const kAlfrescoModelPropertyExifFlash;
+extern NSString * const kAlfrescoModelPropertyExifFocalLength;
+extern NSString * const kAlfrescoModelPropertyExifISOSpeedRating;
+extern NSString * const kAlfrescoModelPropertyExifManufacturer;
+extern NSString * const kAlfrescoModelPropertyExifModel;
+extern NSString * const kAlfrescoModelPropertyExifSoftware;
+extern NSString * const kAlfrescoModelPropertyExifOrientation;
+extern NSString * const kAlfrescoModelPropertyExifXResolution;
+extern NSString * const kAlfrescoModelPropertyExifYResolution;
+extern NSString * const kAlfrescoModelPropertyExifResolutionUnit;
+extern NSString * const kAlfrescoModelPropertyAudioAlbum;
+extern NSString * const kAlfrescoModelPropertyAudioArtist;
+extern NSString * const kAlfrescoModelPropertyAudioComposer;
+extern NSString * const kAlfrescoModelPropertyAudioEngineer;
+extern NSString * const kAlfrescoModelPropertyAudioGenre;
+extern NSString * const kAlfrescoModelPropertyAudioTrackNumber;
+extern NSString * const kAlfrescoModelPropertyAudioReleaseDate;
+extern NSString * const kAlfrescoModelPropertyAudioSampleRate;
+extern NSString * const kAlfrescoModelPropertyAudioSampleType;
+extern NSString * const kAlfrescoModelPropertyAudioChannelType;
+extern NSString * const kAlfrescoModelPropertyAudioCompressor;
 
 /**---------------------------------------------------------------------------------------
  * @name Workflow Constants

@@ -121,7 +121,7 @@
             {
                 XCTAssertNotNil(folder, @"Folder should not be nil");
                 XCTAssertTrue([folder.name isEqualToString:folderName], @"Folder name: %@ does not match %@", folder.name, folderName);
-                XCTAssertTrue([folder.type isEqualToString:kAlfrescoContentModelTypeFolder], @"Folder type: %@ does not match %@", folder.type, kAlfrescoContentModelTypeFolder);
+                XCTAssertTrue([folder.type isEqualToString:kAlfrescoModelTypeFolder], @"Folder type: %@ does not match %@", folder.type, kAlfrescoModelTypeFolder);
                 
                 // check the properties were added at creation time
                 NSDictionary *newFolderProps = folder.properties;
@@ -1013,7 +1013,7 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
-        properties[kCMISPropertyObjectTypeId] = [kAlfrescoContentModelTypeContent stringByAppendingString:@",P:cm:titled,P:cm:author"];
+        properties[kCMISPropertyObjectTypeId] = [kAlfrescoModelTypeContent stringByAppendingString:@",P:cm:titled,P:cm:author"];
         properties[@"cm:description"] = @"Test Description";
         properties[@"cm:title"] = @"Test Title";
         properties[@"cm:author"] = @"Test Author";
@@ -1063,7 +1063,7 @@
                                    {
                                        XCTAssertNotNil(document, @"document should not be nil");
                                        XCTAssertTrue([document.name isEqualToString:documentName], @"folder name should be %@ but instead we got %@",documentName, document.name);
-                                       XCTAssertTrue([document.type isEqualToString:kAlfrescoContentModelTypeContent], @"object type should be cm:content but instead we got %@", document.type);
+                                       XCTAssertTrue([document.type isEqualToString:kAlfrescoModelTypeContent], @"object type should be cm:content but instead we got %@", document.type);
                                        // check the properties were added at creation time
                                        NSDictionary *newFolderProps = document.properties;
                                        AlfrescoProperty *newDescriptionProp = newFolderProps[@"cm:description"];
@@ -2898,11 +2898,15 @@
                  __block NSString *propertyObjectTestValue = @"version-download-test-updated.txt";
                  NSMutableDictionary *propDict = [NSMutableDictionary dictionaryWithCapacity:8];
                  propDict[kCMISPropertyName] = propertyObjectTestValue;
-                 propDict[@"cm:description"] = @"updated description";
-                 propDict[@"cm:title"] = @"updated title";
-                 propDict[@"cm:author"] = @"updated author";
-                 propDict[@"cm:latitude"] = @(51.52255);
-                 propDict[@"cm:longitude"] = @(-0.71670);
+                 propDict[kAlfrescoModelPropertyDescription] = @"updated description";
+                 propDict[kAlfrescoModelPropertyTitle] = @"updated title";
+                 propDict[kAlfrescoModelPropertyAuthor] = @"updated author";
+                 propDict[kAlfrescoModelPropertyLatitude] = @(51.52255);
+                 propDict[kAlfrescoModelPropertyLongitude] = @(-0.71670);
+                 propDict[kAlfrescoModelPropertyExifManufacturer] = @"Canon";
+                 propDict[kAlfrescoModelPropertyExifModel] = @"1100D";
+                 propDict[kAlfrescoModelPropertyAudioArtist] = @"Leftfield";
+                 propDict[kAlfrescoModelPropertyAudioAlbum] = @"Leftism";
                  
                  [weakDfService updatePropertiesOfNode:self.testAlfrescoDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error)
                   {
@@ -2919,12 +2923,14 @@
                           XCTAssertTrue(updatedDocument.contentLength > 100, @"expected content to be filled");
                           XCTAssertTrue([updatedDocument.type isEqualToString:@"cm:content"], @"type should be cm:content, but is %@", updatedDocument.type);
                           
-                          // check all the expected aspects are there, should be at least 3
-                          XCTAssertTrue(updatedNode.aspects.count >= 3,
-                                        @"Expected updated node to have at least 3 aspects but there were %lu", (unsigned long)updatedNode.aspects.count);
-                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectTitled], @"Expected updated node to have the cm:titled aspect");
-                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectAuthor], @"Expected updated node to have the cm:author aspect");
-                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoContentModelAspectGeographic], @"Expected updated node to have the cm:geopraphic aspect");
+                          // check all the expected aspects are there, should be at least 5
+                          XCTAssertTrue(updatedNode.aspects.count >= 5,
+                                        @"Expected updated node to have at least 5 aspects but there were %lu", (unsigned long)updatedNode.aspects.count);
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoModelAspectTitled], @"Expected updated node to have the cm:titled aspect");
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoModelAspectAuthor], @"Expected updated node to have the cm:author aspect");
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoModelAspectGeographic], @"Expected updated node to have the cm:geopraphic aspect");
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoModelAspectExif], @"Expected updated node to have the exif:exif aspect");
+                          XCTAssertTrue([updatedNode hasAspectWithName:kAlfrescoModelAspectAudio], @"Expected updated node to have the audio:audio aspect");
                           
                           // check the updated properties
                           NSDictionary *updatedProps = updatedDocument.properties;
@@ -2941,6 +2947,15 @@
                           BOOL longitudeMatch = [[NSString stringWithFormat:@"%.2f", [updatedLongitude doubleValue]] isEqualToString:[NSString stringWithFormat:@"%.2f", -0.71670]];
                           XCTAssertTrue(latitudeMatch, @"Expected latitude to be 51.52255 but was %@", updatedLatitude);
                           XCTAssertTrue(longitudeMatch, @"Expected latitude to be -0.71670 but was %@", updatedLongitude);
+                          
+                          AlfrescoProperty *updatedManufacturer = updatedProps[kAlfrescoModelPropertyExifManufacturer];
+                          AlfrescoProperty *updatedModel = updatedProps[kAlfrescoModelPropertyExifModel];
+                          AlfrescoProperty *updatedArtist = updatedProps[kAlfrescoModelPropertyAudioArtist];
+                          AlfrescoProperty *updatedAlbum = updatedProps[kAlfrescoModelPropertyAudioAlbum];
+                          XCTAssertTrue([updatedManufacturer.value isEqualToString:@"Canon"], @"Expected manufacturer property to be Canon but was %@", updatedManufacturer.value);
+                          XCTAssertTrue([updatedModel.value isEqualToString:@"1100D"], @"Expected model property to be 1100D but was %@", updatedModel.value);
+                          XCTAssertTrue([updatedArtist.value isEqualToString:@"Leftfield"], @"Expected artist property to be Leftfield but was %@", updatedArtist.value);
+                          XCTAssertTrue([updatedAlbum.value isEqualToString:@"Leftism"], @"Expected album property to be Leftism but was %@", updatedAlbum.value);
                           
                           id propertyValue = [updatedDocument propertyValueWithName:kCMISPropertyName];
                           if ([propertyValue isKindOfClass:[NSString class]])
