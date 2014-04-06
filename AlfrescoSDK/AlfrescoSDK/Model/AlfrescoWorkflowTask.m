@@ -83,7 +83,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         
         self.identifier = properties[kAlfrescoWorkflowLegacyJSONIdentifier];
         self.processIdentifier = workflowInstance[kAlfrescoWorkflowLegacyJSONIdentifier];
-        self.processDefinitionIdentifier = [workflowInstance[kAlfrescoWorkflowLegacyJSONProcessDefinitionID] lastPathComponent];
+        self.processDefinitionIdentifier = workflowInstance[kAlfrescoWorkflowLegacyJSONName];
         self.name = taskProperties[kAlfrescoWorkflowLegacyJSONBPMDescription];
         if (taskProperties[kAlfrescoWorkflowLegacyJSONBPMStartedAt] != [NSNull null])
         {
