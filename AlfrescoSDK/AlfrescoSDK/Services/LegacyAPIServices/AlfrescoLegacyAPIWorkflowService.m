@@ -371,7 +371,8 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyAPIWorkflowTasks];
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTasks stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
@@ -398,8 +399,9 @@
     {
         listingContext = self.session.defaultListingContext;
     }
-    
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyAPIWorkflowTasks listingContext:listingContext];
+
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTasks stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
@@ -429,7 +431,6 @@
     [AlfrescoErrors assertArgumentNotNil:taskIdentifier argumentName:@"taskIdentifier"];
     
     NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:taskIdentifier];
-    
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -1097,19 +1098,17 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *queryString = nil;
-    
-    if (state && ![state isEqualToString:kAlfrescoWorkflowProcessStateAny])
-    {
-        queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoLegacyAPIWorkflowProcessState : (self.publicToPrivateStateMappings)[state]}];
-    }
-    
     if (!listingContext)
     {
         listingContext = self.session.defaultListingContext;
     }
     
-    NSString *requestString = (queryString) ? [kAlfrescoLegacyAPIWorkflowInstances stringByAppendingString:queryString] : kAlfrescoLegacyAPIWorkflowInstances;
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowInstances stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    if (state && ![state isEqualToString:kAlfrescoWorkflowProcessStateAny])
+    {
+        requestString = [requestString stringByAppendingFormat:@"&%@=%@", kAlfrescoLegacyAPIWorkflowProcessState, (self.publicToPrivateStateMappings)[state]];
+    }
+
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];

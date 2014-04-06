@@ -91,7 +91,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     else
     {
         self.identifier = properties[kAlfrescoWorkflowPublicJSONIdentifier];
-        self.processDefinitionIdentifier = [properties[kAlfrescoWorkflowLegacyJSONProcessDefinitionID] lastPathComponent];
+        self.processDefinitionIdentifier = properties[kAlfrescoWorkflowLegacyJSONName];
         self.processDefinitionKey = properties[kAlfrescoWorkflowLegacyJSONName];
         if (properties[kAlfrescoWorkflowLegacyJSONMessage] != [NSNull null])
         {
