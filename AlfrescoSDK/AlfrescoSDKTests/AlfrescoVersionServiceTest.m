@@ -19,6 +19,7 @@
 #import "AlfrescoVersionServiceTest.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoProperty.h"
 
 @implementation AlfrescoVersionServiceTest
 
@@ -405,16 +406,25 @@
                 NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
                 AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"text/plain"];
                 
+                // also update some properties
+                NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+                properties[kAlfrescoModelPropertyTitle] = @"Updated by checkin";
+                properties[kAlfrescoModelPropertyExifManufacturer] = @"Canon";
+                
                 // sleep for a couple of seconds before checking back in
                 [NSThread sleepForTimeInterval:2.0];
                 
                 [self.versionService checkinDocument:checkedOutDocument asMajorVersion:NO contentFile:updatedContentFile
-                                          properties:nil comment:versionComment completionBlock:^(AlfrescoDocument *checkedInDocument, NSError *checkinError) {
+                                          properties:properties comment:versionComment completionBlock:^(AlfrescoDocument *checkedInDocument, NSError *checkinError) {
                                               if (checkedInDocument == nil)
                                               {
                                                   self.lastTestSuccessful = NO;
                                                   self.lastTestFailureMessage = [NSString stringWithFormat:@"Checkin Error: %@ - %@", [checkoutError localizedDescription], [checkoutError localizedFailureReason]];
-                                                  self.callbackCompleted = YES;
+                                                  
+                                                  // cancel the checkout to cleanup
+                                                  [self.versionService cancelCheckoutOfDocument:checkedOutDocument completionBlock:^(BOOL succeeded, NSError *error) {
+                                                      self.callbackCompleted = YES;
+                                                  }];
                                               }
                                               else
                                               {
@@ -426,6 +436,18 @@
                                                   XCTAssertTrue([checkedInDocument.versionComment isEqualToString:versionComment],
                                                                 @"Expected version comment to be %@ but it was: %@", versionComment, checkedInDocument.versionComment);
                                                   XCTAssertTrue(checkedInDocument.isLatestVersion, @"Expected document to be the latest version");
+                                                  
+                                                  // check properties were updated and aspects are present
+                                                  XCTAssertTrue([checkedInDocument hasAspectWithName:kAlfrescoModelAspectTitled],
+                                                                @"Expected the checked in document to have the titled aspect");
+                                                  XCTAssertTrue([checkedInDocument hasAspectWithName:kAlfrescoModelAspectExif],
+                                                                @"Expected the checked in document to have the exif aspect");
+                                                  AlfrescoProperty *updatedTitle = checkedInDocument.properties[kAlfrescoModelPropertyTitle];
+                                                  XCTAssertTrue([updatedTitle.value isEqualToString:@"Updated by checkin"],
+                                                                @"Expected the title to be Updated by checkin but it was :%@", updatedTitle.value);
+                                                  AlfrescoProperty *updatedManufacturer = checkedInDocument.properties[kAlfrescoModelPropertyExifManufacturer];
+                                                  XCTAssertTrue([updatedManufacturer.value isEqualToString:@"Canon"],
+                                                                @"Expected the author to be Canon but it was: %@", updatedManufacturer.value);
                                                   
                                                   // check content got updated
                                                   AlfrescoDocumentFolderService *documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
