@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoPublicAPIPersonService.h"
-#import "AlfrescoOnPremisePersonService.h"
+#import "AlfrescoLegacyAPIPersonService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
@@ -56,7 +56,7 @@
     [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
+    NSString *requestString = [kAlfrescoLegacyPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -107,8 +107,8 @@
 - (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     // Not supported with PublicAPI - defer to OnPremise APIs
-    AlfrescoOnPremisePersonService *onPremise = [[AlfrescoOnPremisePersonService alloc] initWithSession:self.session];
-    return [onPremise searchWithKeywords:keywords completionBlock:completionBlock];
+    AlfrescoLegacyAPIPersonService *legacyAPI = [[AlfrescoLegacyAPIPersonService alloc] initWithSession:self.session];
+    return [legacyAPI searchWithKeywords:keywords completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
@@ -116,8 +116,8 @@
                         completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     // Not supported with PublicAPI - defer to OnPremise APIs
-    AlfrescoOnPremisePersonService *onPremise = [[AlfrescoOnPremisePersonService alloc] initWithSession:self.session];
-    return [onPremise searchWithKeywords:keywords listingContext:listingContext completionBlock:completionBlock];
+    AlfrescoLegacyAPIPersonService *legacyAPI = [[AlfrescoLegacyAPIPersonService alloc] initWithSession:self.session];
+    return [legacyAPI searchWithKeywords:keywords listingContext:listingContext completionBlock:completionBlock];
 }
 
 #pragma mark - private methods

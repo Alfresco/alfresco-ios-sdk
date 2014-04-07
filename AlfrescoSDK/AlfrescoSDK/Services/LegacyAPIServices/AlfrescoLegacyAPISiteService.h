@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -19,8 +19,9 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoCommentService.h"
+#import "AlfrescoSiteService.h"
+#import "AlfrescoSiteCache.h"
 
-@interface AlfrescoOnPremiseCommentService : AlfrescoCommentService
+@interface AlfrescoLegacyAPISiteService : AlfrescoSiteService <AlfrescoSiteCacheDataDelegate>
 
 @end

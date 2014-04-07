@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -21,7 +21,7 @@
 #import "AlfrescoPlaceholderDocumentFolderService.h"
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
-#import "AlfrescoOnPremiseDocumentFolderService.h"
+#import "AlfrescoLegacyAPIDocumentFolderService.h"
 #import "AlfrescoCloudDocumentFolderService.h"
 
 @implementation AlfrescoPlaceholderDocumentFolderService
@@ -36,7 +36,7 @@
         }
         return (id)[[AlfrescoPublicAPIDocumentFolderService alloc] initWithSession:session];
     }
-    return (id)[[AlfrescoOnPremiseDocumentFolderService alloc] initWithSession:session];
+    return (id)[[AlfrescoLegacyAPIDocumentFolderService alloc] initWithSession:session];
 }
 
 @end

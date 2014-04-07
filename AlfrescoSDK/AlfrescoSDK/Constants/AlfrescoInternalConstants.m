@@ -96,8 +96,6 @@ NSString * const kAlfrescoMaxItems = @"{maxItems}";
 NSString * const kAlfrescoSkipCount = @"{skipCount}";
 NSString * const kAlfrescoSearchFilter = @"{filter}";
 NSString * const kAlfrescoReverseComments = @"reverse";
-NSString * const kAlfrescoLegacyMaxItems = @"pageSize";
-NSString * const kAlfrescoLegacySkipCount = @"startIndex";
 
 /**
  Session data key constants
@@ -145,44 +143,44 @@ NSString *const kAlfrescoOAuthRefreshToken = @"refresh_token={refreshID}";
 /**
  On Premise constants      
  */
-NSString * const kAlfrescoOnPremiseAPIPath = @"/service/api/";
-NSString * const kAlfrescoOnPremiseCMISPath = @"/service/cmis";
-NSString * const kAlfrescoOnPremise4_xCMISPath = @"/cmisatom";
-NSString * const kAlfrescoOnPremiseActivityAPI = @"activities/feed/user?format=json";
-NSString * const kAlfrescoOnPremiseActivityForSiteAPI = @"activities/feed/site/{siteID}?format=json";
-NSString * const kAlfrescoOnPremiseRatingsAPI = @"node/{nodeRef}/ratings";
-NSString * const kAlfrescoOnPremiseRatingsLikingSchemeAPI = @"node/{nodeRef}/ratings/likesRatingScheme";
-NSString * const kAlfrescoOnPremiseRatingsCount = @"data.nodeStatistics.likesRatingScheme.ratingsCount";
-NSString * const kAlfrescoOnPremiseLikesSchemeRatings = @"data.ratings.likesRatingScheme.rating";
-NSString * const kAlfrescoOnPremiseSiteAPI = @"sites?format=json";
-NSString * const kAlfrescoOnPremiseSiteForPersonAPI = @"people/{personID}/sites";
-NSString * const kAlfrescoOnPremiseFavoriteSiteForPersonAPI = @"people/{personID}/preferences?pf=org.alfresco.share.sites";
-NSString * const kAlfrescoOnPremiseSitesShortnameAPI = @"sites/{siteID}";
-NSString * const kAlfrescoOnPremiseSiteDoclibAPI = @"service/slingshot/doclib/containers/{siteID}";
-NSString * const kAlfrescoOnPremiseFavoriteSites = @"org.alfresco.share.sites.favourites";
-NSString * const kAlfrescoOnPremiseCommentsAPI = @"node/{nodeRef}/comments";
-NSString * const kAlfrescoOnPremiseCommentForNodeAPI = @"comment/node/{commentID}";
-NSString * const kAlfrescoOnPremiseTagsAPI = @"tags/workspace/SpacesStore";
-NSString * const kAlfrescoOnPremiseTagsForNodeAPI = @"node/{nodeRef}/tags";
-NSString * const kAlfrescoOnPremisePersonAPI = @"people/{personID}";
-NSString * const kAlfrescoOnPremisePersonSearchAPI = @"people?filter={filter}";
-NSString * const kAlfrescoOnPremiseAvatarForPersonAPI = @"/service/slingshot/profile/avatar/{personID}";
-NSString * const kAlfrescoOnPremiseMetadataExtractionAPI = @"/service/api/actionQueue";
-NSString * const kAlfrescoOnPremiseThumbnailCreationAPI = @"/node/{nodeRef}/content/thumbnails?as=true";
-NSString * const kAlfrescoOnPremiseThumbnailRenditionAPI = @"node/{nodeRef}/content/thumbnails/{renditionID}?c=queue";
+NSString * const kAlfrescoLegacyAPIPath = @"/service/api/";
+NSString * const kAlfrescoLegacyCMISPath = @"/service/cmis";
+NSString * const kAlfrescoLegacy4_xCMISPath = @"/cmisatom";
+NSString * const kAlfrescoLegacyActivityAPI = @"activities/feed/user?format=json";
+NSString * const kAlfrescoLegacyActivityForSiteAPI = @"activities/feed/site/{siteID}?format=json";
+NSString * const kAlfrescoLegacyRatingsAPI = @"node/{nodeRef}/ratings";
+NSString * const kAlfrescoLegacyRatingsLikingSchemeAPI = @"node/{nodeRef}/ratings/likesRatingScheme";
+NSString * const kAlfrescoLegacyRatingsCount = @"data.nodeStatistics.likesRatingScheme.ratingsCount";
+NSString * const kAlfrescoLegacyLikesSchemeRatings = @"data.ratings.likesRatingScheme.rating";
+NSString * const kAlfrescoLegacySiteAPI = @"sites?format=json";
+NSString * const kAlfrescoLegacySiteForPersonAPI = @"people/{personID}/sites";
+NSString * const kAlfrescoLegacyFavoriteSiteForPersonAPI = @"people/{personID}/preferences?pf=org.alfresco.share.sites";
+NSString * const kAlfrescoLegacySitesShortnameAPI = @"sites/{siteID}";
+NSString * const kAlfrescoLegacySiteDoclibAPI = @"service/slingshot/doclib/containers/{siteID}";
+NSString * const kAlfrescoLegacyFavoriteSites = @"org.alfresco.share.sites.favourites";
+NSString * const kAlfrescoLegacyCommentsAPI = @"node/{nodeRef}/comments";
+NSString * const kAlfrescoLegacyCommentForNodeAPI = @"comment/node/{commentID}";
+NSString * const kAlfrescoLegacyTagsAPI = @"tags/workspace/SpacesStore";
+NSString * const kAlfrescoLegacyTagsForNodeAPI = @"node/{nodeRef}/tags";
+NSString * const kAlfrescoLegacyPersonAPI = @"people/{personID}";
+NSString * const kAlfrescoLegacyPersonSearchAPI = @"people?filter={filter}";
+NSString * const kAlfrescoLegacyAvatarForPersonAPI = @"/service/slingshot/profile/avatar/{personID}";
+NSString * const kAlfrescoLegacyMetadataExtractionAPI = @"/service/api/actionQueue";
+NSString * const kAlfrescoLegacyThumbnailCreationAPI = @"/node/{nodeRef}/content/thumbnails?as=true";
+NSString * const kAlfrescoLegacyThumbnailRenditionAPI = @"node/{nodeRef}/content/thumbnails/{renditionID}?c=queue";
 
-NSString * const kAlfrescoOnPremiseAddOrRemoveFavoriteSiteAPI = @"people/{personID}/preferences";
-NSString * const kAlfrescoOnPremiseJoinPublicSiteAPI = @"sites/{siteID}/memberships";
-NSString * const kAlfrescoOnPremiseJoinModeratedSiteAPI = @"sites/{siteID}/invitations";
-NSString * const kAlfrescoOnPremisePendingJoinRequestsAPI = @"invitations?inviteeUserName={personID}";
-NSString * const kAlfrescoOnPremiseCancelJoinRequestsAPI = @"sites/{siteID}/invitations/{inviteID}";
-NSString * const kAlfrescoOnPremiseLeaveSiteAPI = @"sites/{siteID}/memberships/{personID}";
-NSString * const kAlfrescoOnPremiseSiteMembershipFilter = @"?nf={filter}&authorityType=USER";
+NSString * const kAlfrescoLegacyAddOrRemoveFavoriteSiteAPI = @"people/{personID}/preferences";
+NSString * const kAlfrescoLegacyJoinPublicSiteAPI = @"sites/{siteID}/memberships";
+NSString * const kAlfrescoLegacyJoinModeratedSiteAPI = @"sites/{siteID}/invitations";
+NSString * const kAlfrescoLegacyPendingJoinRequestsAPI = @"invitations?inviteeUserName={personID}";
+NSString * const kAlfrescoLegacyCancelJoinRequestsAPI = @"sites/{siteID}/invitations/{inviteID}";
+NSString * const kAlfrescoLegacyLeaveSiteAPI = @"sites/{siteID}/memberships/{personID}";
+NSString * const kAlfrescoLegacySiteMembershipFilter = @"?nf={filter}&authorityType=USER";
 
-NSString * const kAlfrescoOnPremiseFavoriteDocuments = @"org.alfresco.share.documents.favourites";
-NSString * const kAlfrescoOnPremiseFavoriteFolders = @"org.alfresco.share.folders.favourites";
-NSString * const kAlfrescoOnPremiseFavoriteDocumentsAPI = @"/people/{personID}/preferences?pf=org.alfresco.share.documents.favourites";
-NSString * const kAlfrescoOnPremiseFavoriteFoldersAPI = @"/people/{personID}/preferences?pf=org.alfresco.share.folders.favourites";
+NSString * const kAlfrescoLegacyFavoriteDocuments = @"org.alfresco.share.documents.favourites";
+NSString * const kAlfrescoLegacyFavoriteFolders = @"org.alfresco.share.folders.favourites";
+NSString * const kAlfrescoLegacyFavoriteDocumentsAPI = @"/people/{personID}/preferences?pf=org.alfresco.share.documents.favourites";
+NSString * const kAlfrescoLegacyFavoriteFoldersAPI = @"/people/{personID}/preferences?pf=org.alfresco.share.folders.favourites";
 /**
  Public API constants
  */

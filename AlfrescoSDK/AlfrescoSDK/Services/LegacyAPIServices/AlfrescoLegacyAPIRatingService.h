@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -19,17 +19,8 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "AlfrescoRatingService.h"
 
-@interface AlfrescoOnPremiseJoinSiteRequest : NSObject <NSCoding>
-/// Returns the short name of the site.
-@property (nonatomic, strong, readonly) NSString *shortName;
-/// Returns the identifier of the site.
-@property (nonatomic, strong, readonly) NSString *identifier;
-/// message for the join request.
-@property (nonatomic, strong, readonly) NSString *message;
-
-- (id)initWithIdentifier:(NSString *)identifier message:(NSString *)message;
-
-- (id)initWithProperties:(NSDictionary *)properties;
+@interface AlfrescoLegacyAPIRatingService : AlfrescoRatingService
 
 @end

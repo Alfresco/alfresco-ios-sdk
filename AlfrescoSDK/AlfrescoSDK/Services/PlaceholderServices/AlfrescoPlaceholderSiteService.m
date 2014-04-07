@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoPlaceholderSiteService.h"
-#import "AlfrescoOnPremiseSiteService.h"
+#import "AlfrescoLegacyAPISiteService.h"
 #import "AlfrescoCloudSiteService.h"
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
@@ -34,7 +34,7 @@
         }
         return (id)[[AlfrescoPublicAPISiteService alloc] initWithSession:session];
     }
-    return (id)[[AlfrescoOnPremiseSiteService alloc] initWithSession:session];
+    return (id)[[AlfrescoLegacyAPISiteService alloc] initWithSession:session];
 }
 
 

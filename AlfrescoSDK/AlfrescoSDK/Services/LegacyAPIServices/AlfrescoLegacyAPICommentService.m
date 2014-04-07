@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AlfrescoOnPremiseCommentService.h"
+#import "AlfrescoLegacyAPICommentService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
@@ -26,21 +26,21 @@
 #import "AlfrescoSortingUtils.h"
 #import <objc/runtime.h>
 
-@interface AlfrescoOnPremiseCommentService ()
+@interface AlfrescoLegacyAPICommentService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoCMISToAlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @end
 
-@implementation AlfrescoOnPremiseCommentService
+@implementation AlfrescoLegacyAPICommentService
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
     if (self = [super init])
     {
         self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyAPIPath];
         self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
         self.authenticationProvider = nil;
@@ -65,12 +65,12 @@
     
     NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
-    NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
+    NSString *requestString = [kAlfrescoLegacyCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
     
     // add an artificial cap, return the first 1000 comments - Related to ACE-469
     NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionary];
-    queryDictionary[kAlfrescoLegacyMaxItems] = @"1000";
-    queryDictionary[kAlfrescoLegacySkipCount] = @"0";
+    queryDictionary[kAlfrescoLegacyJSONMaxItems] = @"1000";
+    queryDictionary[kAlfrescoLegacyJSONSkipCount] = @"0";
     
     if (latestFirst)
     {
@@ -124,11 +124,11 @@
     
     NSString *nodeString = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     NSString *cleanNodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:nodeString];
-    NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
+    NSString *requestString = [kAlfrescoLegacyCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:cleanNodeId];
     
     NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionary];
-    queryDictionary[kAlfrescoLegacyMaxItems] = [NSString stringWithFormat:@"%d", listingContext.maxItems];
-    queryDictionary[kAlfrescoLegacySkipCount] = [NSString stringWithFormat:@"%d", listingContext.skipCount];
+    queryDictionary[kAlfrescoLegacyJSONMaxItems] = [NSString stringWithFormat:@"%d", listingContext.maxItems];
+    queryDictionary[kAlfrescoLegacyJSONSkipCount] = [NSString stringWithFormat:@"%d", listingContext.skipCount];
     
     if (latestFirst)
     {
@@ -194,7 +194,7 @@
     [commentDict setValue:title forKey:kAlfrescoJSONTitle];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:0 error:&error];
     
-    NSString *requestString = [kAlfrescoOnPremiseCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+    NSString *requestString = [kAlfrescoLegacyCommentsAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                        withString:cleanNodeId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
@@ -236,7 +236,7 @@
     [commentDict setValue:commentId forKey:kAlfrescoJSONNodeRef];
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:0 error:&error];
-    NSString *requestString = [kAlfrescoOnPremiseCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
+    NSString *requestString = [kAlfrescoLegacyCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
                                                                                              withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
@@ -276,7 +276,7 @@
     [commentDict setValue:commentId forKey:kAlfrescoJSONNodeRef];
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:commentDict options:0 error:&error];
-    NSString *requestString = [kAlfrescoOnPremiseCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
+    NSString *requestString = [kAlfrescoLegacyCommentForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoCommentId
                                                                                              withString:[commentId stringByReplacingOccurrencesOfString:@"://" withString:@"/"]];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];

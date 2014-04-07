@@ -25,8 +25,6 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoCMISUtil.h"
 
-// TODO: Maintain these tests on an 'alfresco' branch, also remove the Alfresco specific code from master.
-
 static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 
 @interface AlfrescoSpecificCMISTests()
@@ -61,11 +59,11 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         if ([[self.environment valueForKey:@"useWebscriptEndpointForAlfrescoSpecificCMISTests"] boolValue])
         {
             // Use the webscript binding for this server
-            urlString = [self.server stringByAppendingString:kAlfrescoOnPremiseCMISPath];
+            urlString = [self.server stringByAppendingString:kAlfrescoLegacyCMISPath];
         }
         else
         {
-            urlString = [self.server stringByAppendingString:kAlfrescoOnPremise4_xCMISPath];
+            urlString = [self.server stringByAppendingString:kAlfrescoLegacy4_xCMISPath];
         }
     }
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc]

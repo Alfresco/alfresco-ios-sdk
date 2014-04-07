@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoPlaceholderRatingService.h"
-#import "AlfrescoOnPremiseRatingService.h"
+#import "AlfrescoLegacyAPIRatingService.h"
 #import "AlfrescoCloudRatingService.h"
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
@@ -34,7 +34,7 @@
         }
         return (id)[[AlfrescoPublicAPIRatingService alloc] initWithSession:session];
     }
-    return (id)[[AlfrescoOnPremiseRatingService alloc] initWithSession:session];
+    return (id)[[AlfrescoLegacyAPIRatingService alloc] initWithSession:session];
 }
 
 @end

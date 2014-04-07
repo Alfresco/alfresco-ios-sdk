@@ -53,7 +53,7 @@
     if (self)
     {
         self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyAPIWorkflowBaseURL];
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyAPIPath];
         self.workflowObjectConverter = [[AlfrescoWorkflowObjectConverter alloc] init];
         self.documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:session];
         self.dateFormatter = [[NSDateFormatter alloc] init];

@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,16 +18,16 @@
  *****************************************************************************
  */
 
-#import "AlfrescoOnPremiseJoinSiteRequest.h"
+#import "AlfrescoLegacyAPIJoinSiteRequest.h"
 #import "AlfrescoInternalConstants.h"
 
-@interface AlfrescoOnPremiseJoinSiteRequest ()
+@interface AlfrescoLegacyAPIJoinSiteRequest ()
 @property (nonatomic, strong, readwrite) NSString *shortName;
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSString *message;
 @end
 
-@implementation AlfrescoOnPremiseJoinSiteRequest
+@implementation AlfrescoLegacyAPIJoinSiteRequest
 
 - (id)initWithIdentifier:(NSString *)identifier message:(NSString *)message
 {
