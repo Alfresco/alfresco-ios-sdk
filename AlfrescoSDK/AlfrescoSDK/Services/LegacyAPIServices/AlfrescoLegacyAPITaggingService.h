@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -21,6 +21,6 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoTaggingService.h"
 
-@interface AlfrescoOnPremiseTaggingService : AlfrescoTaggingService
+@interface AlfrescoLegacyAPITaggingService : AlfrescoTaggingService
 
 @end

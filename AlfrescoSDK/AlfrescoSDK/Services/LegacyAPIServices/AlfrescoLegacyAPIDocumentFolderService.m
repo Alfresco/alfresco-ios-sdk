@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,7 +18,7 @@
  *****************************************************************************
  */
 
-#import "AlfrescoOnPremiseDocumentFolderService.h"
+#import "AlfrescoLegacyAPIDocumentFolderService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoURLUtils.h"
@@ -28,20 +28,20 @@
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSearchService.h"
 
-@interface AlfrescoOnPremiseDocumentFolderService ()
+@interface AlfrescoLegacyAPIDocumentFolderService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoFavoritesCache *favoritesCache;
 @property (nonatomic, strong, readwrite) NSString *defaultSortKey;
 @end
 
-@implementation AlfrescoOnPremiseDocumentFolderService
+@implementation AlfrescoLegacyAPIDocumentFolderService
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
     if (self = [super initWithSession:session])
     {
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyAPIPath];
         
         NSString *favoritesCacheKey = [NSString stringWithFormat:@"%@%@", kAlfrescoSessionInternalCache, NSStringFromClass([AlfrescoFavoritesCache class])];
         id cachedObj = [self.session objectForParameter:favoritesCacheKey];
@@ -326,7 +326,7 @@
     NSString *nodeIdentifier = [node.identifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];    
     nodeIdentifier = [self identifierWithoutVersionNumberForIdentifier:nodeIdentifier];
     
-    NSString *requestString = [kAlfrescoOnPremiseThumbnailRenditionAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:nodeIdentifier];
+    NSString *requestString = [kAlfrescoLegacyThumbnailRenditionAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:nodeIdentifier];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoRenditionId withString:renditionName];
     return [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
 }
@@ -358,12 +358,12 @@
     NSURL *url = nil;
     if (type == AlfrescoFavoriteDocument)
     {
-        requestString = [kAlfrescoOnPremiseFavoriteDocumentsAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+        requestString = [kAlfrescoLegacyFavoriteDocumentsAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
         url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     }
     else if (type == AlfrescoFavoriteFolder)
     {
-        requestString = [kAlfrescoOnPremiseFavoriteFoldersAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+        requestString = [kAlfrescoLegacyFavoriteFoldersAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
         url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     }
     
@@ -464,11 +464,11 @@
     NSString *joinedFavoriteNodes = nil;
     if (type == AlfrescoFavoriteDocument)
     {
-        joinedFavoriteNodes = [favoritesDictionary valueForKeyPath:kAlfrescoOnPremiseFavoriteDocuments];
+        joinedFavoriteNodes = [favoritesDictionary valueForKeyPath:kAlfrescoLegacyFavoriteDocuments];
     }
     else
     {
-        joinedFavoriteNodes = [favoritesDictionary valueForKeyPath:kAlfrescoOnPremiseFavoriteFolders];
+        joinedFavoriteNodes = [favoritesDictionary valueForKeyPath:kAlfrescoLegacyFavoriteFolders];
     }
     
     NSMutableArray *favoriteNodes = [NSMutableArray array];
@@ -486,12 +486,12 @@
     NSURL *url = nil;
     if (type == AlfrescoFavoriteDocument)
     {
-        requestString = [kAlfrescoOnPremiseFavoriteDocumentsAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+        requestString = [kAlfrescoLegacyFavoriteDocumentsAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
         url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     }
     else
     {
-        requestString = [kAlfrescoOnPremiseFavoriteFoldersAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+        requestString = [kAlfrescoLegacyFavoriteFoldersAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
         url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     }
     
@@ -541,7 +541,7 @@
         }
         NSString *joinedFavoriteIdentifiers = [favoriteIdentifiersWithoutVersionNumber componentsJoinedByString:@","];
         
-        NSString *favoritesAPIKey = node.isDocument ? kAlfrescoOnPremiseFavoriteDocuments : kAlfrescoOnPremiseFavoriteFolders;
+        NSString *favoritesAPIKey = node.isDocument ? kAlfrescoLegacyFavoriteDocuments : kAlfrescoLegacyFavoriteFolders;
         NSArray *favoriteKeyComponents = [favoritesAPIKey componentsSeparatedByString:@"."];
         
         NSDictionary *favoriteKeyComponentDictionaries = nil;

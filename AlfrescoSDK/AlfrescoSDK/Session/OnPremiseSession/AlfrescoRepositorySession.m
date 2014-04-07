@@ -178,7 +178,7 @@
                               completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     BOOL useCustomBinding = NO;
-    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseCMISPath];
+    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyCMISPath];
     NSString *customBindingURL = (self.sessionData)[kAlfrescoCMISBindingURL];
     if (customBindingURL)
     {
@@ -191,7 +191,7 @@
     v3params.password = password;
     v3params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     
-    NSString *v4cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremise4_xCMISPath];
+    NSString *v4cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacy4_xCMISPath];
     __block CMISSessionParameters *v4params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     v4params.username = username;
     v4params.password = password;
@@ -272,7 +272,7 @@
             __block NSString *v3RepositoryProductName = nil;
             
             void (^workflowDefinitionsCompletionBlock)(NSError *error) = ^(NSError *error) {
-                NSString *workflowDefinitionString = [kAlfrescoLegacyAPIWorkflowBaseURL stringByAppendingString:kAlfrescoLegacyAPIWorkflowProcessDefinition];
+                NSString *workflowDefinitionString = [kAlfrescoLegacyAPIPath stringByAppendingString:kAlfrescoLegacyAPIWorkflowProcessDefinition];
                 NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:workflowDefinitionString];
                 [self.networkProvider executeRequestWithURL:url session:self alfrescoRequest:request completionBlock:^(NSData *data, NSError *workflowError) {
                     if (error)

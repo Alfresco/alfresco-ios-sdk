@@ -50,7 +50,7 @@
         NSString *objectTypeId = [self.aspectTypes componentsJoinedByString:@","];
 
         CMISSessionParameters *sessionParameters = self.session.sessionParameters;
-        BOOL isWebscriptImplementation = [[sessionParameters.atomPubUrl relativeString] hasSuffix:kAlfrescoOnPremiseCMISPath];
+        BOOL isWebscriptImplementation = [[sessionParameters.atomPubUrl relativeString] hasSuffix:kAlfrescoLegacyCMISPath];
         if (isWebscriptImplementation)
         {
             // Must add the objectType to the property for the old implementation

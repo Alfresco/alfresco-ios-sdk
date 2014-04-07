@@ -1130,7 +1130,7 @@
 
 #pragma mark Internal private methods
 
-// NOTE: Ideally these methods should be in a common base class as it is identical to the implementation in AlfrescoOnPremiseSiteService.m
+// NOTE: Ideally these methods should be in a common base class as it is identical to the implementation in AlfrescoLegacySiteService.m
 
 - (AlfrescoRequest *)fetchAllSitesWithListingContext:(AlfrescoListingContext *)listingContext
                                      completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock

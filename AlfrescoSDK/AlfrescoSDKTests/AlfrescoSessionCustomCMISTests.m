@@ -70,7 +70,7 @@
                     {
                         CMISSessionParameters *parameters = cmisSession.sessionParameters;
                         NSString *atomPubUrl = [parameters.atomPubUrl absoluteString];
-                        XCTAssertFalse(NSNotFound == [atomPubUrl rangeOfString:kAlfrescoOnPremiseCMISPath].location, @"should have found the /service/cmis string in atomPubURl");
+                        XCTAssertFalse(NSNotFound == [atomPubUrl rangeOfString:kAlfrescoLegacyCMISPath].location, @"should have found the /service/cmis string in atomPubURl");
                         
                     }
                     self.lastTestSuccessful = YES;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AlfrescoOnPremiseTaggingService.h"
+#import "AlfrescoLegacyAPITaggingService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
@@ -25,21 +25,21 @@
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoTag.h"
 
-@interface AlfrescoOnPremiseTaggingService ()
+@interface AlfrescoLegacyAPITaggingService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoCMISToAlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @end
 
-@implementation AlfrescoOnPremiseTaggingService
+@implementation AlfrescoLegacyAPITaggingService
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
     if (self = [super init])
     {
         self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyAPIPath];
         self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
         self.authenticationProvider = nil;
@@ -55,7 +55,7 @@
 - (AlfrescoRequest *)retrieveAllTagsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyTagsAPI];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
@@ -84,7 +84,7 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoOnPremiseTagsAPI];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyTagsAPI];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
@@ -114,7 +114,7 @@
     
     NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
     NSString *cleanNodeId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-    NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+    NSString *requestString = [kAlfrescoLegacyTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                           withString:cleanNodeId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -149,7 +149,7 @@
     
     NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
     NSString *cleanNodeId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-    NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+    NSString *requestString = [kAlfrescoLegacyTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                           withString:cleanNodeId];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -182,7 +182,7 @@
     
     NSString *nodeId = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
     NSString *cleanNodeId = [nodeId stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
-    NSString *requestString = [kAlfrescoOnPremiseTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+    NSString *requestString = [kAlfrescoLegacyTagsForNodeAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                           withString:cleanNodeId];
     NSError *jsonError = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tags options:0 error:&jsonError];

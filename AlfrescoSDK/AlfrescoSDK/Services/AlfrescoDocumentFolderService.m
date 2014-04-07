@@ -1165,7 +1165,7 @@
     [jsonDictionary setValue:identifier forKey:kAlfrescoJSONActionedUponNode];
     [jsonDictionary setValue:kAlfrescoJSONExtractMetadata forKey:kAlfrescoJSONActionDefinitionName];
     NSError *postError = nil;
-    NSURL *apiUrl = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:kAlfrescoOnPremiseMetadataExtractionAPI];
+    NSURL *apiUrl = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:kAlfrescoLegacyMetadataExtractionAPI];
     NSData *jsonData = [NSJSONSerialization
                         dataWithJSONObject:jsonDictionary
                         options:0
@@ -1184,7 +1184,7 @@
     NSMutableDictionary *jsonDictionary = [NSMutableDictionary dictionary];
     [jsonDictionary setValue:kAlfrescoJSONThumbnailName forKey:kAlfrescoThumbnailRendition];
     NSError *postError = nil;
-    NSString *requestString = [kAlfrescoOnPremiseThumbnailCreationAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
+    NSString *requestString = [kAlfrescoLegacyThumbnailCreationAPI stringByReplacingOccurrencesOfString:kAlfrescoNodeRef
                                                                                                 withString:[node.identifier stringByReplacingOccurrencesOfString:@"://"
                                                                                                                                                       withString:@"/"]];
     NSURL *apiUrl = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];

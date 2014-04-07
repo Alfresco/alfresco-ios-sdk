@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AlfrescoOnPremiseSiteService.h"
+#import "AlfrescoLegacyAPISiteService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoURLUtils.h"
@@ -26,12 +26,12 @@
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoLog.h"
-#import "AlfrescoOnPremiseJoinSiteRequest.h"
+#import "AlfrescoLegacyAPIJoinSiteRequest.h"
 #import "AlfrescoProperty.h"
 
 #define TIMEOUTINTERVAL 120
 
-@interface AlfrescoOnPremiseSiteService ()
+@interface AlfrescoLegacyAPISiteService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoCMISToAlfrescoObjectConverter *objectConverter;
@@ -43,7 +43,7 @@
 @property (nonatomic, strong, readwrite) AlfrescoFolder *sitesRootFolder;
 @end
 
-@implementation AlfrescoOnPremiseSiteService
+@implementation AlfrescoLegacyAPISiteService
 
 #pragma mark Public service methods
 
@@ -52,7 +52,7 @@
     if (self = [super init])
     {
         self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyAPIPath];
         self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
         self.authenticationProvider = nil;
@@ -311,7 +311,7 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     __block AlfrescoDocumentFolderService *docService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
-    NSString *requestString = [kAlfrescoOnPremiseSiteDoclibAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:siteShortName];
+    NSString *requestString = [kAlfrescoLegacySiteDoclibAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:siteShortName];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
@@ -361,7 +361,7 @@
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    NSString *requestString = [kAlfrescoOnPremiseAddOrRemoveFavoriteSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+    NSString *requestString = [kAlfrescoLegacyAddOrRemoveFavoriteSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                                       withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     NSData *jsonData = [self jsonDataForFavoriteSites:site.shortName addFavorite:YES];
@@ -394,7 +394,7 @@
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoOnPremiseAddOrRemoveFavoriteSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+    NSString *requestString = [kAlfrescoLegacyAddOrRemoveFavoriteSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                                       withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     NSData *jsonData = [self jsonDataForFavoriteSites:site.shortName addFavorite:NO];
@@ -509,8 +509,8 @@
         completionBlock(nil, error);
         return nil;
     }
-    __block AlfrescoOnPremiseJoinSiteRequest *foundRequest = foundRequests[0];
-    NSString *requestString = [kAlfrescoOnPremiseCancelJoinRequestsAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
+    __block AlfrescoLegacyAPIJoinSiteRequest *foundRequest = foundRequests[0];
+    NSString *requestString = [kAlfrescoLegacyCancelJoinRequestsAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
                                                                                                   withString:site.identifier];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoInviteId withString:foundRequest.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
@@ -543,7 +543,7 @@
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
         
-    NSString *requestString = [kAlfrescoOnPremiseLeaveSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+    NSString *requestString = [kAlfrescoLegacyLeaveSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                         withString:self.session.personIdentifier];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
@@ -585,7 +585,7 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    NSString *requestString = [kAlfrescoOnPremiseJoinPublicSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
+    NSString *requestString = [kAlfrescoLegacyJoinPublicSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
                                                                                              withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -628,7 +628,7 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    NSString *requestString =  [kAlfrescoOnPremiseJoinPublicSiteAPI stringByAppendingString:kAlfrescoOnPremiseSiteMembershipFilter];
+    NSString *requestString =  [kAlfrescoLegacyJoinPublicSiteAPI stringByAppendingString:kAlfrescoLegacySiteMembershipFilter];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.identifier];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:keywords];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
@@ -666,7 +666,7 @@
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoOnPremiseLeaveSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
+    NSString *requestString = [kAlfrescoLegacyLeaveSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
     requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
@@ -688,7 +688,7 @@
 
 #pragma mark Data parsing methods
 
-- (AlfrescoOnPremiseJoinSiteRequest *)singleJoinRequestFromJSONData:(NSData *)data error:(NSError **)outError
+- (AlfrescoLegacyAPIJoinSiteRequest *)singleJoinRequestFromJSONData:(NSData *)data error:(NSError **)outError
 {
     if (nil == data)
     {
@@ -740,7 +740,7 @@
     }
     else
     {
-        return [[AlfrescoOnPremiseJoinSiteRequest alloc] initWithProperties:(NSDictionary *)dataObj];
+        return [[AlfrescoLegacyAPIJoinSiteRequest alloc] initWithProperties:(NSDictionary *)dataObj];
     }
 }
 
@@ -797,7 +797,7 @@
     NSMutableArray *allRequests = [NSMutableArray array];
     for (id requestObj in (NSArray *)dataObj)
     {
-        [allRequests addObject:[[AlfrescoOnPremiseJoinSiteRequest alloc] initWithProperties:requestObj]];
+        [allRequests addObject:[[AlfrescoLegacyAPIJoinSiteRequest alloc] initWithProperties:requestObj]];
     }
     return allRequests;    
 }
@@ -1014,7 +1014,7 @@
     NSDictionary *favouriteSitesDictionary = (NSDictionary *)favoriteSitesObject;
     NSMutableArray *resultArray = [NSMutableArray array];
 
-    id favouriteSitesObj = [favouriteSitesDictionary valueForKeyPath:kAlfrescoOnPremiseFavoriteSites];
+    id favouriteSitesObj = [favouriteSitesDictionary valueForKeyPath:kAlfrescoLegacyFavoriteSites];
     if ([favouriteSitesObj isKindOfClass:[NSDictionary class]])
     {
         NSDictionary *favDict = (NSDictionary *)favouriteSitesObj;
@@ -1084,7 +1084,7 @@
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     __weak typeof(self) weakSelf = self;
     
-    NSString *siteString = [kAlfrescoOnPremiseSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSString *siteString = [kAlfrescoLegacySiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     NSURL *mySitesAPI = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:siteString];
     [self.session.networkProvider executeRequestWithURL:mySitesAPI session:self.session
                                         alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error){
@@ -1108,7 +1108,7 @@
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     __weak typeof(self) weakSelf = self;
     
-    NSString *favRequestString = [kAlfrescoOnPremiseFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+    NSString *favRequestString = [kAlfrescoLegacyFavoriteSiteForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                                        withString:self.session.personIdentifier];
     NSURL *favouriteSitesURL = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:favRequestString];
     [self.session.networkProvider executeRequestWithURL:favouriteSitesURL session:self.session
@@ -1133,7 +1133,7 @@
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     __weak typeof(self) weakSelf = self;
     
-    NSString *pendingString = [kAlfrescoOnPremisePendingJoinRequestsAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+    NSString *pendingString = [kAlfrescoLegacyPendingJoinRequestsAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                                   withString:self.session.personIdentifier];
     NSURL *pendingSitesAPI = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:pendingString];
     [self.session.networkProvider executeRequestWithURL:pendingSitesAPI session:self.session
@@ -1143,7 +1143,7 @@
             NSError *conversionError = nil;
             NSArray *joinRequestData = [weakSelf joinRequestArrayFromJSONData:data error:&conversionError];
             NSMutableArray *pendingSiteNames = [NSMutableArray arrayWithCapacity:joinRequestData.count];
-            for (AlfrescoOnPremiseJoinSiteRequest *joinRequest in joinRequestData)
+            for (AlfrescoLegacyAPIJoinSiteRequest *joinRequest in joinRequestData)
             {
                 [pendingSiteNames addObject:joinRequest.shortName];
             }
@@ -1164,7 +1164,7 @@
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     __weak typeof(self) weakSelf = self;
     
-    NSString *requestString = [kAlfrescoOnPremiseSitesShortnameAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:shortName];
+    NSString *requestString = [kAlfrescoLegacySitesShortnameAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:shortName];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     [self.session.networkProvider executeRequestWithURL:url session:self.session
@@ -1190,7 +1190,7 @@
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    NSString *requestString = [kAlfrescoOnPremiseJoinPublicSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
+    NSString *requestString = [kAlfrescoLegacyJoinPublicSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
                                                                                              withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     NSData *jsonData = [self jsonDataForJoiningPublicSite:self.session.personIdentifier];
@@ -1219,7 +1219,7 @@
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    NSString *requestString = [kAlfrescoOnPremiseJoinModeratedSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
+    NSString *requestString = [kAlfrescoLegacyJoinModeratedSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId
                                                                                                 withString:site.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     NSData *jsonData = [self jsonDataForJoiningModeratedSite:self.session.personIdentifier comment:nil];
@@ -1233,7 +1233,7 @@
         else
         {
             NSError *jsonError = nil;
-            AlfrescoOnPremiseJoinSiteRequest *joinRequest = [weakSelf singleJoinRequestFromJSONData:data error:&jsonError];
+            AlfrescoLegacyAPIJoinSiteRequest *joinRequest = [weakSelf singleJoinRequestFromJSONData:data error:&jsonError];
             if (joinRequest)
             {
                 [weakSelf.joinRequests addObject:joinRequest];

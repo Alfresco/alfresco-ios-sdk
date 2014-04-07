@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -18,7 +18,7 @@
 
 #import "AlfrescoPlaceholderActivityStreamService.h"
 #import "AlfrescoCloudActivityStreamService.h"
-#import "AlfrescoOnPremiseActivityStreamService.h"
+#import "AlfrescoLegacyAPIActivityStreamService.h"
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
 
@@ -34,7 +34,7 @@
         }
         return (id)[[AlfrescoPublicAPIActivityStreamService alloc] initWithSession:session];
     }
-    return (id)[[AlfrescoOnPremiseActivityStreamService alloc] initWithSession:session];
+    return (id)[[AlfrescoLegacyAPIActivityStreamService alloc] initWithSession:session];
 }
 
 @end

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoPlaceholderCommentService.h"
-#import "AlfrescoOnPremiseCommentService.h"
+#import "AlfrescoLegacyAPICommentService.h"
 #import "AlfrescoCloudCommentService.h"
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoCloudSession.h"
@@ -34,6 +34,6 @@
         }
         return (id)[[AlfrescoPublicAPICommentService alloc] initWithSession:session];
     }
-    return (id)[[AlfrescoOnPremiseCommentService alloc] initWithSession:session];
+    return (id)[[AlfrescoLegacyAPICommentService alloc] initWithSession:session];
 }
 @end

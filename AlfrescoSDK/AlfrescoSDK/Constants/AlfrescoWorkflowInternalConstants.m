@@ -31,7 +31,6 @@ NSString * const kAlfrescoItemID = @"{itemId}";
 NSString * const kAlfrescoWorkflowReviewAndApprove = @"activitiReview";
 
 // Base URLs
-NSString * const kAlfrescoLegacyAPIWorkflowBaseURL = @"/service/api/";
 NSString * const kAlfrescoPublicAPIWorkflowBaseURL = @"/api/-default-/public/workflow/versions/1";
 NSString * const kAlfrescoCloudWorkflowBaseURL = @"/public/workflow/versions/1";
 

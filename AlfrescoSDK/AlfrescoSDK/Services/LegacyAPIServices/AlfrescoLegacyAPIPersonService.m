@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AlfrescoOnPremisePersonService.h"
+#import "AlfrescoLegacyAPIPersonService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
@@ -24,21 +24,21 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoPagingUtils.h"
 
-@interface AlfrescoOnPremisePersonService ()
+@interface AlfrescoLegacyAPIPersonService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoCMISToAlfrescoObjectConverter *objectConverter;
 @property (nonatomic, weak, readwrite) id<AlfrescoAuthenticationProvider> authenticationProvider;
 @end
 
-@implementation AlfrescoOnPremisePersonService
+@implementation AlfrescoLegacyAPIPersonService
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
     if (self = [super init])
     {
         self.session = session;
-        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoOnPremiseAPIPath];
+        self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyAPIPath];
         self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         id authenticationObject = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
         self.authenticationProvider = nil;
@@ -53,7 +53,7 @@
 {
     [AlfrescoErrors assertArgumentNotNil:identifier argumentName:@"identifier"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    NSString *requestString = [kAlfrescoOnPremisePersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
+    NSString *requestString = [kAlfrescoLegacyPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -89,7 +89,7 @@
 
 - (AlfrescoRequest *)retrieveAvatarForPersonV4x:(AlfrescoPerson *)person completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
-    NSString *requestString = [kAlfrescoOnPremiseAvatarForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
+    NSString *requestString = [kAlfrescoLegacyAvatarForPersonAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:person.identifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:[self.session.baseUrl absoluteString] extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
@@ -166,7 +166,7 @@
 
 - (AlfrescoRequest *)searchPeople:(NSString *)keywords completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSString *requestString = [kAlfrescoOnPremisePersonSearchAPI stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:keywords];
+    NSString *requestString = [kAlfrescoLegacyPersonSearchAPI stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:keywords];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url
