@@ -228,43 +228,62 @@
     [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    // TODO: Handle properties, they need to be converted to CMISProperties first.
+    // define completion block to perform the checkin
+    CMISRequest* (^checkin)(CMISProperties *cmisProperties) = ^CMISRequest*(CMISProperties *cmisProperties) {
+        return [self.cmisSession.binding.versioningService checkIn:document.identifier asMajorVersion:majorVersion
+                                                          filePath:[file.fileUrl path] mimeType:file.mimeType
+                                                        properties:cmisProperties checkinComment:comment
+                                                   completionBlock:^(CMISObjectData *objectData, NSError *error) {
+            if (objectData == nil)
+            {
+                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeVersion]);
+            }
+            else
+            {
+                // The CMISObjectData object is not fully populated so we need to retrieve the object
+                [self.cmisSession retrieveObject:objectData.identifier completionBlock:^(CMISObject *object, NSError *error) {
+                    if (object == nil)
+                    {
+                        completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeVersion]);
+                    }
+                    else
+                    {
+                        AlfrescoDocument *checkedInNode = (AlfrescoDocument *)[self.objectConverter nodeFromCMISObject:object];
+                        NSError *conversionError = nil;
+                        if (checkedInNode == nil)
+                        {
+                            conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
+                        }
+                        completionBlock(checkedInNode, conversionError);
+                    }
+                }];
+            }
+        } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
+            if (progressBlock)
+            {
+                progressBlock(bytesUploaded, bytesTotal);
+            }
+        }];
+    };
     
     AlfrescoRequest *request = [AlfrescoRequest new];
-    request.httpRequest = [self.cmisSession.binding.versioningService checkIn:document.identifier asMajorVersion:majorVersion
-                                                                     filePath:[file.fileUrl path] mimeType:file.mimeType
-                                                                   properties:nil checkinComment:comment
-                                                              completionBlock:^(CMISObjectData *objectData, NSError *error) {
-        if (objectData == nil)
-        {
-            completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeVersion]);
-        }
-        else
-        {
-            // The CMISObjectData object is not fully populated so we need to retrieve the object
-            [self.cmisSession retrieveObject:objectData.identifier completionBlock:^(CMISObject *object, NSError *error) {
-                if (object == nil)
-                {
-                    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeVersion]);
-                }
-                else
-                {
-                    AlfrescoDocument *checkedInNode = (AlfrescoDocument *)[self.objectConverter nodeFromCMISObject:object];
-                    NSError *conversionError = nil;
-                    if (checkedInNode == nil)
-                    {
-                        conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
-                    }
-                    completionBlock(checkedInNode, conversionError);
-                }
-            }];
-        }
-    } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
-        if (progressBlock)
-        {
-            progressBlock(bytesUploaded, bytesTotal);
-        }
-    }];
+    if (properties != nil)
+    {
+        [AlfrescoCMISUtil preparePropertiesForUpdate:properties node:document cmisSession:self.cmisSession completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
+            if (cmisProperties != nil)
+            {
+                request.httpRequest = checkin(cmisProperties);
+            }
+            else
+            {
+                completionBlock(nil, error);
+            }
+        }];
+    }
+    else
+    {
+        request.httpRequest = checkin(nil);
+    }
     
     return request;
 }
@@ -281,43 +300,62 @@
     [AlfrescoErrors assertArgumentNotNil:document argumentName:@"document"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    // TODO: Handle properties, they need to be converted to CMISProperties first.
+    // define completion block to perform the checkin
+    CMISRequest* (^checkin)(CMISProperties *cmisProperties) = ^CMISRequest*(CMISProperties *cmisProperties) {
+        return [self.cmisSession.binding.versioningService checkIn:document.identifier asMajorVersion:majorVersion
+                                                                      inputStream:contentStream.inputStream bytesExpected:contentStream.length
+                                                                         mimeType:contentStream.mimeType properties:cmisProperties checkinComment:comment
+                                                                  completionBlock:^(CMISObjectData *objectData, NSError *error) {
+            if (objectData == nil)
+            {
+                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeVersion]);
+            }
+            else
+            {
+                // The CMISObjectData object is not fully populated so we need to retrieve the object
+                [self.cmisSession retrieveObject:objectData.identifier completionBlock:^(CMISObject *object, NSError *error) {
+                    if (object == nil)
+                    {
+                        completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeVersion]);
+                    }
+                    else
+                    {
+                        AlfrescoDocument *checkedInNode = (AlfrescoDocument *)[self.objectConverter nodeFromCMISObject:object];
+                        NSError *conversionError = nil;
+                        if (checkedInNode == nil)
+                        {
+                            conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
+                        }
+                        completionBlock(checkedInNode, conversionError);
+                    }
+                }];
+            }
+        } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
+            if (progressBlock)
+            {
+                progressBlock(bytesUploaded, bytesTotal);
+            }
+        }];
+    };
     
     AlfrescoRequest *request = [AlfrescoRequest new];
-    request.httpRequest = [self.cmisSession.binding.versioningService checkIn:document.identifier asMajorVersion:majorVersion
-                                                                  inputStream:contentStream.inputStream bytesExpected:contentStream.length
-                                                                     mimeType:contentStream.mimeType properties:nil checkinComment:comment
-                                                              completionBlock:^(CMISObjectData *objectData, NSError *error) {
-        if (objectData == nil)
-        {
-            completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeVersion]);
-        }
-        else
-        {
-            // The CMISObjectData object is not fully populated so we need to retrieve the object
-            [self.cmisSession retrieveObject:objectData.identifier completionBlock:^(CMISObject *object, NSError *error) {
-                if (object == nil)
-                {
-                    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeVersion]);
-                }
-                else
-                {
-                    AlfrescoDocument *checkedInNode = (AlfrescoDocument *)[self.objectConverter nodeFromCMISObject:object];
-                    NSError *conversionError = nil;
-                    if (checkedInNode == nil)
-                    {
-                        conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
-                    }
-                    completionBlock(checkedInNode, conversionError);
-                }
-            }];
-        }
-    } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
-        if (progressBlock)
-        {
-            progressBlock(bytesUploaded, bytesTotal);
-        }
-    }];
+    if (properties != nil)
+    {
+        [AlfrescoCMISUtil preparePropertiesForUpdate:properties node:document cmisSession:self.cmisSession completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
+            if (cmisProperties != nil)
+            {
+                request.httpRequest = checkin(cmisProperties);
+            }
+            else
+            {
+                completionBlock(nil, error);
+            }
+        }];
+    }
+    else
+    {
+        request.httpRequest = checkin(nil);
+    }
     
     return request;
 }
