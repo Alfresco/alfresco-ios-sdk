@@ -35,6 +35,9 @@ static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
 static NSString * const kAlfrescoJBPMAdhocProcessDefinitionKey = @"wf:adhoc";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiAdhoc";
+static NSString * const kAlfrescoJBPMReviewProcessDefinitionKey = @"wf:review";
+static NSString * const kAlfrescoActivitiReviewProcessDefinitionKey = @"activitiReview";
+static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"activitiParallelReview";
 
 @implementation AlfrescoWorkflowProcessTests
 
@@ -56,9 +59,119 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
                 XCTAssertNotNil(array, @"array should not be nil");
                 XCTAssertTrue(array.count > 1, @"Array should contain more than 1 process");
                 
-                // TODO
+                BOOL reviewProcessFound = NO;
                 
-                self.lastTestSuccessful = YES;
+                if (self.currentSession.repositoryInfo.capabilities.doesSupportJBPMWorkflowEngine)
+                {
+                    NSString *reviewKey = [kAlfrescoJBPMPrefix stringByAppendingString:kAlfrescoJBPMReviewProcessDefinitionKey];
+                    
+                    // go through the processes looking for a review process
+                    for (AlfrescoWorkflowProcess *process in array)
+                    {
+                        if ([process.processDefinitionKey isEqualToString:reviewKey])
+                        {
+                            XCTAssertTrue([process.processDefinitionIdentifier isEqualToString:reviewKey],
+                                          @"Expected processDefinitionIdentifier to be %@ but it was %@", kAlfrescoJBPMReviewProcessDefinitionKey,
+                                          process.processDefinitionIdentifier);
+                            XCTAssertTrue([process.identifier rangeOfString:@"jbpm$"].location != NSNotFound,
+                                          @"Expected identifer to contain jbpm$ but it was %@", process.identifier);
+                            XCTAssertTrue([process.summary isEqualToString:@"Review & approval of content"],
+                                          @"Expected adhoc summary to be 'Review & approval of content' but it was %@", process.summary);
+                            
+                            XCTAssertNotNil(process.name, @"Expected name to be populated");
+                            XCTAssertNotNil(process.startedAt, @"Expected startedAt to be populated");
+                            XCTAssertNotNil(process.priority, @"Expected priority to be populated");
+                            XCTAssertNotNil(process.initiatorUsername, @"Expected initiatorUsername to be populated");
+                            XCTAssertNotNil(process.variables, @"Expected variables to be populated");
+                            XCTAssertTrue(process.variables.count > 0, @"Expected variables count to be more than 0");
+                            
+                            reviewProcessFound = YES;
+                            break;
+                        }
+                    }
+                }
+                else if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+                {
+                    if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                    {
+                        NSString *reviewKey = nil;
+                        if (self.isCloud)
+                        {
+                            reviewKey = kAlfrescoActivitiParallelReviewProcessDefinitionKey;
+                        }
+                        else
+                        {
+                            reviewKey = kAlfrescoActivitiReviewProcessDefinitionKey;
+                        }
+                        
+                        // go through the processes looking for the adhoc workflow
+                        for (AlfrescoWorkflowProcess *process in array)
+                        {
+                            if ([process.processDefinitionKey isEqualToString:reviewKey])
+                            {
+                                if (self.isCloud)
+                                {
+                                    XCTAssertTrue([process.processDefinitionIdentifier rangeOfString:kAlfrescoActivitiParallelReviewProcessDefinitionKey].location != NSNotFound,
+                                                  @"Expected processDefinitionIdentifier to contain activitiParallelReview but it was %@", process.processDefinitionIdentifier);
+                                }
+                                else
+                                {
+                                    XCTAssertTrue([process.processDefinitionIdentifier rangeOfString:kAlfrescoActivitiReviewProcessDefinitionKey].location != NSNotFound,
+                                                  @"Expected processDefinitionIdentifier to contain activitiReview but it was %@", process.processDefinitionIdentifier);
+                                }
+                                
+                                XCTAssertNotNil(process.identifier, @"Expected identifier to be populated");
+                                XCTAssertNotNil(process.name, @"Expected name to be populated");
+                                XCTAssertNotNil(process.startedAt, @"Expected startedAt to be populated");
+                                XCTAssertNotNil(process.priority, @"Expected priority to be populated");
+                                XCTAssertNotNil(process.initiatorUsername, @"Expected initiatorUsername to be populated");
+                                XCTAssertNotNil(process.variables, @"Expected variables to be populated");
+                                XCTAssertTrue(process.variables.count > 0, @"Expected variables count to be more than 0");
+                                
+                                // the summary property for the public api will always be nil
+                                XCTAssertNil(process.summary, @"Expected the summary property to be nil when using the public API");
+                                
+                                reviewProcessFound = YES;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        NSString *reviewKey = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiReviewProcessDefinitionKey];
+                        
+                        // go through the processes looking for the adhoc workflow
+                        for (AlfrescoWorkflowProcess *process in array)
+                        {
+                            if ([process.processDefinitionKey isEqualToString:reviewKey])
+                            {
+                                XCTAssertTrue([process.processDefinitionIdentifier isEqualToString:reviewKey],
+                                              @"Expected processDefinitionIdentifier to be %@ but it was %@", kAlfrescoJBPMReviewProcessDefinitionKey,
+                                              process.processDefinitionIdentifier);
+                                XCTAssertTrue([process.identifier rangeOfString:@"activiti$"].location != NSNotFound,
+                                              @"Expected identifer to contain activit$ but it was %@", process.identifier);
+                                XCTAssertTrue([process.summary isEqualToString:@"Review and approval of content using Activiti workflow engine"],
+                                              @"Expected adhoc summary to be 'Review and approval of content using Activiti workflow engine' but it was %@", process.summary);
+                                
+                                XCTAssertNotNil(process.name, @"Expected name to be populated");
+                                XCTAssertNotNil(process.startedAt, @"Expected startedAt to be populated");
+                                XCTAssertNotNil(process.priority, @"Expected priority to be populated");
+                                XCTAssertNotNil(process.initiatorUsername, @"Expected initiatorUsername to be populated");
+                                XCTAssertNotNil(process.variables, @"Expected variables to be populated");
+                                XCTAssertTrue(process.variables.count > 0, @"Expected variables count to be more than 0");
+                                
+                                reviewProcessFound = YES;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                self.lastTestSuccessful = reviewProcessFound;
+                if (!reviewProcessFound)
+                {
+                    self.lastTestFailureMessage = @"Failed to find instance of review process";
+                }
             }
             self.callbackCompleted = YES;
 
@@ -94,10 +207,11 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
                 XCTAssertTrue(pagingResult.objects.count == 1, @"PagingResult objects should contain 1 process");
                 XCTAssertTrue(pagingResult.hasMoreItems, @"PagingResult should contain more objects");
                 
-                // TODO
+                // make sure the array contains the correct type of objects
+                AlfrescoWorkflowProcess *process = pagingResult.objects[0];
+                XCTAssertTrue([process isKindOfClass:[AlfrescoWorkflowProcess class]], @"Expected the objects array to contain AlfrescoWorkflowProcess objects");
                 
                 self.lastTestSuccessful = YES;
-                
                 self.callbackCompleted = YES;
             }
         }];
@@ -235,11 +349,48 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
                     }
                     else
                     {
-                        XCTAssertNotNil(process.processDefinitionIdentifier, @"Process definition identifier should not be nil");
-                        XCTAssertNotNil(process.startedAt, @"Process started at date should not be nil");
+                        XCTAssertNotNil(process.identifier, @"Expected identifier property to be populated");
+                        XCTAssertNotNil(process.processDefinitionKey, @"Expected processDefinitionKey property to be populated");
+                        XCTAssertNotNil(process.processDefinitionIdentifier, @"Expected processDefinitionIdentifier property to be populated");
+                        XCTAssertNotNil(process.name, @"Expected name property to be populated");
+                        XCTAssertNotNil(process.identifier, @"Expected identifier property to be populated");
+                        XCTAssertNotNil(process.startedAt, @"Expected startedAt property to be populated");
+                        XCTAssertNotNil(process.priority, @"Expected priority property to be populated");
+                        XCTAssertNotNil(process.initiatorUsername, @"Expected initiatorUsername property to be populated");
+                        XCTAssertNotNil(process.identifier, @"Expected identifier property to be populated");
+                        XCTAssertNotNil(process.variables, @"Expected variables property to be populated");
                         
+                        XCTAssertTrue([process.processDefinitionIdentifier rangeOfString:@"dhoc"].location != NSNotFound,
+                                      @"Expected processDefinitionIdentifier to contain 'dhoc' but it was %@", process.processDefinitionIdentifier);
+                        XCTAssertTrue([process.processDefinitionKey rangeOfString:@"dhoc"].location != NSNotFound,
+                                      @"Expected processDefinitionKey to contain 'dhoc' but it was %@", process.processDefinitionKey);
+                        
+                        // the summary property for the public api will always be nil
+                        if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                        {
+                            XCTAssertNil(process.summary, @"Expected the summary property to be nil when using the public API");
+                        }
+                        else
+                        {
+                            XCTAssertNotNil(process.summary, @"Expected summary property to be populated");
+                        }
+                        
+                        // check expected variables are present
+                        XCTAssertTrue(process.variables.count > 0, @"Expected variables count to be more than 0");
                         NSDictionary *variables = process.variables;
-                        XCTAssertNotNil(variables, @"Expected to find a set of variables for the process");
+                        
+                        // currently these will fail on-prem as the names are wrong
+                        /*
+                        AlfrescoProperty *priorityProperty = variables[@"bpm_priority"];
+                        XCTAssertNotNil(priorityProperty, @"Expected to find the bpm_priority process variable");
+                        XCTAssertTrue(priorityProperty.type == AlfrescoPropertyTypeInteger);
+                        
+                        AlfrescoProperty *descriptionProperty = variables[@"bpm_description"];
+                        XCTAssertNotNil(descriptionProperty, @"Expected to find the bpm_description process variable");
+                        XCTAssertTrue(descriptionProperty.type == AlfrescoPropertyTypeString);
+                        */
+                        
+                        // TODO: remove these tests and uncomment the ones above
                         
                         if ([AlfrescoWorkflowUtils isJBPMProcess:process] ||
                             !self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
@@ -306,7 +457,32 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
             else
             {
                 XCTAssertNotNil(createdProcess, @"Process should not be nil");
-                XCTAssertNotNil(createdProcess.identifier, @"Process identifier should not be nil");
+                XCTAssertNotNil(createdProcess.identifier, @"Expected identifier property to be populated");
+                XCTAssertNotNil(createdProcess.processDefinitionKey, @"Expected processDefinitionKey property to be populated");
+                XCTAssertNotNil(createdProcess.processDefinitionIdentifier, @"Expected processDefinitionIdentifier property to be populated");
+                XCTAssertNotNil(createdProcess.name, @"Expected name property to be populated");
+                XCTAssertNotNil(createdProcess.identifier, @"Expected identifier property to be populated");
+                XCTAssertNotNil(createdProcess.startedAt, @"Expected startedAt property to be populated");
+                XCTAssertNotNil(createdProcess.priority, @"Expected priority property to be populated");
+                XCTAssertNotNil(createdProcess.initiatorUsername, @"Expected initiatorUsername property to be populated");
+                XCTAssertNotNil(createdProcess.identifier, @"Expected identifier property to be populated");
+                XCTAssertNotNil(createdProcess.variables, @"Expected variables property to be populated");
+                
+                XCTAssertTrue([createdProcess.processDefinitionIdentifier rangeOfString:@"dhoc"].location != NSNotFound,
+                              @"Expected processDefinitionIdentifier to contain 'dhoc' but it was %@", createdProcess.processDefinitionIdentifier);
+                XCTAssertTrue([createdProcess.processDefinitionKey rangeOfString:@"dhoc"].location != NSNotFound,
+                              @"Expected processDefinitionKey to contain 'dhoc' but it was %@", createdProcess.processDefinitionKey);
+                XCTAssertTrue(createdProcess.variables.count > 0, @"Expected variables count to be more than 0");
+                
+                // the summary property for the public api will always be nil
+                if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                {
+                    XCTAssertNil(createdProcess.summary, @"Expected the summary property to be nil when using the public API");
+                }
+                else
+                {
+                    XCTAssertNotNil(createdProcess.summary, @"Expected summary property to be populated");
+                }
                 
                 [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
                     XCTAssertTrue(succeeded, @"Deletion flag should be true");
@@ -375,8 +551,35 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
                     }
                     else
                     {
-                        XCTAssertTrue([createdProcess.name isEqualToString:processName], @"The process summary should be %@, but got back %@", processName, createdProcess.name);
+                        XCTAssertNotNil(createdProcess, @"Process should not be nil");
+                        XCTAssertNotNil(createdProcess.identifier, @"Expected identifier property to be populated");
+                        XCTAssertNotNil(createdProcess.processDefinitionKey, @"Expected processDefinitionKey property to be populated");
+                        XCTAssertNotNil(createdProcess.processDefinitionIdentifier, @"Expected processDefinitionIdentifier property to be populated");
+                        XCTAssertNotNil(createdProcess.name, @"Expected name property to be populated");
+                        XCTAssertNotNil(createdProcess.identifier, @"Expected identifier property to be populated");
+                        XCTAssertNotNil(createdProcess.startedAt, @"Expected startedAt property to be populated");
+                        XCTAssertNotNil(createdProcess.priority, @"Expected priority property to be populated");
+                        XCTAssertNotNil(createdProcess.initiatorUsername, @"Expected initiatorUsername property to be populated");
+                        XCTAssertNotNil(createdProcess.identifier, @"Expected identifier property to be populated");
+                        XCTAssertNotNil(createdProcess.variables, @"Expected variables property to be populated");
+                        
+                        XCTAssertTrue([createdProcess.processDefinitionIdentifier rangeOfString:@"dhoc"].location != NSNotFound,
+                                      @"Expected processDefinitionIdentifier to contain 'dhoc' but it was %@", createdProcess.processDefinitionIdentifier);
+                        XCTAssertTrue([createdProcess.processDefinitionKey rangeOfString:@"dhoc"].location != NSNotFound,
+                                      @"Expected processDefinitionKey to contain 'dhoc' but it was %@", createdProcess.processDefinitionKey);
+                        XCTAssertTrue(createdProcess.variables.count > 0, @"Expected variables count to be more than 0");
+                        XCTAssertTrue([createdProcess.name isEqualToString:processName], @"The process name should be %@, but got back %@", processName, createdProcess.name);
                         XCTAssertTrue(createdProcess.priority.intValue == priority.integerValue, @"The priority should be %i, but got back %i", priority.intValue, createdProcess.priority.intValue);
+                        
+                        // the summary property for the public api will always be nil
+                        if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                        {
+                            XCTAssertNil(createdProcess.summary, @"Expected the summary property to be nil when using the public API");
+                        }
+                        else
+                        {
+                            XCTAssertNotNil(createdProcess.summary, @"Expected summary property to be populated");
+                        }
                         
                         // Should get back an ISO8601 format date, even if a standard date was passed in
                         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -601,7 +804,7 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
                     else
                     {
                         XCTAssertNotNil(array, @"array should not be nil");
-                        XCTAssertTrue(array.count > 0, @"Array should contain more than or atleast 1 task");
+                        XCTAssertTrue(array.count > 0, @"Array should contain more than or at least 1 task");
                         
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
                             XCTAssertTrue(succeeded, @"Deletion flag should be true");
@@ -659,6 +862,10 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
                         XCTAssertNotNil(attachmentNodes, @"array should not be nil");
                         XCTAssertTrue(attachmentNodes.count == attachmentArray.count, @"Array should contain %lu attachment(s)", (unsigned long)attachmentArray.count);
                         
+                        AlfrescoDocument *attachedDocument = attachmentNodes[0];
+                        XCTAssertTrue([attachedDocument.identifier isEqualToString:self.testAlfrescoDocument.identifier],
+                                      @"Expected the attached document to have the same identifier as the document passed to the create method");
+                        
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
                             XCTAssertTrue(succeeded, @"Deletion flag should be true");
                             self.lastTestSuccessful = succeeded;
@@ -687,7 +894,16 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
         
         // define the process creation block
         void (^createProcessWithDefinition)(AlfrescoWorkflowProcessDefinition *definition) = ^(AlfrescoWorkflowProcessDefinition *definition) {
-            [self.workflowService startProcessForProcessDefinition:definition assignees:assignees variables:variables attachments:attachmentNodes completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
+            
+            // make sure there is a description for the process
+            NSMutableDictionary *processVariables = [NSMutableDictionary dictionaryWithDictionary:variables];
+            if (processVariables[kAlfrescoWorkflowProcessDescription] == nil)
+            {
+                NSString *processName = [NSString stringWithFormat:@"iOS SDK Test Process - %@", [NSDate date]];
+                processVariables[kAlfrescoWorkflowProcessDescription] = processName;
+            }
+            
+            [self.workflowService startProcessForProcessDefinition:definition assignees:assignees variables:processVariables attachments:attachmentNodes completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
                 if (startError)
                 {
                     completionBlock(nil, startError);

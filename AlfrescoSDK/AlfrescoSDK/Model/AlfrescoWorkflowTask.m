@@ -97,7 +97,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         {
             self.dueAt = [self.dateFormatter dateFromString:taskProperties[kAlfrescoWorkflowLegacyJSONBPMDueAt]];
         }
-        self.summary = taskProperties[kAlfrescoWorkflowLegacyJSONName];
+        self.summary = properties[kAlfrescoWorkflowLegacyJSONDescription];
         self.priority = taskProperties[kAlfrescoWorkflowLegacyJSONBPMPriority];
         if (taskProperties[kAlfrescoWorkflowLegacyJSONOwner] != [NSNull null])
         {

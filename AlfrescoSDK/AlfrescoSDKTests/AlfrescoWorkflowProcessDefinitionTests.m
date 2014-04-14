@@ -53,7 +53,81 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
                 XCTAssertNotNil(array, @"array should not be nil");
                 XCTAssertTrue(array.count > 1, @"Array should contain more than 1 process");
                 
-                self.lastTestSuccessful = YES;
+                BOOL adhocDefinitionFound = NO;
+                
+                if (self.currentSession.repositoryInfo.capabilities.doesSupportJBPMWorkflowEngine)
+                {
+                    NSString *adhocKey = [kAlfrescoJBPMPrefix stringByAppendingString:kAlfrescoJBPMAdhocProcessDefinitionKey];
+                    
+                    // go through the process definitions looking for the adhoc workflow
+                    for (AlfrescoWorkflowProcessDefinition *processDefinition in array)
+                    {
+                        if ([processDefinition.key isEqualToString:adhocKey])
+                        {
+                            XCTAssertTrue([processDefinition.identifier isEqualToString:@"jbpm$1"],
+                                          @"Expected adhoc identifer to be jbpm$1 but it was %@", processDefinition.identifier);
+                            XCTAssertTrue([processDefinition.name isEqualToString:@"Adhoc"],
+                                          @"Expected adhoc name to be 'Adhoc' but it was %@", processDefinition.name);
+                            XCTAssertTrue([processDefinition.summary isEqualToString:@"Assign task to colleague"],
+                                          @"Expected adhoc summary to be 'Assign task to colleague' but it was %@", processDefinition.summary);
+                            XCTAssertTrue([processDefinition.version intValue] == 1, @"Expected adhoc version to be 1 but it was %d", [processDefinition.version intValue]);
+                            
+                            adhocDefinitionFound = YES;
+                            break;
+                        }
+                    }
+                }
+                else if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+                {
+                    if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                    {
+                        // go through the process definitions looking for the adhoc workflow
+                        for (AlfrescoWorkflowProcessDefinition *processDefinition in array)
+                        {
+                            if ([processDefinition.key isEqualToString:kAlfrescoActivitiAdhocProcessDefinitionKey])
+                            {
+                                XCTAssertTrue([processDefinition.identifier isEqualToString:kAlfrescoActivitiAdhocProcessDefinition],
+                                              @"Expected adhoc identifer to be activitiAdhoc:1:4 but it was %@", processDefinition.identifier);
+                                XCTAssertTrue([processDefinition.name isEqualToString:@"New Task"],
+                                              @"Expected adhoc name to be 'New Task' but it was %@", processDefinition.name);
+                                XCTAssertTrue([processDefinition.summary isEqualToString:@"Assign a new task to yourself or a colleague"],
+                                              @"Expected adhoc summary to be 'Assign a new task to yourself or a colleague' but it was %@", processDefinition.summary);
+                                XCTAssertTrue([processDefinition.version intValue] == 1, @"Expected adhoc version to be 1 but it was %d", [processDefinition.version intValue]);
+                                
+                                adhocDefinitionFound = YES;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        NSString *adhocKey = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinitionKey];
+                        
+                        // go through the process definitions looking for the adhoc workflow
+                        for (AlfrescoWorkflowProcessDefinition *processDefinition in array)
+                        {
+                            if ([processDefinition.key isEqualToString:adhocKey])
+                            {
+                                XCTAssertTrue([processDefinition.identifier isEqualToString:[kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition]],
+                                              @"Expected adhoc identifer to be activiti$activitiAdhoc:1:4 but it was %@", processDefinition.identifier);
+                                XCTAssertTrue([processDefinition.name isEqualToString:@"Adhoc Workflow"],
+                                              @"Expected adhoc name to be 'Adhoc Workflow' but it was %@", processDefinition.name);
+                                XCTAssertTrue([processDefinition.summary isEqualToString:@"Assign arbitrary task to colleague using Activiti workflow engine"],
+                                              @"Expected adhoc summary to be 'Assign arbitrary task to colleague using Activiti workflow engine' but it was %@", processDefinition.summary);
+                                XCTAssertTrue([processDefinition.version intValue] == 1, @"Expected adhoc version to be 1 but it was %d", [processDefinition.version intValue]);
+                                
+                                adhocDefinitionFound = YES;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                self.lastTestSuccessful = adhocDefinitionFound;
+                if (!adhocDefinitionFound)
+                {
+                    self.lastTestFailureMessage = @"Failed to find adhoc process definition";
+                }
             }
             self.callbackCompleted = YES;
         }];
@@ -87,13 +161,14 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
             else
             {
                 XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
-                XCTAssertTrue(pagingResult.objects.count > 1, @"Paging result should contain more than 1 process");
                 XCTAssertTrue(pagingResult.objects.count == maxItemsToRetrieve, @"Paging result should be %i, instead got back %lu", maxItemsToRetrieve, (unsigned long)pagingResult.objects.count);
-                
-                // COMMENTED OUT FOR NOW - LOOK INTO WHY MORE ITEMS ARE BEING RETRIEVED
-//                XCTAssertTrue(pagingResult.totalItems == maxItemsToRetrieve, @"Paging result should be %i, instead got back %i", maxItemsToRetrieve, pagingResult.totalItems);
-//                XCTAssertFalse(pagingResult.hasMoreItems, @"The hasMoreItems flag should be false");
+                XCTAssertTrue(pagingResult.totalItems > maxItemsToRetrieve, @"Total items should be more than 2 but was %d", pagingResult.totalItems);
+                XCTAssertTrue(pagingResult.hasMoreItems, @"The hasMoreItems flag should be true");
 
+                // make sure the array contains the correct type of objects
+                AlfrescoWorkflowProcessDefinition *processDefinition = pagingResult.objects[0];
+                XCTAssertTrue([processDefinition isKindOfClass:[AlfrescoWorkflowProcessDefinition class]], @"Expected the objects array to contain AlfrescoWorkflowProcessDefinition objects");
+                
                 self.lastTestSuccessful = YES;
             }
             self.callbackCompleted = YES;

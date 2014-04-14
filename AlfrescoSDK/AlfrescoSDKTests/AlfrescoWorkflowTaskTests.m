@@ -27,9 +27,13 @@
 #import "AlfrescoWorkflowUtils.h"
 #import "AlfrescoErrors.h"
 
+static NSString * const kAlfrescoJBPMPrefix = @"jbpm$";
 static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
 static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
+static NSString * const kAlfrescoJBPMReviewProcessDefinitionKey = @"wf:review";
+static NSString * const kAlfrescoActivitiReviewProcessDefinitionKey = @"activitiReview";
+static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"activitiParallelReview";
 
 @implementation AlfrescoWorkflowTaskTests
 
@@ -49,11 +53,91 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
             else
             {
                 XCTAssertNotNil(array, @"array should not be nil");
-                XCTAssertTrue(array.count > 1, @"Array should contain more than 1 process");
+                XCTAssertTrue(array.count > 1, @"array should contain more than 1 task");
                 
-                // TODO
+                BOOL reviewTaskFound = NO;
                 
-                self.lastTestSuccessful = YES;
+                if (self.currentSession.repositoryInfo.capabilities.doesSupportJBPMWorkflowEngine)
+                {
+                    NSString *reviewKey = [kAlfrescoJBPMPrefix stringByAppendingString:kAlfrescoJBPMReviewProcessDefinitionKey];
+                    
+                    // go through the tasks looking for a review task
+                    for (AlfrescoWorkflowTask *task in array)
+                    {
+                        if ([task.processDefinitionIdentifier isEqualToString:reviewKey])
+                        {
+                            XCTAssertTrue([task.identifier rangeOfString:kAlfrescoJBPMPrefix].location != NSNotFound,
+                                          @"Expected identifier to contain jbpm$ but it was %@", task.identifier);
+                            XCTAssertTrue([task.processIdentifier rangeOfString:kAlfrescoJBPMPrefix].location != NSNotFound,
+                                          @"Expected processIdentifier to contain jbpm$ but it was %@", task.processIdentifier);
+                            XCTAssertTrue([task.summary isEqualToString:@"Review Documents to Approve or Reject them"],
+                                          @"Expected task summary to be 'Review Documents to Approve or Reject them' but it was %@", task.summary);
+                            
+                            XCTAssertNotNil(task.name, @"Expected the name property to be populated");
+                            XCTAssertNotNil(task.priority, @"Expected the priority property to be populated");
+                            XCTAssertNotNil(task.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
+                            
+                            reviewTaskFound = YES;
+                            break;
+                        }
+                    }
+                }
+                else if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+                {
+                    if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                    {
+                        // go through the tasks looking for a review task
+                        for (AlfrescoWorkflowTask *task in array)
+                        {
+                            if ((self.isCloud && [task.processDefinitionIdentifier rangeOfString:kAlfrescoActivitiParallelReviewProcessDefinitionKey].location != NSNotFound) ||
+                                (!self.isCloud && [task.processDefinitionIdentifier rangeOfString:kAlfrescoActivitiReviewProcessDefinitionKey].location != NSNotFound))
+                            {
+                                XCTAssertTrue([task.summary isEqualToString:@"Review Task"],
+                                              @"Expected task summary to be 'Review Task' but it was %@", task.summary);
+                                
+                                XCTAssertNotNil(task.identifier, @"Expected the identifier property to be populated");
+                                XCTAssertNotNil(task.processIdentifier, @"Expected the processIdentifier property to be populated");
+                                XCTAssertNotNil(task.name, @"Expected the name property to be populated");
+                                XCTAssertNotNil(task.priority, @"Expected the priority property to be populated");
+                                XCTAssertNotNil(task.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
+                                
+                                reviewTaskFound = YES;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        NSString *reviewKey = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiReviewProcessDefinitionKey];
+                        
+                        // go through the tasks looking for a review task
+                        for (AlfrescoWorkflowTask *task in array)
+                        {
+                            if ([task.processDefinitionIdentifier isEqualToString:reviewKey])
+                            {
+                                XCTAssertTrue([task.identifier rangeOfString:kAlfrescoActivitiPrefix].location != NSNotFound,
+                                              @"Expected identifier to contain activiti$ but it was %@", task.identifier);
+                                XCTAssertTrue([task.processIdentifier rangeOfString:kAlfrescoActivitiPrefix].location != NSNotFound,
+                                              @"Expected processIdentifier to contain activiti$ but it was %@", task.processIdentifier);
+                                XCTAssertTrue([task.summary isEqualToString:@"Review Documents to Approve or Reject them"],
+                                              @"Expected task summary to be 'Review Documents to Approve or Reject them' but it was %@", task.summary);
+                                
+                                XCTAssertNotNil(task.name, @"Expected the name property to be populated");
+                                XCTAssertNotNil(task.priority, @"Expected the priority property to be populated");
+                                XCTAssertNotNil(task.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
+                                
+                                reviewTaskFound = YES;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                self.lastTestSuccessful = reviewTaskFound;
+                if (!reviewTaskFound)
+                {
+                    self.lastTestFailureMessage = @"Failed to find a review task";
+                }
             }
             self.callbackCompleted = YES;
             
@@ -74,7 +158,7 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:10 skipCount:0];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:0];
         
         [self.workflowService retrieveTasksWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
             if (retrieveError)
@@ -85,8 +169,13 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
             }
             else
             {
-                XCTAssertNotNil(pagingResult, @"The paging result should not be nil");
-                XCTAssertTrue(pagingResult.objects.count <= 10, @"The paging result brought back more than 10 items");
+                XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
+                XCTAssertTrue(pagingResult.objects.count == 1, @"PagingResult objects should contain 1 task");
+                XCTAssertTrue(pagingResult.hasMoreItems, @"PagingResult should contain more objects");
+                
+                // make sure the array contains the correct type of objects
+                AlfrescoWorkflowTask *task = pagingResult.objects[0];
+                XCTAssertTrue([task isKindOfClass:[AlfrescoWorkflowTask class]], @"Expected the objects array to contain AlfrescoWorkflowTask objects");
                 
                 self.lastTestSuccessful = YES;
             }
@@ -102,7 +191,7 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
     }
 }
 
-- (void)testRetrieveTaskByTaskByProcess
+- (void)testRetrieveTaskForProcess
 {
     if (self.setUpSuccess)
     {
@@ -133,9 +222,18 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                     else
                     {
                         XCTAssertNotNil(array, @"Returned array should not be nil");
-                        XCTAssertTrue(array.count > 0, @"Tasks array should contain atleast one task");
+                        XCTAssertTrue(array.count > 0, @"Tasks array should contain at least one task");
+
+                        AlfrescoWorkflowTask *firstRetrievedTask = array[0];
+                        XCTAssertNotNil(firstRetrievedTask.identifier, @"Expected the identifier property to be populated");
+                        XCTAssertNotNil(firstRetrievedTask.processIdentifier, @"Expected the processIdentifier property to be populated");
+                        XCTAssertNotNil(firstRetrievedTask.name, @"Expected the name property to be populated");
+                        XCTAssertNotNil(firstRetrievedTask.summary, @"Expected the summary property to be populated");
+                        XCTAssertNotNil(firstRetrievedTask.priority, @"Expected the priority property to be populated");
+                        XCTAssertNotNil(firstRetrievedTask.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
                         
-                        // TODO
+                        XCTAssertTrue([firstRetrievedTask.processDefinitionIdentifier rangeOfString:@"dhoc"].location != NSNotFound,
+                                      @"Expected processDefinitionIdentifier to contain 'dhoc' but it was %@", firstRetrievedTask.processDefinitionIdentifier);
                         
                         [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                             self.lastTestSuccessful = succeeded;
@@ -256,11 +354,15 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                             }
                             else
                             {
-                                XCTAssertNotNil(assignedTask, @"Updated task should not be nil");
-                                NSLog(@"%@ %@", newAssignee, task.assigneeIdentifier);
+                                XCTAssertNotNil(assignedTask, @"Assigned task should not be nil");
+                                XCTAssertTrue([task.identifier isEqualToString:assignedTask.identifier], @"Expected the assigned task to have the same id");
                                 
-                                // Commented out - KNOWN BUG IN JSON RESPONSE FROM SERVER - Public API (See ALF-20568)
-//                                XCTAssertTrue([task.assigneeIdentifier isEqualToString:newAssignee], @"The new assignee identifier has not been updated");
+                                // only test the following on non-public API servers due to ALF-20568 (assignee is not updated in response)
+                                if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                                {
+                                    XCTAssertTrue([assignedTask.assigneeIdentifier isEqualToString:newAssignee],
+                                                  @"Expected the new assignee to be %@ but it was %@", newAssignee, assignedTask.assigneeIdentifier);
+                                }
                                 
                                 [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                                     self.lastTestSuccessful = succeeded;
@@ -311,8 +413,14 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                     }
                     else
                     {
-                        // RESPONSE NOT UPDATED WITH CORRECT VALUES
-//                        XCTAssertNil(unclaimedTask.assigneeIdentifier, @"Assignee Identifier should be nil");
+                        XCTAssertNotNil(unclaimedTask, @"Unclaimed task should not be nil");
+                        XCTAssertTrue([task.identifier isEqualToString:unclaimedTask.identifier], @"Expected the unclaimed task to have the same id");
+                        
+                        // only test the following on non-public API servers due to ALF-20568 (assignee is not updated in response)
+                        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                        {
+                            XCTAssertNil(unclaimedTask.assigneeIdentifier, @"Expected unclaimedTask assignee to be nil");
+                        }
                         
                         [self.workflowService claimTask:unclaimedTask completionBlock:^(AlfrescoWorkflowTask *claimedTask, NSError *claimingError) {
                             if (claimingError)
@@ -323,6 +431,7 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                             }
                             else
                             {
+                                XCTAssertNotNil(claimedTask, @"Claimed task should not be nil");
                                 XCTAssertTrue([claimedTask.assigneeIdentifier isEqualToString:self.currentSession.personIdentifier], @"The task has not been successfully claimed");
                                 
                                 [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
@@ -374,7 +483,13 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                     }
                     else
                     {
-                        XCTAssertNotNil(completedTask, @"Returned task should not be nil");
+                        XCTAssertNotNil(completedTask, @"Completed task should not be nil");
+                        XCTAssertNotNil(completedTask.identifier, @"Expected the identifier property to be populated");
+                        XCTAssertNotNil(completedTask.processIdentifier, @"Expected the processIdentifier property to be populated");
+                        XCTAssertNotNil(completedTask.name, @"Expected the name property to be populated");
+                        XCTAssertNotNil(completedTask.priority, @"Expected the priority property to be populated");
+                        XCTAssertNotNil(completedTask.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
+                        XCTAssertNotNil(completedTask.endedAt, @"Expected the endedAt property to be populated");
                         
                         [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                             self.lastTestSuccessful = succeeded;
@@ -437,9 +552,11 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                             else
                             {
                                 XCTAssertNotNil(array, @"Returned array should not be nil");
-                                XCTAssertTrue(array.count > 0, @"Array should contain more than one item");
+                                XCTAssertTrue(array.count == 1, @"Array should contain one item");
                                 
                                 AlfrescoDocument *document = array[0];
+                                XCTAssertTrue([document.identifier isEqualToString:self.testAlfrescoDocument.identifier],
+                                              @"Expected the attached document to have the same identifier as the document passed to the addAttachmentsToTask method");
                                 
                                 [weakSelf.workflowService removeAttachmentFromTask:task attachment:document completionBlock:^(BOOL removalSuccess, NSError *removeAttachmentError) {
                                     XCTAssertTrue(removalSuccess, @"The removal of the attachment did not return true");
@@ -498,14 +615,17 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
                         else
                         {
                             XCTAssertNotNil(resolvedTask, @"The resolved task should not be nil");
+                            XCTAssertNotNil(resolvedTask.identifier, @"Expected the identifier property to be populated");
+                            XCTAssertNotNil(resolvedTask.processIdentifier, @"Expected the processIdentifier property to be populated");
+                            XCTAssertNotNil(resolvedTask.name, @"Expected the name property to be populated");
+                            XCTAssertNotNil(resolvedTask.priority, @"Expected the priority property to be populated");
                             
-                            /**
-                             * MJH: Removed 08/Jan/2014 as Public API does not return endedAt property for task updates (as per API docs)
-                             *
-                            XCTAssertNotNil(resolvedTask.endedAt, @"The resolved tasks endedAt property should not be nil");
-                             */
-                            
-                            // TODO
+                            // only test the following on non-public API servers due to a bug on the public API
+                            if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                            {
+                                XCTAssertNotNil(resolvedTask.endedAt, @"Expected the endedAt property to be populated");
+                                XCTAssertNotNil(resolvedTask.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
+                            }
                             
                             [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                                 self.lastTestSuccessful = succeeded;
@@ -544,7 +664,12 @@ static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
     [self.workflowService retrieveProcessDefinitionWithIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
         // define creation block
         void (^createProcessAndTaskForDefinition)(AlfrescoWorkflowProcessDefinition *definition) = ^(AlfrescoWorkflowProcessDefinition *definition) {
-            [self.workflowService startProcessForProcessDefinition:definition assignees:nil variables:nil attachments:nil completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
+            
+            // provide a description for the process
+            NSString *processName = [NSString stringWithFormat:@"iOS SDK Test Process - %@", [NSDate date]];
+            NSDictionary *processVariables = @{kAlfrescoWorkflowProcessDescription: processName};
+            
+            [self.workflowService startProcessForProcessDefinition:definition assignees:nil variables:processVariables attachments:nil completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
                 if (startError)
                 {
                     completionBlock(nil, nil, retrieveError);

@@ -21,14 +21,14 @@
 
 NSString * const kAlfrescoErrorDomainName = @"AlfrescoErrorDomain";
 
-NSString * const kAlfrescoErrorDescriptionUnknown = @"Unknown Alfresco Error";
+NSString * const kAlfrescoErrorDescriptionUnknown = @"An unknown error occurred";
+NSString * const kAlfrescoErrorDescriptionHTTPResponse= @"An error occurred on the server";
 NSString * const kAlfrescoErrorDescriptionRequestedNodeNotFound = @"The requested node wasn't found";
 NSString * const kAlfrescoErrorDescriptionAccessDenied = @"Access Denied";
 
 NSString * const kAlfrescoErrorDescriptionSession = @"Session Error";
 NSString * const kAlfrescoErrorDescriptionNoRepositoryFound = @"Session Error: No Alfresco repository found";
 NSString * const kAlfrescoErrorDescriptionUnauthorisedAccess = @"Session Error: Unauthorised Access";
-NSString * const kAlfrescoErrorDescriptionHTTPResponse= @"Session Error: the HTTP Response code suggests an error";
 NSString * const kAlfrescoErrorDescriptionNoNetworkFound = @"Session Error: No Cloud network/domain found";
 NSString * const kAlfrescoErrorDescriptionAPIKeyOrSecretKeyUnrecognised = @"The API or Secret Key (or both) are unrecognised";
 NSString * const kAlfrescoErrorDescriptionAuthorizationCodeInvalid = @"The authentication code is invalid";
