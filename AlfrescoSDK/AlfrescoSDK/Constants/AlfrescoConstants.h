@@ -100,6 +100,7 @@ extern NSString * const kAlfrescoSortByDescription;
 extern NSString * const kAlfrescoFilterByWorkflowState;
 extern NSString * const kAlfrescoFilterValueWorkflowStateActive;
 extern NSString * const kAlfrescoFilterValueWorkflowStateCompleted;
+extern NSString * const kAlfrescoFilterValueWorkflowStateAny;
 
 /**---------------------------------------------------------------------------------------
  * @name capability constants
