@@ -183,7 +183,7 @@
 - (AlfrescoRequest *)retrieveProcessesWithListingContext:(AlfrescoListingContext *)listingContext
                                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSString *state = kAlfrescoWorkflowProcessStateAny;
+    NSString *state = kAlfrescoWorkflowProcessStateActive;
     
     // for now map the new filter listing to the existing state constants (now internal) but these should be removed soon
     if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowState])
@@ -192,9 +192,9 @@
         {
             state = kAlfrescoWorkflowProcessStateCompleted;
         }
-        else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateActive])
+        else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateAny])
         {
-            state = kAlfrescoWorkflowProcessStateActive;
+            state = kAlfrescoWorkflowProcessStateAny;
         }
     }
     
