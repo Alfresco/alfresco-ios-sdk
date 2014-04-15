@@ -175,20 +175,14 @@ extern NSString * const kAlfrescoModelPropertyAudioCompressor;
 /**---------------------------------------------------------------------------------------
  * @name Workflow Constants
  --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoWorkflowTaskComment;
-extern NSString * const kAlfrescoWorkflowTaskReviewOutcome;
+extern NSString * const kAlfrescoWorkflowVariableProcessName;
+extern NSString * const kAlfrescoWorkflowVariableProcessPriority;
+extern NSString * const kAlfrescoWorkflowVariableProcessDueDate;
+extern NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications;
+extern NSString * const kAlfrescoWorkflowVariableProcessApprovalRate;
+extern NSString * const kAlfrescoWorkflowVariableTaskComment;
+extern NSString * const kAlfrescoWorkflowVariableTaskStatus;
+extern NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome;
 
 extern NSString * const kAlfrescoWorkflowTaskTransitionApprove;
 extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
-
-extern NSString * const kAlfrescoWorkflowProcessDescription;
-extern NSString * const kAlfrescoWorkflowProcessPriority;
-extern NSString * const kAlfrescoWorkflowProcessSendEmailNotification;
-extern NSString * const kAlfrescoWorkflowProcessDueDate;
-extern NSString * const kAlfrescoWorkflowProcessApprovalRate;
-
-
-
-
-
-

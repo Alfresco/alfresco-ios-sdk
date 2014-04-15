@@ -143,24 +143,14 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONBPMPackageContainer;
 extern NSString * const kAlfrescoWorkflowLegacyJSONOwner;
 
 extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessTitle;
-extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDescription;
-extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessPriority;
 extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignee;
 extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignees;
-extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessSendEmailNotification;
-extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDueDate;
-extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessApprovalRate;
 
-extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessDescription;
-extern NSString * const kAlfrescoWorkflowLegacyJSONLegacyProcessPriority;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAssignee;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAssignees;
-extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessSendEmailNotification;
-extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessDueDate;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachments;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsAdd;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsRemove;
-extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessApprovalRate;
 
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMTransition;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMStatus;
@@ -170,10 +160,6 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONNext;
 extern NSString * const kAlfrescoWorkflowLegacyJSONCompleted;
 extern NSString * const kAlfrescoWorkflowLegacyJSONItemValue;
 
-extern NSString * const kAlfrescoWorkflowLegacyJSONProcessDefinitionID;
-extern NSString * const kAlfrescoWorkflowLegacyJSONDiagramURL;
-extern NSString * const kAlfrescoWorkflowLegacyJSONStartInstance;
-extern NSString * const kAlfrescoWorkflowLegacyJSONDefinition;
 extern NSString * const kAlfrescoWorkflowLegacyJSONUsername;
 extern NSString * const kAlfrescoWorkflowLegacyJSONStartedAt;
 extern NSString * const kAlfrescoWorkflowLegacyJSONEndedAt;
@@ -184,12 +170,12 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONInitiator;
 extern NSString * const kAlfrescoWorkflowLegacyJSONFormData;
 extern NSString * const kAlfrescoWorkflowLegacyJSONTasks;
 
+extern NSString * const kAlfrescoWorkflowLegacyJSONPropertyPrefix;
+extern NSString * const kAlfrescoWorkflowLegacyJSONAssociationPrefix;
+
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableName;
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableType;
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableValue;
-
-extern NSString * const kAlfrescoWorkflowEngineType;
-extern NSString * const kAlfrescoWorkflowUsingPublicAPI;
 
 // Variable types
 extern NSString * const kAlfrescoWorkflowVariableTypeString;
@@ -198,7 +184,3 @@ extern NSString * const kAlfrescoWorkflowVariableTypeBoolean;
 extern NSString * const kAlfrescoWorkflowVariableTypeDate;
 extern NSString * const kAlfrescoWorkflowVariableTypeDateTime;
 
-// state
-extern NSString * const kAlfrescoWorkflowProcessStateAny;
-extern NSString * const kAlfrescoWorkflowProcessStateActive;
-extern NSString * const kAlfrescoWorkflowProcessStateCompleted;

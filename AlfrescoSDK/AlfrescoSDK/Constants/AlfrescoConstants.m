@@ -129,14 +129,14 @@ NSString * const kAlfrescoModelPropertyAudioCompressor = @"audio:compressor";
 /**
  Workflow Task Constants
  */
-NSString * const kAlfrescoWorkflowTaskComment = @"org.alfresco.mobile.task.comment";
-NSString * const kAlfrescoWorkflowTaskReviewOutcome = @"org.alfresco.mobile.task.reviewoutcome";
+NSString * const kAlfrescoWorkflowVariableProcessName = @"bpm_workflowDescription";
+NSString * const kAlfrescoWorkflowVariableProcessPriority = @"bpm_workflowPriority";
+NSString * const kAlfrescoWorkflowVariableProcessDueDate = @"bpm_workflowDueDate";
+NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications = @"bpm_sendEMailNotifications";
+NSString * const kAlfrescoWorkflowVariableProcessApprovalRate = @"wf_requiredApprovePercent";
+NSString * const kAlfrescoWorkflowVariableTaskComment = @"bpm_comment";
+NSString * const kAlfrescoWorkflowVariableTaskStatus = @"bpm_status";
+NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome = @"wf_reviewOutcome";
 
 NSString * const kAlfrescoWorkflowTaskTransitionApprove = @"Approve";
 NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";
-
-NSString * const kAlfrescoWorkflowProcessDescription = @"org.alfresco.mobile.process.create.description";
-NSString * const kAlfrescoWorkflowProcessPriority = @"org.alfresco.mobile.process.create.priority";
-NSString * const kAlfrescoWorkflowProcessSendEmailNotification = @"org.alfresco.mobile.process.create.sendemailnotification";
-NSString * const kAlfrescoWorkflowProcessDueDate = @"org.alfresco.mobile.process.create.duedate";
-NSString * const kAlfrescoWorkflowProcessApprovalRate = @"org.alfresco.mobile.process.create.approvalrate";

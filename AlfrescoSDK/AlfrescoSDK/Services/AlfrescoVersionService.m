@@ -40,6 +40,12 @@
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
+    // we can't do much without a session so just return nil
+    if (session == nil)
+    {
+        return nil;
+    }
+    
     self = [super init];
     if (nil != self)
     {

@@ -19,6 +19,16 @@
 #import "AlfrescoUtilsTest.h"
 #import "AlfrescoConstants.h"
 #import "AlfrescoListingContext.h"
+#import "AlfrescoActivityStreamService.h"
+#import "AlfrescoCommentService.h"
+#import "AlfrescoDocumentFolderService.h"
+#import "AlfrescoPersonService.h"
+#import "AlfrescoRatingService.h"
+#import "AlfrescoSearchService.h"
+#import "AlfrescoSiteService.h"
+#import "AlfrescoTaggingService.h"
+#import "AlfrescoVersionService.h"
+#import "AlfrescoWorkflowService.h"
 
 @implementation AlfrescoUtilsTest
 
@@ -68,6 +78,39 @@
     listingContext.sortAscending = NO;
     listingContext.sortProperty = kAlfrescoSortByDescription;
     listingContext.listingFilter = listingFilter;
+}
+
+- (void)testServiceCreationWithNilSession
+{
+    AlfrescoActivityStreamService *streamService = [[AlfrescoActivityStreamService alloc] initWithSession:nil];
+    XCTAssertNil(streamService, @"Expected streamService to be nil as it was created with a nil session");
+    
+    AlfrescoCommentService *commentService = [[AlfrescoCommentService alloc] initWithSession:nil];
+    XCTAssertNil(commentService, @"Expected commentService to be nil as it was created with a nil session");
+    
+    AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:nil];
+    XCTAssertNil(docFolderService, @"Expected docFolderService to be nil as it was created with a nil session");
+    
+    AlfrescoPersonService *personService = [[AlfrescoPersonService alloc] initWithSession:nil];
+    XCTAssertNil(personService, @"Expected personService to be nil as it was created with a nil session");
+    
+    AlfrescoRatingService *ratingService = [[AlfrescoRatingService alloc] initWithSession:nil];
+    XCTAssertNil(ratingService, @"Expected ratingService to be nil as it was created with a nil session");
+    
+    AlfrescoSearchService *searchService = [[AlfrescoSearchService alloc] initWithSession:nil];
+    XCTAssertNil(searchService, @"Expected searchService to be nil as it was created with a nil session");
+    
+    AlfrescoSiteService *siteService = [[AlfrescoSiteService alloc] initWithSession:nil];
+    XCTAssertNil(siteService, @"Expected siteService to be nil as it was created with a nil session");
+    
+    AlfrescoTaggingService *taggingService = [[AlfrescoTaggingService alloc] initWithSession:nil];
+    XCTAssertNil(taggingService, @"Expected taggingService to be nil as it was created with a nil session");
+    
+    AlfrescoVersionService *versionService = [[AlfrescoVersionService alloc] initWithSession:nil];
+    XCTAssertNil(versionService, @"Expected versionService to be nil as it was created with a nil session");
+    
+    AlfrescoWorkflowService *workflowService = [[AlfrescoWorkflowService alloc] initWithSession:nil];
+    XCTAssertNil(workflowService, @"Expected workflowService to be nil as it was created with a nil session");
 }
 
 @end

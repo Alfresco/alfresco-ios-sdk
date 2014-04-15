@@ -245,7 +245,7 @@
 
 - (AlfrescoRequest *)isFavorite:(AlfrescoNode *)node completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     if (node.isDocument)
@@ -281,7 +281,7 @@
 
 - (AlfrescoRequest *)addFavorite:(AlfrescoNode *)node completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     [self prepareRequestBodyToFavorite:YES node:node completionBlock:^(NSData *data, NSError *error) {
@@ -301,7 +301,7 @@
 
 - (AlfrescoRequest *)removeFavorite:(AlfrescoNode *)node completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     [self prepareRequestBodyToFavorite:NO node:node completionBlock:^(NSData *data, NSError *error) {

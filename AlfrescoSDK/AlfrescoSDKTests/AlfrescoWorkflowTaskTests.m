@@ -667,7 +667,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
             
             // provide a description for the process
             NSString *processName = [NSString stringWithFormat:@"iOS SDK Test Process - %@", [NSDate date]];
-            NSDictionary *processVariables = @{kAlfrescoWorkflowProcessDescription: processName};
+            NSDictionary *processVariables = @{kAlfrescoWorkflowVariableProcessName: processName};
             
             [self.workflowService startProcessForProcessDefinition:definition assignees:nil variables:processVariables attachments:nil completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
                 if (startError)
