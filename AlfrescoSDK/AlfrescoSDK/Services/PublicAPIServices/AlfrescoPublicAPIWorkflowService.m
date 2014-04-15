@@ -37,8 +37,6 @@
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoDocumentFolderService *documentService;
-@property (nonatomic, strong, readwrite) NSDictionary *publicToPrivateStateMappings;
-@property (nonatomic, strong, readwrite) NSDictionary *publicToPrivateVariableMappings;
 @property (nonatomic, strong, readwrite) AlfrescoWorkflowObjectConverter *workflowObjectConverter;
 @property (nonatomic, strong, readwrite) NSDateFormatter *dateFormatter;
 
@@ -58,14 +56,6 @@
         self.documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:session];
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setDateFormat:kAlfrescoISO8601DateStringFormat];
-        self.publicToPrivateStateMappings = @{kAlfrescoWorkflowProcessStateAny : kAlfrescoPublicAPIWorkflowProcessStatusAny,
-                                              kAlfrescoWorkflowProcessStateActive : kAlfrescoPublicAPIWorkflowProcessStatusActive,
-                                              kAlfrescoWorkflowProcessStateCompleted : kAlfrescoPublicAPIWorkflowProcessStatusCompleted};
-        self.publicToPrivateVariableMappings = @{kAlfrescoWorkflowProcessDescription : kAlfrescoWorkflowPublicBPMJSONProcessDescription,
-                                                 kAlfrescoWorkflowProcessPriority : kAlfrescoWorkflowPublicBPMJSONProcessPriority,
-                                                 kAlfrescoWorkflowProcessSendEmailNotification : kAlfrescoWorkflowPublicBPMJSONProcessSendEmailNotification,
-                                                 kAlfrescoWorkflowProcessDueDate : kAlfrescoWorkflowPublicBPMJSONProcessDueDate,
-                                                 kAlfrescoWorkflowProcessApprovalRate : kAlfrescoWorkflowPublicBPMJSONProcessApprovalRate};
     }
     
     return self;
@@ -179,22 +169,21 @@
 - (AlfrescoRequest *)retrieveProcessesWithListingContext:(AlfrescoListingContext *)listingContext
                                          completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSString *state = kAlfrescoWorkflowProcessStateActive;
+    NSString *stateParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusActive;
     
-    // for now map the new filter listing to the existing state constants (now internal) but these should be removed soon
     if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowState])
     {
         if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateCompleted])
         {
-            state = kAlfrescoWorkflowProcessStateCompleted;
+            stateParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusCompleted;
         }
         else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateAny])
         {
-            state = kAlfrescoWorkflowProcessStateAny;
+            stateParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusAny;
         }
     }
     
-    return [self retrieveProcessesInState:state listingContext:listingContext completionBlock:completionBlock];
+    return [self retrieveProcessesInState:stateParameterValue listingContext:listingContext completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)retrieveProcessWithIdentifier:(NSString *)processIdentifier
@@ -297,33 +286,51 @@
                               listingContext:(AlfrescoListingContext *)listingContext
                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
-    NSString *state = kAlfrescoWorkflowProcessStateAny;
+    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    // for now map the new filter listing to the existing state constants (now internal) but these should be removed soon
+    NSString *stateParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusAny;
+    
     if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowState])
     {
         if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateCompleted])
         {
-            state = kAlfrescoWorkflowProcessStateCompleted;
+            stateParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusCompleted;
         }
         else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateActive])
         {
-            state = kAlfrescoWorkflowProcessStateActive;
+            stateParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusActive;
         }
     }
     
-    // for now call the existing internal method, this needs to be replaced with a proper paging aware implementation
-    return [self retrieveTasksForProcess:process inState:state completionBlock:^(NSArray *array, NSError *error) {
-        // for now create paging result object from the given array
+    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowTaskState : stateParameterValue}];
+    NSString *requestString = [kAlfrescoPublicAPIWorkflowTasksForProcess stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+    NSString *completeRequestString = [requestString stringByAppendingString:queryString];
+    
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:completeRequestString];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
             completionBlock(nil, error);
         }
         else
         {
-            completionBlock([AlfrescoPagingUtils pagedResultFromArray:array listingContext:listingContext], nil);
+            NSError *conversionError = nil;
+            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data conversionError:&conversionError];
+            
+            if (error)
+            {
+                completionBlock(nil, conversionError);
+            }
+            else
+            {
+                completionBlock([AlfrescoPagingUtils pagedResultFromArray:tasks listingContext:listingContext], conversionError);
+            }
         }
     }];
+    return request;
 }
 
 - (AlfrescoRequest *)retrieveAttachmentsForProcess:(AlfrescoWorkflowProcess *)process
@@ -538,15 +545,7 @@
         }
         
         // remapped keys
-        NSString *mappedPrivateKey = (self.publicToPrivateVariableMappings)[key];
-        if (mappedPrivateKey)
-        {
-            completeVariables[mappedPrivateKey] = remapValue;
-        }
-        else
-        {
-            completeVariables[key] = remapValue;
-        }
+        completeVariables[key] = remapValue;
     }
     
     // assignees
@@ -631,22 +630,22 @@
     
     if (name)
     {
-        populatedVariables[kAlfrescoWorkflowProcessDescription] = name;
+        populatedVariables[kAlfrescoWorkflowVariableProcessName] = name;
     }
     
     if (priority)
     {
-        populatedVariables[kAlfrescoWorkflowProcessPriority] = priority;
+        populatedVariables[kAlfrescoWorkflowVariableProcessPriority] = priority;
     }
     
     if (dueDate)
     {
-        populatedVariables[kAlfrescoWorkflowProcessDueDate] = dueDate;
+        populatedVariables[kAlfrescoWorkflowVariableProcessDueDate] = dueDate;
     }
     
     if (sendEmail)
     {
-        populatedVariables[kAlfrescoWorkflowProcessSendEmailNotification] = sendEmail;
+        populatedVariables[kAlfrescoWorkflowVariableProcessSendEmailNotifications] = sendEmail;
     }
     
     return [self startProcessForProcessDefinition:processDefinition assignees:assignees variables:populatedVariables attachments:attachmentNodes completionBlock:completionBlock];
@@ -887,8 +886,7 @@
     [AlfrescoErrors assertArgumentNotNil:listingContext argumentName:@"listingContext"];
     
     // Attempt to get all processes without variables
-    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)",
-                                      kAlfrescoPublicAPIWorkflowProcessStatus, (self.publicToPrivateStateMappings)[state]];
+    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)", kAlfrescoPublicAPIWorkflowProcessStatus, state];
     
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
     NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
@@ -986,7 +984,7 @@
     }
     
     NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@ AND %@=%@)",
-                                      kAlfrescoPublicAPIWorkflowProcessStatus, [self.publicToPrivateStateMappings objectForKey:state],
+                                      kAlfrescoPublicAPIWorkflowProcessStatus, state,
                                       kAlfrescoPublicAPIWorkflowProcessIncludeVariables, @"true"];
     
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
@@ -1034,43 +1032,6 @@
         }
     }];
     
-    return request;
-}
-
-- (AlfrescoRequest *)retrieveTasksForProcess:(AlfrescoWorkflowProcess *)process
-                                     inState:(NSString *)state
-                             completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
-{
-    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowTaskState : (self.publicToPrivateStateMappings)[state]}];
-    NSString *requestString = [kAlfrescoPublicAPIWorkflowTasksForProcess stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
-    NSString *completeRequestString = [requestString stringByAppendingString:queryString];
-    
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:completeRequestString];
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromPublicJSONData:data conversionError:&conversionError];
-            
-            if (error)
-            {
-                completionBlock(nil, conversionError);
-            }
-            else
-            {
-                completionBlock(tasks, conversionError);
-            }
-        }
-    }];
     return request;
 }
 

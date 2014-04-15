@@ -326,6 +326,7 @@
 - (AlfrescoRequest *)isFavorite:(AlfrescoNode *)node
               	completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSString *requestString = [kAlfrescoPublicAPIFavorite stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
@@ -352,7 +353,7 @@
 - (AlfrescoRequest *)addFavorite:(AlfrescoNode *)node
                  completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"node"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoPublicAPIAddFavorite listingContext:nil];
@@ -381,6 +382,7 @@
 - (AlfrescoRequest *)removeFavorite:(AlfrescoNode *)node
                     completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
 {
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSString *requestString = [kAlfrescoPublicAPIFavorite stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];

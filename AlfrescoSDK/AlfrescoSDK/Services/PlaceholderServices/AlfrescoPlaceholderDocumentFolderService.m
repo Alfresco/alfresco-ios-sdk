@@ -28,6 +28,12 @@
 
 - (id)initWithSession:(id<AlfrescoSession>)session
 {
+    // we can't do much without a session so just return nil
+    if (session == nil)
+    {
+        return nil;
+    }
+    
     if (session.repositoryInfo.capabilities.doesSupportPublicAPI)
     {
         if ([session isKindOfClass:[AlfrescoCloudSession class]])

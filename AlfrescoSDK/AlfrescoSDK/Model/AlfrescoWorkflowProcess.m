@@ -24,6 +24,7 @@
  */
 
 #import "AlfrescoWorkflowProcess.h"
+#import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoWorkflowObjectConverter.h"
@@ -176,16 +177,16 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.name = (NSString *)titleVariable.value;
     }
     
-    AlfrescoProperty *priorityVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessPriority];
+    AlfrescoProperty *priorityVariable = variables[kAlfrescoWorkflowVariableProcessPriority];
     if (priorityVariable.value != [NSNull null])
     {
         self.priority = (NSNumber *)priorityVariable.value;
     }
     
-    AlfrescoProperty *dueDateVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessDueDate];
+    AlfrescoProperty *dueDateVariable = variables[kAlfrescoWorkflowVariableProcessDueDate];
     if (dueDateVariable.value != [NSNull null])
     {
-        self.dueAt = [self.dateFormatter dateFromString:dueDateVariable.value];
+        self.dueAt = (NSDate *)dueDateVariable.value;
     }
 }
 

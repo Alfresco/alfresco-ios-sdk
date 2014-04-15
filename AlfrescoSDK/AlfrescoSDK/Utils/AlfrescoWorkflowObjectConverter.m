@@ -24,6 +24,7 @@
  */
 
 #import "AlfrescoWorkflowObjectConverter.h"
+#import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoLog.h"
 #import "AlfrescoProperty.h"
@@ -31,6 +32,7 @@
 #import "AlfrescoWorkflowProcess.h"
 #import "AlfrescoWorkflowTask.h"
 #import "AlfrescoWorkflowInternalConstants.h"
+#import "CMISDateUtil.h"
 
 @implementation AlfrescoWorkflowObjectConverter
 
@@ -242,18 +244,7 @@
         for (NSDictionary *variableProperties in variables)
         {
             NSString *name = variableProperties[kAlfrescoWorkflowPublicJSONVariableName];
-            NSString *value = variableProperties[kAlfrescoWorkflowPublicJSONVariableValue];
-            NSNumber *propTypeIndex = @([self propertyTypeForVariable:variableProperties[kAlfrescoWorkflowPublicJSONVariableType]]);
-
-            
-            // create AlfrescoProperty and store in variables dictionary (changed for MOBSDK-674)
-            NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionaryWithObject:propTypeIndex forKey:kAlfrescoPropertyType];
-            if (value != nil)
-            {
-                propertyDictionary[kAlfrescoPropertyValue] = value;
-            }
-            
-            AlfrescoProperty *variable = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
+            AlfrescoProperty *variable = [self propertyForDictionary:variableProperties];
             [variableDictionary setValue:variable forKey:name];
         }
     }
@@ -265,38 +256,37 @@
 {
     NSMutableDictionary *variables = [NSMutableDictionary dictionary];
     
-    NSArray *excludeKeys = @[kAlfrescoWorkflowLegacyJSONProcessDefinitionID,
-                             kAlfrescoWorkflowLegacyJSONDiagramURL,
-                             kAlfrescoWorkflowLegacyJSONStartInstance,
-                             kAlfrescoWorkflowLegacyJSONDefinition];
+    // The legacy API does not return varaibles for processes (only for tasks) so
+    // for the purposes of satisfying the AlfrescoWorkflowProcess contract we manually
+    // build the well known, common properties.
     
-    for (NSString *key in properties.allKeys)
+    // workflow description/name variable
+    NSMutableDictionary *nameDictionary = [NSMutableDictionary dictionaryWithObject:@(AlfrescoPropertyTypeString) forKey:kAlfrescoPropertyType];
+    if (properties[kAlfrescoWorkflowLegacyJSONMessage] != [NSNull null])
     {
-        if (properties[key] != [NSNull null] && ![excludeKeys containsObject:key])
-        {
-            NSString *name = key;
-            id value = properties[key];
-            NSNumber *propTypeIndex = @([self propertyTypeForVariableValue:value]);
-            
-            // get the username for the initiator dictionary
-            if ([key isEqualToString:kAlfrescoWorkflowLegacyJSONInitiator])
-            {
-                value = (properties[kAlfrescoWorkflowLegacyJSONInitiator])[kAlfrescoWorkflowLegacyJSONUsername];
-                propTypeIndex = @([self propertyTypeForVariableValue:value]);
-            }
-            
-            // create AlfrescoProperty and store in variables dictionary (changed for MOBSDK-674)
-            NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionaryWithObject:propTypeIndex forKey:kAlfrescoPropertyType];
-            if (value != nil)
-            {
-                propertyDictionary[kAlfrescoPropertyValue] = value;
-            }
-            
-            AlfrescoProperty *variable = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
-            [variables setValue:variable forKey:name];
-            
-        }
+        nameDictionary[kAlfrescoPropertyValue] = properties[kAlfrescoWorkflowLegacyJSONMessage];
     }
+    AlfrescoProperty *nameVariable = [[AlfrescoProperty alloc] initWithProperties:nameDictionary];
+    [variables setValue:nameVariable forKey:kAlfrescoWorkflowVariableProcessName];
+    
+    // workflow priority variable
+    NSMutableDictionary *priorityDictionary = [NSMutableDictionary dictionaryWithObject:@(AlfrescoPropertyTypeInteger) forKey:kAlfrescoPropertyType];
+    if (properties[kAlfrescoWorkflowLegacyJSONPriority] != [NSNull null])
+    {
+        priorityDictionary[kAlfrescoPropertyValue] = properties[kAlfrescoWorkflowLegacyJSONPriority];
+    }
+    AlfrescoProperty *priorityVariable = [[AlfrescoProperty alloc] initWithProperties:priorityDictionary];
+    [variables setValue:priorityVariable forKey:kAlfrescoWorkflowVariableProcessPriority];
+    
+    // workflow due date variable
+    NSMutableDictionary *dueDictionary = [NSMutableDictionary dictionaryWithObject:@(AlfrescoPropertyTypeDate) forKey:kAlfrescoPropertyType];
+    if (properties[kAlfrescoWorkflowLegacyJSONDueAt] != [NSNull null])
+    {
+        dueDictionary[kAlfrescoPropertyValue] = [CMISDateUtil dateFromString:properties[kAlfrescoWorkflowLegacyJSONDueAt]];
+    }
+    AlfrescoProperty *dueVariable = [[AlfrescoProperty alloc] initWithProperties:dueDictionary];
+    [variables setValue:dueVariable forKey:kAlfrescoWorkflowVariableProcessDueDate];
+    
     return variables;
 }
 
@@ -318,17 +308,7 @@
                 NSDictionary *variableProperties = entry[kAlfrescoWorkflowPublicJSONEntry];
                 
                 NSString *name = variableProperties[kAlfrescoWorkflowPublicJSONVariableName];
-                NSString *value = variableProperties[kAlfrescoWorkflowPublicJSONVariableValue];
-                NSNumber *propTypeIndex = @([self propertyTypeForVariable:variableProperties[kAlfrescoWorkflowPublicJSONVariableType]]);
-                
-                // create AlfrescoProperty and store in variables dictionary (changed for MOBSDK-674)
-                NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionaryWithObject:propTypeIndex forKey:kAlfrescoPropertyType];
-                if (value != nil)
-                {
-                    propertyDictionary[kAlfrescoPropertyValue] = value;
-                }
-                
-                AlfrescoProperty *variable = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
+                AlfrescoProperty *variable = [self propertyForDictionary:variableProperties];
                 [workflowVariables setValue:variable forKey:name];
             }
             return workflowVariables;
@@ -426,6 +406,28 @@
 }
 
 #pragma mark Helper methods
+
+- (AlfrescoProperty *)propertyForDictionary:(NSDictionary *)variableDictionary
+{
+    id value = variableDictionary[kAlfrescoWorkflowPublicJSONVariableValue];
+    AlfrescoPropertyType propType = [self propertyTypeForVariable:variableDictionary[kAlfrescoWorkflowPublicJSONVariableType]];
+    NSNumber *propTypeIndex = @(propType);
+
+    // construct the AlfrescoProperty object
+    NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionaryWithObject:propTypeIndex forKey:kAlfrescoPropertyType];
+    if (value != nil && value != [NSNull null])
+    {
+        // convert values if necessary
+        if (propType == AlfrescoPropertyTypeDate || propType == AlfrescoPropertyTypeDateTime)
+        {
+            value = [CMISDateUtil dateFromString:value];
+        }
+        
+        propertyDictionary[kAlfrescoPropertyValue] = value;
+    }
+    
+    return [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
+}
 
 - (AlfrescoPropertyType)propertyTypeForVariable:(NSString *)type
 {
