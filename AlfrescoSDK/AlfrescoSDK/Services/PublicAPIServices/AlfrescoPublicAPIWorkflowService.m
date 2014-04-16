@@ -481,13 +481,21 @@
         {
             NSError *conversionError = nil;
             NSArray *attachmentIdentifiers = [self.workflowObjectConverter attachmentIdentifiersFromPublicJSONData:data conversionError:&conversionError];
+            
             if (conversionError)
             {
                 completionBlock(nil, conversionError);
             }
             else
             {
-                [self retrieveAlfrescoNodes:attachmentIdentifiers completionBlock:completionBlock];
+                if (attachmentIdentifiers.count > 0)
+                {
+                    [self retrieveAlfrescoNodes:attachmentIdentifiers completionBlock:completionBlock];
+                }
+                else
+                {
+                    completionBlock(attachmentIdentifiers, nil);
+                }
             }
         }
     }];

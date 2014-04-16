@@ -151,10 +151,7 @@ NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachments = @"assoc_pack
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsAdd = @"assoc_packageItems_added";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsRemove = @"assoc_packageItems_removed";
 
-NSString * const kAlfrescoWorkflowLegacyJSONBPMTransition = @"prop_transitions";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMStatus = @"prop_bpm_status";
-NSString * const kAlfrescoWorkflowLegacyJSONBPMReviewOutcome = @"prop_wf_reviewOutcome";
-NSString * const kAlfrescoWorkflowLegacyJSONBPMComment = @"prop_bpm_comment";
 NSString * const kAlfrescoWorkflowLegacyJSONNext = @"Next";
 NSString * const kAlfrescoWorkflowLegacyJSONCompleted = @"Completed";
 NSString * const kAlfrescoWorkflowLegacyJSONItemValue = @"itemValueType";

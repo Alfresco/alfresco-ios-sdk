@@ -180,6 +180,7 @@ extern NSString * const kAlfrescoWorkflowVariableProcessPriority;
 extern NSString * const kAlfrescoWorkflowVariableProcessDueDate;
 extern NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications;
 extern NSString * const kAlfrescoWorkflowVariableProcessApprovalRate;
+extern NSString * const kAlfrescoWorkflowVariableTaskTransition;
 extern NSString * const kAlfrescoWorkflowVariableTaskComment;
 extern NSString * const kAlfrescoWorkflowVariableTaskStatus;
 extern NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome;

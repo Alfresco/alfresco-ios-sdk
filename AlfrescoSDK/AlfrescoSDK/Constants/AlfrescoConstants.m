@@ -134,6 +134,7 @@ NSString * const kAlfrescoWorkflowVariableProcessPriority = @"bpm_workflowPriori
 NSString * const kAlfrescoWorkflowVariableProcessDueDate = @"bpm_workflowDueDate";
 NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications = @"bpm_sendEMailNotifications";
 NSString * const kAlfrescoWorkflowVariableProcessApprovalRate = @"wf_requiredApprovePercent";
+NSString * const kAlfrescoWorkflowVariableTaskTransition = @"prop_transitions";
 NSString * const kAlfrescoWorkflowVariableTaskComment = @"bpm_comment";
 NSString * const kAlfrescoWorkflowVariableTaskStatus = @"bpm_status";
 NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome = @"wf_reviewOutcome";
