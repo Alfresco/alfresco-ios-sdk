@@ -28,8 +28,6 @@ extern NSString * const kAlfrescoProcessID;
 extern NSString * const kAlfrescoTaskID;
 extern NSString * const kAlfrescoItemID;
 
-extern NSString * const kAlfrescoWorkflowReviewAndApprove;
-
 // Base URLs
 extern NSString * const kAlfrescoPublicAPIWorkflowBaseURL;
 extern NSString * const kAlfrescoCloudWorkflowBaseURL;
@@ -123,6 +121,7 @@ extern NSString * const kAlfrescoWorkflowPublicJSONAssignee;
 extern NSString * const kAlfrescoWorkflowPublicJSONProcessVariables;
 extern NSString * const kAlfrescoWorkflowPublicJSONVariables;
 extern NSString * const kAlfrescoWorkflowPublicJSONStartUserID;
+extern NSString * const kAlfrescoWorkflowPublicJSONFormResourceKey;
 
 extern NSString * const kAlfrescoWorkflowLegacyJSONProperties;
 extern NSString * const kAlfrescoWorkflowLegacyJSONWorkflowInstance;
@@ -176,6 +175,9 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONAssociationPrefix;
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableName;
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableType;
 extern NSString * const kAlfrescoWorkflowPublicJSONVariableValue;
+extern NSString * const kAlfrescoWorkflowPublicJSONVariableScope;
+extern NSString * const kAlfrescoWorkflowPublicJSONVariableScopeLocal;
+extern NSString * const kAlfrescoWorkflowPublicJSONVariableScopeGlobal;
 
 // Variable types
 extern NSString * const kAlfrescoWorkflowVariableTypeString;

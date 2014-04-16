@@ -217,7 +217,7 @@
 #pragma mark Tasks
 
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
-                       properties:(NSDictionary *)properties
+                        variables:(NSDictionary *)variables
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];

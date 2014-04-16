@@ -29,6 +29,8 @@
 
 static NSString * const kAlfrescoJBPMPrefix = @"jbpm$";
 static NSString * const kAlfrescoActivitiPrefix = @"activiti$";
+static NSString * const kAlfrescoAdhocTaskType = @"wf:adhocTask";
+static NSString * const kAlfrescoSubmitAdhocTaskType = @"wf:submitAdhocTask";
 static NSString * const kAlfrescoActivitiAdhocProcessDefinition = @"activitiAdhoc:1:4";
 static NSString * const kAlfrescoJBPMAdhocProcessDefinition = @"jbpm$wf:adhoc";
 static NSString * const kAlfrescoJBPMReviewProcessDefinitionKey = @"wf:review";
@@ -74,6 +76,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                                           @"Expected task summary to be 'Review Documents to Approve or Reject them' but it was %@", task.summary);
                             
                             XCTAssertNotNil(task.name, @"Expected the name property to be populated");
+                            XCTAssertNotNil(task.type, @"Expected the type property to be populated");
                             XCTAssertNotNil(task.priority, @"Expected the priority property to be populated");
                             XCTAssertNotNil(task.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
                             
@@ -98,6 +101,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                                 XCTAssertNotNil(task.identifier, @"Expected the identifier property to be populated");
                                 XCTAssertNotNil(task.processIdentifier, @"Expected the processIdentifier property to be populated");
                                 XCTAssertNotNil(task.name, @"Expected the name property to be populated");
+                                XCTAssertNotNil(task.type, @"Expected the type property to be populated");
                                 XCTAssertNotNil(task.priority, @"Expected the priority property to be populated");
                                 XCTAssertNotNil(task.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
                                 
@@ -123,6 +127,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                                               @"Expected task summary to be 'Review Documents to Approve or Reject them' but it was %@", task.summary);
                                 
                                 XCTAssertNotNil(task.name, @"Expected the name property to be populated");
+                                XCTAssertNotNil(task.type, @"Expected the type property to be populated");
                                 XCTAssertNotNil(task.priority, @"Expected the priority property to be populated");
                                 XCTAssertNotNil(task.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
                                 
@@ -228,12 +233,24 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         XCTAssertNotNil(firstRetrievedTask.identifier, @"Expected the identifier property to be populated");
                         XCTAssertNotNil(firstRetrievedTask.processIdentifier, @"Expected the processIdentifier property to be populated");
                         XCTAssertNotNil(firstRetrievedTask.name, @"Expected the name property to be populated");
+                        XCTAssertNotNil(firstRetrievedTask.type, @"Expected the type property to be populated");
                         XCTAssertNotNil(firstRetrievedTask.summary, @"Expected the summary property to be populated");
                         XCTAssertNotNil(firstRetrievedTask.priority, @"Expected the priority property to be populated");
                         XCTAssertNotNil(firstRetrievedTask.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
                         
                         XCTAssertTrue([firstRetrievedTask.processDefinitionIdentifier rangeOfString:@"dhoc"].location != NSNotFound,
                                       @"Expected processDefinitionIdentifier to contain 'dhoc' but it was %@", firstRetrievedTask.processDefinitionIdentifier);
+                        
+                        if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+                        {
+                            XCTAssertTrue([firstRetrievedTask.type isEqualToString:kAlfrescoAdhocTaskType],
+                                          @"Expected type of task to be %@ but it was %@", kAlfrescoAdhocTaskType, firstRetrievedTask.type);
+                        }
+                        else
+                        {
+                            XCTAssertTrue([firstRetrievedTask.type isEqualToString:kAlfrescoSubmitAdhocTaskType],
+                                          @"Expected type of task to be %@ but it was %@", kAlfrescoSubmitAdhocTaskType, firstRetrievedTask.type);
+                        }
                         
                         [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                             self.lastTestSuccessful = succeeded;
@@ -289,6 +306,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         XCTAssertEqualObjects(task.startedAt, retrievedTask.startedAt, @"The task startedAt property does not match");
                         XCTAssertEqualObjects(task.endedAt, retrievedTask.endedAt, @"The task endedAt property does not match");
                         XCTAssertEqualObjects(task.dueAt, retrievedTask.dueAt, @"The task dueAt property does not match");
+                        XCTAssertEqualObjects(task.type, retrievedTask.type, @"The task type property does not match");
                         XCTAssertEqualObjects(task.summary, retrievedTask.summary, @"The task summary property does not match");
                         XCTAssertEqualObjects(task.priority, retrievedTask.priority, @"The task priority property does not match");
                         XCTAssertEqualObjects(task.assigneeIdentifier, retrievedTask.assigneeIdentifier, @"The task assigneeIdentifier property does not match");
@@ -474,7 +492,10 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
             }
             else
             {
-                [self.workflowService completeTask:task properties:nil completionBlock:^(AlfrescoWorkflowTask *completedTask, NSError *completedError) {
+                NSString *taskComment = @"Comment added by SDK tests";
+                NSDictionary *variables = @{kAlfrescoWorkflowVariableTaskComment: taskComment};
+                
+                [self.workflowService completeTask:task variables:variables completionBlock:^(AlfrescoWorkflowTask *completedTask, NSError *completedError) {
                     if (completedError)
                     {
                         self.lastTestSuccessful = NO;
@@ -490,6 +511,8 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         XCTAssertNotNil(completedTask.priority, @"Expected the priority property to be populated");
                         XCTAssertNotNil(completedTask.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
                         XCTAssertNotNil(completedTask.endedAt, @"Expected the endedAt property to be populated");
+                        
+                        // TODO: once we support retrieval of task variables make sure the comment is present.
                         
                         [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
                             self.lastTestSuccessful = succeeded;

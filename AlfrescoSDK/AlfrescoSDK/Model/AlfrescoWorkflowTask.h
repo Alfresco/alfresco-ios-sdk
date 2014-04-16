@@ -31,6 +31,7 @@
 @property (nonatomic, strong, readonly) NSString *processIdentifier;
 @property (nonatomic, strong, readonly) NSString *processDefinitionIdentifier;
 @property (nonatomic, strong, readonly) NSString *name;
+@property (nonatomic, strong, readonly) NSString *type;
 @property (nonatomic, strong, readonly) NSDate *startedAt;
 @property (nonatomic, strong, readonly) NSDate *endedAt;
 @property (nonatomic, strong, readonly) NSDate *dueAt;
