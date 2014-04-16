@@ -531,80 +531,6 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
     }
 }
 
-- (void)testAddRetrieveAndDeleteAttachment
-{
-    if (self.setUpSuccess)
-    {
-        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
-        
-        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
-        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
-        {
-            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
-        }
-        
-        __weak typeof(self) weakSelf = self;
-        
-        [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
-            if (creationError)
-            {
-                weakSelf.lastTestSuccessful = NO;
-                weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [creationError localizedDescription], [creationError localizedFailureReason]];
-                weakSelf.callbackCompleted = YES;
-            }
-            else
-            {
-                [weakSelf.workflowService addAttachmentsToTask:task attachments:@[self.testAlfrescoDocument] completionBlock:^(BOOL succeeded, NSError *addError) {
-                    if (addError)
-                    {
-                        weakSelf.lastTestSuccessful = NO;
-                        weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [addError localizedDescription], [addError localizedFailureReason]];
-                        weakSelf.callbackCompleted = YES;
-                    }
-                    else
-                    {
-                        XCTAssertNotNil(task, @"Returned task should not be nil");
-                        
-                        [weakSelf.workflowService retrieveAttachmentsForTask:task completionBlock:^(NSArray *array, NSError *retrieveError) {
-                            if (retrieveError)
-                            {
-                                weakSelf.lastTestSuccessful = NO;
-                                weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [addError localizedDescription], [addError localizedFailureReason]];
-                                weakSelf.callbackCompleted = YES;
-                            }
-                            else
-                            {
-                                XCTAssertNotNil(array, @"Returned array should not be nil");
-                                XCTAssertTrue(array.count == 1, @"Array should contain one item");
-                                
-                                AlfrescoDocument *document = array[0];
-                                XCTAssertTrue([document.identifier isEqualToString:self.testAlfrescoDocument.identifier],
-                                              @"Expected the attached document to have the same identifier as the document passed to the addAttachmentsToTask method");
-                                
-                                [weakSelf.workflowService removeAttachmentFromTask:task attachment:document completionBlock:^(BOOL removalSuccess, NSError *removeAttachmentError) {
-                                    XCTAssertTrue(removalSuccess, @"The removal of the attachment did not return true");
-                                    XCTAssertNil(removeAttachmentError, @"The returned error should be nil");
-                                        
-                                    [weakSelf deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
-                                        weakSelf.lastTestSuccessful = succeeded;
-                                        weakSelf.callbackCompleted = YES;
-                                    }];
-                                }];
-                            }
-                        }];
-                    }
-                }];
-            }
-        }];
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-    }
-    else
-    {
-        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
-    }
-}
-
 - (void)testResolveTask
 {
     if (self.setUpSuccess)
@@ -616,7 +542,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
         {
             processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
         }
-            
+        
         [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
             if (creationError)
             {
@@ -665,6 +591,134 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         
                         self.lastTestSuccessful = YES;
                         self.callbackCompleted = YES;
+                    }
+                }];
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testAddRetrieveAndDeleteAttachment
+{
+    if (self.setUpSuccess)
+    {
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+        
+        __weak typeof(self) weakSelf = self;
+        
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+            if (creationError)
+            {
+                weakSelf.lastTestSuccessful = NO;
+                weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [creationError localizedDescription], [creationError localizedFailureReason]];
+                weakSelf.callbackCompleted = YES;
+            }
+            else
+            {
+                [weakSelf.workflowService addAttachmentsToTask:task attachments:@[self.testAlfrescoDocument] completionBlock:^(BOOL succeeded, NSError *addError) {
+                    if (addError)
+                    {
+                        weakSelf.lastTestSuccessful = NO;
+                        weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [addError localizedDescription], [addError localizedFailureReason]];
+                        weakSelf.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertNotNil(task, @"Returned task should not be nil");
+                        
+                        [weakSelf.workflowService retrieveAttachmentsForTask:task completionBlock:^(NSArray *array, NSError *retrieveError) {
+                            if (retrieveError)
+                            {
+                                weakSelf.lastTestSuccessful = NO;
+                                weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveError localizedDescription], [retrieveError localizedFailureReason]];
+                                weakSelf.callbackCompleted = YES;
+                            }
+                            else
+                            {
+                                XCTAssertNotNil(array, @"Returned array should not be nil");
+                                XCTAssertTrue(array.count == 1, @"Array should contain one item");
+                                
+                                AlfrescoDocument *document = array[0];
+                                XCTAssertTrue([document.identifier isEqualToString:self.testAlfrescoDocument.identifier],
+                                              @"Expected the attached document to have the same identifier as the document passed to the addAttachmentsToTask method");
+                                
+                                [weakSelf.workflowService removeAttachmentFromTask:task attachment:document completionBlock:^(BOOL removalSuccess, NSError *removeAttachmentError) {
+                                    XCTAssertTrue(removalSuccess, @"The removal of the attachment did not return true");
+                                    XCTAssertNil(removeAttachmentError, @"The returned error should be nil");
+                                        
+                                    [weakSelf deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
+                                        weakSelf.lastTestSuccessful = succeeded;
+                                        weakSelf.callbackCompleted = YES;
+                                    }];
+                                }];
+                            }
+                        }];
+                    }
+                }];
+            }
+        }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveNoAttachments
+{
+    if (self.setUpSuccess)
+    {
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
+        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+        
+        __weak typeof(self) weakSelf = self;
+        
+        [self createTaskAndProcessWithProcessDefinitionIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcess *process, AlfrescoWorkflowTask *task, NSError *creationError) {
+            if (creationError)
+            {
+                weakSelf.lastTestSuccessful = NO;
+                weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [creationError localizedDescription], [creationError localizedFailureReason]];
+                weakSelf.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(task, @"Returned task should not be nil");
+                
+                [weakSelf.workflowService retrieveAttachmentsForTask:task completionBlock:^(NSArray *array, NSError *retrieveError) {
+                    if (retrieveError)
+                    {
+                        weakSelf.lastTestSuccessful = NO;
+                        weakSelf.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveError localizedDescription], [retrieveError localizedFailureReason]];
+                        weakSelf.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertNotNil(array, @"Returned array should not be nil");
+                        XCTAssertTrue(array.count == 0, @"Array should be empty");
+                            
+                        [weakSelf deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
+                            weakSelf.lastTestSuccessful = succeeded;
+                            weakSelf.callbackCompleted = YES;
+                        }];
                     }
                 }];
             }

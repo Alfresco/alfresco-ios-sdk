@@ -518,13 +518,20 @@
             NSError *nodeIdentifierError = nil;
             NSArray *nodeIdentifiers = [self.workflowObjectConverter attachmentIdentifiersFromLegacyJSONData:data conversionError:&nodeIdentifierError];
             
-            if (nodeIdentifiers)
+            if (nodeIdentifierError)
             {
-                [self retrieveAlfrescoNodes:nodeIdentifiers completionBlock:completionBlock];
+                completionBlock(nil, nodeIdentifierError);
             }
             else
             {
-                completionBlock(nil, nil);
+                if (nodeIdentifiers.count > 0)
+                {
+                    [self retrieveAlfrescoNodes:nodeIdentifiers completionBlock:completionBlock];
+                }
+                else
+                {
+                    completionBlock(nodeIdentifiers, nil);
+                }
             }
         }
     }];
@@ -773,17 +780,17 @@
     }
 
     // make sure a transition is present
-    if (requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] == nil)
+    if (requestBody[kAlfrescoWorkflowVariableTaskTransition] == nil)
     {
         if ([AlfrescoWorkflowUtils isActivitiTask:task])
         {
             // always set the transition to "next" for activiti tasks
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = kAlfrescoWorkflowLegacyJSONNext;
+            requestBody[kAlfrescoWorkflowVariableTaskTransition] = kAlfrescoWorkflowLegacyJSONNext;
         }
         else if ([AlfrescoWorkflowUtils isJBPMTask:task])
         {
             // if jbpm task and there is no transition set, set it to ""
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = @"";
+            requestBody[kAlfrescoWorkflowVariableTaskTransition] = @"";
         }
     }
     
