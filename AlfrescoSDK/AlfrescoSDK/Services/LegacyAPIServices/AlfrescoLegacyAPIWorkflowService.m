@@ -760,53 +760,35 @@
 #pragma mark Tasks
 
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
-                       properties:(NSDictionary *)properties
+                        variables:(NSDictionary *)variables
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
     NSMutableDictionary *requestBody = [[NSMutableDictionary alloc] init];
     
-    [requestBody addEntriesFromDictionary:properties];
-    
-    if ([AlfrescoWorkflowUtils isActivitiTask:task])
+    // process the variable names
+    for (NSString *key in [variables allKeys])
     {
-        requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = kAlfrescoWorkflowLegacyJSONNext;
-        requestBody[kAlfrescoWorkflowLegacyJSONBPMStatus] = kAlfrescoWorkflowLegacyJSONCompleted;
-        
-        // BUG: The SDK should not be making these decisions, besides this will only work for one type of review workflows
-        if ([task.processDefinitionIdentifier rangeOfString:kAlfrescoWorkflowReviewAndApprove options:NSCaseInsensitiveSearch].location != NSNotFound)
-        {
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMReviewOutcome] = properties[kAlfrescoWorkflowVariableTaskReviewOutcome];
-        }
-        
-        if ([[properties allKeys] containsObject:kAlfrescoWorkflowVariableTaskComment])
-        {
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMComment] = properties[kAlfrescoWorkflowVariableTaskComment];
-        }
+        NSString *processedKey = [self processVariableKey:key];
+        requestBody[processedKey] = variables[key];
     }
-    else if ([AlfrescoWorkflowUtils isJBPMTask:task])
+
+    // make sure a transition is present
+    if (requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] == nil)
     {
-        // BUG: The SDK should not be making these decisions, in fact this will never work as it's a JBPM task but checking for activitiReview workflow
-        if ([task.processDefinitionIdentifier isEqualToString:kAlfrescoWorkflowReviewAndApprove])
+        if ([AlfrescoWorkflowUtils isActivitiTask:task])
         {
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = properties[kAlfrescoWorkflowVariableTaskReviewOutcome];
+            // always set the transition to "next" for activiti tasks
+            requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = kAlfrescoWorkflowLegacyJSONNext;
         }
-        else
+        else if ([AlfrescoWorkflowUtils isJBPMTask:task])
         {
+            // if jbpm task and there is no transition set, set it to ""
             requestBody[kAlfrescoWorkflowLegacyJSONBPMTransition] = @"";
         }
-        
-        requestBody[kAlfrescoWorkflowLegacyJSONBPMStatus] = kAlfrescoWorkflowLegacyJSONCompleted;
-        
-        if ([[properties allKeys] containsObject:kAlfrescoWorkflowVariableTaskComment])
-        {
-            requestBody[kAlfrescoWorkflowLegacyJSONBPMComment] = properties[kAlfrescoWorkflowVariableTaskComment];
-        }
     }
-    else
-    {
-        AlfrescoLogError(@"The workflow engine type can not be determined in selector - %@", NSStringFromSelector(_cmd));
-        return nil;
-    }
+    
+    // always set the bpm_status flag to completed
+    requestBody[kAlfrescoWorkflowLegacyJSONBPMStatus] = kAlfrescoWorkflowLegacyJSONCompleted;
     
     NSString *requestString = [kAlfrescoLegacyAPIWorkflowTaskFormProcessor stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
     
@@ -1131,7 +1113,7 @@
         [key rangeOfString:kAlfrescoWorkflowLegacyJSONAssociationPrefix].location == NSNotFound)
     {
         // Ideally we should look up the variable using the Alfresco model defined for the
-        // workflow to determine which prefix is required, for now presume a property
+        // workflow/task to determine which prefix is required, for now presume a property
         
         processedKey = [kAlfrescoWorkflowLegacyJSONPropertyPrefix stringByAppendingString:key];
     }

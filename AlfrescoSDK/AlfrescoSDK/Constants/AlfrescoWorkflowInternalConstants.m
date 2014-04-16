@@ -28,8 +28,6 @@ NSString * const kAlfrescoProcessID = @"{processId}";
 NSString * const kAlfrescoTaskID = @"{taskId}";
 NSString * const kAlfrescoItemID = @"{itemId}";
 
-NSString * const kAlfrescoWorkflowReviewAndApprove = @"activitiReview";
-
 // Base URLs
 NSString * const kAlfrescoPublicAPIWorkflowBaseURL = @"/api/-default-/public/workflow/versions/1";
 NSString * const kAlfrescoCloudWorkflowBaseURL = @"/public/workflow/versions/1";
@@ -123,6 +121,7 @@ NSString * const kAlfrescoWorkflowPublicJSONAssignee = @"assignee";
 NSString * const kAlfrescoWorkflowPublicJSONProcessVariables = @"processVariables";
 NSString * const kAlfrescoWorkflowPublicJSONVariables = @"variables";
 NSString * const kAlfrescoWorkflowPublicJSONStartUserID = @"startUserId";
+NSString * const kAlfrescoWorkflowPublicJSONFormResourceKey = @"formResourceKey";
 
 NSString * const kAlfrescoWorkflowLegacyJSONProperties = @"properties";
 NSString * const kAlfrescoWorkflowLegacyJSONWorkflowInstance = @"workflowInstance";
@@ -176,6 +175,9 @@ NSString * const kAlfrescoWorkflowLegacyJSONAssociationPrefix = @"assoc_";
 NSString * const kAlfrescoWorkflowPublicJSONVariableName = @"name";
 NSString * const kAlfrescoWorkflowPublicJSONVariableType = @"type";
 NSString * const kAlfrescoWorkflowPublicJSONVariableValue = @"value";
+NSString * const kAlfrescoWorkflowPublicJSONVariableScope = @"scope";
+NSString * const kAlfrescoWorkflowPublicJSONVariableScopeLocal = @"local";
+NSString * const kAlfrescoWorkflowPublicJSONVariableScopeGlobal = @"global";
 
 // Variable types
 NSString * const kAlfrescoWorkflowVariableTypeString = @"d:text";

@@ -255,11 +255,11 @@
  Completes a given task.
  
  @param task The task that should be marked as complete
- @param properties Any properties to add to the task
+ @param variables Any variables to add to the task
  @param completionBlock The block that's called with the operation completes
  */
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
-                       properties:(NSDictionary *)properties
+                        variables:(NSDictionary *)variables
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
 
 /**

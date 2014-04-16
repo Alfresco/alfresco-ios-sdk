@@ -678,35 +678,40 @@
 #pragma mark Tasks
 
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
-                       properties:(NSDictionary *)properties
+                        variables:(NSDictionary *)variables
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateStateForTask:task state:@{kAlfrescoWorkflowTaskState : kAlfrescoPublicAPIWorkflowTaskStateCompleted} completionBlock:completionBlock];
+    return [self updateStateForTask:task state:kAlfrescoPublicAPIWorkflowTaskStateCompleted
+                           assignee:nil variables:variables completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)claimTask:(AlfrescoWorkflowTask *)task
                completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateStateForTask:task state:@{kAlfrescoWorkflowTaskState : kAlfrescoPublicAPIWorkflowTaskStateClaimed} completionBlock:completionBlock];
+    return [self updateStateForTask:task state:kAlfrescoPublicAPIWorkflowTaskStateClaimed
+                           assignee:nil variables:nil completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)unclaimTask:(AlfrescoWorkflowTask *)task
                  completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateStateForTask:task state:@{kAlfrescoWorkflowTaskState : kAlfrescoPublicAPIWorkflowTaskStateUnclaimed} completionBlock:completionBlock];
+    return [self updateStateForTask:task state:kAlfrescoPublicAPIWorkflowTaskStateUnclaimed
+                           assignee:nil variables:nil completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)reassignTask:(AlfrescoWorkflowTask *)task
                        toAssignee:(AlfrescoPerson *)assignee
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateStateForTask:task state:@{kAlfrescoWorkflowTaskState : kAlfrescoPublicAPIWorkflowTaskStateClaimed, kAlfrescoPublicAPIWorkflowTaskAssignee : assignee.identifier} completionBlock:completionBlock];
+    return [self updateStateForTask:task state:kAlfrescoPublicAPIWorkflowTaskStateClaimed
+                           assignee:assignee.identifier variables:nil completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)resolveTask:(AlfrescoWorkflowTask *)task
                  completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateStateForTask:task state:@{kAlfrescoWorkflowTaskState : kAlfrescoPublicAPIWorkflowTaskStateResolved} completionBlock:completionBlock];
+    return [self updateStateForTask:task state:kAlfrescoPublicAPIWorkflowTaskStateResolved
+                           assignee:nil variables:nil completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)addAttachmentToTask:(AlfrescoWorkflowTask *)task
@@ -820,35 +825,72 @@
 }
 
 - (AlfrescoRequest *)updateStateForTask:(AlfrescoWorkflowTask *)task
-                                  state:(NSDictionary *)requestDictionary
+                                  state:(NSString *)state
+                               assignee:(NSString *)assignee
+                                  variables:(NSDictionary *)variables
                         completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
-    [AlfrescoErrors assertArgumentNotNil:requestDictionary argumentName:@"requestDictionary"];
+    [AlfrescoErrors assertArgumentNotNil:state argumentName:@"state"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSMutableString *requestString = [[kAlfrescoPublicAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier] mutableCopy];
     
     // build the select parameters string
-    NSMutableString *requestParametersString = [[NSMutableString alloc] init];
-    NSArray *allParameterKeys = [requestDictionary allKeys];
-    for (int i = 0; i < allParameterKeys.count; i++)
+    NSString *requestParametersString = [[NSString alloc] initWithFormat:@"?%@=%@", kAlfrescoWorkflowTaskSelectParameter, kAlfrescoWorkflowTaskState];
+
+    // if there is an assignee present add to select parameter
+    if (assignee != nil)
     {
-        NSString *key = allParameterKeys[i];
-        [requestParametersString appendString:key];
-        if (i != (allParameterKeys.count - 1))
-        {
-            [requestParametersString appendString:@","];
-        }
+        requestParametersString = [requestParametersString stringByAppendingFormat:@",%@", kAlfrescoPublicAPIWorkflowTaskAssignee];
     }
     
-    NSString *parameters = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoWorkflowTaskSelectParameter : requestParametersString}];
-    [requestString appendString:parameters];
+    // if there are variables present add to select parameter
+    if (variables != nil)
+    {
+        requestParametersString = [requestParametersString stringByAppendingFormat:@",%@", kAlfrescoWorkflowPublicJSONVariables];
+    }
     
+    // add parameters
+    [requestString appendString:requestParametersString];
+    
+    // create dictionary structure for request body
+    NSMutableDictionary *requestBodyDictionary = [NSMutableDictionary dictionary];
+    
+    // set the state
+    requestBodyDictionary[kAlfrescoWorkflowTaskState] = state;
+    
+    // set the assignee, if there is one
+    if (assignee != nil)
+    {
+        requestBodyDictionary[kAlfrescoWorkflowPublicJSONAssignee] = assignee;
+    }
+    
+    // set the variables, if there are any
+    if (variables != nil && variables.count > 0)
+    {
+        // generate dictionary for each variable
+        
+        // NOTE: currently we have no way of knowing whether a variable is "local" or "global", as
+        // we're updating a task lets presume it's local for now, once we support variables on a
+        // task we can maintain a list of local and global variables and refer to that.
+        NSMutableArray *variablesArray = [NSMutableArray array];
+        for (NSString *variableName in [variables allKeys])
+        {
+            [variablesArray addObject:@{kAlfrescoWorkflowPublicJSONName: variableName,
+                                        kAlfrescoWorkflowPublicJSONVariableValue: variables[variableName],
+                                        kAlfrescoWorkflowPublicJSONVariableScope: kAlfrescoWorkflowPublicJSONVariableScopeLocal}];
+        }
+        
+        // add variables array
+        requestBodyDictionary[kAlfrescoWorkflowPublicJSONVariables] = variablesArray;
+    }
+    
+    // construct full url
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     NSError *requestBodyConversionError = nil;
-    NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestDictionary options:0 error:&requestBodyConversionError];
+    NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestBodyDictionary options:0 error:&requestBodyConversionError];
     
     if (requestBodyConversionError)
     {
