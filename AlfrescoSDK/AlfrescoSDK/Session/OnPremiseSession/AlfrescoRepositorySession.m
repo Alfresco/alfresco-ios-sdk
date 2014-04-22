@@ -48,8 +48,6 @@
                                   andPassword:(NSString *)password
                               completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 - (void)establishCMISSession:(CMISSession *)session username:(NSString *)username password:(NSString *)password;
-
-+ (NSNumber *)majorVersionFromString:(NSString *)versionString;
 @end
 
 @implementation AlfrescoRepositorySession
@@ -355,7 +353,8 @@
                     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
                     int majorVersion = [[formatter numberFromString:versionArray[0]] intValue];
                     int minorVersion = [[formatter numberFromString:versionArray[1]] intValue];
-                    AlfrescoLogDebug(@"session connected with user %@, repo version is %@", username, version);
+                    BOOL isEnterpriseEdition = [v3RepositoryProductName rangeOfString:kAlfrescoRepositoryEditionEnterprise].location != NSNotFound;
+                    AlfrescoLogDebug(@"Session connected with user %@, repo version is %@", username, version);
 
                     if (majorVersion >= 4 && !useCustomBinding)
                     {
@@ -374,8 +373,10 @@
                             }
                         };
 
-                        // PublicAPI is potentially viable for version 4.2 and newer
-                        if ((majorVersion == 4 && minorVersion >= 2) || (majorVersion > 4))
+                        // PublicAPI is potentially viable for Enterprise 4.2 and Community 4.3 and newer
+                        if ((majorVersion > 4) ||
+                            (isEnterpriseEdition && majorVersion == 4 && minorVersion >= 2) ||
+                            (!isEnterpriseEdition && majorVersion == 4 && minorVersion >= 3))
                         {
                             // Try to create a PublicAPI-based session
                             void (^publicAPISessionInterceptCompletionBlock)(CMISSession *session, NSError *error) = ^void(CMISSession *session, NSError *error) {
@@ -492,14 +493,6 @@
         }
     }];
     [self.sessionCache removeAllObjects];
-}
-
-+ (NSNumber *)majorVersionFromString:(NSString *)versionString
-{
-    NSArray *versionArray = [versionString componentsSeparatedByString:@"."];
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSNumber *majorVersionNumber = [formatter numberFromString:versionArray[0]];
-    return majorVersionNumber;
 }
 
 
