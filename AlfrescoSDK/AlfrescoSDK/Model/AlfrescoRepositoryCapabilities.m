@@ -84,7 +84,7 @@ static NSInteger kRepositoryCapabilitiesModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kRepositoryCapabilitiesModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kRepositoryCapabilitiesModelVersion forKey:@"AlfrescoRepositoryCapabilities"];
     [aCoder encodeBool:self.doesSupportCommentCounts forKey:kAlfrescoCapabilityCommentsCount];
     [aCoder encodeBool:self.doesSupportLikingNodes forKey:kAlfrescoCapabilityLike];
     [aCoder encodeBool:self.doesSupportPublicAPI forKey:kAlfrescoCapabilityPublicAPI];
@@ -98,7 +98,7 @@ static NSInteger kRepositoryCapabilitiesModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoRepositoryCapabilities"];
         self.doesSupportLikingNodes = [aDecoder decodeBoolForKey:kAlfrescoCapabilityCommentsCount];
         self.doesSupportCommentCounts = [aDecoder decodeBoolForKey:kAlfrescoCapabilityLike];
         self.doesSupportPublicAPI = [aDecoder decodeBoolForKey:kAlfrescoCapabilityPublicAPI];

@@ -186,7 +186,7 @@ static NSUInteger kCommentModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kCommentModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kCommentModelVersion forKey:@"AlfrescoComment"];
     [aCoder encodeObject:self.title forKey:kAlfrescoJSONTitle];
     [aCoder encodeObject:self.content forKey:kAlfrescoJSONContent];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
@@ -204,7 +204,7 @@ static NSUInteger kCommentModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoComment"];
         self.title = [aDecoder decodeObjectForKey:kAlfrescoJSONTitle];
         self.content = [aDecoder decodeObjectForKey:kAlfrescoJSONContent];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];

@@ -131,7 +131,7 @@ static NSInteger kCompanyModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kCompanyModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kCompanyModelVersion forKey:@"AlfrescoCompany"];
     [aCoder encodeObject:self.name forKey:kAlfrescoJSONCompanyName];
     [aCoder encodeObject:self.addressLine1 forKey:kAlfrescoJSONCompanyAddressLine1];
     [aCoder encodeObject:self.addressLine2 forKey:kAlfrescoJSONCompanyAddressLine2];
@@ -149,7 +149,7 @@ static NSInteger kCompanyModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-        //NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+        //NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoCompany"];
         self.name = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyName];
         self.addressLine1 = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyAddressLine1];
         self.addressLine2 = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyAddressLine2];

@@ -81,7 +81,7 @@ static NSInteger kPermissionsModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kPermissionsModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kPermissionsModelVersion forKey:@"AlfrescoPermissions"];
     [aCoder encodeBool:self.canAddChildren forKey:@"canAddChildren"];
     [aCoder encodeBool:self.canComment forKey:@"canComment"];
     [aCoder encodeBool:self.canDelete forKey:@"canDelete"];
@@ -99,7 +99,7 @@ static NSInteger kPermissionsModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-        //NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+        //NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoPermissions"];
         self.canEdit = [aDecoder decodeBoolForKey:@"canEdit"];
         self.canDelete = [aDecoder decodeBoolForKey:@"canDelete"];
         self.canComment = [aDecoder decodeBoolForKey:@"canComment"];

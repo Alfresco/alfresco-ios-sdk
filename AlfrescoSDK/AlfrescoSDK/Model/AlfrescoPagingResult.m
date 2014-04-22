@@ -43,7 +43,7 @@ static NSInteger kPagingResultModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kPagingResultModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kPagingResultModelVersion forKey:@"AlfrescoPagingResult"];
     [aCoder encodeObject:self.objects forKey:@"pagingResultsArray"];
     [aCoder encodeBool:self.hasMoreItems forKey:@"hasMoreItems"];
     [aCoder encodeInt:self.totalItems forKey:@"totalItems"];
@@ -55,7 +55,7 @@ static NSInteger kPagingResultModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoPagingResult"];
         self.objects = [aDecoder decodeObjectForKey:@"pagingResultsArray"];
         self.hasMoreItems = [aDecoder decodeBoolForKey:@"hasMoreItems"];
         self.totalItems = [aDecoder decodeIntForKey:@"totalItems"];

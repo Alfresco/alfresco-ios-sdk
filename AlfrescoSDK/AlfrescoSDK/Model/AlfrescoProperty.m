@@ -53,7 +53,7 @@ static NSInteger kPropertyModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kPropertyModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kPropertyModelVersion forKey:@"AlfrescoProperty"];
     [aCoder encodeInt:self.type forKey:kAlfrescoPropertyType];
     [aCoder encodeObject:self.value forKey:kAlfrescoPropertyValue];
     [aCoder encodeBool:self.isMultiValued forKey:kAlfrescoPropertyIsMultiValued];
@@ -66,7 +66,7 @@ static NSInteger kPropertyModelVersion = 1;
     if (self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoProperty"];
         self.type = [aDecoder decodeIntForKey:kAlfrescoPropertyType];
         self.value = [aDecoder decodeObjectForKey:kAlfrescoPropertyValue];
         self.isMultiValued = [aDecoder decodeBoolForKey:kAlfrescoPropertyIsMultiValued];
