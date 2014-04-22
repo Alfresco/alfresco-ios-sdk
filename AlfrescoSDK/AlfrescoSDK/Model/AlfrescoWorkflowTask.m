@@ -111,7 +111,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kWorkflowTaskModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kWorkflowTaskModelVersion forKey:@"AlfrescoWorkflowTask"];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoWorkflowPublicJSONIdentifier];
     [aCoder encodeObject:self.processIdentifier forKey:kAlfrescoWorkflowPublicJSONProcessID];
     [aCoder encodeObject:self.processDefinitionIdentifier forKey:kAlfrescoWorkflowPublicJSONProcessDefinitionID];
@@ -130,7 +130,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
     self = [super init];
     if (self)
     {
-        //        NSInteger version = [aDecoder decodeIntegerForKey:NSStringFromClass([self class])];
+        //        NSInteger version = [aDecoder decodeIntegerForKey:@"AlfrescoWorkflowTask"];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONIdentifier];
         self.processIdentifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONProcessID];
         self.processDefinitionIdentifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONProcessDefinitionID];

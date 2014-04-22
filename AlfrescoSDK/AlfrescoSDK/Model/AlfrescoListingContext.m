@@ -98,7 +98,7 @@ static NSInteger kListingContextModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kListingContextModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kListingContextModelVersion forKey:@"AlfrescoListingContext"];
     [aCoder encodeObject:self.sortProperty forKey:@"sortProperty"];
     [aCoder encodeInt:self.maxItems forKey:@"maxItems"];
     [aCoder encodeInt:self.skipCount forKey:@"skipCount"];
@@ -112,7 +112,7 @@ static NSInteger kListingContextModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoListingContext"];
         self.sortAscending = [aDecoder decodeBoolForKey:@"sortAscending"];
         self.sortProperty = [aDecoder decodeObjectForKey:@"sortProperty"];
         self.maxItems = [aDecoder decodeIntForKey:@"maxItems"];

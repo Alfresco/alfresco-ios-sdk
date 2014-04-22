@@ -125,7 +125,7 @@ static NSUInteger kActivityModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kActivityModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kActivityModelVersion forKey:@"AlfrescoActivityEntry"];
     [aCoder encodeObject:self.createdAt forKey:kAlfrescoJSONActivityPostDate];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
     [aCoder encodeObject:self.type forKey:kAlfrescoJSONActivityType];
@@ -140,7 +140,7 @@ static NSUInteger kActivityModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoActivityEntry"];
         self.createdBy = [aDecoder decodeObjectForKey:kAlfrescoJSONActivityPostPersonID];
         self.createdAt = [aDecoder decodeObjectForKey:kAlfrescoJSONActivityPostDate];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];

@@ -81,7 +81,7 @@ static NSUInteger kKeywordSearchModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kKeywordSearchModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kKeywordSearchModelVersion forKey:@"AlfrescoKeywordSearchOptions"];
     [aCoder encodeBool:self.exactMatch forKey:@"exactMatch"];
     [aCoder encodeBool:self.includeContent forKey:@"includeContent"];
     [aCoder encodeBool:self.includeDescendants forKey:@"includeDescendants"];
@@ -94,7 +94,7 @@ static NSUInteger kKeywordSearchModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoKeywordSearchOptions"];
         self.folder = [aDecoder decodeObjectForKey:@"folder"];
         self.exactMatch = [aDecoder decodeBoolForKey:@"exactMatch"];
         self.includeContent = [aDecoder decodeBoolForKey:@"includeContent"];

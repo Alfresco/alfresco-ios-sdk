@@ -154,7 +154,7 @@ static NSInteger kSiteModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kSiteModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kSiteModelVersion forKey:@"AlfrescoSite"];
     [aCoder encodeObject:self.summary forKey:kAlfrescoJSONDescription];
     [aCoder encodeObject:self.title forKey:kAlfrescoJSONTitle];
     [aCoder encodeInt:self.visibility forKey:kAlfrescoJSONVisibility];
@@ -171,7 +171,7 @@ static NSInteger kSiteModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version   = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version   = [aDecoder decodeIntForKey:@"AlfrescoSite"];
         self.summary = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
         self.title         = [aDecoder decodeObjectForKey:kAlfrescoJSONTitle];
         self.isFavorite         = [aDecoder decodeBoolForKey:kAlfrescoSiteIsFavorite];

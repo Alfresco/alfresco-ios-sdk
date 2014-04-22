@@ -86,7 +86,7 @@ static NSInteger kTagModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kTagModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kTagModelVersion forKey:@"AlfrescoTag"];
     [aCoder encodeObject:self.value forKey:kAlfrescoJSONTag];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoJSONIdentifier];
 }
@@ -97,7 +97,7 @@ static NSInteger kTagModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoTag"];
         self.value = [aDecoder decodeObjectForKey:kAlfrescoJSONTag];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
     }

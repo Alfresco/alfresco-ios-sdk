@@ -158,7 +158,7 @@ static NSInteger kPersonModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kPersonModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kPersonModelVersion forKey:@"AlfrescoPerson"];
     [aCoder encodeObject:self.avatarIdentifier forKey:kAlfrescoJSONAvatarId];
     [aCoder encodeObject:self.firstName forKey:kAlfrescoJSONFirstName];
     [aCoder encodeObject:self.lastName forKey:kAlfrescoJSONLastName];
@@ -184,7 +184,7 @@ static NSInteger kPersonModelVersion = 1;
     if (nil != self)
     {
         //uncomment this line if you need to check the model version
-        //NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+        //NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoPerson"];
         self.avatarIdentifier = [aDecoder decodeObjectForKey:kAlfrescoJSONAvatarId];
         self.firstName = [aDecoder decodeObjectForKey:kAlfrescoJSONFirstName];
         self.lastName = [aDecoder decodeObjectForKey:kAlfrescoJSONLastName];

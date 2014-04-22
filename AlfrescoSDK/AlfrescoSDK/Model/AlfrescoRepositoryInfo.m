@@ -58,7 +58,7 @@ static NSInteger kRepositoryInfoModelVersion = 1;
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeInteger:kRepositoryInfoModelVersion forKey:NSStringFromClass([self class])];
+    [aCoder encodeInteger:kRepositoryInfoModelVersion forKey:@"AlfrescoRepositoryInfo"];
     [aCoder encodeObject:self.name forKey:kAlfrescoRepositoryName];
     [aCoder encodeObject:self.identifier forKey:kAlfrescoRepositoryIdentifier];
     [aCoder encodeObject:self.summary forKey:kAlfrescoRepositorySummary];
@@ -77,7 +77,7 @@ static NSInteger kRepositoryInfoModelVersion = 1;
     if(nil != self)
     {
         //uncomment this line if you need to check the model version
-//        NSInteger version = [aDecoder decodeIntForKey:NSStringFromClass([self class])];
+//        NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoRepositoryInfo"];
         self.name = [aDecoder decodeObjectForKey:kAlfrescoRepositoryName];
         self.identifier = [aDecoder decodeObjectForKey:kAlfrescoRepositoryIdentifier];
         self.summary = [aDecoder decodeObjectForKey:kAlfrescoRepositorySummary];
