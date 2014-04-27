@@ -861,7 +861,7 @@
     [AlfrescoErrors assertArgumentNotNil:document.identifier argumentName:@"document.identifer"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
-    NSString *tmpFile = [NSTemporaryDirectory() stringByAppendingPathComponent:document.name];
+    NSString *tmpFile = [[NSTemporaryDirectory() stringByAppendingPathComponent:document.identifier] stringByAppendingPathExtension:[document.name pathExtension]];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [self.cmisSession downloadContentOfCMISObject:document.identifier toFile:tmpFile completionBlock:^(NSError *error){
         if (error)
