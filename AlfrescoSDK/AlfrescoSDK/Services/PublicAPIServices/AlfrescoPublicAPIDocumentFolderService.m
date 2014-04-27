@@ -118,10 +118,9 @@
                 }
                 else
                 {
-                    AlfrescoLogDebug(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@", renditions.count, thumbnailRendition.renditionDocumentId);
+                    AlfrescoLogDebug(@"************* Found %d renditions, thumbnail documentId is %@", renditions.count, thumbnailRendition.renditionDocumentId);
                     NSString *tmpFileExtension = [thumbnailRendition.mimeType isEqualToString:@"image/png"] ? @"png" : @"jpg";
                     NSString *tmpFileName = [[[AlfrescoFileManager sharedManager] temporaryDirectory] stringByAppendingFormat:@"%@.%@", node.name, tmpFileExtension];
-                    AlfrescoLogDebug(@"************* DOWNLOADING TO FILE %@", tmpFileName);
                     request.httpRequest = [thumbnailRendition downloadRenditionContentToFile:tmpFileName completionBlock:^(NSError *downloadError) {
                         if (downloadError)
                         {
@@ -134,7 +133,7 @@
                             completionBlock(contentFile, nil);
                         }
                     } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
-                        AlfrescoLogDebug(@"************* PROGRESS DOWNLOADING FILE with %llu bytes downloaded from %llu total ",bytesDownloaded, bytesTotal);
+                        AlfrescoLogTrace(@"************* PROGRESS DOWNLOADING FILE with %llu bytes downloaded from %llu total ",bytesDownloaded, bytesTotal);
                     }];
                 }
             }
@@ -197,7 +196,7 @@
                 }
                 else
                 {
-                    AlfrescoLogDebug(@"************* NUMBER OF RENDITION OBJECTS FOUND IS %d and the document ID is %@", renditions.count, thumbnailRendition.renditionDocumentId);
+                    AlfrescoLogDebug(@"************* Found %d renditions, thumbnail documentId is %@", renditions.count, thumbnailRendition.renditionDocumentId);
                     request.httpRequest = [thumbnailRendition downloadRenditionContentToOutputStream:outputStream completionBlock:^(NSError *downloadError) {
                         if (downloadError)
                         {
@@ -209,7 +208,7 @@
                             completionBlock(YES, nil);
                         }
                     } progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
-                        AlfrescoLogDebug(@"************* PROGRESS DOWNLOADING FILE with %llu bytes downloaded from %llu total ",bytesDownloaded, bytesTotal);
+                        AlfrescoLogTrace(@"************* PROGRESS DOWNLOADING FILE with %llu bytes downloaded from %llu total ",bytesDownloaded, bytesTotal);
                     }];
                 }
             }
