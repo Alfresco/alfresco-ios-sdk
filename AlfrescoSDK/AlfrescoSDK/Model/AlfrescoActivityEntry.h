@@ -53,6 +53,14 @@
 @property (nonatomic, strong, readonly) NSDictionary *data;
 
 
+/// Convenience helper properties
+@property (nonatomic, assign, readonly, getter = isDocument) BOOL document;
+@property (nonatomic, assign, readonly, getter = isFolder) BOOL folder;
+@property (nonatomic, assign, readonly, getter = isDeleted) BOOL deleted;
+@property (nonatomic, strong, readonly) NSString *nodeIdentifier;
+
 - (id)initWithProperties:(NSDictionary *)properties;
+
+
 
 @end

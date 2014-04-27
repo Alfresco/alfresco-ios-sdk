@@ -29,99 +29,157 @@ static NSUInteger kActivityModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSString *siteShortName;
 @property (nonatomic, strong, readwrite) NSString *type;
 @property (nonatomic, strong, readwrite) NSDictionary *data;
+
+/// Convenience helper properties
+@property (nonatomic, assign, readwrite, getter = isDocument) BOOL document;
+@property (nonatomic, assign, readwrite, getter = isFolder) BOOL folder;
+@property (nonatomic, strong, readwrite) NSString *nodeIdentifier;
+
+@property (nonatomic, assign) BOOL activityTypeDocumentCalculated;
+@property (nonatomic, assign) BOOL activityTypeFolderCalculated;
 @end
 
 @implementation AlfrescoActivityEntry
 
 /**
- Cloud and OnPremise sessions have slightly different JSON response types
- Cloud: postedAt OnPremise: postDate
- Cloud: postPersonID OnPremise: postUserId
- Cloud: siteId OnPremise: siteNetwork
+ * Cloud and OnPremise sessions have slightly different JSON response types
+ *
+ * Cloud:           OnPremise:
+ *  postedAt         postDate
+ *  postPersonID     postUserId
+ *  siteId           siteNetwork
  */
 
 - (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super init];
-    if (nil != self && nil != properties)
+    if (self && properties)
     {
-        if ([[properties allKeys] containsObject:kAlfrescoJSONIdentifier])
+        self.identifier = properties[kAlfrescoJSONIdentifier];
+        self.type = properties[kAlfrescoJSONActivityType];
+        id summary = properties[kAlfrescoJSONActivitySummary];
+        if ([summary isKindOfClass:[NSDictionary class]])
         {
-            self.identifier = [properties valueForKey:kAlfrescoJSONIdentifier];
+            self.data = (NSDictionary *)summary;
         }
-        if ([[properties allKeys] containsObject:kAlfrescoJSONActivityType])
+        else
         {
-            self.type = [properties valueForKey:kAlfrescoJSONActivityType];
-        }
-        if ([[properties allKeys] containsObject:kAlfrescoJSONActivitySummary])
-        {
-            id summary = [properties valueForKey:kAlfrescoJSONActivitySummary];
-            if ([summary isKindOfClass:[NSDictionary class]])
-            {
-                self.data = (NSDictionary *)summary;
-            }
-            else
-            {
-                NSError *error = nil;
-                self.data = [NSJSONSerialization JSONObjectWithData:[[properties valueForKey:kAlfrescoJSONActivitySummary]
-                                                                     dataUsingEncoding:NSUTF8StringEncoding]
-                                                            options:0 error:&error];
-            }
+            self.data = [NSJSONSerialization JSONObjectWithData:[properties[kAlfrescoJSONActivitySummary] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
         }
 
         [self setOnPremiseProperties:properties];
-        [self setCloudProperties:properties];        
+        [self setCloudProperties:properties];
+
+        self.nodeIdentifier = self.data[kAlfrescoJSONActivityDataNodeRef] ? self.data[kAlfrescoJSONActivityDataNodeRef] : self.data[kAlfrescoJSONActivityDataObjectId];
+
+        self.activityTypeDocumentCalculated = NO;
+        self.activityTypeFolderCalculated = NO;
     }
     return self;
 }
 
 - (void)setOnPremiseProperties:(NSDictionary *)properties
 {
-    //OnPremise Response
-    if ([[properties allKeys] containsObject:kAlfrescoJSONActivityPostUserID])
+    self.createdBy = properties[kAlfrescoJSONActivityPostUserID];
+
+    NSString *rawDateString = properties[kAlfrescoJSONActivityPostDate];
+    if (rawDateString)
     {
-        self.createdBy = [properties valueForKey:kAlfrescoJSONActivityPostUserID];
+        self.createdAt = [CMISDateUtil dateFromString:rawDateString];
     }
-    //On Premise Response
-    if ([[properties allKeys] containsObject:kAlfrescoJSONActivityPostDate])
-    {
-        NSString *rawDateString = [properties valueForKey:kAlfrescoJSONActivityPostDate];
-        if (nil != rawDateString)
-        {
-            self.createdAt = [CMISDateUtil dateFromString:rawDateString];
-        }
-    }
-    //On Premise Response
-    if ([[properties allKeys] containsObject:kAlfrescoJSONActivitySiteNetwork])
-    {
-        self.siteShortName = [properties valueForKey:kAlfrescoJSONActivitySiteNetwork];
-    }
-    
+
+    self.siteShortName = properties[kAlfrescoJSONActivitySiteNetwork];
 }
+
 - (void)setCloudProperties:(NSDictionary *)properties
 {
-    //Cloud Response - Activity Person/User Id
-    if ([[properties allKeys] containsObject:kAlfrescoJSONActivityPostPersonID])
-    {
-        self.createdBy = [properties valueForKey:kAlfrescoJSONActivityPostPersonID];
-    }
+    self.createdBy = properties[kAlfrescoJSONActivityPostPersonID];
     
-    //Cloud Response - Activity Posting date
-    if ([[properties allKeys] containsObject:kAlfrescoJSONPostedAt])
+    NSString *rawDateString = properties[kAlfrescoJSONPostedAt];
+    if (rawDateString)
     {
-        NSString *rawDateString = [properties valueForKey:kAlfrescoJSONPostedAt];
-        if (nil != rawDateString)
-        {
-            self.createdAt = [CMISDateUtil dateFromString:rawDateString];
-        }
+        self.createdAt = [CMISDateUtil dateFromString:rawDateString];
     }
-    //Cloud Response - Activity Network/Site Id
-    if ([[properties allKeys] containsObject:kAlfrescoJSONSiteID])
-    {
-        self.siteShortName = [properties valueForKey:kAlfrescoJSONSiteID];
-    }
-    
+
+    self.siteShortName = properties[kAlfrescoJSONSiteID];
 }
+
+#pragma mark - Activity decode helpers
+
+- (BOOL)isDocument
+{
+    if (!self.activityTypeDocumentCalculated)
+    {
+        NSArray *determinateTypes = @[@"org.alfresco.documentlibrary.file-added",
+                                      @"org.alfresco.documentlibrary.file-created",
+                                      @"org.alfresco.documentlibrary.file-deleted",
+                                      @"org.alfresco.documentlibrary.file-updated",
+                                      @"org.alfresco.documentlibrary.file-liked",
+                                      @"org.alfresco.documentlibrary.google-docs-checkout",
+                                      @"org.alfresco.documentlibrary.google-docs-checkin",
+                                      @"org.alfresco.documentlibrary.inline-edit",
+                                      @"org.alfresco.documentlibrary.file-liked"];
+        NSArray *indeterminateTypes = @[@"org.alfresco.comments.comment-created",
+                                        @"org.alfresco.comments.comment-updated",
+                                        @"org.alfresco.comments.comment-deleted"];
+        
+        if ([determinateTypes containsObject:self.type])
+        {
+            _document = YES;
+        }
+        else if ([indeterminateTypes containsObject:self.type])
+        {
+            // Check the Share page - it's the only way to determine what the target node type was without a round-trip request
+            // Note this parameter *does not exist* when accessing the activity stream via the Public API
+            _document = [self.data[kAlfrescoJSONActivityDataPage] hasPrefix:@"document-details"];
+        }
+        
+        self.activityTypeDocumentCalculated = YES;
+    }
+    return _document;
+}
+
+- (BOOL)isFolder
+{
+    if (!self.activityTypeFolderCalculated)
+    {
+        // TODO: Consider handling the following types here too.
+        /*
+         org.alfresco.documentlibrary.files-added={1} added {0} documents
+         org.alfresco.documentlibrary.files-deleted={1} deleted {0} documents
+         org.alfresco.documentlibrary.files-updated={1} updated {0} documents
+         */
+        
+        NSArray *determinateTypes = @[@"org.alfresco.documentlibrary.folder-added",
+                                      @"org.alfresco.documentlibrary.folder-deleted",
+                                      @"org.alfresco.documentlibrary.folder-liked"];
+        NSArray *indeterminateTypes = @[@"org.alfresco.comments.comment-created",
+                                        @"org.alfresco.comments.comment-updated",
+                                        @"org.alfresco.comments.comment-deleted"];
+        
+        if ([determinateTypes containsObject:self.type])
+        {
+            _folder = YES;
+        }
+        else if ([indeterminateTypes containsObject:self.type])
+        {
+            // Check the Share page - it's the only way to determine what the target node type was without a round-trip request
+            // Note this parameter *does not exist* when accessing the activity stream via the Public API
+            _folder = [self.data[kAlfrescoJSONActivityDataPage] hasPrefix:@"folder-details"];
+        }
+        
+        self.activityTypeFolderCalculated = YES;
+        
+    }
+    return _folder;
+}
+
+- (BOOL)isDeleted
+{
+    return [self.type hasSuffix:@"-deleted"];
+}
+
+#pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
