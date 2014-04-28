@@ -120,6 +120,7 @@ extern NSString *const kAlfrescoOAuthRefreshToken;
 extern NSString * const kAlfrescoLegacyAPIPath;
 extern NSString * const kAlfrescoLegacyCMISPath;
 extern NSString * const kAlfrescoLegacy4_xCMISPath;
+extern NSString * const kAlfrescoLegacyAPINodeRefPrefix;
 extern NSString * const kAlfrescoLegacyActivityAPI;
 extern NSString * const kAlfrescoLegacyActivityForSiteAPI;
 extern NSString * const kAlfrescoLegacyRatingsAPI;

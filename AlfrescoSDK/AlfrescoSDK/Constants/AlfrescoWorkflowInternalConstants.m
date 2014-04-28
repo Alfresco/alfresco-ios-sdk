@@ -92,7 +92,6 @@ NSString * const kAlfrescoLegacyAPIPersonNodeRef = @"forms/picker/authority/chil
 
 NSString * const kAlfrescoWorkflowJBPMEnginePrefix = @"jbpm$";
 NSString * const kAlfrescoWorkflowActivitiEnginePrefix = @"activiti$";
-NSString * const kAlfrescoWorkflowNodeRefPrefix = @"workspace://SpacesStore/";
 
 // JSON
 NSString * const kAlfrescoWorkflowPublicJSONEntry = @"entry";

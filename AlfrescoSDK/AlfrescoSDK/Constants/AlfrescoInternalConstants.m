@@ -146,6 +146,7 @@ NSString *const kAlfrescoOAuthRefreshToken = @"refresh_token={refreshID}";
 NSString * const kAlfrescoLegacyAPIPath = @"/service/api/";
 NSString * const kAlfrescoLegacyCMISPath = @"/service/cmis";
 NSString * const kAlfrescoLegacy4_xCMISPath = @"/cmisatom";
+NSString * const kAlfrescoLegacyAPINodeRefPrefix = @"workspace://SpacesStore/";
 NSString * const kAlfrescoLegacyActivityAPI = @"activities/feed/user?format=json";
 NSString * const kAlfrescoLegacyActivityForSiteAPI = @"activities/feed/site/{siteID}?format=json";
 NSString * const kAlfrescoLegacyRatingsAPI = @"node/{nodeRef}/ratings";
