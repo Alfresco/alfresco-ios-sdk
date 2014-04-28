@@ -67,10 +67,15 @@ static NSUInteger kActivityModelVersion = 1;
             self.data = [NSJSONSerialization JSONObjectWithData:[properties[kAlfrescoJSONActivitySummary] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
         }
 
-        [self setOnPremiseProperties:properties];
-        [self setCloudProperties:properties];
-
-        self.nodeIdentifier = self.data[kAlfrescoJSONActivityDataNodeRef] ? self.data[kAlfrescoJSONActivityDataNodeRef] : self.data[kAlfrescoJSONActivityDataObjectId];
+        // Legacy or Public API JSON model?
+        if (properties[kAlfrescoJSONActivityPostUserID])
+        {
+            [self configureForLegacyAPIProperties:properties];
+        }
+        else
+        {
+            [self configureForPublicAPIProperties:properties];
+        }
 
         self.activityTypeDocumentCalculated = NO;
         self.activityTypeFolderCalculated = NO;
@@ -78,7 +83,7 @@ static NSUInteger kActivityModelVersion = 1;
     return self;
 }
 
-- (void)setOnPremiseProperties:(NSDictionary *)properties
+- (void)configureForLegacyAPIProperties:(NSDictionary *)properties
 {
     self.createdBy = properties[kAlfrescoJSONActivityPostUserID];
 
@@ -89,9 +94,10 @@ static NSUInteger kActivityModelVersion = 1;
     }
 
     self.siteShortName = properties[kAlfrescoJSONActivitySiteNetwork];
+    self.nodeIdentifier = self.data[kAlfrescoJSONActivityDataNodeRef];
 }
 
-- (void)setCloudProperties:(NSDictionary *)properties
+- (void)configureForPublicAPIProperties:(NSDictionary *)properties
 {
     self.createdBy = properties[kAlfrescoJSONActivityPostPersonID];
     
@@ -102,6 +108,7 @@ static NSUInteger kActivityModelVersion = 1;
     }
 
     self.siteShortName = properties[kAlfrescoJSONSiteID];
+    self.nodeIdentifier = self.data[kAlfrescoJSONActivityDataObjectId];
 }
 
 #pragma mark - Activity decode helpers
