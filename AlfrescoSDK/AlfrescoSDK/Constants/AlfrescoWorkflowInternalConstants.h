@@ -92,7 +92,6 @@ extern NSString * const kAlfrescoLegacyAPIPersonNodeRef;
 
 extern NSString * const kAlfrescoWorkflowJBPMEnginePrefix;
 extern NSString * const kAlfrescoWorkflowActivitiEnginePrefix;
-extern NSString * const kAlfrescoWorkflowNodeRefPrefix;
 
 // JSON
 extern NSString * const kAlfrescoWorkflowPublicJSONEntry;

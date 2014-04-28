@@ -640,11 +640,11 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                 XCTAssertNotNil(retrievedWorkflowDueDate, @"Expected to find workflow due date variable");
                 
                 XCTAssertTrue(retrievedWorkflowName.type == AlfrescoPropertyTypeString,
-                              @"Expected workflow name variable to be a string but it was %d", retrievedWorkflowName.type);
+                              @"Expected workflow name variable to be a string but it was %@", @(retrievedWorkflowName.type));
                 XCTAssertTrue(retrievedWorkflowPriority.type == AlfrescoPropertyTypeInteger,
-                              @"Expected workflow description variable to be a integer but it was %d", retrievedWorkflowPriority.type);
+                              @"Expected workflow description variable to be a integer but it was %@", @(retrievedWorkflowPriority.type));
                 XCTAssertTrue(retrievedWorkflowDueDate.type == AlfrescoPropertyTypeDate,
-                              @"Expected workflow due date variable to be a date but it was %d", retrievedWorkflowDueDate.type);
+                              @"Expected workflow due date variable to be a date but it was %@", @(retrievedWorkflowDueDate.type));
                 
                 XCTAssertTrue([(NSString *)retrievedWorkflowName.value isEqualToString:workflowName],
                               @"Expected workflow name to be %@ but it was %@", workflowName, retrievedWorkflowName.value);
@@ -662,7 +662,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                     AlfrescoProperty *retrievedSendEmailNotifications = retrievedVariables[kAlfrescoWorkflowVariableProcessSendEmailNotifications];
                     XCTAssertNotNil(retrievedSendEmailNotifications, @"Expected to find send email notifications variable");
                     XCTAssertTrue(retrievedSendEmailNotifications.type == AlfrescoPropertyTypeBoolean,
-                                  @"Expected send  variable to be a boolean but it was %d", retrievedSendEmailNotifications.type);
+                                  @"Expected send  variable to be a boolean but it was %@", @(retrievedSendEmailNotifications.type));
                     XCTAssertTrue([retrievedSendEmailNotifications.value isEqualToNumber:sendEmailNotifications],
                                   @"Expected send email notifications to be %@ but it was %@", sendEmailNotifications, retrievedSendEmailNotifications.value);
                 }

@@ -232,7 +232,7 @@
 
 + (NSString *)nodeGUIDFromNodeIdentifier:(NSString *)nodeIdentifier
 {
-    NSString *nodeGUID = [nodeIdentifier stringByReplacingOccurrencesOfString:kAlfrescoWorkflowNodeRefPrefix withString:@""];
+    NSString *nodeGUID = [nodeIdentifier stringByReplacingOccurrencesOfString:kAlfrescoLegacyAPINodeRefPrefix withString:@""];
     NSRange range = [nodeGUID rangeOfString:@";" options:NSBackwardsSearch];
     nodeGUID = [nodeGUID substringToIndex:range.location];
     
