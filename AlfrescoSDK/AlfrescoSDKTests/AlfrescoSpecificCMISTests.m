@@ -461,6 +461,8 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
 - (void)testObjectTypeIdHelper
 {
     NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+    NSSet *objectTypeIdTestSet;
+    NSSet *objectTypeIdExpectedSet;
     
     // test just the folder parameter being set
     NSString *objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:nil aspects:nil folder:YES];
@@ -502,8 +504,10 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     
     // test just aspects
     objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:nil aspects:@[kAlfrescoModelAspectTitled, kAlfrescoModelAspectAuthor] folder:NO];
-    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:author,P:cm:titled"],
-                  @"Expected objectTypeId to be cmis:document,P:cm:author,P:cm:titled but it was %@", objectTypeId);
+    objectTypeIdTestSet = [NSSet setWithArray:[objectTypeId componentsSeparatedByString:@","]];
+    objectTypeIdExpectedSet = [NSSet setWithObjects:@"cmis:document", @"P:cm:author", @"P:cm:titled", nil];
+    XCTAssertTrue([objectTypeIdTestSet isEqualToSet:objectTypeIdExpectedSet],
+                  @"Expected objectTypeId to be similar to cmis:document,P:cm:author,P:cm:titled but it was %@", objectTypeId);
     
     // test aspect and type
     objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:nil type:kAlfrescoModelTypeFolder aspects:@[kAlfrescoModelAspectTitled] folder:NO];
@@ -541,12 +545,16 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
     properties[kAlfrescoModelPropertyExifManufacturer] = @"Canon";
     properties[kAlfrescoModelPropertyAudioArtist] = @"Leftfield";
     objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties type:kAlfrescoModelTypeContent aspects:nil folder:NO];
-    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:exif:exif"],
-                  @"Expected objectTypeId to be cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:exif:exif but it was %@", objectTypeId);
+    objectTypeIdTestSet = [NSSet setWithArray:[objectTypeId componentsSeparatedByString:@","]];
+    objectTypeIdExpectedSet = [NSSet setWithObjects:@"cmis:document", @"P:cm:geographic", @"P:cm:titled", @"P:audio:audio", @"P:exif:exif", nil];
+    XCTAssertTrue([objectTypeIdTestSet isEqualToSet:objectTypeIdExpectedSet],
+                  @"Expected objectTypeId to be similar to cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:exif:exif but it was %@", objectTypeId);
     
     // test aspects being applied by their presence in the dictionary and given as a parameter
     objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:properties type:kAlfrescoModelTypeContent aspects:@[kAlfrescoModelAspectAuthor] folder:NO];
-    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:cm:author,P:exif:exif"],
+    objectTypeIdTestSet = [NSSet setWithArray:[objectTypeId componentsSeparatedByString:@","]];
+    objectTypeIdExpectedSet = [NSSet setWithObjects:@"cmis:document", @"P:cm:geographic", @"P:cm:titled", @"P:audio:audio", @"P:cm:author", @"P:exif:exif", nil];
+    XCTAssertTrue([objectTypeIdTestSet isEqualToSet:objectTypeIdExpectedSet],
                   @"Expected objectTypeId to be cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:cm:author,P:exif:exif but it was %@", objectTypeId);
     
     // test that we don't get duplicated aspects or system aspects
@@ -557,7 +565,9 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
                                                                         kAlfrescoModelAspectGeographic,
                                                                         kAlfrescoSystemModelAspectLocalized]
                                                                folder:NO];
-    XCTAssertTrue([objectTypeId isEqualToString:@"cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:cm:author,P:exif:exif"],
+    objectTypeIdTestSet = [NSSet setWithArray:[objectTypeId componentsSeparatedByString:@","]];
+    objectTypeIdExpectedSet = [NSSet setWithObjects:@"cmis:document", @"P:cm:geographic", @"P:cm:titled", @"P:audio:audio", @"P:cm:author", @"P:exif:exif", nil];
+    XCTAssertTrue([objectTypeIdTestSet isEqualToSet:objectTypeIdExpectedSet],
                   @"Expected objectTypeId to be cmis:document,P:cm:geographic,P:cm:titled,P:audio:audio,P:cm:author,P:exif:exif but it was %@", objectTypeId);
 }
 
