@@ -437,6 +437,7 @@
     NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoPublicAPICMISPath];
     params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     params.authenticationProvider = passthroughAuthProvider;
+    params.repositoryId = network;
 
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
@@ -470,12 +471,10 @@
         }
         else
         {
-            CMISRepositoryInfo *repoInfo = repositories[0];
-            parameters.repositoryId = repoInfo.identifier;
             [parameters setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
-
-            AlfrescoLogDebug(@"URL is %@ and the repo ID is %@ ****", [parameters.atomPubUrl absoluteString], repoInfo.identifier);
-
+            
+            AlfrescoLogDebug(@"URL is %@ and the repo ID is %@ ****", [parameters.atomPubUrl absoluteString], parameters.repositoryId);
+            
             alfrescoRequest.httpRequest = [CMISSession connectWithSessionParameters:parameters
                                                                     completionBlock:^(CMISSession *cmisSession, NSError *error){
                 if (nil == cmisSession)
@@ -599,6 +598,7 @@ This authentication method authorises the user to access the home network assign
     params.username = emailAddress;
     params.password = password;
     params.atomPubUrl = [NSURL URLWithString:cmisUrl];
+    params.repositoryId = network;
 
     id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
