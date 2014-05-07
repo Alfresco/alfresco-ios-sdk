@@ -301,6 +301,27 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     if (self.isLoginScreenLoad)
     {
         self.isLoginScreenLoad = NO;
+
+        /**
+         * Perform some post-load steps to improve the mobile UX.
+         */
+
+        // Set the username field type to "email"
+        NSString *javascript = @"var u=document.getElementById('username'); u.type='email'; ";
+        
+        /**
+         * Additional post-load steps if the current device is an iPad (not enough room on iPhones to see explanation text)
+         *      Remove top margin on <ul> tag
+         *      Autofocus the username field and set UIWebView flag to ensure keyboard shows
+         */
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        {
+            webView.keyboardDisplayRequiresUserAction = NO;
+            // Note: order matters
+            javascript = [NSString stringWithFormat:@"document.getElementsByTagName('ul')[0].style.marginTop = 0; %@ u.focus(); ", javascript];
+        }
+        
+        [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"void function(){ try { %@ } catch(e){} }();", javascript]];
     }
 }
 
