@@ -29,6 +29,7 @@
 #import <objc/runtime.h>
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoRepositoryInfoBuilder.h"
+#import "AlfrescoCMISUtil.h"
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -273,7 +274,7 @@
                 NSString *workflowDefinitionString = [kAlfrescoLegacyAPIPath stringByAppendingString:kAlfrescoLegacyAPIWorkflowProcessDefinition];
                 NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:workflowDefinitionString];
                 [self.networkProvider executeRequestWithURL:url session:self alfrescoRequest:request completionBlock:^(NSData *data, NSError *workflowError) {
-                    if (error)
+                    if (workflowError)
                     {
                         AlfrescoLogError(@"Could not determine whether to use JBPM");
                         completionBlock(nil, workflowError);
@@ -297,7 +298,8 @@
                 if (nil == rootFolder)
                 {
                     AlfrescoLogError(@"repository root folder is nil");
-                    completionBlock(nil, error);
+                    NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+                    completionBlock(nil, alfrescoError);
                 }
                 else
                 {
@@ -311,7 +313,8 @@
                 if (nil == v4Session)
                 {
                     AlfrescoLogError(@"failed to create v4 session");
-                    completionBlock(nil, error);
+                    NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+                    completionBlock(nil, alfrescoError);
                 }
                 else
                 {
@@ -339,7 +342,8 @@
                 if (nil == v3Session)
                 {
                     AlfrescoLogError(@"failed to create v3 session");
-                    completionBlock(nil, error);
+                    NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+                    completionBlock(nil, alfrescoError);
                 }
                 else
                 {
