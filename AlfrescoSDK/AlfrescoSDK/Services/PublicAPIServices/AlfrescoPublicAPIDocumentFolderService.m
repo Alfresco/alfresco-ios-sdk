@@ -61,6 +61,7 @@
         {
             AlfrescoLogDebug(@"Creating new AlfrescoFavoritesCache for key %@", favoritesCacheKey);
             self.favoritesCache = [AlfrescoFavoritesCache favoritesCacheForSession:session];
+            [self.session setObject:self.favoritesCache forParameter:favoritesCacheKey];
         }
     }
     return self;
