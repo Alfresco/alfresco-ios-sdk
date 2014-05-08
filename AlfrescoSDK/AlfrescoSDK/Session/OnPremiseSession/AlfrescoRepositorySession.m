@@ -98,6 +98,8 @@
     if (self = [super init])
     {
         self.baseUrl = url;
+        self.sessionCache = [NSMutableDictionary dictionary];
+
         if (nil != parameters)
         {
             self.sessionData = [NSMutableDictionary dictionaryWithDictionary:parameters];
