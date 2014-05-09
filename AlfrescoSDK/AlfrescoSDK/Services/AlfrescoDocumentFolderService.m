@@ -179,7 +179,6 @@
     [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifier"];
     [AlfrescoErrors assertArgumentNotNil:documentName argumentName:@"folderName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:progressBlock argumentName:@"progressBlock"];
     
     NSDictionary *processedProperties = [self propertiesForName:documentName properties:properties type:type aspects:aspects isFolder:NO];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -271,7 +270,7 @@
     [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifier"];
     [AlfrescoErrors assertArgumentNotNil:documentName argumentName:@"folderName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:progressBlock argumentName:@"progressBlock"];
+
     NSDictionary *processedProperties = [self propertiesForName:documentName properties:properties type:type aspects:aspects isFolder:NO];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     request.httpRequest = [self.cmisSession createDocumentFromInputStream:contentStream.inputStream
@@ -307,7 +306,7 @@
             request.httpRequest = retrieveRequest.httpRequest;
         }
     } progressBlock:^(unsigned long long bytesUploaded, unsigned long long bytesTotal) {
-        if (progressBlock && 0 < contentStream.length)
+        if (progressBlock)
         {
             progressBlock(bytesUploaded, bytesTotal);
         }

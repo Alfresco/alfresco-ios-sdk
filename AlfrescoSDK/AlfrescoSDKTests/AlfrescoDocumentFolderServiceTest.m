@@ -1085,7 +1085,7 @@
                                        }];
                                        
                                    }
-                               } progressBlock:^(unsigned long long transferred, unsigned long long total){}];
+                               } progressBlock:nil];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
