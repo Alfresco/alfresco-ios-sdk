@@ -67,7 +67,6 @@
 @property (nonatomic, strong, readwrite) NSURL *baseURLWithoutNetwork;
 @property (nonatomic, strong) NSURL *cmisUrl;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;
-@property (nonatomic, strong, readwrite) NSMutableDictionary *sessionCache;
 @property (nonatomic, strong, readwrite) NSString *personIdentifier;
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfo *repositoryInfo;
 @property (nonatomic, strong, readwrite) AlfrescoRepositoryInfoBuilder *repositoryInfoBuilder;
@@ -274,7 +273,6 @@
     }
 }
 
-
 - (NSArray *)allParameterKeys
 {
     return [self.sessionData allKeys];
@@ -282,77 +280,40 @@
 
 - (id)objectForParameter:(id)key
 {
-    if ([key hasPrefix:kAlfrescoSessionInternalCache])
-    {
-        return (self.sessionCache)[key];
-    }
-    else
-    {
-        return (self.sessionData)[key];
-    }
+    return (self.sessionData)[key];
 }
 
 - (void)setObject:(id)object forParameter:(id)key
 {
-    if ([key hasPrefix:kAlfrescoSessionInternalCache])
-    {
-        (self.sessionCache)[key] = object;
-    }
-    else if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
-    {
-        (self.sessionData)[key] = object;
-    }
-    else
-    {
-        (self.sessionData)[key] = object;
-    }
+    (self.sessionData)[key] = object;
 }
 
 - (void)addParametersFromDictionary:(NSDictionary *)dictionary
 {
-    [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
-        {
-            (self.sessionData)[key] = obj;
-        }
-        else
-        {
-            (self.sessionData)[key] = obj;
-        }
-    }];
+    [self.sessionData addEntriesFromDictionary:dictionary];
 }
 
 - (void)removeParameter:(id)key
 {
-    if ([key hasPrefix:kAlfrescoSessionInternalCache])
-    {
-        id cached = (self.sessionCache)[key];
-        if ([cached respondsToSelector:@selector(clear)])
-        {
-            [cached clear];
-        }
-        [self.sessionCache removeObjectForKey:key];
-    }
-    else if (![self.unremovableSessionKeys containsObject:key])
+    if (![self.unremovableSessionKeys containsObject:key])
     {
         [self.sessionData removeObjectForKey:key];
     }
 }
 
-
 - (void)clear
 {
-    [self.sessionCache enumerateKeysAndObjectsUsingBlock:^(NSString *cacheName, id cacheObj, BOOL *stop){
+    // call the clear method on any objects stored in the session that have the method
+    [self.sessionData enumerateKeysAndObjectsUsingBlock:^(NSString *cacheName, id cacheObj, BOOL *stop){
         if ([cacheObj respondsToSelector:@selector(clear)])
         {
             [cacheObj clear];
         }
     }];
-    [self.sessionCache removeAllObjects];
 }
 
-
 #pragma mark - Private methods
+
 - (id)authProviderToBeUsed
 {
     if (self.isUsingBaseAuthenticationProvider)
@@ -629,7 +590,6 @@ This authentication method authorises the user to access the home network assign
         {
             self.sessionData = [NSMutableDictionary dictionaryWithCapacity:8];
         }
-        self.sessionCache = [NSMutableDictionary dictionary];
         [self setObject:@NO forParameter:kAlfrescoMetadataExtraction];
         [self setObject:@NO forParameter:kAlfrescoThumbnailCreation];
         

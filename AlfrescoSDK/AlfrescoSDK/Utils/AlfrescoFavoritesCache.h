@@ -29,40 +29,42 @@ typedef NS_ENUM(NSInteger, AlfrescoFavoriteType)
     
 };
 
+@protocol AlfrescoFavoritesCacheDataDelegate <NSObject>
+- (AlfrescoRequest *)retrieveFavoriteNodeDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+@end
+
 @interface AlfrescoFavoritesCache : NSObject
 
-@property (nonatomic, assign, readonly) BOOL hasMoreFavoriteDocuments;
-@property (nonatomic, assign, readonly) BOOL hasMoreFavoriteFolders;
-@property (nonatomic, assign, readonly) BOOL hasMoreFavoriteNodes;
-@property (nonatomic, assign, readonly) int totalDocuments;
-@property (nonatomic, assign, readonly) int totalFolders;
-@property (nonatomic, assign, readonly) int totalNodes;
-/**
- initialiser
- */
-+ (id)favoritesCacheForSession:(id<AlfrescoSession>)session;
+@property (nonatomic, assign, readonly) BOOL isCacheBuilt;
+@property (nonatomic, strong, readonly) NSArray *favoriteNodes;
+@property (nonatomic, strong, readonly) NSArray *favoriteDocuments;
+@property (nonatomic, strong, readonly) NSArray *favoriteFolders;
 
 /**
- clears all entries in the cache
+ initialiser.
+ */
+- (instancetype)initWithFavoritesCacheDataDelegate:(id<AlfrescoFavoritesCacheDataDelegate>)favoritesCacheDataDelegate;
+
+/**
+ Build the cache.
+ */
+- (AlfrescoRequest *)buildCacheWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+
+/**
+ Caches the given node with given flag. If the node already exists in the cache it's favortie state
+ will be updated otherwise the node is added to the cache with the given state.
+ */
+- (void)cacheNode:(AlfrescoNode *)node favorite:(BOOL)favorite;
+
+/**
+ Determines whether the given node has been favorited. If the node is in the cache an NSNumber object
+ is returned representing the state, if nil is returned the node is not known to the cache.
+ */
+- (NSNumber *)isNodeFavorited:(AlfrescoNode *)node;
+
+/**
+ clears all entries in the cache.
  */
 - (void)clear;
-
-/**
- returns favourites
- */
-- (NSArray *)allFavorites;
-- (NSArray *)favoriteDocuments;
-- (NSArray *)favoriteFolders;
-
-- (void)addFavorite:(AlfrescoNode *)node;
-- (void)addFavorites:(NSArray *)nodes type:(AlfrescoFavoriteType)type hasMoreFavorites:(BOOL)hasMoreFavorites totalFavorites:(NSInteger)totalFavorites;
-
-- (void)removeFavorite:(AlfrescoNode *)node;
-- (void)removeFavorites:(NSArray *)nodes;
-
-/**
- Returns the first entry found for the identifier.
- */
-- (AlfrescoNode *)objectWithIdentifier:(NSString *)identifier;
 
 @end

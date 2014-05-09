@@ -58,7 +58,7 @@
         self.defaultSortKey = kAlfrescoSortByTitle;
         self.supportedSortKeys = @[kAlfrescoSortByTitle, kAlfrescoSortByShortname];
 
-        id cachedObj = [self.session objectForParameter:kAlfrescoSessionSitesCache];
+        id cachedObj = [self.session objectForParameter:kAlfrescoSessionCacheSites];
         if (cachedObj)
         {
             AlfrescoLogDebug(@"Found an existing SiteCache in session");
@@ -67,7 +67,7 @@
         else
         {
             self.siteCache = [[AlfrescoSiteCache alloc] initWithSiteCacheDataDelegate:self];
-            [self.session setObject:self.siteCache forParameter:kAlfrescoSessionSitesCache];
+            [self.session setObject:self.siteCache forParameter:kAlfrescoSessionCacheSites];
             AlfrescoLogDebug(@"Created new SiteCache object");
         }
     }
@@ -1026,7 +1026,7 @@
 }
 
 
-#pragma mark AlfrescoSiteDataDelegate methods
+#pragma mark AlfrescoSiteCacheDataDelegate methods
 
 - (AlfrescoRequest *)retrieveMemberSiteDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {

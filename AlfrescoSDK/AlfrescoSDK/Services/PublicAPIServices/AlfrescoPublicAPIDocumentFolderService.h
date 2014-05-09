@@ -20,7 +20,8 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoDocumentFolderService.h"
+#import "AlfrescoFavoritesCache.h"
 
-@interface AlfrescoPublicAPIDocumentFolderService : AlfrescoDocumentFolderService
+@interface AlfrescoPublicAPIDocumentFolderService : AlfrescoDocumentFolderService <AlfrescoFavoritesCacheDataDelegate>
 
 @end
