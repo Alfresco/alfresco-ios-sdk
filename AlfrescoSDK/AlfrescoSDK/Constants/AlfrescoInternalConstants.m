@@ -379,7 +379,7 @@ NSString * const kAlfrescoPropertyIsMultiValued = @"isMultiValued";
 
 NSString * const kAlfrescoHTTPDelete = @"DELETE";
 NSString * const kAlfrescoHTTPGet = @"GET";
-NSString * const kAlfrescoHTTPPOST = @"POST";
+NSString * const kAlfrescoHTTPPost = @"POST";
 NSString * const kAlfrescoHTTPPut = @"PUT";
 
 NSString * const kAlfrescoFileManagerClass = @"AlfrescoFileManagerClassName";

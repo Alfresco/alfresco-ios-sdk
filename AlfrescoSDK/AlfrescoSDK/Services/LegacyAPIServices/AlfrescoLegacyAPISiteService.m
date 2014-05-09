@@ -370,7 +370,7 @@
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:jsonData
-                                                 method:kAlfrescoHTTPPOST
+                                                 method:kAlfrescoHTTPPost
                                         alfrescoRequest:request
                                         completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
@@ -403,7 +403,7 @@
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:jsonData
-                                                 method:kAlfrescoHTTPPOST
+                                                 method:kAlfrescoHTTPPost
                                         alfrescoRequest:request
                                         completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
@@ -1196,7 +1196,7 @@
     NSData *jsonData = [self jsonDataForJoiningPublicSite:self.session.personIdentifier];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     __weak typeof(self) weakSelf = self;
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPost alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);
@@ -1225,7 +1225,7 @@
     NSData *jsonData = [self jsonDataForJoiningModeratedSite:self.session.personIdentifier comment:nil];
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     __weak typeof(self) weakSelf = self;
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:jsonData method:kAlfrescoHTTPPost alfrescoRequest:request completionBlock:^(NSData *data, NSError *error){
         if (nil == data)
         {
             completionBlock(nil, error);

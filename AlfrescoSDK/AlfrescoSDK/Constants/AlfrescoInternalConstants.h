@@ -341,7 +341,7 @@ extern NSString * const kAlfrescoPropertyIsMultiValued;
 
 extern NSString * const kAlfrescoHTTPDelete;
 extern NSString * const kAlfrescoHTTPGet;
-extern NSString * const kAlfrescoHTTPPOST;
+extern NSString * const kAlfrescoHTTPPost;
 extern NSString * const kAlfrescoHTTPPut;
 
 extern NSString * const kAlfrescoFileManagerClass;
