@@ -164,7 +164,7 @@
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:jsonData
-                                                 method:kAlfrescoHTTPPOST
+                                                 method:kAlfrescoHTTPPost
                                         alfrescoRequest:request
                                         completionBlock:^(NSData *data, NSError *responseError){
         if (nil != error)

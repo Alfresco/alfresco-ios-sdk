@@ -427,7 +427,7 @@
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:jsonData
-                                                 method:kAlfrescoHTTPPOST
+                                                 method:kAlfrescoHTTPPost
                                         alfrescoRequest:request
                                         completionBlock:^(NSData *data, NSError *error){
                                             if (nil == data)
@@ -488,7 +488,7 @@
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:jsonData
-                                                 method:kAlfrescoHTTPPOST
+                                                 method:kAlfrescoHTTPPost
                                         alfrescoRequest:request
                                         completionBlock:^(NSData *data, NSError *error){
                                             if (nil == data)

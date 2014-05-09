@@ -1175,7 +1175,7 @@
     [self.session.networkProvider executeRequestWithURL:apiUrl
                                      session:self.session
                                  requestBody:jsonData
-                                                 method:kAlfrescoHTTPPOST
+                                                 method:kAlfrescoHTTPPost
                                         alfrescoRequest:alfrescoRequest
                              completionBlock:^(NSData *data, NSError *error){}];
 }
@@ -1197,7 +1197,7 @@
     [self.session.networkProvider executeRequestWithURL:apiUrl
                                                 session:self.session
                                             requestBody:jsonData
-                                                 method:kAlfrescoHTTPPOST
+                                                 method:kAlfrescoHTTPPost
                                         alfrescoRequest:alfrescoRequest
                                         completionBlock:^(NSData *data, NSError *error){}];
 }

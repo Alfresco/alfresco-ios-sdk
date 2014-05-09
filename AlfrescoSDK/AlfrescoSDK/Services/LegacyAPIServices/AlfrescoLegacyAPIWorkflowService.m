@@ -508,7 +508,7 @@
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyAPIWorkflowTaskAttachments];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:containerRequestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *attachmentRefError) {
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:containerRequestData method:kAlfrescoHTTPPost alfrescoRequest:request completionBlock:^(NSData *data, NSError *attachmentRefError) {
         if (!data)
         {
             completionBlock(nil, attachmentRefError);
@@ -634,7 +634,7 @@
         NSString *requestString = [kAlfrescoLegacyAPIWorkflowFormProcessor stringByReplacingOccurrencesOfString:kAlfrescoProcessDefinitionID withString:processDefinition.key];
         NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
         
-        [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPost alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
             if (error)
             {
                 completionBlock(nil, error);
@@ -811,7 +811,7 @@
     }
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPost alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
             completionBlock(nil, error);
@@ -1097,7 +1097,7 @@
     }
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPOST alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPost alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
         {
             completionBlock(NO, error);

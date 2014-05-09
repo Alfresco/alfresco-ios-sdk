@@ -362,7 +362,7 @@
     [self.session.networkProvider executeRequestWithURL:url
                                                 session:self.session
                                             requestBody:bodyData
-                                                 method:kAlfrescoHTTPPOST
+                                                 method:kAlfrescoHTTPPost
                                         alfrescoRequest:request
                                         completionBlock:^(NSData *data, NSError *error) {
                                             if (error)

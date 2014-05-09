@@ -375,8 +375,15 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                                 XCTAssertNotNil(assignedTask, @"Assigned task should not be nil");
                                 XCTAssertTrue([task.identifier isEqualToString:assignedTask.identifier], @"Expected the assigned task to have the same id");
                                 
-                                // only test the following on non-public API servers due to ALF-20568 (assignee is not updated in response)
-                                if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                                // Re-query the task on non-public API servers due to ALF-20568 (assignee is not updated in response)
+                                if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                                {
+                                    [self.workflowService retrieveTaskWithIdentifier:task.identifier completionBlock:^(AlfrescoWorkflowTask *reassignedTask, NSError *error) {
+                                        XCTAssertTrue([reassignedTask.assigneeIdentifier isEqualToString:newAssignee],
+                                                      @"Expected the new assignee to be %@ but it was %@", newAssignee, reassignedTask.assigneeIdentifier);
+                                    }];
+                                }
+                                else
                                 {
                                     XCTAssertTrue([assignedTask.assigneeIdentifier isEqualToString:newAssignee],
                                                   @"Expected the new assignee to be %@ but it was %@", newAssignee, assignedTask.assigneeIdentifier);
@@ -434,8 +441,14 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         XCTAssertNotNil(unclaimedTask, @"Unclaimed task should not be nil");
                         XCTAssertTrue([task.identifier isEqualToString:unclaimedTask.identifier], @"Expected the unclaimed task to have the same id");
                         
-                        // only test the following on non-public API servers due to ALF-20568 (assignee is not updated in response)
-                        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                        // Re-query the task on non-public API servers due to ALF-20568 (assignee is not updated in response)
+                        if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+                        {
+                            [self.workflowService retrieveTaskWithIdentifier:task.identifier completionBlock:^(AlfrescoWorkflowTask *requeriedTask, NSError *error) {
+                                XCTAssertNil(requeriedTask.assigneeIdentifier, @"Expected unclaimedTask assignee to be nil");
+                            }];
+                        }
+                        else
                         {
                             XCTAssertNil(unclaimedTask.assigneeIdentifier, @"Expected unclaimedTask assignee to be nil");
                         }
