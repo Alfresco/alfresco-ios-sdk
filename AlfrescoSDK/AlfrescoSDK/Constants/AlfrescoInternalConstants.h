@@ -91,6 +91,7 @@ extern NSString * const kAlfrescoSessionUsername;
 extern NSString * const kAlfrescoSessionPassword;
 extern NSString * const kAlfrescoSessionInternalCache;
 extern NSString * const kAlfrescoSessionSitesCache;
+extern NSString * const kAlfrescoSessionAlternatePersonIdentifier;
 
 extern NSString * const kAlfrescoSiteIsFavorite;
 extern NSString * const kAlfrescoSiteIsMember;

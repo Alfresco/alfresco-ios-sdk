@@ -107,6 +107,9 @@ NSString * const kAlfrescoSessionUsername = @"org.alfresco.mobile.internal.sessi
 NSString * const kAlfrescoSessionPassword = @"org.alfresco.mobile.internal.session.password";
 NSString * const kAlfrescoSessionInternalCache = @"org.alfresco.mobile.internal.cache.";
 NSString * const kAlfrescoSessionSitesCache = @"org.alfresco.mobile.internal.cache.sites";
+// Temporary for ACE-1445
+NSString * const kAlfrescoSessionAlternatePersonIdentifier = @"org.alfresco.mobile.internal.session.personIdentifier";
+
 
 NSString * const kAlfrescoSiteIsFavorite = @"isFavorite";
 NSString * const kAlfrescoSiteIsMember = @"isMember";

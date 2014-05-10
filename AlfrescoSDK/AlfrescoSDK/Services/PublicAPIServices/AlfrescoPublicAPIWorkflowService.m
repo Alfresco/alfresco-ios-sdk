@@ -373,7 +373,9 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     // Workaround for MNT-11264: Workflow public API for tasks is returning other users tasks
-    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)", kAlfrescoPublicAPIWorkflowTaskAssignee, [self.session.personIdentifier stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    // ...requires additional workaround for ACE-1445: The workflow public API does not support the -me- user identifier
+    NSString *personIdentifier = [self.session objectForParameter:kAlfrescoSessionAlternatePersonIdentifier] ?: self.session.personIdentifier;
+    NSString *whereParameterString = [NSString stringWithFormat:@"(%@='%@')", kAlfrescoPublicAPIWorkflowTaskAssignee, [personIdentifier stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
     NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowTasks stringByAppendingString:queryString];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extensionURLString];
@@ -405,7 +407,9 @@
     }
 
     // Workaround for MNT-11264: Workflow public API for tasks is returning other users tasks
-    NSString *whereParameterString = [NSString stringWithFormat:@"(%@=%@)", kAlfrescoPublicAPIWorkflowTaskAssignee, [self.session.personIdentifier stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    // ...requires additional workaround for ACE-1445: The workflow public API does not support the -me- user identifier
+    NSString *personIdentifier = [self.session objectForParameter:kAlfrescoSessionAlternatePersonIdentifier] ?: self.session.personIdentifier;
+    NSString *whereParameterString = [NSString stringWithFormat:@"(%@='%@')", kAlfrescoPublicAPIWorkflowTaskAssignee, [personIdentifier stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowProcessWhereParameter : whereParameterString}];
     NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowTasks stringByAppendingString:queryString];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extensionURLString listingContext:listingContext];
