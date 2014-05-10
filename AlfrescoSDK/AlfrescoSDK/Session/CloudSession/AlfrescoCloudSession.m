@@ -30,6 +30,7 @@
 #import "AlfrescoLog.h"
 #import <objc/runtime.h>
 #import "AlfrescoRepositoryInfoBuilder.h"
+#import "AlfrescoPersonService.h"
 
 @interface AlfrescoCloudSession ()
 
@@ -298,10 +299,6 @@
     {
         (self.sessionCache)[key] = object;
     }
-    else if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
-    {
-        (self.sessionData)[key] = object;
-    }
     else
     {
         (self.sessionData)[key] = object;
@@ -311,14 +308,7 @@
 - (void)addParametersFromDictionary:(NSDictionary *)dictionary
 {
     [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        if ([self.unremovableSessionKeys containsObject:key] && ![[self allParameterKeys] containsObject:key])
-        {
-            (self.sessionData)[key] = obj;
-        }
-        else
-        {
-            (self.sessionData)[key] = obj;
-        }
+        (self.sessionData)[key] = obj;
     }];
 }
 
@@ -479,7 +469,7 @@
                                                                     completionBlock:^(CMISSession *cmisSession, NSError *error){
                 if (nil == cmisSession)
                 {
-                    if(completionBlock)
+                    if (completionBlock)
                     {
                         completionBlock(nil, error);
                     }
@@ -491,7 +481,7 @@
                     alfrescoRequest.httpRequest = [cmisSession retrieveRootFolderWithCompletionBlock:^(CMISFolder *rootFolder, NSError *error){
                         if (nil == rootFolder)
                         {
-                            if(completionBlock)
+                            if (completionBlock)
                             {
                                 completionBlock(nil, error);
                             }
@@ -500,21 +490,38 @@
                         {
                             AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
                             self.rootFolder = (AlfrescoFolder *)[objectConverter nodeFromCMISObject:rootFolder];
-                            if(completionBlock)
-                            {
-                                // build the repositoryInfo object
-                                self.repositoryInfo = [self.repositoryInfoBuilder repositoryInfoFromCurrentState];
-                                self.repositoryInfoBuilder = nil;
-                                
-                                // call the original completion block
-                                completionBlock(self, nil);
-                            }
+
+                            // build the repositoryInfo object
+                            self.repositoryInfo = [self.repositoryInfoBuilder repositoryInfoFromCurrentState];
+                            self.repositoryInfoBuilder = nil;
+                            
+                            /**
+                             * Workaround for ACE-1445: The workflow public API does not support the -me- user identifier
+                             * Retrieve the authenticated user's profile to obtain their email address.
+                             */
+                            AlfrescoPersonService *personService = [[AlfrescoPersonService alloc] initWithSession:self];
+                            [personService retrievePersonWithIdentifier:self.personIdentifier completionBlock:^(AlfrescoPerson *person, NSError *error) {
+                                if (error)
+                                {
+                                    if (completionBlock)
+                                    {
+                                        completionBlock(nil, error);
+                                    }
+                                }
+                                else
+                                {
+                                    [self setObject:person.identifier forParameter:kAlfrescoSessionAlternatePersonIdentifier];
+                                    if (completionBlock)
+                                    {
+                                        // call the original completion block
+                                        completionBlock(self, nil);
+                                    }
+                                }
+                            }];
                         }
                     }];
-                    
                 }
             }];
-            
         }
     };
     return arrayCompletionBlock;
