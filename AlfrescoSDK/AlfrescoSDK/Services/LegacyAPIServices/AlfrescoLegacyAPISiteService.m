@@ -64,7 +64,7 @@
         self.supportedSortKeys = @[kAlfrescoSortByTitle, kAlfrescoSortByShortname];
         self.joinRequests = [NSMutableArray array];
 
-        id cachedObj = [self.session objectForParameter:kAlfrescoSessionSitesCache];
+        id cachedObj = [self.session objectForParameter:kAlfrescoSessionCacheSites];
         if (cachedObj)
         {
             AlfrescoLogDebug(@"Found an existing SiteCache in session");
@@ -73,7 +73,7 @@
         else
         {
             self.siteCache = [[AlfrescoSiteCache alloc] initWithSiteCacheDataDelegate:self];
-            [self.session setObject:self.siteCache forParameter:kAlfrescoSessionSitesCache];
+            [self.session setObject:self.siteCache forParameter:kAlfrescoSessionCacheSites];
             AlfrescoLogDebug(@"Created new SiteCache object");
         }
     }
@@ -361,7 +361,7 @@
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    NSString *requestString = [kAlfrescoLegacyAddOrRemoveFavoriteSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+    NSString *requestString = [kAlfrescoLegacyPreferencesAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                                       withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     NSData *jsonData = [self jsonDataForFavoriteSites:site.shortName addFavorite:YES];
@@ -394,7 +394,7 @@
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoLegacyAddOrRemoveFavoriteSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
+    NSString *requestString = [kAlfrescoLegacyPreferencesAPI stringByReplacingOccurrencesOfString:kAlfrescoPersonId
                                                                                                       withString:self.session.personIdentifier];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     NSData *jsonData = [self jsonDataForFavoriteSites:site.shortName addFavorite:NO];

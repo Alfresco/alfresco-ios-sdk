@@ -50,17 +50,18 @@
     {
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoPublicAPIPath];
         
-        NSString *favoritesCacheKey = [NSString stringWithFormat:@"%@%@", kAlfrescoSessionInternalCache, NSStringFromClass([AlfrescoFavoritesCache class])];
-        id cachedObj = [self.session objectForParameter:favoritesCacheKey];
+        // setup favorites cache
+        id cachedObj = [self.session objectForParameter:kAlfrescoSessionCacheFavorites];
         if (cachedObj)
         {
-            AlfrescoLogDebug(@"Using existing AlfrescoFavoritesCache for key %@", favoritesCacheKey);
+            AlfrescoLogDebug(@"Found an existing FavoritesCache in session");
             self.favoritesCache = (AlfrescoFavoritesCache *)cachedObj;
         }
         else
         {
-            AlfrescoLogDebug(@"Creating new AlfrescoFavoritesCache for key %@", favoritesCacheKey);
-            self.favoritesCache = [AlfrescoFavoritesCache favoritesCacheForSession:session];
+            self.favoritesCache = [[AlfrescoFavoritesCache alloc] initWithFavoritesCacheDataDelegate:self];
+            [self.session setObject:self.favoritesCache forParameter:kAlfrescoSessionCacheFavorites];
+            AlfrescoLogDebug(@"Created new FavoritesCache object");
         }
     }
     return self;
@@ -219,106 +220,139 @@
 
 - (AlfrescoRequest *)retrieveFavoriteDocumentsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    NSArray *favoriteDocuments = [self.favoritesCache favoriteDocuments];
-    if (favoriteDocuments.count > 0 && !self.favoritesCache.hasMoreFavoriteDocuments)
-    {
-        NSArray *sortedDocuments = [AlfrescoSortingUtils sortedArrayForArray:favoriteDocuments sortKey:self.defaultSortKey ascending:YES];
-        completionBlock(sortedDocuments, nil);
-        return nil;
-    }
-    AlfrescoRequest *request = [self favoritesForType:AlfrescoFavoriteDocument listingContext:nil arrayCompletionBlock:completionBlock pagingCompletionBlock:nil];
-    return request;
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveFavoriteDocumentsWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        completionBlock(pagingResult.objects, error);
+    }];
 }
 
 - (AlfrescoRequest *)retrieveFavoriteDocumentsWithListingContext:(AlfrescoListingContext *)listingContext
                                                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
     }
-    NSArray *favoriteDocuments = [self.favoritesCache favoriteDocuments];
-    if (favoriteDocuments.count > 0 && !self.favoritesCache.hasMoreFavoriteDocuments)
+    
+    AlfrescoRequest *request = nil;
+    if (!self.favoritesCache.isCacheBuilt)
     {
-        NSArray *sortedDocuments = [AlfrescoSortingUtils sortedArrayForArray:favoriteDocuments sortKey:self.defaultSortKey ascending:YES];
-        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedDocuments listingContext:listingContext];
-        completionBlock(pagingResult, nil);
-        return nil;
+        __weak typeof(self) weakSelf = self;
+        request = [self.favoritesCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded)
+            {
+                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:weakSelf.favoritesCache.favoriteDocuments
+                                                                                listingContext:listingContext];
+                completionBlock(pagingResult, nil);
+            }
+            else
+            {
+                completionBlock(nil, error);
+            }
+        }];
     }
-    AlfrescoRequest *request = [self favoritesForType:AlfrescoFavoriteDocument listingContext:listingContext arrayCompletionBlock:nil pagingCompletionBlock:completionBlock];
+    else
+    {
+        AlfrescoLogDebug(@"Cache hit: returning favorite documents from cache");
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:self.favoritesCache.favoriteDocuments
+                                                                        listingContext:listingContext];
+        completionBlock(pagingResult, nil);
+    }
+    
     return request;
 }
 
 - (AlfrescoRequest *)retrieveFavoriteFoldersWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    NSArray *favoriteFolders = [self.favoritesCache favoriteFolders];
-    if (favoriteFolders.count > 0 && !self.favoritesCache.hasMoreFavoriteFolders)
-    {
-        NSArray *sortedFolders = [AlfrescoSortingUtils sortedArrayForArray:favoriteFolders sortKey:self.defaultSortKey ascending:YES];
-        completionBlock(sortedFolders, nil);
-        return nil;
-    }
-    AlfrescoRequest *request = [self favoritesForType:AlfrescoFavoriteFolder listingContext:nil arrayCompletionBlock:completionBlock pagingCompletionBlock:nil];
-    return request;
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveFavoriteFoldersWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        completionBlock(pagingResult.objects, error);
+    }];
 }
 
 - (AlfrescoRequest *)retrieveFavoriteFoldersWithListingContext:(AlfrescoListingContext *)listingContext
                                                completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
     }
-    NSArray *favoriteFolders = [self.favoritesCache favoriteFolders];
-    if (favoriteFolders.count > 0 && !self.favoritesCache.hasMoreFavoriteFolders)
+    
+    AlfrescoRequest *request = nil;
+    if (!self.favoritesCache.isCacheBuilt)
     {
-        NSArray *sortedFolders = [AlfrescoSortingUtils sortedArrayForArray:favoriteFolders sortKey:self.defaultSortKey ascending:YES];
-        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedFolders listingContext:listingContext];
-        completionBlock(pagingResult, nil);
-        return nil;
+        __weak typeof(self) weakSelf = self;
+        request = [self.favoritesCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded)
+            {
+                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:weakSelf.favoritesCache.favoriteFolders
+                                                                                listingContext:listingContext];
+                completionBlock(pagingResult, nil);
+            }
+            else
+            {
+                completionBlock(nil, error);
+            }
+        }];
     }
-    AlfrescoRequest *request = [self favoritesForType:AlfrescoFavoriteFolder listingContext:listingContext arrayCompletionBlock:nil pagingCompletionBlock:completionBlock];
+    else
+    {
+        AlfrescoLogDebug(@"Cache hit: returning favorite folders from cache");
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:self.favoritesCache.favoriteFolders
+                                                                        listingContext:listingContext];
+        completionBlock(pagingResult, nil);
+    }
+    
     return request;
 }
 
 - (AlfrescoRequest *)retrieveFavoriteNodesWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    
-    NSArray *favoriteNodes = [self.favoritesCache allFavorites];
-    if (favoriteNodes.count > 0 && !self.favoritesCache.hasMoreFavoriteNodes)
-    {
-        NSArray *sortedNodes = [AlfrescoSortingUtils sortedArrayForArray:favoriteNodes sortKey:self.defaultSortKey ascending:YES];
-        completionBlock(sortedNodes, nil);
-        return nil;
-    }
-    AlfrescoRequest *request = [self favoritesForType:AlfrescoFavoriteNode listingContext:nil arrayCompletionBlock:completionBlock pagingCompletionBlock:nil];
-    return request;
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveFavoriteNodesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        completionBlock(pagingResult.objects, error);
+    }];
 }
 
 - (AlfrescoRequest *)retrieveFavoriteNodesWithListingContext:(AlfrescoListingContext *)listingContext
                                              completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
     }
-    NSArray *favoriteNodes = [self.favoritesCache allFavorites];
-    if (favoriteNodes.count > 0 && !self.favoritesCache.hasMoreFavoriteNodes)
+    
+    AlfrescoRequest *request = nil;
+    if (!self.favoritesCache.isCacheBuilt)
     {
-        NSArray *sortedNodes = [AlfrescoSortingUtils sortedArrayForArray:favoriteNodes sortKey:self.defaultSortKey ascending:YES];
-        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedNodes listingContext:listingContext];
-        completionBlock(pagingResult, nil);
-        return nil;
+        __weak typeof(self) weakSelf = self;
+        request = [self.favoritesCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded)
+            {
+                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:weakSelf.favoritesCache.favoriteNodes
+                                                                                listingContext:listingContext];
+                completionBlock(pagingResult, nil);
+            }
+            else
+            {
+                completionBlock(nil, error);
+            }
+        }];
     }
-    AlfrescoRequest *request = [self favoritesForType:AlfrescoFavoriteNode listingContext:listingContext arrayCompletionBlock:nil pagingCompletionBlock:completionBlock];
+    else
+    {
+        AlfrescoLogDebug(@"Cache hit: returning favorite nodes from cache");
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:self.favoritesCache.favoriteNodes
+                                                                        listingContext:listingContext];
+        completionBlock(pagingResult, nil);
+    }
+    
     return request;
 }
 
@@ -328,23 +362,46 @@
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoPublicAPIFavorite stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:node.identifier];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:nil];
+    __block NSNumber *favorite = nil;
     
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        
-        if (error && error.code != kAlfrescoErrorCodeHTTPResponse)
+    AlfrescoRequest *request = nil;
+    if (!self.favoritesCache.isCacheBuilt)
+    {
+        __weak typeof(self) weakSelf = self;
+        request = [self.favoritesCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded)
+            {
+                favorite = [weakSelf.favoritesCache isNodeFavorited:node];
+                if (favorite != nil)
+                {
+                    completionBlock(YES, [favorite boolValue], nil);
+                }
+                else
+                {
+                    AlfrescoRequest *fetchStateRequest = [self fetchFavoriteState:node completionBlock:completionBlock];
+                    request.httpRequest = fetchStateRequest.httpRequest;
+                }
+            }
+            else
+            {
+                completionBlock(NO, NO, error);
+            }
+        }];
+    }
+    else
+    {
+        favorite = [self.favoritesCache isNodeFavorited:node];
+        if (favorite != nil)
         {
-            completionBlock(NO, NO, error);
+            // return cached state
+            AlfrescoLogDebug(@"Cache hit: returning favorite state for %@ from cache", node.identifier);
+            completionBlock(YES, [favorite boolValue], nil);
         }
         else
         {
-            completionBlock(YES, (data != nil), nil);
+            request = [self fetchFavoriteState:node completionBlock:completionBlock];
         }
-    }];
+    }
     
     return request;
 }
@@ -371,7 +428,7 @@
                                             }
                                             else
                                             {
-                                                [self.favoritesCache addFavorite:node];
+                                                [self.favoritesCache cacheNode:node favorite:YES];
                                                 completionBlock(YES, YES, error);
                                             }
                                         }];
@@ -402,119 +459,37 @@
                                             }
                                             else
                                             {
-                                                [self.favoritesCache removeFavorite:node];
+                                                [self.favoritesCache cacheNode:node favorite:NO];
                                                 completionBlock(YES, NO, error);
                                             }
                                         }];
     return request;
 }
 
-#pragma mark - private methods
+#pragma mark AlfrescoFavortiesCacheDataDelegate methods
 
-- (AlfrescoRequest *)favoritesForType:(AlfrescoFavoriteType)type
-                       listingContext:(AlfrescoListingContext *)listingContext
-                 arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
-                pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock
+- (AlfrescoRequest *)retrieveFavoriteNodeDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    NSString *requestString = nil;
-    NSURL *url = nil;
-    if (type == AlfrescoFavoriteDocument)
-    {
-        requestString = [kAlfrescoPublicAPIFavoriteDocuments stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    }
-    else if (type == AlfrescoFavoriteFolder)
-    {
-        requestString = [kAlfrescoPublicAPIFavoriteFolders stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    }
-    else
-    {
-        requestString = [kAlfrescoPublicAPIFavoritesAll stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    }
-    url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
+    NSString *requestString = [kAlfrescoPublicAPIFavoritesAll stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    BOOL usePaging = (nil == arrayCompletionBlock);
-    
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (nil == data)
         {
-            [self errorForCompletionBlocks:error arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
+            completionBlock(nil, error);
         }
         else
         {
-            NSError *conversionError = nil;
-            NSDictionary *pagingInfo = [AlfrescoObjectConverter paginationJSONFromData:data error:&conversionError];
-            [self favoritesArrayWithData:data completionBlock:^(NSArray *favorites, NSError *conversionError) {
-                
-                if (conversionError)
-                {
-                    [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
-                }
-                else
-                {
-                    if (favorites && pagingInfo)
-                    {
-                        NSArray *sortedFavorites = [AlfrescoSortingUtils sortedArrayForArray:favorites sortKey:self.defaultSortKey ascending:YES];
-                        BOOL hasMoreFavorites = [[pagingInfo valueForKeyPath:kAlfrescoPublicAPIJSONHasMoreItems] boolValue];
-                        int totalFavorites = -1;
-                        if ([pagingInfo valueForKey:kAlfrescoPublicAPIJSONTotalItems])
-                        {
-                            totalFavorites = [[pagingInfo valueForKey:kAlfrescoPublicAPIJSONTotalItems] intValue];
-                        }
-                        [self.favoritesCache addFavorites:sortedFavorites type:type hasMoreFavorites:hasMoreFavorites totalFavorites:totalFavorites];
-                        
-                        NSArray *resultsArray = nil;
-                        switch (type)
-                        {
-                            case AlfrescoFavoriteDocument:
-                            {
-                                hasMoreFavorites = self.favoritesCache.hasMoreFavoriteDocuments;
-                                totalFavorites = self.favoritesCache.totalDocuments;
-                                resultsArray = [self.favoritesCache favoriteDocuments];
-                            }
-                                break;
-                            case AlfrescoFavoriteFolder:
-                            {
-                                hasMoreFavorites = self.favoritesCache.hasMoreFavoriteFolders;
-                                totalFavorites = self.favoritesCache.totalFolders;
-                                resultsArray = [self.favoritesCache favoriteFolders];
-                            }
-                                break;
-                            case AlfrescoFavoriteNode:
-                            {
-                                hasMoreFavorites = self.favoritesCache.hasMoreFavoriteNodes;
-                                totalFavorites = self.favoritesCache.totalNodes;
-                                resultsArray = [self.favoritesCache allFavorites];
-                            }
-                                break;
-                        }
-                        if (usePaging)
-                        {
-                            // paging result needs to be built with the listing context in mind, however we already
-                            // retrieved paged results above but then corrupted them by retrieving the full array from
-                            // the cache! For now return the correct number of results requested, but there's a danger
-                            // the hasMoreItems flag will be incorrect.
-                            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:resultsArray listingContext:listingContext];
-                            pagingCompletionBlock(pagingResult, nil);
-                        }
-                        else
-                        {
-                            arrayCompletionBlock(resultsArray, nil);
-                        }
-                    }
-                    else
-                    {
-                        [self errorForCompletionBlocks:conversionError arrayCompletionBlock:arrayCompletionBlock pagingCompletionBlock:pagingCompletionBlock];
-                    }
-                }
-            }];
+            // retrieve complete node info for each favorite
+            [self favoritesArrayWithData:data completionBlock:completionBlock];
         }
     }];
     
     return request;
 }
 
-#pragma mark - private methods
+#pragma mark Internal private methods
 
 - (void)favoritesArrayWithData:(NSData *)data completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
@@ -569,18 +544,29 @@
     return [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&error];
 }
 
-- (void)errorForCompletionBlocks:(NSError *)error
-            arrayCompletionBlock:(AlfrescoArrayCompletionBlock)arrayCompletionBlock
-           pagingCompletionBlock:(AlfrescoPagingResultCompletionBlock)pagingCompletionBlock
+- (AlfrescoRequest *)fetchFavoriteState:(AlfrescoNode *)node completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
 {
-    if (arrayCompletionBlock)
-    {
-        arrayCompletionBlock(nil, error);
-    }
-    else
-    {
-        pagingCompletionBlock(nil, error);
-    }
+    NSString *requestString = [kAlfrescoPublicAPIFavorite stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    requestString = [requestString stringByReplacingOccurrencesOfString:kAlfrescoNodeRef withString:node.identifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:nil];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        
+        if (error && error.code != kAlfrescoErrorCodeHTTPResponse)
+        {
+            [self.favoritesCache cacheNode:node favorite:NO];
+            completionBlock(NO, NO, error);
+        }
+        else
+        {
+            [self.favoritesCache cacheNode:node favorite:(data != nil)];
+            completionBlock(YES, (data != nil), nil);
+        }
+    }];
+    
+    return request;
 }
 
 @end

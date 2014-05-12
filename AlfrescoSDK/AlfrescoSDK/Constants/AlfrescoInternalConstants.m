@@ -105,11 +105,10 @@ NSString * const kAlfrescoSessionCloudURL = @"org.alfresco.mobile.internal.sessi
 NSString * const kAlfrescoSessionCloudBasicAuth = @"org.alfresco.mobile.internal.session.cloud.basic";
 NSString * const kAlfrescoSessionUsername = @"org.alfresco.mobile.internal.session.username";
 NSString * const kAlfrescoSessionPassword = @"org.alfresco.mobile.internal.session.password";
-NSString * const kAlfrescoSessionInternalCache = @"org.alfresco.mobile.internal.cache.";
-NSString * const kAlfrescoSessionSitesCache = @"org.alfresco.mobile.internal.cache.sites";
+NSString * const kAlfrescoSessionCacheSites = @"org.alfresco.mobile.internal.cache.sites";
+NSString * const kAlfrescoSessionCacheFavorites = @"org.alfresco.mobile.internal.cache.favorites";
 // Temporary for ACE-1445
 NSString * const kAlfrescoSessionAlternatePersonIdentifier = @"org.alfresco.mobile.internal.session.personIdentifier";
-
 
 NSString * const kAlfrescoSiteIsFavorite = @"isFavorite";
 NSString * const kAlfrescoSiteIsMember = @"isMember";
@@ -173,7 +172,7 @@ NSString * const kAlfrescoLegacyMetadataExtractionAPI = @"/service/api/actionQue
 NSString * const kAlfrescoLegacyThumbnailCreationAPI = @"/node/{nodeRef}/content/thumbnails?as=true";
 NSString * const kAlfrescoLegacyThumbnailRenditionAPI = @"node/{nodeRef}/content/thumbnails/{renditionID}?c=queue";
 
-NSString * const kAlfrescoLegacyAddOrRemoveFavoriteSiteAPI = @"people/{personID}/preferences";
+NSString * const kAlfrescoLegacyPreferencesAPI = @"people/{personID}/preferences";
 NSString * const kAlfrescoLegacyJoinPublicSiteAPI = @"sites/{siteID}/memberships";
 NSString * const kAlfrescoLegacyJoinModeratedSiteAPI = @"sites/{siteID}/invitations";
 NSString * const kAlfrescoLegacyPendingJoinRequestsAPI = @"invitations?inviteeUserName={personID}";

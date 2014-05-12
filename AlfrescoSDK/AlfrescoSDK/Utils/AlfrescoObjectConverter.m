@@ -220,7 +220,6 @@
     {
         return originalIdentifier;
     }
-    //    NSString *stringId = [originalIdentifier stringByReplacingOccurrencesOfString:@"://" withString:@"/"];
     
     NSArray *strings = [originalIdentifier componentsSeparatedByString:@";"];
     if (strings.count > 1)
