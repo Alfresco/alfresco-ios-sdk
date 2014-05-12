@@ -19,156 +19,180 @@
  */
 
 #import "AlfrescoFavoritesCache.h"
-#import "AlfrescoInternalConstants.h"
+#import "AlfrescoLog.h"
+#import "AlfrescoErrors.h"
+#import "AlfrescoObjectConverter.h"
 
-@interface AlfrescoFavoritesCache ()
-@property (nonatomic, strong) NSMutableArray * favoritesCache;
-@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteDocuments;
-@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteFolders;
-@property (nonatomic, assign, readwrite) BOOL hasMoreFavoriteNodes;
-@property (nonatomic, assign, readwrite) int totalDocuments;
-@property (nonatomic, assign, readwrite) int totalFolders;
-@property (nonatomic, assign, readwrite) int totalNodes;
+@interface AlfrescoFavoritesCacheEntry : NSObject
+@property (nonatomic, strong) AlfrescoNode *node;
+@property (nonatomic, assign) BOOL favorite;
+- (instancetype)initWithNode:(AlfrescoNode *)node favorite:(BOOL)favorite;
 @end
 
-@implementation AlfrescoFavoritesCache
-
-- (id)init
+@implementation AlfrescoFavoritesCacheEntry
+- (instancetype)initWithNode:(AlfrescoNode *)node favorite:(BOOL)favorite
 {
     self = [super init];
     if (nil != self)
     {
-        _favoritesCache = [NSMutableArray arrayWithCapacity:0];
-        _hasMoreFavoriteDocuments = YES;
-        _hasMoreFavoriteFolders = YES;
-        _hasMoreFavoriteNodes = YES;
+        self.node = node;
+        self.favorite = favorite;
+    }
+    return self;
+}
+@end
+
+@interface AlfrescoFavoritesCache ()
+@property (nonatomic, assign, readwrite) BOOL isCacheBuilt;
+@property (nonatomic, strong, readwrite) NSArray *favoriteNodes;
+@property (nonatomic, strong, readwrite) NSArray *favoriteDocuments;
+@property (nonatomic, strong, readwrite) NSArray *favoriteFolders;
+
+@property (nonatomic, strong) id<AlfrescoFavoritesCacheDataDelegate> delegate;
+@property (nonatomic, strong) NSMutableDictionary *internalFavoritesCache;
+@end
+
+@implementation AlfrescoFavoritesCache
+
+- (instancetype)initWithFavoritesCacheDataDelegate:(id<AlfrescoFavoritesCacheDataDelegate>)favoritesCacheDataDelegate;
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.isCacheBuilt = NO;
+        self.delegate = favoritesCacheDataDelegate;
+        self.internalFavoritesCache = [NSMutableDictionary dictionary];
     }
     return self;
 }
 
-+ (id)favoritesCacheForSession:(id<AlfrescoSession>)session
-{
-    static dispatch_once_t singleDispatchToken;
-    static AlfrescoFavoritesCache *cache = nil;
-    dispatch_once(&singleDispatchToken, ^{
-        cache = [[self alloc] init];
-        if (cache)
-        {
-            NSString *key = [NSString stringWithFormat:@"%@%@",kAlfrescoSessionInternalCache, [AlfrescoFavoritesCache class]];
-            [session setObject:cache forParameter:key];
-        }
-    });
-    return cache;
-}
-
+/**
+ clears all entries in the cache
+ */
 - (void)clear
 {
-    [self.favoritesCache removeAllObjects];
-    _hasMoreFavoriteDocuments = YES;
-    _hasMoreFavoriteFolders = YES;
-    _hasMoreFavoriteNodes = YES;
-    _totalDocuments = 0;
-    _totalFolders = 0;
-    _totalNodes = 0;
+    self.isCacheBuilt = NO;
+    [self.internalFavoritesCache removeAllObjects];
 }
 
-- (NSArray *)allFavorites
+- (AlfrescoRequest *)buildCacheWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
-    return self.favoritesCache;
+    AlfrescoLogDebug(@"Building favorites cache");
+    
+    // request the data required to build the initial caches
+    AlfrescoLogDebug(@"Requesting favorite node data from delegate");
+    AlfrescoRequest *request = [AlfrescoRequest new];
+    request = [self.delegate retrieveFavoriteNodeDataWithCompletionBlock:^(NSArray *array, NSError *error) {
+        if (array != nil)
+        {
+            // add each node to the cache
+            for (AlfrescoNode *node in array)
+            {
+                [self cacheNode:node favorite:YES];
+            }
+            
+            // let the original caller know the cache is built
+            self.isCacheBuilt = YES;
+            AlfrescoLogDebug(@"Favorties cache successfully built");
+            if (completionBlock != NULL)
+            {
+                completionBlock(YES, nil);
+            }
+        }
+        else
+        {
+            completionBlock(NO, error);
+        }
+    }];
+    
+    return request;
+}
+
+- (NSArray *)favoriteNodes
+{
+    // get cache entries that are marked as a favorite
+    NSPredicate *favoritedEntriesPredicate = [NSPredicate predicateWithFormat:@"favorite == YES"];
+    NSArray *favoritedEntries =  [[self.internalFavoritesCache allValues] filteredArrayUsingPredicate:favoritedEntriesPredicate];
+    
+    NSMutableArray *nodes = [NSMutableArray arrayWithCapacity:favoritedEntries.count];
+    for (AlfrescoFavoritesCacheEntry *entry in favoritedEntries)
+    {
+        [nodes addObject:entry.node];
+    }
+    
+    return nodes;
 }
 
 - (NSArray *)favoriteDocuments
 {
-    NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"isDocument == YES"];
-    return [self.favoritesCache filteredArrayUsingPredicate:favoritePredicate];
+    // get cache entries that are documents and marked as a favorite
+    NSPredicate *favoriteDocumentsPredicate = [NSPredicate predicateWithFormat:@"(favorite == YES) AND (node.isDocument == YES)"];
+    NSArray *favoritedEntries =  [[self.internalFavoritesCache allValues] filteredArrayUsingPredicate:favoriteDocumentsPredicate];
+    
+    NSMutableArray *nodes = [NSMutableArray arrayWithCapacity:favoritedEntries.count];
+    for (AlfrescoFavoritesCacheEntry *entry in favoritedEntries)
+    {
+        [nodes addObject:entry.node];
+    }
+    
+    return nodes;
 }
 
 - (NSArray *)favoriteFolders
 {
-    NSPredicate *favoritePredicate = [NSPredicate predicateWithFormat:@"isFolder == YES"];
-    return [self.favoritesCache filteredArrayUsingPredicate:favoritePredicate];
+    // get cache entries that are folders and marked as a favorite
+    NSPredicate *favoriteFoldersPredicate = [NSPredicate predicateWithFormat:@"(favorite == YES) AND (node.isFolder == YES)"];
+    NSArray *favoritedEntries =  [[self.internalFavoritesCache allValues] filteredArrayUsingPredicate:favoriteFoldersPredicate];
+    
+    NSMutableArray *nodes = [NSMutableArray arrayWithCapacity:favoritedEntries.count];
+    for (AlfrescoFavoritesCacheEntry *entry in favoritedEntries)
+    {
+        [nodes addObject:entry.node];
+    }
+    
+    return nodes;
 }
 
-- (void)addFavorite:(AlfrescoNode *)node
+- (void)cacheNode:(AlfrescoNode *)node favorite:(BOOL)favorite
 {
-    if (nil == node)
-    {
-        return;
-    }
-    NSArray *identifiers = [self.favoritesCache valueForKey:@"identifier"];
-    NSUInteger foundIndex = [identifiers indexOfObject:node.identifier];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     
-    if (NSNotFound == foundIndex)
+    // remove the version suffix (if present) from the identifier prior to adding to cache
+    NSString *cacheKey = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+    
+    AlfrescoFavoritesCacheEntry *entry = self.internalFavoritesCache[cacheKey];
+    if (entry != nil)
     {
-        [self.favoritesCache addObject:node];
+        // update node and favorite state in cache entry
+        entry.node = node;
+        entry.favorite = favorite;
     }
     else
     {
-        (self.favoritesCache)[foundIndex] = node;
-    }
-}
-
-- (void)addFavorites:(NSArray *)nodes type:(AlfrescoFavoriteType)type hasMoreFavorites:(BOOL)hasMoreFavorites totalFavorites:(NSInteger)totalFavorites
-{
-    if (nil == nodes)
-    {
-        return;
-    }
-    switch (type)
-    {
-        case AlfrescoFavoriteDocument:
-            self.hasMoreFavoriteDocuments = hasMoreFavorites;
-            self.totalDocuments = (int)totalFavorites;
-            break;
-        case AlfrescoFavoriteFolder:
-            self.hasMoreFavoriteFolders = hasMoreFavorites;
-            self.totalFolders = (int)totalFavorites;
-            break;
-        case AlfrescoFavoriteNode:
-            self.hasMoreFavoriteNodes = hasMoreFavorites;
-            self.totalNodes = (int)totalFavorites;
-            break;
+        // create cache entry and add
+        entry = [[AlfrescoFavoritesCacheEntry alloc] initWithNode:node favorite:favorite];
+        self.internalFavoritesCache[cacheKey] = entry;
     }
     
-    [nodes enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger index, BOOL *stop) {
-        [self addFavorite:node];
-    }];
+    AlfrescoLogTrace(@"Cached node: %@, favorite = %@", cacheKey, favorite ? @"YES" : @"NO");
 }
 
-- (void)removeFavorite:(AlfrescoNode *)node
+- (NSNumber *)isNodeFavorited:(AlfrescoNode *)node
 {
-    __block AlfrescoNode *nodeToRemove = nil;
-
-    [self.favoritesCache enumerateObjectsUsingBlock:^(AlfrescoNode *cachedNode, NSUInteger index, BOOL *stop) {
-        if ([node.identifier isEqualToString:cachedNode.identifier])
-        {
-            *stop = YES;
-            nodeToRemove = cachedNode;
-        }
-    }];
-
-    if (nodeToRemove)
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
+    
+    NSNumber *result = nil;
+    
+    // remove the version suffix (if present) from the identifier prior to checking cache
+    NSString *cacheKey = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
+    
+    AlfrescoFavoritesCacheEntry *entry = self.internalFavoritesCache[cacheKey];
+    if (entry != nil)
     {
-        [self.favoritesCache removeObject:nodeToRemove];
+        result = [NSNumber numberWithBool:entry.favorite];
     }
-}
-
-- (void)removeFavorites:(NSArray *)nodes
-{
-    [nodes enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger index, BOOL *stop) {
-        [self removeFavorite:node];
-    }];
-}
-
-- (AlfrescoNode *)objectWithIdentifier:(NSString *)identifier
-{
-    if (!identifier)
-    {
-        return nil;
-    }
-    NSPredicate *idPredicate = [NSPredicate predicateWithFormat:@"identifier == %@",identifier];
-    NSArray *results = [self.favoritesCache filteredArrayUsingPredicate:idPredicate];
-    return (0 == results.count) ? nil : results[0];
+    
+    return result;
 }
 
 @end

@@ -1085,7 +1085,7 @@
                                        }];
                                        
                                    }
-                               } progressBlock:^(unsigned long long transferred, unsigned long long total){}];
+                               } progressBlock:nil];
         
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -5643,7 +5643,20 @@
                 XCTAssertTrue(array.count > 0, @"The array should not be empty");
                 
                 AlfrescoLogDebug(@"Favorites Documents: %@", [array valueForKeyPath:@"name"]);
-                self.lastTestSuccessful = YES;
+                
+                // make sure all nodes returned are documents
+                BOOL allDocuments = YES;
+                for (AlfrescoDocument *document in array)
+                {
+                    if (document.isFolder)
+                    {
+                        allDocuments = NO;
+                        self.lastTestFailureMessage = @"Expecting to only get AlfrescoDocument objects in array";
+                        break;
+                    }
+                }
+                
+                self.lastTestSuccessful = allDocuments;
             }
             self.callbackCompleted = YES;
         }];
@@ -5680,7 +5693,20 @@
                 XCTAssertTrue(pagingResult.objects.count == numberOfFavoriteDocuments, @"Expected the objects array to be of size %i, instead got back a size %lu", numberOfFavoriteDocuments, (unsigned long)pagingResult.objects.count);
 
                 AlfrescoLogDebug(@"Favorites Documents with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
-                self.lastTestSuccessful = YES;
+                
+                // make sure all nodes returned are documents
+                BOOL allDocuments = YES;
+                for (AlfrescoDocument *document in pagingResult.objects)
+                {
+                    if (document.isFolder)
+                    {
+                        allDocuments = NO;
+                        self.lastTestFailureMessage = @"Expecting to only get AlfrescoDocument objects in pagingResult.objects";
+                        break;
+                    }
+                }
+                
+                self.lastTestSuccessful = allDocuments;
             }
             self.callbackCompleted = YES;
         }];
@@ -5711,7 +5737,20 @@
                 XCTAssertTrue(array.count > 0, @"The array should not be empty");
                 
                 AlfrescoLogDebug(@"Favorites Folders: %@", [array valueForKeyPath:@"name"]);
-                self.lastTestSuccessful = YES;
+                
+                // make sure all nodes returned are folders
+                BOOL allFolders = YES;
+                for (AlfrescoFolder *folder in array)
+                {
+                    if (folder.isDocument)
+                    {
+                        allFolders = NO;
+                        self.lastTestFailureMessage = @"Expecting to only get AlfrescoFolder objects in array";
+                        break;
+                    }
+                }
+                
+                self.lastTestSuccessful = allFolders;
             }
             self.callbackCompleted = YES;
         }];
@@ -5748,7 +5787,20 @@
                 XCTAssertTrue(pagingResult.objects.count == numberOfFavoriteFolders, @"Expected the objects array to be of size %i, instead got back a size %lu", numberOfFavoriteFolders, (unsigned long)pagingResult.objects.count);
                 
                 AlfrescoLogDebug(@"Favorites Folders with Listing Context: %@", [pagingResult.objects valueForKeyPath:@"name"]);
-                self.lastTestSuccessful = YES;
+                
+                // make sure all nodes returned are folders
+                BOOL allFolders = YES;
+                for (AlfrescoFolder *folder in pagingResult.objects)
+                {
+                    if (folder.isDocument)
+                    {
+                        allFolders = NO;
+                        self.lastTestFailureMessage = @"Expecting to only get AlfrescoFolder objects in pagingResult.objects";
+                        break;
+                    }
+                }
+                
+                self.lastTestSuccessful = allFolders;
             }
             self.callbackCompleted = YES;
         }];
@@ -5836,37 +5888,50 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
-        [weakDfService addFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
-            if (!succeeded)
+        [weakDfService isFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+            if (succeeded)
+            {
+                XCTAssertFalse(isFavorited, @"Document should not be marked as favorite");
+                
+                [weakDfService addFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                    if (!succeeded)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertTrue(isFavorited, @"Document should be marked as favorite");
+                        if (!isFavorited)
+                        {
+                            self.lastTestSuccessful = NO;
+                            self.callbackCompleted = YES;
+                        }
+                        else
+                        {
+                            [weakDfService isFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                                if (!succeeded)
+                                {
+                                    self.lastTestSuccessful = NO;
+                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                }
+                                else
+                                {
+                                    XCTAssertTrue(isFavorited, @"Documented should be flagged as favorited");
+                                    self.lastTestSuccessful = YES;
+                                }
+                                self.callbackCompleted = YES;
+                            }];
+                        }
+                    }
+                }];
+            }
+            else
             {
                 self.lastTestSuccessful = NO;
                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
                 self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertTrue(isFavorited, @"Document should be marked as favorite");
-                if (!isFavorited)
-                {
-                    self.lastTestSuccessful = NO;
-                    self.callbackCompleted = YES;
-                }
-                else
-                {
-                    [weakDfService isFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
-                        if (!succeeded)
-                        {
-                            self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
-                        }
-                        else
-                        {
-                            XCTAssertTrue(isFavorited, @"Documented should be flagged as favorited");
-                            self.lastTestSuccessful = YES;
-                        }
-                        self.callbackCompleted = YES;
-                    }];
-                }
             }
         }];
         
@@ -5895,9 +5960,31 @@
             else
             {
                 XCTAssertTrue(isFavorited, @"node should be marked as favorite");
-                self.lastTestSuccessful = YES;
+                
+                // retrieve favorite documents and make sure it appears in the list
+                [weakDfService retrieveFavoriteDocumentsWithCompletionBlock:^(NSArray *array, NSError *error) {
+                    if (array == nil)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    }
+                    else
+                    {
+                        BOOL favortiedDocumentFound = NO;
+                        for (AlfrescoDocument *document in array)
+                        {
+                            if ([document.identifier isEqualToString:self.testAlfrescoDocument.identifier])
+                            {
+                                favortiedDocumentFound = YES;
+                                break;
+                            }
+                        }
+                        
+                        self.lastTestSuccessful = favortiedDocumentFound;
+                    }
+                    self.callbackCompleted = YES;
+                }];
             }
-            self.callbackCompleted = YES;
         }];
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -5941,9 +6028,31 @@
                         else
                         {
                             XCTAssertFalse(isFavorited, @"Document should no longer be marked as favorite");
-                            self.lastTestSuccessful = YES;
+                            
+                            // retrieve favorite documents and make sure it does not appear in the list
+                            [weakDfService retrieveFavoriteDocumentsWithCompletionBlock:^(NSArray *array, NSError *error) {
+                                if (array == nil)
+                                {
+                                    self.lastTestSuccessful = NO;
+                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                }
+                                else
+                                {
+                                    BOOL favortiedDocumentFound = NO;
+                                    for (AlfrescoDocument *document in array)
+                                    {
+                                        if ([document.identifier isEqualToString:self.testAlfrescoDocument.identifier])
+                                        {
+                                            favortiedDocumentFound = YES;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    self.lastTestSuccessful = !favortiedDocumentFound;
+                                }
+                                self.callbackCompleted = YES;
+                            }];
                         }
-                        self.callbackCompleted = YES;
                     }];
                 }
             }
