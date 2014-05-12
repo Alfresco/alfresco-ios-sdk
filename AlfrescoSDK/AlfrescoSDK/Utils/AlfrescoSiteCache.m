@@ -29,7 +29,6 @@
 @property (nonatomic, strong, readwrite) NSArray *favoriteSites;
 @property (nonatomic, strong, readwrite) NSArray *pendingSites;
 
-@property (nonatomic, weak) id<AlfrescoSiteCacheDataDelegate> delegate;
 @property (nonatomic, strong) NSMutableArray *memberSiteData;
 @property (nonatomic, strong) NSMutableArray *favoriteSiteData;
 @property (nonatomic, strong) NSMutableArray *pendingSiteData;
@@ -38,13 +37,12 @@
 
 @implementation AlfrescoSiteCache
 
-- (instancetype)initWithSiteCacheDataDelegate:(id<AlfrescoSiteCacheDataDelegate>)siteCacheDataDelegate
+- (instancetype)init
 {
     self = [super init];
     if (nil != self)
     {
         self.isCacheBuilt = NO;
-        self.delegate = siteCacheDataDelegate;
     }
     return self;
 }
@@ -58,14 +56,14 @@
     [self.internalSiteCache removeAllObjects];
 }
 
-- (AlfrescoRequest *)buildCacheWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)buildCacheWithDelegate:(id<AlfrescoSiteCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 {
     AlfrescoLogDebug(@"Building site cache");
 
     // start the daisy chained methods to collect all the data required to build the initial caches
     AlfrescoLogDebug(@"Requesting member site data from delegate");
     AlfrescoRequest *request = [AlfrescoRequest new];
-    request = [self.delegate retrieveMemberSiteDataWithCompletionBlock:^(NSArray *memberData, NSError *error) {
+    request = [delegate retrieveMemberSiteDataWithCompletionBlock:^(NSArray *memberData, NSError *error) {
         if (memberData != nil)
         {
             // store member site data
@@ -73,7 +71,7 @@
             
             // get favorite data
             AlfrescoLogDebug(@"Requesting favorite site data from delegate");
-            AlfrescoRequest *favoritesRequest = [self.delegate retrieveFavoriteSiteDataWithCompletionBlock:^(NSArray *favoriteData, NSError *error) {
+            AlfrescoRequest *favoritesRequest = [delegate retrieveFavoriteSiteDataWithCompletionBlock:^(NSArray *favoriteData, NSError *error) {
                 if (favoriteData != nil)
                 {
                     // store favorite site data
@@ -81,14 +79,14 @@
                     
                     // get pending data
                     AlfrescoLogDebug(@"Requesting pending site data from delegate");
-                    AlfrescoRequest *pendingRequest = [self.delegate retrievePendingSiteDataWithCompletionBlock:^(NSArray *pendingData, NSError *error) {
+                    AlfrescoRequest *pendingRequest = [delegate retrievePendingSiteDataWithCompletionBlock:^(NSArray *pendingData, NSError *error) {
                         if (pendingData != nil)
                         {
                             // store the pending data
                             self.pendingSiteData = [NSMutableArray arrayWithArray:pendingData];
                             
                             // process the data
-                            [self processCacheDataWithCompletionBlock:completionBlock];
+                            [self processCacheDataWithDelegate:delegate completionBlock:completionBlock];
                         }
                         else
                         {
@@ -115,7 +113,7 @@
     return request;
 }
 
-- (void)processCacheDataWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (void)processCacheDataWithDelegate:(id<AlfrescoSiteCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
     // this could take some time, especially if sites have to be individually retrieved,
     // so move all this off the main thread
@@ -214,7 +212,7 @@
                 siteName = namesOfMissingSites[i];
                 
                 AlfrescoLogDebug(@"Fetching site data for site: %@", siteName);
-                [self.delegate retrieveDataForSiteWithShortName:siteName completionBlock:^(AlfrescoSite *site, NSError *error) {
+                [delegate retrieveDataForSiteWithShortName:siteName completionBlock:^(AlfrescoSite *site, NSError *error) {
                     if (site != nil)
                     {
                         // add site to the internal cache with appropriate state

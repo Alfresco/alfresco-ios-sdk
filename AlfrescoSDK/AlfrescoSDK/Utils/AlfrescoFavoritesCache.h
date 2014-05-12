@@ -21,14 +21,6 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoSession.h"
 
-typedef NS_ENUM(NSInteger, AlfrescoFavoriteType)
-{
-    AlfrescoFavoriteDocument = 0,
-    AlfrescoFavoriteFolder,
-    AlfrescoFavoriteNode,
-    
-};
-
 @protocol AlfrescoFavoritesCacheDataDelegate <NSObject>
 - (AlfrescoRequest *)retrieveFavoriteNodeDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 @end
@@ -41,14 +33,9 @@ typedef NS_ENUM(NSInteger, AlfrescoFavoriteType)
 @property (nonatomic, strong, readonly) NSArray *favoriteFolders;
 
 /**
- initialiser.
- */
-- (instancetype)initWithFavoritesCacheDataDelegate:(id<AlfrescoFavoritesCacheDataDelegate>)favoritesCacheDataDelegate;
-
-/**
  Build the cache.
  */
-- (AlfrescoRequest *)buildCacheWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+- (AlfrescoRequest *)buildCacheWithDelegate:(id<AlfrescoFavoritesCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 /**
  Caches the given node with given flag. If the node already exists in the cache it's favortie state

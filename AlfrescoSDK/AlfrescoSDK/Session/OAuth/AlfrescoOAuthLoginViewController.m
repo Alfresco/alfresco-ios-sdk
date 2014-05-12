@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -214,21 +214,15 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
         [self createActivityView];
     }
     [self.activityIndicator startAnimating];
-        
-    NSMutableString *authURLString = [NSMutableString string];
-    [authURLString appendString:self.baseURL];
-    [authURLString appendString:@"?"];
-    [authURLString appendString:[kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey]];
-    [authURLString appendString:@"&"];
-    [authURLString appendString:[kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.oauthData.redirectURI]];
-    [authURLString appendString:@"&"];
-    [authURLString appendString:kAlfrescoOAuthScope];
-    [authURLString appendString:@"&"];
-    [authURLString appendString:kAlfrescoOAuthResponseType];
+
+    NSString *authURLString = [NSString stringWithFormat:@"%@?%@&%@&%@&%@", self.baseURL,
+                               [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey],
+                               [kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.oauthData.redirectURI],
+                               kAlfrescoOAuthScope, kAlfrescoOAuthResponseType];
     
     // load the authorization URL in the web view
     NSURL *authURL = [NSURL URLWithString:authURLString];
-    AlfrescoLogDebug(@"UIWebviewDelegate loadWebView: just before loading request with %@",authURLString);
+    AlfrescoLogDebug(@"Loading webview with baseURL", self.baseURL);
     [self.webView loadRequest:[NSURLRequest requestWithURL:authURL]];
 }
 

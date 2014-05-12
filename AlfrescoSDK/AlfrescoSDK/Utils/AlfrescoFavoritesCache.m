@@ -47,20 +47,17 @@
 @property (nonatomic, strong, readwrite) NSArray *favoriteNodes;
 @property (nonatomic, strong, readwrite) NSArray *favoriteDocuments;
 @property (nonatomic, strong, readwrite) NSArray *favoriteFolders;
-
-@property (nonatomic, strong) id<AlfrescoFavoritesCacheDataDelegate> delegate;
 @property (nonatomic, strong) NSMutableDictionary *internalFavoritesCache;
 @end
 
 @implementation AlfrescoFavoritesCache
 
-- (instancetype)initWithFavoritesCacheDataDelegate:(id<AlfrescoFavoritesCacheDataDelegate>)favoritesCacheDataDelegate;
+- (instancetype)init
 {
     self = [super init];
     if (nil != self)
     {
         self.isCacheBuilt = NO;
-        self.delegate = favoritesCacheDataDelegate;
         self.internalFavoritesCache = [NSMutableDictionary dictionary];
     }
     return self;
@@ -75,14 +72,14 @@
     [self.internalFavoritesCache removeAllObjects];
 }
 
-- (AlfrescoRequest *)buildCacheWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+- (AlfrescoRequest *)buildCacheWithDelegate:(id<AlfrescoFavoritesCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 {
     AlfrescoLogDebug(@"Building favorites cache");
     
     // request the data required to build the initial caches
     AlfrescoLogDebug(@"Requesting favorite node data from delegate");
     AlfrescoRequest *request = [AlfrescoRequest new];
-    request = [self.delegate retrieveFavoriteNodeDataWithCompletionBlock:^(NSArray *array, NSError *error) {
+    request = [delegate retrieveFavoriteNodeDataWithCompletionBlock:^(NSArray *array, NSError *error) {
         if (array != nil)
         {
             // add each node to the cache
