@@ -36,9 +36,7 @@
 @property (nonatomic, strong, readonly) NSArray *favoriteSites;
 @property (nonatomic, strong, readonly) NSArray *pendingSites;
 
-- (instancetype)initWithSiteCacheDataDelegate:(id<AlfrescoSiteCacheDataDelegate>)siteCacheDataDelegate;
-
-- (AlfrescoRequest *)buildCacheWithCompletionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+- (AlfrescoRequest *)buildCacheWithDelegate:(id<AlfrescoSiteCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
 - (void)cacheSite:(AlfrescoSite *)site;
 

@@ -66,7 +66,7 @@
         }
         else
         {
-            self.siteCache = [[AlfrescoSiteCache alloc] initWithSiteCacheDataDelegate:self];
+            self.siteCache = [AlfrescoSiteCache new];
             [self.session setObject:self.siteCache forParameter:kAlfrescoSessionCacheSites];
             AlfrescoLogDebug(@"Created new SiteCache object");
         }
@@ -101,7 +101,7 @@
     if (!self.siteCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
-        request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+        request = [self.siteCache buildCacheWithDelegate:self completionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
                 AlfrescoRequest *fetchRequest = [weakSelf fetchAllSitesWithListingContext:(AlfrescoListingContext *)listingContext completionBlock:completionBlock];
@@ -143,7 +143,7 @@
     if (!self.siteCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
-        request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+        request = [self.siteCache buildCacheWithDelegate:self completionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
                 NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:weakSelf.siteCache.memberSites
@@ -193,7 +193,7 @@
     if (!self.siteCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
-        request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+        request = [self.siteCache buildCacheWithDelegate:self completionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
                 NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:weakSelf.siteCache.favoriteSites
@@ -231,7 +231,7 @@
     if (!self.siteCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
-        request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+        request = [self.siteCache buildCacheWithDelegate:self completionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
                 // now the cache is built see if we have already retrieved it
@@ -386,7 +386,7 @@
     if (!self.siteCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
-        request = [self.siteCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+        request = [self.siteCache buildCacheWithDelegate:self completionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
                 NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:weakSelf.siteCache.pendingSites

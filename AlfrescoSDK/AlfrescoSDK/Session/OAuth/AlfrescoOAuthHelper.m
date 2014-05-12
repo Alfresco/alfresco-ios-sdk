@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -64,9 +64,9 @@
 }
 
 
-- (void)retrieveOAuthDataForAuthorizationCode:(NSString *)authorizationCode
-                                    oauthData:(AlfrescoOAuthData *)oauthData
-                              completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveOAuthDataForAuthorizationCode:(NSString *)authorizationCode
+                                                 oauthData:(AlfrescoOAuthData *)oauthData
+                                           completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:authorizationCode argumentName:@"authorizationCode"];
     [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
@@ -82,33 +82,27 @@
     
     [request setHTTPMethod:@"POST"];
     
-    NSMutableString *contentString = [NSMutableString string];
     NSString *codeID   = [kAlfrescoOAuthCode stringByReplacingOccurrencesOfString:kAlfrescoCode withString:authorizationCode];
     NSString *clientID = [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey];
     NSString *secretID = [kAlfrescoOAuthClientSecret stringByReplacingOccurrencesOfString:kAlfrescoClientSecret withString:self.oauthData.secretKey];
     NSString *redirect = [kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.oauthData.redirectURI];
+    NSString *bodyContentString = [NSString stringWithFormat:@"%@&%@&%@&%@&%@", codeID, clientID, secretID, kAlfrescoOAuthGrantType, redirect];
     
-    [contentString appendString:codeID];
-    [contentString appendString:@"&"];
-    [contentString appendString:clientID];
-    [contentString appendString:@"&"];
-    [contentString appendString:secretID];
-    [contentString appendString:@"&"];
-    [contentString appendString:kAlfrescoOAuthGrantType];
-    [contentString appendString:@"&"];
-    [contentString appendString:redirect];
-    AlfrescoLogDebug(@"body is %@", contentString);
-    
-    NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [bodyContentString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:data];
     
     self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
     
+    // return an AlfrescoRequest object to allow cancelling of connection
+    AlfrescoRequest *alfrescoRequest = [AlfrescoRequest new];
+    // NOTE: setting NSURLConnection as the httpRequest property as it is the connection that handles the cancel
+    alfrescoRequest.httpRequest = self.connection;
+    return alfrescoRequest;
 }
 
 
-- (void)refreshAccessToken:(AlfrescoOAuthData *)oauthData
-           completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
+- (AlfrescoRequest *)refreshAccessToken:(AlfrescoOAuthData *)oauthData
+                        completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -126,25 +120,21 @@
     AlfrescoLogDebug(@"URL is: %@ auth header is %@", self.baseURL, authHeader);
     [request addValue:authHeader forHTTPHeaderField:@"Authorization"];
     
-    NSMutableString *contentString = [NSMutableString string];
     NSString *refreshID = [kAlfrescoOAuthRefreshToken stringByReplacingOccurrencesOfString:kAlfrescoRefreshID withString:self.oauthData.refreshToken];
     NSString *clientID  = [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey];
     NSString *secretID  = [kAlfrescoOAuthClientSecret stringByReplacingOccurrencesOfString:kAlfrescoClientSecret withString:self.oauthData.secretKey];
+    NSString *bodyContentString = [NSString stringWithFormat:@"%@&%@&%@&%@", refreshID, clientID, secretID, kAlfrescoOAuthGrantTypeRefresh];
     
-    [contentString appendString:refreshID];
-    [contentString appendString:@"&"];
-    [contentString appendString:clientID];
-    [contentString appendString:@"&"];
-    [contentString appendString:secretID];
-    [contentString appendString:@"&"];
-    [contentString appendString:kAlfrescoOAuthGrantTypeRefresh];
-    AlfrescoLogDebug(@"body is %@", contentString);
-    
-    NSData *data = [contentString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [bodyContentString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:data];
     
     self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
     
+    // return an AlfrescoRequest object to allow cancelling of connection
+    AlfrescoRequest *alfrescoRequest = [AlfrescoRequest new];
+    // NOTE: setting NSURLConnection as the httpRequest property as it is the connection that handles the cancel
+    alfrescoRequest.httpRequest = self.connection;
+    return alfrescoRequest;
 }
 
 

@@ -59,7 +59,7 @@
         }
         else
         {
-            self.favoritesCache = [[AlfrescoFavoritesCache alloc] initWithFavoritesCacheDataDelegate:self];
+            self.favoritesCache = [AlfrescoFavoritesCache new];
             [self.session setObject:self.favoritesCache forParameter:kAlfrescoSessionCacheFavorites];
             AlfrescoLogDebug(@"Created new FavoritesCache object");
         }
@@ -240,10 +240,12 @@
     if (!self.favoritesCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
-        request = [self.favoritesCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+        request = [self.favoritesCache buildCacheWithDelegate:self completionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
-                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:weakSelf.favoritesCache.favoriteDocuments
+                NSArray *sortedFavoriteDocuments = [AlfrescoSortingUtils sortedArrayForArray:weakSelf.favoritesCache.favoriteDocuments
+                                                                                     sortKey:self.defaultSortKey ascending:YES];
+                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedFavoriteDocuments
                                                                                 listingContext:listingContext];
                 completionBlock(pagingResult, nil);
             }
@@ -286,10 +288,12 @@
     if (!self.favoritesCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
-        request = [self.favoritesCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+        request = [self.favoritesCache buildCacheWithDelegate:self completionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
-                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:weakSelf.favoritesCache.favoriteFolders
+                NSArray *sortedFavoriteFolders = [AlfrescoSortingUtils sortedArrayForArray:weakSelf.favoritesCache.favoriteFolders
+                                                                                     sortKey:self.defaultSortKey ascending:YES];
+                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedFavoriteFolders
                                                                                 listingContext:listingContext];
                 completionBlock(pagingResult, nil);
             }
@@ -332,10 +336,12 @@
     if (!self.favoritesCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
-        request = [self.favoritesCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+        request = [self.favoritesCache buildCacheWithDelegate:self completionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
-                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:weakSelf.favoritesCache.favoriteNodes
+                NSArray *sortedFavoriteNodes = [AlfrescoSortingUtils sortedArrayForArray:weakSelf.favoritesCache.favoriteNodes
+                                                                                   sortKey:self.defaultSortKey ascending:YES];
+                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedFavoriteNodes
                                                                                 listingContext:listingContext];
                 completionBlock(pagingResult, nil);
             }
@@ -368,7 +374,7 @@
     if (!self.favoritesCache.isCacheBuilt)
     {
         __weak typeof(self) weakSelf = self;
-        request = [self.favoritesCache buildCacheWithCompletionBlock:^(BOOL succeeded, NSError *error) {
+        request = [self.favoritesCache buildCacheWithDelegate:self completionBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded)
             {
                 favorite = [weakSelf.favoritesCache isNodeFavorited:node];
