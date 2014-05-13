@@ -701,10 +701,13 @@
                         variables:(NSDictionary *)variables
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTask:task
-                 parameters:@{kAlfrescoWorkflowTaskState: kAlfrescoPublicAPIWorkflowTaskStateCompleted,
-                              kAlfrescoWorkflowPublicJSONVariables: variables}
-            completionBlock:completionBlock];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:@{kAlfrescoWorkflowTaskState: kAlfrescoPublicAPIWorkflowTaskStateCompleted}];
+    if (variables)
+    {
+        parameters[kAlfrescoWorkflowPublicJSONVariables] = variables;
+    }
+    
+    return [self updateTask:task parameters:parameters completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)claimTask:(AlfrescoWorkflowTask *)task
