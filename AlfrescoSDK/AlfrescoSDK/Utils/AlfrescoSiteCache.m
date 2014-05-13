@@ -33,6 +33,7 @@
 @property (nonatomic, strong) NSMutableArray *favoriteSiteData;
 @property (nonatomic, strong) NSMutableArray *pendingSiteData;
 @property (nonatomic, strong) NSMutableDictionary *internalSiteCache;
+@property (nonatomic, strong) NSMutableArray *deferredCompletionBlocks;
 @end
 
 @implementation AlfrescoSiteCache
@@ -43,6 +44,7 @@
     if (nil != self)
     {
         self.isCacheBuilt = NO;
+        self.deferredCompletionBlocks = [NSMutableArray new];
     }
     return self;
 }
@@ -58,8 +60,34 @@
 
 - (AlfrescoRequest *)buildCacheWithDelegate:(id<AlfrescoSiteCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 {
+    static BOOL isCacheBuilding = NO;
+    
+    if (completionBlock)
+    {
+        [self.deferredCompletionBlocks addObject:completionBlock];
+    }
+    
+    if (isCacheBuilding)
+    {
+        AlfrescoLogDebug(@"Site cache building already in progress");
+        return nil;
+    }
+    
     AlfrescoLogDebug(@"Building site cache");
 
+    isCacheBuilding = YES;
+    return [self internalBuildCacheWithDelegate:delegate completionBlock:^(BOOL succeeded, NSError *error) {
+        for (AlfrescoBOOLCompletionBlock completionBlock in self.deferredCompletionBlocks)
+        {
+            completionBlock(succeeded, error);
+        }
+        [self.deferredCompletionBlocks removeAllObjects];
+        isCacheBuilding = NO;
+    }];
+}
+
+- (AlfrescoRequest *)internalBuildCacheWithDelegate:(id<AlfrescoSiteCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+{
     // start the daisy chained methods to collect all the data required to build the initial caches
     AlfrescoLogDebug(@"Requesting member site data from delegate");
     AlfrescoRequest *request = [AlfrescoRequest new];

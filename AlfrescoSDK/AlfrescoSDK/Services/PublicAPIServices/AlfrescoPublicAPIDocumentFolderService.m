@@ -34,6 +34,8 @@
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoPagingUtils.h"
 
+static const double kFavoritesRequestRateLimit = 0.1; // seconds between requests
+
 @interface AlfrescoPublicAPIDocumentFolderService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) CMISSession *cmisSession;
@@ -508,22 +510,27 @@
     if (nil != entriesArray && entriesArray.count > 0)
     {
         NSArray *identifiers = [entriesArray valueForKeyPath:@"entry.targetGuid"];
+        int delay = 0;
         
         for (NSString *identifier in identifiers)
         {
-            [self retrieveNodeWithIdentifier:identifier completionBlock:^(AlfrescoNode *node, NSError *error) {
-                
-                if (!error)
-                {
-                    [resultsArray addObject:node];
-                }
-                total--;
-                
-                if (total == 0)
-                {
-                    completionBlock(resultsArray, nil);
-                }
-            }];
+            // Rate-limit the requests
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay++ * kFavoritesRequestRateLimit * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [self retrieveNodeWithIdentifier:identifier completionBlock:^(AlfrescoNode *node, NSError *error) {
+                        if (!error)
+                        {
+                            [resultsArray addObject:node];
+                        }
+                        total--;
+                        
+                        if (total == 0)
+                        {
+                            completionBlock(resultsArray, nil);
+                        }
+                    }];
+                }];
+            });
         }
     }
     else
@@ -536,15 +543,7 @@
 {
     NSString *nodeIdWithoutVersionNumber = [AlfrescoObjectConverter nodeRefWithoutVersionID:node.identifier];
     NSDictionary *nodeId = @{kAlfrescoJSONGUID: nodeIdWithoutVersionNumber};
-    NSDictionary *fileFolder = nil;
-    if (node.isDocument)
-    {
-        fileFolder = @{kAlfrescoJSONFile: nodeId};
-    }
-    else
-    {
-        fileFolder = @{kAlfrescoJSONFolder: nodeId};
-    }
+    NSDictionary *fileFolder = (node.isDocument) ? @{kAlfrescoJSONFile: nodeId} : @{kAlfrescoJSONFolder: nodeId};
     NSDictionary *jsonDict = @{kAlfrescoJSONTarget: fileFolder};
     NSError *error = nil;
     return [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&error];
@@ -559,7 +558,6 @@
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        
         if (error && error.code != kAlfrescoErrorCodeHTTPResponse)
         {
             [self.favoritesCache cacheNode:node favorite:NO];

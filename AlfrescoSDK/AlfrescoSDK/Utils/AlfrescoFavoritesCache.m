@@ -48,6 +48,7 @@
 @property (nonatomic, strong, readwrite) NSArray *favoriteDocuments;
 @property (nonatomic, strong, readwrite) NSArray *favoriteFolders;
 @property (nonatomic, strong) NSMutableDictionary *internalFavoritesCache;
+@property (nonatomic, strong) NSMutableArray *deferredCompletionBlocks;
 @end
 
 @implementation AlfrescoFavoritesCache
@@ -59,6 +60,7 @@
     {
         self.isCacheBuilt = NO;
         self.internalFavoritesCache = [NSMutableDictionary dictionary];
+        self.deferredCompletionBlocks = [NSMutableArray new];
     }
     return self;
 }
@@ -74,12 +76,37 @@
 
 - (AlfrescoRequest *)buildCacheWithDelegate:(id<AlfrescoFavoritesCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 {
-    AlfrescoLogDebug(@"Building favorites cache");
+    static BOOL isCacheBuilding = NO;
     
+    if (completionBlock)
+    {
+        [self.deferredCompletionBlocks addObject:completionBlock];
+    }
+    
+    if (isCacheBuilding)
+    {
+        AlfrescoLogDebug(@"Favorites cache building already in progress");
+        return nil;
+    }
+
+    AlfrescoLogDebug(@"Building favorites cache");
+
+    isCacheBuilding = YES;
+    return [self internalBuildCacheWithDelegate:delegate completionBlock:^(BOOL succeeded, NSError *error) {
+        for (AlfrescoBOOLCompletionBlock completionBlock in self.deferredCompletionBlocks)
+        {
+            completionBlock(succeeded, error);
+        }
+        [self.deferredCompletionBlocks removeAllObjects];
+        isCacheBuilding = NO;
+    }];
+}
+
+- (AlfrescoRequest *)internalBuildCacheWithDelegate:(id<AlfrescoFavoritesCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+{
     // request the data required to build the initial caches
     AlfrescoLogDebug(@"Requesting favorite node data from delegate");
-    AlfrescoRequest *request = [AlfrescoRequest new];
-    request = [delegate retrieveFavoriteNodeDataWithCompletionBlock:^(NSArray *array, NSError *error) {
+    return [delegate retrieveFavoriteNodeDataWithCompletionBlock:^(NSArray *array, NSError *error) {
         if (array != nil)
         {
             // add each node to the cache
@@ -90,7 +117,7 @@
             
             // let the original caller know the cache is built
             self.isCacheBuilt = YES;
-            AlfrescoLogDebug(@"Favorties cache successfully built");
+            AlfrescoLogDebug(@"Favorites cache successfully built");
             if (completionBlock != NULL)
             {
                 completionBlock(YES, nil);
@@ -101,8 +128,6 @@
             completionBlock(NO, error);
         }
     }];
-    
-    return request;
 }
 
 - (NSArray *)favoriteNodes
