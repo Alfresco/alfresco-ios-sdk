@@ -19,6 +19,7 @@
  */
 
 #import "AlfrescoCMISPassThroughAuthenticationProvider.h"
+#import "AlfrescoLog.h"
 
 @interface AlfrescoCMISPassThroughAuthenticationProvider ()
 @property (nonatomic, strong, readwrite) id<AlfrescoAuthenticationProvider> authProvider;
@@ -41,6 +42,7 @@
 
 - (void)updateWithHttpURLResponse:(NSHTTPURLResponse *)httpUrlResponse
 {
+    // No-op
 }
 
 - (BOOL)canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
@@ -50,10 +52,39 @@
 
 - (void)didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
+    // No-op
 }
 
 - (void)didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
+    if (challenge.previousFailureCount == 0)
+    {
+        /**
+         * Note: The AlfrescoSDK does not specifically support additional authentication method schemes including:
+         *    NSURLAuthenticationMethodHTTPBasic
+         *    NSURLAuthenticationMethodHTTPDigest
+         *    NSURLAuthenticationMethodNTLM
+         * unless the authentication crediential are passed in the request header.
+         *
+         * The SDK handles NSURLAuthenticationMethodClientCertificate in AlfrescoClientCertificateHTTPRequest
+         */
+
+        if (challenge.proposedCredential)
+        {
+            AlfrescoLogDebug(@"Authenticating with proposed credential");
+            [challenge.sender useCredential:challenge.proposedCredential forAuthenticationChallenge:challenge];
+        }
+        else
+        {
+            AlfrescoLogDebug(@"Authenticating without credential");
+            [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+        }
+    }
+    else
+    {
+        AlfrescoLogDebug(@"Authentication failed, cancelling logon");
+        [challenge.sender cancelAuthenticationChallenge:challenge];
+    }
 }
 
 @end
