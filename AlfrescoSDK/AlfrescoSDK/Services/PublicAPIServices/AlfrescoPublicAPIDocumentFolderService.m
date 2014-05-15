@@ -503,32 +503,28 @@ static const double kFavoritesRequestRateLimit = 0.1; // seconds between request
 {
     NSError *conversionError = nil;
     NSArray *entriesArray = [AlfrescoObjectConverter arrayJSONEntriesFromListData:data error:&conversionError];
-    
-    __block NSInteger total = entriesArray.count;
     NSMutableArray *resultsArray = [NSMutableArray arrayWithCapacity:entriesArray.count];
     
     if (nil != entriesArray && entriesArray.count > 0)
     {
         NSArray *identifiers = [entriesArray valueForKeyPath:@"entry.targetGuid"];
+        __block NSInteger total = identifiers.count;
         int delay = 0;
         
         for (NSString *identifier in identifiers)
         {
             // Rate-limit the requests
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay++ * kFavoritesRequestRateLimit * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    [self retrieveNodeWithIdentifier:identifier completionBlock:^(AlfrescoNode *node, NSError *error) {
-                        if (!error)
-                        {
-                            [resultsArray addObject:node];
-                        }
-                        total--;
-                        
-                        if (total == 0)
-                        {
-                            completionBlock(resultsArray, nil);
-                        }
-                    }];
+                [self retrieveNodeWithIdentifier:identifier completionBlock:^(AlfrescoNode *node, NSError *error) {
+                    if (!error)
+                    {
+                        [resultsArray addObject:node];
+                    }
+
+                    if (--total == 0)
+                    {
+                        completionBlock(resultsArray, nil);
+                    }
                 }];
             });
         }
