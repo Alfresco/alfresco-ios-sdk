@@ -36,6 +36,7 @@ NSString * const kAlfrescoErrorDescriptionAccessTokenExpired = @"The access toke
 NSString * const kAlfrescoErrorDescriptionRefreshTokenExpired = @"The refresh token has expired";
 NSString * const kAlfrescoErrorDescriptionNetworkRequestCancelled = @"The network request was cancelled";
 NSString * const kAlfrescoErrorDescriptionRefreshTokenInvalid = @"Refresh token validation failed";
+NSString * const kAlfrescoErrorDescriptionAPIRateLimitExceeded = @"API rate limit exceeded";
 
 NSString * const kAlfrescoErrorDescriptionJSONParsing = @"JSON Data parsing Error";
 NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON Data are nil/empty";
@@ -241,6 +242,9 @@ NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
             break;
         case kAlfrescoErrorCodeRefreshTokenInvalid:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionRefreshTokenInvalid;
+            break;
+        case kAlfrescoErrorCodeAPIRateLimitExceeded:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionAPIRateLimitExceeded;
             break;
         case kAlfrescoErrorCodeJSONParsing:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionJSONParsing;
