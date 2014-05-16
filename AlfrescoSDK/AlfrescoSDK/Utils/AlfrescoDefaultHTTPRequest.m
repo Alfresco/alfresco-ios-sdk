@@ -20,6 +20,7 @@
 
 #import "AlfrescoDefaultHTTPRequest.h"
 #import "AlfrescoErrors.h"
+#import "AlfrescoInternalConstants.h"
 #import "AlfrescoLog.h"
 
 @interface AlfrescoDefaultHTTPRequest()
@@ -161,7 +162,15 @@
         }
         else
         {
-            error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+            NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+            if ([responseString rangeOfString:kAlfrescoCloudAPIRateLimitExceeded].location != NSNotFound)
+            {
+                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeAPIRateLimitExceeded];
+            }
+            else
+            {
+                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+            }
         }
     }
     

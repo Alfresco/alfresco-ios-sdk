@@ -189,7 +189,6 @@ NSString * const kAlfrescoLegacyFavoriteFoldersAPI = @"/people/{personID}/prefer
  */
 NSString * const kAlfrescoPublicAPICMISPath = @"/api/-default-/public/cmis/versions/1.0/atom";
 NSString * const kAlfrescoPublicAPIPath  = @"/api/-default-/public/alfresco/versions/1/";
-NSString * const kAlfrescoDocumentLibrary =@"documentLibrary";
 NSString * const kAlfrescoPublicAPISite = @"sites";
 NSString * const kAlfrescoPublicAPISiteForPerson = @"people/{personID}/sites";
 NSString * const kAlfrescoPublicAPIFavoriteSiteForPerson = @"people/{personID}/favorite-sites";
@@ -220,6 +219,8 @@ NSString * const kAlfrescoPublicAPIFavoritesAll = @"people/{personID}/favorites?
 NSString * const kAlfrescoPublicAPIFavorite = @"people/{personID}/favorites/{nodeRef}";
 NSString * const kAlfrescoPublicAPIAddFavorite = @"people/-me-/favorites";
 
+NSString * const kAlfrescoDocumentLibrary = @"documentLibrary";
+
 /**
  Cloud constants     
  */
@@ -227,6 +228,7 @@ NSString * const kAlfrescoCloudURL = @"https://api.alfresco.com";
 NSString * const kAlfrescoCloudDefaultRedirectURI = @"http://www.alfresco.com/mobile-auth-callback.html";
 NSString * const kAlfrescoCloudCMISPath = @"/public/cmis/versions/1.0/atom";
 NSString * const kAlfrescoCloudAPIPath  = @"/public/alfresco/versions/1/";
+NSString * const kAlfrescoCloudAPIRateLimitExceeded = @"API plan limit exceeded";
 NSString * const kAlfrescoHomeNetworkType = @"homeNetwork";
 
 /**

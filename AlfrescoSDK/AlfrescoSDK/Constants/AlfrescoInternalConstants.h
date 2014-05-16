@@ -186,12 +186,14 @@ extern NSString * const kAlfrescoPublicAPIFavoritesAll;
 extern NSString * const kAlfrescoPublicAPIFavorite;
 extern NSString * const kAlfrescoPublicAPIAddFavorite;
 
+extern NSString * const kAlfrescoDocumentLibrary;
+
 extern NSString * const kAlfrescoCloudURL;
 extern NSString * const kAlfrescoCloudDefaultRedirectURI;
 extern NSString * const kAlfrescoCloudAPIPath;
 extern NSString * const kAlfrescoCloudCMISPath;
+extern NSString * const kAlfrescoCloudAPIRateLimitExceeded;
 extern NSString * const kAlfrescoHomeNetworkType;
-extern NSString * const kAlfrescoDocumentLibrary;
 
 extern NSString * const kAlfrescoPublicAPIJSONList;
 extern NSString * const kAlfrescoPublicAPIJSONPagination;
