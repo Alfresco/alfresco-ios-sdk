@@ -246,7 +246,8 @@
     request.httpRequest = [CMISSession arrayOfRepositories:v3params completionBlock:^(NSArray *repositories, NSError *error) {
         if (nil == repositories)
         {
-            completionBlock(nil, error);
+            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+            completionBlock(nil, alfrescoError);
         }
         else if (repositories.count == 0)
         {
