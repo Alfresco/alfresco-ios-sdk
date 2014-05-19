@@ -79,12 +79,12 @@ void handleFlags(SCNetworkReachabilityFlags flags)
     BOOL connected = !(flags & kSCNetworkReachabilityFlagsConnectionRequired);
     
     if (reachable && connected)
-	{
+    {
         internetReachability->_internetConnection = YES;
-	}
+    }
     else
     {
-		internetReachability->_internetConnection = NO;
+        internetReachability->_internetConnection = NO;
     }
     
     if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelDebug)
@@ -97,46 +97,46 @@ void handleFlags(SCNetworkReachabilityFlags flags)
 {
     AlfrescoReachability *returnReachability = NULL;
     
-	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *)hostAddress);
-	
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *)hostAddress);
+    
     if (reachability != NULL)
-	{
-		returnReachability = [[self alloc] init];
+    {
+        returnReachability = [[self alloc] init];
         if (returnReachability != NULL)
-		{
+        {
             returnReachability.internetReachabilityRef = reachability;
             [returnReachability startNotifier];
-		}
-	}
+        }
+    }
     
-	return returnReachability;
+    return returnReachability;
 }
 
 - (BOOL)startNotifier
 {
-	BOOL started = NO;
+    BOOL started = NO;
     
-	SCNetworkReachabilityContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
+    SCNetworkReachabilityContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
     
-	if (SCNetworkReachabilitySetCallback(self.internetReachabilityRef, ReachabilityChangedCallback, &context))
-	{
-		if (SCNetworkReachabilityScheduleWithRunLoop(self.internetReachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode))
-		{
-			started = YES;
-		}
-	}
+    if (SCNetworkReachabilitySetCallback(self.internetReachabilityRef, ReachabilityChangedCallback, &context))
+    {
+        if (SCNetworkReachabilityScheduleWithRunLoop(self.internetReachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode))
+        {
+            started = YES;
+        }
+    }
     
-	return started;
+    return started;
 }
 
 - (BOOL)stopNotifier
 {
     BOOL stopped = NO;
     
-	if (self.internetReachabilityRef != NULL)
-	{
-		SCNetworkReachabilityUnscheduleFromRunLoop(self.internetReachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-	}
+    if (self.internetReachabilityRef != NULL)
+    {
+        SCNetworkReachabilityUnscheduleFromRunLoop(self.internetReachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    }
     
     return stopped;
 }
