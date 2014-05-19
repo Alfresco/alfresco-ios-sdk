@@ -28,7 +28,7 @@
 #import "CMISErrors.h"
 
 // An addition of CMISErrorCodes enum
-NS_ENUM(NSInteger, CMISErrorCodesSwizzled)
+NS_ENUM(NSInteger, CMISErrorCodesAdditions)
 {
     kCMISErrorCodeNoInternet = 600
 };
