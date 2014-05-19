@@ -176,6 +176,7 @@
 		7300368A192A3CAC006733EC /* CMISHttpRequest+Swizzled.m in Sources */ = {isa = PBXBuildFile; fileRef = 73003689192A3CAC006733EC /* CMISHttpRequest+Swizzled.m */; };
 		7300368D192A3D56006733EC /* AlfrescoReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7300368C192A3D56006733EC /* AlfrescoReachability.m */; };
 		7300368E192A4BD5006733EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0780E15B0127900DF7DED /* SystemConfiguration.framework */; };
+		7300369E192A5C6A006733EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EB0780E15B0127900DF7DED /* SystemConfiguration.framework */; };
 		730243B91628388C0028C378 /* AlfrescoSessionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 730243B81628388C0028C378 /* AlfrescoSessionTest.m */; };
 		731F7CE917BA3020003A871C /* AlfrescoWorkflowUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 731F7CE717BA3020003A871C /* AlfrescoWorkflowUtils.m */; };
 		733407C516BBCE9800AC3740 /* AlfrescoDefaultHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 733407C316BBCE9800AC3740 /* AlfrescoDefaultHTTPRequest.m */; };
@@ -640,6 +641,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7300369E192A5C6A006733EC /* SystemConfiguration.framework in Frameworks */,
 				279C02851892CA2700BC8628 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
