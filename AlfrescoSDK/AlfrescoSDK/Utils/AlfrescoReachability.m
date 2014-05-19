@@ -20,8 +20,9 @@
 
 #import "AlfrescoReachability.h"
 #import <netinet/in.h>
-#import <SystemConfiguration/SystemConfiguration.h>
 #import "AlfrescoLog.h"
+
+@import SystemConfiguration;
 
 static AlfrescoReachability * internetReachability = NULL;
 

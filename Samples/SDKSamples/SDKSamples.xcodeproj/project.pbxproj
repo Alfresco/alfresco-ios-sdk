@@ -26,7 +26,6 @@
 		4E80E8F016145A4D00922D5D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E80E8EF16145A4D00922D5D /* Default-568h@2x.png */; };
 		4EAA12671577CD6D001B073B /* MobileSDKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EAA12661577CD6D001B073B /* MobileSDKWebViewController.m */; };
 		4EBBC4FB1585FE0B00EFDC16 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBBC4FA1585FE0B00EFDC16 /* QuartzCore.framework */; };
-		730036AF192A6206006733EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 730036A5192A5E59006733EC /* SystemConfiguration.framework */; };
 		82194470161B980E00D07520 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219446C161B980E00D07520 /* cloud.png */; };
 		82194471161B980E00D07520 /* cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219446D161B980E00D07520 /* cloud@2x.png */; };
 		82194472161B980E00D07520 /* repository.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219446E161B980E00D07520 /* repository.png */; };
@@ -211,7 +210,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				730036AF192A6206006733EC /* SystemConfiguration.framework in Frameworks */,
 				27E4D48917BBFE5500F5D773 /* MediaPlayer.framework in Frameworks */,
 				4EBBC4FB1585FE0B00EFDC16 /* QuartzCore.framework in Frameworks */,
 				D6A698A4156A5BC50094686D /* QuickLook.framework in Frameworks */,

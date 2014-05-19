@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4E80E8EB1614540100922D5D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E80E8EA1614540100922D5D /* Default-568h@2x.png */; };
-		730036A2192A5E2D006733EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 730036A1192A5E2D006733EC /* SystemConfiguration.framework */; };
 		8219448F161B9E3A00D07520 /* app_icon_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219448B161B9E3A00D07520 /* app_icon_large.png */; };
 		82194490161B9E3A00D07520 /* app_icon_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219448C161B9E3A00D07520 /* app_icon_large@2x.png */; };
 		82194491161B9E3A00D07520 /* app_icon_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 8219448D161B9E3A00D07520 /* app_icon_small.png */; };
@@ -75,7 +74,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				730036A2192A5E2D006733EC /* SystemConfiguration.framework in Frameworks */,
 				82FC416415E7C4570081888D /* MobileCoreServices.framework in Frameworks */,
 				82FC411415E7AC7D0081888D /* UIKit.framework in Frameworks */,
 				82FC411615E7AC7D0081888D /* Foundation.framework in Frameworks */,
