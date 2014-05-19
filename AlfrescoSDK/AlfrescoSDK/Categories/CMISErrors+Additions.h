@@ -28,7 +28,11 @@
 #import "CMISErrors.h"
 
 // An addition of CMISErrorCodes enum
-NSInteger const kCMISErrorCodeNoInternet = 600;
+NS_ENUM(NSInteger, CMISErrorCodesAdditions)
+{
+    kCMISErrorCodeNoInternet = 600
+};
+
 // This will usually be defined in CMISError
 extern NSString * const kCMISErrorDescriptionNoInternet;
 

@@ -23,7 +23,6 @@ from our [developer portal](https://developer.alfresco.com/mobile). All previous
 
 Alternatively, use one of the [tags](https://github.com/Alfresco/alfresco-ios-sdk/tags) to build from source.
 
-
 Known Issues
 ------------
 
