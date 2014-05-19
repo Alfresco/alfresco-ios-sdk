@@ -90,7 +90,9 @@ typedef NS_ENUM(NSInteger, AlfrescoErrorCodes)
     kAlfrescoErrorCodeWorkflowNoProcessFound = 1103,
     kAlfrescoErrorCodeWorkflowNoTaskFound = 1104,
     
-    kAlfrescoErrorCodeVersion = 1200
+    kAlfrescoErrorCodeVersion = 1200,
+    
+    kAlfrescoErrorCodeNoInternetConnection = 1300
 };
 
 extern NSString * const kAlfrescoErrorDomainName;
@@ -154,6 +156,8 @@ extern NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessFound;
 extern NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound;
 
 extern NSString * const kAlfrescoErrorDescriptionVersion;
+
+extern NSString * const kAlfrescoErrorDescriptionNoInternetConnection;
 
 
 /** AlfrescoErrors is used in case an error occurs when executing an operation against the Alfresco repository.

@@ -83,6 +83,7 @@ NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task 
 
 NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
 
+NSString * const kAlfrescoErrorDescriptionNoInternetConnection = @"No Internet Connection.";
 
 @implementation AlfrescoErrors
 
@@ -347,6 +348,9 @@ NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
             break;
         case kAlfrescoErrorCodeVersion:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionVersion;
+            break;
+        case kAlfrescoErrorCodeNoInternetConnection:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionNoInternetConnection;
             break;
         default:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionUnknown;

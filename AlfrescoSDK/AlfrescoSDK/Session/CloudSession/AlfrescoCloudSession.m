@@ -31,6 +31,7 @@
 #import <objc/runtime.h>
 #import "AlfrescoRepositoryInfoBuilder.h"
 #import "AlfrescoPersonService.h"
+#import "AlfrescoCMISUtil.h"
 
 @interface AlfrescoCloudSession ()
 
@@ -443,7 +444,8 @@
                 {
                     if (completionBlock)
                     {
-                        completionBlock(nil, error);
+                        NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+                        completionBlock(nil, alfrescoError);
                     }
                 }
                 else
@@ -455,7 +457,8 @@
                         {
                             if (completionBlock)
                             {
-                                completionBlock(nil, error);
+                                NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+                                completionBlock(nil, alfrescoError);
                             }
                         }
                         else

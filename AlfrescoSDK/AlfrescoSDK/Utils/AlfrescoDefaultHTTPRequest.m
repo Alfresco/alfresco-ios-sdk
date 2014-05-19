@@ -22,6 +22,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoReachability.h"
 
 @interface AlfrescoDefaultHTTPRequest()
 @property (nonatomic, strong) NSURLConnection *connection;
@@ -91,7 +92,17 @@
     self.responseData = nil;
     self.connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self startImmediately:NO];
     [self.connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    [self.connection start];
+    
+    AlfrescoReachability *reach = [AlfrescoReachability internetReachability];
+    if (reach.hasInternetConnection)
+    {
+        [self.connection start];
+    }
+    else
+    {
+        NSError *noConnectionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoInternetConnection];
+        [self connection:self.connection didFailWithError:noConnectionError];
+    }
 }
 
 #pragma URL delegate methods

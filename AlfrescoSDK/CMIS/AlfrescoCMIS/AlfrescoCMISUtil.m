@@ -32,6 +32,8 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
+// This has been temporarily added until an error code is added to CMISErrors
+#import "CMISErrors+Additions.h"
 
 #define ALFRESCO_EXTENSION_ASPECTS @"aspects"
 #define ALFRESCO_EXTENSION_APPLIED_ASPECTS @"appliedAspects"
@@ -218,6 +220,9 @@ static NSSet *audioAspectProperties;
             break;
         case kCMISErrorCodeVersioning:
             alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+            break;
+        case kCMISErrorCodeNoInternet:
+            alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeNoInternetConnection];
             break;
             
         default:
