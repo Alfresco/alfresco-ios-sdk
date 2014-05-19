@@ -32,7 +32,7 @@
     return [super alloc];
 }
 
-+ (id)sharedManager
++ (AlfrescoFileManager *)sharedManager
 {
     static dispatch_once_t onceToken;
     static AlfrescoPlaceholderFileManager *placeholderFileManager = nil;
@@ -99,6 +99,13 @@
                                  userInfo:nil];
 }
 
+- (BOOL)removeItemAtURL:(NSURL *)URL error:(NSError **)error
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in the subclass %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]
+                                 userInfo:nil];
+}
+
 - (BOOL)copyItemAtPath:(NSString *)sourcePath toPath:(NSString *)destinationPath error:(NSError **)error
 {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -106,7 +113,21 @@
                                  userInfo:nil];
 }
 
+- (BOOL)copyItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in the subclass %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]
+                                 userInfo:nil];
+}
+
 - (BOOL)moveItemAtPath:(NSString *)sourcePath toPath:(NSString *)destinationPath error:(NSError **)error
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in the subclass %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]
+                                 userInfo:nil];
+}
+
+- (BOOL)moveItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error
 {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must override %@ in the subclass %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]

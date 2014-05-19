@@ -65,14 +65,29 @@
     return [[NSFileManager defaultManager] removeItemAtPath:path error:error];
 }
 
+- (BOOL)removeItemAtURL:(NSURL *)URL error:(NSError **)error
+{
+    return [[NSFileManager defaultManager] removeItemAtURL:URL error:error];
+}
+
 - (BOOL)copyItemAtPath:(NSString *)sourcePath toPath:(NSString *)destinationPath error:(NSError **)error
 {
     return [[NSFileManager defaultManager] copyItemAtPath:sourcePath toPath:destinationPath error:error];
 }
 
+- (BOOL)copyItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error
+{
+    return [[NSFileManager defaultManager] copyItemAtURL:sourceURL toURL:destinationURL error:error];
+}
+
 - (BOOL)moveItemAtPath:(NSString *)sourcePath toPath:(NSString *)destinationPath error:(NSError **)error
 {
     return [[NSFileManager defaultManager] moveItemAtPath:sourcePath toPath:destinationPath error:error];
+}
+
+- (BOOL)moveItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error
+{
+    return [[NSFileManager defaultManager] moveItemAtURL:sourceURL toURL:destinationURL error:error];
 }
 
 - (NSDictionary *)attributesOfItemAtPath:(NSString *)path error:(NSError **)error
@@ -87,8 +102,8 @@
     if (attributes)
     {
         alfrescoAttributeDictionary = @{kAlfrescoFileSize: attributes[NSFileSize],
-                                       kAlfrescoFileLastModification: attributes[NSFileModificationDate],
-                                       kAlfrescoIsFolder: @(isDir)};
+                                        kAlfrescoFileLastModification: attributes[NSFileModificationDate],
+                                        kAlfrescoIsFolder: @(isDir)};
     }
     
     return alfrescoAttributeDictionary;

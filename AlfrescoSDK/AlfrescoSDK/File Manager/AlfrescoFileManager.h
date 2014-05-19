@@ -46,7 +46,7 @@
 /**
  Call this function to get a shared instance of the AlfrescoFileManager
  */
-+ (id)sharedManager;
++ (AlfrescoFileManager *)sharedManager;
 
 /**
  Call this to check if a file exists at the path location
@@ -86,6 +86,13 @@
 - (BOOL)removeItemAtPath:(NSString *)path error:(NSError **)error;
 
 /*
+ Call this to remove an item at a given URL
+ 
+ @returns bool - True if the file/folder was removed successfully
+ */
+- (BOOL)removeItemAtURL:(NSURL *)URL error:(NSError **)error;
+
+/*
  Call this to copy an item from a given path to another path within the current file system
  
  @returns bool - True if the file was copied successfully
@@ -93,11 +100,25 @@
 - (BOOL)copyItemAtPath:(NSString *)sourcePath toPath:(NSString *)destinationPath error:(NSError **)error;
 
 /*
+ Call this to copy an item from a given URL to another URL within the current file system
+ 
+ @returns bool - True if the file was copied successfully
+ */
+- (BOOL)copyItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error;
+
+/*
  Call this to move an item from a given path to another within the current file system
  
  @returns bool - True if the item was moved successfully
  */
 - (BOOL)moveItemAtPath:(NSString *)sourcePath toPath:(NSString *)destinationPath error:(NSError **)error;
+
+/*
+ Call this to move an item from a given URL to another URL within the current file system
+ 
+ @returns bool - True if the file was moved successfully
+ */
+- (BOOL)moveItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error;
 
 /*
  Call this to return the attributes of a given item at a path
