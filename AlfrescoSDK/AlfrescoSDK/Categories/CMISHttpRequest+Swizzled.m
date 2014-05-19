@@ -67,7 +67,7 @@
     }
     else if (!reach.hasInternetConnection)
     {
-        // Caste the swizzled error code to CMISErrorCodes
+        // Caste the additional error code to CMISErrorCodes
         NSError *noConnectionError = [CMISErrors createCMISErrorWithCode:(CMISErrorCodes)kCMISErrorCodeNoInternet detailedDescription:kCMISErrorDescriptionNoInternet];
         [self connection:self.connection didFailWithError:noConnectionError];
     }
