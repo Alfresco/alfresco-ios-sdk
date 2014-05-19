@@ -91,6 +91,7 @@
     }
     self.responseData = nil;
     self.connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self startImmediately:NO];
+    [self.connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
     AlfrescoReachability *reach = [AlfrescoReachability internetReachability];
     if (reach.hasInternetConnection)
