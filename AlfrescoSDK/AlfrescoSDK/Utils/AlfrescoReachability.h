@@ -31,6 +31,6 @@
 
 @property (nonatomic, assign, readonly, getter = hasInternetConnection) BOOL internetConnection;
 
-+ (id)internetReachability;
++ (instancetype)internetReachability;
 
 @end

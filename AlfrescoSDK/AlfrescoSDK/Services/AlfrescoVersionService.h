@@ -65,19 +65,41 @@
                        listingContext:(AlfrescoListingContext *)listingContext
                       completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
-
+/** Retrieves the latest version of the given document.
+ 
+ @param document The document to get the latest of.
+ @param completionBlock The block that's called with the retrieved document.
+ */
 - (AlfrescoRequest *)retrieveLatestVersionOfDocument:(AlfrescoDocument *)document
                                      completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock;
 
-
+/** Checks out the given document and returns the private working copy (pwc) document.
+    The original document is locked in the repository.
+ 
+ @param document The document to check out.
+ @param completionBlock The block that's called following the checkout operation, if the checkout was successful the pwc is provided.
+ */
 - (AlfrescoRequest *)checkoutDocument:(AlfrescoDocument *)document
                       completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock;
 
-
+/** Cancels a previous checkout operation.
+ 
+ @param document The private working copy document to cancel the checkout for.
+ @param completionBlock The block that's called following the cancel checkout operation.
+ */
 - (AlfrescoRequest *)cancelCheckoutOfDocument:(AlfrescoDocument *)document
                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
-
+/** Checks in the given private working copy document.
+ 
+ @param document The private working copy document to checkin.
+ @param asMajorVersion Indicates whether the new version should be created as the next major version i.e. 2.0.
+ @param contentFile A file that represents the content for the new version.
+ @param properties An optional set of properties to update as part of the checkin operation.
+ @param comment An optional comment describing the reason for the update.
+ @param completionBlock The block that's called when the checkin operation completes.
+ @param progressBlock The block that's called as the new content is uploaded to the server.
+ */
 - (AlfrescoRequest *)checkinDocument:(AlfrescoDocument *)document
                       asMajorVersion:(BOOL)majorVersion
                          contentFile:(AlfrescoContentFile *)file
@@ -86,7 +108,16 @@
                      completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                        progressBlock:(AlfrescoProgressBlock)progressBlock;
 
-
+/** Checks in the given private working copy document.
+ 
+ @param document The private working copy document to checkin.
+ @param asMajorVersion Indicates whether the new version should be created as the next major version i.e. 2.0.
+ @param contentStream A stream that represents the content for the new version.
+ @param properties An optional set of properties to update as part of the checkin operation.
+ @param comment An optional comment describing the reason for the update.
+ @param completionBlock The block that's called when the checkin operation completes.
+ @param progressBlock The block that's called as the new content is uploaded to the server.
+ */
 - (AlfrescoRequest *)checkinDocument:(AlfrescoDocument *)document
                       asMajorVersion:(BOOL)majorVersion
                        contentStream:(AlfrescoContentStream *)contentStream

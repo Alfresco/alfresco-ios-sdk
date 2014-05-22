@@ -31,6 +31,7 @@ typedef NS_ENUM(NSInteger, AlfrescoErrorCodes)
     kAlfrescoErrorCodeHTTPResponse = 1,
     kAlfrescoErrorCodeRequestedNodeNotFound = 2,
     kAlfrescoErrorCodeAccessDenied = 3,
+    kAlfrescoErrorCodeNoNetworkConnection = 4,
 
     kAlfrescoErrorCodeSession = 100,
     kAlfrescoErrorCodeUnauthorisedAccess = 101,
@@ -90,15 +91,14 @@ typedef NS_ENUM(NSInteger, AlfrescoErrorCodes)
     kAlfrescoErrorCodeWorkflowNoProcessFound = 1103,
     kAlfrescoErrorCodeWorkflowNoTaskFound = 1104,
     
-    kAlfrescoErrorCodeVersion = 1200,
-    
-    kAlfrescoErrorCodeNoInternetConnection = 1300
+    kAlfrescoErrorCodeVersion = 1200
 };
 
 extern NSString * const kAlfrescoErrorDomainName;
 extern NSString * const kAlfrescoErrorDescriptionUnknown;
 extern NSString * const kAlfrescoErrorDescriptionRequestedNodeNotFound;
 extern NSString * const kAlfrescoErrorDescriptionAccessDenied;
+extern NSString * const kAlfrescoErrorDescriptionNoNetworkConnection;
 
 extern NSString * const kAlfrescoErrorDescriptionSession;
 extern NSString * const kAlfrescoErrorDescriptionNoRepositoryFound;
@@ -156,8 +156,6 @@ extern NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessFound;
 extern NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound;
 
 extern NSString * const kAlfrescoErrorDescriptionVersion;
-
-extern NSString * const kAlfrescoErrorDescriptionNoInternetConnection;
 
 
 /** AlfrescoErrors is used in case an error occurs when executing an operation against the Alfresco repository.
