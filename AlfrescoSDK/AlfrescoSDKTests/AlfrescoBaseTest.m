@@ -347,12 +347,12 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         {
             self.lastTestSuccessful = NO;
             self.lastTestFailureMessage = [NSString stringWithFormat:@"Cloud session could not be authenticated. Error %@",[error localizedDescription]];
-            AlfrescoLogDebug(@"*** The returned cloudSession is NIL with error message %@ ***",self.lastTestFailureMessage);
+            AlfrescoLogDebug(@"The returned cloudSession is nil with error message %@",self.lastTestFailureMessage);
             self.callbackCompleted = YES;
         }
         else
         {
-            AlfrescoLogDebug(@"*** Cloud session is NOT nil ***");
+            AlfrescoLogDebug(@"Cloud session is not nil");
 //            XCTAssertNotNil(cloudSession, @"Cloud session should not be nil");
             self.lastTestSuccessful = YES;
             self.currentSession = cloudSession;

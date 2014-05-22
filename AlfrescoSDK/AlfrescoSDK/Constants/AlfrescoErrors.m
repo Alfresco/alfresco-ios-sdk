@@ -25,6 +25,7 @@ NSString * const kAlfrescoErrorDescriptionUnknown = @"An unknown error occurred"
 NSString * const kAlfrescoErrorDescriptionHTTPResponse= @"An error occurred on the server";
 NSString * const kAlfrescoErrorDescriptionRequestedNodeNotFound = @"The requested node wasn't found";
 NSString * const kAlfrescoErrorDescriptionAccessDenied = @"Access Denied";
+NSString * const kAlfrescoErrorDescriptionNoNetworkConnection = @"No Network Connection.";
 
 NSString * const kAlfrescoErrorDescriptionSession = @"Session Error";
 NSString * const kAlfrescoErrorDescriptionNoRepositoryFound = @"Session Error: No Alfresco repository found";
@@ -82,8 +83,6 @@ NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessFound = @"Workflow Pr
 NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task Service Error: No workflow tasks were found.";
 
 NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
-
-NSString * const kAlfrescoErrorDescriptionNoInternetConnection = @"No Internet Connection.";
 
 @implementation AlfrescoErrors
 
@@ -212,6 +211,9 @@ NSString * const kAlfrescoErrorDescriptionNoInternetConnection = @"No Internet C
         case kAlfrescoErrorCodeAccessDenied:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionAccessDenied;
             break;
+        case kAlfrescoErrorCodeNoNetworkConnection:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionNoNetworkConnection;
+            break;
         case kAlfrescoErrorCodeSession:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionSession;
             break;
@@ -221,7 +223,6 @@ NSString * const kAlfrescoErrorDescriptionNoInternetConnection = @"No Internet C
         case kAlfrescoErrorCodeUnauthorisedAccess:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionUnauthorisedAccess;
             break;
-            
         case kAlfrescoErrorCodeAPIKeyOrSecretKeyUnrecognised:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionAPIKeyOrSecretKeyUnrecognised;
             break;
@@ -348,9 +349,6 @@ NSString * const kAlfrescoErrorDescriptionNoInternetConnection = @"No Internet C
             break;
         case kAlfrescoErrorCodeVersion:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionVersion;
-            break;
-        case kAlfrescoErrorCodeNoInternetConnection:
-            alfrescoErrorDescription = kAlfrescoErrorDescriptionNoInternetConnection;
             break;
         default:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionUnknown;

@@ -4761,7 +4761,7 @@
                 for (AlfrescoNode *node in pagingResult.objects)
                 {
                     NSString *name = node.name;
-                    AlfrescoLogInfo(@"*** pagingResult: %@", name);
+                    AlfrescoLogInfo(@"pagingResult: %@", name);
                 }
                 
                 // check if array is sorted correctly
@@ -4776,7 +4776,7 @@
                 for (AlfrescoNode *node in sortedArray)
                 {
                     NSString *name = node.name;
-                    AlfrescoLogInfo(@"*** local sort: %@", name);
+                    AlfrescoLogInfo(@"local sort: %@", name);
                 }
                 
                 BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];
@@ -4833,7 +4833,7 @@
                 for (AlfrescoNode *node in pagingResult.objects)
                 {
                     NSString *name = node.name;
-                    AlfrescoLogInfo(@"*** pagingResult: %@", name);
+                    AlfrescoLogInfo(@"pagingResult: %@", name);
                 }
 
                 // check if array is sorted correctly
@@ -4846,7 +4846,7 @@
                 for (AlfrescoNode *node in sortedArray)
                 {
                     NSString *name = node.name;
-                    AlfrescoLogInfo(@"*** local sort: %@", name);
+                    AlfrescoLogInfo(@"local sort: %@", name);
                 }
 
                 BOOL isResultSortedInDescendingOrderByName = [pagingResult.objects isEqualToArray:sortedArray];

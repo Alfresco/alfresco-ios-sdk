@@ -100,7 +100,7 @@
     }
     else
     {
-        NSError *noConnectionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoInternetConnection];
+        NSError *noConnectionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoNetworkConnection];
         [self connection:self.connection didFailWithError:noConnectionError];
     }
 }
