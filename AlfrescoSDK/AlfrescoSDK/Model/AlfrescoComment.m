@@ -158,8 +158,15 @@ static NSUInteger kCommentModelVersion = 1;
     }
     if ([[properties allKeys] containsObject:kAlfrescoJSONCreatedBy])
     {
-        NSDictionary *createdByDict = [properties valueForKey:kAlfrescoJSONCreatedBy];
-        self.createdBy = [createdByDict valueForKey:kAlfrescoJSONIdentifier];
+        id createdBy = [properties valueForKey:kAlfrescoJSONCreatedBy];
+        if ([createdBy isKindOfClass:[NSDictionary class]])
+        {
+            self.createdBy = [createdBy valueForKey:kAlfrescoJSONIdentifier];
+        }
+        else if ([createdBy isKindOfClass:[NSString class]])
+        {
+            self.createdBy = createdBy;
+        }
     }
     if ([[properties allKeys] containsObject:kAlfrescoJSONModifiedAt])
     {

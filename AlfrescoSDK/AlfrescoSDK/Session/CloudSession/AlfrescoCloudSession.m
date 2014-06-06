@@ -350,8 +350,8 @@
     self.baseUrl = [NSURL URLWithString:baseURL];
     self.baseURLWithoutNetwork = [self.baseUrl copy];
     _oauthData = oauthData; ///setting oauthData only via instance variable. The setter method recreates a CMIS session and this shouldn't be used here.
-    AlfrescoRequest *request = [AlfrescoRequest new];
-    request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
+    
+    __block AlfrescoRequest *request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
         if (nil == networks)
         {
             completionBlock(nil, error);
@@ -525,8 +525,8 @@ This authentication method authorises the user to access the home network assign
     self.emailAddress = emailAddress;
     self.password = password;
     self.personIdentifier = emailAddress;
-    AlfrescoRequest *request = [AlfrescoRequest new];
-    request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error){
+    
+    __block AlfrescoRequest *request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
         if (nil == networks)
         {
             completionBlock(nil, error);
