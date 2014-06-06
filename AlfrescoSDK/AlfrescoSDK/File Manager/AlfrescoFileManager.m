@@ -27,7 +27,7 @@
 {
     if (self == [AlfrescoFileManager self])
     {
-        return [[AlfrescoPlaceholderFileManager alloc] init];
+        return [AlfrescoPlaceholderFileManager alloc];
     }
     return [super alloc];
 }
