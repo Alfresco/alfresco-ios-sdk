@@ -325,6 +325,8 @@
     // PublicAPI doesn't respond with siteId for certain activities
     if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI &&
         [@[@"org.alfresco.site.user-left", @"org.alfresco.site.user-joined",
+           @"org.alfresco.documentlibrary.folder-added", @"org.alfresco.documentlibrary.folder-deleted",
+           @"org.alfresco.documentlibrary.files-added", @"org.alfresco.documentlibrary.files-deleted",
            @"org.alfresco.documentlibrary.file-added", @"org.alfresco.documentlibrary.file-deleted",
            @"org.alfresco.documentlibrary.file-created", @"org.alfresco.documentlibrary.file-updated"
            ] containsObject:activity.type])
