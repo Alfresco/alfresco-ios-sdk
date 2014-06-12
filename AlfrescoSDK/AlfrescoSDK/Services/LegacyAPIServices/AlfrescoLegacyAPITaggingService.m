@@ -128,8 +128,9 @@
         }
         else
         {
-            NSArray *tagArray = [self customTagArrayFromJSONData:data];
-            completionBlock(tagArray, nil);
+            NSError *conversionError = nil;
+            NSArray *tagArray = [self tagArrayFromJSONData:data error:&conversionError];
+            completionBlock(tagArray, conversionError);
         }
     }];
     return request;
@@ -163,9 +164,10 @@
         }
         else
         {
-            NSArray *tagArray = [self customTagArrayFromJSONData:data];
+            NSError *conversionError = nil;
+            NSArray *tagArray = [self tagArrayFromJSONData:data error:&conversionError];
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:tagArray listingContext:listingContext];
-            completionBlock(pagingResult, nil);
+            completionBlock(pagingResult, conversionError);
         }
     }];
     return request;
@@ -229,8 +231,21 @@
     id jsonTagArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (nil != error)
     {
-        *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
-        return nil;
+        if (error.code == NSPropertyListReadCorruptError)
+        {
+            // Unable to parse valid JSON (Known issue on 3.4.2 version server)
+            // Attempt to parse manually, if that fails, notify the caller with the parse error.
+            NSArray *tagsResultsArray = [self customTagArrayFromJSONData:data];
+            if (tagsResultsArray)
+            {
+                return tagsResultsArray;
+            }
+            else
+            {
+                *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeTagging];
+                return nil;
+            }
+        }
     }
     if (![jsonTagArray isKindOfClass:[NSArray class]])
     {
@@ -269,21 +284,27 @@
 
 - (NSArray *) customTagArrayFromJSONData:(NSData *) data
 {
+    NSMutableArray *tagArray = nil;
     NSString *tagString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    tagString = [tagString stringByReplacingOccurrencesOfString:@"[" withString:@""];
-    tagString = [tagString stringByReplacingOccurrencesOfString:@"]" withString:@""];
-    NSArray *separatedTagArray = [tagString componentsSeparatedByString:@","];
-    NSMutableArray *tagArray = [NSMutableArray arrayWithCapacity:separatedTagArray.count];
-    for (NSString *tag in separatedTagArray)
+    
+    if ([tagString hasPrefix:@"["] && [tagString hasSuffix:@"]"])
     {
-        NSString *trimmedString = [tag stringByTrimmingCharactersInSet:
-                                   [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        if ([trimmedString length] > 0)
+        tagString = [tagString stringByReplacingOccurrencesOfString:@"[" withString:@""];
+        tagString = [tagString stringByReplacingOccurrencesOfString:@"]" withString:@""];
+        NSArray *separatedTagArray = [tagString componentsSeparatedByString:@","];
+        
+        tagArray = [NSMutableArray arrayWithCapacity:separatedTagArray.count];
+        for (NSString *tag in separatedTagArray)
         {
-            NSMutableDictionary *tagDict = [NSMutableDictionary dictionary];
-            [tagDict setValue:trimmedString forKey:kAlfrescoJSONTag];
-            AlfrescoTag *tag = [[AlfrescoTag alloc] initWithProperties:tagDict];
-            [tagArray addObject:tag];
+            NSString *trimmedString = [tag stringByTrimmingCharactersInSet:
+                                       [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            if ([trimmedString length] > 0)
+            {
+                NSMutableDictionary *tagDict = [NSMutableDictionary dictionary];
+                [tagDict setValue:trimmedString forKey:kAlfrescoJSONTag];
+                AlfrescoTag *tag = [[AlfrescoTag alloc] initWithProperties:tagDict];
+                [tagArray addObject:tag];
+            }
         }
     }
     
