@@ -140,7 +140,7 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONBPMPackageContainer;
 
 extern NSString * const kAlfrescoWorkflowLegacyJSONOwner;
 
-extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessTitle;
+extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDescription;
 extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignee;
 extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignees;
 

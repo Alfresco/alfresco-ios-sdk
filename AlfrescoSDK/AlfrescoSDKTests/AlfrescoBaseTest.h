@@ -41,6 +41,7 @@
 @property (nonatomic, strong) NSString *unitTestFolder;
 @property (nonatomic, strong) id<AlfrescoSession> currentSession;
 // Test environment parameters
+@property (nonatomic, strong) NSString *userTestConfigFolder;
 @property (nonatomic, strong) NSString *testSearchFileName;
 @property (nonatomic, strong) NSString *testSearchFileKeywords;
 @property (nonatomic, strong) NSString *textKeyWord;
@@ -75,6 +76,5 @@
 - (NSDictionary *)setupEnvironmentParameters;
 - (void)setUpTestImageFile:(NSString *)filePath;
 - (void)resetTestVariables;
-- (NSString *)userTestConfigFolder;
 
 @end

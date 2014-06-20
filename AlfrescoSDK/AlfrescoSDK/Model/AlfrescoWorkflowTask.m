@@ -69,12 +69,12 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         self.identifier = entry[kAlfrescoWorkflowPublicJSONIdentifier];
         self.processIdentifier = entry[kAlfrescoWorkflowPublicJSONProcessID];
         self.processDefinitionIdentifier = entry[kAlfrescoWorkflowPublicJSONProcessDefinitionID];
-        self.name = entry[kAlfrescoWorkflowPublicJSONDescription];
+        self.summary = entry[kAlfrescoWorkflowPublicJSONDescription];
         self.type = entry[kAlfrescoWorkflowPublicJSONFormResourceKey];
         self.startedAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONStartedAt]];
         self.endedAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONEndedAt]];
         self.dueAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONDueAt]];
-        self.summary = entry[kAlfrescoWorkflowPublicJSONName];
+        self.name = entry[kAlfrescoWorkflowPublicJSONName];
         self.priority = entry[kAlfrescoWorkflowPublicJSONPriority];
         self.assigneeIdentifier = entry[kAlfrescoWorkflowPublicJSONAssignee];
     }
@@ -86,7 +86,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         self.identifier = properties[kAlfrescoWorkflowLegacyJSONIdentifier];
         self.processIdentifier = workflowInstance[kAlfrescoWorkflowLegacyJSONIdentifier];
         self.processDefinitionIdentifier = workflowInstance[kAlfrescoWorkflowLegacyJSONName];
-        self.name = taskProperties[kAlfrescoWorkflowLegacyJSONBPMDescription];
+        self.name = properties[kAlfrescoWorkflowLegacyJSONTitle];
         self.type = properties[kAlfrescoWorkflowLegacyJSONName];
         if (taskProperties[kAlfrescoWorkflowLegacyJSONBPMStartedAt] != [NSNull null])
         {
@@ -100,7 +100,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         {
             self.dueAt = [self.dateFormatter dateFromString:taskProperties[kAlfrescoWorkflowLegacyJSONBPMDueAt]];
         }
-        self.summary = properties[kAlfrescoWorkflowLegacyJSONDescription];
+        self.summary = taskProperties[kAlfrescoWorkflowLegacyJSONBPMDescription];
         self.priority = taskProperties[kAlfrescoWorkflowLegacyJSONBPMPriority];
         if (taskProperties[kAlfrescoWorkflowLegacyJSONOwner] != [NSNull null])
         {
