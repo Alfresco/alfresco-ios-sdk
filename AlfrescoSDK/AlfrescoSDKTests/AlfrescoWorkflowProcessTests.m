@@ -150,10 +150,10 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                                               process.processDefinitionIdentifier);
                                 XCTAssertTrue([process.identifier rangeOfString:@"activiti$"].location != NSNotFound,
                                               @"Expected identifer to contain activit$ but it was %@", process.identifier);
-                                XCTAssertTrue([process.summary isEqualToString:@"Review and approval of content using Activiti workflow engine"],
-                                              @"Expected adhoc summary to be 'Review and approval of content using Activiti workflow engine' but it was %@", process.summary);
+                                XCTAssertTrue([process.name isEqualToString:@"Review And Approve"],
+                                              @"Expected adhoc name to be 'Review And Approve' but it was %@", process.name);
                                 
-                                XCTAssertNotNil(process.name, @"Expected name to be populated");
+                                XCTAssertNotNil(process.summary, @"Expected summary to be populated");
                                 XCTAssertNotNil(process.startedAt, @"Expected startedAt to be populated");
                                 XCTAssertNotNil(process.priority, @"Expected priority to be populated");
                                 XCTAssertNotNil(process.initiatorUsername, @"Expected initiatorUsername to be populated");
