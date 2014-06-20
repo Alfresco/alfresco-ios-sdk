@@ -30,16 +30,11 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
 
 #pragma mark unit test internal methods
 
-- (NSString *)userTestConfigFolder
-{
-    NSString *userName = [[NSString alloc] initWithCString:getlogin() encoding:NSUTF8StringEncoding];
-    return [NSString pathWithComponents:@[@"/Users", userName, kAlfrescoTestServersConfigDirectory]];
-}
-
 - (NSDictionary *)setupEnvironmentParameters
 {
     NSDictionary *environment = nil;
-
+    NSDictionary *environmentVariables = [[NSProcessInfo processInfo] environment];
+    
     // Expecting a "TEST_SERVER" environment variable via the xcconfig file
 #if !defined(TEST_SERVER)
     #warning Missing AlfrescoSDKTests.xcconfig entries. Ensure the project configuration settings are correct.
@@ -51,8 +46,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     {
         // Try to read directly from environment variables. This allows the test server to be set by
         // a developer via Xcode's "Edit Scheme ⌘<" view
-        NSDictionary *environmentVariables = [[NSProcessInfo processInfo] environment];
-        testServer = [environmentVariables valueForKey:@"TEST_SERVER"];
+        testServer = environmentVariables[@"TEST_SERVER"];
         
         // Still nothing? - default to localhost
         if ([testServer isEqualToString:@""])
@@ -61,6 +55,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         }
     }
     
+    self.userTestConfigFolder = [NSString pathWithComponents:@[environmentVariables[@"IPHONE_SIMULATOR_HOST_HOME"], kAlfrescoTestServersConfigDirectory]];
     NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
     NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
     NSDictionary *allEnvironments = plistContents[@"environments"];
@@ -293,7 +288,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.server]
                                      username:self.userName
                                      password:self.password
-                                     parameters:parameters
+                                   parameters:parameters
                               completionBlock:^(id<AlfrescoSession> session, NSError *error){
                                   if (nil == session)
                                   {
@@ -310,7 +305,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
                                       self.currentRootFolder = self.currentSession.rootFolder;
                                       success = YES;
                                   }
-    }];
+                              }];
     
     
     [self waitUntilCompleteWithFixedTimeInterval];

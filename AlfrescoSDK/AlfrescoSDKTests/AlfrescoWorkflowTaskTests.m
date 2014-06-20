@@ -72,10 +72,10 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                                           @"Expected identifier to contain jbpm$ but it was %@", task.identifier);
                             XCTAssertTrue([task.processIdentifier rangeOfString:kAlfrescoJBPMPrefix].location != NSNotFound,
                                           @"Expected processIdentifier to contain jbpm$ but it was %@", task.processIdentifier);
-                            XCTAssertTrue([task.summary isEqualToString:@"Review Documents to Approve or Reject them"],
-                                          @"Expected task summary to be 'Review Documents to Approve or Reject them' but it was %@", task.summary);
+                            XCTAssertTrue([task.name isEqualToString:@"Review"],
+                                          @"Expected task summary to be 'Review' but it was %@", task.name);
                             
-                            XCTAssertNotNil(task.name, @"Expected the name property to be populated");
+                            XCTAssertNotNil(task.summary, @"Expected the name property to be populated");
                             XCTAssertNotNil(task.type, @"Expected the type property to be populated");
                             XCTAssertNotNil(task.priority, @"Expected the priority property to be populated");
                             XCTAssertNotNil(task.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
@@ -95,8 +95,8 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                             if ((self.isCloud && [task.processDefinitionIdentifier rangeOfString:kAlfrescoActivitiParallelReviewProcessDefinitionKey].location != NSNotFound) ||
                                 (!self.isCloud && [task.processDefinitionIdentifier rangeOfString:kAlfrescoActivitiReviewProcessDefinitionKey].location != NSNotFound))
                             {
-                                XCTAssertTrue([task.summary isEqualToString:@"Review Task"],
-                                              @"Expected task summary to be 'Review Task' but it was %@", task.summary);
+                                XCTAssertTrue([task.name isEqualToString:@"Review Task"],
+                                              @"Expected task name to be 'Review Task' but it was %@", task.name);
                                 
                                 XCTAssertNotNil(task.identifier, @"Expected the identifier property to be populated");
                                 XCTAssertNotNil(task.processIdentifier, @"Expected the processIdentifier property to be populated");

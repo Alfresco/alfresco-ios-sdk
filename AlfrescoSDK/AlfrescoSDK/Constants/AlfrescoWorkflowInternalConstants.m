@@ -140,7 +140,7 @@ NSString * const kAlfrescoWorkflowLegacyJSONBPMPackageContainer = @"bpm_package"
 
 NSString * const kAlfrescoWorkflowLegacyJSONOwner = @"cm_owner";
 
-NSString * const kAlfrescoWorkflowPublicBPMJSONProcessTitle = @"bpm_description";
+NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDescription = @"bpm_description";
 NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignee = @"bpm_assignee";
 NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignees = @"bpm_assignees";
 

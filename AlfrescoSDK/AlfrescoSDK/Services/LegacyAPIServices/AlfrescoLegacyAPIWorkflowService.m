@@ -185,9 +185,9 @@
     NSString *requestString = [kAlfrescoLegacyAPIWorkflowInstances stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
     
     // for now map the new filter listing to the existing state constants (now internal) but these should be removed soon
-    if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowState])
+    if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowStatus])
     {
-        NSString *requestedState = [listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState];
+        NSString *requestedState = [listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus];
         
         if (![requestedState isEqualToString:kAlfrescoFilterValueWorkflowStateAny])
         {
@@ -349,9 +349,9 @@
     
     NSString *stateParameterValue = kAlfrescoLegacyAPIWorkflowStatusInProgress;
     
-    if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowState])
+    if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowStatus])
     {
-        NSString *requestedState = [listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState];
+        NSString *requestedState = [listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus];
         
         if ([requestedState isEqualToString:kAlfrescoFilterValueWorkflowStateCompleted])
         {

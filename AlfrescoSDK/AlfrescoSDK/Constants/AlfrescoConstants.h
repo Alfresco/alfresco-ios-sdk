@@ -97,7 +97,7 @@ extern NSString * const kAlfrescoSortByDescription;
 /**---------------------------------------------------------------------------------------
  * @name filter properties
  --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoFilterByWorkflowState;
+extern NSString * const kAlfrescoFilterByWorkflowStatus;
 extern NSString * const kAlfrescoFilterValueWorkflowStateActive;
 extern NSString * const kAlfrescoFilterValueWorkflowStateCompleted;
 extern NSString * const kAlfrescoFilterValueWorkflowStateAny;
