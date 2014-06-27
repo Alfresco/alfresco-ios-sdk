@@ -54,7 +54,7 @@ NSString * const kAlfrescoSortByDescription = @"description";
 /**
  Filtering constants
  */
-NSString * const kAlfrescoFilterByWorkflowState = @"state";
+NSString * const kAlfrescoFilterByWorkflowStatus = @"status";
 NSString * const kAlfrescoFilterValueWorkflowStateActive = @"active";
 NSString * const kAlfrescoFilterValueWorkflowStateCompleted = @"completed";
 NSString * const kAlfrescoFilterValueWorkflowStateAny = @"any";

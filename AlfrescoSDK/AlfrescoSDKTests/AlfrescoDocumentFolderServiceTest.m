@@ -1745,7 +1745,7 @@
                      NSMutableArray *myObject = [NSMutableArray array];
                      [myObject addObject:doc];
                      
-                     NSString *filePath = [[self userTestConfigFolder] stringByAppendingPathComponent:@"serialized-object.txt"];
+                     NSString *filePath = [self.userTestConfigFolder stringByAppendingPathComponent:@"serialized-object.txt"];
                      [NSKeyedArchiver archiveRootObject:myObject toFile:filePath];
                      
                      NSMutableArray* myArray = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];

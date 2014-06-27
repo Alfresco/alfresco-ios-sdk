@@ -60,16 +60,16 @@
                   @"Expected sortProperty to be %@ but it was %@", kAlfrescoSortByTitle, listingContext.sortProperty);
     XCTAssertFalse(listingContext.sortAscending, @"Expected sortAscending to be NO");
     
-    AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterByWorkflowState value:kAlfrescoFilterValueWorkflowStateActive];
+    AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterByWorkflowStatus value:kAlfrescoFilterValueWorkflowStateActive];
     listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
     XCTAssertTrue(listingContext.maxItems == 50, @"Expected maxItems to default to 50");
     XCTAssertTrue(listingContext.skipCount == 0, @"Expected skipCount to default to 0");
     XCTAssertEqual(listingFilter, listingContext.listingFilter, @"Expected the given listing filter to be the one returned from the listing context");
     XCTAssertTrue(listingContext.listingFilter.filters.count == 1,
                   "Expected listingFilter to have 1 filter but it had %lu", (unsigned long)listingContext.listingFilter.filters.count);
-    XCTAssertTrue([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowState], @"Expected the listing filter to have the kAlfrescoFilterByWorkflowState filter");
-    XCTAssertTrue([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState] isEqualToString:kAlfrescoFilterValueWorkflowStateActive],
-                  @"Expected the listing filter value to be kAlfrescoFilterValueWorkflowStateActive but it was %@", [listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowState]);
+    XCTAssertTrue([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowStatus], @"Expected the listing filter to have the kAlfrescoFilterByWorkflowStatus filter");
+    XCTAssertTrue([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStateActive],
+                  @"Expected the listing filter value to be kAlfrescoFilterValueWorkflowStateActive but it was %@", [listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus]);
     
     // test the properties are readwrite
     listingContext = [AlfrescoListingContext new];
