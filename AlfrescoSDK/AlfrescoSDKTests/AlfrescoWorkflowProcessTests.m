@@ -517,7 +517,6 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                                       @"Expected processDefinitionIdentifier to contain 'dhoc' but it was %@", createdProcess.processDefinitionIdentifier);
                         XCTAssertTrue([createdProcess.processDefinitionKey rangeOfString:@"dhoc"].location != NSNotFound,
                                       @"Expected processDefinitionKey to contain 'dhoc' but it was %@", createdProcess.processDefinitionKey);
-                        XCTAssertTrue([createdProcess.name isEqualToString:processName], @"The process name should be %@, but got back %@", processName, createdProcess.name);
                         XCTAssertTrue([createdProcess.summary isEqualToString:processName], @"The process summary should be %@, but got back %@", processName, createdProcess.summary);
                         XCTAssertTrue(createdProcess.priority.intValue == priority.integerValue, @"The priority should be %i, but got back %i", priority.intValue, createdProcess.priority.intValue);
                         
