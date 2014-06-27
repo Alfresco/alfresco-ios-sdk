@@ -82,8 +82,6 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                             XCTAssertNotNil(process.startedAt, @"Expected startedAt to be populated");
                             XCTAssertNotNil(process.priority, @"Expected priority to be populated");
                             XCTAssertNotNil(process.initiatorUsername, @"Expected initiatorUsername to be populated");
-                            XCTAssertNotNil(process.variables, @"Expected variables to be populated");
-                            XCTAssertTrue(process.variables.count > 0, @"Expected variables count to be more than 0");
                             
                             reviewProcessFound = YES;
                             break;
@@ -125,8 +123,6 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                                 XCTAssertNotNil(process.startedAt, @"Expected startedAt to be populated");
                                 XCTAssertNotNil(process.priority, @"Expected priority to be populated");
                                 XCTAssertNotNil(process.initiatorUsername, @"Expected initiatorUsername to be populated");
-                                XCTAssertNotNil(process.variables, @"Expected variables to be populated");
-                                XCTAssertTrue(process.variables.count > 0, @"Expected variables count to be more than 0");
                                 
                                 // the summary property for the public api will always be nil
                                 XCTAssertNil(process.summary, @"Expected the summary property to be nil when using the public API");
@@ -157,8 +153,6 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                                 XCTAssertNotNil(process.startedAt, @"Expected startedAt to be populated");
                                 XCTAssertNotNil(process.priority, @"Expected priority to be populated");
                                 XCTAssertNotNil(process.initiatorUsername, @"Expected initiatorUsername to be populated");
-                                XCTAssertNotNil(process.variables, @"Expected variables to be populated");
-                                XCTAssertTrue(process.variables.count > 0, @"Expected variables count to be more than 0");
                                 
                                 reviewProcessFound = YES;
                                 break;
@@ -358,7 +352,6 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         XCTAssertNotNil(process.priority, @"Expected priority property to be populated");
                         XCTAssertNotNil(process.initiatorUsername, @"Expected initiatorUsername property to be populated");
                         XCTAssertNotNil(process.identifier, @"Expected identifier property to be populated");
-                        XCTAssertNotNil(process.variables, @"Expected variables property to be populated");
                         XCTAssertNil(process.dueAt, @"Expected dueAt property to be nil");
                         XCTAssertNil(process.endedAt, @"Expected endedAt property to be nil");
                         
@@ -375,31 +368,6 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         else
                         {
                             XCTAssertNotNil(process.summary, @"Expected summary property to be populated");
-                        }
-                        
-                        // check expected variables are present
-                        XCTAssertTrue(process.variables.count > 0, @"Expected variables count to be more than 0");
-                        NSDictionary *variables = process.variables;
-                        
-                        AlfrescoProperty *priorityProperty = variables[kAlfrescoWorkflowVariableProcessPriority];
-                        XCTAssertNotNil(priorityProperty, @"Expected to find the bpm_workflowPriority process variable");
-                        XCTAssertTrue(priorityProperty.type == AlfrescoPropertyTypeInteger);
-                        
-                        AlfrescoProperty *nameProperty = variables[kAlfrescoWorkflowVariableProcessName];
-                        XCTAssertNotNil(nameProperty, @"Expected to find the process name variable");
-                        XCTAssertTrue(nameProperty.type == AlfrescoPropertyTypeString);
-                        
-                        if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
-                        {
-                            AlfrescoProperty *sendEmailProperty = variables[kAlfrescoWorkflowVariableProcessSendEmailNotifications];
-                            XCTAssertNotNil(sendEmailProperty, @"Expected to find the bpm_sendEMailNotifications process variable");
-                            XCTAssertTrue(sendEmailProperty.type == AlfrescoPropertyTypeBoolean);
-                            
-                            AlfrescoProperty *statusProperty = variables[@"bpm_status"];
-                            XCTAssertNotNil(statusProperty, @"Expected to find the bpm_status process variable");
-                            XCTAssertTrue(statusProperty.type == AlfrescoPropertyTypeString);
-                            XCTAssertTrue([statusProperty.value isEqualToString:@"Not Yet Started"],
-                                          @"Expected status property to be 'Not Yet Started' but was %@", statusProperty.value);
                         }
                         
                         [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
@@ -451,13 +419,11 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                 XCTAssertNotNil(createdProcess.priority, @"Expected priority property to be populated");
                 XCTAssertNotNil(createdProcess.initiatorUsername, @"Expected initiatorUsername property to be populated");
                 XCTAssertNotNil(createdProcess.identifier, @"Expected identifier property to be populated");
-                XCTAssertNotNil(createdProcess.variables, @"Expected variables property to be populated");
                 
                 XCTAssertTrue([createdProcess.processDefinitionIdentifier rangeOfString:@"dhoc"].location != NSNotFound,
                               @"Expected processDefinitionIdentifier to contain 'dhoc' but it was %@", createdProcess.processDefinitionIdentifier);
                 XCTAssertTrue([createdProcess.processDefinitionKey rangeOfString:@"dhoc"].location != NSNotFound,
                               @"Expected processDefinitionKey to contain 'dhoc' but it was %@", createdProcess.processDefinitionKey);
-                XCTAssertTrue(createdProcess.variables.count > 0, @"Expected variables count to be more than 0");
                 
                 // the summary property for the public api will always be nil
                 if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
@@ -546,13 +512,11 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         XCTAssertNotNil(createdProcess.priority, @"Expected priority property to be populated");
                         XCTAssertNotNil(createdProcess.initiatorUsername, @"Expected initiatorUsername property to be populated");
                         XCTAssertNotNil(createdProcess.identifier, @"Expected identifier property to be populated");
-                        XCTAssertNotNil(createdProcess.variables, @"Expected variables property to be populated");
                         
                         XCTAssertTrue([createdProcess.processDefinitionIdentifier rangeOfString:@"dhoc"].location != NSNotFound,
                                       @"Expected processDefinitionIdentifier to contain 'dhoc' but it was %@", createdProcess.processDefinitionIdentifier);
                         XCTAssertTrue([createdProcess.processDefinitionKey rangeOfString:@"dhoc"].location != NSNotFound,
                                       @"Expected processDefinitionKey to contain 'dhoc' but it was %@", createdProcess.processDefinitionKey);
-                        XCTAssertTrue(createdProcess.variables.count > 0, @"Expected variables count to be more than 0");
                         XCTAssertTrue([createdProcess.name isEqualToString:processName], @"The process name should be %@, but got back %@", processName, createdProcess.name);
                         XCTAssertTrue(createdProcess.priority.intValue == priority.integerValue, @"The priority should be %i, but got back %i", priority.intValue, createdProcess.priority.intValue);
                         
@@ -581,99 +545,6 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
             }
         }];
         
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-    }
-    else
-    {
-        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
-    }
-}
-
-- (void)testStartProcessWithVariables
-{
-    if (self.setUpSuccess)
-    {
-        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
-        
-        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
-        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
-        {
-            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
-        }
-        
-        // provide variables when starting the process
-        NSString *workflowName = [NSString stringWithFormat:@"MOBSDK Test Process - %@", [NSDate date]];
-        NSNumber *workflowPriority = @(3);
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDateComponents *dateComponents = [NSDateComponents new];
-        dateComponents.day = 7;
-        NSDate *workflowDueDate = [calendar dateByAddingComponents:dateComponents toDate:[NSDate date] options:0];
-        NSNumber *sendEmailNotifications = @NO;
-        
-        NSDictionary *variables = @{kAlfrescoWorkflowVariableProcessName: workflowName,
-                                    kAlfrescoWorkflowVariableProcessPriority: workflowPriority,
-                                    kAlfrescoWorkflowVariableProcessDueDate: workflowDueDate,
-                                    kAlfrescoWorkflowVariableProcessSendEmailNotifications: sendEmailNotifications};
-        
-        [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:variables attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *startError) {
-            if (startError)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [startError localizedDescription], [startError localizedFailureReason]];
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertNotNil(createdProcess, @"Process should not be nil");
-                XCTAssertNotNil(createdProcess.variables, @"variables property should not be nil");
-                XCTAssertTrue(createdProcess.variables.count > 0, @"Expected there to be variables present");
-                
-                // retrieve variables and make sure they are populated as expected
-                NSDictionary *retrievedVariables = createdProcess.variables;
-                AlfrescoProperty *retrievedWorkflowName = retrievedVariables[kAlfrescoWorkflowVariableProcessName];
-                AlfrescoProperty *retrievedWorkflowPriority = retrievedVariables[kAlfrescoWorkflowVariableProcessPriority];
-                AlfrescoProperty *retrievedWorkflowDueDate = retrievedVariables[kAlfrescoWorkflowVariableProcessDueDate];
-                
-                XCTAssertNotNil(retrievedWorkflowName, @"Expected to find workflow name variable");
-                XCTAssertNotNil(retrievedWorkflowPriority, @"Expected to find workflow priority variable");
-                XCTAssertNotNil(retrievedWorkflowDueDate, @"Expected to find workflow due date variable");
-                
-                XCTAssertTrue(retrievedWorkflowName.type == AlfrescoPropertyTypeString,
-                              @"Expected workflow name variable to be a string but it was %@", @(retrievedWorkflowName.type));
-                XCTAssertTrue(retrievedWorkflowPriority.type == AlfrescoPropertyTypeInteger,
-                              @"Expected workflow description variable to be a integer but it was %@", @(retrievedWorkflowPriority.type));
-                XCTAssertTrue(retrievedWorkflowDueDate.type == AlfrescoPropertyTypeDate,
-                              @"Expected workflow due date variable to be a date but it was %@", @(retrievedWorkflowDueDate.type));
-                
-                XCTAssertTrue([(NSString *)retrievedWorkflowName.value isEqualToString:workflowName],
-                              @"Expected workflow name to be %@ but it was %@", workflowName, retrievedWorkflowName.value);
-                XCTAssertTrue([(NSNumber *)retrievedWorkflowPriority.value isEqualToNumber:workflowPriority],
-                              @"Expected workflow priority to be %@ but it was %@", workflowPriority, retrievedWorkflowPriority.value);
-                
-                NSDate *retrievedWorkflowDueDateValue = retrievedWorkflowDueDate.value;
-                double providedDueDateInterval = floor([workflowDueDate timeIntervalSince1970]);
-                double retrievedDueDateInterval = floor([retrievedWorkflowDueDateValue timeIntervalSince1970]);
-                XCTAssertTrue(providedDueDateInterval == retrievedDueDateInterval,
-                              @"Expected workflow due date variable to match (%f vs %f)", providedDueDateInterval, retrievedDueDateInterval);
-                
-                if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
-                {
-                    AlfrescoProperty *retrievedSendEmailNotifications = retrievedVariables[kAlfrescoWorkflowVariableProcessSendEmailNotifications];
-                    XCTAssertNotNil(retrievedSendEmailNotifications, @"Expected to find send email notifications variable");
-                    XCTAssertTrue(retrievedSendEmailNotifications.type == AlfrescoPropertyTypeBoolean,
-                                  @"Expected send  variable to be a boolean but it was %@", @(retrievedSendEmailNotifications.type));
-                    XCTAssertTrue([retrievedSendEmailNotifications.value isEqualToNumber:sendEmailNotifications],
-                                  @"Expected send email notifications to be %@ but it was %@", sendEmailNotifications, retrievedSendEmailNotifications.value);
-                }
-                
-                [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
-                    XCTAssertTrue(succeeded, @"Deletion flag should be true");
-                    self.lastTestSuccessful = succeeded;
-                    self.callbackCompleted = YES;
-                }];
-            }
-        }];
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }

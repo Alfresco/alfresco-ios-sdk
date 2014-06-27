@@ -37,7 +37,6 @@
 @property (nonatomic, strong, readonly) NSNumber *priority;
 @property (nonatomic, strong, readonly) NSString *summary;
 @property (nonatomic, strong, readonly) NSString *initiatorUsername;
-@property (nonatomic, strong, readonly) NSDictionary *variables;
 
 - (id)initWithProperties:(NSDictionary *)properties;
 
