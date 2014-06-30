@@ -189,11 +189,11 @@
     {
         NSString *requestedState = [listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus];
         
-        if (![requestedState isEqualToString:kAlfrescoFilterValueWorkflowStateAny])
+        if (![requestedState isEqualToString:kAlfrescoFilterValueWorkflowStatusAny])
         {
             NSString *stateParameterValue = kAlfrescoLegacyAPIWorkflowStatusInProgress;
             
-            if ([requestedState isEqualToString:kAlfrescoFilterValueWorkflowStateCompleted])
+            if ([requestedState isEqualToString:kAlfrescoFilterValueWorkflowStatusCompleted])
             {
                 stateParameterValue = kAlfrescoLegacyAPIWorkflowStatusCompleted;
             }
@@ -353,7 +353,7 @@
     {
         NSString *requestedState = [listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus];
         
-        if ([requestedState isEqualToString:kAlfrescoFilterValueWorkflowStateCompleted])
+        if ([requestedState isEqualToString:kAlfrescoFilterValueWorkflowStatusCompleted])
         {
             stateParameterValue = kAlfrescoLegacyAPIWorkflowStatusCompleted;
         }

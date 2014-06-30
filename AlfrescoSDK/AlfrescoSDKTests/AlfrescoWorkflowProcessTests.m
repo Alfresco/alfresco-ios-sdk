@@ -225,7 +225,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc]
-                                                initWithFilter:kAlfrescoFilterByWorkflowStatus value:kAlfrescoFilterValueWorkflowStateActive];
+                                                initWithFilter:kAlfrescoFilterByWorkflowStatus value:kAlfrescoFilterValueWorkflowStatusActive];
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
         
         [self.workflowService retrieveProcessesWithListingContext:listingContext
@@ -271,7 +271,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc]
-                                                initWithFilter:kAlfrescoFilterByWorkflowStatus value:kAlfrescoFilterValueWorkflowStateCompleted];
+                                                initWithFilter:kAlfrescoFilterByWorkflowStatus value:kAlfrescoFilterValueWorkflowStatusCompleted];
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
         
         [self.workflowService retrieveProcessesWithListingContext:listingContext
