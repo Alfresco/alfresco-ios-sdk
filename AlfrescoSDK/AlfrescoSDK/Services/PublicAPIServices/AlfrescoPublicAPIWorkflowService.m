@@ -173,11 +173,11 @@
     
     if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowStatus])
     {
-        if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStateCompleted])
+        if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStatusCompleted])
         {
             statusParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusCompleted;
         }
-        else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStateAny])
+        else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStatusAny])
         {
             statusParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusAny;
         }
@@ -293,11 +293,11 @@
     
     if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowStatus])
     {
-        if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStateCompleted])
+        if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStatusCompleted])
         {
             statusParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusCompleted;
         }
-        else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStateActive])
+        else if ([[listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStatusActive])
         {
             statusParameterValue = kAlfrescoPublicAPIWorkflowProcessStatusActive;
         }
