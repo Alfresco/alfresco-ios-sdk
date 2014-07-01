@@ -5944,6 +5944,72 @@
     }
 }
 
+// Test fix for MOBSDK-746
+- (void)testIsNodeFavoriteForSite
+{
+    if (self.setUpSuccess)
+    {
+        if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            AlfrescoSiteService *siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+            
+            [siteService retrieveFavoriteSitesWithCompletionBlock:^(NSArray *array, NSError *favoriteSitesError) {
+                if (array != nil)
+                {
+                    XCTAssertNotNil(array, @"The favorite sites array should not be nil");
+                    XCTAssertTrue(array.count >= 1, @"Expected favorite sites to be returned but got %lu", (unsigned long)array.count);
+                    
+                    // grab the GUID of the first favorited site
+                    NSString *siteGUID = ((AlfrescoSite*)array[0]).GUID;
+                    
+                    self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+                    __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
+                    
+                    [self.dfService retrieveNodeWithIdentifier:siteGUID completionBlock:^(AlfrescoNode *node, NSError *nodeError) {
+                        if (node != nil)
+                        {
+                            [weakDfService isFavorite:node completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *isFavoriteError) {
+                                if (succeeded)
+                                {
+                                    XCTAssertFalse(isFavorited, @"Favorite sites should not be marked as a favorite node");
+                                    
+                                    self.lastTestSuccessful = !isFavorited;
+                                    self.callbackCompleted = YES;
+                                }
+                                else
+                                {
+                                    self.lastTestSuccessful = NO;
+                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [isFavoriteError localizedDescription], [isFavoriteError localizedFailureReason]];
+                                    self.callbackCompleted = YES;
+                                }
+                            }];
+                        }
+                        else
+                        {
+                            self.lastTestSuccessful = NO;
+                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [nodeError localizedDescription], [nodeError localizedFailureReason]];
+                            self.callbackCompleted = YES;
+                        }
+                    }];
+                }
+                else
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [favoriteSitesError localizedDescription], [favoriteSitesError localizedFailureReason]];
+                    self.callbackCompleted = YES;
+                }
+            }];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 - (void)testAddFavorite
 {
     if (self.setUpSuccess)
