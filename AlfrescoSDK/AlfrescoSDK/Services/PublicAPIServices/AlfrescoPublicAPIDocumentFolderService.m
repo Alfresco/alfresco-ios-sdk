@@ -561,8 +561,41 @@ static const double kFavoritesRequestRateLimit = 0.1; // seconds between request
         }
         else
         {
-            [self.favoritesCache cacheNode:node favorite:(data != nil)];
-            completionBlock(YES, (data != nil), nil);
+            BOOL favorite = NO;
+            if (data != nil)
+            {
+                // if we get a response body check the favorite is a "file" or "folder" (MOBSDK-746)
+                NSError *parseError = nil;
+                id jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
+                if (jsonDictionary != nil)
+                {
+                    NSString *targetKeyPath = [[NSString alloc] initWithFormat:@"%@.%@", kAlfrescoPublicAPIJSONEntry, kAlfrescoJSONTarget];
+                    NSDictionary *targetDictionary = [jsonDictionary valueForKeyPath:targetKeyPath];
+                    if (targetDictionary != nil)
+                    {
+                        // look for "file" entry first
+                        NSDictionary *fileDictionary = targetDictionary[kAlfrescoJSONFile];
+                        if (fileDictionary != nil)
+                        {
+                            // node is a favorite document
+                            favorite = YES;
+                        }
+                        else
+                        {
+                            // look for the "folder" entry
+                            NSDictionary *folderDictionary = targetDictionary[kAlfrescoJSONFolder];
+                            if (folderDictionary != nil)
+                            {
+                                // node is a favorite folder
+                                favorite = YES;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            [self.favoritesCache cacheNode:node favorite:favorite];
+            completionBlock(YES, favorite, nil);
         }
     }];
     
