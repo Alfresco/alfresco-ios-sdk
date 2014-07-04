@@ -293,7 +293,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
                                   if (nil == session)
                                   {
                                       self.lastTestSuccessful = NO;
-                                      self.lastTestFailureMessage = [NSString stringWithFormat:@"Session could not be authenticated. Error %@",[error localizedDescription]];
+                                      self.lastTestFailureMessage = [NSString stringWithFormat:@"OnPremise session could not be authenticated: %@",[error localizedDescription]];
                                       self.callbackCompleted = YES;
                                   }
                                   else
@@ -309,7 +309,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     
     
     [self waitUntilCompleteWithFixedTimeInterval];
-    XCTAssertTrue(self.lastTestSuccessful, @"OnPremise Session authentication failed");
+    XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     return success;
 }
 
@@ -341,7 +341,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         if (nil == cloudSession)
         {
             self.lastTestSuccessful = NO;
-            self.lastTestFailureMessage = [NSString stringWithFormat:@"Cloud session could not be authenticated. Error %@",[error localizedDescription]];
+            self.lastTestFailureMessage = [NSString stringWithFormat:@"Cloud session could not be authenticated: %@",[error localizedDescription]];
             AlfrescoLogDebug(@"The returned cloudSession is nil with error message %@",self.lastTestFailureMessage);
             self.callbackCompleted = YES;
         }

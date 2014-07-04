@@ -51,10 +51,12 @@ NSString * const kAlfrescoSystemModelAspectLocalized = @"sys:localized";
  Property name constants
  */
 NSString * const kAlfrescoRepositoryName = @"name";
+NSString * const kAlfrescoRepositoryNamePattern = @"Alfresco Repository (%@)";
 NSString * const kAlfrescoRepositoryEdition = @"edition";
 NSString * const kAlfrescoRepositoryEditionCommunity = @"Community";
 NSString * const kAlfrescoRepositoryEditionEnterprise = @"Enterprise";
 NSString * const kAlfrescoRepositoryEditionCloud = @"Alfresco in the Cloud";
+NSString * const kAlfrescoRepositoryEditionUnknown = @"Unknown";
 NSString * const kAlfrescoRepositoryIdentifier = @"identifier";
 NSString * const kAlfrescoRepositorySummary = @"summary";
 NSString * const kAlfrescoRepositoryVersion = @"version";
@@ -147,7 +149,7 @@ NSString *const kAlfrescoOAuthRefreshToken = @"refresh_token={refreshID}";
  */
 NSString * const kAlfrescoLegacyAPIPath = @"/service/api/";
 NSString * const kAlfrescoLegacyCMISPath = @"/service/cmis";
-NSString * const kAlfrescoLegacy4_xCMISPath = @"/cmisatom";
+NSString * const kAlfrescoLegacyCMISAtomPath = @"/cmisatom";
 NSString * const kAlfrescoLegacyAPINodeRefPrefix = @"workspace://SpacesStore/";
 NSString * const kAlfrescoLegacyActivityAPI = @"activities/feed/user?format=json";
 NSString * const kAlfrescoLegacyActivityForSiteAPI = @"activities/feed/site/{siteID}?format=json";
@@ -171,6 +173,7 @@ NSString * const kAlfrescoLegacyAvatarForPersonAPI = @"/service/slingshot/profil
 NSString * const kAlfrescoLegacyMetadataExtractionAPI = @"/service/api/actionQueue";
 NSString * const kAlfrescoLegacyThumbnailCreationAPI = @"/node/{nodeRef}/content/thumbnails?as=true";
 NSString * const kAlfrescoLegacyThumbnailRenditionAPI = @"node/{nodeRef}/content/thumbnails/{renditionID}?c=queue";
+NSString * const kAlfrescoLegacyServerAPI = @"server";
 
 NSString * const kAlfrescoLegacyPreferencesAPI = @"people/{personID}/preferences";
 NSString * const kAlfrescoLegacyJoinPublicSiteAPI = @"sites/{siteID}/memberships";
@@ -187,7 +190,8 @@ NSString * const kAlfrescoLegacyFavoriteFoldersAPI = @"/people/{personID}/prefer
 /**
  Public API constants
  */
-NSString * const kAlfrescoPublicAPICMISPath = @"/api/-default-/public/cmis/versions/1.0/atom";
+NSString * const kAlfrescoPublicAPICMISAtomPath = @"/api/-default-/public/cmis/versions/1.0/atom";
+NSString * const kAlfrescoPublicAPICMISBrowserPath = @"/api/-default-/public/cmis/versions/1.1/browser";
 NSString * const kAlfrescoPublicAPIPath  = @"/api/-default-/public/alfresco/versions/1/";
 NSString * const kAlfrescoPublicAPISite = @"sites";
 NSString * const kAlfrescoPublicAPISiteForPerson = @"people/{personID}/sites";

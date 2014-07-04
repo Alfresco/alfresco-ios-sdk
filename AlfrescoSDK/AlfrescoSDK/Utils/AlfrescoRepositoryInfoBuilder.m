@@ -59,9 +59,13 @@
         {
             repoDictionary[kAlfrescoRepositoryEdition] = kAlfrescoRepositoryEditionCommunity;
         }
-        else
+        else if ([productName rangeOfString:kAlfrescoRepositoryEditionEnterprise].location != NSNotFound)
         {
             repoDictionary[kAlfrescoRepositoryEdition] = kAlfrescoRepositoryEditionEnterprise;
+        }
+        else
+        {
+            repoDictionary[kAlfrescoRepositoryEdition] = kAlfrescoRepositoryEditionUnknown;
         }
         repoDictionary[kAlfrescoRepositoryIdentifier] = identifier;
         repoDictionary[kAlfrescoRepositorySummary] = summary;
@@ -109,9 +113,13 @@
                 [capabilities setValue:@YES forKey:kAlfrescoCapabilityActivitiWorkflowEngine];
             }
             
-            if ([workflowDefinitionString rangeOfString:@"jbpm$"].location != NSNotFound)
+            // only check for JBPM if the public API is not available
+            if (![[capabilities valueForKey:kAlfrescoCapabilityPublicAPI] boolValue])
             {
-                [capabilities setValue:@YES forKey:kAlfrescoCapabilityJBPMWorkflowEngine];
+                if ([workflowDefinitionString rangeOfString:@"jbpm$"].location != NSNotFound)
+                {
+                    [capabilities setValue:@YES forKey:kAlfrescoCapabilityJBPMWorkflowEngine];
+                }
             }
         }
     }

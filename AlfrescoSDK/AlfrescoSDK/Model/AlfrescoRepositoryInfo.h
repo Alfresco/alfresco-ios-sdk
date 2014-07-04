@@ -44,7 +44,7 @@
 @property (nonatomic, strong, readonly) NSString *summary;
 
 
-/// The edition of the repository, will be either "Community" or "Enterprise".
+/// The edition of the repository, will be either "Community", "Enterprise" or "Cloud".
 @property (nonatomic, strong, readonly) NSString *edition;
 
 
