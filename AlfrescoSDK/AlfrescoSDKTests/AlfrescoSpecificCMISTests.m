@@ -63,7 +63,7 @@ static NSString * const kAlfrescoTestNetworkID = @"/alfresco.com";
         }
         else
         {
-            urlString = [self.server stringByAppendingString:kAlfrescoLegacy4_xCMISPath];
+            urlString = [self.server stringByAppendingString:kAlfrescoLegacyCMISAtomPath];
         }
     }
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc]

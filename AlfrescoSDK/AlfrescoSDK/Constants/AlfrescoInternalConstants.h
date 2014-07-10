@@ -41,10 +41,12 @@ extern NSString * const kAlfrescoSystemModelPrefix;
 extern NSString * const kAlfrescoSystemModelAspectLocalized;
 
 extern NSString * const kAlfrescoRepositoryName;
+extern NSString * const kAlfrescoRepositoryNamePattern;
 extern NSString * const kAlfrescoRepositoryEdition;
 extern NSString * const kAlfrescoRepositoryEditionCommunity;
 extern NSString * const kAlfrescoRepositoryEditionEnterprise;
 extern NSString * const kAlfrescoRepositoryEditionCloud;
+extern NSString * const kAlfrescoRepositoryEditionUnknown;
 extern NSString * const kAlfrescoRepositoryIdentifier;
 extern NSString * const kAlfrescoRepositorySummary;
 extern NSString * const kAlfrescoRepositoryVersion;
@@ -120,7 +122,7 @@ extern NSString *const kAlfrescoOAuthRefreshToken;
 
 extern NSString * const kAlfrescoLegacyAPIPath;
 extern NSString * const kAlfrescoLegacyCMISPath;
-extern NSString * const kAlfrescoLegacy4_xCMISPath;
+extern NSString * const kAlfrescoLegacyCMISAtomPath;
 extern NSString * const kAlfrescoLegacyAPINodeRefPrefix;
 extern NSString * const kAlfrescoLegacyActivityAPI;
 extern NSString * const kAlfrescoLegacyActivityForSiteAPI;
@@ -157,7 +159,8 @@ extern NSString * const kAlfrescoLegacyFavoriteDocuments;
 extern NSString * const kAlfrescoLegacyFavoriteFolders;
 
 extern NSString * const kAlfrescoPublicAPIPath;
-extern NSString * const kAlfrescoPublicAPICMISPath;
+extern NSString * const kAlfrescoPublicAPICMISAtomPath;
+extern NSString * const kAlfrescoPublicAPICMISBrowserPath;
 extern NSString * const kAlfrescoPublicAPISite;
 extern NSString * const kAlfrescoPublicAPISiteForPerson;
 extern NSString * const kAlfrescoPublicAPIFavoriteSiteForPerson;
@@ -185,6 +188,7 @@ extern NSString * const kAlfrescoPublicAPIFavoriteFolders;
 extern NSString * const kAlfrescoPublicAPIFavoritesAll;
 extern NSString * const kAlfrescoPublicAPIFavorite;
 extern NSString * const kAlfrescoPublicAPIAddFavorite;
+extern NSString * const kAlfrescoLegacyServerAPI;
 
 extern NSString * const kAlfrescoDocumentLibrary;
 
