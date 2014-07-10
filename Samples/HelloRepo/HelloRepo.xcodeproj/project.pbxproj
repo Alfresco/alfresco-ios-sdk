@@ -74,7 +74,7 @@
 		27B19F0518935C85005C6BBD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				27B19F0A18935C86005C6BBD /* libAlfrescoSDKv1.3.0-debug.a */,
+				27B19F0A18935C86005C6BBD /* libAlfrescoSDKv1.3.1-debug.a */,
 				27B19F0C18935C86005C6BBD /* AlfrescoSDKTests.xctest */,
 			);
 			name = Products;
@@ -188,10 +188,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		27B19F0A18935C86005C6BBD /* libAlfrescoSDKv1.3.0-debug.a */ = {
+		27B19F0A18935C86005C6BBD /* libAlfrescoSDKv1.3.1-debug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libAlfrescoSDKv1.3.0-debug.a";
+			path = "libAlfrescoSDKv1.3.1-debug.a";
 			remoteRef = 27B19F0918935C86005C6BBD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -335,7 +335,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				OTHER_LDFLAGS = (
 					"-ObjC",
-					"\"$(CONFIGURATION_BUILD_DIR)/libAlfrescoSDKv1.3.0-debug.a\"",
+					"\"$(CONFIGURATION_BUILD_DIR)/libAlfrescoSDKv1.3.1-debug.a\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -356,7 +356,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				OTHER_LDFLAGS = (
 					"-ObjC",
-					"\"$(CONFIGURATION_BUILD_DIR)/libAlfrescoSDKv1.3.0.a\"",
+					"\"$(CONFIGURATION_BUILD_DIR)/libAlfrescoSDKv1.3.1.a\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
