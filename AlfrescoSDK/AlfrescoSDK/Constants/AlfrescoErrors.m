@@ -84,6 +84,11 @@ NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task 
 
 NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
 
+// Keys used in userInfo dictionary
+NSString * const kAlfrescoErrorKeyHTTPResponseCode = @"org.alfresco.mobile.error.http.response.code";
+NSString * const kAlfrescoErrorKeyHTTPResponseBody = @"org.alfresco.mobile.error.http.response.body";
+
+
 @implementation AlfrescoErrors
 
 + (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code
@@ -113,10 +118,39 @@ NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
 
 + (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code
 {
+    // create error with code, description and reason
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
     NSString *standardDescription = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
-    [errorInfo setValue:standardDescription forKey:NSLocalizedFailureReasonErrorKey];
+    errorInfo[NSLocalizedDescriptionKey] = standardDescription;
+    errorInfo[NSLocalizedFailureReasonErrorKey] = standardDescription;
+    
+    return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
+}
+
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code reason:(NSString *)reason
+{
+    // create error with code, description and optional reason
+    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+    errorInfo[NSLocalizedDescriptionKey] = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
+    
+    if (reason != nil)
+    {
+        errorInfo[NSLocalizedFailureReasonErrorKey] = reason;
+    }
+    
+    return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
+}
+
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code userInfo:(NSDictionary *)userInfo
+{
+    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+    
+    // ensure the dictionary has the error description
+    if (errorInfo[NSLocalizedDescriptionKey] == nil)
+    {
+        errorInfo[NSLocalizedDescriptionKey] = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
+    }
+    
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
 }
 

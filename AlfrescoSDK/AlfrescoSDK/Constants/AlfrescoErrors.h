@@ -157,6 +157,9 @@ extern NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound;
 
 extern NSString * const kAlfrescoErrorDescriptionVersion;
 
+// Keys used in userInfo dictionary
+extern NSString * const kAlfrescoErrorKeyHTTPResponseCode;
+extern NSString * const kAlfrescoErrorKeyHTTPResponseBody;
 
 /** AlfrescoErrors is used in case an error occurs when executing an operation against the Alfresco repository.
  
@@ -179,14 +182,34 @@ extern NSString * const kAlfrescoErrorDescriptionVersion;
 + (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
 
-/** Creates an error object based on an error code and a description.
+/** Creates an error object based on an error code.
  
  @param code the code string that represents the error type.
  @return The newly created error.
  */
 + (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
+/** Creates an error object based on an error code and a reason.
+ 
+ @param code the code string that represents the error type.
+ @param reason An explanation or error details that explain why the error occurred.
+ @return The newly created error.
+ */
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code reason:(NSString *)reason;
 
+/** Creates an error object based on an error code and a userInfo dictionary.
+ 
+ @param code the code string that represents the error type.
+ @param userInfo Dictionary containing information about the error.
+ @return The newly created error.
+ */
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code userInfo:(NSDictionary *)userInfo;
+
+/** Creates an error object based on the given JSON.
+ 
+ @param parameters The dictionary representing the JSON containing error information.
+ @return The newly created error.
+ */
 + (NSError *)alfrescoErrorFromJSONParameters:(NSDictionary *)parameters;
 
 /**

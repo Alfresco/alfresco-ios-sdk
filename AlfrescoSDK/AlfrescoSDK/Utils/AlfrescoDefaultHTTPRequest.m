@@ -180,7 +180,10 @@
             }
             else
             {
-                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+                NSDictionary *userInfo = @{kAlfrescoErrorKeyHTTPResponseCode: @(self.statusCode),
+                                           kAlfrescoErrorKeyHTTPResponseBody: self.responseData};
+                
+                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse userInfo:userInfo];
             }
         }
     }
