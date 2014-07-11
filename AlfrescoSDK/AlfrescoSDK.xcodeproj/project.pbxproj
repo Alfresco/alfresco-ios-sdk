@@ -1495,7 +1495,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/AlfrescoSDK.dst;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
@@ -1600,7 +1602,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/AlfrescoSDK.dst;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
@@ -1622,7 +1626,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/AlfrescoSDK.dst;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
