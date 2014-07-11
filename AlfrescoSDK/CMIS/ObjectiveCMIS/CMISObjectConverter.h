@@ -38,4 +38,9 @@
           forObjectTypeId:(NSString *)objectTypeId 
           completionBlock:(void (^)(CMISProperties *convertedProperties, NSError *error))completionBlock;
 
+/**
+ * Converts the source to an array with elements of type CMISExtensionElement. Elements of the source with keys that are contained in the cmisKeys set set are ignored.
+ */
++ (NSArray *)convertExtensions:(NSDictionary *)source cmisKeys:(NSSet *)cmisKeys;
+
 @end

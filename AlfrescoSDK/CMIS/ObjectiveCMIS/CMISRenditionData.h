@@ -18,9 +18,9 @@
  */
  
 #import <Foundation/Foundation.h>
+#import "CMISExtensionData.h"
 
-
-@interface CMISRenditionData : NSObject
+@interface CMISRenditionData : CMISExtensionData
 
 /**  Identifies the rendition stream. */
 @property (nonatomic, strong) NSString *streamId;

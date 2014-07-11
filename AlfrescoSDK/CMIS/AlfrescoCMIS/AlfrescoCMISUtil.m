@@ -24,7 +24,7 @@
 #import "AlfrescoCMISUtil.h"
 #import "CMISObject.h"
 #import "CMISAtomPubConstants.h"
-#import "CMISAtomParserUtil.h"
+#import "CMISAtomPubParserUtil.h"
 #import "CMISErrors.h"
 #import "CMISConstants.h"
 #import "CMISSession.h"
@@ -32,8 +32,6 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
-// This has been temporarily added until an error code is added to CMISErrors
-#import "CMISErrors+Additions.h"
 
 #define ALFRESCO_EXTENSION_ASPECTS @"aspects"
 #define ALFRESCO_EXTENSION_APPLIED_ASPECTS @"appliedAspects"
@@ -129,7 +127,7 @@ static NSSet *audioAspectProperties;
             propertyData.identifier = (propertyExtension.attributes)[kCMISAtomEntryPropertyDefId];
             propertyData.displayName = (propertyExtension.attributes)[kCMISAtomEntryDisplayName];
             propertyData.queryName = (propertyExtension.attributes)[kCMISAtomEntryQueryName];
-            propertyData.type = [CMISAtomParserUtil atomPubTypeToInternalType:propertyExtension.name];
+            propertyData.type = [CMISAtomPubParserUtil atomPubTypeToInternalType:propertyExtension.name];
 
             
             // MOBSDK-616: multi-valued aspect properties will have multiple children, not just one!
@@ -138,7 +136,7 @@ static NSSet *audioAspectProperties;
             {
                 if (valueExtensionElement.value)
                 {
-                    [CMISAtomParserUtil parsePropertyValue:valueExtensionElement.value propertyType:propertyExtension.name addToArray:propertyValues];
+                    [CMISAtomPubParserUtil parsePropertyValue:valueExtensionElement.value propertyType:propertyExtension.name addToArray:propertyValues];
                 }
             }
             
@@ -161,7 +159,7 @@ static NSSet *audioAspectProperties;
     NSError *alfrescoError = nil;
     switch (cmisErrorCode)
     {
-        case kCMISErrorCodeNoReturn:
+        case kCMISErrorCodeUnknown:
             alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
             break;
         case kCMISErrorCodeConnection:
@@ -221,7 +219,7 @@ static NSSet *audioAspectProperties;
         case kCMISErrorCodeVersioning:
             alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
             break;
-        case kCMISErrorCodeNoInternet:
+        case kCMISErrorCodeNoNetworkConnection:
             alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeNoNetworkConnection];
             break;
             
