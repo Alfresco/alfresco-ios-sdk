@@ -96,9 +96,17 @@ NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
     {
         return error;
     }
+    
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
+    errorInfo[NSLocalizedDescriptionKey] = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
     errorInfo[NSUnderlyingErrorKey] = error;
+    
+    // use the underlying error failure reason, if present
+    if (error.localizedFailureReason != nil)
+    {
+        errorInfo[NSLocalizedFailureReasonErrorKey] = error.localizedFailureReason;
+    }
+
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
 }
 

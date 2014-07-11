@@ -76,5 +76,7 @@
 - (NSDictionary *)setupEnvironmentParameters;
 - (void)setUpTestImageFile:(NSString *)filePath;
 - (void)resetTestVariables;
+- (NSString *)failureMessageFromError:(NSError *)error;
+
 
 @end
