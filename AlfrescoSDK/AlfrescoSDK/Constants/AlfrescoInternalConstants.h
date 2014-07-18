@@ -374,3 +374,39 @@ extern NSString * const kAlfrescoPersonPropertyCompanyPostcode;
 extern NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber;
 extern NSString * const kAlfrescoPersonPropertyCompanyFaxNumber;
 extern NSString * const kAlfrescoPersonPropertyCompanyEmail;
+
+extern NSString * const kAlfrescoJSONInfo;
+extern NSString * const kAlfrescoJSONSchemaVersion;
+extern NSString * const kAlfrescoJSONConfigVersion;
+extern NSString * const kAlfrescoJSONRepository;
+extern NSString * const kAlfrescoJSONShareURL;
+extern NSString * const kAlfrescoJSONCMISURL;
+extern NSString * const kAlfrescoJSONProfiles;
+extern NSString * const kAlfrescoJSONDefault;
+extern NSString * const kAlfrescoJSONLabelId;
+extern NSString * const kAlfrescoJSONDescriptionId;
+extern NSString * const kAlfrescoJSONRootViewId;
+extern NSString * const kAlfrescoJSONFeatures;
+extern NSString * const kAlfrescoJSONItemType;
+extern NSString * const kAlfrescoJSONViewGroups;
+extern NSString * const kAlfrescoJSONViewGroupId;
+extern NSString * const kAlfrescoJSONViewId;
+extern NSString * const kAlfrescoJSONViews;
+extern NSString * const kAlfrescoJSONType;
+extern NSString * const kAlfrescoJSONCreation;
+extern NSString * const kAlfrescoJSONMimeTypes;
+extern NSString * const kAlfrescoJSONDocumentTypes;
+extern NSString * const kAlfrescoJSONFolderTypes;
+extern NSString * const kAlfrescoJSONForms;
+extern NSString * const kAlfrescoJSONLayout;
+extern NSString * const kAlfrescoJSONFieldGroupId;
+extern NSString * const kAlfrescoJSONFieldGroups;
+extern NSString * const kAlfrescoJSONFieldId;
+extern NSString * const kAlfrescoJSONField;
+extern NSString * const kAlfrescoJSONModelId;
+
+
+
+
+
+

@@ -91,7 +91,14 @@ typedef NS_ENUM(NSInteger, AlfrescoErrorCodes)
     kAlfrescoErrorCodeWorkflowNoProcessFound = 1103,
     kAlfrescoErrorCodeWorkflowNoTaskFound = 1104,
     
-    kAlfrescoErrorCodeVersion = 1200
+    kAlfrescoErrorCodeVersion = 1200,
+    
+    kAlfrescoErrorCodeModelDefinition = 1300,
+    kAlfrescoErrorCodeModelDefinitionNotFound = 1301,
+    
+    kAlfrescoErrorCodeConfig = 1400,
+    kAlfrescoErrorCodeConfigInitializationFailed = 1401,
+    kAlfrescoErrorCodeConfigNotFound = 1402
 };
 
 extern NSString * const kAlfrescoErrorDomainName;
@@ -156,6 +163,12 @@ extern NSString * const kAlfrescoErrorDescriptionWorkflowNoProcessFound;
 extern NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound;
 
 extern NSString * const kAlfrescoErrorDescriptionVersion;
+
+extern NSString * const kAlfrescoErrorDescriptionModelDefinition;
+
+extern NSString * const kAlfrescoErrorDescriptionConfig;
+extern NSString * const kAlfrescoErrorDescriptionConfigInitializationFailed;
+extern NSString * const kAlfrescoErrorDescriptionConfigNotFound;
 
 // Keys used in userInfo dictionary
 extern NSString * const kAlfrescoErrorKeyHTTPResponseCode;

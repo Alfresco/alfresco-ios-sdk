@@ -84,6 +84,12 @@ NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task 
 
 NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
 
+NSString * const kAlfrescoErrorDescriptionModelDefinition = @"Model Definition Service Error";
+
+NSString * const kAlfrescoErrorDescriptionConfig = @"Config Service Error";
+NSString * const kAlfrescoErrorDescriptionConfigInitializationFailed = @"Config Service Error: Initialization Failed";
+NSString * const kAlfrescoErrorDescriptionConfigNotFound = @"Config Service Error: Requested configuration was not found.";
+
 // Keys used in userInfo dictionary
 NSString * const kAlfrescoErrorKeyHTTPResponseCode = @"org.alfresco.mobile.error.http.response.code";
 NSString * const kAlfrescoErrorKeyHTTPResponseBody = @"org.alfresco.mobile.error.http.response.body";
@@ -391,6 +397,18 @@ NSString * const kAlfrescoErrorKeyHTTPResponseBody = @"org.alfresco.mobile.error
             break;
         case kAlfrescoErrorCodeVersion:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionVersion;
+            break;
+        case kAlfrescoErrorCodeModelDefinition:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionModelDefinition;
+            break;
+        case kAlfrescoErrorCodeConfig:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionConfig;
+            break;
+        case kAlfrescoErrorCodeConfigInitializationFailed:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionConfigInitializationFailed;
+            break;
+        case kAlfrescoErrorCodeConfigNotFound:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionConfigNotFound;
             break;
         default:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionUnknown;

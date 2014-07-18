@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4EB0769615B00D8E00DF7DED"
-               BuildableName = "libAlfrescoSDKv1.3.1.a"
+               BuildableName = "libAlfrescoSDKv1.4.a"
                BlueprintName = "AlfrescoSDK"
                ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
             </BuildableReference>
