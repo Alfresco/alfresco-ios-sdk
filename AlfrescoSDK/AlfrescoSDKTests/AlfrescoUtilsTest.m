@@ -29,6 +29,7 @@
 #import "AlfrescoTaggingService.h"
 #import "AlfrescoVersionService.h"
 #import "AlfrescoWorkflowService.h"
+#import "AlfrescoObjectConverter.h"
 
 @implementation AlfrescoUtilsTest
 
@@ -111,6 +112,49 @@
     
     AlfrescoWorkflowService *workflowService = [[AlfrescoWorkflowService alloc] initWithSession:nil];
     XCTAssertNil(workflowService, @"Expected workflowService to be nil as it was created with a nil session");
+}
+
+- (void)testMappingDictionaryKeys
+{
+    NSDictionary *sourceDictionary = @{@"id": @"123", @"label-id": @"an-nls-id", @"description": @"The description"};
+    
+    NSDictionary *targetDictionary = [AlfrescoObjectConverter dictionaryFromDictionary:sourceDictionary
+                                                                        withMappedKeys:@{@"id": @"identifier",
+                                                                                         @"label-id": @"label",
+                                                                                         @"description": @"summary"}];
+    
+    // make sure new keys are present
+    XCTAssertNotNil(targetDictionary[@"identifier"], @"Expected to find key 'identifier'");
+    XCTAssertNotNil(targetDictionary[@"label"], @"Expected to find key 'label'");
+    XCTAssertNotNil(targetDictionary[@"summary"], @"Expected to find key 'summary'");
+    
+    // make sure old keys are removed
+    XCTAssertNil(targetDictionary[@"id"], @"Did not expect to find key 'id'");
+    XCTAssertNil(targetDictionary[@"label-id"], @"Did not expect to find key 'label-id'");
+    XCTAssertNil(targetDictionary[@"description"], @"Did not expect to find key 'description'");
+    
+    // make sure values are still correct
+    NSString *identifier = targetDictionary[@"identifier"];
+    XCTAssertTrue([identifier isEqualToString:@"123"], @"Expected value of 'identifier' to be '123' but it was %@", identifier);
+    NSString *label = targetDictionary[@"label"];
+    XCTAssertTrue([label isEqualToString:@"an-nls-id"], @"Expected value of 'label' to be 'an-nls-id' but it was %@", label);
+    NSString *summary = targetDictionary[@"summary"];
+    XCTAssertTrue([summary isEqualToString:@"The description"], @"Expected value of 'summary' to be 'The description' but it was %@", summary);
+    
+    // test non-existent keys and Null
+    sourceDictionary = @{@"id": @"123", @"null": [NSNull new]};
+    targetDictionary = [AlfrescoObjectConverter dictionaryFromDictionary:sourceDictionary
+                                                          withMappedKeys:@{@"id": @"identifier",
+                                                                           @"default": @"isDefault",
+                                                                           @"null": @"nullObject"}];
+    XCTAssertTrue(targetDictionary.count == 2, @"Expected the dictionary to have 2 entries but it has %lu", (long)targetDictionary.count);
+    XCTAssertNotNil(targetDictionary[@"identifier"], @"Expected to find key 'identifier'");
+    XCTAssertNil(targetDictionary[@"default"], @"Did not expect to find key 'default'");
+    XCTAssertNil(targetDictionary[@"isDefault"], @"Did not expect to find key 'isDefault'");
+    XCTAssertNotNil(targetDictionary[@"nullObject"], @"Expected to find key 'nullObject'");
+    XCTAssertNil(targetDictionary[@"null"], @"Did not expect to find key 'null'");
+    XCTAssertTrue([targetDictionary[@"nullObject"] isKindOfClass:[NSNull class]],
+                  @"Expected 'nullObject' to be an NSNull class but it was %@", targetDictionary[@"nullObject"]);
 }
 
 @end

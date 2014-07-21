@@ -27,21 +27,34 @@ NSString * const kAlfrescoBaseConfigPropertySummary = @"summary";
 NSString * const kAlfrescoConfigInfoPropertySchemaVersion = @"schemaVersion";
 NSString * const kAlfrescoConfigInfoPropertyConfigVersion = @"configVersion";
 
-NSString * const kAlfrescoRepositoryConfigPropertyShareURL = @"shareURL";
-NSString * const kAlfrescoRepositoryConfigPropertyCMISURL = @"cmisURL";
-
-NSString * const kAlfrescoProfileConfigPropertyIdentifier = @"identifier";
-NSString * const kAlfrescoProfileConfigPropertyLabel = @"label";
-NSString * const kAlfrescoProfileConfigPropertySummary = @"summary";
-NSString * const kAlfrescoProfileConfigPropertyIsDefault = @"isDefault";
-NSString * const kAlfrescoProfileConfigPropertyRootViewId = @"rootViewId";
-
-NSString * const kAlfrescoFeatureConfigPropertyIdentifier = @"identifier";
-NSString * const kAlfrescoFeatureConfigPropertyLabel = @"label";
-NSString * const kAlfrescoFeatureConfigPropertySummary = @"summary";
-
 NSString * const kAlfrescoCreationConfigPropertyCreatableMimeTypes = @"creatableMimeTypes";
 NSString * const kAlfrescoCreationConfigPropertyCreatableDocumentTypes = @"createDocumentTypes";
 NSString * const kAlfrescoCreationConfigPropertyCreatableFolderTypes = @"creatableFolderTypes";
 
+NSString * const kAlfrescoFieldConfigPropertyModelIdentifier = @"modelIdentifier";
+
+NSString * const kAlfrescoFormConfigPropertyLayout = @"layout";
+
+NSString * const kAlfrescoGroupConfigPropertyItems = @"items";
+
+NSString * const kAlfrescoItemConfigPropertyIconIdentifier = @"iconIdentifier";
+NSString * const kAlfrescoItemConfigPropertyType = @"type";
+NSString * const kAlfrescoItemConfigPropertyParameters = @"parameters";
+NSString * const kAlfrescoItemConfigPropertyFormIdentifier = @"formIdentifier";
+
+NSString * const kAlfrescoProcessConfigPropertyIsVisible = @"isVisible";
+
+NSString * const kAlfrescoProfileConfigPropertyIsDefault = @"isDefault";
+NSString * const kAlfrescoProfileConfigPropertyRootViewId = @"rootViewId";
+
+NSString * const kAlfrescoRepositoryConfigPropertyShareURL = @"shareURL";
+NSString * const kAlfrescoRepositoryConfigPropertyCMISURL = @"cmisURL";
+
+NSString * const kAlfrescoSearchConfigPropertySearchableDocumentTypes = @"searchableDocumentTypes";
+NSString * const kAlfrescoSearchConfigPropertySearchableFolderTypes = @"searchableFolderTypes";
+
+NSString * const kAlfrescoTaskConfigPropertyIsVisible = @"isVisible";
+
+NSString * const kAlfrescoWorkflowConfigPropertyProcessConfig = @"processConfig";
+NSString * const kAlfrescoWorkflowConfigPropertyTaskConfig = @"taskConfig";
 

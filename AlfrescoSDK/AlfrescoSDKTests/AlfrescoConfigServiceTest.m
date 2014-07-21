@@ -79,7 +79,7 @@
     }
 }
 
-- (void)testSetupFromSession
+- (void)disabledTestSetupFromSession
 {
     if (self.setUpSuccess)
     {
@@ -615,14 +615,14 @@
                 XCTAssertNotNil(mimeTypes, @"Expected to find createable mime types config");
                 XCTAssertTrue(mimeTypes.count == 1, @"Expected to find 1 configured mime type");
                 AlfrescoItemConfig *mimeType1 = mimeTypes[0];
-                XCTAssertTrue([mimeType1.identifier isEqualToString:@"cm:folder"],
-                              @"Expected folder type identifier to be 'cm:folder' but it was %@", mimeType1.identifier);
-                XCTAssertTrue([mimeType1.label isEqualToString:@"Default Folder"],
-                              @"Expected folder type label to be 'Default Folder' but it was %@", mimeType1.label);
-                XCTAssertTrue([mimeType1.iconIdentifier isEqualToString:@"Default Folder Icon"],
-                              @"Expected folder type label to be 'Default Folder Icon' but it was %@", mimeType1.iconIdentifier);
-                XCTAssertTrue([mimeType1.summary isEqualToString:@"Default Description Folder"],
-                              @"Expected folder type summary to be 'Default Description Folder' but it was %@", mimeType1.summary);
+                XCTAssertTrue([mimeType1.identifier isEqualToString:@"application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+                              @"Expected folder type identifier to be 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' but it was %@", mimeType1.identifier);
+                XCTAssertTrue([mimeType1.label isEqualToString:@"Word Document"],
+                              @"Expected folder type label to be 'Word Document' but it was %@", mimeType1.label);
+                XCTAssertTrue([mimeType1.iconIdentifier isEqualToString:@"Word Icon"],
+                              @"Expected folder type label to be 'Word Icon' but it was %@", mimeType1.iconIdentifier);
+                XCTAssertTrue([mimeType1.summary isEqualToString:@"Microsoft Office 2007 Word Document"],
+                              @"Expected folder type summary to be 'Microsoft Office 2007 Word Document' but it was %@", mimeType1.summary);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -638,28 +638,21 @@
     }
 }
 
-- (void)testActionGroupConfig
+- (void)disabledtestActionGroupConfig
 {
     // TODO
     
     XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
 }
 
-- (void)testWorkflowConfig
+- (void)disabledtestWorkflowConfig
 {
     // TODO
     
     XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
 }
 
-- (void)testSearchConfig
-{
-    // TODO
-    
-    XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
-}
-
-- (void)testThemeConfig
+- (void)disabledtestSearchConfig
 {
     // TODO
     

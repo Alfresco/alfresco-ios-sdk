@@ -20,7 +20,48 @@
 
 #import "AlfrescoConfigScope.h"
 
+@interface AlfrescoConfigScope ()
+@property (nonatomic, strong, readwrite) NSString *profile;
+
+@property (nonatomic, strong) NSMutableDictionary *internalContext;
+@end
+
 @implementation AlfrescoConfigScope
 
+- (instancetype)initWithProfile:(NSString *)profile
+{
+    return [self initWithProfile:profile context:nil];
+}
+
+- (instancetype)initWithProfile:(NSString *)profile context:(NSDictionary *)context
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.profile = profile;
+        self.internalContext = [NSMutableDictionary dictionaryWithDictionary:context];
+    }
+    return self;
+}
+
+- (void)setObject:(id)object forKey:(NSString *)key
+{
+    self.internalContext[key] = object;
+}
+
+- (void)addObjectsFromDictionary:(NSDictionary *)dictionary
+{
+    [self.internalContext addEntriesFromDictionary:dictionary];
+}
+
+- (id)valueForKey:(NSString *)key
+{
+    return self.internalContext[key];
+}
+
+- (NSDictionary *)context
+{
+    return [NSDictionary dictionaryWithDictionary:self.internalContext];
+}
 
 @end

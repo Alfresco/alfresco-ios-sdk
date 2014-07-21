@@ -29,7 +29,6 @@
 #import "AlfrescoProfileConfig.h"
 #import "AlfrescoRepositoryConfig.h"
 #import "AlfrescoSearchConfig.h"
-#import "AlfrescoThemeConfig.h"
 #import "AlfrescoViewGroupConfig.h"
 #import "AlfrescoWorkflowConfig.h"
 
@@ -42,7 +41,6 @@ typedef void (^AlfrescoFormConfigCompletionBlock)(AlfrescoFormConfig *config, NS
 typedef void (^AlfrescoProfileConfigCompletionBlock)(AlfrescoProfileConfig *config, NSError *error);
 typedef void (^AlfrescoRepositoryConfigCompletionBlock)(AlfrescoRepositoryConfig *config, NSError *error);
 typedef void (^AlfrescoSearchConfigCompletionBlock)(AlfrescoSearchConfig *config, NSError *error);
-typedef void (^AlfrescoThemeConfigCompletionBlock)(AlfrescoThemeConfig *config, NSError *error);
 typedef void (^AlfrescoViewGroupConfigCompletionBlock)(AlfrescoViewGroupConfig *config, NSError *error);
 typedef void (^AlfrescoWorkflowConfigCompletionBlock)(AlfrescoWorkflowConfig *config, NSError *error);
 
@@ -157,12 +155,6 @@ extern NSString * const kAlfrescoConfigServiceParameterLocalFile;
 - (AlfrescoRequest *)retrieveSearchConfigWithConfigScope:(AlfrescoConfigScope *)scope
                                          completionBlock:(AlfrescoSearchConfigCompletionBlock)completionBlock;
 
-
-- (AlfrescoRequest *)retrieveThemeConfigWithCompletionBlock:(AlfrescoSearchConfigCompletionBlock)completionBlock;
-
-
-- (AlfrescoRequest *)retrieveThemeConfigWithConfigScope:(AlfrescoConfigScope *)scope
-                                        completionBlock:(AlfrescoThemeConfigCompletionBlock)completionBlock;
 
 /**
  Clears any cached state the service has.

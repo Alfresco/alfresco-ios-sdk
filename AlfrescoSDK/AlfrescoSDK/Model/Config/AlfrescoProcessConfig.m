@@ -19,7 +19,40 @@
  */
 
 #import "AlfrescoProcessConfig.h"
+#import "AlfrescopropertyConstants.h"
+
+@interface AlfrescoProcessConfig ()
+@property (nonatomic, assign, readwrite) BOOL isVisible;
+@end
 
 @implementation AlfrescoProcessConfig
+
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super initWithDictionary:properties];
+    if (nil != self)
+    {
+        self.isVisible = [properties[kAlfrescoProcessConfigPropertyIsVisible] boolValue];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeBool:self.isVisible forKey:kAlfrescoProcessConfigPropertyIsVisible];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.isVisible = [aDecoder decodeBoolForKey:kAlfrescoProcessConfigPropertyIsVisible];
+    }
+    return self;
+}
 
 @end

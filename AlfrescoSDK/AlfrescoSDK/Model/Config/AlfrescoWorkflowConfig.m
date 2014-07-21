@@ -19,9 +19,41 @@
  */
 
 #import "AlfrescoWorkflowConfig.h"
+#import "AlfrescopropertyConstants.h"
+
+@interface AlfrescoWorkflowConfig ()
+@property (nonatomic, strong, readwrite) NSArray *processConfig;
+@property (nonatomic, strong, readwrite) NSArray *taskConfig;
+@end
 
 @implementation AlfrescoWorkflowConfig
 
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.processConfig = properties[kAlfrescoWorkflowConfigPropertyProcessConfig];
+        self.taskConfig = properties[kAlfrescoWorkflowConfigPropertyTaskConfig];
+    }
+    return self;
+}
 
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.processConfig forKey:kAlfrescoWorkflowConfigPropertyProcessConfig];
+    [aCoder encodeObject:self.taskConfig forKey:kAlfrescoWorkflowConfigPropertyTaskConfig];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.processConfig = [aDecoder decodeObjectForKey:kAlfrescoWorkflowConfigPropertyProcessConfig];
+        self.taskConfig = [aDecoder decodeObjectForKey:kAlfrescoWorkflowConfigPropertyTaskConfig];
+    }
+    return self;
+}
 
 @end

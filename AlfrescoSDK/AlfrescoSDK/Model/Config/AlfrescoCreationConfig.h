@@ -31,4 +31,7 @@
 
 @property (nonatomic, strong, readonly) NSArray *creatableFolderTypes;
 
+
+- (id)initWithDictionary:(NSDictionary *)properties;
+
 @end

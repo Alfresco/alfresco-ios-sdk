@@ -19,7 +19,59 @@
  */
 
 #import "AlfrescoItemConfig.h"
+#import "AlfrescoPropertyConstants.h"
+#import "CMISDictionaryUtil.h"
+
+@interface AlfrescoItemConfig ()
+@property (nonatomic, strong, readwrite) NSString *iconIdentifier;
+@property (nonatomic, strong, readwrite) NSString *type;
+@property (nonatomic, strong, readwrite) NSDictionary *parameters;
+@property (nonatomic, strong, readwrite) NSString *formIdentifier;
+@end
 
 @implementation AlfrescoItemConfig
+
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super initWithDictionary:properties];
+    if (nil != self)
+    {
+        self.iconIdentifier = [properties cmis_objectForKeyNotNull:kAlfrescoItemConfigPropertyIconIdentifier];
+        self.type = [properties cmis_objectForKeyNotNull:kAlfrescoItemConfigPropertyType];
+        self.parameters = [properties cmis_objectForKeyNotNull:kAlfrescoItemConfigPropertyParameters];
+        self.formIdentifier = [properties cmis_objectForKeyNotNull:kAlfrescoItemConfigPropertyFormIdentifier];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeObject:self.iconIdentifier forKey:kAlfrescoItemConfigPropertyIconIdentifier];
+    [aCoder encodeObject:self.type forKey:kAlfrescoItemConfigPropertyType];
+    [aCoder encodeObject:self.parameters forKey:kAlfrescoItemConfigPropertyParameters];
+    [aCoder encodeObject:self.formIdentifier forKey:kAlfrescoItemConfigPropertyFormIdentifier];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.iconIdentifier = [aDecoder decodeObjectForKey:kAlfrescoItemConfigPropertyIconIdentifier];
+        self.type = [aDecoder decodeObjectForKey:kAlfrescoItemConfigPropertyType];
+        self.parameters = [aDecoder decodeObjectForKey:kAlfrescoItemConfigPropertyParameters];
+        self.formIdentifier = [aDecoder decodeObjectForKey:kAlfrescoItemConfigPropertyFormIdentifier];
+    }
+
+    return self;
+}
+
+- (id)valueForParameterWithKey:(NSString *)key
+{
+    return self.parameters[key];
+}
 
 @end

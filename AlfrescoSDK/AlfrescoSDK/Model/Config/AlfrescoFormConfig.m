@@ -19,7 +19,40 @@
  */
 
 #import "AlfrescoFormConfig.h"
+#import "AlfrescopropertyConstants.h"
+
+@interface AlfrescoFormConfig ()
+@property (nonatomic, strong, readwrite) NSString *layout;
+@end
 
 @implementation AlfrescoFormConfig
+
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super initWithDictionary:properties];
+    if (nil != self)
+    {
+        self.layout = properties[kAlfrescoFormConfigPropertyLayout];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeObject:self.layout forKey:kAlfrescoFormConfigPropertyLayout];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.layout = [aDecoder decodeObjectForKey:kAlfrescoFormConfigPropertyLayout];
+    }
+    return self;
+}
 
 @end

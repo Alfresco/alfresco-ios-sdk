@@ -19,7 +19,40 @@
  */
 
 #import "AlfrescoTaskConfig.h"
+#import "AlfrescopropertyConstants.h"
+
+@interface AlfrescoTaskConfig ()
+@property (nonatomic, assign, readwrite) BOOL isVisible;
+@end
 
 @implementation AlfrescoTaskConfig
+
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super initWithDictionary:properties];
+    if (nil != self)
+    {
+        self.isVisible = [properties[kAlfrescoTaskConfigPropertyIsVisible] boolValue];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeBool:self.isVisible forKey:kAlfrescoTaskConfigPropertyIsVisible];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.isVisible = [aDecoder decodeBoolForKey:kAlfrescoTaskConfigPropertyIsVisible];
+    }
+    return self;
+}
 
 @end

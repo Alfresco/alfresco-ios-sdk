@@ -19,7 +19,40 @@
  */
 
 #import "AlfrescoGroupConfig.h"
+#import "AlfrescopropertyConstants.h"
+
+@interface AlfrescoGroupConfig ()
+@property (nonatomic, strong, readwrite) NSArray *items;
+@end
 
 @implementation AlfrescoGroupConfig
+
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super initWithDictionary:properties];
+    if (nil != self)
+    {
+        self.items = properties[kAlfrescoGroupConfigPropertyItems];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeObject:self.items forKey:kAlfrescoGroupConfigPropertyItems];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.items = [aDecoder decodeObjectForKey:kAlfrescoGroupConfigPropertyItems];
+    }
+    return self;
+}
 
 @end

@@ -304,4 +304,25 @@
     }];
 }
 
++ (NSDictionary *)dictionaryFromDictionary:(NSDictionary *)source withMappedKeys:(NSDictionary *)keyMappings
+{
+    // create mutable copy of source dictionary we can manipulate
+    NSMutableDictionary *targetDictionary = [source mutableCopy];
+    
+    // iterate over each mapped key and change the key name
+    for (NSString *oldKey in [keyMappings allKeys])
+    {
+        NSString *newKey = keyMappings[oldKey];
+        id value = targetDictionary[oldKey];
+        
+        if (value != nil)
+        {
+            targetDictionary[newKey] = targetDictionary[oldKey];
+            [targetDictionary removeObjectForKey:oldKey];
+        }
+    }
+    
+    return targetDictionary;
+}
+
 @end

@@ -19,7 +19,40 @@
  */
 
 #import "AlfrescoFieldConfig.h"
+#import "AlfrescopropertyConstants.h"
+
+@interface AlfrescoFieldConfig ()
+@property (nonatomic, strong, readwrite) NSString *modelIdentifier;
+@end
 
 @implementation AlfrescoFieldConfig
+
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super initWithDictionary:properties];
+    if (nil != self)
+    {
+        self.modelIdentifier = properties[kAlfrescoFieldConfigPropertyModelIdentifier];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeObject:self.modelIdentifier forKey:kAlfrescoFieldConfigPropertyModelIdentifier];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.modelIdentifier = [aDecoder decodeObjectForKey:kAlfrescoFieldConfigPropertyModelIdentifier];
+    }
+    return self;
+}
 
 @end

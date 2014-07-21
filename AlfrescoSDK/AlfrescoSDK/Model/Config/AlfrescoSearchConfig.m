@@ -19,7 +19,41 @@
  */
 
 #import "AlfrescoSearchConfig.h"
+#import "AlfrescopropertyConstants.h"
+
+@interface AlfrescoSearchConfig ()
+@property (nonatomic, strong, readwrite) NSArray *searchableDocumentTypes;
+@property (nonatomic, strong, readwrite) NSArray *searchableFolderTypes;
+@end
 
 @implementation AlfrescoSearchConfig
+
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.searchableDocumentTypes = properties[kAlfrescoSearchConfigPropertySearchableDocumentTypes];
+        self.searchableFolderTypes = properties[kAlfrescoSearchConfigPropertySearchableFolderTypes];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.searchableDocumentTypes forKey:kAlfrescoSearchConfigPropertySearchableDocumentTypes];
+    [aCoder encodeObject:self.searchableFolderTypes forKey:kAlfrescoSearchConfigPropertySearchableFolderTypes];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.searchableDocumentTypes = [aDecoder decodeObjectForKey:kAlfrescoSearchConfigPropertySearchableDocumentTypes];
+        self.searchableFolderTypes = [aDecoder decodeObjectForKey:kAlfrescoSearchConfigPropertySearchableFolderTypes];
+    }
+    return self;
+}
 
 @end
