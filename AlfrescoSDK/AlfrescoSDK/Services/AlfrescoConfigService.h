@@ -20,6 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoSession.h"
+#import "AlfrescoActionConfig.h"
 #import "AlfrescoActionGroupConfig.h"
 #import "AlfrescoConfigInfo.h"
 #import "AlfrescoConfigScope.h"
@@ -29,10 +30,12 @@
 #import "AlfrescoProfileConfig.h"
 #import "AlfrescoRepositoryConfig.h"
 #import "AlfrescoSearchConfig.h"
+#import "AlfrescoViewConfig.h"
 #import "AlfrescoViewGroupConfig.h"
 #import "AlfrescoWorkflowConfig.h"
 
 // TODO: move to public constants file...
+typedef void (^AlfrescoActionConfigCompletionBlock)(AlfrescoActionConfig *config, NSError *error);
 typedef void (^AlfrescoActionGroupConfigCompletionBlock)(AlfrescoActionGroupConfig *config, NSError *error);
 typedef void (^AlfrescoConfigInfoCompletionBlock)(AlfrescoConfigInfo *configInfo, NSError *error);
 typedef void (^AlfrescoCreationConfigCompletionBlock)(AlfrescoCreationConfig *config, NSError *error);
@@ -41,6 +44,7 @@ typedef void (^AlfrescoFormConfigCompletionBlock)(AlfrescoFormConfig *config, NS
 typedef void (^AlfrescoProfileConfigCompletionBlock)(AlfrescoProfileConfig *config, NSError *error);
 typedef void (^AlfrescoRepositoryConfigCompletionBlock)(AlfrescoRepositoryConfig *config, NSError *error);
 typedef void (^AlfrescoSearchConfigCompletionBlock)(AlfrescoSearchConfig *config, NSError *error);
+typedef void (^AlfrescoViewConfigCompletionBlock)(AlfrescoViewConfig *config, NSError *error);
 typedef void (^AlfrescoViewGroupConfigCompletionBlock)(AlfrescoViewGroupConfig *config, NSError *error);
 typedef void (^AlfrescoWorkflowConfigCompletionBlock)(AlfrescoWorkflowConfig *config, NSError *error);
 
@@ -108,6 +112,15 @@ extern NSString * const kAlfrescoConfigServiceParameterLocalFile;
                                          completionBlock:(AlfrescoFeatureConfigCompletionBlock)completionBlock;
 
 
+- (AlfrescoRequest *)retrieveViewConfigWithIdentifier:(NSString *)identifier
+                                      completionBlock:(AlfrescoViewConfigCompletionBlock)completionBlock;
+
+
+- (AlfrescoRequest *)retrieveViewConfigWithIdentifier:(NSString *)identifier
+                                                scope:(AlfrescoConfigScope *)scope
+                                      completionBlock:(AlfrescoViewConfigCompletionBlock)completionBlock;
+
+
 - (AlfrescoRequest *)retrieveViewGroupConfigWithIdentifier:(NSString *)identifier
                                            completionBlock:(AlfrescoViewGroupConfigCompletionBlock)completionBlock;
 
@@ -115,6 +128,15 @@ extern NSString * const kAlfrescoConfigServiceParameterLocalFile;
 - (AlfrescoRequest *)retrieveViewGroupConfigWithIdentifier:(NSString *)identifier
                                                      scope:(AlfrescoConfigScope *)scope
                                            completionBlock:(AlfrescoViewGroupConfigCompletionBlock)completionBlock;
+
+
+- (AlfrescoRequest *)retrieveActionConfigWithIdentifier:(NSString *)identifier
+                                        completionBlock:(AlfrescoActionConfigCompletionBlock)completionBlock;
+
+
+- (AlfrescoRequest *)retrieveActionConfigWithIdentifier:(NSString *)identifier
+                                                  scope:(AlfrescoConfigScope *)scope
+                                        completionBlock:(AlfrescoActionConfigCompletionBlock)completionBlock;
 
 
 - (AlfrescoRequest *)retrieveActionGroupConfigWithIdentifier:(NSString *)identifier

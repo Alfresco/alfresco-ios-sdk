@@ -41,29 +41,7 @@
     "view-groups":
     [
         {
-            "id": "rootNavigationMenu",
-            "items":
-            [
-                {
-                    "item-type": "view-group-id",
-                    "view-group-id": "views-menu-default"
-                },
-                {
-                    "item-type": "view",
-                    "view":
-                    {
-                        "id": "view-activities-default",
-                        "type": "com.alfresco.type.activities",
-                        "label-id": "Activities",
-                        "icon-id": "Activities Icon",
-                        "description-id": "Activities Description"
-                    }
-                }
-             ]
-        },
-        {
             "id": "views-menu-default",
-            "item-type": "view",
             "label-id": "Default Menu",
             "items":
             [
@@ -74,9 +52,19 @@
                 {
                     "item-type": "view-id",
                     "view-id": "view-repository-default"
+                },
+                {
+                    "item-type": "view",
+                    "view":
+                    {
+                        "type": "com.alfresco.type.sites",
+                        "label-id": "Sites",
+                        "icon-id": "Sites Icon",
+                        "description-id": "Sites Description"
+                    }
                 }
              ]
-        }
+        },
     ],
     "views":
     {
@@ -434,7 +422,7 @@
         },
         "mimetype":
         {
-            "model-id": "cmis:contentStreamMimeType",
+            "model-id": "mimetype",
             "label-id": "cm_contentmodel.property.cm_mimetype.title"
         },
         "cm:author":
@@ -444,7 +432,7 @@
         },
         "size":
         {
-            "model-id": "cmis:contentStreamLength",
+            "model-id": "size",
             "type": "com.alfresco.client.field.fileSize",
             "label-id": "cm_contentmodel.property.cm_size.title"
         },

@@ -23,4 +23,6 @@
 
 @property (nonatomic, strong, readonly) NSString *modelIdentifier;
 
+//@property (nonatomic, strong, readonly) NSArray *validationRules;
+
 @end

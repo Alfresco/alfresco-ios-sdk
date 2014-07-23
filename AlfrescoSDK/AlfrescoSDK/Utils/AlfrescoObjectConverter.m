@@ -313,12 +313,16 @@
     for (NSString *oldKey in [keyMappings allKeys])
     {
         NSString *newKey = keyMappings[oldKey];
-        id value = targetDictionary[oldKey];
         
-        if (value != nil)
+        if (![newKey isEqualToString:oldKey])
         {
-            targetDictionary[newKey] = targetDictionary[oldKey];
-            [targetDictionary removeObjectForKey:oldKey];
+            id value = targetDictionary[oldKey];
+            
+            if (value != nil)
+            {
+                targetDictionary[newKey] = targetDictionary[oldKey];
+                [targetDictionary removeObjectForKey:oldKey];
+            }
         }
     }
     

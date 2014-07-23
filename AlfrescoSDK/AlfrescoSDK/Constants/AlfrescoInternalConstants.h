@@ -392,8 +392,10 @@ extern NSString * const kAlfrescoJSONFeatures;
 extern NSString * const kAlfrescoJSONItemType;
 extern NSString * const kAlfrescoJSONViewGroups;
 extern NSString * const kAlfrescoJSONViewGroupId;
+extern NSString * const kAlfrescoJSONViewGroup;
 extern NSString * const kAlfrescoJSONViewId;
 extern NSString * const kAlfrescoJSONViews;
+extern NSString * const kAlfrescoJSONView;
 extern NSString * const kAlfrescoJSONType;
 extern NSString * const kAlfrescoJSONParameters;
 extern NSString * const kAlfrescoJSONCreation;
@@ -406,8 +408,8 @@ extern NSString * const kAlfrescoJSONFieldGroupId;
 extern NSString * const kAlfrescoJSONFieldGroups;
 extern NSString * const kAlfrescoJSONFieldId;
 extern NSString * const kAlfrescoJSONField;
+extern NSString * const kAlfrescoJSONFields;
 extern NSString * const kAlfrescoJSONModelId;
-
 
 
 

@@ -155,6 +155,13 @@
     XCTAssertNil(targetDictionary[@"null"], @"Did not expect to find key 'null'");
     XCTAssertTrue([targetDictionary[@"nullObject"] isKindOfClass:[NSNull class]],
                   @"Expected 'nullObject' to be an NSNull class but it was %@", targetDictionary[@"nullObject"]);
+    
+    // test protection against removing existing items i.e. if the existing and mapped key are the same
+    sourceDictionary = @{@"id": @"123"};
+    targetDictionary = [AlfrescoObjectConverter dictionaryFromDictionary:sourceDictionary
+                                                          withMappedKeys:@{@"id": @"id"}];
+    XCTAssertTrue(targetDictionary.count == 1, @"Expected the target dictionary to have 1 item still but it had %lu", (long)targetDictionary.count);
+    XCTAssertTrue([targetDictionary[@"id"] isEqualToString:@"123"], @"Expected target dictionary to still have the 'id' key");
 }
 
 @end
