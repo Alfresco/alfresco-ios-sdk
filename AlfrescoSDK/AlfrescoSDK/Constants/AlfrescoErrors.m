@@ -130,7 +130,7 @@ NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
             {
                 code = isExpired ? kAlfrescoErrorCodeRefreshTokenExpired : kAlfrescoErrorCodeRefreshTokenInvalid;
             }
-            else if ([descriptionObj hasPrefix:@"The access token"])
+            else if (descriptionObj && [descriptionObj rangeOfString:@"access token" options:NSCaseInsensitiveSearch].location != NSNotFound)
             {
                 code = kAlfrescoErrorCodeAccessTokenExpired;
             }
