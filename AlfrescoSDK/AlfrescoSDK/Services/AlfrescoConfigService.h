@@ -52,11 +52,18 @@ extern NSString * const kAlfrescoConfigServiceParameterApplicationId;
 extern NSString * const kAlfrescoConfigServiceParameterProfileId;
 extern NSString * const kAlfrescoConfigServiceParameterLocalFile;
 
+extern NSString * const kAlfrescoConfigScopeContextUsername;
+extern NSString * const kAlfrescoConfigScopeContextNode;
+
+extern NSString * const kAlfrescoConfigProfileDefault;
+
 /**
  The ConfigService retrieves JSON based configuration data either from the Data Dictionary
  in the connected repository or from a local file containing configuration data.
  */
 @interface AlfrescoConfigService : NSObject
+
+@property (nonatomic, strong, readonly) AlfrescoConfigScope *defaultConfigScope;
 
 /**---------------------------------------------------------------------------------------
  * @name Initialisation methods

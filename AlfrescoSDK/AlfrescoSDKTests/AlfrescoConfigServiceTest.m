@@ -20,6 +20,10 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoViewConfig.h"
 #import "AlfrescoFieldConfig.h"
+#import "AlfrescoInternalConstants.h"
+#import "CMISConstants.h"
+
+NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 
 @implementation AlfrescoConfigServiceTest
 
@@ -31,7 +35,7 @@
 
 - (NSDictionary *)dictionaryForConfigService
 {
-    NSDictionary *parameters = @{kAlfrescoConfigServiceParameterApplicationId: @"com.alfresco.mobile.ios",
+    NSDictionary *parameters = @{kAlfrescoConfigServiceParameterApplicationId: kAlfrescoTestApplicationId,
                                  kAlfrescoConfigServiceParameterLocalFile: [self urlForLocalConfigFile]};
     
     return parameters;
@@ -39,8 +43,7 @@
 
 - (id<AlfrescoSession>)sessionForConfigService
 {
-    // TODO: decorate the current session with the parameters required for a config service
-    
+    [self.currentSession setObject:kAlfrescoTestApplicationId forParameter:kAlfrescoConfigServiceParameterApplicationId];
     return self.currentSession;
 }
 
@@ -79,13 +82,11 @@
     }
 }
 
-- (void)disabledTestSetupFromSession
+- (void)testSetupFromSession
 {
     if (self.setUpSuccess)
     {
         self.configService = [[AlfrescoConfigService alloc] initWithSession:[self sessionForConfigService]];
-        
-        // TODO: upload the test JSON file to the Data Dictionary folder (clear out old one first if present)
         
         // retrieve basic config information
         [self.configService retrieveConfigInfoWithCompletionBlock:^(AlfrescoConfigInfo *configInfo, NSError *error) {
@@ -503,8 +504,26 @@
     {
         self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
         
-        // retrieve form config
-        [self.configService retrieveFormConfigWithIdentifier:@"view-properties" completionBlock:^(AlfrescoFormConfig *config, NSError *error) {
+        // manually create a document object that is cm:content and has the titled and geopgrpahic aspects
+        NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
+                                     kCMISPropertyContentStreamMediaType: @"text/plain",
+                                     kCMISPropertyObjectId: @"1234567890",
+                                     kCMISPropertyName: @"dummy.txt",
+                                     kCMISPropertyObjectTypeId: @"cm:content",
+                                     kAlfrescoNodeAspects: @[@"cm:titled", @"cm:geographic"],
+                                     kCMISPropertyCreatedBy: @"mobile",
+                                     kCMISPropertyModifiedBy: @"mobile",
+                                     kCMISPropertyCreationDate: [NSDate date],
+                                     kCMISPropertyModificationDate: [NSDate date],
+                                     kAlfrescoModelPropertyTitle: @"Title",
+                                     kAlfrescoModelPropertyDescription: @"Description"};
+        
+        AlfrescoDocument *document = [[AlfrescoDocument alloc] initWithProperties:properties];
+        
+        // retrieve form config using scope
+        AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefault
+                                                                          context:@{kAlfrescoConfigScopeContextNode: document}];
+        [self.configService retrieveFormConfigWithIdentifier:@"view-properties" scope:scope completionBlock:^(AlfrescoFormConfig *config, NSError *error) {
             if (config == nil)
             {
                 self.lastTestSuccessful = NO;

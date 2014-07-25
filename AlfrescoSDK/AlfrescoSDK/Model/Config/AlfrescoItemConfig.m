@@ -39,7 +39,6 @@
         self.iconIdentifier = [properties cmis_objectForKeyNotNull:kAlfrescoItemConfigPropertyIconIdentifier];
         self.type = [properties cmis_objectForKeyNotNull:kAlfrescoItemConfigPropertyType];
         self.parameters = [properties cmis_objectForKeyNotNull:kAlfrescoItemConfigPropertyParameters];
-        self.formIdentifier = [properties cmis_objectForKeyNotNull:kAlfrescoItemConfigPropertyFormIdentifier];
     }
     return self;
 }
@@ -51,7 +50,6 @@
     [aCoder encodeObject:self.iconIdentifier forKey:kAlfrescoItemConfigPropertyIconIdentifier];
     [aCoder encodeObject:self.type forKey:kAlfrescoItemConfigPropertyType];
     [aCoder encodeObject:self.parameters forKey:kAlfrescoItemConfigPropertyParameters];
-    [aCoder encodeObject:self.formIdentifier forKey:kAlfrescoItemConfigPropertyFormIdentifier];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -63,7 +61,6 @@
         self.iconIdentifier = [aDecoder decodeObjectForKey:kAlfrescoItemConfigPropertyIconIdentifier];
         self.type = [aDecoder decodeObjectForKey:kAlfrescoItemConfigPropertyType];
         self.parameters = [aDecoder decodeObjectForKey:kAlfrescoItemConfigPropertyParameters];
-        self.formIdentifier = [aDecoder decodeObjectForKey:kAlfrescoItemConfigPropertyFormIdentifier];
     }
 
     return self;

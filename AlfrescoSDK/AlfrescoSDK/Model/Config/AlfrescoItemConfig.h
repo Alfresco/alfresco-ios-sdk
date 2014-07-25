@@ -31,9 +31,6 @@
 @property (nonatomic, strong, readonly) NSDictionary *parameters;
 
 
-@property (nonatomic, strong, readonly) NSString *formIdentifier;
-
-
 - (id)valueForParameterWithKey:(NSString *)key;
 
 @end

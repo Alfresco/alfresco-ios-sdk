@@ -40,7 +40,6 @@ NSString * const kAlfrescoGroupConfigPropertyItems = @"items";
 NSString * const kAlfrescoItemConfigPropertyIconIdentifier = @"iconIdentifier";
 NSString * const kAlfrescoItemConfigPropertyType = @"type";
 NSString * const kAlfrescoItemConfigPropertyParameters = @"parameters";
-NSString * const kAlfrescoItemConfigPropertyFormIdentifier = @"formIdentifier";
 
 NSString * const kAlfrescoProcessConfigPropertyIsVisible = @"isVisible";
 
@@ -54,6 +53,8 @@ NSString * const kAlfrescoSearchConfigPropertySearchableDocumentTypes = @"search
 NSString * const kAlfrescoSearchConfigPropertySearchableFolderTypes = @"searchableFolderTypes";
 
 NSString * const kAlfrescoTaskConfigPropertyIsVisible = @"isVisible";
+
+NSString * const kAlfrescoViewConfigPropertyFormIdentifier = @"formIdentifier";
 
 NSString * const kAlfrescoWorkflowConfigPropertyProcessConfig = @"processConfig";
 NSString * const kAlfrescoWorkflowConfigPropertyTaskConfig = @"taskConfig";

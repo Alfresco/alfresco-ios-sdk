@@ -26,12 +26,21 @@
 #import "AlfrescoFieldConfig.h"
 #import "AlfrescoFieldGroupConfig.h"
 #import "AlfrescoObjectConverter.h"
+#import "AlfrescoDocumentFolderService.h"
 
 NSString * const kAlfrescoConfigServiceParameterApplicationId = @"org.alfresco.mobile.config.application.id";
 NSString * const kAlfrescoConfigServiceParameterProfileId = @"org.alfresco.mobile.config.profile.id";
 NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobile.config.local.file";
 
+NSString * const kAlfrescoConfigScopeContextUsername = @"org.alfresco.mobile.config.scope.context.username";
+NSString * const kAlfrescoConfigScopeContextNode = @"org.alfresco.mobile.config.scope.context.node";
+
+NSString * const kAlfrescoConfigProfileDefault = @"default";
+
+
 @interface AlfrescoConfigService ()
+@property (nonatomic, strong, readwrite) AlfrescoConfigScope *defaultConfigScope;
+
 @property (nonatomic, strong) id<AlfrescoSession> session;
 @property (nonatomic, strong) NSDictionary *parameters;
 @property (nonatomic, assign) BOOL isCacheBuilt;
@@ -71,6 +80,8 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
         self.session = session;
         self.isCacheBuilt = NO;
         self.isCacheBuilding = NO;
+        self.defaultConfigScope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefault
+                                                                       context:@{kAlfrescoConfigScopeContextUsername: session.personIdentifier}];
     }
     
     return self;
@@ -84,6 +95,7 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
         self.parameters = parameters;
         self.isCacheBuilt = NO;
         self.isCacheBuilding = NO;
+        self.defaultConfigScope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefault];
     }
     
     return self;
@@ -105,8 +117,36 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
             // pull parameters from session
             self.applicationId = [self.session objectForParameter:kAlfrescoConfigServiceParameterApplicationId];
             
-            // TODO: use the document folder service to retrieve the content from DD.
-            return nil;
+            // TODO: Determine if this is the correct location and if there is a "safer" way of getting the file.
+            NSString *configPath = [NSString stringWithFormat:@"/Data Dictionary/Client Configuration/Mobile/%@/config.json", self.applicationId];
+            
+            // retrieve the configuration content
+            AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
+            AlfrescoRequest *request = nil;
+            request = [docFolderService retrieveNodeWithFolderPath:configPath completionBlock:^(AlfrescoNode *configNode, NSError *retrieveNodeError) {
+                if (configNode != nil)
+                {
+                    AlfrescoRequest *contentRequest = [docFolderService retrieveContentOfDocument:(AlfrescoDocument*)configNode completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveContentError) {
+                        if (configNode != nil)
+                        {
+                            [self processJSONData:[NSData dataWithContentsOfFile:contentFile.fileUrl.path]
+                                  completionBlock:completionBlock];
+                        }
+                        else
+                        {
+                            completionBlock(NO, retrieveContentError);
+                        }
+                    } progressBlock:nil];
+                    
+                    request.httpRequest = contentRequest.httpRequest;
+                }
+                else
+                {
+                    completionBlock(NO, retrieveNodeError);
+                }
+            }];
+            
+            return request;
         }
         else
         {
@@ -248,8 +288,7 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
     NSDictionary *keyMappings = @{kAlfrescoJSONIdentifier: kAlfrescoBaseConfigPropertyIdentifier,
                                   kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
                                   kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
-                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier,
-                                  kAlfrescoJSONFormId: kAlfrescoItemConfigPropertyFormIdentifier};
+                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier};
     
     // parse all the options
     NSMutableDictionary *creationDictionary = [NSMutableDictionary dictionary];
@@ -303,8 +342,7 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
     NSDictionary *keyMappings = @{kAlfrescoJSONIdentifier: kAlfrescoBaseConfigPropertyIdentifier,
                                   kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
                                   kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
-                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier,
-                                  kAlfrescoJSONFormId: kAlfrescoItemConfigPropertyFormIdentifier};
+                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier};
     
     NSMutableDictionary *viewsDictionary = [NSMutableDictionary dictionary];
     for (NSString *viewId in [viewsJSON allKeys])
@@ -342,7 +380,7 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
                                   kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
                                   kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
                                   kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier,
-                                  kAlfrescoJSONFormId: kAlfrescoItemConfigPropertyFormIdentifier};
+                                  kAlfrescoJSONFormId: kAlfrescoViewConfigPropertyFormIdentifier};
     
     // build an array of config objects representing the "items" config
     NSArray *groupItems = viewGroupJSON[kAlfrescoJSONItems];
@@ -496,29 +534,12 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
             if ([itemType isEqualToString:kAlfrescoJSONFieldGroupId])
             {
                 NSString *fieldGroupId = itemJSON[kAlfrescoJSONFieldGroupId];
-                
-                // check for well known type and aspect markers
-                if ([fieldGroupId isEqualToString:@"${type-properties}"])
-                {
-                    // add the string to the items array to be resolved later
-//                    [itemsArray addObject:fieldGroupId];
-                    
-                    // TODO: for now hardcode to cm:content type
-                    [itemsArray addObject:self.fieldGroups[@"type:cm:content"]];
-                }
-                else if ([fieldGroupId isEqualToString:@"${aspects}"])
-                {
-                    // add the string to the items array to be resolved later
-                    //                    [itemsArray addObject:fieldGroupId];
-                    
-                    // TODO: for now hardcode to cm:geographic
-                    [itemsArray addObject:self.fieldGroups[@"aspect:cm:geographic"]];
-                }
-                else
-                {
-                    // add the retrieved field group id to items array
-                    [itemsArray addObject:self.fieldGroups[fieldGroupId]];
-                }
+                [itemsArray addObject:fieldGroupId];
+            }
+            else if ([itemType isEqualToString:kAlfrescoJSONField])
+            {
+                NSString *fieldId = itemJSON[kAlfrescoJSONFieldId];
+                [itemsArray addObject:self.fields[fieldId]];
             }
             else if ([itemType isEqualToString:kAlfrescoJSONField])
             {
@@ -628,6 +649,13 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
 
 - (AlfrescoRequest *)retrieveFeatureConfigWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
+    return [self retrieveFeatureConfigWithConfigScope:self.defaultConfigScope completionBlock:completionBlock];
+}
+
+
+- (AlfrescoRequest *)retrieveFeatureConfigWithConfigScope:(AlfrescoConfigScope *)scope
+                                          completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
@@ -641,15 +669,15 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
 }
 
 
-- (AlfrescoRequest *)retrieveFeatureConfigWithConfigScope:(AlfrescoConfigScope *)scope
-                                          completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveFeatureConfigWithIdentifier:(NSString *)identifier
+                                         completionBlock:(AlfrescoFeatureConfigCompletionBlock)completionBlock
 {
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
+    return [self retrieveFeatureConfigWithIdentifier:identifier scope:self.defaultConfigScope completionBlock:completionBlock];
 }
 
 
 - (AlfrescoRequest *)retrieveFeatureConfigWithIdentifier:(NSString *)identifier
+                                                   scope:(AlfrescoConfigScope *)scope
                                          completionBlock:(AlfrescoFeatureConfigCompletionBlock)completionBlock
 {
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
@@ -681,16 +709,14 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
     }];
 }
 
-
-- (AlfrescoRequest *)retrieveFeatureConfigWithIdentifier:(NSString *)identifier
-                                                   scope:(AlfrescoConfigScope *)scope
-                                         completionBlock:(AlfrescoFeatureConfigCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveViewConfigWithIdentifier:(NSString *)identifier
+                                      completionBlock:(AlfrescoViewConfigCompletionBlock)completionBlock
 {
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
+    return [self retrieveViewConfigWithIdentifier:identifier scope:self.defaultConfigScope completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)retrieveViewConfigWithIdentifier:(NSString *)identifier
+                                                scope:(AlfrescoConfigScope *)scope
                                       completionBlock:(AlfrescoViewConfigCompletionBlock)completionBlock
 {
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
@@ -705,16 +731,16 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
     }];
 }
 
-- (AlfrescoRequest *)retrieveViewConfigWithIdentifier:(NSString *)identifier
-                                                scope:(AlfrescoConfigScope *)scope
-                                      completionBlock:(AlfrescoViewConfigCompletionBlock)completionBlock
+
+- (AlfrescoRequest *)retrieveViewGroupConfigWithIdentifier:(NSString *)identifier
+                                           completionBlock:(AlfrescoViewGroupConfigCompletionBlock)completionBlock
 {
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
+    return [self retrieveViewGroupConfigWithIdentifier:identifier scope:self.defaultConfigScope completionBlock:completionBlock];
 }
 
 
 - (AlfrescoRequest *)retrieveViewGroupConfigWithIdentifier:(NSString *)identifier
+                                                     scope:(AlfrescoConfigScope *)scope
                                            completionBlock:(AlfrescoViewGroupConfigCompletionBlock)completionBlock
 {
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
@@ -738,20 +764,10 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
     }];
 }
 
-
-- (AlfrescoRequest *)retrieveViewGroupConfigWithIdentifier:(NSString *)identifier
-                                                     scope:(AlfrescoConfigScope *)scope
-                                           completionBlock:(AlfrescoViewGroupConfigCompletionBlock)completionBlock
-{
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
-}
-
 - (AlfrescoRequest *)retrieveActionConfigWithIdentifier:(NSString *)identifier
                                         completionBlock:(AlfrescoActionConfigCompletionBlock)completionBlock
 {
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
+    return [self retrieveActionConfigWithIdentifier:identifier scope:self.defaultConfigScope completionBlock:completionBlock];
 }
 
 
@@ -766,8 +782,7 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
 - (AlfrescoRequest *)retrieveActionGroupConfigWithIdentifier:(NSString *)identifier
                                              completionBlock:(AlfrescoActionGroupConfigCompletionBlock)completionBlock
 {
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
+    return [self retrieveActionGroupConfigWithIdentifier:identifier scope:self.defaultConfigScope completionBlock:completionBlock];
 }
 
 
@@ -781,6 +796,14 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
 
 
 - (AlfrescoRequest *)retrieveFormConfigWithIdentifier:(NSString *)identifier
+                                      completionBlock:(AlfrescoFormConfigCompletionBlock)completionBlock
+{
+    return [self retrieveFormConfigWithIdentifier:identifier scope:self.defaultConfigScope completionBlock:completionBlock];
+}
+
+
+- (AlfrescoRequest *)retrieveFormConfigWithIdentifier:(NSString *)identifier
+                                                scope:(AlfrescoConfigScope *)scope
                                       completionBlock:(AlfrescoFormConfigCompletionBlock)completionBlock
 {
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
@@ -798,6 +821,57 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
             
             if (requestedFormConfig != nil)
             {
+                // the items array needs resolving as there's likely to be group references
+                // which can only be resolved within the context of a node
+                AlfrescoNode *node = [scope valueForKey:kAlfrescoConfigScopeContextNode];
+                NSString *typeLookup = [NSString stringWithFormat:@"type:%@", node.type];
+                
+                // FIXME: re-build the itemsArray using the resolved groups
+                NSMutableArray *resolvedItems = [NSMutableArray array];
+                for (id item in requestedFormConfig.items)
+                {
+                    if ([item isKindOfClass:[NSString class]])
+                    {
+                        NSString *fieldGroupId = (NSString *)item;
+                        if ([fieldGroupId isEqualToString:@"${type-properties}"])
+                        {
+                            AlfrescoFieldGroupConfig *config = self.fieldGroups[typeLookup];
+                            if (config != nil)
+                            {
+                                [resolvedItems addObject:config];
+                            }
+                        }
+                        else if ([fieldGroupId isEqualToString:@"${aspects}"])
+                        {
+                            for (NSString *aspectName in node.aspects)
+                            {
+                                NSString *aspectLookup = [NSString stringWithFormat:@"aspect:%@", aspectName];
+                                AlfrescoFieldGroupConfig *config = self.fieldGroups[aspectLookup];
+                                if (config != nil)
+                                {
+                                    [resolvedItems addObject:config];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            AlfrescoFieldGroupConfig *config = self.fieldGroups[fieldGroupId];
+                            if (config != nil)
+                            {
+                                [resolvedItems addObject:config];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        [resolvedItems addObject:item];
+                    }
+                }
+                
+                // replace the items array on the config object
+                SEL setItemsSelector = sel_registerName("setItems:");
+                [requestedFormConfig performSelector:setItemsSelector withObject:resolvedItems];
+                
                 completionBlock(requestedFormConfig, nil);
             }
             else
@@ -813,19 +887,9 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
 }
 
 
-- (AlfrescoRequest *)retrieveFormConfigWithIdentifier:(NSString *)identifier
-                                                scope:(AlfrescoConfigScope *)scope
-                                      completionBlock:(AlfrescoFormConfigCompletionBlock)completionBlock
-{
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
-}
-
-
 - (AlfrescoRequest *)retrieveWorkflowConfigWithCompletionBlock:(AlfrescoWorkflowConfigCompletionBlock)completionBlock
 {
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
+    return [self retrieveWorkflowConfigWithConfigScope:self.defaultConfigScope completionBlock:completionBlock];
 }
 
 
@@ -838,6 +902,13 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
 
 
 - (AlfrescoRequest *)retrieveCreationConfigWithCompletionBlock:(AlfrescoCreationConfigCompletionBlock)completionBlock
+{
+    return [self retrieveCreationConfigWithConfigScope:self.defaultConfigScope completionBlock:completionBlock];
+}
+
+
+- (AlfrescoRequest *)retrieveCreationConfigWithConfigScope:(AlfrescoConfigScope *)scope
+                                           completionBlock:(AlfrescoCreationConfigCompletionBlock)completionBlock
 {
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
@@ -852,18 +923,9 @@ NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobil
 }
 
 
-- (AlfrescoRequest *)retrieveCreationConfigWithConfigScope:(AlfrescoConfigScope *)scope
-                                           completionBlock:(AlfrescoCreationConfigCompletionBlock)completionBlock
-{
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
-}
-
-
 - (AlfrescoRequest *)retrieveSearchConfigWithCompletionBlock:(AlfrescoSearchConfigCompletionBlock)completionBlock
 {
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
+    return [self retrieveSearchConfigWithConfigScope:self.defaultConfigScope completionBlock:completionBlock];
 }
 
 

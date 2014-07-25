@@ -22,4 +22,6 @@
 
 @interface AlfrescoViewConfig : AlfrescoItemConfig
 
+@property (nonatomic, strong, readonly) NSString *formIdentifier;
+
 @end

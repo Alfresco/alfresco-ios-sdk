@@ -19,7 +19,42 @@
  */
 
 #import "AlfrescoViewConfig.h"
+#import "AlfrescoPropertyConstants.h"
+#import "CMISDictionaryUtil.h"
+
+@interface AlfrescoViewConfig ()
+@property (nonatomic, strong, readwrite) NSString *formIdentifier;
+@end
 
 @implementation AlfrescoViewConfig
+
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super initWithDictionary:properties];
+    if (nil != self)
+    {
+        self.formIdentifier = [properties cmis_objectForKeyNotNull:kAlfrescoViewConfigPropertyFormIdentifier];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeObject:self.formIdentifier forKey:kAlfrescoViewConfigPropertyFormIdentifier];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        self.formIdentifier = [aDecoder decodeObjectForKey:kAlfrescoViewConfigPropertyFormIdentifier];
+    }
+    
+    return self;
+}
 
 @end
