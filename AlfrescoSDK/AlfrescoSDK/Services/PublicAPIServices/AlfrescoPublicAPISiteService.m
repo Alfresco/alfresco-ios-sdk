@@ -1139,46 +1139,45 @@
     __weak typeof(self) weakSelf = self;
     
     // define completion block to fetch the sites
-    AlfrescoRequest* (^fetchSites)(AlfrescoFolder *sitesFolder) =
-    ^AlfrescoRequest*(AlfrescoFolder *sitesFolder) {
-
+    AlfrescoRequest * (^fetchSites)(AlfrescoFolder *sitesFolder) = ^AlfrescoRequest * (AlfrescoFolder *sitesFolder) {
         AlfrescoDocumentFolderService *docFolderSvc = [[AlfrescoDocumentFolderService alloc] initWithSession:weakSelf.session];
-        return [docFolderSvc retrieveChildrenInFolder:sitesFolder
-                                        listingContext:listingContext
-                                        completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
-                                            if (pagingResult != nil)
-                                            {
-                                                NSArray *children = pagingResult.objects;
-                                                NSMutableArray *sites = [NSMutableArray arrayWithCapacity:pagingResult.objects.count];
-                                                AlfrescoSite *site = nil;
-                                                for (AlfrescoNode *node in children)
-                                                {
-                                                    if (node.isFolder && [node.type isEqualToString:@"st:site"])
-                                                    {
-                                                        site = [weakSelf.siteCache siteWithShortName:node.name];
-                                                        if (site != nil)
-                                                        {
-                                                            [sites addObject:site];
-                                                        }
-                                                        else
-                                                        {
-                                                            site = [weakSelf siteFromFolder:(AlfrescoFolder *)node];
-                                                            [weakSelf.siteCache cacheSite:site];
-                                                            [sites addObject:site];
-                                                        }
-                                                    }
-                                                }
-                                                 
-                                                // call the completion
-                                                completionBlock([[AlfrescoPagingResult alloc] initWithArray:sites
-                                                                                               hasMoreItems:pagingResult.hasMoreItems
-                                                                                                 totalItems:pagingResult.totalItems], nil);
-                                            }
-                                            else
-                                            {
-                                                completionBlock(nil, error);
-                                            }
-                                        }];
+        return [docFolderSvc retrieveChildrenInFolder:sitesFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (pagingResult != nil)
+            {
+                NSArray *children = pagingResult.objects;
+                NSMutableArray *sites = [NSMutableArray array];
+                AlfrescoSite *site = nil;
+                for (AlfrescoNode *node in children)
+                {
+                    if (node.isFolder && [node.type isEqualToString:@"st:site"])
+                    {
+                        site = [weakSelf.siteCache siteWithShortName:node.name];
+                        if (site != nil)
+                        {
+                            [sites addObject:site];
+                        }
+                        else
+                        {
+                            site = [weakSelf siteFromFolder:(AlfrescoFolder *)node];
+                            if (site != nil)
+                            {
+                                [weakSelf.siteCache cacheSite:site];
+                                [sites addObject:site];
+                            }
+                        }
+                    }
+                }
+                
+                // call the completion
+                completionBlock([[AlfrescoPagingResult alloc] initWithArray:sites
+                                                               hasMoreItems:pagingResult.hasMoreItems
+                                                                 totalItems:pagingResult.totalItems], nil);
+            }
+            else
+            {
+                completionBlock(nil, error);
+            }
+        }];
     };
     
     if (self.sitesRootFolder == nil)
