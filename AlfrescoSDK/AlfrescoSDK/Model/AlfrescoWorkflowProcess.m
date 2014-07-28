@@ -111,8 +111,17 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         }
         self.name = properties[kAlfrescoWorkflowLegacyJSONTitle];
         self.priority = properties[kAlfrescoWorkflowLegacyJSONPriority];
-        NSDictionary *initiatorDictionary = properties[kAlfrescoWorkflowLegacyJSONInitiator];
-        self.initiatorUsername = initiatorDictionary[kAlfrescoJSONUserName];
+        
+        id initiator = properties[kAlfrescoWorkflowLegacyJSONInitiator];
+        if ([initiator isKindOfClass:[NSDictionary class]])
+        {
+            self.initiatorUsername = initiator[kAlfrescoJSONUserName];
+        }
+        else if ([initiator isKindOfClass:[NSString class]])
+        {
+            self.initiatorUsername = initiator;
+        }
+        
         self.variables = [objectConverter workflowVariablesFromLegacyProperties:properties];
     }
 }
