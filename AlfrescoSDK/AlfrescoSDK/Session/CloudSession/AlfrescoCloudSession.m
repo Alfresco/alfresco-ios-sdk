@@ -373,7 +373,7 @@
     AlfrescoCMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[AlfrescoCMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
 
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
-    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoPublicAPICMISAtomPath];
+    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
     params.atomPubUrl = [NSURL URLWithString:cmisUrl];
     params.authenticationProvider = passthroughAuthProvider;
     params.repositoryId = networkIdentifier;
@@ -550,7 +550,7 @@ This authentication method authorises the user to access the home network assign
     self.password = password;
     self.personIdentifier = emailAddress;
     
-    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoPublicAPICMISAtomPath];
+    NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoCloudCMISPath];
 
     __block CMISSessionParameters *params = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
     params.username = emailAddress;
