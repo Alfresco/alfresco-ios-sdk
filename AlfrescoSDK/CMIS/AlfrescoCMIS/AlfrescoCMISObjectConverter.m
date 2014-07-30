@@ -172,7 +172,7 @@
             for (CMISTypeDefinition *aspectType in aspectTypes)
             {
                 CMISExtensionElement *extensionElement = [[CMISExtensionElement alloc] initLeafWithName:@"aspectsToAdd"
-                                                                                           namespaceUri:@"http://www.alfresco.org" attributes:nil value:aspectType.id];
+                                                                                           namespaceUri:@"http://www.alfresco.org" attributes:nil value:aspectType.identifier];
                 [alfrescoExtensions addObject:extensionElement];
             }
 
@@ -223,7 +223,7 @@
                     }
                     
                     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-                    attributes[@"propertyDefinitionId"] = aspectPropertyDefinition.id;
+                    attributes[@"propertyDefinitionId"] = aspectPropertyDefinition.identifier;
                     
                     NSMutableArray *propertyValues = [NSMutableArray array];
                     id value = aspectProperties[propertyId];
@@ -277,10 +277,10 @@
             // Cmis doesn't understand aspects, so we must replace the objectTypeId if needed
             if (typeProperties[kCMISPropertyObjectTypeId] != nil)
             {
-                [typeProperties setValue:mainTypeDefinition.id forKey:kCMISPropertyObjectTypeId];
+                [typeProperties setValue:mainTypeDefinition.identifier forKey:kCMISPropertyObjectTypeId];
             }
 
-            [super convertProperties:typeProperties forObjectTypeId:mainTypeDefinition.id completionBlock:^(CMISProperties *result, NSError *error){
+            [super convertProperties:typeProperties forObjectTypeId:mainTypeDefinition.identifier completionBlock:^(CMISProperties *result, NSError *error){
                 if (nil == result)
                 {
                     completionBlock(nil, error);
@@ -304,7 +304,9 @@
     CMISTypeDefinition *typeDefinition = nil;
     for (CMISTypeDefinition * type in typeArray)
     {
-        if ([type.id hasPrefix:kAlfrescoCMISModelPrefix] || [type.id hasPrefix:kAlfrescoCMISDocumentTypePrefix] || [type.id hasPrefix:kAlfrescoCMISFolderTypePrefix])
+        if ([type.identifier hasPrefix:kAlfrescoCMISModelPrefix] ||
+            [type.identifier hasPrefix:kAlfrescoCMISDocumentTypePrefix] ||
+            [type.identifier hasPrefix:kAlfrescoCMISFolderTypePrefix])
         {
             typeDefinition = type;
             break;
@@ -318,7 +320,9 @@
     NSMutableArray *aspects = [NSMutableArray array];
     for (CMISTypeDefinition * type in typeArray)
     {
-        if (![type.id hasPrefix:kAlfrescoCMISModelPrefix] && ![type.id hasPrefix:kAlfrescoCMISDocumentTypePrefix] && ![type.id hasPrefix:kAlfrescoCMISFolderTypePrefix])
+        if (![type.identifier hasPrefix:kAlfrescoCMISModelPrefix] &&
+            ![type.identifier hasPrefix:kAlfrescoCMISDocumentTypePrefix] &&
+            ![type.identifier hasPrefix:kAlfrescoCMISFolderTypePrefix])
         {
             [aspects addObject:type];
         }

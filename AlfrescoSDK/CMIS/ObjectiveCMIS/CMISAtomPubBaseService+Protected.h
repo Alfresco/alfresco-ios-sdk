@@ -19,7 +19,7 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISAtomPubBaseService.h"
-#import "CMISObjectByIdUriBuilder.h"
+#import "CMISAtomPubObjectByIdUriBuilder.h"
 
 @class CMISObjectData;
 

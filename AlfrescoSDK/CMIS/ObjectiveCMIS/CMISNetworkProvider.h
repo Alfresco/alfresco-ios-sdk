@@ -96,7 +96,7 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
 
 
 /**
- * Invoke method used for uploads, i.e. POST/PUT requests. This method is used for encoding base64 data while streaming
+ * Invoke method used for uploads, i.e. POST/PUT requests. This method is used for putting the stream data between the start and end data
  * @param url the RESTful API URL to be used
  * @param httpRequestMethod
  * @param session
@@ -104,8 +104,9 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
  * @param headers any additional headers to be used in the request (maybe nil)
  * @param bytesExpected the size of the content to be uploaded
  * @param cmisRequest will be used to set the cancellable request to the one created by the invoked method
- * @param cmisProperties 
- * @param mimeType
+ * @param startData start payload e.g. containing the form data before the input stream is written
+ * @param endData end payload e.g. containing the form data after the input stream is written
+ * @param useBase64Encoding Determines whether the data sent via the inputStream is encoded as base64 as it's sent to the server
  * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
  * @param progressBlock
  * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled
@@ -117,15 +118,15 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
        headers:(NSDictionary *)additionalHeaders
  bytesExpected:(unsigned long long)bytesExpected
    cmisRequest:(CMISRequest *)cmisRequest
-cmisProperties:(CMISProperties *)cmisProperties
-      mimeType:(NSString *)mimeType
+     startData:(NSData *)startData
+       endData:(NSData *)endData
+useBase64Encoding:(BOOL)useBase64Encoding
 completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
  progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
 
-
 /**
- * Invoke method used for downloads, 
+ * Invoke method used for downloads,
  * @param url the RESTful API URL to be used
  * @param httpRequestMethod
  * @param session

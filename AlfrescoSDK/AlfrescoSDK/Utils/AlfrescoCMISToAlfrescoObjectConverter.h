@@ -26,8 +26,11 @@
 #import "AlfrescoComment.h"
 #import "AlfrescoPerson.h"
 #import "AlfrescoObjectConverter.h"
+#import "AlfrescoDocumentTypeDefinition.h"
+#import "AlfrescoFolderTypeDefinition.h"
+#import "AlfrescoAspectDefinition.h"
 
-@class CMISSession, CMISFolder, CMISDocument, CMISObject, CMISObjectData, CMISQueryResult;
+@class CMISSession, CMISFolder, CMISDocument, CMISObject, CMISObjectData, CMISQueryResult, CMISTypeDefinition;
 
 @interface AlfrescoCMISToAlfrescoObjectConverter : AlfrescoObjectConverter
 
@@ -39,6 +42,10 @@
 
 - (AlfrescoDocument *)documentFromCMISQueryResult:(CMISQueryResult *)cmisQueryResult;
 
+- (AlfrescoDocumentTypeDefinition *)documentTypeDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition;
 
+- (AlfrescoFolderTypeDefinition *)folderTypeDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition;
+
+- (AlfrescoAspectDefinition *)aspectDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition;
 
 @end

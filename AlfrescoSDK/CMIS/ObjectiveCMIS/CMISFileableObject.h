@@ -38,5 +38,15 @@
 - (CMISRequest*)retrieveParentsWithOperationContext:(CMISOperationContext *)operationContext 
                             completionBlock:(void (^)(NSArray *parentFolders, NSError *error))completionBlock;
 
+/**
+ * Returns all the parents of this object as an array of CMISFolder objects with paging options
+ * CompletionBlock will return array or nil if unsuccessful
+ * CompletionBlock will return nil for root folder and non-fileable objects.
+ */
+- (CMISRequest*)moveFromFolderWithId:(NSString *)sourceFolderId
+                      toFolderWithId:(NSString *)targetFolderId
+                     completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
+
+
 
 @end

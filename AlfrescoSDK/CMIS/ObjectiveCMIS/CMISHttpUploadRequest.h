@@ -39,11 +39,8 @@
                          progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
 /**
- * starts a URL request with a provided input stream. The input stream has to point to the raw NON-encoded data set. This method will use the
- * provided CMIS properties and mimeType to create the appropriate XML data. The base 64 encoding will be done while the data are being read in
- * from the source input stream.
- * In order to achieve this, the pairing an OutputStream (where we will write the XML and base64 data to) with a resulting fully base64 encoded
- * input stream. This base64 encoded inputstream will be passed on to the NSMutableURLRequest via its HTTPBodyStream property/method.
+ * starts a URL request with a provided input stream. The input stream has to point to the raw NON-encoded data set. This method will first write the 
+ * provided start data, afterwards the content of the input stream (optionally encoding it as base64) and then the provided end data.
  */
 + (id)startRequest:(NSMutableURLRequest *)urlRequest
         httpMethod:(CMISHttpRequestMethod)httpRequestMethod
@@ -51,8 +48,9 @@
            headers:(NSDictionary*)additionalHeaders
      bytesExpected:(unsigned long long)bytesExpected
 authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
-    cmisProperties:(CMISProperties *)cmisProperties
-          mimeType:(NSString *)mimeType
+         startData:(NSData *)startData
+           endData:(NSData *)endData
+ useBase64Encoding:(BOOL)useBase64Encoding
    completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
      progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 

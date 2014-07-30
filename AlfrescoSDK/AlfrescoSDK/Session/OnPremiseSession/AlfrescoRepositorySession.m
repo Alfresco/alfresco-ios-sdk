@@ -17,20 +17,22 @@
  ******************************************************************************/
 
 #import "AlfrescoRepositorySession.h"
-#import "AlfrescoInternalConstants.h"
+#import <objc/runtime.h>
 #import "CMISSession.h"
 #import "CMISStandardUntrustedSSLAuthenticationProvider.h"
+#import "CMISErrors.h"
+#import "CMISConstants.h"
+#import "AlfrescoInternalConstants.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
-#import <objc/runtime.h>
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoRepositoryInfoBuilder.h"
 #import "AlfrescoCMISUtil.h"
-#import "CMISErrors.h"
+
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -400,8 +402,7 @@
                                             }
                                             
                                             // session creation is complete, call the original completion block
-                                            AlfrescoLogDebug(@"Session established for user %@, repo version: %@ %@ Edition",
-                                                             self.personIdentifier, self.repositoryInfo.version, self.repositoryInfo.edition);
+                                            [self logStartupInfo];
                                             completionBlock(self, nil);
                                         }
                                     }];
@@ -409,8 +410,7 @@
                                 else
                                 {
                                     // session creation is complete, call the original completion block
-                                    AlfrescoLogDebug(@"Session established for user %@, repo version: %@ %@ Edition",
-                                                     self.personIdentifier, self.repositoryInfo.version, self.repositoryInfo.edition);
+                                    [self logStartupInfo];
                                     completionBlock(self, nil);
                                 }
                             }
@@ -422,6 +422,16 @@
     }
     
     return request;
+}
+
+- (void)logStartupInfo
+{
+    // log info about session
+    AlfrescoLogInfo(@"Session established for user %@, repo version: %@ %@ Edition",
+                    self.personIdentifier, self.repositoryInfo.version, self.repositoryInfo.edition);
+    
+    // log info about SDKs being used
+    AlfrescoLogInfo(@"Using Alfresco SDK v%@ and ObjectiveCMIS v%@", kAlfrescoSDKVersion, kCMISLibraryVersion);
 }
 
 #pragma clang diagnostic pop
