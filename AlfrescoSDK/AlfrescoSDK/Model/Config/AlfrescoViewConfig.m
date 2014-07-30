@@ -38,13 +38,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [super encodeWithCoder:aCoder];
-    
-    [aCoder encodeObject:self.formIdentifier forKey:kAlfrescoViewConfigPropertyFormIdentifier];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -55,6 +48,13 @@
     }
     
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeObject:self.formIdentifier forKey:kAlfrescoViewConfigPropertyFormIdentifier];
 }
 
 @end

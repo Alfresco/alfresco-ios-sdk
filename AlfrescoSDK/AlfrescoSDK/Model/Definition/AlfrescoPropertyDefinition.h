@@ -18,41 +18,38 @@
  *****************************************************************************
  */
 
-#import "AlfrescoFormConfig.h"
-#import "AlfrescopropertyConstants.h"
+#import <Foundation/Foundation.h>
+#import "AlfrescoProperty.h"
 
-@interface AlfrescoFormConfig ()
-@property (nonatomic, strong, readwrite) NSString *layout;
-@end
+@interface AlfrescoPropertyDefinition : NSObject
 
-@implementation AlfrescoFormConfig
+@property (nonatomic, strong, readonly) NSString *name;
 
-- (id)initWithDictionary:(NSDictionary *)properties
-{
-    self = [super initWithDictionary:properties];
-    if (nil != self)
-    {
-        self.layout = properties[kAlfrescoFormConfigPropertyLayout];
-    }
-    return self;
-}
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    
-    if (self)
-    {
-        self.layout = [aDecoder decodeObjectForKey:kAlfrescoFormConfigPropertyLayout];
-    }
-    return self;
-}
+@property (nonatomic, strong, readonly) NSString *title;
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [super encodeWithCoder:aCoder];
-    
-    [aCoder encodeObject:self.layout forKey:kAlfrescoFormConfigPropertyLayout];
-}
+
+@property (nonatomic, strong, readonly) NSString *summary;
+
+
+@property (nonatomic, assign, readonly) AlfrescoPropertyType type;
+
+
+@property (nonatomic, assign, readonly) BOOL isRequired;
+
+
+@property (nonatomic, assign, readonly) BOOL isReadOnly;
+
+
+@property (nonatomic, assign, readonly) BOOL isMultiValued;
+
+
+@property (nonatomic, assign, readonly) id defaultValue;
+
+
+@property (nonatomic, strong, readonly) NSArray *allowableValues;
+
+
+- (instancetype)initWithDictionary:(NSDictionary *)properties;
 
 @end

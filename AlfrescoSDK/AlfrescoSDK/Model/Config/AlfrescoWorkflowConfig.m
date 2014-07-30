@@ -39,12 +39,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:self.processConfig forKey:kAlfrescoWorkflowConfigPropertyProcessConfig];
-    [aCoder encodeObject:self.taskConfig forKey:kAlfrescoWorkflowConfigPropertyTaskConfig];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
@@ -54,6 +48,12 @@
         self.taskConfig = [aDecoder decodeObjectForKey:kAlfrescoWorkflowConfigPropertyTaskConfig];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.processConfig forKey:kAlfrescoWorkflowConfigPropertyProcessConfig];
+    [aCoder encodeObject:self.taskConfig forKey:kAlfrescoWorkflowConfigPropertyTaskConfig];
 }
 
 @end

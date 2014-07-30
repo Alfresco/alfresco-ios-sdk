@@ -165,6 +165,7 @@ extern NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound;
 extern NSString * const kAlfrescoErrorDescriptionVersion;
 
 extern NSString * const kAlfrescoErrorDescriptionModelDefinition;
+extern NSString * const kAlfrescoErrorDescriptionModelDefinitionNotFound;
 
 extern NSString * const kAlfrescoErrorDescriptionConfig;
 extern NSString * const kAlfrescoErrorDescriptionConfigInitializationFailed;

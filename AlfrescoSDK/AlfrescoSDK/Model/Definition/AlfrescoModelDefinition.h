@@ -18,41 +18,30 @@
  *****************************************************************************
  */
 
-#import "AlfrescoFormConfig.h"
-#import "AlfrescopropertyConstants.h"
+#import <Foundation/Foundation.h>
+#import "AlfrescoPropertyDefinition.h"
 
-@interface AlfrescoFormConfig ()
-@property (nonatomic, strong, readwrite) NSString *layout;
-@end
+@interface AlfrescoModelDefinition : NSObject <NSCoding>
 
-@implementation AlfrescoFormConfig
 
-- (id)initWithDictionary:(NSDictionary *)properties
-{
-    self = [super initWithDictionary:properties];
-    if (nil != self)
-    {
-        self.layout = properties[kAlfrescoFormConfigPropertyLayout];
-    }
-    return self;
-}
+@property (nonatomic, strong, readonly) NSString *name;
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    
-    if (self)
-    {
-        self.layout = [aDecoder decodeObjectForKey:kAlfrescoFormConfigPropertyLayout];
-    }
-    return self;
-}
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [super encodeWithCoder:aCoder];
-    
-    [aCoder encodeObject:self.layout forKey:kAlfrescoFormConfigPropertyLayout];
-}
+@property (nonatomic, strong, readonly) NSString *title;
+
+
+@property (nonatomic, strong, readonly) NSString *summary;
+
+
+@property (nonatomic, strong, readonly) NSString *parent;
+
+
+@property (nonatomic, strong, readonly) NSArray *propertyNames;
+
+
+- (instancetype)initWithDictionary:(NSDictionary *)properties;
+
+
+- (AlfrescoPropertyDefinition *)propertyDefinitionForPropertyWithName:(NSString *)name;
 
 @end

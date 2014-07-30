@@ -39,14 +39,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [super encodeWithCoder:aCoder];
-    
-    [aCoder encodeBool:self.isDefault forKey:kAlfrescoProfileConfigPropertyIsDefault];
-    [aCoder encodeObject:self.rootViewId forKey:kAlfrescoProfileConfigPropertyRootViewId];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -57,6 +49,14 @@
         self.rootViewId = [aDecoder decodeObjectForKey:kAlfrescoProfileConfigPropertyRootViewId];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeBool:self.isDefault forKey:kAlfrescoProfileConfigPropertyIsDefault];
+    [aCoder encodeObject:self.rootViewId forKey:kAlfrescoProfileConfigPropertyRootViewId];
 }
 
 @end

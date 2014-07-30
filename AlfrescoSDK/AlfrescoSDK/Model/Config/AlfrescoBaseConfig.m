@@ -42,13 +42,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:self.identifier forKey:kAlfrescoBaseConfigPropertyIdentifier];
-    [aCoder encodeObject:self.label forKey:kAlfrescoBaseConfigPropertyLabel];
-    [aCoder encodeObject:self.summary forKey:kAlfrescoBaseConfigPropertySummary];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
@@ -59,6 +52,13 @@
         self.summary = [aDecoder decodeObjectForKey:kAlfrescoBaseConfigPropertySummary];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.identifier forKey:kAlfrescoBaseConfigPropertyIdentifier];
+    [aCoder encodeObject:self.label forKey:kAlfrescoBaseConfigPropertyLabel];
+    [aCoder encodeObject:self.summary forKey:kAlfrescoBaseConfigPropertySummary];
 }
 
 @end

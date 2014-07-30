@@ -37,13 +37,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [super encodeWithCoder:aCoder];
-    
-    [aCoder encodeObject:self.items forKey:kAlfrescoGroupConfigPropertyItems];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -53,6 +46,13 @@
         self.items = [aDecoder decodeObjectForKey:kAlfrescoGroupConfigPropertyItems];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeObject:self.items forKey:kAlfrescoGroupConfigPropertyItems];
 }
 
 @end

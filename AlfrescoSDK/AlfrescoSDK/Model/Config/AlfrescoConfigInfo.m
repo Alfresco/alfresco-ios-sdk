@@ -54,12 +54,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:self.schemaVersion forKey:kAlfrescoConfigInfoPropertySchemaVersion];
-    [aCoder encodeObject:self.configVersion forKey:kAlfrescoConfigInfoPropertyConfigVersion];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
@@ -69,6 +63,12 @@
         self.configVersion = [aDecoder decodeObjectForKey:kAlfrescoConfigInfoPropertyConfigVersion];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.schemaVersion forKey:kAlfrescoConfigInfoPropertySchemaVersion];
+    [aCoder encodeObject:self.configVersion forKey:kAlfrescoConfigInfoPropertyConfigVersion];
 }
 
 @end

@@ -41,13 +41,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:self.creatableMimeTypes forKey:kAlfrescoCreationConfigPropertyCreatableMimeTypes];
-    [aCoder encodeObject:self.creatableDocumentTypes forKey:kAlfrescoCreationConfigPropertyCreatableDocumentTypes];
-    [aCoder encodeObject:self.creatableFolderTypes forKey:kAlfrescoCreationConfigPropertyCreatableFolderTypes];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
@@ -58,6 +51,13 @@
         self.creatableFolderTypes = [aDecoder decodeObjectForKey:kAlfrescoCreationConfigPropertyCreatableFolderTypes];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.creatableMimeTypes forKey:kAlfrescoCreationConfigPropertyCreatableMimeTypes];
+    [aCoder encodeObject:self.creatableDocumentTypes forKey:kAlfrescoCreationConfigPropertyCreatableDocumentTypes];
+    [aCoder encodeObject:self.creatableFolderTypes forKey:kAlfrescoCreationConfigPropertyCreatableFolderTypes];
 }
 
 @end

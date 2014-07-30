@@ -66,3 +66,23 @@ extern NSString * const kAlfrescoViewConfigPropertyFormIdentifier;
 extern NSString * const kAlfrescoWorkflowConfigPropertyProcessConfig;
 extern NSString * const kAlfrescoWorkflowConfigPropertyTaskConfig;
 
+extern NSString * const kAlfrescoModelDefinitionPropertyName;
+extern NSString * const kAlfrescoModelDefinitionPropertyTitle;
+extern NSString * const kAlfrescoModelDefinitionPropertySummary;
+extern NSString * const kAlfrescoModelDefinitionPropertyParent;
+extern NSString * const kAlfrescoModelDefinitionPropertyPropertyDefinitions;
+
+extern NSString * const kAlfrescoNodeTypeDefinitionPropertyMandatoryAspects;
+
+extern NSString * const kAlfrescoPropertyDefinitionPropertyName;
+extern NSString * const kAlfrescoPropertyDefinitionPropertyTitle;
+extern NSString * const kAlfrescoPropertyDefinitionPropertySummary;
+extern NSString * const kAlfrescoPropertyDefinitionPropertyType;
+extern NSString * const kAlfrescoPropertyDefinitionPropertyIsRequired;
+extern NSString * const kAlfrescoPropertyDefinitionPropertyIsReadOnly;
+extern NSString * const kAlfrescoPropertyDefinitionPropertyIsMultiValued;
+extern NSString * const kAlfrescoPropertyDefinitionPropertyDefaultValue;
+extern NSString * const kAlfrescoPropertyDefinitionPropertyAllowableValues;
+
+
+

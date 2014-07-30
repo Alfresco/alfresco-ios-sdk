@@ -43,15 +43,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [super encodeWithCoder:aCoder];
-    
-    [aCoder encodeObject:self.iconIdentifier forKey:kAlfrescoItemConfigPropertyIconIdentifier];
-    [aCoder encodeObject:self.type forKey:kAlfrescoItemConfigPropertyType];
-    [aCoder encodeObject:self.parameters forKey:kAlfrescoItemConfigPropertyParameters];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -64,6 +55,15 @@
     }
 
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeObject:self.iconIdentifier forKey:kAlfrescoItemConfigPropertyIconIdentifier];
+    [aCoder encodeObject:self.type forKey:kAlfrescoItemConfigPropertyType];
+    [aCoder encodeObject:self.parameters forKey:kAlfrescoItemConfigPropertyParameters];
 }
 
 - (id)valueForParameterWithKey:(NSString *)key

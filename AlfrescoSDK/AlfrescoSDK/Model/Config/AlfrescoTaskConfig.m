@@ -37,13 +37,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [super encodeWithCoder:aCoder];
-    
-    [aCoder encodeBool:self.isVisible forKey:kAlfrescoTaskConfigPropertyIsVisible];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -53,6 +46,13 @@
         self.isVisible = [aDecoder decodeBoolForKey:kAlfrescoTaskConfigPropertyIsVisible];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeBool:self.isVisible forKey:kAlfrescoTaskConfigPropertyIsVisible];
 }
 
 @end

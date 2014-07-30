@@ -39,12 +39,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:self.searchableDocumentTypes forKey:kAlfrescoSearchConfigPropertySearchableDocumentTypes];
-    [aCoder encodeObject:self.searchableFolderTypes forKey:kAlfrescoSearchConfigPropertySearchableFolderTypes];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
@@ -54,6 +48,12 @@
         self.searchableFolderTypes = [aDecoder decodeObjectForKey:kAlfrescoSearchConfigPropertySearchableFolderTypes];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.searchableDocumentTypes forKey:kAlfrescoSearchConfigPropertySearchableDocumentTypes];
+    [aCoder encodeObject:self.searchableFolderTypes forKey:kAlfrescoSearchConfigPropertySearchableFolderTypes];
 }
 
 @end

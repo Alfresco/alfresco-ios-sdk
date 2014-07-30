@@ -18,33 +18,35 @@
  *****************************************************************************
  */
 
-#import "AlfrescoFieldConfig.h"
-#import "AlfrescopropertyConstants.h"
+#import "AlfrescoNodeTypeDefinition.h"
+#import "AlfrescoPropertyConstants.h"
+#import "CMISDictionaryUtil.h"
 
-@interface AlfrescoFieldConfig ()
-@property (nonatomic, strong, readwrite) NSString *modelIdentifier;
+@interface AlfrescoNodeTypeDefinition ()
+@property (nonatomic, strong, readwrite) NSArray *mandatoryAspects;
 @end
 
-@implementation AlfrescoFieldConfig
+@implementation AlfrescoNodeTypeDefinition
 
-- (id)initWithDictionary:(NSDictionary *)properties
+- (instancetype)initWithDictionary:(NSDictionary *)properties
 {
     self = [super initWithDictionary:properties];
     if (nil != self)
     {
-        self.modelIdentifier = properties[kAlfrescoFieldConfigPropertyModelIdentifier];
+        self.mandatoryAspects = [properties cmis_objectForKeyNotNull:kAlfrescoNodeTypeDefinitionPropertyMandatoryAspects];
     }
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     
     if (self)
     {
-        self.modelIdentifier = [aDecoder decodeObjectForKey:kAlfrescoFieldConfigPropertyModelIdentifier];
+        self.mandatoryAspects = [aDecoder decodeObjectForKey:kAlfrescoNodeTypeDefinitionPropertyMandatoryAspects];
     }
+    
     return self;
 }
 
@@ -52,7 +54,7 @@
 {
     [super encodeWithCoder:aCoder];
     
-    [aCoder encodeObject:self.modelIdentifier forKey:kAlfrescoFieldConfigPropertyModelIdentifier];
+    [aCoder encodeObject:self.mandatoryAspects forKey:kAlfrescoNodeTypeDefinitionPropertyMandatoryAspects];
 }
 
 @end

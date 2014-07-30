@@ -59,3 +59,21 @@ NSString * const kAlfrescoViewConfigPropertyFormIdentifier = @"formIdentifier";
 NSString * const kAlfrescoWorkflowConfigPropertyProcessConfig = @"processConfig";
 NSString * const kAlfrescoWorkflowConfigPropertyTaskConfig = @"taskConfig";
 
+NSString * const kAlfrescoModelDefinitionPropertyName = @"name";
+NSString * const kAlfrescoModelDefinitionPropertyTitle = @"title";
+NSString * const kAlfrescoModelDefinitionPropertySummary = @"summary";
+NSString * const kAlfrescoModelDefinitionPropertyParent = @"parent";
+NSString * const kAlfrescoModelDefinitionPropertyPropertyDefinitions = @"propertyDefinitions";
+
+NSString * const kAlfrescoNodeTypeDefinitionPropertyMandatoryAspects = @"mandatoryAspects";
+
+NSString * const kAlfrescoPropertyDefinitionPropertyName = @"name";
+NSString * const kAlfrescoPropertyDefinitionPropertyTitle = @"title";
+NSString * const kAlfrescoPropertyDefinitionPropertySummary = @"summary";
+NSString * const kAlfrescoPropertyDefinitionPropertyType = @"type";
+NSString * const kAlfrescoPropertyDefinitionPropertyIsRequired = @"isRequired";
+NSString * const kAlfrescoPropertyDefinitionPropertyIsReadOnly = @"isReadOnly";
+NSString * const kAlfrescoPropertyDefinitionPropertyIsMultiValued = @"isMultiValued";
+NSString * const kAlfrescoPropertyDefinitionPropertyDefaultValue = @"defaultValue";
+NSString * const kAlfrescoPropertyDefinitionPropertyAllowableValues = @"allowableValues";
+

@@ -56,12 +56,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:self.shareURL forKey:kAlfrescoRepositoryConfigPropertyShareURL];
-    [aCoder encodeObject:self.cmisURL forKey:kAlfrescoRepositoryConfigPropertyCMISURL];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
@@ -71,6 +65,12 @@
         self.cmisURL = [aDecoder decodeObjectForKey:kAlfrescoRepositoryConfigPropertyCMISURL];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.shareURL forKey:kAlfrescoRepositoryConfigPropertyShareURL];
+    [aCoder encodeObject:self.cmisURL forKey:kAlfrescoRepositoryConfigPropertyCMISURL];
 }
 
 @end

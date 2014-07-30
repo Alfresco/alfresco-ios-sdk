@@ -37,13 +37,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [super encodeWithCoder:aCoder];
-    
-    [aCoder encodeBool:self.isVisible forKey:kAlfrescoProcessConfigPropertyIsVisible];
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -53,6 +46,13 @@
         self.isVisible = [aDecoder decodeBoolForKey:kAlfrescoProcessConfigPropertyIsVisible];
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeBool:self.isVisible forKey:kAlfrescoProcessConfigPropertyIsVisible];
 }
 
 @end
