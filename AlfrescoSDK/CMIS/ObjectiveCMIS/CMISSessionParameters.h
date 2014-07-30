@@ -22,6 +22,7 @@
 #import "CMISBinding.h"
 #import "CMISAuthenticationProvider.h"
 #import "CMISNetworkProvider.h"
+#import "CMISTypeDefinitionCache.h"
 
 
 // Session param keys
@@ -39,8 +40,12 @@ extern NSString * const kCMISSessionParameterObjectConverterClassName;
  */
 extern NSString * const kCMISSessionParameterLinkCacheSize;
 
-// TODO: Temporary, must be extracted into separate project
-extern NSString * const kCMISSessionParameterMode;
+/**
+ * Key for setting the value of the cache of type definitions.
+ * Value should be an NSNumber, indicating the amount of type defintions will be cached.
+ */
+extern NSString * const kCMISSessionParameterTypeDefinitionCacheSize;
+
 
 @interface CMISSessionParameters : NSObject
 
@@ -50,6 +55,7 @@ extern NSString * const kCMISSessionParameterMode;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *repositoryId;
 @property (nonatomic, strong) NSURL *atomPubUrl;
+@property (nonatomic, strong) NSURL *browserUrl;
 
 @property (nonatomic, assign, readonly) CMISBindingType bindingType;
 
@@ -59,6 +65,9 @@ extern NSString * const kCMISSessionParameterMode;
 
 // Network I/O
 @property (nonatomic, strong) id<CMISNetworkProvider> networkProvider;
+
+// Type definitions cache
+@property (nonatomic, strong) CMISTypeDefinitionCache *typeDefinitionCache;
 
 /** init with binding type
  */

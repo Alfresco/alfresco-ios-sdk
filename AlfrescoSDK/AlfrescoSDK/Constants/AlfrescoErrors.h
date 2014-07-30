@@ -91,7 +91,14 @@ typedef NS_ENUM(NSInteger, AlfrescoErrorCodes)
     kAlfrescoErrorCodeWorkflowNoProcessFound = 1103,
     kAlfrescoErrorCodeWorkflowNoTaskFound = 1104,
     
-    kAlfrescoErrorCodeVersion = 1200
+    kAlfrescoErrorCodeVersion = 1200,
+    
+    kAlfrescoErrorCodeModelDefinition = 1300,
+    kAlfrescoErrorCodeModelDefinitionNotFound = 1301,
+    
+    kAlfrescoErrorCodeConfig = 1400,
+    kAlfrescoErrorCodeConfigInitializationFailed = 1401,
+    kAlfrescoErrorCodeConfigNotFound = 1402
 };
 
 extern NSString * const kAlfrescoErrorDomainName;
@@ -157,6 +164,16 @@ extern NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound;
 
 extern NSString * const kAlfrescoErrorDescriptionVersion;
 
+extern NSString * const kAlfrescoErrorDescriptionModelDefinition;
+extern NSString * const kAlfrescoErrorDescriptionModelDefinitionNotFound;
+
+extern NSString * const kAlfrescoErrorDescriptionConfig;
+extern NSString * const kAlfrescoErrorDescriptionConfigInitializationFailed;
+extern NSString * const kAlfrescoErrorDescriptionConfigNotFound;
+
+// Keys used in userInfo dictionary
+extern NSString * const kAlfrescoErrorKeyHTTPResponseCode;
+extern NSString * const kAlfrescoErrorKeyHTTPResponseBody;
 
 /** AlfrescoErrors is used in case an error occurs when executing an operation against the Alfresco repository.
  
@@ -179,14 +196,34 @@ extern NSString * const kAlfrescoErrorDescriptionVersion;
 + (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
 
-/** Creates an error object based on an error code and a description.
+/** Creates an error object based on an error code.
  
  @param code the code string that represents the error type.
  @return The newly created error.
  */
 + (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code;
 
+/** Creates an error object based on an error code and a reason.
+ 
+ @param code the code string that represents the error type.
+ @param reason An explanation or error details that explain why the error occurred.
+ @return The newly created error.
+ */
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code reason:(NSString *)reason;
 
+/** Creates an error object based on an error code and a userInfo dictionary.
+ 
+ @param code the code string that represents the error type.
+ @param userInfo Dictionary containing information about the error.
+ @return The newly created error.
+ */
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code userInfo:(NSDictionary *)userInfo;
+
+/** Creates an error object based on the given JSON.
+ 
+ @param parameters The dictionary representing the JSON containing error information.
+ @return The newly created error.
+ */
 + (NSError *)alfrescoErrorFromJSONParameters:(NSDictionary *)parameters;
 
 /**

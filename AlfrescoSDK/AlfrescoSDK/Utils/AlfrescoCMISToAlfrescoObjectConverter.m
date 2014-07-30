@@ -28,6 +28,9 @@
 #import "AlfrescoCloudSession.h"
 #import "AlfrescoCMISFolder.h"
 #import "AlfrescoCMISDocument.h"
+#import "AlfrescoNodeTypeDefinition.h"
+#import "AlfrescoPropertyConstants.h"
+#import "CMISPropertyDefinition.h"
 
 @interface AlfrescoCMISToAlfrescoObjectConverter ()
 @property (nonatomic, assign) BOOL isCloud;
@@ -71,7 +74,7 @@
     if (![objectType isEqualToString:emptyString])
     {
         NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueFolder withString:kAlfrescoModelTypeFolder];
-        [properties setValue:[AlfrescoCMISToAlfrescoObjectConverter propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
+        [properties setValue:[self propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
     {
@@ -114,7 +117,7 @@
     if (![objectType isEqualToString:emptyString])
     {
         NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueDocument withString:kAlfrescoModelTypeContent];
-        [properties setValue:[AlfrescoCMISToAlfrescoObjectConverter propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
+        [properties setValue:[self propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
     }
     if (![createdBy isEqualToString:emptyString])
     {
@@ -156,7 +159,7 @@
     {
         NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
         NSString *propertyStringType = propData.identifier;
-        NSNumber *propTypeIndex = @([AlfrescoCMISToAlfrescoObjectConverter typeForCMISProperty:propertyStringType]);
+        NSNumber *propTypeIndex = @([self typeForCMISPropertyTypeString:propertyStringType]);
         [propertyDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
         if(propData.values != nil && propData.values.count > 1)
         {
@@ -183,7 +186,7 @@
             NSMutableArray *strippedAspectTypes = [NSMutableArray array];
             for (NSString * type in folder.aspectTypes)
             {
-                NSString *correctedString = [AlfrescoCMISToAlfrescoObjectConverter propertyValueWithoutPrecursor:type];
+                NSString *correctedString = [self propertyValueWithoutPrecursor:type];
                 [strippedAspectTypes addObject:correctedString];
             }
             NSString *title = [folder.properties propertyValueForId:kAlfrescoModelPropertyTitle];
@@ -209,7 +212,7 @@
             NSMutableArray *strippedAspectTypes = [NSMutableArray array];
             for (NSString * type in document.aspectTypes)
             {
-                NSString *correctedString = [AlfrescoCMISToAlfrescoObjectConverter propertyValueWithoutPrecursor:type];
+                NSString *correctedString = [self propertyValueWithoutPrecursor:type];
                 [strippedAspectTypes addObject:correctedString];
             }
             NSString *title = [document.properties propertyValueForId:kAlfrescoModelPropertyTitle];
@@ -260,34 +263,74 @@
     return (AlfrescoDocument *)[self nodeFromCMISObject:cmisObject];
 }
 
+- (AlfrescoDocumentTypeDefinition *)documentTypeDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition
+{
+    return (AlfrescoDocumentTypeDefinition *)[self modelDefinitionFromCMISTypeDefinition:cmisTypeDefinition];
+}
+
+- (AlfrescoFolderTypeDefinition *)folderTypeDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition
+{
+    return (AlfrescoFolderTypeDefinition *)[self modelDefinitionFromCMISTypeDefinition:cmisTypeDefinition];
+}
+
+- (AlfrescoAspectDefinition *)aspectDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition
+{
+    return (AlfrescoAspectDefinition *)[self modelDefinitionFromCMISTypeDefinition:cmisTypeDefinition];
+}
+
 #pragma mark internal methods
 
-+ (AlfrescoPropertyType)typeForCMISProperty:(NSString *)propertyIdentifier
+- (AlfrescoPropertyType)typeForCMISPropertyTypeString:(NSString *)type
 {
-    if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeInt]) 
+    if ([[type lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeInt])
     {
         return AlfrescoPropertyTypeInteger;
     }
-    else if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeBoolean]) 
+    else if ([[type lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeBoolean])
     {
         return AlfrescoPropertyTypeBoolean;
     }
-    else if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeDatetime]) 
+    else if ([[type lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeDatetime])
     {
         return AlfrescoPropertyTypeDateTime;
     }
-    else if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeDecimal]) 
+    else if ([[type lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeDecimal])
     {
         return AlfrescoPropertyTypeDecimal;
     }
-    else if ([[propertyIdentifier lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeId]) 
+    else if ([[type lowercaseString] hasSuffix:kAlfrescoCMISPropertyTypeId])
     {
         return AlfrescoPropertyTypeId;
     }
     return AlfrescoPropertyTypeString;
 }
 
-+ (NSString *)propertyValueWithoutPrecursor:(NSString *)value
+- (AlfrescoPropertyType)typeForCMISPropertyType:(CMISPropertyType)type
+{
+    if (type == CMISPropertyTypeInteger)
+    {
+        return AlfrescoPropertyTypeInteger;
+    }
+    else if (type == CMISPropertyTypeBoolean)
+    {
+        return AlfrescoPropertyTypeBoolean;
+    }
+    else if (type == CMISPropertyTypeDateTime)
+    {
+        return AlfrescoPropertyTypeDateTime;
+    }
+    else if (type == CMISPropertyTypeDecimal)
+    {
+        return AlfrescoPropertyTypeDecimal;
+    }
+    else if (type == CMISPropertyTypeId)
+    {
+        return AlfrescoPropertyTypeId;
+    }
+    return AlfrescoPropertyTypeString;
+}
+
+- (NSString *)propertyValueWithoutPrecursor:(NSString *)value
 {
     if ([value hasPrefix:kAlfrescoCMISAspectPrefix])
     {
@@ -302,6 +345,160 @@
         return [value stringByReplacingOccurrencesOfString:kAlfrescoCMISFolderTypePrefix withString:@""];
     }
     return value;
+}
+
+- (AlfrescoModelDefinition *)modelDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition
+{
+    // build dictionary to create an AlfrescoNodeTypeDefinition instance
+    NSMutableDictionary *modelDefinitionProperties = [NSMutableDictionary dictionary];
+    if (cmisTypeDefinition.displayName != nil)
+    {
+        modelDefinitionProperties[kAlfrescoModelDefinitionPropertyTitle] = cmisTypeDefinition.displayName;
+    }
+    if (cmisTypeDefinition.summary != nil)
+    {
+        modelDefinitionProperties[kAlfrescoModelDefinitionPropertySummary] = cmisTypeDefinition.summary;
+    }
+    
+    // build dictionary of property definitions
+    NSMutableDictionary *propertyDefinitions = [NSMutableDictionary dictionary];
+    for (NSString *cmisPropertyName in [cmisTypeDefinition.propertyDefinitions allKeys])
+    {
+        CMISPropertyDefinition *cmisPropertyDefinition = [cmisTypeDefinition propertyDefinitionForId:cmisPropertyName];
+        
+        // convert and store the property definition
+        propertyDefinitions[cmisPropertyDefinition.identifier] = [self propertyDefinitionFromCMISPropertyDefinition:cmisPropertyDefinition];
+    }
+    
+    // store property definitions
+    modelDefinitionProperties[kAlfrescoModelDefinitionPropertyPropertyDefinitions] = propertyDefinitions;
+    
+    // TODO: store any mandatory aspects defined for the type
+    
+    // determine which subclass instance to create depending on the baseId
+    AlfrescoModelDefinition *modelDefinition = nil;
+    if (cmisTypeDefinition.baseTypeId == CMISBaseTypeDocument)
+    {
+        if ([cmisTypeDefinition.identifier isEqualToString:kCMISPropertyObjectTypeIdValueDocument])
+        {
+            modelDefinitionProperties[kAlfrescoModelDefinitionPropertyName] = kAlfrescoModelTypeContent;
+        }
+        else
+        {
+            modelDefinitionProperties[kAlfrescoModelDefinitionPropertyName] = [self propertyValueWithoutPrecursor:cmisTypeDefinition.identifier];
+        }
+        
+        if (cmisTypeDefinition.parentTypeId != nil)
+        {
+            if ([cmisTypeDefinition.parentTypeId isEqualToString:kCMISPropertyObjectTypeIdValueDocument])
+            {
+                modelDefinitionProperties[kAlfrescoModelDefinitionPropertyParent] = kAlfrescoModelTypeContent;
+            }
+            else
+            {
+                modelDefinitionProperties[kAlfrescoModelDefinitionPropertyParent] = [self propertyValueWithoutPrecursor:cmisTypeDefinition.parentTypeId];
+            }
+        }
+        
+        modelDefinition = [[AlfrescoDocumentTypeDefinition alloc] initWithDictionary:modelDefinitionProperties];
+    }
+    else if (cmisTypeDefinition.baseTypeId == CMISBaseTypeFolder)
+    {
+        if ([cmisTypeDefinition.identifier isEqualToString:kCMISPropertyObjectTypeIdValueFolder])
+        {
+            modelDefinitionProperties[kAlfrescoModelDefinitionPropertyName] = kAlfrescoModelTypeFolder;
+        }
+        else
+        {
+            modelDefinitionProperties[kAlfrescoModelDefinitionPropertyName] = [self propertyValueWithoutPrecursor:cmisTypeDefinition.identifier];
+        }
+        
+        if (cmisTypeDefinition.parentTypeId != nil)
+        {
+            if ([cmisTypeDefinition.parentTypeId isEqualToString:kCMISPropertyObjectTypeIdValueFolder])
+            {
+                modelDefinitionProperties[kAlfrescoModelDefinitionPropertyParent] = kAlfrescoModelTypeFolder;
+            }
+            else
+            {
+                modelDefinitionProperties[kAlfrescoModelDefinitionPropertyParent] = [self propertyValueWithoutPrecursor:cmisTypeDefinition.parentTypeId];
+            }
+        }
+        
+        modelDefinition = [[AlfrescoFolderTypeDefinition alloc] initWithDictionary:modelDefinitionProperties];
+    }
+    else
+    {
+        // if it's not a document or folder, presume it's an aspect
+        modelDefinitionProperties[kAlfrescoModelDefinitionPropertyName] = [self propertyValueWithoutPrecursor:cmisTypeDefinition.identifier];
+        
+        // TODO: Determine if an aspect has a parent, for now, presume it doesn't
+        
+        modelDefinition = [[AlfrescoAspectDefinition alloc] initWithDictionary:modelDefinitionProperties];
+    }
+    
+    return modelDefinition;
+}
+
+- (AlfrescoPropertyDefinition *)propertyDefinitionFromCMISPropertyDefinition:(CMISPropertyDefinition *)cmisPropertyDefinition
+{
+    // build dictionary to create an AlfrescoPropertyDefinition instance
+    // setup basic properties
+    NSMutableDictionary *propertyDefinitonProperties = [NSMutableDictionary dictionary];
+    propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyName] = cmisPropertyDefinition.identifier;
+    if (cmisPropertyDefinition.displayName != nil)
+    {
+        propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyTitle] = cmisPropertyDefinition.displayName;
+    }
+    if (cmisPropertyDefinition.summary != nil)
+    {
+        propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertySummary] = cmisPropertyDefinition.summary;
+    }
+    
+    // determine property type
+    AlfrescoPropertyType propertyType = [self typeForCMISPropertyType:cmisPropertyDefinition.propertyType];
+    propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyType] = @(propertyType);
+    
+    // setup flag properties
+    propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyIsRequired] = @(cmisPropertyDefinition.isRequired);
+    
+    if (cmisPropertyDefinition.updatability == CMISUpdatabilityReadWrite)
+    {
+        propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyIsReadOnly] = @(NO);
+    }
+    else if (cmisPropertyDefinition.updatability == CMISUpdatabilityReadOnly)
+    {
+        propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyIsReadOnly] = @(YES);
+    }
+    
+    if (cmisPropertyDefinition.cardinality == CMISCardinalitySingle)
+    {
+        propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyIsMultiValued] = @(NO);
+        
+        // for single value properties store the first default value
+        if (cmisPropertyDefinition.defaultValues != nil && cmisPropertyDefinition.defaultValues.count > 0)
+        {
+            propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyDefaultValue] = cmisPropertyDefinition.defaultValues[0];
+        }
+    }
+    else if (cmisPropertyDefinition.cardinality == CMISCardinalityMulti)
+    {
+        propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyIsMultiValued] = @(YES);
+        
+        if (cmisPropertyDefinition.defaultValues != nil)
+        {
+            propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyDefaultValue] = cmisPropertyDefinition.defaultValues;
+        }
+    }
+    
+    // setup allowable values
+    if (cmisPropertyDefinition.choices != nil && cmisPropertyDefinition.choices.count > 0)
+    {
+        // TODO: populate the allowable values property
+    }
+    
+    // create AlfrescoPropertyDefinition instance
+    return [[AlfrescoPropertyDefinition alloc] initWithDictionary:propertyDefinitonProperties];
 }
 
 @end

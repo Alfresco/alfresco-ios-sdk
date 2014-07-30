@@ -46,4 +46,6 @@
 
 + (NSDictionary *)pagingFromOldAPIData:(NSData *)data error:(NSError **)outError;
 
++ (NSDictionary *)dictionaryFromDictionary:(NSDictionary *)source withMappedKeys:(NSDictionary *)keyMappings;
+
 @end

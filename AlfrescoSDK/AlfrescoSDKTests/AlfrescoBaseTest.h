@@ -28,7 +28,7 @@
 
 #define BOOL_TO_STRING(x) (x ? @"YES" : @"NO")
 
-#define TIMEINTERVAL 120
+#define TIMEINTERVAL 30
 
 @interface AlfrescoBaseTest : XCTestCase
 
@@ -76,5 +76,7 @@
 - (NSDictionary *)setupEnvironmentParameters;
 - (void)setUpTestImageFile:(NSString *)filePath;
 - (void)resetTestVariables;
+- (NSString *)failureMessageFromError:(NSError *)error;
+
 
 @end

@@ -429,4 +429,33 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
     }
 }
 
+- (NSString *)failureMessageFromError:(NSError *)error
+{
+    // just return if error has not been provided
+    if (error == nil)
+    {
+        return nil;
+    }
+    
+    NSString *message = error.localizedDescription;
+    
+    // add the failure reason, if there is one!
+    if (error.localizedFailureReason != nil)
+    {
+        message = [message stringByAppendingFormat:@" - %@", error.localizedFailureReason];
+    }
+    else
+    {
+        // try looking for an underlying error and output the whole error object
+        NSError *underlyingError = error.userInfo[NSUnderlyingErrorKey];
+        if (underlyingError != nil)
+        {
+            message = [message stringByAppendingFormat:@" - %@", underlyingError];
+        }
+    }
+    
+    return message;
+}
+
+
 @end
