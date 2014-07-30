@@ -184,6 +184,35 @@
 		581FC4F3197403D200045087 /* AlfrescoCreationConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 581FC4F2197403D200045087 /* AlfrescoCreationConfig.m */; };
 		581FC4F61974040100045087 /* AlfrescoSearchConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 581FC4F51974040100045087 /* AlfrescoSearchConfig.m */; };
 		581FC4FC197406AD00045087 /* AlfrescoConfigScope.m in Sources */ = {isa = PBXBuildFile; fileRef = 581FC4FB197406AD00045087 /* AlfrescoConfigScope.m */; };
+		582AEA451989100300CD551D /* AlfrescoActionConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4DC1974013200045087 /* AlfrescoActionConfig.h */; };
+		582AEA461989100300CD551D /* AlfrescoActionGroupConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4D91974011100045087 /* AlfrescoActionGroupConfig.h */; };
+		582AEA471989100300CD551D /* AlfrescoBaseConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4BF1973DD5C00045087 /* AlfrescoBaseConfig.h */; };
+		582AEA481989100300CD551D /* AlfrescoConfigInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4BC1973DC8C00045087 /* AlfrescoConfigInfo.h */; };
+		582AEA491989100300CD551D /* AlfrescoConfigScope.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4FA197406AD00045087 /* AlfrescoConfigScope.h */; };
+		582AEA4A1989100300CD551D /* AlfrescoCreationConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4F1197403D200045087 /* AlfrescoCreationConfig.h */; };
+		582AEA4B1989100300CD551D /* AlfrescoFeatureConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4CA1973FED600045087 /* AlfrescoFeatureConfig.h */; };
+		582AEA4C1989100300CD551D /* AlfrescoFieldConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4E51974021400045087 /* AlfrescoFieldConfig.h */; };
+		582AEA4D1989100300CD551D /* AlfrescoFieldGroupConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4E2197401DC00045087 /* AlfrescoFieldGroupConfig.h */; };
+		582AEA4E1989100300CD551D /* AlfrescoFormConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4DF1974014A00045087 /* AlfrescoFormConfig.h */; };
+		582AEA4F1989100300CD551D /* AlfrescoGroupConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4D01974002000045087 /* AlfrescoGroupConfig.h */; };
+		582AEA501989100300CD551D /* AlfrescoItemConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4CD1973FEEE00045087 /* AlfrescoItemConfig.h */; };
+		582AEA511989100300CD551D /* AlfrescoProcessConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4EB1974036F00045087 /* AlfrescoProcessConfig.h */; };
+		582AEA521989100300CD551D /* AlfrescoProfileConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4C71973E5D100045087 /* AlfrescoProfileConfig.h */; };
+		582AEA531989100300CD551D /* AlfrescoRepositoryConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4C21973DDB600045087 /* AlfrescoRepositoryConfig.h */; };
+		582AEA541989100300CD551D /* AlfrescoSearchConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4F41974040100045087 /* AlfrescoSearchConfig.h */; };
+		582AEA551989100300CD551D /* AlfrescoTaskConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4EE1974039800045087 /* AlfrescoTaskConfig.h */; };
+		582AEA561989100300CD551D /* AlfrescoViewConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4D6197400EF00045087 /* AlfrescoViewConfig.h */; };
+		582AEA571989100300CD551D /* AlfrescoViewGroupConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4D3197400BB00045087 /* AlfrescoViewGroupConfig.h */; };
+		582AEA581989100300CD551D /* AlfrescoWorkflowConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4E8197402FE00045087 /* AlfrescoWorkflowConfig.h */; };
+		582AEA591989100300CD551D /* AlfrescoAspectDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410BA198679C20047EBDF /* AlfrescoAspectDefinition.h */; };
+		582AEA5A1989100300CD551D /* AlfrescoDocumentTypeDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410B1198679630047EBDF /* AlfrescoDocumentTypeDefinition.h */; };
+		582AEA5B1989100300CD551D /* AlfrescoFolderTypeDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410B4198679780047EBDF /* AlfrescoFolderTypeDefinition.h */; };
+		582AEA5C1989100300CD551D /* AlfrescoModelDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410AB198678550047EBDF /* AlfrescoModelDefinition.h */; };
+		582AEA5D1989100300CD551D /* AlfrescoNodeTypeDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410AE1986793D0047EBDF /* AlfrescoNodeTypeDefinition.h */; };
+		582AEA5E1989100300CD551D /* AlfrescoPropertyDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410BD198679E60047EBDF /* AlfrescoPropertyDefinition.h */; };
+		582AEA5F1989100300CD551D /* AlfrescoTaskTypeDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410B7198679920047EBDF /* AlfrescoTaskTypeDefinition.h */; };
+		582AEA601989100300CD551D /* AlfrescoConfigService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4B81973D96E00045087 /* AlfrescoConfigService.h */; };
+		582AEA611989100300CD551D /* AlfrescoModelDefinitionService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410C019868AEE0047EBDF /* AlfrescoModelDefinitionService.h */; };
 		58604D9C18F2A2BC002B09A5 /* AlfrescoLegacyAPIActivityStreamService.m in Sources */ = {isa = PBXBuildFile; fileRef = 58604D8D18F2A2BC002B09A5 /* AlfrescoLegacyAPIActivityStreamService.m */; };
 		58604D9D18F2A2BC002B09A5 /* AlfrescoLegacyAPICommentService.m in Sources */ = {isa = PBXBuildFile; fileRef = 58604D8F18F2A2BC002B09A5 /* AlfrescoLegacyAPICommentService.m */; };
 		58604D9E18F2A2BC002B09A5 /* AlfrescoLegacyAPIDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 58604D9118F2A2BC002B09A5 /* AlfrescoLegacyAPIDocumentFolderService.m */; };
@@ -246,6 +275,35 @@
 			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				582AEA451989100300CD551D /* AlfrescoActionConfig.h in CopyFiles */,
+				582AEA461989100300CD551D /* AlfrescoActionGroupConfig.h in CopyFiles */,
+				582AEA471989100300CD551D /* AlfrescoBaseConfig.h in CopyFiles */,
+				582AEA481989100300CD551D /* AlfrescoConfigInfo.h in CopyFiles */,
+				582AEA491989100300CD551D /* AlfrescoConfigScope.h in CopyFiles */,
+				582AEA4A1989100300CD551D /* AlfrescoCreationConfig.h in CopyFiles */,
+				582AEA4B1989100300CD551D /* AlfrescoFeatureConfig.h in CopyFiles */,
+				582AEA4C1989100300CD551D /* AlfrescoFieldConfig.h in CopyFiles */,
+				582AEA4D1989100300CD551D /* AlfrescoFieldGroupConfig.h in CopyFiles */,
+				582AEA4E1989100300CD551D /* AlfrescoFormConfig.h in CopyFiles */,
+				582AEA4F1989100300CD551D /* AlfrescoGroupConfig.h in CopyFiles */,
+				582AEA501989100300CD551D /* AlfrescoItemConfig.h in CopyFiles */,
+				582AEA511989100300CD551D /* AlfrescoProcessConfig.h in CopyFiles */,
+				582AEA521989100300CD551D /* AlfrescoProfileConfig.h in CopyFiles */,
+				582AEA531989100300CD551D /* AlfrescoRepositoryConfig.h in CopyFiles */,
+				582AEA541989100300CD551D /* AlfrescoSearchConfig.h in CopyFiles */,
+				582AEA551989100300CD551D /* AlfrescoTaskConfig.h in CopyFiles */,
+				582AEA561989100300CD551D /* AlfrescoViewConfig.h in CopyFiles */,
+				582AEA571989100300CD551D /* AlfrescoViewGroupConfig.h in CopyFiles */,
+				582AEA581989100300CD551D /* AlfrescoWorkflowConfig.h in CopyFiles */,
+				582AEA591989100300CD551D /* AlfrescoAspectDefinition.h in CopyFiles */,
+				582AEA5A1989100300CD551D /* AlfrescoDocumentTypeDefinition.h in CopyFiles */,
+				582AEA5B1989100300CD551D /* AlfrescoFolderTypeDefinition.h in CopyFiles */,
+				582AEA5C1989100300CD551D /* AlfrescoModelDefinition.h in CopyFiles */,
+				582AEA5D1989100300CD551D /* AlfrescoNodeTypeDefinition.h in CopyFiles */,
+				582AEA5E1989100300CD551D /* AlfrescoPropertyDefinition.h in CopyFiles */,
+				582AEA5F1989100300CD551D /* AlfrescoTaskTypeDefinition.h in CopyFiles */,
+				582AEA601989100300CD551D /* AlfrescoConfigService.h in CopyFiles */,
+				582AEA611989100300CD551D /* AlfrescoModelDefinitionService.h in CopyFiles */,
 				58FE7B2A18D3713D00E28197 /* AlfrescoListingFilter.h in CopyFiles */,
 				279C02881892CC5800BC8628 /* AlfrescoSDK.h in CopyFiles */,
 				279C02891892CC6F00BC8628 /* AlfrescoActivityEntry.h in CopyFiles */,
