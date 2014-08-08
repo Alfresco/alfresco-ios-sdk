@@ -20,7 +20,8 @@
 
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoOAuthLoginViewController.h"
+#import "AlfrescoConstants.h"
+#import "AlfrescoOAuthData.h"
 #import "AlfrescoOAuthLoginDelegate.h"
 #import "AlfrescoRequest.h"
 

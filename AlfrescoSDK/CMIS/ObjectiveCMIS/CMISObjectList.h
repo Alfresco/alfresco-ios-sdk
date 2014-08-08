@@ -19,6 +19,7 @@
  
 #import <Foundation/Foundation.h>
 #import "CMISEnums.h"
+#import "CMISExtensionData.h"
 
 @protocol CMISBinding;
 
@@ -26,7 +27,7 @@
 /**
   * Class to hold the result of executing a query
   */
-@interface CMISObjectList : NSObject
+@interface CMISObjectList : CMISExtensionData
 
 /**
  * Array of CMISObjectData, representing a result of some query

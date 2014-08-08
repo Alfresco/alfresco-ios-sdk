@@ -23,16 +23,20 @@
 typedef NS_ENUM(NSInteger, CMISBindingType)
 {
     CMISBindingTypeAtomPub,
+    CMISBindingTypeBrowser,
     CMISBindingTypeCustom
 };
 
 // Base type
 typedef NS_ENUM(NSInteger, CMISBaseType)
 {
+    CMISBaseTypeUnknown,
     CMISBaseTypeDocument,
     CMISBaseTypeFolder,
     CMISBaseTypeRelationship,
-    CMISBaseTypePolicy
+    CMISBaseTypePolicy,
+    CMISBaseTypeItem,
+    CMISBaseTypeSecondary
 };
 
 typedef NS_ENUM(NSInteger, CMISIncludeRelationship)
@@ -53,7 +57,8 @@ typedef NS_ENUM(NSInteger, CMISPropertyType)
     CMISPropertyTypeDecimal,
     CMISPropertyTypeHtml,
     CMISPropertyTypeString,
-    CMISPropertyTypeUri
+    CMISPropertyTypeUri,
+    CMISPropertyTypeUnknown
 };
 
 // Property cardinality options
@@ -140,12 +145,84 @@ typedef NS_ENUM(NSInteger, CMISContentStreamAllowedType)
 {
     CMISContentStreamNotAllowed,
     CMISContentStreamAllowed,
-    CMISContentStreamRequired
+    CMISContentStreamRequired,
+    CMISContentStreamUnknown
+};
+
+// Repository Capability ACL
+typedef NS_ENUM(NSInteger, CMISCapabilityAcl)
+{
+    CMISCapabilityAclNone,
+    CMISCapabilityAclDiscover,
+    CMISCapabilityAclManage
+};
+
+// Repository Capability Changes
+typedef NS_ENUM(NSInteger, CMISCapabilityChanges)
+{
+    CMISCapabilityChangesNone,
+    CMISCapabilityChangesObjectIdsOnly,
+    CMISCapabilityChangesProperties,
+    CMISCapabilityChangesAll
+};
+
+// Repository Capability Content Stream Updates
+typedef NS_ENUM(NSInteger, CMISCapabilityContentStreamUpdates)
+{
+    CMISCapabilityContentStreamUpdatesNone,
+    CMISCapabilityContentStreamUpdatesPwcOnly,
+    CMISCapabilityContentStreamUpdatesAnytime
+};
+
+// Repository Capability Join
+typedef NS_ENUM(NSInteger, CMISCapabilityJoin)
+{
+    CMISCapabilityJoinNone,
+    CMISCapabilityJoinInnerOnly,
+    CMISCapabilityJoinInnerAndOuter
+};
+
+// Repository Capability Query
+typedef NS_ENUM(NSInteger, CMISCapabilityQuery)
+{
+    CMISCapabilityQueryNone,
+    CMISCapabilityQueryMetaDataOnly,
+    CMISCapabilityQueryFullTextOnly,
+    CMISCapabilityQueryBothSeparate,
+    CMISCapabilityQueryBothCombined
+};
+
+// Repository Capability Renditions
+typedef NS_ENUM(NSInteger, CMISCapabilityRenditions)
+{
+    CMISCapabilityRenditionsNone,
+    CMISCapabilityRenditionsRead
+};
+
+// Repository Capability Order By
+typedef NS_ENUM(NSInteger, CMISCapabilityOrderBy)
+{
+    CMISCapabilityOrderByNone,
+    CMISCapabilityOrderByCommon,
+    CMISCapabilityOrderByCustom
+};
+
+// ReturnVersion
+typedef NS_ENUM(NSInteger, CMISReturnVersion)
+{
+    NOT_PROVIDED,
+    THIS,
+    LATEST,
+    LATEST_MAJOR
 };
 
 @interface CMISEnums : NSObject 
 
 + (NSString *)stringForIncludeRelationShip:(CMISIncludeRelationship)includeRelationship;
 + (NSString *)stringForUnfileObject:(CMISUnfileObject)unfileObject;
++ (NSString *)stringForReturnVersion:(BOOL)major;
++ (CMISBaseType)enumForBaseId:(NSString *)baseId;
++ (CMISContentStreamAllowedType)enumForContentStreamAllowed:(NSString *)contentStreamAllowed;
++ (CMISPropertyType)enumForPropertyType:(NSString *)typeString;
 
 @end

@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4EB0769615B00D8E00DF7DED"
-               BuildableName = "libAlfrescoSDKv1.3.1.a"
-               BlueprintName = "AlfrescoSDK"
+               BuildableName = "libAlfrescoSDK-iOSv1.3.1.a"
+               BlueprintName = "AlfrescoSDK-iOS"
                ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4EB076A615B00D8E00DF7DED"
-               BuildableName = "AlfrescoSDKTests.xctest"
-               BlueprintName = "AlfrescoSDKTests"
+               BuildableName = "AlfrescoSDK-iOSTests.xctest"
+               BlueprintName = "AlfrescoSDK-iOSTests"
                ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,8 +47,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4EB076A615B00D8E00DF7DED"
-               BuildableName = "AlfrescoSDKTests.xctest"
-               BlueprintName = "AlfrescoSDKTests"
+               BuildableName = "AlfrescoSDK-iOSTests.xctest"
+               BlueprintName = "AlfrescoSDK-iOSTests"
                ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
             </BuildableReference>
          </TestableReference>

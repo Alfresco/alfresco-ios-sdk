@@ -25,4 +25,10 @@
 #import <AvailabilityMacros.h>
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#import <MobileCoreServices/MobileCoreServices.h>
+#elif TARGET_OS_MAC
+#import <CoreServices/CoreServices.h>
+#endif
+
 #endif

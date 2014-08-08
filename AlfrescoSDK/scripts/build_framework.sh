@@ -21,42 +21,69 @@
 # -----------------------------------------------------------------------------
 # Universal library
 #
-. $ALFRESCO_SDK_SCRIPT/build_library.sh $BUILD_CONFIGURATION \
+. "$ALFRESCO_SDK_SCRIPT/build_library.sh" "$BUILD_CONFIGURATION" \
    || die "Static library failed to build."
 
-
-# -----------------------------------------------------------------------------
-# Build .framework folder structure
 #
-progress_message "Building $ALFRESCO_SDK_FRAMEWORK_NAME"
+# params
+#    target name - e.g. "AlfrescoSDK-iOS" or "AlfrescoSDK-OSX"
+#    library location - e.g. /Users/[username]/AlfrescoSDK-iOSv1.0.a
+#    framework name - e.g. AlfrescoSDK-iOS.framework
+#    framework build path - e.g. /Users/[username]/AlfrescoSDK-iOS.framework
+#
+function build_framework() {
+  # local vars
+  local framework_target=${1}
+  local framework_library_location=${2}
+  local framework_name=${3}
+  local framework_path=${4}
+  local framework_library_header_root="$(dirname "$framework_library_location")"
 
-\rm -rf $ALFRESCO_SDK_FRAMEWORK
-mkdir $ALFRESCO_SDK_FRAMEWORK \
-   || die "Could not create directory $ALFRESCO_SDK_FRAMEWORK"
-mkdir $ALFRESCO_SDK_FRAMEWORK/Versions
-mkdir $ALFRESCO_SDK_FRAMEWORK/Versions/A
-mkdir $ALFRESCO_SDK_FRAMEWORK/Versions/A/Headers
-mkdir $ALFRESCO_SDK_FRAMEWORK/Versions/A/Resources
+  echo "PATH:$framework_path NAME:$framework_name TARGET:$framework_target Location:$framework_library_location"
 
-\cp \
-   $ALFRESCO_SDK_SRC/Framework/Resources/* \
-   $ALFRESCO_SDK_FRAMEWORK/Versions/A/Resources \
-   || die "Error building framework while copying Resources"
-\cp \
-   $ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-iphoneos/include/$ALFRESCO_SDK_PRODUCT_NAME/*.h \
-   $ALFRESCO_SDK_FRAMEWORK/Versions/A/Headers \
-   || die "Error building framework while copying SDK headers"
-\cp \
-   $ALFRESCO_SDK_UNIVERSAL_LIBRARY \
-   $ALFRESCO_SDK_FRAMEWORK/Versions/A/$ALFRESCO_SDK_PRODUCT_NAME \
-   || die "Error building framework while copying AlfrescoSDK universal library"
+  # -----------------------------------------------------------------------------
+  # Build .framework folder structure
+  #
+  progress_message "Building $framework_name"
 
-# Current directory matters to ln.
-cd $ALFRESCO_SDK_FRAMEWORK
-ln -s ./Versions/A/Headers ./Headers
-ln -s ./Versions/A/Resources ./Resources
-ln -s ./Versions/A/$ALFRESCO_SDK_PRODUCT_NAME ./$ALFRESCO_SDK_PRODUCT_NAME
-cd $ALFRESCO_SDK_FRAMEWORK/Versions
-ln -s ./A ./Current
+  \rm -rf "$framework_path"
+  mkdir "$framework_path" \
+     || die "Could not create directory $framework_path"
+  mkdir "$framework_path/Versions"
+  mkdir "$framework_path/Versions/A"
+  mkdir "$framework_path/Versions/A/Headers"
+  mkdir "$framework_path/Versions/A/Resources"
 
-cd $ALFRESCO_SDK_ROOT
+  \cp \
+     "$ALFRESCO_SDK_SRC/Framework/Resources/"* \
+     "$framework_path/Versions/A/Resources" \
+     || die "Error building framework while copying Resources"
+  \cp \
+     "$framework_library_header_root/include/$framework_target/"*.h \
+     "$framework_path/Versions/A/Headers" \
+     || die "Error building framework while copying SDK headers"
+  \cp \
+     "$framework_library_location" \
+     "$framework_path/Versions/A/$framework_target" \
+     || die "Error building framework while copying AlfrescoSDK universal library"
+
+  # Current directory matters to ln.
+  cd "$framework_path"
+  ln -s ./Versions/A/Headers ./Headers
+  ln -s ./Versions/A/Resources ./Resources
+  ln -s ./Versions/A/$framework_target ./$framework_target
+  cd "$framework_path/Versions"
+  ln -s ./A ./Current
+}
+
+build_framework "$ALFRESCO_IOS_SDK_PRODUCT_NAME" \
+                "$ALFRESCO_IOS_SDK_UNIVERSAL_LIBRARY" \
+                "$ALFRESCO_IOS_SDK_FRAMEWORK_NAME" \
+                "$ALFRESCO_IOS_SDK_FRAMEWORK"
+
+build_framework "$ALFRESCO_OSX_SDK_PRODUCT_NAME" \
+                "$ALFRESCO_OSX_SDK_UNIVERSAL_LIBRARY" \
+                "$ALFRESCO_OSX_SDK_FRAMEWORK_NAME" \
+                "$ALFRESCO_OSX_SDK_FRAMEWORK"
+
+cd "$ALFRESCO_SDK_ROOT"
