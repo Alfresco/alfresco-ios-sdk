@@ -19,18 +19,21 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISExtensionData.h"
+#import "CMISRepositoryCapabilities.h"
 
 @interface CMISRepositoryInfo : CMISExtensionData
 
 @property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *desc;
+@property (nonatomic, strong) NSString *summary;
 @property (nonatomic, strong) NSString *rootFolderId;
 
 @property (nonatomic, strong) NSString *cmisVersionSupported;
 @property (nonatomic, strong) NSString *productName;
 @property (nonatomic, strong) NSString *productVersion;
 @property (nonatomic, strong) NSString *vendorName;
+@property (nonatomic, strong) NSString *thinClientUri;
+@property (nonatomic, strong) NSString *latestChangeLogToken;
 
 /**
  * Returns principal ID for an anonymous user (any authenticated user). This
@@ -54,11 +57,11 @@
  */
 @property (nonatomic, strong) NSString *principalIdAnyone;
 
-// TODO the repositoryCapabilities property is currently not types.  
-/**  CMISRepositoryCapabilities needs to be created and replace the raw NSDictionary object
- * that is currently being set from the CMISRepositoryInfoParser
- * Use keypaths to get values until the property is properly typed **
+/**
+ * Returns Repository Capabilities Object
+ *
+ * @return Repository Capabilities
  */
-@property (nonatomic, strong) id repositoryCapabilities;
+@property (nonatomic, strong) CMISRepositoryCapabilities *repositoryCapabilities;
 
 @end

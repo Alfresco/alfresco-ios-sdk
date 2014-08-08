@@ -55,7 +55,13 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         }
     }
     
-    self.userTestConfigFolder = [NSString pathWithComponents:@[environmentVariables[@"IPHONE_SIMULATOR_HOST_HOME"], kAlfrescoTestServersConfigDirectory]];
+    NSString *homePath = environmentVariables[@"IPHONE_SIMULATOR_HOST_HOME"];
+    if (!homePath)
+    {
+        homePath = environmentVariables[@"HOME"];
+    }
+    
+    self.userTestConfigFolder = [NSString pathWithComponents:@[homePath, kAlfrescoTestServersConfigDirectory]];
     NSString *plistFilePath = [self.userTestConfigFolder stringByAppendingPathComponent:kAlfrescoTestServersPlist];
     NSDictionary *plistContents =  [NSDictionary dictionaryWithContentsOfFile:plistFilePath];
     NSDictionary *allEnvironments = plistContents[@"environments"];

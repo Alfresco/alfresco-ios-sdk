@@ -28,7 +28,7 @@
     NSMutableDictionary *repoDictionary = [NSMutableDictionary dictionary];
     NSString *productName = self.cmisSession.repositoryInfo.productName;
     NSString *identifier = self.cmisSession.repositoryInfo.identifier;
-    NSString *summary = self.cmisSession.repositoryInfo.desc;
+    NSString *summary = self.cmisSession.repositoryInfo.summary;
     NSString *version = self.cmisSession.repositoryInfo.productVersion;
     NSArray *versionArray = [version componentsSeparatedByString:@"."];
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];

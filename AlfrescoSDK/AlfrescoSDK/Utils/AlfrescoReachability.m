@@ -46,7 +46,7 @@ static AlfrescoReachability * internetReachability = NULL;
         SCNetworkReachabilityFlags currentFlags = 0;
         if (SCNetworkReachabilityGetFlags(internetReachability->_internetReachabilityRef, &currentFlags))
         {
-            handleFlags(currentFlags);
+            handleAlfrescoReachabilityFlags(currentFlags);
         }
     }
     return internetReachability;
@@ -65,10 +65,10 @@ static AlfrescoReachability * internetReachability = NULL;
 
 static void ReachabilityChangedCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void * info)
 {
-    handleFlags(flags);
+    handleAlfrescoReachabilityFlags(flags);
 }
 
-void handleFlags(SCNetworkReachabilityFlags flags)
+void handleAlfrescoReachabilityFlags(SCNetworkReachabilityFlags flags)
 {
     // At the moment we only care if we have internet access
 #if TARGET_OS_IPHONE

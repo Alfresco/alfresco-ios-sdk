@@ -22,7 +22,6 @@
 #import <objc/runtime.h>
 #import "CMISLog.h"
 #import "CMISErrors.h"
-#import "CMISErrors+Additions.h"
 #import "AlfrescoReachability.h"
 
 @implementation CMISHttpRequest (Swizzled)
@@ -68,7 +67,7 @@
     else if (!reach.hasInternetConnection)
     {
         // Caste the additional error code to CMISErrorCodes
-        NSError *noConnectionError = [CMISErrors createCMISErrorWithCode:(CMISErrorCodes)kCMISErrorCodeNoInternet detailedDescription:kCMISErrorDescriptionNoInternet];
+        NSError *noConnectionError = [CMISErrors createCMISErrorWithCode:(CMISErrorCodes)kCMISErrorCodeNoNetworkConnection detailedDescription:kCMISErrorDescriptionNoNetworkConnection];
         [self connection:self.connection didFailWithError:noConnectionError];
     }
     else

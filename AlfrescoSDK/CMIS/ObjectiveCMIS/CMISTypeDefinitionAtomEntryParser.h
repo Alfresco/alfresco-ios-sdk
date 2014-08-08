@@ -18,12 +18,12 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "CMISPropertyDefinitionParser.h"
+#import "CMISAtomPubPropertyDefinitionParser.h"
 
 @class CMISTypeDefinition;
 
 // TODO: should we merge this parser with the generic AtomEntry parser?
-@interface CMISTypeDefinitionAtomEntryParser : NSObject <NSXMLParserDelegate, CMISPropertyDefinitionDelegate>
+@interface CMISTypeDefinitionAtomEntryParser : NSObject <NSXMLParserDelegate, CMISAtomPubPropertyDefinitionDelegate>
 
 /**
 * Available after a successful parse.
