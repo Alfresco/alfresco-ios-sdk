@@ -159,10 +159,10 @@ static NSSet *audioAspectProperties;
     NSError *alfrescoError = nil;
     switch (cmisErrorCode)
     {
-        case kCMISErrorCodeUnknown:
+        case kAlfrescoErrorCodeHTTPResponse:
             alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
             break;
-        case kCMISErrorCodeConnection:
+        case kAlfrescoErrorCodeSession:
             alfrescoError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:cmisError andAlfrescoErrorCode:kAlfrescoErrorCodeSession];
             break;
         case kCMISErrorCodeProxyAuthentication:

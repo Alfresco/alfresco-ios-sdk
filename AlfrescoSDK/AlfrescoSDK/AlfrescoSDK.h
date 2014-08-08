@@ -36,8 +36,13 @@
 #import "AlfrescoOAuthData.h"
 
 #if TARGET_OS_IPHONE
-#import "AlfrescoOAuthLoginViewController.h"
+#import "AlfrescoOAuthUILoginViewController.h"
+#import "AlfrescoOAuthLoginViewController.h" // deprecated
+#elif TARGET_OS_MAC
+#import "AlfrescoOAuthNSLoginViewController.h"
 #endif
+
+
 
 /**
  * Model

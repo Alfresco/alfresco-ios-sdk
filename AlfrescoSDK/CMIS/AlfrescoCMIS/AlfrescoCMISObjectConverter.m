@@ -304,9 +304,7 @@
     CMISTypeDefinition *typeDefinition = nil;
     for (CMISTypeDefinition * type in typeArray)
     {
-        if ([type.identifier hasPrefix:kAlfrescoCMISModelPrefix] ||
-            [type.identifier hasPrefix:kAlfrescoCMISDocumentTypePrefix] ||
-            [type.identifier hasPrefix:kAlfrescoCMISFolderTypePrefix])
+        if ([type.identifier hasPrefix:kAlfrescoCMISModelPrefix] || [type.identifier hasPrefix:kAlfrescoCMISDocumentTypePrefix] || [type.identifier hasPrefix:kAlfrescoCMISFolderTypePrefix])
         {
             typeDefinition = type;
             break;
@@ -320,9 +318,7 @@
     NSMutableArray *aspects = [NSMutableArray array];
     for (CMISTypeDefinition * type in typeArray)
     {
-        if (![type.identifier hasPrefix:kAlfrescoCMISModelPrefix] &&
-            ![type.identifier hasPrefix:kAlfrescoCMISDocumentTypePrefix] &&
-            ![type.identifier hasPrefix:kAlfrescoCMISFolderTypePrefix])
+        if (![type.identifier hasPrefix:kAlfrescoCMISModelPrefix] && ![type.identifier hasPrefix:kAlfrescoCMISDocumentTypePrefix] && ![type.identifier hasPrefix:kAlfrescoCMISFolderTypePrefix])
         {
             [aspects addObject:type];
         }

@@ -22,6 +22,7 @@
 #import "CMISRepositoryInfo.h"
 #import "CMISBinding.h"
 #import "CMISFolder.h"
+#import "CMISQueryStatement.h"
 
 @class CMISOperationContext;
 @class CMISPagedResult;
@@ -114,20 +115,36 @@
 - (CMISRequest*)retrieveTypeDefinition:(NSString *)typeId 
                completionBlock:(void (^)(CMISTypeDefinition *typeDefinition, NSError *error))completionBlock;
 /**
- * Retrieves all objects matching the given cmis query.
+ * Retrieves all objects matching the given cmis query string.
  * completionBlock returns the search results as a paged results object or nil if unsuccessful.
  */
 - (CMISRequest*)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
                                       completionBlock:(void (^)(CMISPagedResult *pagedResult, NSError *error))completionBlock;
 
 /**
- * Retrieves all objects matching the given cmis query, as CMISQueryResult objects.
+ * Retrieves all objects matching the given cmis query string, as CMISQueryResult objects.
  * and using the parameters provided in the operation context.
  * completionBlock returns the search results as a paged results object or nil if unsuccessful.
  */
 - (CMISRequest*)query:(NSString *)statement searchAllVersions:(BOOL)searchAllVersion
                                      operationContext:(CMISOperationContext *)operationContext
                                       completionBlock:(void (^)(CMISPagedResult *pagedResult, NSError *error))completionBlock;
+
+/**
+ * Retrieves all objects matching the given cmis query statement.
+ * completionBlock returns the search results as a paged results object or nil if unsuccessful.
+ */
+- (CMISRequest*)queryStatement:(CMISQueryStatement *)queryStatement searchAllVersions:(BOOL)searchAllVersion
+      completionBlock:(void (^)(CMISPagedResult *pagedResult, NSError *error))completionBlock;
+
+/**
+ * Retrieves all objects matching the given cmis query statement, as CMISQueryResult objects.
+ * and using the parameters provided in the operation context.
+ * completionBlock returns the search results as a paged results object or nil if unsuccessful.
+ */
+- (CMISRequest*)queryStatement:(CMISQueryStatement *)queryStatement searchAllVersions:(BOOL)searchAllVersion
+     operationContext:(CMISOperationContext *)operationContext
+      completionBlock:(void (^)(CMISPagedResult *pagedResult, NSError *error))completionBlock;
 
 /**
  * Queries for a specific type of objects.
@@ -139,6 +156,18 @@
              searchAllVersions:(BOOL)searchAllVersion
               operationContext:(CMISOperationContext *)operationContext
                completionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
+
+/**
+ * Queries for a specific type of objects.
+ * Pass where clause as query statement to ensure correct escaping
+ * Returns a paged result set, containing CMISObject instances.
+ * completionBlock returns the search results as a paged results object or nil if unsuccessful.
+ */
+- (CMISRequest*)queryObjectsWithTypeid:(NSString *)typeId
+                        whereStatement:(CMISQueryStatement *)whereStatement
+                     searchAllVersions:(BOOL)searchAllVersion
+                      operationContext:(CMISOperationContext *)operationContext
+                       completionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
 
 
 /**
