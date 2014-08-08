@@ -575,7 +575,10 @@
         else
         {
             NSInteger nodeIndex = [[favorites valueForKeyPath:@"identifier"] indexOfObject:node.identifier];
-            [favorites removeObjectAtIndex:nodeIndex];
+            if (nodeIndex != NSNotFound)
+            {
+                [favorites removeObjectAtIndex:nodeIndex];
+            }
         }
     };
     
@@ -583,18 +586,18 @@
     {
         NSArray *favoriteIdentifiers = [favorites valueForKeyPath:@"identifier"];
         NSMutableArray *favoriteIdentifiersWithoutVersionNumber = [NSMutableArray array];
+
         for (NSString *favoriteIdentifier in favoriteIdentifiers)
         {
             [favoriteIdentifiersWithoutVersionNumber addObject:[self identifierWithoutVersionNumberForIdentifier:favoriteIdentifier]];
         }
-        NSString *joinedFavoriteIdentifiers = [favoriteIdentifiersWithoutVersionNumber componentsJoinedByString:@","];
         
+        NSString *joinedFavoriteIdentifiers = [favoriteIdentifiersWithoutVersionNumber componentsJoinedByString:@","];
         NSString *favoritesAPIKey = node.isDocument ? kAlfrescoLegacyFavoriteDocuments : kAlfrescoLegacyFavoriteFolders;
         NSArray *favoriteKeyComponents = [favoritesAPIKey componentsSeparatedByString:@"."];
-        
         NSDictionary *favoriteKeyComponentDictionaries = nil;
-        
         NSInteger lastKeyComponentIndex = favoriteKeyComponents.count - 1;
+
         for (NSInteger i = lastKeyComponentIndex; i >= 0; i--)
         {
             NSString *keyComponent = favoriteKeyComponents[i];
