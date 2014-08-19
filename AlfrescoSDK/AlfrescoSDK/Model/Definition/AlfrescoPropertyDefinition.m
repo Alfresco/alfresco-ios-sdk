@@ -67,7 +67,7 @@
         self.type = [aDecoder decodeIntForKey:kAlfrescoPropertyDefinitionPropertyType];
         self.isRequired = [aDecoder decodeBoolForKey:kAlfrescoPropertyDefinitionPropertyIsRequired];
         self.isReadOnly = [aDecoder decodeBoolForKey:kAlfrescoPropertyDefinitionPropertyIsReadOnly];
-        self.isMultiValued = [aDecoder decodeObjectForKey:kAlfrescoPropertyDefinitionPropertyIsMultiValued];
+        self.isMultiValued = [aDecoder decodeBoolForKey:kAlfrescoPropertyDefinitionPropertyIsMultiValued];
     }
     return self;
 }

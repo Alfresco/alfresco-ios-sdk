@@ -123,8 +123,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
                 self.baseURL = [NSString stringWithFormat:@"%@%@",supplementedURL,kAlfrescoOAuthAuthorize];
             }
         }
-        
-        
     }
     return self;
 }
@@ -162,40 +160,13 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     }
     [self.activityIndicator startAnimation:self];
     
-    NSString *authURLString = [NSString stringWithFormat:@"%@?%@&%@&%@&%@", self.baseURL,
-                               [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey],
-                               [kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.oauthData.redirectURI],
-                               kAlfrescoOAuthScope, kAlfrescoOAuthResponseType];
+    NSString *authURLString = [AlfrescoOAuthHelper buildOAuthURLWithBaseURLString:self.baseURL apiKey:self.oauthData.apiKey redirectURI:self.oauthData.redirectURI];
     
     // load the authorization URL in the web view
     NSURL *authURL = [NSURL URLWithString:authURLString];
     AlfrescoLogDebug(@"Loading webview with baseURL", self.baseURL);
     [self.webView.mainFrame loadRequest:[NSURLRequest requestWithURL:authURL]];
 }
-
-
-- (NSString *)authorizationCodeFromURL:(NSURL *)url
-{
-    if (nil == url)
-    {
-        return nil;
-    }
-    
-    NSArray *components = [[url absoluteString] componentsSeparatedByString:@"code="];
-    if (2 == components.count)
-    {
-        self.receivedData = [NSMutableData data];
-        NSString *codeString = components[1];
-        NSArray *codeComponents = [codeString componentsSeparatedByString:@"&"];
-        if (codeComponents.count > 0)
-        {
-            return codeComponents[0];
-        }
-        
-    }
-    return nil;
-}
-
 
 - (void)createActivityView
 {
@@ -331,21 +302,13 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     AlfrescoLogDebug(@"LoginNSViewController:didReceiveResponse");
-    NSString *code = [self authorizationCodeFromURL:response.URL];
+    AlfrescoOAuthHelper *helper = [[AlfrescoOAuthHelper alloc] initWithParameters:self.parameters delegate:self.oauthDelegate];
+    NSString *code = [helper authorizationCodeFromURL:response.URL];
     AlfrescoLogDebug(@"Extracted auth code: %@", code);
     
     if (nil != code)
     {
         self.hasValidAuthenticationCode = YES;
-        AlfrescoOAuthHelper *helper = nil;
-        if (nil != self.parameters)
-        {
-            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:self.parameters delegate:self.oauthDelegate];
-        }
-        else
-        {
-            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self.oauthDelegate];
-        }
         [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
     }
     else

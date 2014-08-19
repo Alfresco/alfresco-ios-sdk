@@ -33,6 +33,13 @@
 @interface AlfrescoOAuthHelper : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 
 /**
+ @param baseURLString - the base URL
+ @param apiKey - the clients api key
+ @param redirectURI - the redirect URI
+ */
++ (NSString *)buildOAuthURLWithBaseURLString:(NSString *)baseURLString apiKey:(NSString *)apiKey redirectURI:(NSString *)redirectURI;
+
+/**
  this is an internal initialiser used for testing purposes only. Do not use for production services
  @param parameters
  */
@@ -57,7 +64,10 @@
 - (AlfrescoRequest *)refreshAccessToken:(AlfrescoOAuthData *)oauthData
                         completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
 
-
+/**
+ @param url - the URL from which the authorization code should be extracted
+ */
+- (NSString *)authorizationCodeFromURL:(NSURL *)url;
 
 @end
 

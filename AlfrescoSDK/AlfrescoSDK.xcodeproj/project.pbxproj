@@ -323,7 +323,6 @@
 		73D01DA2197FC3D00065E107 /* AlfrescoRatingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0774315B00EE700DF7DED /* AlfrescoRatingService.m */; };
 		73D01DA3197FC3D00065E107 /* AlfrescoSearchService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0774515B00EE700DF7DED /* AlfrescoSearchService.m */; };
 		73D01DA4197FC3D00065E107 /* AlfrescoSiteService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0774715B00EE700DF7DED /* AlfrescoSiteService.m */; };
-		73D01DA5197FC3D00065E107 /* AlfrescoReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7300368C192A3D56006733EC /* AlfrescoReachability.m */; };
 		73D01DA6197FC3D00065E107 /* AlfrescoTaggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0774915B00EE700DF7DED /* AlfrescoTaggingService.m */; };
 		73D01DA7197FC3D00065E107 /* AlfrescoVersionService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0774B15B00EE700DF7DED /* AlfrescoVersionService.m */; };
 		73D01DA8197FC3D00065E107 /* AlfrescoBasicAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0774F15B00EE700DF7DED /* AlfrescoBasicAuthenticationProvider.m */; };
@@ -883,7 +882,6 @@
 		58E3B6E118D30BC500360B6A /* AlfrescoListingFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoListingFilter.m; sourceTree = "<group>"; };
 		58F4645F18BF6B9300C8A28D /* AlfrescoRepositoryInfoBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoRepositoryInfoBuilder.h; sourceTree = "<group>"; };
 		58F4646018BF6B9300C8A28D /* AlfrescoRepositoryInfoBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoRepositoryInfoBuilder.m; sourceTree = "<group>"; };
-		7300368C192A3D56006733EC /* AlfrescoReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoReachability.m; sourceTree = "<group>"; };
 		730243B71628388C0028C378 /* AlfrescoSessionTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSessionTest.h; sourceTree = "<group>"; };
 		730243B81628388C0028C378 /* AlfrescoSessionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AlfrescoSessionTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		731F7CE617BA3020003A871C /* AlfrescoWorkflowUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowUtils.h; sourceTree = "<group>"; };
@@ -2138,7 +2136,6 @@
 				732C0A9419951B240032831C /* AlfrescoGroupConfig.m in Sources */,
 				73D01DA3197FC3D00065E107 /* AlfrescoSearchService.m in Sources */,
 				73D01DA4197FC3D00065E107 /* AlfrescoSiteService.m in Sources */,
-				73D01DA5197FC3D00065E107 /* AlfrescoReachability.m in Sources */,
 				73D01DA6197FC3D00065E107 /* AlfrescoTaggingService.m in Sources */,
 				73D01DA7197FC3D00065E107 /* AlfrescoVersionService.m in Sources */,
 				73D01DA8197FC3D00065E107 /* AlfrescoBasicAuthenticationProvider.m in Sources */,

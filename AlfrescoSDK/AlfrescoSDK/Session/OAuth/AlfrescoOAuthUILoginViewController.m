@@ -33,10 +33,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
 @property (nonatomic, strong, readwrite) NSDictionary *parameters;
 @property BOOL isLoginScreenLoad;
 @property BOOL hasValidAuthenticationCode;
-- (void)loadWebView;
-- (NSString *)authorizationCodeFromURL:(NSURL *)url;
-- (void)createActivityView;
-- (void)reloadAndReset;
 @end
 
 @implementation AlfrescoOAuthUILoginViewController
@@ -124,8 +120,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
                 self.baseURL = [NSString stringWithFormat:@"%@%@",supplementedURL,kAlfrescoOAuthAuthorize];
             }
         }
-        
-        
     }
     return self;
 }
@@ -195,7 +189,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     self.connection = nil;
     self.receivedData = nil;
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma private methods
@@ -215,41 +208,13 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     }
     [self.activityIndicator startAnimating];
 
-    NSString *authURLString = [NSString stringWithFormat:@"%@?%@&%@&%@&%@", self.baseURL,
-                               [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:self.oauthData.apiKey],
-                               [kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:self.oauthData.redirectURI],
-                               kAlfrescoOAuthScope, kAlfrescoOAuthResponseType];
+    NSString *authURLString = [AlfrescoOAuthHelper buildOAuthURLWithBaseURLString:self.baseURL apiKey:self.oauthData.apiKey redirectURI:self.oauthData.redirectURI];
     
     // load the authorization URL in the web view
     NSURL *authURL = [NSURL URLWithString:authURLString];
     AlfrescoLogDebug(@"Loading webview with baseURL", self.baseURL);
     [self.webView loadRequest:[NSURLRequest requestWithURL:authURL]];
 }
-
-
-- (NSString *)authorizationCodeFromURL:(NSURL *)url
-{
-    
-    if (nil == url)
-    {
-        return nil;
-    }
-    
-    NSArray *components = [[url absoluteString] componentsSeparatedByString:@"code="];
-    if (2 == components.count)
-    {
-        self.receivedData = [NSMutableData data];
-        NSString *codeString = components[1];
-        NSArray *codeComponents = [codeString componentsSeparatedByString:@"&"];
-        if (codeComponents.count > 0)
-        {
-            return codeComponents[0];
-        }
-        
-    }
-    return nil;
-}
-
 
 - (void)createActivityView
 {
@@ -321,7 +286,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    
     switch (navigationType)
     {
         case UIWebViewNavigationTypeFormSubmitted:
@@ -406,21 +370,13 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     AlfrescoLogDebug(@"LoginViewController:didReceiveResponse");
-    NSString *code = [self authorizationCodeFromURL:response.URL];
+    AlfrescoOAuthHelper *helper = [[AlfrescoOAuthHelper alloc] initWithParameters:self.parameters delegate:self.oauthDelegate];
+    NSString *code = [helper authorizationCodeFromURL:response.URL];
     AlfrescoLogDebug(@"Extracted auth code: %@", code);
     
     if (nil != code)
     {
         self.hasValidAuthenticationCode = YES;
-        AlfrescoOAuthHelper *helper = nil;
-        if (nil != self.parameters)
-        {
-            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:self.parameters delegate:self.oauthDelegate];
-        }
-        else
-        {
-            helper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self.oauthDelegate];
-        }
         [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
     }
     else
