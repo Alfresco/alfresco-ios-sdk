@@ -104,6 +104,7 @@ NSString * const kAlfrescoReverseComments = @"reverse";
  */
 NSString * const kAlfrescoSessionKeyCmisSession = @"alfresco_session_key_cmis_session";
 NSString * const kAlfrescoSessionCloudURL = @"org.alfresco.mobile.internal.session.cloud.url";
+NSString * const kAlfrescoOAuthRequestDenyAction = @"action=Deny";
 NSString * const kAlfrescoSessionCloudBasicAuth = @"org.alfresco.mobile.internal.session.cloud.basic";
 NSString * const kAlfrescoSessionUsername = @"org.alfresco.mobile.internal.session.username";
 NSString * const kAlfrescoSessionPassword = @"org.alfresco.mobile.internal.session.password";

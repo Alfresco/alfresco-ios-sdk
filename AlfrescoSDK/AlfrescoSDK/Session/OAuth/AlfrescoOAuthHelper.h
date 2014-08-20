@@ -40,6 +40,11 @@
 + (NSString *)buildOAuthURLWithBaseURLString:(NSString *)baseURLString apiKey:(NSString *)apiKey redirectURI:(NSString *)redirectURI;
 
 /**
+ @param parameters - session parameters
+ */
++ (NSString *)buildCloudURLFromParameters:(NSDictionary *)parameters;
+
+/**
  this is an internal initialiser used for testing purposes only. Do not use for production services
  @param parameters
  */

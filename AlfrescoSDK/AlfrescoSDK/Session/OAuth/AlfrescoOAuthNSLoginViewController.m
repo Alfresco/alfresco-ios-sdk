@@ -24,8 +24,6 @@
 #import "AlfrescoOAuthHelper.h"
 #import "AlfrescoLog.h"
 
-static NSString * const kOAuthRequestDenyAction = @"action=Deny";
-
 @interface AlfrescoOAuthNSLoginViewController () <NSURLConnectionDelegate, NSURLConnectionDataDelegate, NSAlertDelegate>
 
 @property (nonatomic, strong, readwrite) NSURLConnection *connection;
@@ -113,16 +111,7 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
         
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
-        self.baseURL = [NSString stringWithFormat:@"%@%@", kAlfrescoCloudURL, kAlfrescoOAuthAuthorize];
-        if (nil != parameters)
-        {
-            self.parameters = parameters;
-            if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudURL])
-            {
-                NSString *supplementedURL = [parameters valueForKey:kAlfrescoSessionCloudURL];
-                self.baseURL = [NSString stringWithFormat:@"%@%@",supplementedURL,kAlfrescoOAuthAuthorize];
-            }
-        }
+        self.baseURL = [AlfrescoOAuthHelper buildCloudURLFromParameters:parameters];
     }
     return self;
 }
@@ -263,7 +252,7 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
     {
         NSArray *requestComponents = [[[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding] componentsSeparatedByString:@"&"];
         
-        if ([requestComponents containsObject:kOAuthRequestDenyAction])
+        if ([requestComponents containsObject:kAlfrescoOAuthRequestDenyAction])
         {
             NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNetworkRequestCancelled];
             if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidCancel)])
