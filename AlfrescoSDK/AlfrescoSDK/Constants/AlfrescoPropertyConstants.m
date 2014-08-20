@@ -25,7 +25,6 @@ NSString * const kAlfrescoBaseConfigPropertyLabel = @"label";
 NSString * const kAlfrescoBaseConfigPropertySummary = @"summary";
 
 NSString * const kAlfrescoConfigInfoPropertySchemaVersion = @"schemaVersion";
-NSString * const kAlfrescoConfigInfoPropertyConfigVersion = @"configVersion";
 
 NSString * const kAlfrescoCreationConfigPropertyCreatableMimeTypes = @"creatableMimeTypes";
 NSString * const kAlfrescoCreationConfigPropertyCreatableDocumentTypes = @"createDocumentTypes";

@@ -21,6 +21,11 @@
 #import "CMISEnums.h"
 #import "CMISExtensionData.h"
 
+@interface CMISPropertyChoice : NSObject
+@property (nonatomic, strong) NSString *displayName;
+@property (nonatomic, strong) id value;
+@end
+
 
 // TODO: type specific properties, see cmis spec line 527
 @interface CMISPropertyDefinition : CMISExtensionData
@@ -43,6 +48,8 @@
 @property (nonatomic, assign, getter = isOpenChoice) BOOL openChoice;
 
 @property (nonatomic, strong) NSArray *defaultValues;
+
+// Returns an array of CMISPropertyChoice objects
 @property (nonatomic, strong) NSArray *choices;
 
 @end

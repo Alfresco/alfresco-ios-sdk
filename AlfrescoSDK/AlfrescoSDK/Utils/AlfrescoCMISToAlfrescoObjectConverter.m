@@ -373,7 +373,25 @@
     // store property definitions
     modelDefinitionProperties[kAlfrescoModelDefinitionPropertyPropertyDefinitions] = propertyDefinitions;
     
-    // TODO: store any mandatory aspects defined for the type
+    // store any mandatory aspects defined for the type
+    if (cmisTypeDefinition.extensions != nil && cmisTypeDefinition.extensions.count == 1)
+    {
+        // check the extension data is for mandatory aspects
+        CMISExtensionElement *mandatoryAspectsData = cmisTypeDefinition.extensions[0];
+        if ([mandatoryAspectsData.name isEqualToString:kAlfrescoCMISMandatoryAspects] &&
+            [mandatoryAspectsData.namespaceUri isEqualToString:kAlfrescoCMISNamespace])
+        {
+            // iterate around the children to get individual aspect entries.
+            NSMutableArray *mandatoryAspects = [NSMutableArray arrayWithCapacity:mandatoryAspectsData.children.count];
+            for (CMISExtensionElement *mandatoryAspectData in mandatoryAspectsData.children)
+            {
+                [mandatoryAspects addObject:[self propertyValueWithoutPrecursor:mandatoryAspectData.value]];
+            }
+            
+            // set the mandatory aspects array
+            modelDefinitionProperties[kAlfrescoNodeTypeDefinitionPropertyMandatoryAspects] = mandatoryAspects;
+        }
+    }
     
     // determine which subclass instance to create depending on the baseId
     AlfrescoModelDefinition *modelDefinition = nil;
@@ -494,7 +512,16 @@
     // setup allowable values
     if (cmisPropertyDefinition.choices != nil && cmisPropertyDefinition.choices.count > 0)
     {
-        // TODO: populate the allowable values property
+        // generate an array of dictionaries representing the choices
+        NSMutableArray *allowableValues = [NSMutableArray array];
+        
+        for (CMISPropertyChoice *choice in cmisPropertyDefinition.choices)
+        {
+            NSDictionary *allowableValue = @{choice.displayName: choice.value};
+            [allowableValues addObject:allowableValue];
+        }
+        
+        propertyDefinitonProperties[kAlfrescoPropertyDefinitionPropertyAllowableValues] = allowableValues;
     }
     
     // create AlfrescoPropertyDefinition instance

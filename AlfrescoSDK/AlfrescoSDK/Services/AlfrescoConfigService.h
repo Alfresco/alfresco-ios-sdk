@@ -35,18 +35,14 @@
 #import "AlfrescoWorkflowConfig.h"
 
 // TODO: move to public constants file...
-typedef void (^AlfrescoActionConfigCompletionBlock)(AlfrescoActionConfig *config, NSError *error);
-typedef void (^AlfrescoActionGroupConfigCompletionBlock)(AlfrescoActionGroupConfig *config, NSError *error);
 typedef void (^AlfrescoConfigInfoCompletionBlock)(AlfrescoConfigInfo *configInfo, NSError *error);
 typedef void (^AlfrescoCreationConfigCompletionBlock)(AlfrescoCreationConfig *config, NSError *error);
 typedef void (^AlfrescoFeatureConfigCompletionBlock)(AlfrescoFeatureConfig *config, NSError *error);
 typedef void (^AlfrescoFormConfigCompletionBlock)(AlfrescoFormConfig *config, NSError *error);
 typedef void (^AlfrescoProfileConfigCompletionBlock)(AlfrescoProfileConfig *config, NSError *error);
 typedef void (^AlfrescoRepositoryConfigCompletionBlock)(AlfrescoRepositoryConfig *config, NSError *error);
-typedef void (^AlfrescoSearchConfigCompletionBlock)(AlfrescoSearchConfig *config, NSError *error);
 typedef void (^AlfrescoViewConfigCompletionBlock)(AlfrescoViewConfig *config, NSError *error);
 typedef void (^AlfrescoViewGroupConfigCompletionBlock)(AlfrescoViewGroupConfig *config, NSError *error);
-typedef void (^AlfrescoWorkflowConfigCompletionBlock)(AlfrescoWorkflowConfig *config, NSError *error);
 
 extern NSString * const kAlfrescoConfigServiceParameterApplicationId;
 extern NSString * const kAlfrescoConfigServiceParameterProfileId;
@@ -137,24 +133,6 @@ extern NSString * const kAlfrescoConfigProfileDefault;
                                            completionBlock:(AlfrescoViewGroupConfigCompletionBlock)completionBlock;
 
 
-- (AlfrescoRequest *)retrieveActionConfigWithIdentifier:(NSString *)identifier
-                                        completionBlock:(AlfrescoActionConfigCompletionBlock)completionBlock;
-
-
-- (AlfrescoRequest *)retrieveActionConfigWithIdentifier:(NSString *)identifier
-                                                  scope:(AlfrescoConfigScope *)scope
-                                        completionBlock:(AlfrescoActionConfigCompletionBlock)completionBlock;
-
-
-- (AlfrescoRequest *)retrieveActionGroupConfigWithIdentifier:(NSString *)identifier
-                                             completionBlock:(AlfrescoActionGroupConfigCompletionBlock)completionBlock;
-
-
-- (AlfrescoRequest *)retrieveActionGroupConfigWithIdentifier:(NSString *)identifier
-                                                       scope:(AlfrescoConfigScope *)scope
-                                             completionBlock:(AlfrescoActionGroupConfigCompletionBlock)completionBlock;
-
-
 - (AlfrescoRequest *)retrieveFormConfigWithIdentifier:(NSString *)identifier
                                       completionBlock:(AlfrescoFormConfigCompletionBlock)completionBlock;
 
@@ -164,25 +142,11 @@ extern NSString * const kAlfrescoConfigProfileDefault;
                                       completionBlock:(AlfrescoFormConfigCompletionBlock)completionBlock;
 
 
-- (AlfrescoRequest *)retrieveWorkflowConfigWithCompletionBlock:(AlfrescoWorkflowConfigCompletionBlock)completionBlock;
-
-
-- (AlfrescoRequest *)retrieveWorkflowConfigWithConfigScope:(AlfrescoConfigScope *)scope
-                                           completionBlock:(AlfrescoWorkflowConfigCompletionBlock)completionBlock;
-
-
 - (AlfrescoRequest *)retrieveCreationConfigWithCompletionBlock:(AlfrescoCreationConfigCompletionBlock)completionBlock;
 
 
 - (AlfrescoRequest *)retrieveCreationConfigWithConfigScope:(AlfrescoConfigScope *)scope
                                            completionBlock:(AlfrescoCreationConfigCompletionBlock)completionBlock;
-
-
-- (AlfrescoRequest *)retrieveSearchConfigWithCompletionBlock:(AlfrescoSearchConfigCompletionBlock)completionBlock;
-
-
-- (AlfrescoRequest *)retrieveSearchConfigWithConfigScope:(AlfrescoConfigScope *)scope
-                                         completionBlock:(AlfrescoSearchConfigCompletionBlock)completionBlock;
 
 
 /**

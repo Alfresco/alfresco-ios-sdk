@@ -209,8 +209,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
 - (void)parseConfigInfo:(NSDictionary *)json
 {
     NSDictionary *configInfoJSON = json[kAlfrescoJSONInfo];
-    NSDictionary *configInfoProperties = @{kAlfrescoConfigInfoPropertySchemaVersion: configInfoJSON[kAlfrescoJSONSchemaVersion],
-                                           kAlfrescoConfigInfoPropertyConfigVersion: configInfoJSON[kAlfrescoJSONConfigVersion]};
+    NSDictionary *configInfoProperties = @{kAlfrescoConfigInfoPropertySchemaVersion: configInfoJSON[kAlfrescoJSONSchemaVersion]};
     
     self.configInfo = [[AlfrescoConfigInfo alloc] initWithDictionary:configInfoProperties];
 }
@@ -764,37 +763,6 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     }];
 }
 
-- (AlfrescoRequest *)retrieveActionConfigWithIdentifier:(NSString *)identifier
-                                        completionBlock:(AlfrescoActionConfigCompletionBlock)completionBlock
-{
-    return [self retrieveActionConfigWithIdentifier:identifier scope:self.defaultConfigScope completionBlock:completionBlock];
-}
-
-
-- (AlfrescoRequest *)retrieveActionConfigWithIdentifier:(NSString *)identifier
-                                                  scope:(AlfrescoConfigScope *)scope
-                                        completionBlock:(AlfrescoActionConfigCompletionBlock)completionBlock
-{
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
-}
-
-- (AlfrescoRequest *)retrieveActionGroupConfigWithIdentifier:(NSString *)identifier
-                                             completionBlock:(AlfrescoActionGroupConfigCompletionBlock)completionBlock
-{
-    return [self retrieveActionGroupConfigWithIdentifier:identifier scope:self.defaultConfigScope completionBlock:completionBlock];
-}
-
-
-- (AlfrescoRequest *)retrieveActionGroupConfigWithIdentifier:(NSString *)identifier
-                                                       scope:(AlfrescoConfigScope *)scope
-                                             completionBlock:(AlfrescoActionGroupConfigCompletionBlock)completionBlock
-{
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
-}
-
-
 - (AlfrescoRequest *)retrieveFormConfigWithIdentifier:(NSString *)identifier
                                       completionBlock:(AlfrescoFormConfigCompletionBlock)completionBlock
 {
@@ -887,20 +855,6 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
 }
 
 
-- (AlfrescoRequest *)retrieveWorkflowConfigWithCompletionBlock:(AlfrescoWorkflowConfigCompletionBlock)completionBlock
-{
-    return [self retrieveWorkflowConfigWithConfigScope:self.defaultConfigScope completionBlock:completionBlock];
-}
-
-
-- (AlfrescoRequest *)retrieveWorkflowConfigWithConfigScope:(AlfrescoConfigScope *)scope
-                                           completionBlock:(AlfrescoWorkflowConfigCompletionBlock)completionBlock
-{
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
-}
-
-
 - (AlfrescoRequest *)retrieveCreationConfigWithCompletionBlock:(AlfrescoCreationConfigCompletionBlock)completionBlock
 {
     return [self retrieveCreationConfigWithConfigScope:self.defaultConfigScope completionBlock:completionBlock];
@@ -920,20 +874,6 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
             completionBlock(nil, error);
         }
     }];
-}
-
-
-- (AlfrescoRequest *)retrieveSearchConfigWithCompletionBlock:(AlfrescoSearchConfigCompletionBlock)completionBlock
-{
-    return [self retrieveSearchConfigWithConfigScope:self.defaultConfigScope completionBlock:completionBlock];
-}
-
-
-- (AlfrescoRequest *)retrieveSearchConfigWithConfigScope:(AlfrescoConfigScope *)scope
-                                         completionBlock:(AlfrescoSearchConfigCompletionBlock)completionBlock
-{
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfig reason:@"Method Not Implemented"]);
-    return nil;
 }
 
 @end

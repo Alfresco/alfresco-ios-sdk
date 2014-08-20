@@ -39,6 +39,11 @@ NSString * const kAlfrescoCMISModelPrefix = @"cmis:";
 NSString * const kAlfrescoCMISFolderTypePrefix = @"F:";
 NSString * const kAlfrescoCMISDocumentTypePrefix = @"D:";
 NSString * const kAlfrescoCMISAspectPrefix = @"P:";
+NSString * const kAlfrescoCMISNamespace = @"http://www.alfresco.org";
+NSString * const kAlfrescoCMISSetAspects = @"setAspects";
+NSString * const kAlfrescoCMISAspectsToAdd = @"aspectsToAdd";
+NSString * const kAlfrescoCMISMandatoryAspects = @"mandatoryAspects";
+
 
 /**
  Content Model constants

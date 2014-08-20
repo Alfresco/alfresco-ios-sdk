@@ -2484,6 +2484,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 27E4C7F817F6554E002C0F77 /* AlfrescoSDKTests.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2499,6 +2500,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 27E4C7F817F6554E002C0F77 /* AlfrescoSDKTests.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2514,6 +2516,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 27E4C7F817F6554E002C0F77 /* AlfrescoSDKTests.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2528,7 +2531,6 @@
 		73D01E2A197FC3D00065E107 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/AlfrescoSDK.dst;
@@ -2555,7 +2557,6 @@
 		73D01E2B197FC3D00065E107 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/AlfrescoSDK.dst;
@@ -2582,7 +2583,6 @@
 		73D01E2C197FC3D00065E107 /* AdHoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/AlfrescoSDK.dst;
