@@ -17,7 +17,6 @@
  ******************************************************************************/
 
 #import "AlfrescoContentFile.h"
-#import <MobileCoreServices/MobileCoreServices.h>
 #import "AlfrescoFileManager.h"
 #import "AlfrescoConstants.h"
 

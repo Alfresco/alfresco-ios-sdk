@@ -40,8 +40,8 @@ if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
    popd >/dev/null
 
    # The root directory where the Alfresco SDK for iOS is cloned
-   ALFRESCO_SDK_ROOT=$(dirname $ALFRESCO_SDK_SCRIPT)
-   cd $ALFRESCO_SDK_ROOT
+   ALFRESCO_SDK_ROOT="$(dirname "$ALFRESCO_SDK_SCRIPT")"
+   cd "$ALFRESCO_SDK_ROOT"
 
    # Path to source files for Alfresco SDK
    ALFRESCO_SDK_SRC=$ALFRESCO_SDK_ROOT/AlfrescoSDK
@@ -49,30 +49,51 @@ if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
    # The directory where the target is built
    ALFRESCO_SDK_BUILD=$ALFRESCO_SDK_ROOT/build
 
-   # The name of the Alfresco SDK for iOS
+   # The name of the Alfresco SDK
    ALFRESCO_SDK_PRODUCT_NAME=AlfrescoSDK
 
+   # The name of the Alfresco SDK for iOS
+   ALFRESCO_IOS_SDK_PRODUCT_NAME=AlfrescoSDK-iOS
+
+   # The name of the Alfresco SDK for OS X
+   ALFRESCO_OSX_SDK_PRODUCT_NAME=AlfrescoSDK-OSX
+
    # Extracts the Alfresco SDK Version from the project's xcconfig file.
-   ALFRESCO_SDK_VERSION=`sed -ne '/^ALFRESCO_SDK_VERSION=/s/.*=\([\^]*\)/\1/p' $ALFRESCO_SDK_SRC/AlfrescoSDK.xcconfig`
+   ALFRESCO_SDK_VERSION=`sed -ne '/^ALFRESCO_SDK_VERSION=/s/.*=\([\^]*\)/\1/p' "$ALFRESCO_SDK_SRC/AlfrescoSDK.xcconfig"`
    echo Alfresco SDK Version detected: $ALFRESCO_SDK_VERSION
 
    # The name of the Alfresco SDK for iOS static library
-   ALFRESCO_SDK_LIBRARY_NAME=lib"$ALFRESCO_SDK_PRODUCT_NAME"v"$ALFRESCO_SDK_VERSION""$LIBRARY_SUFFIX".a
-   
+   ALFRESCO_IOS_SDK_LIBRARY_NAME=lib"$ALFRESCO_IOS_SDK_PRODUCT_NAME"v"$ALFRESCO_SDK_VERSION""$LIBRARY_SUFFIX".a
+
+   # The name of the Alfresco SDK for OS X library
+   ALFRESCO_OSX_SDK_LIBRARY_NAME=lib"$ALFRESCO_OSX_SDK_PRODUCT_NAME"v"$ALFRESCO_SDK_VERSION""$LIBRARY_SUFFIX".a
+
    # The directory containing the public header files
-   ALFRESCO_SDK_HEADER_PATH=$ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-iphoneos
+   ALFRESCO_IOS_SDK_HEADER_PATH=$ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-iphoneos
 
-   # The directory containing the universal static library
-   ALFRESCO_SDK_UNIVERSAL_LIBRARY_PATH=$ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-universal
+   # The directory containing the universal static library for iOS
+   ALFRESCO_IOS_SDK_UNIVERSAL_LIBRARY_PATH=$ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-universal
 
-   # The path to the universal static library
-   ALFRESCO_SDK_UNIVERSAL_LIBRARY=$ALFRESCO_SDK_UNIVERSAL_LIBRARY_PATH/$ALFRESCO_SDK_LIBRARY_NAME
+   # The directory containing the universal static library for OS X
+   ALFRESCO_OSX_SDK_UNIVERSAL_LIBRARY_PATH=$ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-macosx
+
+   # The path to the universal static library for iOS
+   ALFRESCO_IOS_SDK_UNIVERSAL_LIBRARY=$ALFRESCO_IOS_SDK_UNIVERSAL_LIBRARY_PATH/$ALFRESCO_IOS_SDK_LIBRARY_NAME
+
+   # The path to the universal static library for OSX
+   ALFRESCO_OSX_SDK_UNIVERSAL_LIBRARY=$ALFRESCO_OSX_SDK_UNIVERSAL_LIBRARY_PATH/$ALFRESCO_OSX_SDK_LIBRARY_NAME
 
    # The name of the Alfresco SDK for iOS framework
-   ALFRESCO_SDK_FRAMEWORK_NAME=$ALFRESCO_SDK_PRODUCT_NAME.framework
+   ALFRESCO_IOS_SDK_FRAMEWORK_NAME=$ALFRESCO_IOS_SDK_PRODUCT_NAME.framework
+
+   # The name of the Alfresco SDK for OS X framework
+   ALFRESCO_OSX_SDK_FRAMEWORK_NAME=$ALFRESCO_OSX_SDK_PRODUCT_NAME.framework
 
    # The path to the built Alfresco SDK for iOS .framework
-   ALFRESCO_SDK_FRAMEWORK=$ALFRESCO_SDK_BUILD/$ALFRESCO_SDK_FRAMEWORK_NAME
+   ALFRESCO_IOS_SDK_FRAMEWORK=$ALFRESCO_SDK_BUILD/$ALFRESCO_IOS_SDK_FRAMEWORK_NAME
+
+   # The path to the built Alfresco SDK for OS X .framework
+   ALFRESCO_OSX_SDK_FRAMEWORK=$ALFRESCO_SDK_BUILD/$ALFRESCO_OSX_SDK_FRAMEWORK_NAME
 
    # The name of the docset
    ALFRESCO_SDK_DOCSET_NAME=com.alfresco.AlfrescoSDK.docset
@@ -82,7 +103,6 @@ if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
 
    # The path to the framework docs and zip file
    ALFRESCO_SDK_DOCSET=$ALFRESCO_SDK_DOCSET_BUILD/$ALFRESCO_SDK_DOCSET_NAME
-   
 
    # Xcode build tools
    test -n "$XCODEBUILD"   || XCODEBUILD=$(which xcodebuild)

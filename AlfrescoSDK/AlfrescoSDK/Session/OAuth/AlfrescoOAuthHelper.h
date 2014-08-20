@@ -20,7 +20,8 @@
 
 
 #import <Foundation/Foundation.h>
-#import "AlfrescoOAuthLoginViewController.h"
+#import "AlfrescoConstants.h"
+#import "AlfrescoOAuthData.h"
 #import "AlfrescoOAuthLoginDelegate.h"
 #import "AlfrescoRequest.h"
 
@@ -30,6 +31,13 @@
  */
 
 @interface AlfrescoOAuthHelper : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+
+/**
+ @param baseURLString - the base URL
+ @param apiKey - the clients api key
+ @param redirectURI - the redirect URI
+ */
++ (NSString *)buildOAuthURLWithBaseURLString:(NSString *)baseURLString apiKey:(NSString *)apiKey redirectURI:(NSString *)redirectURI;
 
 /**
  this is an internal initialiser used for testing purposes only. Do not use for production services
@@ -56,7 +64,10 @@
 - (AlfrescoRequest *)refreshAccessToken:(AlfrescoOAuthData *)oauthData
                         completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
 
-
+/**
+ @param url - the URL from which the authorization code should be extracted
+ */
+- (NSString *)authorizationCodeFromURL:(NSURL *)url;
 
 @end
 
