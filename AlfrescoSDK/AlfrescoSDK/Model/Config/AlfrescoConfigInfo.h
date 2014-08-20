@@ -26,9 +26,6 @@
 @property (nonatomic, strong, readonly) NSString *schemaVersion;
 
 
-@property (nonatomic, strong, readonly) NSString *configVersion;
-
-
 - (id)initWithDictionary:(NSDictionary *)properties;
 
 @end

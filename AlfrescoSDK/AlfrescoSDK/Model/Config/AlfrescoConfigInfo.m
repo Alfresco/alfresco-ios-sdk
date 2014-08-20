@@ -21,7 +21,6 @@
 
 @interface AlfrescoConfigInfo ()
 @property (nonatomic, strong, readwrite) NSString *schemaVersion;
-@property (nonatomic, strong, readwrite) NSString *configVersion;
 @end
 
 @implementation AlfrescoConfigInfo
@@ -40,16 +39,6 @@
         {
             self.schemaVersion = [schemaVersionObject stringValue];
         }
-        
-        id configVersionObject = properties[kAlfrescoConfigInfoPropertyConfigVersion];
-        if ([configVersionObject isKindOfClass:[NSString class]])
-        {
-            self.configVersion = configVersionObject;
-        }
-        else if ([configVersionObject isKindOfClass:[NSNumber class]])
-        {
-            self.configVersion = [configVersionObject stringValue];
-        }
     }
     return self;
 }
@@ -60,7 +49,6 @@
     if (nil != self)
     {
         self.schemaVersion = [aDecoder decodeObjectForKey:kAlfrescoConfigInfoPropertySchemaVersion];
-        self.configVersion = [aDecoder decodeObjectForKey:kAlfrescoConfigInfoPropertyConfigVersion];
     }
     return self;
 }
@@ -68,7 +56,6 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeObject:self.schemaVersion forKey:kAlfrescoConfigInfoPropertySchemaVersion];
-    [aCoder encodeObject:self.configVersion forKey:kAlfrescoConfigInfoPropertyConfigVersion];
 }
 
 @end

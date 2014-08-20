@@ -30,7 +30,6 @@ extern NSString * const kAlfrescoBaseConfigPropertyLabel;
 extern NSString * const kAlfrescoBaseConfigPropertySummary;
 
 extern NSString * const kAlfrescoConfigInfoPropertySchemaVersion;
-extern NSString * const kAlfrescoConfigInfoPropertyConfigVersion;
 
 extern NSString * const kAlfrescoCreationConfigPropertyCreatableMimeTypes;
 extern NSString * const kAlfrescoCreationConfigPropertyCreatableDocumentTypes;
