@@ -686,4 +686,47 @@
     }
 }
 
+/** MOBSDK-711 */
+- (void)testConcurrentSiteCacheBuilding
+{
+    if (self.setUpSuccess)
+    {
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        __block int resultCount = 0;
+        
+        void (^completionBlock)(NSArray *, NSError *) = ^(NSArray *sites, NSError *error)
+        {
+            if (error != nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.callbackCompleted = YES;
+            }
+            
+            resultCount++;
+            
+            XCTAssertTrue(sites.count > 0, @"Expected to retrieve at least one site from each method");
+            
+            if (resultCount == 3)
+            {
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        };
+        
+        // request all types of site at once, this should create parallel requests to build the site caches
+        [self.siteService retrieveSitesWithCompletionBlock:completionBlock];
+        [self.siteService retrieveAllSitesWithCompletionBlock:completionBlock];
+        [self.siteService retrieveFavoriteSitesWithCompletionBlock:completionBlock];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 @end
