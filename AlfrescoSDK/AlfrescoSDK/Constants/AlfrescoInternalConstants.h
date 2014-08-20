@@ -93,6 +93,7 @@ extern NSString * const kAlfrescoReverseComments;
 extern NSString * const kAlfrescoSessionKeyCmisSession;
 extern NSString * const kAlfrescoSessionCloudURL;
 extern NSString * const kAlfrescoSessionCloudBasicAuth;
+extern NSString * const kAlfrescoOAuthRequestDenyAction;
 extern NSString * const kAlfrescoSessionUsername;
 extern NSString * const kAlfrescoSessionPassword;
 extern NSString * const kAlfrescoSessionCacheSites;

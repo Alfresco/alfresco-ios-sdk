@@ -146,6 +146,17 @@
     return authURLString;
 }
 
++ (NSString *)buildCloudURLFromParameters:(NSDictionary *)parameters
+{
+    NSString *baseURL = [NSString stringWithFormat:@"%@%@", kAlfrescoCloudURL, kAlfrescoOAuthAuthorize];
+    if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudURL])
+    {
+        NSString *supplementedURL = [parameters valueForKey:kAlfrescoSessionCloudURL];
+        baseURL = [NSString stringWithFormat:@"%@%@", supplementedURL, kAlfrescoOAuthAuthorize];
+    }
+    return baseURL;
+}
+
 - (NSString *)authorizationCodeFromURL:(NSURL *)url
 {
     if (nil == url)
