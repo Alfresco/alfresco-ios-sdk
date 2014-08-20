@@ -33,6 +33,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
+#import "CMISAtomPubConstants.h"
 
 @interface AlfrescoCMISObjectConverter ()
 - (void)retrieveAspectTypeDefinitionsFromObjectID:(NSString *)objectID completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
@@ -171,8 +172,10 @@
             // Convert the aspect types stuff to CMIS extensions
             for (CMISTypeDefinition *aspectType in aspectTypes)
             {
-                CMISExtensionElement *extensionElement = [[CMISExtensionElement alloc] initLeafWithName:@"aspectsToAdd"
-                                                                                           namespaceUri:@"http://www.alfresco.org" attributes:nil value:aspectType.identifier];
+                CMISExtensionElement *extensionElement = [[CMISExtensionElement alloc] initLeafWithName:kAlfrescoCMISAspectsToAdd
+                                                                                           namespaceUri:kAlfrescoCMISNamespace
+                                                                                             attributes:nil
+                                                                                                  value:aspectType.identifier];
                 [alfrescoExtensions addObject:extensionElement];
             }
 
@@ -197,33 +200,33 @@
                     switch (aspectPropertyDefinition.propertyType)
                     {
                         case CMISPropertyTypeBoolean:
-                            name = @"propertyBoolean";
+                            name = kCMISAtomEntryPropertyBoolean;
                             break;
                         case CMISPropertyTypeDateTime:
-                            name = @"propertyDateTime";
+                            name = kCMISAtomEntryPropertyDateTime;
                             break;
                         case CMISPropertyTypeInteger:
-                            name = @"propertyInteger";
+                            name = kCMISAtomEntryPropertyInteger;
                             break;
                         case CMISPropertyTypeDecimal:
-                            name = @"propertyDecimal";
+                            name = kCMISAtomEntryPropertyDecimal;
                             break;
                         case CMISPropertyTypeId:
-                            name = @"propertyId";
+                            name = kCMISAtomEntryPropertyId;
                             break;
                         case CMISPropertyTypeHtml:
-                            name = @"propertyHtml";
+                            name = kCMISAtomEntryPropertyHtml;
                             break;
                         case CMISPropertyTypeUri:
-                            name = @"propertyUri";
+                            name = kCMISAtomEntryPropertyUri;
                             break;
                         default:
-                            name = @"propertyString";
+                            name = kCMISAtomEntryPropertyString;
                             break;
                     }
                     
                     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-                    attributes[@"propertyDefinitionId"] = aspectPropertyDefinition.identifier;
+                    attributes[kCMISAtomEntryPropertyDefId] = aspectPropertyDefinition.identifier;
                     
                     NSMutableArray *propertyValues = [NSMutableArray array];
                     id value = aspectProperties[propertyId];
@@ -260,19 +263,25 @@
                             }
                         }
                         
-                        CMISExtensionElement *valueExtensionElement = [[CMISExtensionElement alloc] initLeafWithName:@"value"
-                                                                                                        namespaceUri:@"http://docs.oasis-open.org/ns/cmis/core/200908/" attributes:nil value:stringValue];
+                        CMISExtensionElement *valueExtensionElement = [[CMISExtensionElement alloc] initLeafWithName:kCMISAtomEntryValue
+                                                                                                        namespaceUri:kCMISNamespaceCmis
+                                                                                                          attributes:nil
+                                                                                                               value:stringValue];
                         [propertyValues addObject:valueExtensionElement];
                     }
                     
                     
                     CMISExtensionElement *aspectPropertyExtensionElement = [[CMISExtensionElement alloc] initNodeWithName:name
-                                                                                                             namespaceUri:@"http://docs.oasis-open.org/ns/cmis/core/200908/" attributes:attributes children:propertyValues];
+                                                                                                             namespaceUri:kCMISNamespaceCmis
+                                                                                                               attributes:attributes
+                                                                                                                 children:propertyValues];
                     [propertyExtensions addObject:aspectPropertyExtensionElement];
                 }
                 
-                [alfrescoExtensions addObject: [[CMISExtensionElement alloc] initNodeWithName:@"properties"
-                                                                                 namespaceUri:@"http://www.alfresco.org" attributes:nil children:propertyExtensions]];
+                [alfrescoExtensions addObject: [[CMISExtensionElement alloc] initNodeWithName:kCMISCoreProperties
+                                                                                 namespaceUri:kAlfrescoCMISNamespace
+                                                                                   attributes:nil
+                                                                                     children:propertyExtensions]];
             }
             // Cmis doesn't understand aspects, so we must replace the objectTypeId if needed
             if (typeProperties[kCMISPropertyObjectTypeId] != nil)
@@ -289,8 +298,10 @@
                 {
                     if (alfrescoExtensions.count > 0)
                     {
-                        result.extensions = @[[[CMISExtensionElement alloc] initNodeWithName:@"setAspects"
-                                                                                namespaceUri:@"http://www.alfresco.org" attributes:nil children:alfrescoExtensions]];
+                        result.extensions = @[[[CMISExtensionElement alloc] initNodeWithName:kAlfrescoCMISSetAspects
+                                                                                namespaceUri:kAlfrescoCMISNamespace
+                                                                                  attributes:nil
+                                                                                    children:alfrescoExtensions]];
                     }
                     completionBlock(result, nil);
                 }

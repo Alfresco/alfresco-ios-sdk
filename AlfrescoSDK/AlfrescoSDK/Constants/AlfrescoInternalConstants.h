@@ -35,6 +35,10 @@ extern NSString * const kAlfrescoCMISModelPrefix;
 extern NSString * const kAlfrescoCMISFolderTypePrefix;
 extern NSString * const kAlfrescoCMISDocumentTypePrefix;
 extern NSString * const kAlfrescoCMISAspectPrefix;
+extern NSString * const kAlfrescoCMISNamespace;
+extern NSString * const kAlfrescoCMISSetAspects;
+extern NSString * const kAlfrescoCMISAspectsToAdd;
+extern NSString * const kAlfrescoCMISMandatoryAspects;
 
 extern NSString * const kAlfrescoContentModelPrefix;
 extern NSString * const kAlfrescoSystemModelPrefix;
