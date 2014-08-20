@@ -17,7 +17,6 @@
   under the License.
  */
 
-#import <UIKit/UIKit.h>
 #import "CMISAtomPubExtensionDataParserBase.h"
 #import "CMISPrincipal.h"
 

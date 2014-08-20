@@ -290,7 +290,7 @@
                     if (alfrescoExtensions.count > 0)
                     {
                         result.extensions = @[[[CMISExtensionElement alloc] initNodeWithName:@"setAspects"
-                                                                                                       namespaceUri:@"http://www.alfresco.org" attributes:nil children:alfrescoExtensions]];
+                                                                                namespaceUri:@"http://www.alfresco.org" attributes:nil children:alfrescoExtensions]];
                     }
                     completionBlock(result, nil);
                 }

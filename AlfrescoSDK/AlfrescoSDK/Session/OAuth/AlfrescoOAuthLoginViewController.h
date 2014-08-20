@@ -18,71 +18,16 @@
  *****************************************************************************
  */
 
-#import <UIKit/UIKit.h>
-#import "AlfrescoConstants.h"
-#import "AlfrescoOAuthLoginDelegate.h"
+#import "AlfrescoOAuthUILoginViewController.h"
 
 /** The AlfrescoOAuthLoginViewController starts the OAuth authentication processes.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco)
+ 
+ @deprecated This class has been deprecated, please use AlfrescoOAuthUILoginViewController instead
  */
 
-@interface AlfrescoOAuthLoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, UIAlertViewDelegate>
-/// @param webView - holds the login HTML page
-@property (nonatomic, strong) UIWebView * webView;
-/// @param activityIndicator - indicates loading process
-@property (nonatomic, strong) UIActivityIndicatorView * activityIndicator;
-/// @param oauthDelegate - call back for when things go wrong
-@property (nonatomic, weak) id<AlfrescoOAuthLoginDelegate> oauthDelegate;
-/**
- @name Initialisers
- The AlfrescoOAuthLoginViewController has 4 different initialisers available. At the minimum an apiKey, secretKey and completionBlock must be provided.
- */
-
-/**
- This initialiser is using the default Alfresco redirect URI
- @param apiKey
- @param secretKey
- @param completionBlock
- */
-- (id)initWithAPIKey:(NSString *)apiKey
-           secretKey:(NSString *)secretKey
-     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
-
-/**
- @param apiKey
- @param secretKey
- @param redirectURI
- @param completionBlock
- */
-- (id)initWithAPIKey:(NSString *)apiKey
-           secretKey:(NSString *)secretKey
-         redirectURI:(NSString *)redirectURI
-     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
-
-/**
- This initialiser is using the default Alfresco redirect URI
- @param apiKey
- @param secretKey
- @param completionBlock
- @param parameters (optional)
- */
-- (id)initWithAPIKey:(NSString *)apiKey
-           secretKey:(NSString *)secretKey
-          parameters:(NSDictionary *)parameters
-     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
-
-/**
- @param apiKey
- @param secretKey
- @param redirectURI
- @param parameters - (optional)
- @param completionBlock
- */
-- (id)initWithAPIKey:(NSString *)apiKey
-           secretKey:(NSString *)secretKey
-         redirectURI:(NSString *)redirectURI
-          parameters:(NSDictionary *)parameters
-     completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock;
+__attribute__((deprecated("This class has been deprecated, please use AlfrescoOAuthUILoginViewController instead")))
+@interface AlfrescoOAuthLoginViewController : AlfrescoOAuthUILoginViewController
 
 @end
