@@ -80,4 +80,19 @@
     return self.propertyDefinitions[name];
 }
 
+- (void)addPropertyDefinitions:(NSArray *)definitions
+{
+    NSMutableDictionary *updatedPropertyDefinitions = [NSMutableDictionary dictionaryWithDictionary:self.propertyDefinitions];
+    
+    for (AlfrescoPropertyDefinition *propertyDefinition in definitions)
+    {
+        if ([updatedPropertyDefinitions objectForKey:propertyDefinition.name] == nil)
+        {
+            updatedPropertyDefinitions[propertyDefinition.name] = propertyDefinition;
+        }
+    }
+    
+    self.propertyDefinitions = updatedPropertyDefinitions;
+}
+
 @end

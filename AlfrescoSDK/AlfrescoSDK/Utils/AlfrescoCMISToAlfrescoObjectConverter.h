@@ -29,6 +29,7 @@
 #import "AlfrescoDocumentTypeDefinition.h"
 #import "AlfrescoFolderTypeDefinition.h"
 #import "AlfrescoAspectDefinition.h"
+#import "AlfrescoTaskTypeDefinition.h"
 
 @class CMISSession, CMISFolder, CMISDocument, CMISObject, CMISObjectData, CMISQueryResult, CMISTypeDefinition;
 
@@ -47,5 +48,7 @@
 - (AlfrescoFolderTypeDefinition *)folderTypeDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition;
 
 - (AlfrescoAspectDefinition *)aspectDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition;
+
+- (AlfrescoTaskTypeDefinition *)taskTypeDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition;
 
 @end

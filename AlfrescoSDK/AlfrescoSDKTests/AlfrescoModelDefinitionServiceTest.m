@@ -19,8 +19,9 @@
 #import "AlfrescoModelDefinitionServiceTest.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoWorkflowService.h"
+#import "AlfrescoWorkflowTask.h"
 #import "CMISConstants.h"
-
 
 @implementation AlfrescoModelDefinitionServiceTest
 
@@ -353,9 +354,9 @@
                 XCTAssertTrue([aspectDefinition.name isEqualToString:@"exif:exif"],
                               @"Expected definition name to be 'exif:exif' but it was %@", aspectDefinition.name);
                 XCTAssertTrue([aspectDefinition.title isEqualToString:@"EXIF"],
-                              @"Expected definition name to be 'EXIF' but it was %@", aspectDefinition.title);
+                              @"Expected definition title to be 'EXIF' but it was %@", aspectDefinition.title);
                 XCTAssertTrue([aspectDefinition.summary isEqualToString:@"Subset of the standard EXIF metadata"],
-                              @"Expected definition name to be 'Subset of the standard EXIF metadata' but it was %@", aspectDefinition.summary);
+                              @"Expected definition summary to be 'Subset of the standard EXIF metadata' but it was %@", aspectDefinition.summary);
                 XCTAssertNil(aspectDefinition.parent, @"Expected parent to be nil but it was %@", aspectDefinition.parent);
                 XCTAssertNotNil(aspectDefinition.propertyNames, @"Expected propertyNames property to be populated");
                 XCTAssertTrue(aspectDefinition.propertyNames.count == 27,
@@ -385,6 +386,83 @@
                              @"Expected default value to be nil but it was %@", xResolutionPropertyDefiniton.defaultValue);
                 XCTAssertNil(xResolutionPropertyDefiniton.allowableValues,
                              @"Expected allowable values to be nil but it was %@", xResolutionPropertyDefiniton.allowableValues);
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveTaskDefinition
+{
+    if (self.setUpSuccess)
+    {
+        self.modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:self.currentSession];
+        
+        // retrieve task definition for wf:adhocTask
+        [self.modelDefinitionService retrieveDefinitionForTaskType:@"wf:adhocTask" completionBlock:^(AlfrescoTaskTypeDefinition *taskDefinition, NSError *error) {
+            if (taskDefinition == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue([taskDefinition.name isEqualToString:@"wf:adhocTask"],
+                              @"Expected definition name to be 'wf:adhocTask' but it was %@", taskDefinition.name);
+                XCTAssertTrue([taskDefinition.title isEqualToString:@"Task"],
+                              @"Expected definition title to be 'Task' but it was %@", taskDefinition.title);
+                XCTAssertTrue([taskDefinition.summary isEqualToString:@"Task allocated by colleague"],
+                              @"Expected definition summary to be 'Task allocated by colleague' but it was %@", taskDefinition.summary);
+                XCTAssertTrue([taskDefinition.parent isEqualToString:@"bpm:workflowTask"],
+                              @"Expected definition parent to be 'bpm:workflowTask' but it was %@", taskDefinition.parent);
+                XCTAssertNotNil(taskDefinition.propertyNames, @"Expected propertyNames property to be populated");
+                XCTAssertTrue(taskDefinition.propertyNames.count == 43,
+                              @"Expected there to be 43 property names but there were %lu", (long)taskDefinition.propertyNames.count);
+                XCTAssertTrue(taskDefinition.mandatoryAspects.count == 2,
+                              @"Expected there to be 2 mandatory aspects but there were %lu", (long)taskDefinition.mandatoryAspects.count);
+                
+                // check for a few property names
+                XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageActionGroup"],
+                              @"Expected the bpm:packageActionGroup property to be present");
+                XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageItemActionGroup"],
+                              @"Expected the bpm:packageItemActionGroup property to be present");
+                XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:status"],
+                              @"Expected the bpm:status property to be present");
+                
+                // retrieve and check some property definition objects
+                AlfrescoPropertyDefinition *packageActionGroupPropertyDefiniton = [taskDefinition propertyDefinitionForPropertyWithName:@"bpm:packageActionGroup"];
+                XCTAssertNotNil(packageActionGroupPropertyDefiniton, @"Expected to find a property definition for bpm:packageActionGroup");
+                XCTAssertTrue([packageActionGroupPropertyDefiniton.name isEqualToString:@"bpm:packageActionGroup"],
+                              @"Expected name to be 'bpm:packageActionGroup' but it was %@", packageActionGroupPropertyDefiniton.name);
+                XCTAssertTrue([packageActionGroupPropertyDefiniton.title isEqualToString:@"bpm:packageActionGroup"],
+                              @"Expected title to be 'bpm:packageActionGroup' but it was %@", packageActionGroupPropertyDefiniton.title);
+                XCTAssertTrue([packageActionGroupPropertyDefiniton.summary isEqualToString:@"bpm:packageActionGroup"],
+                              @"Expected summary to be 'bpm:packageActionGroup' but it was %@", packageActionGroupPropertyDefiniton.summary);
+//                XCTAssertTrue([packageActionGroupPropertyDefiniton.defaultValue isEqualToString:@"add_package_item_actions"],
+//                              @"Expected default value to be 'add_package_item_actions' but it was %@", packageActionGroupPropertyDefiniton.defaultValue);
+                XCTAssertTrue(packageActionGroupPropertyDefiniton.type == AlfrescoPropertyTypeString,
+                              @"Expected type to be a string but it was %ld", packageActionGroupPropertyDefiniton.type);
+                XCTAssertFalse(packageActionGroupPropertyDefiniton.isRequired, @"Expected isRequired to be false");
+                XCTAssertFalse(packageActionGroupPropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
+                XCTAssertFalse(packageActionGroupPropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
+                
+                AlfrescoPropertyDefinition *statusPropertyDefiniton = [taskDefinition propertyDefinitionForPropertyWithName:@"bpm:status"];
+                XCTAssertNotNil(statusPropertyDefiniton, @"Expected to find a property definition for bpm:status");
+//                XCTAssertTrue([statusPropertyDefiniton.defaultValue isEqualToString:@"Not Yet Started"],
+//                              @"Expected default value to be 'Not Yet Started' but it was %@", statusPropertyDefiniton.defaultValue);
+                XCTAssertNotNil(statusPropertyDefiniton.allowableValues, @"Expected allowable values to be set");
+                XCTAssertTrue(statusPropertyDefiniton.allowableValues.count == 5,
+                              @"Expected there to be 5 allowable values but there were %lu", (long)statusPropertyDefiniton.allowableValues.count);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -469,32 +547,205 @@
     }
 }
 
-- (void)disabledtestRetrieveTaskDefinition
+- (void)testRetrieveDefinitionFromDocument
 {
-    // TODO
-    
-    XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
+    if (self.setUpSuccess)
+    {
+        self.modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:self.currentSession];
+        
+        
+        NSLog(@"There are %lu aspects on the test folder", (unsigned long)self.testDocFolder.aspects.count);
+        
+        
+        // retrieve type definition for cm:content
+        [self.modelDefinitionService retrieveDefinitionForDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoDocumentTypeDefinition *typeDefinition, NSError *error) {
+            if (typeDefinition == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue([typeDefinition.name isEqualToString:@"cm:content"],
+                              @"Expected definition name to be 'cm:content' but it was %@", typeDefinition.name);
+                XCTAssertTrue([typeDefinition.title isEqualToString:@"Document"],
+                              @"Expected definition name to be 'Document' but it was %@", typeDefinition.title);
+                XCTAssertTrue([typeDefinition.summary isEqualToString:@"Document Type"],
+                              @"Expected definition name to be 'Document Type' but it was %@", typeDefinition.summary);
+                XCTAssertNil(typeDefinition.parent, @"Expected parent to be nil but it was %@", typeDefinition.parent);
+                XCTAssertNotNil(typeDefinition.propertyNames, @"Expected propertyNames property to be populated");
+                XCTAssertTrue(typeDefinition.propertyNames.count == 30,
+                              @"Expected there to be 30 property names but there were %lu", (long)typeDefinition.propertyNames.count);
+                XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
+                XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
+                              @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
+                
+                // check for a few property names
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:name"], @"Expected the cmis:name property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:description"], @"Expected the cmis:description property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:createdBy"], @"Expected the cmis:createdBy property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:creationDate"], @"Expected the cmis:creationDate property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cm:title"], @"Expected the cm:title property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cm:description"], @"Expected the cm:description property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cm:author"], @"Expected the cm:author property to be present");
+                
+                // check the cm:title property is properly populated
+                AlfrescoPropertyDefinition *titlePropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"cm:title"];
+                XCTAssertNotNil(titlePropertyDefiniton, @"Expected to find a property definition for cm:title");
+                XCTAssertTrue([titlePropertyDefiniton.name isEqualToString:@"cm:title"],
+                              @"Expected name to be 'cm:title' but it was %@", titlePropertyDefiniton.name);
+                XCTAssertTrue([titlePropertyDefiniton.title isEqualToString:@"Title"],
+                              @"Expected title to be 'Title' but it was %@", titlePropertyDefiniton.title);
+                XCTAssertTrue([titlePropertyDefiniton.summary isEqualToString:@"Content Title"],
+                              @"Expected summary to be 'Content Title' but it was %@", titlePropertyDefiniton.summary);
+                XCTAssertTrue(titlePropertyDefiniton.type == AlfrescoPropertyTypeString,
+                              @"Expected type to be a string but it was %ld", titlePropertyDefiniton.type);
+                XCTAssertFalse(titlePropertyDefiniton.isRequired, @"Expected isRequired to be false");
+                XCTAssertFalse(titlePropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
+                XCTAssertFalse(titlePropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
 }
 
-- (void)disabledtestRetrieveDefinitionFromDocument
+- (void)testRetrieveDefinitionFromFolder
 {
-    // TODO
-    
-    XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
+    if (self.setUpSuccess)
+    {
+        self.modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:self.currentSession];
+        
+        // retrieve type definition for folder object
+        [self.modelDefinitionService retrieveDefinitionForFolder:self.testDocFolder completionBlock:^(AlfrescoFolderTypeDefinition *typeDefinition, NSError *error) {
+            if (typeDefinition == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue([typeDefinition.name isEqualToString:@"cm:folder"],
+                              @"Expected definition name to be 'cm:folder' but it was %@", typeDefinition.name);
+                XCTAssertTrue([typeDefinition.title isEqualToString:@"Folder"],
+                              @"Expected definition name to be 'Folder' but it was %@", typeDefinition.title);
+                XCTAssertTrue([typeDefinition.summary isEqualToString:@"Folder Type"],
+                              @"Expected definition name to be 'Folder Type' but it was %@", typeDefinition.summary);
+                XCTAssertNil(typeDefinition.parent, @"Expected parent to be nil but it was %@", typeDefinition.parent);
+                XCTAssertNotNil(typeDefinition.propertyNames, @"Expected propertyNames property to be populated");
+                XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
+                XCTAssertTrue(typeDefinition.propertyNames.count == 17,
+                              @"Expected there to be 17 property names but there were %lu", (long)typeDefinition.propertyNames.count);
+                XCTAssertTrue(typeDefinition.mandatoryAspects.count == 1,
+                              @"Expected there to be 1 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
+                XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
+                              @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
+                
+                // check for a few property names
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:name"], @"Expected the cmis:name property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:description"], @"Expected the cmis:description property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:createdBy"], @"Expected the cmis:createdBy property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:creationDate"], @"Expected the cmis:creationDate property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cm:title"], @"Expected the cm:title property to be present");
+                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cm:description"], @"Expected the cm:description property to be present");
+                
+                // check the cm:title property is properly populated
+                AlfrescoPropertyDefinition *titlePropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"cm:title"];
+                XCTAssertNotNil(titlePropertyDefiniton, @"Expected to find a property definition for cm:title");
+                XCTAssertTrue([titlePropertyDefiniton.name isEqualToString:@"cm:title"],
+                              @"Expected name to be 'cm:title' but it was %@", titlePropertyDefiniton.name);
+                XCTAssertTrue([titlePropertyDefiniton.title isEqualToString:@"Title"],
+                              @"Expected title to be 'Title' but it was %@", titlePropertyDefiniton.title);
+                XCTAssertTrue([titlePropertyDefiniton.summary isEqualToString:@"Content Title"],
+                              @"Expected summary to be 'Content Title' but it was %@", titlePropertyDefiniton.summary);
+                XCTAssertTrue(titlePropertyDefiniton.type == AlfrescoPropertyTypeString,
+                              @"Expected type to be a string but it was %ld", titlePropertyDefiniton.type);
+                XCTAssertFalse(titlePropertyDefiniton.isRequired, @"Expected isRequired to be false");
+                XCTAssertFalse(titlePropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
+                XCTAssertFalse(titlePropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
 }
 
-- (void)disabledtestRetrieveDefinitionFromFolder
+- (void)testRetrieveDefinitionFromTask
 {
-    // TODO
-    
-    XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
-}
-
-- (void)disabledtestRetrieveDefinitionFromTask
-{
-    // TODO
-    
-    XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
+    if (self.setUpSuccess)
+    {
+        // retrieve any task
+        AlfrescoWorkflowService *workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        [workflowService retrieveTasksWithCompletionBlock:^(NSArray *tasks, NSError *tasksError) {
+            if (tasks == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:tasksError];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue(tasks.count > 0, @"Expected to find at least one task");
+                AlfrescoWorkflowTask *task = tasks[0];
+                
+                self.modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:self.currentSession];
+                [self.modelDefinitionService retrieveDefinitionForTask:task completionBlock:^(AlfrescoTaskTypeDefinition *taskDefinition, NSError *definitionError) {
+                    if (taskDefinition == nil)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [self failureMessageFromError:definitionError];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        // check the type definition matches the task
+                        XCTAssertTrue([task.type isEqualToString:taskDefinition.name],
+                                      @"Expected the type definition name to match the task type");
+                        
+                        // check for a few property names
+                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageActionGroup"],
+                                      @"Expected the bpm:packageActionGroup property to be present");
+                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageItemActionGroup"],
+                                      @"Expected the bpm:packageItemActionGroup property to be present");
+                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:status"],
+                                      @"Expected the bpm:status property to be present");
+                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:comment"],
+                                      @"Expected the bpm:comment property to be present");
+                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:description"],
+                                      @"Expected the bpm:description property to be present");
+                        
+                        self.lastTestSuccessful = YES;
+                        self.callbackCompleted = YES;
+                    }
+                }];
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
 }
 
 @end

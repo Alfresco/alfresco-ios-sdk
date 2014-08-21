@@ -23,9 +23,12 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoRequest.h"
+#import "AlfrescoLog.h"
 #import "CMISConstants.h"
 #import "CMISSession.h"
 #import "CMISRequest.h"
+
+typedef void (^AlfrescoNodeTypeDefinitionCompletionBlock)(AlfrescoNodeTypeDefinition *typeDefinition, NSError *error);
 
 @interface AlfrescoModelDefinitionService ()
 @property (nonatomic, strong) id<AlfrescoSession> session;
@@ -49,8 +52,32 @@
         self.cmisSession = [session objectForParameter:kAlfrescoSessionKeyCmisSession];
         self.objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self.session];
         
-        self.typeCache = [NSMutableDictionary dictionary];
-        self.aspectCache = [NSMutableDictionary dictionary];
+        // setup caches
+        id cachedTypeObj = [self.session objectForParameter:kAlfrescoSessionCacheDefinitionType];
+        if (cachedTypeObj)
+        {
+            AlfrescoLogDebug(@"Found an existing type definition cache in session");
+            self.typeCache = (NSMutableDictionary *)cachedTypeObj;
+        }
+        else
+        {
+            self.typeCache = [NSMutableDictionary dictionary];
+            [self.session setObject:self.typeCache forParameter:kAlfrescoSessionCacheDefinitionType];
+            AlfrescoLogDebug(@"Created new type definition cache");
+        }
+        
+        id cachedAspectObj = [self.session objectForParameter:kAlfrescoSessionCacheDefinitionAspect];
+        if (cachedAspectObj)
+        {
+            AlfrescoLogDebug(@"Found an existing aspect definition cache in session");
+            self.aspectCache = (NSMutableDictionary *)cachedAspectObj;
+        }
+        else
+        {
+            self.aspectCache = [NSMutableDictionary dictionary];
+            [self.session setObject:self.aspectCache forParameter:kAlfrescoSessionCacheDefinitionAspect];
+            AlfrescoLogDebug(@"Created new aspect definition cache");
+        }
     }
     
     return self;
@@ -74,34 +101,45 @@
         cmisType = [kAlfrescoCMISDocumentTypePrefix stringByAppendingString:type];
     }
     
-    return [self retrieveDefinition:cmisType completionBlock:^(CMISTypeDefinition *typeDefinition, NSError *error) {
-        if (typeDefinition != nil)
-        {
-            // convert the CMIS type definition
-            AlfrescoDocumentTypeDefinition *documentTypeDefinition = [self.objectConverter documentTypeDefinitionFromCMISTypeDefinition:typeDefinition];
-            if (documentTypeDefinition != nil)
+    AlfrescoRequest *request = nil;
+    
+    // check cache first
+    AlfrescoDocumentTypeDefinition *cachedTypeDefinition = self.typeCache[cmisType];
+    if (cachedTypeDefinition != nil)
+    {
+        AlfrescoLogDebug(@"Cache hit: returning document type definition for %@ from cache", cmisType);
+        completionBlock(cachedTypeDefinition, nil);
+    }
+    else
+    {
+        request = [self retrieveDefinition:cmisType completionBlock:^(CMISTypeDefinition *typeDefinition, NSError *error) {
+            if (typeDefinition != nil)
             {
-                completionBlock(documentTypeDefinition, nil);
+                // convert the CMIS type definition
+                AlfrescoDocumentTypeDefinition *documentTypeDefinition = [self.objectConverter documentTypeDefinitionFromCMISTypeDefinition:typeDefinition];
+                if (documentTypeDefinition != nil)
+                {
+                    // cache the type definition
+                    AlfrescoLogDebug(@"Cached document type definition for %@", cmisType);
+                    self.typeCache[cmisType] = documentTypeDefinition;
+                    
+                    // call completion block
+                    completionBlock(documentTypeDefinition, nil);
+                }
+                else
+                {
+                    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
+                }
             }
             else
             {
-                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
+                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error
+                                                                 andAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
             }
-        }
-        else
-        {
-            completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error
-                                                             andAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
-        }
-    }];
-}
-
-
-- (AlfrescoRequest *)retrieveDefinitionForDocument:(AlfrescoDocument *)document
-                                   completionBlock:(AlfrescoDocumentTypeDefinitionCompletionBlock)completionBlock
-{
-    // TODO: examine the aspects and incorporate their definitions into the response
-    return [self retrieveDefinitionForDocumentType:document.type completionBlock:completionBlock];
+        }];
+    }
+    
+    return request;
 }
 
 - (AlfrescoRequest *)retrieveDefinitionForFolderType:(NSString *)type
@@ -114,35 +152,92 @@
         cmisType = [kAlfrescoCMISFolderTypePrefix stringByAppendingString:type];
     }
     
-    return [self retrieveDefinition:cmisType completionBlock:^(CMISTypeDefinition *typeDefinition, NSError *error) {
-        if (typeDefinition != nil)
-        {
-            // convert the CMIS type definition
-            AlfrescoFolderTypeDefinition *folderTypeDefinition = [self.objectConverter folderTypeDefinitionFromCMISTypeDefinition:typeDefinition];
-            if (folderTypeDefinition != nil)
+    AlfrescoRequest *request = nil;
+    
+    // check cache first
+    AlfrescoFolderTypeDefinition *cachedTypeDefinition = self.typeCache[cmisType];
+    if (cachedTypeDefinition != nil)
+    {
+        AlfrescoLogDebug(@"Cache hit: returning folder type definition for %@ from cache", cmisType);
+        completionBlock(cachedTypeDefinition, nil);
+    }
+    else
+    {
+        request =  [self retrieveDefinition:cmisType completionBlock:^(CMISTypeDefinition *typeDefinition, NSError *error) {
+            if (typeDefinition != nil)
             {
-                completionBlock(folderTypeDefinition, nil);
+                // convert the CMIS type definition
+                AlfrescoFolderTypeDefinition *folderTypeDefinition = [self.objectConverter folderTypeDefinitionFromCMISTypeDefinition:typeDefinition];
+                if (folderTypeDefinition != nil)
+                {
+                    // cache the type definition
+                    AlfrescoLogDebug(@"Cached folder type definition for %@", cmisType);
+                    self.typeCache[cmisType] = folderTypeDefinition;
+                    
+                    // call completion block
+                    completionBlock(folderTypeDefinition, nil);
+                }
+                else
+                {
+                    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
+                }
             }
             else
             {
-                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
+                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error
+                                                                 andAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
             }
-        }
-        else
-        {
-            completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error
-                                                             andAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
-        }
-    }];
+        }];
+    }
+    
+    return request;
 }
 
-- (AlfrescoRequest *)retrieveDefinitionForFolder:(AlfrescoFolder *)folder
-                                 completionBlock:(AlfrescoFolderTypeDefinitionCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveDefinitionForTaskType:(NSString *)type
+                                   completionBlock:(AlfrescoTaskTypeDefinitionCompletionBlock)completionBlock
 {
-    // TODO: examine the aspects and incorporate their definitions into the response
-    return [self retrieveDefinitionForFolderType:folder.type completionBlock:completionBlock];
+    NSString *cmisType = [kAlfrescoCMISDocumentTypePrefix stringByAppendingString:type];
+    
+    AlfrescoRequest *request = nil;
+    
+    // check cache first
+    AlfrescoTaskTypeDefinition *cachedTypeDefinition = self.typeCache[cmisType];
+    if (cachedTypeDefinition != nil)
+    {
+        AlfrescoLogDebug(@"Cache hit: returning task type definition for %@ from cache", cmisType);
+        completionBlock(cachedTypeDefinition, nil);
+    }
+    else
+    {
+        request = [self retrieveDefinition:cmisType completionBlock:^(CMISTypeDefinition *typeDefinition, NSError *error) {
+            if (typeDefinition != nil)
+            {
+                // convert the CMIS type definition
+                AlfrescoTaskTypeDefinition *taskTypeDefinition = [self.objectConverter taskTypeDefinitionFromCMISTypeDefinition:typeDefinition];
+                if (taskTypeDefinition != nil)
+                {
+                    // cache the type definition
+                    AlfrescoLogDebug(@"Cached task type definition for %@", cmisType);
+                    self.typeCache[cmisType] = taskTypeDefinition;
+                    
+                    // call completion block
+                    completionBlock(taskTypeDefinition, nil);
+                }
+                else
+                {
+                    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
+                }
+            }
+            else
+            {
+                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error
+                                                                 andAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
+            }
+        }];
+    }
+    
+    return request;
 }
-
 
 - (AlfrescoRequest *)retrieveDefinitionForAspect:(NSString *)aspect
                                  completionBlock:(AlfrescoAspectDefinitionCompletionBlock)completionBlock
@@ -150,41 +245,98 @@
     // construct CMIS specific type identifier
     NSString *cmisType = [kAlfrescoCMISAspectPrefix stringByAppendingString:aspect];
     
-    return [self retrieveDefinition:cmisType completionBlock:^(CMISTypeDefinition *typeDefinition, NSError *error) {
-        if (typeDefinition != nil)
-        {
-            // convert the CMIS type definition
-            AlfrescoAspectDefinition *aspectDefinition = [self.objectConverter aspectDefinitionFromCMISTypeDefinition:typeDefinition];
-            if (aspectDefinition != nil)
+    AlfrescoRequest *request = nil;
+    
+    // check cache first
+    AlfrescoAspectDefinition *cachedDefinition = self.aspectCache[cmisType];
+    if (cachedDefinition != nil)
+    {
+        AlfrescoLogDebug(@"Cache hit: returning aspect definition for %@ from cache", cmisType);
+        completionBlock(cachedDefinition, nil);
+    }
+    else
+    {
+        request = [self retrieveDefinition:cmisType completionBlock:^(CMISTypeDefinition *typeDefinition, NSError *error) {
+            if (typeDefinition != nil)
             {
-                completionBlock(aspectDefinition, nil);
+                // convert the CMIS type definition
+                AlfrescoAspectDefinition *aspectDefinition = [self.objectConverter aspectDefinitionFromCMISTypeDefinition:typeDefinition];
+                if (aspectDefinition != nil)
+                {
+                    // cache the definition
+                    AlfrescoLogDebug(@"Cached aspect definition for %@", cmisType);
+                    self.aspectCache[cmisType] = aspectDefinition;
+                    
+                    // call completion block
+                    completionBlock(aspectDefinition, nil);
+                }
+                else
+                {
+                    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
+                }
             }
             else
             {
-                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
+                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error
+                                                                 andAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
             }
+        }];
+    }
+    
+    return request;
+}
+
+- (AlfrescoRequest *)retrieveDefinitionForDocument:(AlfrescoDocument *)document
+                                   completionBlock:(AlfrescoDocumentTypeDefinitionCompletionBlock)completionBlock
+{
+    AlfrescoRequest *request = nil;
+    request = [self retrieveDefinitionForDocumentType:document.type completionBlock:^(AlfrescoDocumentTypeDefinition *typeDefinition, NSError *typeError) {
+        if (typeDefinition == nil)
+        {
+            completionBlock(nil, typeError);
         }
         else
         {
-            completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:error
-                                                             andAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinitionNotFound]);
+            // add all properties from applied aspects to the type definition
+            [self typeDefinitonWithAspectsFromNode:document
+                                    typeDefinition:typeDefinition
+                                           request:request
+                                   completionBlock:^(AlfrescoNodeTypeDefinition *typeDefinition, NSError *aspectError) {
+                                       completionBlock((AlfrescoDocumentTypeDefinition*)typeDefinition, aspectError);
+                                   }];
         }
     }];
+    
+    return request;
 }
 
-
-- (AlfrescoRequest *)retrieveDefinitionForTaskType:(NSString *)type
-                                   completionBlock:(AlfrescoTaskTypeDefinitionCompletionBlock)completionBlock
+- (AlfrescoRequest *)retrieveDefinitionForFolder:(AlfrescoFolder *)folder
+                                 completionBlock:(AlfrescoFolderTypeDefinitionCompletionBlock)completionBlock
 {
-    completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeModelDefinition reason:@"Method Not Implemented"]);
-    return nil;
+    AlfrescoRequest *request = nil;
+    request = [self retrieveDefinitionForFolderType:folder.type completionBlock:^(AlfrescoFolderTypeDefinition *typeDefinition, NSError *typeError) {
+        if (typeDefinition == nil)
+        {
+            completionBlock(nil, typeError);
+        }
+        else
+        {
+            // add all properties from applied aspects to the type definition
+            [self typeDefinitonWithAspectsFromNode:folder
+                                    typeDefinition:typeDefinition
+                                           request:request
+                                   completionBlock:^(AlfrescoNodeTypeDefinition *typeDefinition, NSError *aspectError) {
+                                       completionBlock((AlfrescoFolderTypeDefinition*)typeDefinition, aspectError);
+                                   }];
+        }
+    }];
+    
+    return request;
 }
-
 
 - (AlfrescoRequest *)retrieveDefinitionForTask:(AlfrescoWorkflowTask *)task
                                completionBlock:(AlfrescoTaskTypeDefinitionCompletionBlock)completionBlock
 {
-    // TODO: examine the aspects and incorporate their definitions into the response
     return [self retrieveDefinitionForTaskType:task.type completionBlock:completionBlock];
 }
 
@@ -200,5 +352,52 @@
     alfrescoRequest.httpRequest = cmisRequest.httpRequest;
     return alfrescoRequest;
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
+- (void)typeDefinitonWithAspectsFromNode:(AlfrescoNode *)node
+                          typeDefinition:(AlfrescoNodeTypeDefinition *)typeDefinition
+                                 request:(AlfrescoRequest *)request
+                         completionBlock:(AlfrescoNodeTypeDefinitionCompletionBlock)completionBlock
+{
+    NSMutableArray *aspectPropertyDefinitions = [NSMutableArray array];
+    
+    // retrieve the definition of each aspect applied to the node and extract the property definitions
+    __block int aspectsRetrieved = 0;
+    for (NSString *aspect in node.aspects)
+    {
+        AlfrescoRequest *aspectRequest = nil;
+        aspectRequest = [self retrieveDefinitionForAspect:aspect completionBlock:^(AlfrescoAspectDefinition *aspectDefinition, NSError *error) {
+            if (aspectDefinition == nil)
+            {
+                completionBlock(nil, error);
+            }
+            else
+            {
+                aspectsRetrieved++;
+                
+                for (NSString *propertyName in aspectDefinition.propertyNames)
+                {
+                    AlfrescoPropertyDefinition *propertyDefinition = [aspectDefinition propertyDefinitionForPropertyWithName:propertyName];
+                    [aspectPropertyDefinitions addObject:propertyDefinition];
+                }
+                
+                if (aspectsRetrieved == node.aspects.count)
+                {
+                    // using a selector add the extra property definitons to the existing type definition
+                    SEL addPropertyDefinitions = sel_registerName("addPropertyDefinitions:");
+                    [typeDefinition performSelector:addPropertyDefinitions withObject:aspectPropertyDefinitions];
+                    
+                    completionBlock(typeDefinition, nil);
+                }
+            }
+        }];
+        
+        request.httpRequest = aspectRequest.httpRequest;
+    }
+}
+
+#pragma clang diagnostic pop
 
 @end
