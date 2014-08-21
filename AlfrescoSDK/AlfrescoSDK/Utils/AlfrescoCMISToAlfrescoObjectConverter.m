@@ -278,6 +278,11 @@
     return (AlfrescoAspectDefinition *)[self modelDefinitionFromCMISTypeDefinition:cmisTypeDefinition];
 }
 
+- (AlfrescoTaskTypeDefinition *)taskTypeDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition
+{
+    return (AlfrescoTaskTypeDefinition *)[self modelDefinitionFromCMISTypeDefinition:cmisTypeDefinition];
+}
+
 #pragma mark internal methods
 
 - (AlfrescoPropertyType)typeForCMISPropertyTypeString:(NSString *)type
