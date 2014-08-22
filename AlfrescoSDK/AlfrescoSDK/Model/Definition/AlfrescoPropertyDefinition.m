@@ -20,7 +20,9 @@
 
 #import "AlfrescoPropertyDefinition.h"
 #import "AlfrescoPropertyConstants.h"
+#import "AlfrescoConstants.h"
 #import "CMISDictionaryUtil.h"
+#import "CMISConstants.h"
 
 @interface AlfrescoPropertyDefinition ()
 @property (nonatomic, strong, readwrite) NSString *name;
@@ -83,6 +85,20 @@
     [aCoder encodeBool:self.isRequired forKey:kAlfrescoPropertyDefinitionPropertyIsRequired];
     [aCoder encodeBool:self.isReadOnly forKey:kAlfrescoPropertyDefinitionPropertyIsReadOnly];
     [aCoder encodeBool:self.isMultiValued forKey:kAlfrescoPropertyDefinitionPropertyIsMultiValued];
+}
+
+- (BOOL)isRequired
+{
+    // cmis:name and cm:name should always be required but MNT-5773 caused it to be
+    // false on older servers, make sure we always return YES
+    if ([self.name isEqualToString:kCMISPropertyName] || [self.name isEqualToString:kAlfrescoModelPropertyName])
+    {
+        return YES;
+    }
+    else
+    {
+        return _isRequired;
+    }
 }
 
 @end
