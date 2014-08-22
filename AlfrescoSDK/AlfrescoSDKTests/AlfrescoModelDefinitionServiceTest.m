@@ -49,21 +49,23 @@
                               @"Expected definition name to be 'Document Type' but it was %@", typeDefinition.summary);
                 XCTAssertNil(typeDefinition.parent, @"Expected parent to be nil but it was %@", typeDefinition.parent);
                 XCTAssertNotNil(typeDefinition.propertyNames, @"Expected propertyNames property to be populated");
-                XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
-                XCTAssertTrue(typeDefinition.propertyNames.count == 26,
-                              @"Expected there to be 26 property names but there were %lu", (long)typeDefinition.propertyNames.count);
-                XCTAssertTrue(typeDefinition.mandatoryAspects.count == 1,
-                              @"Expected there to be 1 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
+                XCTAssertTrue(typeDefinition.propertyNames.count > 20,
+                              @"Expected there to be more than 20 property names but there were %lu", (long)typeDefinition.propertyNames.count);
+                
+                if ([self.currentSession.repositoryInfo.majorVersion intValue] > 3)
+                {
+                    // NOTE: mandatory aspect data is not returned for 3.x servers
+                    XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
+                    XCTAssertTrue(typeDefinition.mandatoryAspects.count == 1,
+                                  @"Expected there to be 1 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
+                    XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
+                                  @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
+                }
                 
                 // check for a few property names
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:name"], @"Expected the cmis:name property to be present");
-                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:description"], @"Expected the cmis:description property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:createdBy"], @"Expected the cmis:createdBy property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:creationDate"], @"Expected the cmis:creationDate property to be present");
-                
-                // check the mandatory aspect is expected
-                XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
-                              @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
                 
                 // retrieve and check some property definition objects
                 AlfrescoPropertyDefinition *namePropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"cmis:name"];
@@ -140,21 +142,23 @@
                               @"Expected definition name to be 'Folder Type' but it was %@", typeDefinition.summary);
                 XCTAssertNil(typeDefinition.parent, @"Expected parent to be nil but it was %@", typeDefinition.parent);
                 XCTAssertNotNil(typeDefinition.propertyNames, @"Expected propertyNames property to be populated");
-                XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
-                XCTAssertTrue(typeDefinition.propertyNames.count == 14,
-                              @"Expected there to be 14 property names but there were %lu", (long)typeDefinition.propertyNames.count);
-                XCTAssertTrue(typeDefinition.mandatoryAspects.count == 1,
-                              @"Expected there to be 1 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
+                XCTAssertTrue(typeDefinition.propertyNames.count > 10,
+                              @"Expected there to be more than 10 property names but there were %lu", (long)typeDefinition.propertyNames.count);
+                
+                if ([self.currentSession.repositoryInfo.majorVersion intValue] > 3)
+                {
+                    // NOTE: mandatory aspect data is not returned for 3.x servers
+                    XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
+                    XCTAssertTrue(typeDefinition.mandatoryAspects.count == 1,
+                                  @"Expected there to be 1 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
+                    XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
+                                  @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
+                }
                 
                 // check for a few property names
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:name"], @"Expected the cmis:name property to be present");
-                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:description"], @"Expected the cmis:description property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:createdBy"], @"Expected the cmis:createdBy property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:creationDate"], @"Expected the cmis:creationDate property to be present");
-                
-                // check the mandatory aspect is expected
-                XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
-                              @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
                 
                 // retrieve and check some property definition objects
                 AlfrescoPropertyDefinition *namePropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"cmis:name"];
@@ -228,18 +232,40 @@
                 {
                     XCTAssertTrue([typeDefinition.name isEqualToString:@"fdk:everything"],
                                   @"Expected definition name to be 'fdk:everything' but it was %@", typeDefinition.name);
-                    XCTAssertTrue([typeDefinition.title isEqualToString:@"Everything"],
-                                  @"Expected definition name to be 'Everything' but it was %@", typeDefinition.title);
-                    XCTAssertTrue([typeDefinition.summary isEqualToString:@"Everything"],
-                                  @"Expected definition name to be 'Everything' but it was %@", typeDefinition.summary);
                     XCTAssertTrue([typeDefinition.parent isEqualToString:@"cm:content"],
                                   @"Expected definition parent to be 'cm:content' but it was %@", typeDefinition.parent);
                     XCTAssertNotNil(typeDefinition.propertyNames, @"Expected propertyNames property to be populated");
-                    XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
-                    XCTAssertTrue(typeDefinition.propertyNames.count == 48,
-                                  @"Expected there to be 48 property names but there were %lu", (long)typeDefinition.propertyNames.count);
-                    XCTAssertTrue(typeDefinition.mandatoryAspects.count == 3,
-                                  @"Expected there to be 1 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
+                    XCTAssertTrue(typeDefinition.propertyNames.count > 40,
+                                  @"Expected there to be more than 40 property names but there were %lu", (long)typeDefinition.propertyNames.count);
+                    
+                    if ([self.currentSession.repositoryInfo.majorVersion intValue] == 4 && [self.currentSession.repositoryInfo.minorVersion intValue] == 0)
+                    {
+                        XCTAssertTrue([typeDefinition.title isEqualToString:@"D:fdk:everything"],
+                                      @"Expected definition name to be 'D:fdk:everything' but it was %@", typeDefinition.title);
+                        XCTAssertTrue([typeDefinition.summary isEqualToString:@"D:fdk:everything"],
+                                      @"Expected definition name to be 'D:fdk:everything' but it was %@", typeDefinition.summary);
+                    }
+                    else
+                    {
+                        XCTAssertTrue([typeDefinition.title isEqualToString:@"Everything"],
+                                      @"Expected definition name to be 'Everything' but it was %@", typeDefinition.title);
+                        XCTAssertTrue([typeDefinition.summary isEqualToString:@"Everything"],
+                                      @"Expected definition name to be 'Everything' but it was %@", typeDefinition.summary);
+                    }
+                    
+                    if ([self.currentSession.repositoryInfo.majorVersion intValue] > 3)
+                    {
+                        // NOTE: mandatory aspect data is not returned for 3.x servers
+                        XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
+                        XCTAssertTrue(typeDefinition.mandatoryAspects.count == 3,
+                                      @"Expected there to be 3 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
+                        XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
+                                      @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
+                        XCTAssertTrue([typeDefinition.mandatoryAspects[1] isEqualToString:@"cm:taggable"],
+                                      @"Expected mandatory aspect entry to be cm:taggable but it was %@", typeDefinition.mandatoryAspects[1]);
+                        XCTAssertTrue([typeDefinition.mandatoryAspects[2] isEqualToString:@"cm:generalclassifiable"],
+                                      @"Expected mandatory aspect entry to be cm:generalclassifiable but it was %@", typeDefinition.mandatoryAspects[2]);
+                    }
                     
                     // check for a few property names
                     XCTAssertTrue([typeDefinition.propertyNames containsObject:@"fdk:mandatory"], @"Expected the fdk:mandatory property to be present");
@@ -248,14 +274,6 @@
                     XCTAssertTrue([typeDefinition.propertyNames containsObject:@"fdk:long"], @"Expected the fdk:long property to be present");
                     XCTAssertTrue([typeDefinition.propertyNames containsObject:@"fdk:listConstraint"], @"Expected the fdk:listConstraint property to be present");
                     XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:name"], @"Expected the cmis:name property to be present");
-                    
-                    // check the mandatory aspects are expected
-                    XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
-                                  @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
-                    XCTAssertTrue([typeDefinition.mandatoryAspects[1] isEqualToString:@"cm:taggable"],
-                                  @"Expected mandatory aspect entry to be cm:taggable but it was %@", typeDefinition.mandatoryAspects[1]);
-                    XCTAssertTrue([typeDefinition.mandatoryAspects[2] isEqualToString:@"cm:generalclassifiable"],
-                                  @"Expected mandatory aspect entry to be cm:generalclassifiable but it was %@", typeDefinition.mandatoryAspects[2]);
                     
                     // retrieve and check some property definition objects
                     AlfrescoPropertyDefinition *mandatoryPropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"fdk:mandatory"];
@@ -359,14 +377,13 @@
                               @"Expected definition summary to be 'Subset of the standard EXIF metadata' but it was %@", aspectDefinition.summary);
                 XCTAssertNil(aspectDefinition.parent, @"Expected parent to be nil but it was %@", aspectDefinition.parent);
                 XCTAssertNotNil(aspectDefinition.propertyNames, @"Expected propertyNames property to be populated");
-                XCTAssertTrue(aspectDefinition.propertyNames.count == 27,
-                              @"Expected there to be 27 property names but there were %lu", (long)aspectDefinition.propertyNames.count);
+                XCTAssertTrue(aspectDefinition.propertyNames.count >= 15,
+                              @"Expected there to be 15 or more property names but there were %lu", (long)aspectDefinition.propertyNames.count);
                 
                 // check for a few property names
                 XCTAssertTrue([aspectDefinition.propertyNames containsObject:@"exif:xResolution"], @"Expected the exif:xResolution property to be present");
                 XCTAssertTrue([aspectDefinition.propertyNames containsObject:@"exif:yResolution"], @"Expected the exif:yResolution property to be present");
                 XCTAssertTrue([aspectDefinition.propertyNames containsObject:@"exif:software"], @"Expected the exif:software property to be present");
-                XCTAssertTrue([aspectDefinition.propertyNames containsObject:@"cmis:name"], @"Expected the cmis:name property to be present");
                 
                 // retrieve and check some property definition objects
                 AlfrescoPropertyDefinition *xResolutionPropertyDefiniton = [aspectDefinition propertyDefinitionForPropertyWithName:@"exif:xResolution"];
@@ -419,17 +436,26 @@
             {
                 XCTAssertTrue([taskDefinition.name isEqualToString:@"wf:adhocTask"],
                               @"Expected definition name to be 'wf:adhocTask' but it was %@", taskDefinition.name);
-                XCTAssertTrue([taskDefinition.title isEqualToString:@"Task"],
-                              @"Expected definition title to be 'Task' but it was %@", taskDefinition.title);
-                XCTAssertTrue([taskDefinition.summary isEqualToString:@"Task allocated by colleague"],
-                              @"Expected definition summary to be 'Task allocated by colleague' but it was %@", taskDefinition.summary);
+                if ([self.currentSession.repositoryInfo.majorVersion intValue] > 4 ||
+                    ([self.currentSession.repositoryInfo.majorVersion intValue] == 4 && [self.currentSession.repositoryInfo.minorVersion intValue] > 1))
+                {
+                    XCTAssertTrue([taskDefinition.title isEqualToString:@"Task"],
+                                  @"Expected definition title to be 'Task' but it was %@", taskDefinition.title);
+                    XCTAssertTrue([taskDefinition.summary isEqualToString:@"Task allocated by colleague"],
+                                  @"Expected definition summary to be 'Task allocated by colleague' but it was %@", taskDefinition.summary);
+                }
+                else
+                {
+                    XCTAssertTrue([taskDefinition.title isEqualToString:@"Adhoc Task"],
+                                  @"Expected definition title to be 'Adhoc Task' but it was %@", taskDefinition.title);
+                    XCTAssertTrue([taskDefinition.summary isEqualToString:@"Adhoc Task allocated by colleague"],
+                                  @"Expected definition summary to be 'Adhoc Task allocated by colleague' but it was %@", taskDefinition.summary);
+                }
                 XCTAssertTrue([taskDefinition.parent isEqualToString:@"bpm:workflowTask"],
                               @"Expected definition parent to be 'bpm:workflowTask' but it was %@", taskDefinition.parent);
                 XCTAssertNotNil(taskDefinition.propertyNames, @"Expected propertyNames property to be populated");
-                XCTAssertTrue(taskDefinition.propertyNames.count == 43,
-                              @"Expected there to be 43 property names but there were %lu", (long)taskDefinition.propertyNames.count);
-                XCTAssertTrue(taskDefinition.mandatoryAspects.count == 2,
-                              @"Expected there to be 2 mandatory aspects but there were %lu", (long)taskDefinition.mandatoryAspects.count);
+                XCTAssertTrue(taskDefinition.propertyNames.count > 35,
+                              @"Expected there to be more than 35 property names but there were %lu", (long)taskDefinition.propertyNames.count);
                 
                 // check for a few property names
                 XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageActionGroup"],
@@ -439,27 +465,20 @@
                 XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:status"],
                               @"Expected the bpm:status property to be present");
                 
-                // retrieve and check some property definition objects
-                AlfrescoPropertyDefinition *packageActionGroupPropertyDefiniton = [taskDefinition propertyDefinitionForPropertyWithName:@"bpm:packageActionGroup"];
-                XCTAssertNotNil(packageActionGroupPropertyDefiniton, @"Expected to find a property definition for bpm:packageActionGroup");
-                XCTAssertTrue([packageActionGroupPropertyDefiniton.name isEqualToString:@"bpm:packageActionGroup"],
-                              @"Expected name to be 'bpm:packageActionGroup' but it was %@", packageActionGroupPropertyDefiniton.name);
-                XCTAssertTrue([packageActionGroupPropertyDefiniton.title isEqualToString:@"bpm:packageActionGroup"],
-                              @"Expected title to be 'bpm:packageActionGroup' but it was %@", packageActionGroupPropertyDefiniton.title);
-                XCTAssertTrue([packageActionGroupPropertyDefiniton.summary isEqualToString:@"bpm:packageActionGroup"],
-                              @"Expected summary to be 'bpm:packageActionGroup' but it was %@", packageActionGroupPropertyDefiniton.summary);
-//                XCTAssertTrue([packageActionGroupPropertyDefiniton.defaultValue isEqualToString:@"add_package_item_actions"],
-//                              @"Expected default value to be 'add_package_item_actions' but it was %@", packageActionGroupPropertyDefiniton.defaultValue);
-                XCTAssertTrue(packageActionGroupPropertyDefiniton.type == AlfrescoPropertyTypeString,
-                              @"Expected type to be a string but it was %ld", packageActionGroupPropertyDefiniton.type);
-                XCTAssertFalse(packageActionGroupPropertyDefiniton.isRequired, @"Expected isRequired to be false");
-                XCTAssertFalse(packageActionGroupPropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
-                XCTAssertFalse(packageActionGroupPropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
-                
+                // retrieve and check bpm:status property definition
                 AlfrescoPropertyDefinition *statusPropertyDefiniton = [taskDefinition propertyDefinitionForPropertyWithName:@"bpm:status"];
                 XCTAssertNotNil(statusPropertyDefiniton, @"Expected to find a property definition for bpm:status");
-//                XCTAssertTrue([statusPropertyDefiniton.defaultValue isEqualToString:@"Not Yet Started"],
-//                              @"Expected default value to be 'Not Yet Started' but it was %@", statusPropertyDefiniton.defaultValue);
+                XCTAssertTrue([statusPropertyDefiniton.name isEqualToString:@"bpm:status"],
+                              @"Expected name to be 'bpm:status' but it was %@", statusPropertyDefiniton.name);
+                XCTAssertTrue([statusPropertyDefiniton.title isEqualToString:@"Status"],
+                              @"Expected title to be 'Status' but it was %@", statusPropertyDefiniton.title);
+                XCTAssertTrue([statusPropertyDefiniton.summary isEqualToString:@"Status"],
+                              @"Expected summary to be 'Status' but it was %@", statusPropertyDefiniton.summary);
+                XCTAssertTrue(statusPropertyDefiniton.isRequired, @"Expected isRequired to be true");
+                XCTAssertFalse(statusPropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
+                XCTAssertFalse(statusPropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
+                XCTAssertTrue([statusPropertyDefiniton.defaultValue isEqualToString:@"Not Yet Started"],
+                              @"Expected default value to be 'Not Yet Started' but it was %@", statusPropertyDefiniton.defaultValue);
                 XCTAssertNotNil(statusPropertyDefiniton.allowableValues, @"Expected allowable values to be set");
                 XCTAssertTrue(statusPropertyDefiniton.allowableValues.count == 5,
                               @"Expected there to be 5 allowable values but there were %lu", (long)statusPropertyDefiniton.allowableValues.count);
@@ -575,15 +594,21 @@
                               @"Expected definition name to be 'Document Type' but it was %@", typeDefinition.summary);
                 XCTAssertNil(typeDefinition.parent, @"Expected parent to be nil but it was %@", typeDefinition.parent);
                 XCTAssertNotNil(typeDefinition.propertyNames, @"Expected propertyNames property to be populated");
-                XCTAssertTrue(typeDefinition.propertyNames.count == 30,
-                              @"Expected there to be 30 property names but there were %lu", (long)typeDefinition.propertyNames.count);
-                XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
-                XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
-                              @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
+                XCTAssertTrue(typeDefinition.propertyNames.count > 25,
+                              @"Expected there to be more than 25 property names but there were %lu", (long)typeDefinition.propertyNames.count);
+                
+                if ([self.currentSession.repositoryInfo.majorVersion intValue] > 3)
+                {
+                    // NOTE: mandatory aspect data is not returned for 3.x servers
+                    XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
+                    XCTAssertTrue(typeDefinition.mandatoryAspects.count == 1,
+                                  @"Expected there to be 1 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
+                    XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
+                                  @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
+                }
                 
                 // check for a few property names
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:name"], @"Expected the cmis:name property to be present");
-                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:description"], @"Expected the cmis:description property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:createdBy"], @"Expected the cmis:createdBy property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:creationDate"], @"Expected the cmis:creationDate property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cm:title"], @"Expected the cm:title property to be present");
@@ -643,17 +668,21 @@
                               @"Expected definition name to be 'Folder Type' but it was %@", typeDefinition.summary);
                 XCTAssertNil(typeDefinition.parent, @"Expected parent to be nil but it was %@", typeDefinition.parent);
                 XCTAssertNotNil(typeDefinition.propertyNames, @"Expected propertyNames property to be populated");
-                XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
-                XCTAssertTrue(typeDefinition.propertyNames.count == 17,
-                              @"Expected there to be 17 property names but there were %lu", (long)typeDefinition.propertyNames.count);
-                XCTAssertTrue(typeDefinition.mandatoryAspects.count == 1,
-                              @"Expected there to be 1 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
-                XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
-                              @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
+                XCTAssertTrue(typeDefinition.propertyNames.count > 10,
+                              @"Expected there to be more than 10 property names but there were %lu", (long)typeDefinition.propertyNames.count);
+                
+                if ([self.currentSession.repositoryInfo.majorVersion intValue] > 3)
+                {
+                    // NOTE: mandatory aspect data is not returned for 3.x servers
+                    XCTAssertNotNil(typeDefinition.mandatoryAspects, @"Expected mandatoryAspects property to be populated");
+                    XCTAssertTrue(typeDefinition.mandatoryAspects.count == 1,
+                                  @"Expected there to be 1 mandatory aspect but there were %lu", (long)typeDefinition.mandatoryAspects.count);
+                    XCTAssertTrue([typeDefinition.mandatoryAspects[0] isEqualToString:@"sys:localized"],
+                                  @"Expected mandatory aspect entry to be sys:localized but it was %@", typeDefinition.mandatoryAspects[0]);
+                }
                 
                 // check for a few property names
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:name"], @"Expected the cmis:name property to be present");
-                XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:description"], @"Expected the cmis:description property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:createdBy"], @"Expected the cmis:createdBy property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cmis:creationDate"], @"Expected the cmis:creationDate property to be present");
                 XCTAssertTrue([typeDefinition.propertyNames containsObject:@"cm:title"], @"Expected the cm:title property to be present");
