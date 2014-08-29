@@ -1,8 +1,7 @@
 {
     "info":
     {
-        "schema-version": 0.1,
-        "config-version": 0.1
+        "schema-version": 0.1
     },
     "repository":
     {
@@ -16,7 +15,7 @@
             "default": true,
             "label-id": "Default Profile",
             "description-id": "Description of the Default Profile",
-            "root-view-id": "rootNavigationMenu"
+            "root-view-id": "root-navigation"
         },
         "custom":
         {
@@ -41,6 +40,21 @@
     "view-groups":
     [
         {
+            "id": "root-navigation",
+            "label-id": "Root Navigation",
+            "items":
+            [
+                {
+                    "item-type": "view-group-id",
+                    "view-group-id": "views-menu-default"
+                },
+                {
+                    "item-type": "view-id",
+                    "view-id": "view-tasks"
+                }
+            ]
+        },
+        {
             "id": "views-menu-default",
             "label-id": "Default Menu",
             "items":
@@ -57,7 +71,7 @@
                     "item-type": "view",
                     "view":
                     {
-                        "type": "com.alfresco.type.sites",
+                        "type": "com.alfresco.client.view.sites",
                         "label-id": "Sites",
                         "icon-id": "Sites Icon",
                         "description-id": "Sites Description"
@@ -65,19 +79,76 @@
                 }
              ]
         },
+        {
+            "id": "sub-group-test",
+            "label-id": "Sub Group Test",
+            "items":
+            [
+                {
+                    "item-type": "view-group",
+                    "view-group":
+                    {
+                        "id": "level1",
+                        "label-id": "Level 1",
+                        "items":
+                        [
+                            {
+                                "item-type": "view-group",
+                                "view-group":
+                                {
+                                    "id": "level2",
+                                    "label-id": "Level 2",
+                                    "items":
+                                    [
+                                        {
+                                            "item-type": "view-group",
+                                            "view-group":
+                                            {
+                                                "id": "level3",
+                                                "label-id": "Level 3",
+                                                "items":
+                                                [
+                                                    {
+                                                        "item-type": "view",
+                                                        "view":
+                                                        {
+                                                            "id": "viewAtLevel3",
+                                                            "type": "com.alfresco.client.view.sites"
+                                                        }
+                                                    },
+                                                    {
+                                                        "item-type": "view-group-id",
+                                                        "view-group-id": "views-menu-default"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
     ],
     "views":
     {
         "view-activities-default":
         {
-            "type": "com.alfresco.type.activities",
+            "type": "com.alfresco.client.view.activities",
             "label-id": "Activities",
             "icon-id": "Activities Icon",
             "description-id": "Activities Description"
         },
         "view-repository-default":
         {
-            "type": "com.alfresco.type.repository"
+            "type": "com.alfresco.client.view.repository"
+        },
+        "view-tasks":
+        {
+            "type": "com.alfresco.client.view.tasks",
+            "label-id": "Tasks"
         }
     },
     "creation":
@@ -128,33 +199,62 @@
                     "item-type": "field-group-id",
                     "field-group-id": "edit:cm:content"
                 }
-             ]
+            ]
+        },
+        {
+            "id": "sub-group-test",
+            "label-id": "Sub Group Test",
+            "items":
+            [
+                {
+                    "item-type": "field-group",
+                    "field-group":
+                    {
+                        "id": "level1",
+                        "label-id": "Level 1",
+                        "items":
+                        [
+                            {
+                                "item-type": "field-group",
+                                "field-group":
+                                {
+                                    "id": "level2",
+                                    "label-id": "Level 2",
+                                    "items":
+                                    [
+                                        {
+                                            "item-type": "field-group",
+                                            "field-group":
+                                            {
+                                                "id": "level3",
+                                                "label-id": "Level 3",
+                                                "items":
+                                                [
+                                                    {
+                                                        "item-type": "field",
+                                                        "field":
+                                                        {
+                                                            "model-id": "viewAtLevel3"
+                                                        }
+                                                    },
+                                                    {
+                                                        "item-type": "field-group-id",
+                                                        "field-group-id": "type:cm:content"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     ],
     "field-groups":
     {
-        "edit:cm:content":
-        {
-            "items":
-            [
-                {
-                    "item-type": "field-id",
-                    "field-id": "cm:name"
-                },
-                {
-                    "item-type": "field-id",
-                    "field-id": "cm:title"
-                },
-                {
-                    "item-type": "field-id",
-                    "field-id": "cm:created"
-                },
-                {
-                    "item-type": "field-id",
-                    "field-id": "cm:description"
-                }
-            ]
-        },
         "type:cm:content":
         {
             "items":
@@ -212,6 +312,54 @@
                 {
                     "item-type": "field-id",
                     "field-id": "cm:title"
+                },
+                {
+                    "item-type": "field-id",
+                    "field-id": "cm:description"
+                }
+            ]
+        },
+        "type:fdk:everything":
+        {
+            "items":
+            [
+                {
+                    "item-type": "field-group-id",
+                    "field-group-id": "edit:cm:content"
+                },
+                {
+                    "item-type": "field",
+                    "field":
+                    {
+                        "model-id": "fdk:text",
+                        "label-id": "Text"
+                    }
+                },
+                {
+                    "item-type": "field",
+                    "field":
+                    {
+                        "model-id": "fdk:int",
+                        "label-id": "Int"
+                    }
+                }
+            ]
+        },
+        "edit:cm:content":
+        {
+            "items":
+            [
+                {
+                    "item-type": "field-id",
+                    "field-id": "cm:name"
+                },
+                {
+                    "item-type": "field-id",
+                    "field-id": "cm:title"
+                },
+                {
+                    "item-type": "field-id",
+                    "field-id": "cm:created"
                 },
                 {
                     "item-type": "field-id",

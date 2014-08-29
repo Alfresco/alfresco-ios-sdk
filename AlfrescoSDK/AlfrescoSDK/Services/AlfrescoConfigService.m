@@ -19,25 +19,20 @@
  */
 
 #import "AlfrescoConfigService.h"
-#import "AlfrescoLog.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoPropertyConstants.h"
 #import "AlfrescoInternalConstants.h"
-#import "AlfrescoFieldConfig.h"
-#import "AlfrescoFieldGroupConfig.h"
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoDocumentFolderService.h"
+#import "AlfrescoProfileConfigHelper.h"
+#import "AlfrescoFeatureConfigHelper.h"
+#import "AlfrescoCreationConfigHelper.h"
+#import "AlfrescoViewConfigHelper.h"
+#import "AlfrescoFormConfigHelper.h"
 
-NSString * const kAlfrescoConfigServiceParameterApplicationId = @"org.alfresco.mobile.config.application.id";
-NSString * const kAlfrescoConfigServiceParameterProfileId = @"org.alfresco.mobile.config.profile.id";
-NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobile.config.local.file";
-
-NSString * const kAlfrescoConfigScopeContextUsername = @"org.alfresco.mobile.config.scope.context.username";
-NSString * const kAlfrescoConfigScopeContextNode = @"org.alfresco.mobile.config.scope.context.node";
-
-NSString * const kAlfrescoConfigProfileDefault = @"default";
-
-
+/**
+ * Configuration service implementation
+ */
 @interface AlfrescoConfigService ()
 @property (nonatomic, strong, readwrite) AlfrescoConfigScope *defaultConfigScope;
 
@@ -50,16 +45,15 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
 
 // cached configuration
 @property (nonatomic, strong) AlfrescoConfigInfo *configInfo;
-@property (nonatomic, strong) AlfrescoRepositoryConfig *repository;
-@property (nonatomic, strong) AlfrescoProfileConfig *defaultProfile;
-@property (nonatomic, strong) NSDictionary *profiles;
-@property (nonatomic, strong) NSArray *features;
-@property (nonatomic, strong) AlfrescoCreationConfig *creation;
-@property (nonatomic, strong) NSDictionary *views;
-@property (nonatomic, strong) NSMutableDictionary *viewGroups;
-@property (nonatomic, strong) NSDictionary *fields;
-@property (nonatomic, strong) NSMutableDictionary *fieldGroups;
-@property (nonatomic, strong) NSArray *forms;
+@property (nonatomic, strong) AlfrescoRepositoryConfig *repositoryConfig;
+
+// config helpers
+@property (nonatomic, strong) AlfrescoProfileConfigHelper *profileConfigHelper;
+@property (nonatomic, strong) AlfrescoFeatureConfigHelper *featureConfigHelper;
+@property (nonatomic, strong) AlfrescoCreationConfigHelper *creationConfigHelper;
+@property (nonatomic, strong) AlfrescoViewConfigHelper *viewConfigHelper;
+@property (nonatomic, strong) AlfrescoFormConfigHelper *formConfigHelper;
+
 @end
 
 @implementation AlfrescoConfigService
@@ -80,7 +74,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
         self.session = session;
         self.isCacheBuilt = NO;
         self.isCacheBuilding = NO;
-        self.defaultConfigScope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefault
+        self.defaultConfigScope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier
                                                                        context:@{kAlfrescoConfigScopeContextUsername: session.personIdentifier}];
     }
     
@@ -95,7 +89,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
         self.parameters = parameters;
         self.isCacheBuilt = NO;
         self.isCacheBuilding = NO;
-        self.defaultConfigScope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefault];
+        self.defaultConfigScope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier];
     }
     
     return self;
@@ -163,7 +157,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     }
     else
     {
-        // TODO: handle concurrent requestss, for now fail so we explicitly highlight concurrency issues
+        // TODO: handle concurrent requests, for now fail so we explicitly highlight concurrency issues
         completionBlock(NO, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfigInitializationFailed
                                                                         reason:@"Request to initialize config whilst cache is being built"]);
         return nil;
@@ -182,11 +176,21 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
             // build internal state
             [self parseConfigInfo:jsonDictionary];
             [self parseRepositoryConfig:jsonDictionary];
-            [self parseProfilesConfig:jsonDictionary];
-            [self parseFeaturesConfig:jsonDictionary];
-            [self parseCreationConfig:jsonDictionary];
-            [self parseViewConfig:jsonDictionary];
-            [self parseFormConfig:jsonDictionary];
+            
+            self.profileConfigHelper = [[AlfrescoProfileConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            [self.profileConfigHelper parse];
+            
+            self.featureConfigHelper = [[AlfrescoFeatureConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            [self.featureConfigHelper parse];
+            
+            self.creationConfigHelper = [[AlfrescoCreationConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            [self.creationConfigHelper parse];
+            
+            self.viewConfigHelper = [[AlfrescoViewConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            [self.viewConfigHelper parse];
+            
+            self.formConfigHelper = [[AlfrescoFormConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            [self.formConfigHelper parse];
             
             // set status flags and call completion block
             self.isCacheBuilt = YES;
@@ -220,346 +224,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     NSDictionary *repositoryProperties = @{kAlfrescoRepositoryConfigPropertyShareURL: repositoryJSON[kAlfrescoJSONShareURL],
                                            kAlfrescoRepositoryConfigPropertyCMISURL: repositoryJSON[kAlfrescoJSONCMISURL]};
     
-    self.repository = [[AlfrescoRepositoryConfig alloc] initWithDictionary:repositoryProperties];
-}
-
-- (void)parseProfilesConfig:(NSDictionary *)json
-{
-    NSDictionary *profilesJSON = json[kAlfrescoJSONProfiles];
-    
-    NSDictionary *keyMappings = @{kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
-                                  kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
-                                  kAlfrescoJSONRootViewId: kAlfrescoProfileConfigPropertyRootViewId,
-                                  kAlfrescoJSONDefault: kAlfrescoProfileConfigPropertyIsDefault};
-    
-    NSMutableDictionary *profilesDictionary = [NSMutableDictionary dictionary];
-    NSArray *profileIds = [profilesJSON allKeys];
-    for (NSString *profileId in profileIds)
-    {
-        NSDictionary *profileJSON = profilesJSON[profileId];
-        
-        // re-map the JSON keys to what the profile config model object expects
-        NSMutableDictionary *profileProperties = [NSMutableDictionary dictionaryWithDictionary:[AlfrescoObjectConverter dictionaryFromDictionary:profileJSON withMappedKeys:keyMappings]];
-        
-        // add the id of the profile
-        profileProperties[kAlfrescoBaseConfigPropertyIdentifier] = profileId;
-        
-        // create and store the profile object
-        AlfrescoProfileConfig *profile = [[AlfrescoProfileConfig alloc] initWithDictionary:profileProperties];
-        profilesDictionary[profile.identifier] = profile;
-        
-        // set as the default profile, if appropriate
-        if (profile.isDefault)
-        {
-            self.defaultProfile = profile;
-        }
-    }
-    
-    self.profiles = profilesDictionary;
-}
-
-- (void)parseFeaturesConfig:(NSDictionary *)json
-{
-    NSArray *featuresJSON = json[kAlfrescoJSONFeatures];
-    
-    NSDictionary *keyMappings = @{kAlfrescoJSONIdentifier: kAlfrescoBaseConfigPropertyIdentifier,
-                                  kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
-                                  kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary};
-    
-    NSMutableArray *featuresArray = [NSMutableArray array];
-    for (NSDictionary *featureJSON in featuresJSON)
-    {
-        // re-map the JSON keys to what the feature config model object expects
-        NSDictionary *featureProperties = [AlfrescoObjectConverter dictionaryFromDictionary:featureJSON withMappedKeys:keyMappings];
-
-        // create and store the feature object
-        AlfrescoFeatureConfig *feature = [[AlfrescoFeatureConfig alloc] initWithDictionary:featureProperties];
-        [featuresArray addObject:feature];
-    }
-    
-    self.features = featuresArray;
-}
-
-- (void)parseCreationConfig:(NSDictionary *)json
-{
-    NSDictionary *creationJSON = json[kAlfrescoJSONCreation];
-    
-    NSDictionary *keyMappings = @{kAlfrescoJSONIdentifier: kAlfrescoBaseConfigPropertyIdentifier,
-                                  kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
-                                  kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
-                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier};
-    
-    // parse all the options
-    NSMutableDictionary *creationDictionary = [NSMutableDictionary dictionary];
-    NSArray *creationIds = [creationJSON allKeys];
-    for (NSString *creationId in creationIds)
-    {
-        NSArray *creationTypeOptionsJSON = creationJSON[creationId];
-        NSMutableArray *creationTypeOptionsArray = [NSMutableArray array];
-        
-        for (NSDictionary *creationOptionJSON in creationTypeOptionsJSON)
-        {
-            // re-map the JSON keys to what the item config model object expects
-            NSDictionary *creationProperties = [AlfrescoObjectConverter dictionaryFromDictionary:creationOptionJSON
-                                                                                  withMappedKeys:keyMappings];
-            
-            // create and store the item object to represent the option
-            AlfrescoItemConfig *creationOption = [[AlfrescoItemConfig alloc] initWithDictionary:creationProperties];
-            [creationTypeOptionsArray addObject:creationOption];
-        }
-        
-        creationDictionary[creationId] = creationTypeOptionsArray;
-    }
-    
-    // generate the AlfrescoCreationConfig object using the dictionary mapper helper object
-    NSMutableDictionary *creationConfigProperties = [NSMutableDictionary dictionary];
-    if (creationDictionary[kAlfrescoJSONMimeTypes] != nil)
-    {
-        creationConfigProperties[kAlfrescoCreationConfigPropertyCreatableMimeTypes] = creationDictionary[kAlfrescoJSONMimeTypes];
-    }
-    if (creationDictionary[kAlfrescoJSONDocumentTypes] != nil)
-    {
-        creationConfigProperties[kAlfrescoCreationConfigPropertyCreatableDocumentTypes] = creationDictionary[kAlfrescoJSONDocumentTypes];
-    }
-    if (creationDictionary[kAlfrescoJSONFolderTypes] != nil)
-    {
-        creationConfigProperties[kAlfrescoCreationConfigPropertyCreatableFolderTypes] = creationDictionary[kAlfrescoJSONFolderTypes];
-    }
-    
-    self.creation = [[AlfrescoCreationConfig alloc] initWithDictionary:creationConfigProperties];
-}
-
-- (void)parseViewConfig:(NSDictionary *)json
-{
-    [self parseViews:json[kAlfrescoJSONViews]];
-    [self parseViewGroups:json[kAlfrescoJSONViewGroups]];
-}
-
-- (void)parseViews:(NSDictionary *)viewsJSON
-{
-    // key mappings for view config -> view config model object
-    NSDictionary *keyMappings = @{kAlfrescoJSONIdentifier: kAlfrescoBaseConfigPropertyIdentifier,
-                                  kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
-                                  kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
-                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier};
-    
-    NSMutableDictionary *viewsDictionary = [NSMutableDictionary dictionary];
-    for (NSString *viewId in [viewsJSON allKeys])
-    {
-        NSDictionary *viewJSON = viewsJSON[viewId];
-        
-        // re-map the JSON keys to what the view config model object expects
-        NSMutableDictionary *viewProperties = [NSMutableDictionary dictionaryWithDictionary:[AlfrescoObjectConverter dictionaryFromDictionary:viewJSON withMappedKeys:keyMappings]];
-        
-        // add the id of the profile
-        viewProperties[kAlfrescoBaseConfigPropertyIdentifier] = viewId;
-        
-        // create and store the view object
-        AlfrescoViewConfig *view = [[AlfrescoViewConfig alloc] initWithDictionary:viewProperties];
-        viewsDictionary[viewId] = view;
-    }
-    
-    self.views = viewsDictionary;
-}
-
-- (void)parseViewGroups:(NSArray *)viewGroupsJSON
-{
-    self.viewGroups = [NSMutableDictionary dictionary];
-    
-    for (NSDictionary *viewGroupJSON in viewGroupsJSON)
-    {
-        // recursively parse the view groups
-        [self parseViewGroup:viewGroupJSON];
-    }
-}
-
-- (void)parseViewGroup:(NSDictionary *)viewGroupJSON
-{
-    NSDictionary *keyMappings = @{kAlfrescoJSONIdentifier: kAlfrescoBaseConfigPropertyIdentifier,
-                                  kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
-                                  kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
-                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier,
-                                  kAlfrescoJSONFormId: kAlfrescoViewConfigPropertyFormIdentifier};
-    
-    // build an array of config objects representing the "items" config
-    NSArray *groupItems = viewGroupJSON[kAlfrescoJSONItems];
-    NSMutableArray *itemsArray = [NSMutableArray array];
-    for (NSDictionary *groupItemJSON in groupItems)
-    {
-        NSString *itemType = groupItemJSON[kAlfrescoJSONItemType];
-        if ([itemType isEqualToString:kAlfrescoJSONViewId])
-        {
-            NSString *viewId = groupItemJSON[kAlfrescoJSONViewId];
-            [itemsArray addObject:self.views[viewId]];
-        }
-        else if ([itemType isEqualToString:kAlfrescoJSONView])
-        {
-            NSDictionary *viewJSON = groupItemJSON[kAlfrescoJSONView];
-            
-            NSDictionary *viewConfigProperties = [AlfrescoObjectConverter dictionaryFromDictionary:viewJSON
-                                                                                    withMappedKeys:keyMappings];
-            [itemsArray addObject:[[AlfrescoViewConfig alloc] initWithDictionary:viewConfigProperties]];
-        }
-        else if ([itemType isEqualToString:kAlfrescoJSONViewGroupId])
-        {
-            NSString *viewGroupId = groupItemJSON[kAlfrescoJSONViewGroupId];
-//            [itemsArray addObject:viewGroupId];
-            AlfrescoLogWarning(@"View group references (%@) not supported yet!!", viewGroupId);
-        }
-        else if ([itemType isEqualToString:kAlfrescoJSONViewGroup])
-        {
-            // recursively parse the inline view group
-            NSDictionary *childViewGroupJSON = groupItemJSON[kAlfrescoJSONViewGroup];
-            [self parseViewGroup:childViewGroupJSON];
-        }
-    }
-    
-    // create view group config object
-    NSMutableDictionary *amendedViewGroupJSON = [NSMutableDictionary dictionaryWithDictionary:viewGroupJSON];
-    amendedViewGroupJSON[kAlfrescoJSONItems] = itemsArray;
-    
-    NSDictionary *viewGroupProperties = [AlfrescoObjectConverter dictionaryFromDictionary:amendedViewGroupJSON
-                                                                           withMappedKeys:keyMappings];
-    AlfrescoViewGroupConfig *viewGroup = [[AlfrescoViewGroupConfig alloc] initWithDictionary:viewGroupProperties];
-    
-    // TODO: we need to store view groups within an array as we might have multiple view groups
-    //       with the same id but differing evaluators.
-    self.viewGroups[viewGroup.identifier] = viewGroup;
-}
-
-- (void)parseFormConfig:(NSDictionary *)json
-{
-    [self parseFields:json[kAlfrescoJSONFields]];
-    [self parseFieldGroups:json[kAlfrescoJSONFieldGroups]];
-    [self parseForms:json[kAlfrescoJSONForms]];
-}
-
-- (void)parseFields:(NSDictionary *)fieldsJSON
-{
-    // key mappings for field config -> field config model object
-    NSDictionary *keyMappings = @{kAlfrescoJSONIdentifier: kAlfrescoBaseConfigPropertyIdentifier,
-                                  kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
-                                  kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
-                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier,
-                                  kAlfrescoJSONModelId: kAlfrescoFieldConfigPropertyModelIdentifier};
-    
-    NSMutableDictionary *fieldsDictionary = [NSMutableDictionary dictionary];
-    for (NSString *fieldId in [fieldsJSON allKeys])
-    {
-        NSDictionary *fieldJSON = fieldsJSON[fieldId];
-        
-        // re-map the JSON keys to what the field config model object expects
-        NSMutableDictionary *fieldProperties = [NSMutableDictionary dictionaryWithDictionary:[AlfrescoObjectConverter dictionaryFromDictionary:fieldJSON withMappedKeys:keyMappings]];
-        
-        // add the id of the field
-        fieldProperties[kAlfrescoBaseConfigPropertyIdentifier] = fieldId;
-        
-        // create and store the field object
-        AlfrescoFieldConfig *field = [[AlfrescoFieldConfig alloc] initWithDictionary:fieldProperties];
-        fieldsDictionary[fieldId] = field;
-    }
-    
-    self.fields = fieldsDictionary;
-}
-
-- (void)parseFieldGroups:(NSDictionary *)fieldGroupsJSON
-{
-    self.fieldGroups = [NSMutableDictionary dictionary];
-    
-    for (NSString *groupId in [fieldGroupsJSON allKeys])
-    {
-        NSDictionary *fieldGroupJSON = fieldGroupsJSON[groupId];
-        self.fieldGroups[groupId] = [self parseFieldGroup:fieldGroupJSON];
-    }
-}
-
-- (AlfrescoFieldGroupConfig *)parseFieldGroup:(NSDictionary *)fieldGroupJSON
-{
-    // key mappings for field group config -> field group config model object
-    NSDictionary *keyMappings = @{kAlfrescoJSONIdentifier: kAlfrescoBaseConfigPropertyIdentifier,
-                                  kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
-                                  kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
-                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier,
-                                  kAlfrescoJSONModelId: kAlfrescoFieldConfigPropertyModelIdentifier};
-    
-    // build an array object representing the fields
-    NSMutableArray *itemsArray = [NSMutableArray array];
-    NSArray *itemsJSON = fieldGroupJSON[kAlfrescoJSONItems];
-    for (NSDictionary *itemJSON in itemsJSON)
-    {
-        NSString *itemType = itemJSON[kAlfrescoJSONItemType];
-        if ([itemType isEqualToString:kAlfrescoJSONFieldId])
-        {
-            NSString *fieldId = itemJSON[kAlfrescoJSONFieldId];
-            [itemsArray addObject:self.fields[fieldId]];
-        }
-        else if ([itemType isEqualToString:kAlfrescoJSONField])
-        {
-            NSDictionary *fieldJSON = itemJSON[kAlfrescoJSONField];
-            
-            NSDictionary *fieldConfigProperties = [AlfrescoObjectConverter dictionaryFromDictionary:fieldJSON
-                                                                                    withMappedKeys:keyMappings];
-            [itemsArray addObject:[[AlfrescoFieldConfig alloc] initWithDictionary:fieldConfigProperties]];
-        }
-    }
-    
-    // build the field group object
-    NSMutableDictionary *amendedFieldGroupJSON = [NSMutableDictionary dictionaryWithDictionary:fieldGroupJSON];
-    amendedFieldGroupJSON[kAlfrescoJSONItems] = itemsArray;
-    NSDictionary *fieldGroupProperties = [AlfrescoObjectConverter dictionaryFromDictionary:amendedFieldGroupJSON
-                                                                            withMappedKeys:keyMappings];
-    AlfrescoFieldGroupConfig *fieldGroup = [[AlfrescoFieldGroupConfig alloc] initWithDictionary:fieldGroupProperties];
-    
-    return fieldGroup;
-}
-
-- (void)parseForms:(NSArray *)formsJSON
-{
-    NSDictionary *keyMappings = @{kAlfrescoJSONIdentifier: kAlfrescoBaseConfigPropertyIdentifier,
-                                  kAlfrescoJSONLabelId: kAlfrescoBaseConfigPropertyLabel,
-                                  kAlfrescoJSONDescriptionId: kAlfrescoBaseConfigPropertySummary,
-                                  kAlfrescoJSONIconId: kAlfrescoItemConfigPropertyIconIdentifier};
-    
-    NSMutableArray *formsArray = [NSMutableArray array];
-    for (NSDictionary *formJSON in formsJSON)
-    {
-    
-        // build an array representing the items
-        NSMutableArray *itemsArray = [NSMutableArray array];
-        NSArray *itemsJSON = formJSON[kAlfrescoJSONItems];
-        for (NSDictionary *itemJSON in itemsJSON)
-        {
-            NSString *itemType = itemJSON[kAlfrescoJSONItemType];
-            if ([itemType isEqualToString:kAlfrescoJSONFieldGroupId])
-            {
-                NSString *fieldGroupId = itemJSON[kAlfrescoJSONFieldGroupId];
-                [itemsArray addObject:fieldGroupId];
-            }
-            else if ([itemType isEqualToString:kAlfrescoJSONField])
-            {
-                NSString *fieldId = itemJSON[kAlfrescoJSONFieldId];
-                [itemsArray addObject:self.fields[fieldId]];
-            }
-            else if ([itemType isEqualToString:kAlfrescoJSONField])
-            {
-                NSDictionary *fieldJSON = itemJSON[kAlfrescoJSONField];
-                
-                NSDictionary *fieldConfigProperties = [AlfrescoObjectConverter dictionaryFromDictionary:fieldJSON
-                                                                                         withMappedKeys:keyMappings];
-                [itemsArray addObject:[[AlfrescoFieldConfig alloc] initWithDictionary:fieldConfigProperties]];
-            }
-        }
-        
-        // build and add the form object
-        NSMutableDictionary *amendedFormJSON = [NSMutableDictionary dictionaryWithDictionary:formJSON];
-        amendedFormJSON[kAlfrescoJSONItems] = itemsArray;
-        NSDictionary *formProperties = [AlfrescoObjectConverter dictionaryFromDictionary:amendedFormJSON
-                                                                                withMappedKeys:keyMappings];
-        AlfrescoFormConfig *form = [[AlfrescoFormConfig alloc] initWithDictionary:formProperties];
-        [formsArray addObject:form];
-    }
-    
-    self.forms = formsArray;
+    self.repositoryConfig = [[AlfrescoRepositoryConfig alloc] initWithDictionary:repositoryProperties];
 }
 
 #pragma mark - Retrieval methods
@@ -583,7 +248,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            completionBlock(self.defaultProfile, nil);
+            completionBlock(self.profileConfigHelper.defaultProfile, nil);
         }
         else
         {
@@ -598,10 +263,11 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            AlfrescoProfileConfig *profile = self.profiles[identifier];
-            if (profile != nil)
+            AlfrescoProfileConfig *requestedProfileConfig = [self.profileConfigHelper profileConfigForIdentifier:identifier];
+            
+            if (requestedProfileConfig != nil)
             {
-                completionBlock(profile, nil);
+                completionBlock(requestedProfileConfig, nil);
             }
             else
             {
@@ -621,7 +287,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            completionBlock([self.profiles allValues], nil);
+            completionBlock(self.profileConfigHelper.profiles, nil);
         }
         else
         {
@@ -636,7 +302,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            completionBlock(self.repository, nil);
+            completionBlock(self.repositoryConfig, nil);
         }
         else
         {
@@ -658,7 +324,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            completionBlock(self.features, nil);
+            completionBlock([self.featureConfigHelper featureConfigWithScope:scope], nil);
         }
         else
         {
@@ -682,15 +348,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            AlfrescoFeatureConfig *requestedFeatureConfig = nil;
-            for (AlfrescoFeatureConfig *featureConfig in self.features)
-            {
-                if ([featureConfig.identifier isEqualToString:identifier])
-                {
-                    requestedFeatureConfig = featureConfig;
-                    break;
-                }
-            }
+            AlfrescoFeatureConfig *requestedFeatureConfig = [self.featureConfigHelper featureConfigForIdentifier:identifier scope:scope];
             
             if (requestedFeatureConfig != nil)
             {
@@ -721,7 +379,16 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            completionBlock(self.views[identifier], nil);
+            AlfrescoViewConfig *requestedViewConfig = [self.viewConfigHelper viewConfigForIdentifier:identifier];
+            
+            if (requestedViewConfig != nil)
+            {
+                completionBlock(requestedViewConfig, nil);
+            }
+            else
+            {
+                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeConfigNotFound]);
+            }
         }
         else
         {
@@ -745,7 +412,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            AlfrescoViewGroupConfig *requestedViewGroupConfig = self.viewGroups[identifier];
+            AlfrescoViewGroupConfig *requestedViewGroupConfig = [self.viewConfigHelper viewGroupConfigForIdentifier:identifier scope:scope];
             
             if (requestedViewGroupConfig != nil)
             {
@@ -777,69 +444,10 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            AlfrescoFormConfig *requestedFormConfig = nil;
-            for (AlfrescoFormConfig *formConfig in self.forms)
-            {
-                if ([formConfig.identifier isEqualToString:identifier])
-                {
-                    requestedFormConfig = formConfig;
-                    break;
-                }
-            }
+            AlfrescoFormConfig *requestedFormConfig = [self.formConfigHelper formConfigForIdentifier:identifier scope:scope];
             
             if (requestedFormConfig != nil)
             {
-                // the items array needs resolving as there's likely to be group references
-                // which can only be resolved within the context of a node
-                AlfrescoNode *node = [scope valueForKey:kAlfrescoConfigScopeContextNode];
-                NSString *typeLookup = [NSString stringWithFormat:@"type:%@", node.type];
-                
-                // FIXME: re-build the itemsArray using the resolved groups
-                NSMutableArray *resolvedItems = [NSMutableArray array];
-                for (id item in requestedFormConfig.items)
-                {
-                    if ([item isKindOfClass:[NSString class]])
-                    {
-                        NSString *fieldGroupId = (NSString *)item;
-                        if ([fieldGroupId isEqualToString:@"${type-properties}"])
-                        {
-                            AlfrescoFieldGroupConfig *config = self.fieldGroups[typeLookup];
-                            if (config != nil)
-                            {
-                                [resolvedItems addObject:config];
-                            }
-                        }
-                        else if ([fieldGroupId isEqualToString:@"${aspects}"])
-                        {
-                            for (NSString *aspectName in node.aspects)
-                            {
-                                NSString *aspectLookup = [NSString stringWithFormat:@"aspect:%@", aspectName];
-                                AlfrescoFieldGroupConfig *config = self.fieldGroups[aspectLookup];
-                                if (config != nil)
-                                {
-                                    [resolvedItems addObject:config];
-                                }
-                            }
-                        }
-                        else
-                        {
-                            AlfrescoFieldGroupConfig *config = self.fieldGroups[fieldGroupId];
-                            if (config != nil)
-                            {
-                                [resolvedItems addObject:config];
-                            }
-                        }
-                    }
-                    else
-                    {
-                        [resolvedItems addObject:item];
-                    }
-                }
-                
-                // replace the items array on the config object
-                SEL setItemsSelector = sel_registerName("setItems:");
-                [requestedFormConfig performSelector:setItemsSelector withObject:resolvedItems];
-                
                 completionBlock(requestedFormConfig, nil);
             }
             else
@@ -867,7 +475,7 @@ NSString * const kAlfrescoConfigProfileDefault = @"default";
     return [self initializeInternalStateWithCompletionBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
         {
-            completionBlock(self.creation, nil);
+            completionBlock([self.creationConfigHelper creationConfigWithScope:scope], nil);
         }
         else
         {

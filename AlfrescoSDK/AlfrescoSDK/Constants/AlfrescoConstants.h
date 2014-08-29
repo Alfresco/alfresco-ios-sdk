@@ -33,6 +33,14 @@
 #import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoWorkflowProcess.h"
 #import "AlfrescoWorkflowTask.h"
+#import "AlfrescoConfigInfo.h"
+#import "AlfrescoCreationConfig.h"
+#import "AlfrescoFeatureConfig.h"
+#import "AlfrescoFormConfig.h"
+#import "AlfrescoProfileConfig.h"
+#import "AlfrescoRepositoryConfig.h"
+#import "AlfrescoViewConfig.h"
+#import "AlfrescoViewGroupConfig.h"
 
 @protocol AlfrescoSession;
 /** The AlfrescoConstants used in the SDK.
@@ -71,7 +79,15 @@ typedef void (^AlfrescoProcessDefinitionCompletionBlock)(AlfrescoWorkflowProcess
 typedef void (^AlfrescoProcessCompletionBlock)(AlfrescoWorkflowProcess *process, NSError *error);
 typedef void (^AlfrescoTaskCompletionBlock)(AlfrescoWorkflowTask *task, NSError *error);
 typedef void (^AlfrescoDictionaryCompletionBlock)(NSDictionary *dictionary, NSError *error);
-
+// config
+typedef void (^AlfrescoConfigInfoCompletionBlock)(AlfrescoConfigInfo *configInfo, NSError *error);
+typedef void (^AlfrescoCreationConfigCompletionBlock)(AlfrescoCreationConfig *config, NSError *error);
+typedef void (^AlfrescoFeatureConfigCompletionBlock)(AlfrescoFeatureConfig *config, NSError *error);
+typedef void (^AlfrescoFormConfigCompletionBlock)(AlfrescoFormConfig *config, NSError *error);
+typedef void (^AlfrescoProfileConfigCompletionBlock)(AlfrescoProfileConfig *config, NSError *error);
+typedef void (^AlfrescoRepositoryConfigCompletionBlock)(AlfrescoRepositoryConfig *config, NSError *error);
+typedef void (^AlfrescoViewConfigCompletionBlock)(AlfrescoViewConfig *config, NSError *error);
+typedef void (^AlfrescoViewGroupConfigCompletionBlock)(AlfrescoViewGroupConfig *config, NSError *error);
 
 /**---------------------------------------------------------------------------------------
  * @name Session parameters
@@ -187,3 +203,14 @@ extern NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome;
 
 extern NSString * const kAlfrescoWorkflowTaskTransitionApprove;
 extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
+
+/**---------------------------------------------------------------------------------------
+ * @name Configuration Constants
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoConfigServiceParameterApplicationId;
+extern NSString * const kAlfrescoConfigServiceParameterProfileId;
+extern NSString * const kAlfrescoConfigServiceParameterLocalFile;
+
+extern NSString * const kAlfrescoConfigScopeContextUsername;
+extern NSString * const kAlfrescoConfigScopeContextNode;
+

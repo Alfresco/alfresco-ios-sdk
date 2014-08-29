@@ -141,3 +141,13 @@ NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome = @"wf_reviewOutcome
 
 NSString * const kAlfrescoWorkflowTaskTransitionApprove = @"Approve";
 NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";
+
+/**
+ Configuration Constants
+ */
+NSString * const kAlfrescoConfigServiceParameterApplicationId = @"org.alfresco.mobile.config.application.id";
+NSString * const kAlfrescoConfigServiceParameterProfileId = @"org.alfresco.mobile.config.profile.id";
+NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobile.config.local.file";
+
+NSString * const kAlfrescoConfigScopeContextUsername = @"org.alfresco.mobile.config.scope.context.username";
+NSString * const kAlfrescoConfigScopeContextNode = @"org.alfresco.mobile.config.scope.context.node";
