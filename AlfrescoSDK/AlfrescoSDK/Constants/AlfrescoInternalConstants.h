@@ -382,6 +382,7 @@ extern NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber;
 extern NSString * const kAlfrescoPersonPropertyCompanyFaxNumber;
 extern NSString * const kAlfrescoPersonPropertyCompanyEmail;
 
+extern NSString * const kAlfrescoJSONEvaluator;
 extern NSString * const kAlfrescoJSONInfo;
 extern NSString * const kAlfrescoJSONSchemaVersion;
 extern NSString * const kAlfrescoJSONConfigVersion;
@@ -413,12 +414,17 @@ extern NSString * const kAlfrescoJSONForms;
 extern NSString * const kAlfrescoJSONLayout;
 extern NSString * const kAlfrescoJSONFieldGroupId;
 extern NSString * const kAlfrescoJSONFieldGroups;
+extern NSString * const kAlfrescoJSONFieldGroup;
 extern NSString * const kAlfrescoJSONFieldId;
 extern NSString * const kAlfrescoJSONField;
 extern NSString * const kAlfrescoJSONFields;
 extern NSString * const kAlfrescoJSONModelId;
 
-
-
+extern NSString * const kAlfrescoConfigProfileDefaultIdentifier;
+extern NSString * const kAlfrescoConfigProfileDefaultLabel;
+extern NSString * const kAlfrescoConfigFormTypePrefix;
+extern NSString * const kAlfrescoConfigFormAspectPrefix;
+extern NSString * const kAlfrescoConfigFormTypeProperties;
+extern NSString * const kAlfrescoConfigFormAspectProperties;
 
 

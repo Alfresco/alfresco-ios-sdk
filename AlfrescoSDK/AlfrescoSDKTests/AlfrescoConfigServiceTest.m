@@ -20,6 +20,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoViewConfig.h"
 #import "AlfrescoFieldConfig.h"
+#import "AlfrescoFieldGroupConfig.h"
 #import "AlfrescoInternalConstants.h"
 #import "CMISConstants.h"
 
@@ -65,8 +66,6 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
             {
                 XCTAssertTrue([configInfo.schemaVersion isEqualToString:@"0.1"],
                               @"Expected schema version to be 0.1 but it was %@", configInfo.schemaVersion);
-                XCTAssertTrue([configInfo.configVersion isEqualToString:@"0.1"],
-                              @"Expected config version to be 0.1 but it was %@", configInfo.configVersion);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -100,8 +99,6 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
             {
                 XCTAssertTrue([configInfo.schemaVersion isEqualToString:@"0.1"],
                               @"Expected schema version to be 0.1 but it was %@", configInfo.schemaVersion);
-                XCTAssertTrue([configInfo.configVersion isEqualToString:@"0.1"],
-                              @"Expected config version to be 0.1 but it was %@", configInfo.configVersion);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -194,8 +191,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                               @"Expected default profile label to be 'Default Profile' but was %@", defaultProfile.label);
                 XCTAssertTrue([defaultProfile.summary isEqualToString:@"Description of the Default Profile"],
                               @"Expected default profile summary to be 'Description of the Default Profile' but was %@", defaultProfile.summary);
-                XCTAssertTrue([defaultProfile.rootViewId isEqualToString:@"rootNavigationMenu"],
-                              @"Expected default profile rootViewId to be 'rootNavigationMenu' but was %@", defaultProfile.rootViewId);
+                XCTAssertTrue([defaultProfile.rootViewId isEqualToString:@"root-navigation"],
+                              @"Expected default profile rootViewId to be 'root-navigation' but was %@", defaultProfile.rootViewId);
                 
                 XCTAssertFalse(customProfile.isDefault, @"Expected the custom profile to not be marked as default");
                 XCTAssertTrue([customProfile.label isEqualToString:@"Custom Profile"],
@@ -242,8 +239,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                                               @"Expected retrieved profile label to be 'Default Profile' but was %@", profile2.label);
                                 XCTAssertTrue([profile2.summary isEqualToString:@"Description of the Default Profile"],
                                               @"Expected retrieved profile summary to be 'Description of the Default Profile' but was %@", profile2.summary);
-                                XCTAssertTrue([profile2.rootViewId isEqualToString:@"rootNavigationMenu"],
-                                              @"Expected retrieved profile rootViewId to be 'rootNavigationMenu' but was %@", profile2.rootViewId);
+                                XCTAssertTrue([profile2.rootViewId isEqualToString:@"root-navigation"],
+                                              @"Expected retrieved profile rootViewId to be 'root-navigation' but was %@", profile2.rootViewId);
                                 
                                 self.lastTestSuccessful = YES;
                                 self.callbackCompleted = YES;
@@ -403,8 +400,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                               @"Expected a summary of 'Activities Description' but it was %@", config.summary);
                 XCTAssertTrue([config.iconIdentifier isEqualToString:@"Activities Icon"],
                               @"Expected a summary of 'Activities Icon' but it was %@", config.iconIdentifier);
-                XCTAssertTrue([config.type isEqualToString:@"com.alfresco.type.activities"],
-                              @"Expected a type of 'com.alfresco.type.activities' but it was %@", config.type);
+                XCTAssertTrue([config.type isEqualToString:@"com.alfresco.client.view.activities"],
+                              @"Expected a type of 'com.alfresco.client.view.activities' but it was %@", config.type);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -420,7 +417,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     }
 }
 
-- (void)testViewGroupConfig
+- (void)testSimpleViewGroupConfig
 {
     if (self.setUpSuccess)
     {
@@ -436,7 +433,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
             }
             else
             {
-                XCTAssertTrue([config.identifier isEqualToString:@"views-menu-default"], @"Expected view group config identifier to be 'views-menu-default' but it was %@", config.identifier);
+                XCTAssertTrue([config.identifier isEqualToString:@"views-menu-default"],
+                              @"Expected view group config identifier to be 'views-menu-default' but it was %@", config.identifier);
                 XCTAssertTrue([config.label isEqualToString:@"Default Menu"],
                               @"Expected view group label of 'Default Menu' but it was %@", config.label);
                 
@@ -455,8 +453,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                               @"Expected a summary of 'Activities Description' but it was %@", view1.summary);
                 XCTAssertTrue([view1.iconIdentifier isEqualToString:@"Activities Icon"],
                               @"Expected a summary of 'Activities Icon' but it was %@", view1.iconIdentifier);
-                XCTAssertTrue([view1.type isEqualToString:@"com.alfresco.type.activities"],
-                              @"Expected a type of 'com.alfresco.type.activities' but it was %@", view1.type);
+                XCTAssertTrue([view1.type isEqualToString:@"com.alfresco.client.view.activities"],
+                              @"Expected a type of 'com.alfresco.client.view.activities' but it was %@", view1.type);
                 
                 // make sure the second item is a view
                 AlfrescoItemConfig *item2 = config.items[1];
@@ -464,8 +462,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 AlfrescoViewConfig *view2 = (AlfrescoViewConfig *)item2;
                 XCTAssertTrue([view2.identifier isEqualToString:@"view-repository-default"],
                               @"Expected an identifier of 'view-repository-default' but it was %@", view2.identifier);
-                XCTAssertTrue([view2.type isEqualToString:@"com.alfresco.type.repository"],
-                              @"Expected a type of 'com.alfresco.type.repository' but it was %@", view2.type);
+                XCTAssertTrue([view2.type isEqualToString:@"com.alfresco.client.view.repository"],
+                              @"Expected a type of 'com.alfresco.client.view.repository' but it was %@", view2.type);
                 XCTAssertNil(view2.label, @"Expected label for view2 to be nil");
                 XCTAssertNil(view2.summary, @"Expected summary for view2 to be nil");
                 XCTAssertNil(view2.iconIdentifier, @"Expected icon identifier for view2 to be nil");
@@ -481,8 +479,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                               @"Expected a summary of 'Sites Description' but it was %@", view3.summary);
                 XCTAssertTrue([view3.iconIdentifier isEqualToString:@"Sites Icon"],
                               @"Expected a summary of 'Sites Icon' but it was %@", view3.iconIdentifier);
-                XCTAssertTrue([view3.type isEqualToString:@"com.alfresco.type.sites"],
-                              @"Expected a type of 'com.alfresco.type.sites' but it was %@", view3.type);
+                XCTAssertTrue([view3.type isEqualToString:@"com.alfresco.client.view.sites"],
+                              @"Expected a type of 'com.alfresco.client.view.sites' but it was %@", view3.type);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -498,13 +496,149 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     }
 }
 
-- (void)testFormConfig
+- (void)testViewGroupReferenceConfig
 {
     if (self.setUpSuccess)
     {
         self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
         
-        // manually create a document object that is cm:content and has the titled and geopgrpahic aspects
+        // retrieve view group config for specific view group
+        [self.configService retrieveViewGroupConfigWithIdentifier:@"root-navigation" completionBlock:^(AlfrescoViewGroupConfig *config, NSError *error) {
+            if (config == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue([config.identifier isEqualToString:@"root-navigation"],
+                              @"Expected view group config identifier to be 'root-navigation' but it was %@", config.identifier);
+                XCTAssertTrue([config.label isEqualToString:@"Root Navigation"],
+                              @"Expected view group label of 'Root Navigation' but it was %@", config.label);
+                
+                XCTAssertNotNil(config.items, @"Expected items property to be populated");
+                XCTAssertTrue(config.items.count == 2, @"Expected there to be 2 items");
+                
+                // make sure the first item is a view group
+                AlfrescoItemConfig *item1 = config.items[0];
+                XCTAssertTrue([item1 isKindOfClass:[AlfrescoViewGroupConfig class]],
+                              @"Expected the first item to be a view group but it was %@", item1);
+                AlfrescoViewGroupConfig *viewGroup1 = (AlfrescoViewGroupConfig *)item1;
+                XCTAssertTrue([viewGroup1.identifier isEqualToString:@"views-menu-default"],
+                              @"Expected an identifier of 'views-menu-default' but it was %@", viewGroup1.identifier);
+                XCTAssertTrue([viewGroup1.label isEqualToString:@"Default Menu"],
+                              @"Expected a label of 'Default Menu' but it was %@", viewGroup1.label);
+                XCTAssertTrue(viewGroup1.items.count == 3, @"Expected there to be 3 items");
+                XCTAssertTrue([viewGroup1.items[0] isKindOfClass:[AlfrescoViewConfig class]], @"Expected item to be a view but it was %@", viewGroup1.items[0]);
+                XCTAssertTrue([viewGroup1.items[1] isKindOfClass:[AlfrescoViewConfig class]], @"Expected item to be a view but it was %@", viewGroup1.items[1]);
+                XCTAssertTrue([viewGroup1.items[2] isKindOfClass:[AlfrescoViewConfig class]], @"Expected item to be a view but it was %@", viewGroup1.items[2]);
+                
+                // make sure the second item is a view
+                AlfrescoItemConfig *item2 = config.items[1];
+                XCTAssertTrue([item2 isKindOfClass:[AlfrescoViewConfig class]], @"Expected the second item to be a view but it was %@", item2);
+                AlfrescoViewConfig *view2 = (AlfrescoViewConfig *)item2;
+                XCTAssertTrue([view2.identifier isEqualToString:@"view-tasks"],
+                              @"Expected an identifier of 'view-tasks' but it was %@", view2.identifier);
+                XCTAssertTrue([view2.type isEqualToString:@"com.alfresco.client.view.tasks"],
+                              @"Expected a type of 'com.alfresco.client.view.tasks' but it was %@", view2.type);
+                XCTAssertTrue([view2.label isEqualToString:@"Tasks"],
+                              @"Expected a label of 'Tasks' but it was %@", view2.label);
+                XCTAssertNil(view2.summary, @"Expected summary for view2 to be nil");
+                XCTAssertNil(view2.iconIdentifier, @"Expected icon identifier for view2 to be nil");
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testViewSubGroupConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        
+        // retrieve view group config for specific view group
+        [self.configService retrieveViewGroupConfigWithIdentifier:@"sub-group-test" completionBlock:^(AlfrescoViewGroupConfig *config, NSError *error) {
+            if (config == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // check root
+                XCTAssertTrue([config.identifier isEqualToString:@"sub-group-test"],
+                              @"Expected view group config identifier to be 'sub-group-test' but it was %@", config.identifier);
+                XCTAssertTrue([config.label isEqualToString:@"Sub Group Test"],
+                              @"Expected view group label of 'Sub Group Test' but it was %@", config.label);
+                XCTAssertTrue(config.items.count == 1, @"Expected there to be 1 item but there was %lu", (unsigned long)config.items.count);
+                
+                // check level1
+                AlfrescoViewGroupConfig *level1 = config.items.firstObject;
+                XCTAssertTrue([level1.identifier isEqualToString:@"level1"],
+                              @"Expected view group config identifier to be 'level1' but it was %@", level1.identifier);
+                XCTAssertTrue([level1.label isEqualToString:@"Level 1"],
+                              @"Expected view group label of 'Level 1' but it was %@", level1.label);
+                XCTAssertTrue(level1.items.count == 1, @"Expected there to be 1 item but there was %lu", (unsigned long)level1.items.count);
+                
+                // check level2
+                AlfrescoViewGroupConfig *level2 = level1.items.firstObject;
+                XCTAssertTrue([level2.identifier isEqualToString:@"level2"],
+                              @"Expected view group config identifier to be 'level2' but it was %@", level2.identifier);
+                XCTAssertTrue([level2.label isEqualToString:@"Level 2"],
+                              @"Expected view group label of 'Level 2' but it was %@", level2.label);
+                XCTAssertTrue(level2.items.count == 1, @"Expected there to be 1 item but there was %lu", (unsigned long)level2.items.count);
+                
+                // check level3
+                AlfrescoViewGroupConfig *level3 = level2.items.firstObject;
+                XCTAssertTrue([level3.identifier isEqualToString:@"level3"],
+                              @"Expected view group config identifier to be 'level3' but it was %@", level3.identifier);
+                XCTAssertTrue([level3.label isEqualToString:@"Level 3"],
+                              @"Expected view group label of 'Level 3' but it was %@", level3.label);
+                XCTAssertTrue(level3.items.count == 2, @"Expected there to be 2 items but there was %lu", (unsigned long)level3.items.count);
+                
+                AlfrescoViewConfig *level3View = level3.items.firstObject;
+                XCTAssertTrue([level3View.identifier isEqualToString:@"viewAtLevel3"],
+                              @"Expected level 3 view identifier to be 'viewAtLevel3' but it was %@", level3View.identifier);
+                
+                AlfrescoViewGroupConfig *level3ViewGroup = level3.items[1];
+                XCTAssertTrue([level3ViewGroup.identifier isEqualToString:@"views-menu-default"],
+                              @"Expected level 3 view group identifier to be 'views-menu-default' but it was %@", level3ViewGroup.identifier);
+                XCTAssertTrue(level3ViewGroup.items.count == 3,
+                              @"Expected level 3 view group to have 3 items but there was %lu", (unsigned long)level3ViewGroup.items.count);
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testSimpleFormConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        
+        // manually create a document object that is cm:content and has the titled and geographic aspects
         NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
                                      kCMISPropertyContentStreamMediaType: @"text/plain",
                                      kCMISPropertyObjectId: @"1234567890",
@@ -521,7 +655,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
         AlfrescoDocument *document = [[AlfrescoDocument alloc] initWithProperties:properties];
         
         // retrieve form config using scope
-        AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefault
+        AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier
                                                                           context:@{kAlfrescoConfigScopeContextNode: document}];
         [self.configService retrieveFormConfigWithIdentifier:@"view-properties" scope:scope completionBlock:^(AlfrescoFormConfig *config, NSError *error) {
             if (config == nil)
@@ -642,6 +776,255 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     }
 }
 
+- (void)testFieldGroupReferenceConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        
+        // manually create a document object that is fdk:everything and has the titled aspect
+        NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
+                                     kCMISPropertyContentStreamMediaType: @"text/plain",
+                                     kCMISPropertyObjectId: @"1234567890",
+                                     kCMISPropertyName: @"dummy.txt",
+                                     kCMISPropertyObjectTypeId: @"fdk:everything",
+                                     kAlfrescoNodeAspects: @[@"cm:titled"],
+                                     kCMISPropertyCreatedBy: @"mobile",
+                                     kCMISPropertyModifiedBy: @"mobile",
+                                     kCMISPropertyCreationDate: [NSDate date],
+                                     kCMISPropertyModificationDate: [NSDate date],
+                                     kAlfrescoModelPropertyTitle: @"Title",
+                                     kAlfrescoModelPropertyDescription: @"Description"};
+        
+        AlfrescoDocument *document = [[AlfrescoDocument alloc] initWithProperties:properties];
+        
+        // retrieve form config using scope
+        AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier
+                                                                          context:@{kAlfrescoConfigScopeContextNode: document}];
+        [self.configService retrieveFormConfigWithIdentifier:@"view-properties" scope:scope completionBlock:^(AlfrescoFormConfig *config, NSError *error) {
+            if (config == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // check we got the right form config
+                XCTAssertTrue([config.identifier isEqualToString:@"view-properties"],
+                              @"Expected form config identifier to be 'view-properties' but was %@", config.identifier);
+                XCTAssertTrue([config.label isEqualToString:@"view.properties.title"],
+                              @"Expected form config label to be 'view.properties.title' but was %@", config.label);
+                XCTAssertTrue([config.summary isEqualToString:@"view.properties.description"],
+                              @"Expected form config label to be 'view.properties.description' but was %@", config.summary);
+                XCTAssertTrue([config.layout isEqualToString:@"1column"],
+                              @"Expected form config label to be '1column' but was %@", config.layout);
+                
+                // check the root field group
+                XCTAssertTrue(config.items.count == 1,
+                              @"Expected form to have 1 field group but there were %lu", (unsigned long)config.items.count);
+                AlfrescoFieldGroupConfig *rootFieldGroup = config.items.firstObject;
+                XCTAssertTrue(rootFieldGroup.items.count == 3,
+                              @"Expected root field group to have 3 items but there were %lu", (unsigned long)rootFieldGroup.items.count);
+                
+                // check the sub group
+                AlfrescoItemConfig *item1 = rootFieldGroup.items.firstObject;
+                XCTAssertTrue([item1 isKindOfClass:[AlfrescoFieldGroupConfig class]],
+                              @"Expected the first item to be a field group but it was %@", item1);
+                AlfrescoFieldGroupConfig *fieldGroup1 = (AlfrescoFieldGroupConfig *)item1;
+                XCTAssertTrue([fieldGroup1.identifier isEqualToString:@"edit:cm:content"],
+                              @"Expected field group identifier to be 'edit:cm:content' but was %@", fieldGroup1.identifier);
+                XCTAssertTrue(fieldGroup1.items.count == 4,
+                              @"Expected field group to have 4 items but there were %lu", (unsigned long)fieldGroup1.items.count);
+                
+                // check the other fields
+                AlfrescoItemConfig *item2 = rootFieldGroup.items[1];
+                XCTAssertTrue([item2 isKindOfClass:[AlfrescoFieldConfig class]],
+                              @"Expected the second item to be a field but it was %@", item2);
+                AlfrescoFieldConfig *field2 = (AlfrescoFieldConfig *)item2;
+                XCTAssertTrue([field2.modelIdentifier isEqualToString:@"fdk:text"],
+                              @"Expected field model identifier to be 'fdk:text' but was %@", field2.modelIdentifier);
+                XCTAssertTrue([field2.label isEqualToString:@"Text"],
+                              @"Expected field model identifier to be 'Text' but was %@", field2.label);
+                
+                AlfrescoItemConfig *item3 = rootFieldGroup.items[2];
+                XCTAssertTrue([item3 isKindOfClass:[AlfrescoFieldConfig class]],
+                              @"Expected the third item to be a field but it was %@", item3);
+                AlfrescoFieldConfig *field3 = (AlfrescoFieldConfig *)item3;
+                XCTAssertTrue([field3.modelIdentifier isEqualToString:@"fdk:int"],
+                              @"Expected field model identifier to be 'fdk:int' but was %@", field3.modelIdentifier);
+                XCTAssertTrue([field3.label isEqualToString:@"Int"],
+                              @"Expected field model identifier to be 'Int' but was %@", field3.label);
+                
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testFormSubGroupConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        
+        // retrieve form config
+        [self.configService retrieveFormConfigWithIdentifier:@"sub-group-test" completionBlock:^(AlfrescoFormConfig *config, NSError *error) {
+            if (config == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // check root
+                XCTAssertTrue([config.identifier isEqualToString:@"sub-group-test"],
+                              @"Expected view group config identifier to be 'sub-group-test' but it was %@", config.identifier);
+                XCTAssertTrue([config.label isEqualToString:@"Sub Group Test"],
+                              @"Expected view group label of 'Sub Group Test' but it was %@", config.label);
+                XCTAssertTrue(config.items.count == 1, @"Expected there to be 1 item but there was %lu", (unsigned long)config.items.count);
+                
+                // check level1
+                AlfrescoFieldGroupConfig *level1 = config.items.firstObject;
+                XCTAssertTrue([level1.identifier isEqualToString:@"level1"],
+                              @"Expected field group config identifier to be 'level1' but it was %@", level1.identifier);
+                XCTAssertTrue([level1.label isEqualToString:@"Level 1"],
+                              @"Expected field group label of 'Level 1' but it was %@", level1.label);
+                XCTAssertTrue(level1.items.count == 1, @"Expected there to be 1 item but there was %lu", (unsigned long)level1.items.count);
+                
+                // check level2
+                AlfrescoFieldGroupConfig *level2 = level1.items.firstObject;
+                XCTAssertTrue([level2.identifier isEqualToString:@"level2"],
+                              @"Expected field group config identifier to be 'level2' but it was %@", level2.identifier);
+                XCTAssertTrue([level2.label isEqualToString:@"Level 2"],
+                              @"Expected field group label of 'Level 2' but it was %@", level2.label);
+                XCTAssertTrue(level2.items.count == 1, @"Expected there to be 1 item but there was %lu", (unsigned long)level2.items.count);
+                
+                // check level3
+                AlfrescoFieldGroupConfig *level3 = level2.items.firstObject;
+                XCTAssertTrue([level3.identifier isEqualToString:@"level3"],
+                              @"Expected field group config identifier to be 'level3' but it was %@", level3.identifier);
+                XCTAssertTrue([level3.label isEqualToString:@"Level 3"],
+                              @"Expected field group label of 'Level 3' but it was %@", level3.label);
+                XCTAssertTrue(level3.items.count == 2, @"Expected there to be 2 items but there was %lu", (unsigned long)level3.items.count);
+                
+                AlfrescoFieldConfig *level3View = level3.items.firstObject;
+                XCTAssertTrue([level3View.modelIdentifier isEqualToString:@"viewAtLevel3"],
+                              @"Expected level 3 field model identifier to be 'viewAtLevel3' but it was %@", level3View.modelIdentifier);
+                
+                AlfrescoFieldGroupConfig *level3FieldGroup = level3.items[1];
+                XCTAssertTrue([level3FieldGroup.identifier isEqualToString:@"type:cm:content"],
+                              @"Expected level 3 field group identifier to be 'type:cm:content' but it was %@", level3FieldGroup.identifier);
+                XCTAssertTrue(level3FieldGroup.items.count == 10,
+                              @"Expected level 3 field group to have 10 items but there was %lu", (unsigned long)level3FieldGroup.items.count);
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testMissingFormConfigForCustomType
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        
+        // manually create a document object has a custom type
+        NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
+                                     kCMISPropertyContentStreamMediaType: @"text/plain",
+                                     kCMISPropertyObjectId: @"1234567890",
+                                     kCMISPropertyName: @"dummy.txt",
+                                     kCMISPropertyObjectTypeId: @"custom:document",
+                                     kAlfrescoNodeAspects: @[@"cm:geographic"],
+                                     kCMISPropertyCreatedBy: @"mobile",
+                                     kCMISPropertyModifiedBy: @"mobile",
+                                     kCMISPropertyCreationDate: [NSDate date],
+                                     kCMISPropertyModificationDate: [NSDate date]};
+        
+        AlfrescoDocument *document = [[AlfrescoDocument alloc] initWithProperties:properties];
+        
+        // retrieve form config using scope
+        AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier
+                                                                          context:@{kAlfrescoConfigScopeContextNode: document}];
+        [self.configService retrieveFormConfigWithIdentifier:@"view-properties" scope:scope completionBlock:^(AlfrescoFormConfig *config, NSError *error) {
+            if (config == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // check we got the right form config
+                XCTAssertTrue([config.identifier isEqualToString:@"view-properties"],
+                              @"Expected form config identifier to be 'view-properties' but was %@", config.identifier);
+                
+                // check that the config fell back to cm:content config rather than returning nothing
+                XCTAssertTrue(config.items.count == 2,
+                              @"Expected to find config for 2 field groups but there were %lu", (unsigned long)config.items.count);
+                
+                // get the field config for the type properties group
+                AlfrescoFieldGroupConfig *typePropertiesGroup = config.items[0];
+                XCTAssertTrue(typePropertiesGroup.items.count == 10,
+                              @"Expected to find config for 10 fields but there was %lu", (unsigned long)typePropertiesGroup.items.count);
+                
+                // check the first field is cm:name
+                AlfrescoFieldConfig *nameField = typePropertiesGroup.items[0];
+                XCTAssertTrue([nameField.modelIdentifier isEqualToString:@"cm:name"],
+                              @"Expected first field to be cm:name but was %@", nameField.identifier);
+                XCTAssertTrue([nameField.label isEqualToString:@"cm_contentmodel.property.cm_name.title"],
+                              @"Expected first field to have label of 'cm_contentmodel.property.cm_name.title' but was %@", nameField.label);
+                
+                // get the field config for the aspect properties group
+                AlfrescoFieldGroupConfig *aspectPropertiesGroup = config.items[1];
+                XCTAssertTrue(aspectPropertiesGroup.items.count == 2,
+                              @"Expected to find config for 2 fields but there were %lu", (unsigned long)aspectPropertiesGroup.items.count);
+                
+                AlfrescoFieldConfig *latitudeField = aspectPropertiesGroup.items[0];
+                XCTAssertTrue([latitudeField.modelIdentifier isEqualToString:@"cm:latitude"],
+                              @"Expected first aspect field to be cm:latitude but was %@", latitudeField.identifier);
+                XCTAssertTrue([latitudeField.label isEqualToString:@"cm_contentmodel.property.cm_latitude.title"],
+                              @"Expected first aspect field to have label of 'cm_contentmodel.property.cm_latitude.title' but was %@", latitudeField.label);
+                
+                AlfrescoFieldConfig *longitudeField = aspectPropertiesGroup.items[1];
+                XCTAssertTrue([longitudeField.modelIdentifier isEqualToString:@"cm:longitude"],
+                              @"Expected second aspect field to be cm:longitude but was %@", longitudeField.identifier);
+                XCTAssertTrue([longitudeField.label isEqualToString:@"cm_contentmodel.property.cm_longitude.title"],
+                              @"Expected second aspect field to have label of 'cm_contentmodel.property.cm_longitude.title' but was %@", longitudeField.label);
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 - (void)testCreationConfig
 {
     if (self.setUpSuccess)
@@ -700,34 +1083,6 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     {
         XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
-}
-
-- (void)disabledtestActionConfig
-{
-    // TODO
-    
-    XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
-}
-
-- (void)disabledtestActionGroupConfig
-{
-    // TODO
-    
-    XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
-}
-
-- (void)disabledtestWorkflowConfig
-{
-    // TODO
-    
-    XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
-}
-
-- (void)disabledtestSearchConfig
-{
-    // TODO
-    
-    XCTFail(@"Test not implemented yet: %@", NSStringFromSelector(_cmd));
 }
 
 @end

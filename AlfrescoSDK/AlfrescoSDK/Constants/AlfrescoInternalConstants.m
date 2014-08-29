@@ -425,6 +425,7 @@ NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber = @"companyTeleph
 NSString * const kAlfrescoPersonPropertyCompanyFaxNumber = @"companyFaxNumber";
 NSString * const kAlfrescoPersonPropertyCompanyEmail = @"companyEmail";
 
+NSString * const kAlfrescoJSONEvaluator = @"evaluator";
 NSString * const kAlfrescoJSONInfo = @"info";
 NSString * const kAlfrescoJSONSchemaVersion = @"schema-version";
 NSString * const kAlfrescoJSONConfigVersion = @"config-version";
@@ -456,7 +457,15 @@ NSString * const kAlfrescoJSONForms = @"forms";
 NSString * const kAlfrescoJSONLayout = @"layout";
 NSString * const kAlfrescoJSONFieldGroupId = @"field-group-id";
 NSString * const kAlfrescoJSONFieldGroups = @"field-groups";
+NSString * const kAlfrescoJSONFieldGroup = @"field-group";
 NSString * const kAlfrescoJSONFieldId = @"field-id";
 NSString * const kAlfrescoJSONField = @"field";
 NSString * const kAlfrescoJSONFields = @"fields";
 NSString * const kAlfrescoJSONModelId = @"model-id";
+
+NSString * const kAlfrescoConfigProfileDefaultIdentifier = @"default";
+NSString * const kAlfrescoConfigProfileDefaultLabel = @"Default";
+NSString * const kAlfrescoConfigFormTypePrefix = @"type:";
+NSString * const kAlfrescoConfigFormAspectPrefix = @"aspect:";
+NSString * const kAlfrescoConfigFormTypeProperties = @"${type-properties}";
+NSString * const kAlfrescoConfigFormAspectProperties = @"${aspects}";

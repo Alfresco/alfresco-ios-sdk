@@ -34,25 +34,6 @@
 #import "AlfrescoViewGroupConfig.h"
 #import "AlfrescoWorkflowConfig.h"
 
-// TODO: move to public constants file...
-typedef void (^AlfrescoConfigInfoCompletionBlock)(AlfrescoConfigInfo *configInfo, NSError *error);
-typedef void (^AlfrescoCreationConfigCompletionBlock)(AlfrescoCreationConfig *config, NSError *error);
-typedef void (^AlfrescoFeatureConfigCompletionBlock)(AlfrescoFeatureConfig *config, NSError *error);
-typedef void (^AlfrescoFormConfigCompletionBlock)(AlfrescoFormConfig *config, NSError *error);
-typedef void (^AlfrescoProfileConfigCompletionBlock)(AlfrescoProfileConfig *config, NSError *error);
-typedef void (^AlfrescoRepositoryConfigCompletionBlock)(AlfrescoRepositoryConfig *config, NSError *error);
-typedef void (^AlfrescoViewConfigCompletionBlock)(AlfrescoViewConfig *config, NSError *error);
-typedef void (^AlfrescoViewGroupConfigCompletionBlock)(AlfrescoViewGroupConfig *config, NSError *error);
-
-extern NSString * const kAlfrescoConfigServiceParameterApplicationId;
-extern NSString * const kAlfrescoConfigServiceParameterProfileId;
-extern NSString * const kAlfrescoConfigServiceParameterLocalFile;
-
-extern NSString * const kAlfrescoConfigScopeContextUsername;
-extern NSString * const kAlfrescoConfigScopeContextNode;
-
-extern NSString * const kAlfrescoConfigProfileDefault;
-
 /**
  The ConfigService retrieves JSON based configuration data either from the Data Dictionary
  in the connected repository or from a local file containing configuration data.
