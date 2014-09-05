@@ -29,17 +29,27 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 
 @implementation AlfrescoConfigServiceTest
 
-- (NSURL *)urlForLocalConfigFile
+- (NSDictionary *)dictionaryForConfigServiceValidTests
 {
-    NSString *configFilePath = [[NSBundle bundleForClass:self.class] pathForResource:@"config.json" ofType:nil];
-    return [NSURL URLWithString:configFilePath];
+    NSString *configFilePath = [[NSBundle bundleForClass:self.class] pathForResource:@"valid-config-test.json" ofType:nil];
+    NSDictionary *parameters = @{kAlfrescoConfigServiceParameterApplicationId: kAlfrescoTestApplicationId,
+                                 kAlfrescoConfigServiceParameterLocalFile: [NSURL URLWithString:configFilePath]};
+    return parameters;
 }
 
-- (NSDictionary *)dictionaryForConfigService
+- (NSDictionary *)dictionaryForConfigServiceInvalidTests
 {
+    NSString *configFilePath = [[NSBundle bundleForClass:self.class] pathForResource:@"invalid-config-test.json" ofType:nil];
     NSDictionary *parameters = @{kAlfrescoConfigServiceParameterApplicationId: kAlfrescoTestApplicationId,
-                                 kAlfrescoConfigServiceParameterLocalFile: [self urlForLocalConfigFile]};
-    
+                                 kAlfrescoConfigServiceParameterLocalFile: [NSURL URLWithString:configFilePath]};
+    return parameters;
+}
+
+- (NSDictionary *)dictionaryForConfigServiceEmptyTest
+{
+    NSString *configFilePath = [[NSBundle bundleForClass:self.class] pathForResource:@"empty-config-test.json" ofType:nil];
+    NSDictionary *parameters = @{kAlfrescoConfigServiceParameterApplicationId: kAlfrescoTestApplicationId,
+                                 kAlfrescoConfigServiceParameterLocalFile: [NSURL URLWithString:configFilePath]};
     return parameters;
 }
 
@@ -49,11 +59,51 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     return self.currentSession;
 }
 
+- (AlfrescoDocument *)documentWithAspects
+{
+    // manually create a document object that is cm:content and has the titled and geographic aspects
+    NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
+                                 kCMISPropertyContentStreamMediaType: @"text/plain",
+                                 kCMISPropertyObjectId: @"1234567890",
+                                 kCMISPropertyName: @"dummy.txt",
+                                 kCMISPropertyObjectTypeId: @"cm:content",
+                                 kAlfrescoNodeAspects: @[@"cm:titled", @"cm:geographic"],
+                                 kCMISPropertyCreatedBy: @"mobile",
+                                 kCMISPropertyModifiedBy: @"mobile",
+                                 kCMISPropertyCreationDate: [NSDate date],
+                                 kCMISPropertyModificationDate: [NSDate date],
+                                 kAlfrescoModelPropertyTitle: @"Title",
+                                 kAlfrescoModelPropertyDescription: @"Description"};
+    
+    return [[AlfrescoDocument alloc] initWithProperties:properties];
+}
+
+- (AlfrescoDocument *)customDocumentWithAspects
+{
+    // manually create a document object that is fdk:everything and has the titled aspect
+    NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
+                                 kCMISPropertyContentStreamMediaType: @"text/plain",
+                                 kCMISPropertyObjectId: @"1234567890",
+                                 kCMISPropertyName: @"dummy.txt",
+                                 kCMISPropertyObjectTypeId: @"fdk:everything",
+                                 kAlfrescoNodeAspects: @[@"cm:titled", @"cm:geographic", @"audio:audio"],
+                                 kCMISPropertyCreatedBy: @"mobile",
+                                 kCMISPropertyModifiedBy: @"mobile",
+                                 kCMISPropertyCreationDate: [NSDate date],
+                                 kCMISPropertyModificationDate: [NSDate date],
+                                 kAlfrescoModelPropertyTitle: @"Title",
+                                 kAlfrescoModelPropertyDescription: @"Description"};
+    
+    return [[AlfrescoDocument alloc] initWithProperties:properties];
+}
+
+#pragma mark - Valid config tests
+
 - (void)testSetupFromDictionary
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // retrieve basic config information
         [self.configService retrieveConfigInfoWithCompletionBlock:^(AlfrescoConfigInfo *configInfo, NSError *error) {
@@ -115,146 +165,11 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     }
 }
 
-- (AlfrescoDocument *)documentWithAspects
-{
-    // manually create a document object that is cm:content and has the titled and geographic aspects
-    NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
-                                 kCMISPropertyContentStreamMediaType: @"text/plain",
-                                 kCMISPropertyObjectId: @"1234567890",
-                                 kCMISPropertyName: @"dummy.txt",
-                                 kCMISPropertyObjectTypeId: @"cm:content",
-                                 kAlfrescoNodeAspects: @[@"cm:titled", @"cm:geographic"],
-                                 kCMISPropertyCreatedBy: @"mobile",
-                                 kCMISPropertyModifiedBy: @"mobile",
-                                 kCMISPropertyCreationDate: [NSDate date],
-                                 kCMISPropertyModificationDate: [NSDate date],
-                                 kAlfrescoModelPropertyTitle: @"Title",
-                                 kAlfrescoModelPropertyDescription: @"Description"};
-    
-    return [[AlfrescoDocument alloc] initWithProperties:properties];
-}
-
-- (AlfrescoDocument *)customDocumentWithAspects
-{
-    // manually create a document object that is fdk:everything and has the titled aspect
-    NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
-                                 kCMISPropertyContentStreamMediaType: @"text/plain",
-                                 kCMISPropertyObjectId: @"1234567890",
-                                 kCMISPropertyName: @"dummy.txt",
-                                 kCMISPropertyObjectTypeId: @"fdk:everything",
-                                 kAlfrescoNodeAspects: @[@"cm:titled", @"cm:geographic", @"audio:audio"],
-                                 kCMISPropertyCreatedBy: @"mobile",
-                                 kCMISPropertyModifiedBy: @"mobile",
-                                 kCMISPropertyCreationDate: [NSDate date],
-                                 kCMISPropertyModificationDate: [NSDate date],
-                                 kAlfrescoModelPropertyTitle: @"Title",
-                                 kAlfrescoModelPropertyDescription: @"Description"};
-    
-    return [[AlfrescoDocument alloc] initWithProperties:properties];
-}
-
-- (void)testEvaluators
-{
-    AlfrescoDocument *document = [self customDocumentWithAspects];
-    NSDictionary *context = @{kAlfrescoConfigScopeContextNode: document,
-                              kAlfrescoConfigScopeContextFormMode: @"edit"};
-    AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier context:context];
-    
-    // test the repository version evaluator
-    NSDictionary *parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @">=",
-                                 kAlfrescoConfigEvaluatorParameterMajorVersion: @(4)};
-    AlfrescoRepositoryVersionEvaluator *v4RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
-                                                                  initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
-                                                                  parameters:parameters session:self.currentSession];
-    
-    if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
-    {
-        XCTAssertTrue([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return true");
-    }
-    else
-    {
-        XCTAssertFalse([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return false");
-    }
-    
-    parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @"==",
-                   kAlfrescoConfigEvaluatorParameterMajorVersion: @(3),
-                   kAlfrescoConfigEvaluatorParameterMinorVersion: @(4)};
-    AlfrescoRepositoryVersionEvaluator *v34RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
-                                                                   initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
-                                                                   parameters:parameters session:self.currentSession];
-    
-    if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
-    {
-        XCTAssertFalse([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return false");
-    }
-    else
-    {
-        XCTAssertTrue([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return true");
-    }
-    
-    // TODO: add more version specific tests
-    
-    // test the profile evaluator
-    parameters = @{kAlfrescoConfigEvaluatorParameterProfile: kAlfrescoConfigProfileDefaultIdentifier};
-    AlfrescoProfileEvaluator *defaultProfileEvaluator = [[AlfrescoProfileEvaluator alloc]
-                                                         initWithIdentifier:kAlfrescoConfigEvaluatorProfile
-                                                         parameters:parameters session:self.currentSession];
-    XCTAssertTrue([defaultProfileEvaluator evaluate:scope], @"Expected the defaultProfileEvaluator evaluator to return true");
-    
-    parameters = @{kAlfrescoConfigEvaluatorParameterProfile: @"test-profile"};
-    AlfrescoProfileEvaluator *testProfileEvaluator = [[AlfrescoProfileEvaluator alloc]
-                                                      initWithIdentifier:kAlfrescoConfigEvaluatorProfile
-                                                      parameters:parameters session:self.currentSession];
-    XCTAssertFalse([testProfileEvaluator evaluate:scope], @"Expected the testProfileEvaluator evaluator to return false");
-    
-    // test the node type evaluator
-    parameters = @{kAlfrescoConfigEvaluatorParameterTypeName: @"fdk:everything"};
-    AlfrescoNodeTypeEvaluator *everythingTypeEvaluator = [[AlfrescoNodeTypeEvaluator alloc]
-                                                          initWithIdentifier:kAlfrescoConfigEvaluatorNodeType
-                                                          parameters:parameters session:self.currentSession];
-    XCTAssertTrue([everythingTypeEvaluator evaluate:scope], @"Expected the everythingTypeEvaluator evaluator to return true");
-    
-    parameters = @{kAlfrescoConfigEvaluatorParameterTypeName: @"custom:document"};
-    AlfrescoNodeTypeEvaluator *missingTypeEvaluator = [[AlfrescoNodeTypeEvaluator alloc]
-                                                       initWithIdentifier:kAlfrescoConfigEvaluatorNodeType
-                                                       parameters:parameters session:self.currentSession];
-    XCTAssertFalse([missingTypeEvaluator evaluate:scope], @"Expected the missingTypeEvaluator evaluator to return false");
-    
-    // test the aspect evaluator
-    parameters = @{kAlfrescoConfigEvaluatorParameterAspectName: @"cm:titled"};
-    AlfrescoAspectEvaluator *titledAspectEvaluator = [[AlfrescoAspectEvaluator alloc]
-                                                      initWithIdentifier:kAlfrescoConfigEvaluatorAspect
-                                                      parameters:parameters session:self.currentSession];
-    XCTAssertTrue([titledAspectEvaluator evaluate:scope], @"Expected the titledAspectEvaluator evaluator to return true");
-    
-    parameters = @{kAlfrescoConfigEvaluatorParameterAspectName: @"cm:dublincore"};
-    AlfrescoAspectEvaluator *dublinCoreAspectEvaluator = [[AlfrescoAspectEvaluator alloc]
-                                                          initWithIdentifier:kAlfrescoConfigEvaluatorAspect
-                                                          parameters:parameters session:self.currentSession];
-    XCTAssertFalse([dublinCoreAspectEvaluator evaluate:scope], @"Expected the dublinCoreAspectEvaluator evaluator to return false");
-    
-    // test form mode
-    parameters = @{kAlfrescoConfigEvaluatorParameterMode: @"edit"};
-    AlfrescoFormModeEvaluator *editModeEvaluator = [[AlfrescoFormModeEvaluator alloc]
-                                                    initWithIdentifier:kAlfrescoConfigEvaluatorFormMode
-                                                    parameters:parameters session:self.currentSession];
-    XCTAssertTrue([editModeEvaluator evaluate:scope], @"Expected the editModeEvaluator evaluator to return true");
-    
-    parameters = @{kAlfrescoConfigEvaluatorParameterMode: @"view"};
-    AlfrescoFormModeEvaluator *viewModeEvaluator = [[AlfrescoFormModeEvaluator alloc]
-                                                    initWithIdentifier:kAlfrescoConfigEvaluatorFormMode
-                                                    parameters:parameters session:self.currentSession];
-    XCTAssertFalse([viewModeEvaluator evaluate:scope], @"Expected the viewModeEvaluator evaluator to return false");
-    
-    self.lastTestSuccessful = YES;
-    self.callbackCompleted = YES;
-}
-
 - (void)testRepositoryConfig
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // retrieve the repository config
         [self.configService retrieveRepositoryConfigWithCompletionBlock:^(AlfrescoRepositoryConfig *repoConfig, NSError *error) {
@@ -288,7 +203,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // start by retrieving all profiles in the config file
         [self.configService retrieveProfilesWithCompletionBlock:^(NSArray *allProfiles, NSError *allProfilesError) {
@@ -396,44 +311,11 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     }
 }
 
-- (void)testInvalidProfile
-{
-    if (self.setUpSuccess)
-    {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
-        
-        // retrieve an invalid profile
-        [self.configService retrieveProfileWithIdentifier:@"invalid" completionBlock:^(AlfrescoProfileConfig *config, NSError *error) {
-            if (config != nil)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = @"Expected retrieval of invalid profile to fail";
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertNotNil(error, @"Expected to recieve an error when retrieving an invalid profile");
-                XCTAssertTrue(error.code == kAlfrescoErrorCodeConfigNotFound, @"Expected the error code to be 1402 but it was %ld", (long)error.code);
-                
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
-        }];
-        
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-    }
-    else
-    {
-        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
-    }
-}
-
 - (void)testFeatureConfig
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // retrieve all the feature config
         [self.configService retrieveFeatureConfigWithCompletionBlock:^(NSArray *allFeatureConfig, NSError *allFeatureConfigError) {
@@ -515,7 +397,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // retrieve view config for specific view
         [self.configService retrieveViewConfigWithIdentifier:@"view-activities-default" completionBlock:^(AlfrescoViewConfig *config, NSError *error) {
@@ -557,7 +439,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // retrieve view group config for specific view group
         [self.configService retrieveViewGroupConfigWithIdentifier:@"views-menu-default" completionBlock:^(AlfrescoViewGroupConfig *config, NSError *error) {
@@ -641,7 +523,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // retrieve view group config for specific view group
         [self.configService retrieveViewGroupConfigWithIdentifier:@"root-navigation" completionBlock:^(AlfrescoViewGroupConfig *config, NSError *error) {
@@ -706,7 +588,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // retrieve view group config for specific view group
         [self.configService retrieveViewGroupConfigWithIdentifier:@"sub-group-test" completionBlock:^(AlfrescoViewGroupConfig *config, NSError *error) {
@@ -777,7 +659,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         AlfrescoDocument *document = [self documentWithAspects];
         
         // retrieve form config using scope
@@ -906,7 +788,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         AlfrescoDocument *document = [self customDocumentWithAspects];
         
         // retrieve form config using scope
@@ -998,7 +880,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // retrieve form config
         [self.configService retrieveFormConfigWithIdentifier:@"sub-group-test" completionBlock:^(AlfrescoFormConfig *config, NSError *error) {
@@ -1069,7 +951,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // manually create a document object has a custom type
         NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
@@ -1152,7 +1034,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // retrieve creation config
         [self.configService retrieveCreationConfigWithCompletionBlock:^(AlfrescoCreationConfig *config, NSError *error) {
@@ -1206,6 +1088,113 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     {
         XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
+}
+
+- (void)testEvaluators
+{
+    AlfrescoDocument *document = [self customDocumentWithAspects];
+    NSDictionary *context = @{kAlfrescoConfigScopeContextNode: document,
+                              kAlfrescoConfigScopeContextFormMode: @"edit"};
+    AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier context:context];
+    
+    // test the repository version evaluator
+    NSDictionary *parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @">=",
+                                 kAlfrescoConfigEvaluatorParameterMajorVersion: @(4)};
+    AlfrescoRepositoryVersionEvaluator *v4RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
+                                                                  initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
+                                                                  parameters:parameters session:self.currentSession];
+    if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
+    {
+        XCTAssertTrue([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return true");
+    }
+    else
+    {
+        XCTAssertFalse([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return false");
+    }
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @"==",
+                   kAlfrescoConfigEvaluatorParameterMajorVersion: @(3),
+                   kAlfrescoConfigEvaluatorParameterMinorVersion: @(4)};
+    AlfrescoRepositoryVersionEvaluator *v34RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
+                                                                   initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
+                                                                   parameters:parameters session:self.currentSession];
+    if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
+    {
+        XCTAssertFalse([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return false");
+    }
+    else
+    {
+        XCTAssertTrue([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return true");
+    }
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @"==",
+                   kAlfrescoConfigEvaluatorParameterEdition: kAlfrescoRepositoryEditionCloud};
+    AlfrescoRepositoryVersionEvaluator *cloudRepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
+                                                                     initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
+                                                                     parameters:parameters session:self.currentSession];
+    if (self.isCloud)
+    {
+        XCTAssertTrue([cloudRepoVersionEvaluator evaluate:scope], @"Expected the cloudRepoVersionEvaluator evaluator to return true");
+    }
+    else
+    {
+        XCTAssertFalse([cloudRepoVersionEvaluator evaluate:scope], @"Expected the cloudRepoVersionEvaluator evaluator to return false");
+    }
+    
+    // test the profile evaluator
+    parameters = @{kAlfrescoConfigEvaluatorParameterProfile: kAlfrescoConfigProfileDefaultIdentifier};
+    AlfrescoProfileEvaluator *defaultProfileEvaluator = [[AlfrescoProfileEvaluator alloc]
+                                                         initWithIdentifier:kAlfrescoConfigEvaluatorProfile
+                                                         parameters:parameters session:self.currentSession];
+    XCTAssertTrue([defaultProfileEvaluator evaluate:scope], @"Expected the defaultProfileEvaluator evaluator to return true");
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterProfile: @"test-profile"};
+    AlfrescoProfileEvaluator *testProfileEvaluator = [[AlfrescoProfileEvaluator alloc]
+                                                      initWithIdentifier:kAlfrescoConfigEvaluatorProfile
+                                                      parameters:parameters session:self.currentSession];
+    XCTAssertFalse([testProfileEvaluator evaluate:scope], @"Expected the testProfileEvaluator evaluator to return false");
+    
+    // test the node type evaluator
+    parameters = @{kAlfrescoConfigEvaluatorParameterTypeName: @"fdk:everything"};
+    AlfrescoNodeTypeEvaluator *everythingTypeEvaluator = [[AlfrescoNodeTypeEvaluator alloc]
+                                                          initWithIdentifier:kAlfrescoConfigEvaluatorNodeType
+                                                          parameters:parameters session:self.currentSession];
+    XCTAssertTrue([everythingTypeEvaluator evaluate:scope], @"Expected the everythingTypeEvaluator evaluator to return true");
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterTypeName: @"custom:document"};
+    AlfrescoNodeTypeEvaluator *missingTypeEvaluator = [[AlfrescoNodeTypeEvaluator alloc]
+                                                       initWithIdentifier:kAlfrescoConfigEvaluatorNodeType
+                                                       parameters:parameters session:self.currentSession];
+    XCTAssertFalse([missingTypeEvaluator evaluate:scope], @"Expected the missingTypeEvaluator evaluator to return false");
+    
+    // test the aspect evaluator
+    parameters = @{kAlfrescoConfigEvaluatorParameterAspectName: @"cm:titled"};
+    AlfrescoAspectEvaluator *titledAspectEvaluator = [[AlfrescoAspectEvaluator alloc]
+                                                      initWithIdentifier:kAlfrescoConfigEvaluatorAspect
+                                                      parameters:parameters session:self.currentSession];
+    XCTAssertTrue([titledAspectEvaluator evaluate:scope], @"Expected the titledAspectEvaluator evaluator to return true");
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterAspectName: @"cm:dublincore"};
+    AlfrescoAspectEvaluator *dublinCoreAspectEvaluator = [[AlfrescoAspectEvaluator alloc]
+                                                          initWithIdentifier:kAlfrescoConfigEvaluatorAspect
+                                                          parameters:parameters session:self.currentSession];
+    XCTAssertFalse([dublinCoreAspectEvaluator evaluate:scope], @"Expected the dublinCoreAspectEvaluator evaluator to return false");
+    
+    // test form mode
+    parameters = @{kAlfrescoConfigEvaluatorParameterMode: @"edit"};
+    AlfrescoFormModeEvaluator *editModeEvaluator = [[AlfrescoFormModeEvaluator alloc]
+                                                    initWithIdentifier:kAlfrescoConfigEvaluatorFormMode
+                                                    parameters:parameters session:self.currentSession];
+    XCTAssertTrue([editModeEvaluator evaluate:scope], @"Expected the editModeEvaluator evaluator to return true");
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterMode: @"view"};
+    AlfrescoFormModeEvaluator *viewModeEvaluator = [[AlfrescoFormModeEvaluator alloc]
+                                                    initWithIdentifier:kAlfrescoConfigEvaluatorFormMode
+                                                    parameters:parameters session:self.currentSession];
+    XCTAssertFalse([viewModeEvaluator evaluate:scope], @"Expected the viewModeEvaluator evaluator to return false");
+    
+    self.lastTestSuccessful = YES;
+    self.callbackCompleted = YES;
 }
 
 - (void)testRepoVersionEvaluatorConfig
@@ -1282,7 +1271,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceValidTests]];
         
         // create the scope object that should filter out all but one field
         NSDictionary *context1 = @{kAlfrescoConfigScopeContextFormMode: @"edit",
@@ -1324,6 +1313,348 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                         // there should now be 5 fields present
                         XCTAssertTrue(config2.items.count == 5,
                                       @"Expected there to be 5 items, but there were: %lu", (unsigned long)config2.items.count);
+                        
+                        self.lastTestSuccessful = YES;
+                        self.callbackCompleted = YES;
+                    }
+                }];
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+#pragma mark - Invalid config tests
+
+- (void)testEmptyConfigFile
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceEmptyTest]];
+        
+        self.lastTestFailureMessage = @"Unexpected config was returned from an empty config file!";
+        
+        // make sure all config retrieval methods return nothing
+        [self.configService retrieveConfigInfoWithCompletionBlock:^(AlfrescoConfigInfo *configInfo, NSError *configInfoError) {
+            if (configInfo == nil)
+            {
+                [self.configService retrieveRepositoryConfigWithCompletionBlock:^(AlfrescoRepositoryConfig *repoConfig, NSError *repoConfigError) {
+                    if (repoConfig == nil)
+                    {
+                        [self.configService retrieveFeatureConfigWithCompletionBlock:^(NSArray *featureConfig, NSError *featureConfigError) {
+                            if (featureConfig.count == 0)
+                            {
+                                [self.configService retrieveCreationConfigWithCompletionBlock:^(AlfrescoCreationConfig *creationConfig, NSError *creationConfigError) {
+                                    if (creationConfig != nil)
+                                    {
+                                        XCTAssertNil(creationConfig.creatableDocumentTypes, @"Expected creatable document types to be nil");
+                                        XCTAssertNil(creationConfig.creatableFolderTypes, @"Expected creatable folder types to be nil");
+                                        XCTAssertNil(creationConfig.creatableMimeTypes, @"Expected creatable mime types to be nil");
+                                        
+                                        [self.configService retrieveProfilesWithCompletionBlock:^(NSArray *profilesConfig, NSError *profilesConfigError) {
+                                            if (profilesConfig != nil)
+                                            {
+                                                XCTAssertTrue(profilesConfig.count == 1,
+                                                              @"Expected 1 profile but there were: %lu", (unsigned long)profilesConfig.count);
+                                                AlfrescoProfileConfig *profile = profilesConfig.firstObject;
+                                                XCTAssertTrue([profile.identifier isEqualToString:kAlfrescoConfigProfileDefaultIdentifier],
+                                                              @"Expected the profile identifier to be '%@' but it was: %@",
+                                                              kAlfrescoConfigProfileDefaultIdentifier, profile.identifier);
+                                                XCTAssertTrue(profile.isDefault, @"Expected profile to be marked as the default profile");
+                                                
+                                                self.lastTestSuccessful = YES;
+                                                self.callbackCompleted = YES;
+                                            }
+                                            else
+                                            {
+                                                self.callbackCompleted = YES;
+                                            }
+                                        }];
+                                    }
+                                    else
+                                    {
+                                        self.callbackCompleted = YES;
+                                    }
+                                }];
+                            }
+                            else
+                            {
+                                self.callbackCompleted = YES;
+                            }
+                        }];
+                    }
+                    else
+                    {
+                        self.callbackCompleted = YES;
+                    }
+                }];
+            }
+            else
+            {
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testInvalidProfileConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
+        
+        // retrieve an invalid profile
+        [self.configService retrieveProfileWithIdentifier:@"invalid" completionBlock:^(AlfrescoProfileConfig *config, NSError *error) {
+            if (config != nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = @"Expected retrieval of invalid profile to fail";
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(error, @"Expected to recieve an error when retrieving an invalid profile");
+                XCTAssertTrue(error.code == kAlfrescoErrorCodeConfigNotFound, @"Expected the error code to be 1402 but it was %ld", (long)error.code);
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testInvalidRepositoryConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
+        
+        [self.configService retrieveRepositoryConfigWithCompletionBlock:^(AlfrescoRepositoryConfig *repoConfig, NSError *error) {
+            if (repoConfig == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNil(repoConfig.shareURL, @"Expected shareURL to be nil");
+                XCTAssertNil(repoConfig.cmisURL, @"Expected cmisURL to be nil");
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testInvalidFeatureConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
+        
+        [self.configService retrieveFeatureConfigWithCompletionBlock:^(NSArray *array, NSError *error) {
+            if (array == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue(array.count == 0,
+                              @"Expected no feature config to be returned but there were %lu", (unsigned long)array.count);
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testInvalidCreationConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
+        
+        [self.configService retrieveCreationConfigWithCompletionBlock:^(AlfrescoCreationConfig *config, NSError *error) {
+            if (config == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNil(config.creatableDocumentTypes, @"Expected creatable document types to be nil");
+                XCTAssertNil(config.creatableFolderTypes, @"Expected creatable folder types to be nil");
+                XCTAssertNil(config.creatableMimeTypes, @"Expected creatable mime types to be nil");
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testInvalidViewConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
+        
+        [self.configService retrieveViewConfigWithIdentifier:@"missing-view-type" completionBlock:^(AlfrescoViewConfig *config, NSError *error) {
+            if (config != nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = @"Expected retrieval of invalid view to fail";
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(error, @"Expected to recieve an error when retrieving an invalid view");
+                XCTAssertTrue(error.code == kAlfrescoErrorCodeConfigNotFound, @"Expected the error code to be 1402 but it was %ld", (long)error.code);
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testInvalidViewGroupConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
+        
+        [self.configService retrieveViewGroupConfigWithIdentifier:@"missing-references" completionBlock:^(AlfrescoViewGroupConfig *config1, NSError *error1) {
+            if (config1 == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error1];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue([config1.identifier isEqualToString:@"missing-references"],
+                              @"Expected view group config identifier to be 'missing-references' but it was %@", config1.identifier);
+                XCTAssertTrue(config1.items.count == 0,
+                              @"Expected no items but there were %lu", (unsigned long)config1.items.count);
+                
+                [self.configService retrieveViewGroupConfigWithIdentifier:@"missing-items" completionBlock:^(AlfrescoViewGroupConfig *config2, NSError *error2) {
+                    if (config2 == nil)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [self failureMessageFromError:error2];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertTrue([config2.identifier isEqualToString:@"missing-items"],
+                                      @"Expected view group config identifier to be 'missing-items' but it was %@", config2.identifier);
+                        XCTAssertTrue(config2.items.count == 0,
+                                      @"Expected no items but there were %lu", (unsigned long)config2.items.count);
+                        
+                        self.lastTestSuccessful = YES;
+                        self.callbackCompleted = YES;
+                    }
+                }];
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testInvalidFormConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
+        
+        [self.configService retrieveFormConfigWithIdentifier:@"missing-references" completionBlock:^(AlfrescoFormConfig *config1, NSError *error1) {
+            if (config1 == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error1];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue([config1.identifier isEqualToString:@"missing-references"],
+                              @"Expected view group config identifier to be 'missing-references' but it was %@", config1.identifier);
+                XCTAssertTrue(config1.items.count == 0,
+                              @"Expected no items but there were %lu", (unsigned long)config1.items.count);
+                
+                [self.configService retrieveFormConfigWithIdentifier:@"missing-items" completionBlock:^(AlfrescoFormConfig *config2, NSError *error2) {
+                    if (config2 == nil)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [self failureMessageFromError:error2];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertTrue([config2.identifier isEqualToString:@"missing-items"],
+                                      @"Expected form config identifier to be 'missing-items' but it was %@", config2.identifier);
+                        XCTAssertTrue(config2.items.count == 0,
+                                      @"Expected no items but there were %lu", (unsigned long)config2.items.count);
                         
                         self.lastTestSuccessful = YES;
                         self.callbackCompleted = YES;

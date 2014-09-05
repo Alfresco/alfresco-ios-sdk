@@ -172,7 +172,7 @@
         },
         "view-my-repository-files":
         {
-            "type": "com.alfresco.client.view.repository"
+            "type": "com.alfresco.client.view.repository",
             "params":
             {
                 "startLocation": "userhome"

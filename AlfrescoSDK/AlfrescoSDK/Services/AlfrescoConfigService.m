@@ -195,6 +195,8 @@
             self.formConfigHelper = [[AlfrescoFormConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
             [self.formConfigHelper parse];
             
+            // TODO: Determine if we fail if anything mandatory is missing i.e. configInfo?
+            
             // set status flags and call completion block
             self.isCacheBuilt = YES;
             self.isCacheBuilding = NO;
@@ -303,7 +305,7 @@
         }
         else
         {
-            AlfrescoLogWarning(@"Unrecognised evaluator with type '%@'", type);
+            AlfrescoLogWarning(@"Unrecognised evaluator type: %@", type);
         }
     }
     
@@ -313,18 +315,37 @@
 - (void)parseConfigInfo:(NSDictionary *)json
 {
     NSDictionary *configInfoJSON = json[kAlfrescoJSONInfo];
-    NSDictionary *configInfoProperties = @{kAlfrescoConfigInfoPropertySchemaVersion: configInfoJSON[kAlfrescoJSONSchemaVersion]};
-    
-    self.configInfo = [[AlfrescoConfigInfo alloc] initWithDictionary:configInfoProperties];
+    if (configInfoJSON != nil)
+    {
+        NSNumber *schemaVersion = configInfoJSON[kAlfrescoJSONSchemaVersion];
+        if (schemaVersion != nil)
+        {
+            self.configInfo = [[AlfrescoConfigInfo alloc] initWithDictionary:@{kAlfrescoConfigInfoPropertySchemaVersion: schemaVersion}];
+        }
+    }
 }
 
 - (void)parseRepositoryConfig:(NSDictionary *)json
 {
     NSDictionary *repositoryJSON = json[kAlfrescoJSONRepository];
-    NSDictionary *repositoryProperties = @{kAlfrescoRepositoryConfigPropertyShareURL: repositoryJSON[kAlfrescoJSONShareURL],
-                                           kAlfrescoRepositoryConfigPropertyCMISURL: repositoryJSON[kAlfrescoJSONCMISURL]};
-    
-    self.repositoryConfig = [[AlfrescoRepositoryConfig alloc] initWithDictionary:repositoryProperties];
+    if (repositoryJSON != nil)
+    {
+        NSMutableDictionary *repositoryProperties = [NSMutableDictionary dictionary];
+        
+        NSString *shareURL = repositoryJSON[kAlfrescoJSONShareURL];
+        if (shareURL != nil)
+        {
+            repositoryProperties[kAlfrescoRepositoryConfigPropertyShareURL] = shareURL;
+        }
+        
+        NSString *cmisURL = repositoryJSON[kAlfrescoJSONCMISURL];
+        if (cmisURL != nil)
+        {
+            repositoryProperties[kAlfrescoRepositoryConfigPropertyCMISURL] = cmisURL;
+        }
+
+        self.repositoryConfig = [[AlfrescoRepositoryConfig alloc] initWithDictionary:repositoryProperties];
+    }
 }
 
 #pragma mark - Retrieval methods

@@ -216,11 +216,15 @@
         NSString *itemType = groupItemJSON[kAlfrescoJSONItemType];
         if ([itemType isEqualToString:kAlfrescoJSONFieldId])
         {
-            // create and store a reference config data object
-            AlfrescoConfigData *configData = [AlfrescoConfigData new];
-            configData.reference = groupItemJSON[kAlfrescoJSONFieldId];
-            configData.evaluator = groupItemJSON[kAlfrescoJSONEvaluator];
-            [potentialItemsArray addObject:configData];
+            NSString *reference = groupItemJSON[kAlfrescoJSONFieldId];
+            if (reference != nil)
+            {
+                // create and store a reference config data object
+                AlfrescoConfigData *configData = [AlfrescoConfigData new];
+                configData.reference = reference;
+                configData.evaluator = groupItemJSON[kAlfrescoJSONEvaluator];
+                [potentialItemsArray addObject:configData];
+            }
         }
         else if ([itemType isEqualToString:kAlfrescoJSONField])
         {
@@ -236,17 +240,24 @@
         }
         else if ([itemType isEqualToString:kAlfrescoJSONFieldGroupId])
         {
-            // create and store a reference group config data object
-            AlfrescoGroupConfigData *configData = [AlfrescoGroupConfigData new];
-            configData.reference = groupItemJSON[kAlfrescoJSONFieldGroupId];
-            configData.evaluator = groupItemJSON[kAlfrescoJSONEvaluator];
-            [potentialItemsArray addObject:configData];
+            NSString *reference = groupItemJSON[kAlfrescoJSONFieldGroupId];
+            if (reference != nil)
+            {
+                // create and store a reference group config data object
+                AlfrescoGroupConfigData *configData = [AlfrescoGroupConfigData new];
+                configData.reference = reference;
+                configData.evaluator = groupItemJSON[kAlfrescoJSONEvaluator];
+                [potentialItemsArray addObject:configData];
+            }
         }
         else if ([itemType isEqualToString:kAlfrescoJSONFieldGroup])
         {
             // recursively parse the inline field group
             NSDictionary *childFieldGroupJSON = groupItemJSON[kAlfrescoJSONFieldGroup];
-            [potentialItemsArray addObject:[self fieldGroupDataFromJSON:childFieldGroupJSON groupId:nil]];
+            if (childFieldGroupJSON != nil)
+            {
+                [potentialItemsArray addObject:[self fieldGroupDataFromJSON:childFieldGroupJSON groupId:nil]];
+            }
         }
     }
     
