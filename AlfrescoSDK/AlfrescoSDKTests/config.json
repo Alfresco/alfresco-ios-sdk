@@ -130,6 +130,22 @@
                     }
                 }
             ]
+        },
+        {
+            "id": "evaluator-test",
+            "label-id": "Evaluator Test",
+            "items":
+            [
+                {
+                    "item-type": "view-id",
+                    "view-id": "view-tasks"
+                },
+                {
+                    "evaluator": "isAlfrescoV42",
+                    "item-type": "view-id",
+                    "view-id": "view-my-repository-files"
+                }
+            ]
         }
     ],
     "views":
@@ -143,12 +159,24 @@
         },
         "view-repository-default":
         {
-            "type": "com.alfresco.client.view.repository"
+            "type": "com.alfresco.client.view.repository",
+            "params":
+            {
+                "startLocation": "companyhome"
+            }
         },
         "view-tasks":
         {
             "type": "com.alfresco.client.view.tasks",
             "label-id": "Tasks"
+        },
+        "view-my-repository-files":
+        {
+            "type": "com.alfresco.client.view.repository"
+            "params":
+            {
+                "startLocation": "userhome"
+            }
         }
     },
     "creation":
@@ -249,6 +277,37 @@
                             }
                         ]
                     }
+                }
+            ]
+        },
+        {
+            "id": "evaluator-test",
+            "label-id": "Evaluator Test",
+            "items":
+            [
+                {
+                    "item-type": "field-id",
+                    "field-id": "cm:name"
+                },
+                {
+                    "evaluator": "usingDefaultProfile",
+                    "item-type": "field-id",
+                    "field-id": "cm:title"
+                },
+                {
+                    "evaluator": "formInViewMode",
+                    "item-type": "field-id",
+                    "field-id": "cm:modified"
+                },
+                {
+                    "evaluator": "fdkEverythingType",
+                    "item-type": "field-id",
+                    "field-id": "size"
+                },
+                {
+                    "evaluator": "hasAudioAspect",
+                    "item-type": "field-id",
+                    "field-id": "audio:album"
                 }
             ]
         }
@@ -774,6 +833,67 @@
         {
             "model-id": "exif:resolutionUnit",
             "label-id": "cm_contentmodel.property.exif_resolutionUnit.title"
+        }
+    },
+    "evaluators":
+    {
+        "isAlfrescoV42":
+        {
+            "match-any": ["isAlfrescoV42-EE", "isAlfrescoV42-CE"]
+        },
+        "isAlfrescoV42-EE":
+        {
+            "type": "com.alfresco.client.evaluator.isRepositoryVersion",
+            "params":
+            {
+                "operator": ">=",
+                "edition": "Enterprise",
+                "majorVersion": 4,
+                "minorVersion": 2
+            }
+        },
+        "isAlfrescoV42-CE":
+        {
+            "type": "com.alfresco.client.evaluator.isRepositoryVersion",
+            "params":
+            {
+                "operator": ">=",
+                "edition": "Community",
+                "majorVersion": 4,
+                "minorVersion": 2
+            }
+        },
+        "usingDefaultProfile":
+        {
+            "type": "com.alfresco.client.evaluator.hasProfile",
+            "params":
+            {
+                "profile": "default"
+            }
+        },
+        "formInViewMode":
+        {
+            "type": "com.alfresco.client.evaluator.formMode",
+            "params":
+            {
+                "mode": "view"
+            }
+        },
+        "fdkEverythingType":
+        {
+            "type": "com.alfresco.client.evaluator.nodeType",
+            "params":
+            {
+                "typeName": "fdk:everything"
+            }
+        },
+        "hasAudioAspect":
+        {
+            "type": "com.alfresco.client.evaluator.hasAspect",
+            "params":
+            {
+                "aspectName": "audio:audio"
+            }
         }
     }
 }

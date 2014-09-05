@@ -29,6 +29,8 @@
 #import "AlfrescoCreationConfigHelper.h"
 #import "AlfrescoViewConfigHelper.h"
 #import "AlfrescoFormConfigHelper.h"
+#import "AlfrescoConfigEvaluator.h"
+#import "AlfrescoLog.h"
 
 /**
  * Configuration service implementation
@@ -44,6 +46,7 @@
 @property (nonatomic, strong) NSURL *localFileURL;
 
 // cached configuration
+@property (nonatomic, strong) NSDictionary *evaluators;
 @property (nonatomic, strong) AlfrescoConfigInfo *configInfo;
 @property (nonatomic, strong) AlfrescoRepositoryConfig *repositoryConfig;
 
@@ -74,8 +77,7 @@
         self.session = session;
         self.isCacheBuilt = NO;
         self.isCacheBuilding = NO;
-        self.defaultConfigScope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier
-                                                                       context:@{kAlfrescoConfigScopeContextUsername: session.personIdentifier}];
+        self.defaultConfigScope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier];
     }
     
     return self;
@@ -111,7 +113,7 @@
             // pull parameters from session
             self.applicationId = [self.session objectForParameter:kAlfrescoConfigServiceParameterApplicationId];
             
-            // TODO: Determine if this is the correct location and if there is a "safer" way of getting the file.
+            // TODO: Determine if this is the correct location and retrieve via a CMIS query or use the internal non localised path
             NSString *configPath = [NSString stringWithFormat:@"/Data Dictionary/Client Configuration/Mobile/%@/config.json", self.applicationId];
             
             // retrieve the configuration content
@@ -174,25 +176,26 @@
         if (jsonDictionary != nil)
         {
             // build internal state
+            [self parseEvaluators:jsonDictionary];
             [self parseConfigInfo:jsonDictionary];
             [self parseRepositoryConfig:jsonDictionary];
             
-            self.profileConfigHelper = [[AlfrescoProfileConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            self.profileConfigHelper = [[AlfrescoProfileConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
             [self.profileConfigHelper parse];
             
-            self.featureConfigHelper = [[AlfrescoFeatureConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            self.featureConfigHelper = [[AlfrescoFeatureConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
             [self.featureConfigHelper parse];
             
-            self.creationConfigHelper = [[AlfrescoCreationConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            self.creationConfigHelper = [[AlfrescoCreationConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
             [self.creationConfigHelper parse];
             
-            self.viewConfigHelper = [[AlfrescoViewConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            self.viewConfigHelper = [[AlfrescoViewConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
             [self.viewConfigHelper parse];
             
-            self.formConfigHelper = [[AlfrescoFormConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:nil];
+            self.formConfigHelper = [[AlfrescoFormConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
             [self.formConfigHelper parse];
             
-            // set status flags and call completion block
+            // set status flags and call completion block
             self.isCacheBuilt = YES;
             self.isCacheBuilding = NO;
             completionBlock(YES, nil);
@@ -208,6 +211,103 @@
         self.isCacheBuilding = NO;
         completionBlock(NO, [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeJSONParsingNilData]);
     }
+}
+
+- (void)parseEvaluators:(NSDictionary *)json
+{
+    NSMutableDictionary *evaluators = [NSMutableDictionary dictionary];
+    
+    NSDictionary *configEvaluators = json[kAlfrescoJSONEvaluators];
+    for (NSString *evaluatorId in [configEvaluators allKeys])
+    {
+        NSDictionary *evaluatorJSON = configEvaluators[evaluatorId];
+        
+        NSString *type = evaluatorJSON[kAlfrescoJSONType];
+        NSArray *matchAny = evaluatorJSON[kAlfrescoJSONMatchAny];
+        NSArray *matchAll = evaluatorJSON[kAlfrescoJSONMatchAll];
+        NSDictionary *parameters = evaluatorJSON[kAlfrescoJSONParams];
+        
+        // make sure either type OR matchXYZ is present
+        if (type != nil && (matchAll != nil || matchAny != nil))
+        {
+            AlfrescoLogWarning(@"Ignoring evaluator with identifier '%@' as both type and match properties are present", evaluatorId);
+            continue;
+        }
+        // and make sure both match operators are not present
+        else if (matchAll != nil && matchAny != nil)
+        {
+            AlfrescoLogWarning(@"Ignoring evaluator with identifier '%@' as both match properties are present", evaluatorId);
+            continue;
+        }
+        
+        // create an instance of the appropriate evaluator class from the JSON with the given parameters
+        id<AlfrescoConfigEvaluator> evaluator = nil;
+        
+        if (type != nil)
+        {
+            if ([type isEqualToString:kAlfrescoConfigEvaluatorRepositoryVersion])
+            {
+                evaluator = [[AlfrescoRepositoryVersionEvaluator alloc] initWithIdentifier:evaluatorId
+                                                                                parameters:parameters
+                                                                                   session:self.session];
+            }
+            else if ([type isEqualToString:kAlfrescoConfigEvaluatorNodeType])
+            {
+                evaluator = [[AlfrescoNodeTypeEvaluator alloc] initWithIdentifier:evaluatorId
+                                                                       parameters:parameters
+                                                                          session:self.session];
+            }
+            else if ([type isEqualToString:kAlfrescoConfigEvaluatorAspect])
+            {
+                evaluator = [[AlfrescoAspectEvaluator alloc] initWithIdentifier:evaluatorId
+                                                                     parameters:parameters
+                                                                        session:self.session];
+            }
+            else if ([type isEqualToString:kAlfrescoConfigEvaluatorFormMode])
+            {
+                evaluator = [[AlfrescoFormModeEvaluator alloc] initWithIdentifier:evaluatorId
+                                                                       parameters:parameters
+                                                                          session:self.session];
+            }
+            else if ([type isEqualToString:kAlfrescoConfigEvaluatorProfile])
+            {
+                evaluator = [[AlfrescoProfileEvaluator alloc] initWithIdentifier:evaluatorId
+                                                                      parameters:parameters
+                                                                         session:self.session];
+            }
+        }
+        else if (matchAny != nil)
+        {
+            parameters = @{kAlfrescoConfigEvaluatorParameterEvaluatorIds: matchAny,
+                           kAlfrescoConfigEvaluatorParameterMatchAll: @(NO)};
+            
+            evaluator = [[AlfrescoMatchEvaluator alloc] initWithIdentifier:evaluatorId
+                                                                   parameters:parameters
+                                                                      session:self.session];
+        }
+        else if (matchAll != nil)
+        {
+            parameters = @{kAlfrescoConfigEvaluatorParameterEvaluatorIds: matchAll,
+                           kAlfrescoConfigEvaluatorParameterMatchAll: @(YES)};
+            
+            evaluator = [[AlfrescoMatchEvaluator alloc] initWithIdentifier:evaluatorId
+                                                                   parameters:parameters
+                                                                      session:self.session];
+        }
+        
+        // add the evaluator to the dictionary
+        if (evaluator != nil)
+        {
+            evaluators[evaluatorId] = evaluator;
+            AlfrescoLogDebug(@"Stored config for evaluator with id: %@", evaluatorId);
+        }
+        else
+        {
+            AlfrescoLogWarning(@"Unrecognised evaluator with type '%@'", type);
+        }
+    }
+    
+    self.evaluators = evaluators;
 }
 
 - (void)parseConfigInfo:(NSDictionary *)json
