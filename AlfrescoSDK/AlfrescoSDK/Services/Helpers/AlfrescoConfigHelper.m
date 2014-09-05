@@ -21,6 +21,8 @@
 #import "AlfrescoConfigHelper.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoPropertyConstants.h"
+#import "AlfrescoConfigEvaluator.h"
+#import "AlfrescoLog.h"
 
 @implementation AlfrescoConfigData
 @end
@@ -102,7 +104,7 @@
     }
     
     // process parameters
-    NSString *params = json[kAlfrescoJSONParameters];
+    NSString *params = json[kAlfrescoJSONParams];
     if (params != nil)
     {
         properties[kAlfrescoItemConfigPropertyParameters] = params;
@@ -113,9 +115,38 @@
 
 - (BOOL)processEvaluator:(NSString *)evaluatorId withScope:(AlfrescoConfigScope *)scope
 {
-    // TODO: lookup evaluator by id (if provided), then test whether it matches the given scope
+    BOOL result = NO;
     
-    return YES;
+    if (evaluatorId == nil)
+    {
+        result = YES;
+    }
+    else
+    {
+        // lookup the evaluator
+        id<AlfrescoConfigEvaluator> evaluator = self.evaluators[evaluatorId];
+        if (evaluator != nil)
+        {
+            AlfrescoLogDebug(@"Processing evaluator with id: %@", evaluatorId);
+            
+            // set the evaluators property for the match evaluator
+            if ([evaluator isKindOfClass:[AlfrescoMatchEvaluator class]])
+            {
+                ((AlfrescoMatchEvaluator *)evaluator).evaluators = self.evaluators;
+            }
+            
+            // process the evaluator
+            result = [evaluator evaluate:scope];
+            
+            AlfrescoLogDebug(@"Evaluator '%@' result: %@", evaluatorId, result ? @"YES" : @"NO");
+        }
+        else
+        {
+            AlfrescoLogWarning(@"Unrecognised evaluator id: %@", evaluatorId);
+        }
+    }
+    
+    return result;
 }
 
 @end

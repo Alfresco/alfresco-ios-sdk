@@ -211,6 +211,7 @@ extern NSString * const kAlfrescoConfigServiceParameterApplicationId;
 extern NSString * const kAlfrescoConfigServiceParameterProfileId;
 extern NSString * const kAlfrescoConfigServiceParameterLocalFile;
 
-extern NSString * const kAlfrescoConfigScopeContextUsername;
 extern NSString * const kAlfrescoConfigScopeContextNode;
+extern NSString * const kAlfrescoConfigScopeContextFormMode;
+
 

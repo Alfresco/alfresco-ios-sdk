@@ -149,5 +149,6 @@ NSString * const kAlfrescoConfigServiceParameterApplicationId = @"org.alfresco.m
 NSString * const kAlfrescoConfigServiceParameterProfileId = @"org.alfresco.mobile.config.profile.id";
 NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobile.config.local.file";
 
-NSString * const kAlfrescoConfigScopeContextUsername = @"org.alfresco.mobile.config.scope.context.username";
 NSString * const kAlfrescoConfigScopeContextNode = @"org.alfresco.mobile.config.scope.context.node";
+NSString * const kAlfrescoConfigScopeContextFormMode = @"org.alfresco.mobile.config.scope.context.form.mode";
+

@@ -22,6 +22,7 @@
 #import "AlfrescoFieldConfig.h"
 #import "AlfrescoFieldGroupConfig.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoConfigEvaluator.h"
 #import "CMISConstants.h"
 
 NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
@@ -112,6 +113,141 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     {
         XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
+}
+
+- (AlfrescoDocument *)documentWithAspects
+{
+    // manually create a document object that is cm:content and has the titled and geographic aspects
+    NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
+                                 kCMISPropertyContentStreamMediaType: @"text/plain",
+                                 kCMISPropertyObjectId: @"1234567890",
+                                 kCMISPropertyName: @"dummy.txt",
+                                 kCMISPropertyObjectTypeId: @"cm:content",
+                                 kAlfrescoNodeAspects: @[@"cm:titled", @"cm:geographic"],
+                                 kCMISPropertyCreatedBy: @"mobile",
+                                 kCMISPropertyModifiedBy: @"mobile",
+                                 kCMISPropertyCreationDate: [NSDate date],
+                                 kCMISPropertyModificationDate: [NSDate date],
+                                 kAlfrescoModelPropertyTitle: @"Title",
+                                 kAlfrescoModelPropertyDescription: @"Description"};
+    
+    return [[AlfrescoDocument alloc] initWithProperties:properties];
+}
+
+- (AlfrescoDocument *)customDocumentWithAspects
+{
+    // manually create a document object that is fdk:everything and has the titled aspect
+    NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
+                                 kCMISPropertyContentStreamMediaType: @"text/plain",
+                                 kCMISPropertyObjectId: @"1234567890",
+                                 kCMISPropertyName: @"dummy.txt",
+                                 kCMISPropertyObjectTypeId: @"fdk:everything",
+                                 kAlfrescoNodeAspects: @[@"cm:titled", @"cm:geographic", @"audio:audio"],
+                                 kCMISPropertyCreatedBy: @"mobile",
+                                 kCMISPropertyModifiedBy: @"mobile",
+                                 kCMISPropertyCreationDate: [NSDate date],
+                                 kCMISPropertyModificationDate: [NSDate date],
+                                 kAlfrescoModelPropertyTitle: @"Title",
+                                 kAlfrescoModelPropertyDescription: @"Description"};
+    
+    return [[AlfrescoDocument alloc] initWithProperties:properties];
+}
+
+- (void)testEvaluators
+{
+    AlfrescoDocument *document = [self customDocumentWithAspects];
+    NSDictionary *context = @{kAlfrescoConfigScopeContextNode: document,
+                              kAlfrescoConfigScopeContextFormMode: @"edit"};
+    AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier context:context];
+    
+    // test the repository version evaluator
+    NSDictionary *parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @">=",
+                                 kAlfrescoConfigEvaluatorParameterMajorVersion: @(4)};
+    AlfrescoRepositoryVersionEvaluator *v4RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
+                                                                  initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
+                                                                  parameters:parameters session:self.currentSession];
+    
+    if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
+    {
+        XCTAssertTrue([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return true");
+    }
+    else
+    {
+        XCTAssertFalse([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return false");
+    }
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @"==",
+                   kAlfrescoConfigEvaluatorParameterMajorVersion: @(3),
+                   kAlfrescoConfigEvaluatorParameterMinorVersion: @(4)};
+    AlfrescoRepositoryVersionEvaluator *v34RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
+                                                                   initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
+                                                                   parameters:parameters session:self.currentSession];
+    
+    if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
+    {
+        XCTAssertFalse([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return false");
+    }
+    else
+    {
+        XCTAssertTrue([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return true");
+    }
+    
+    // TODO: add more version specific tests
+    
+    // test the profile evaluator
+    parameters = @{kAlfrescoConfigEvaluatorParameterProfile: kAlfrescoConfigProfileDefaultIdentifier};
+    AlfrescoProfileEvaluator *defaultProfileEvaluator = [[AlfrescoProfileEvaluator alloc]
+                                                         initWithIdentifier:kAlfrescoConfigEvaluatorProfile
+                                                         parameters:parameters session:self.currentSession];
+    XCTAssertTrue([defaultProfileEvaluator evaluate:scope], @"Expected the defaultProfileEvaluator evaluator to return true");
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterProfile: @"test-profile"};
+    AlfrescoProfileEvaluator *testProfileEvaluator = [[AlfrescoProfileEvaluator alloc]
+                                                      initWithIdentifier:kAlfrescoConfigEvaluatorProfile
+                                                      parameters:parameters session:self.currentSession];
+    XCTAssertFalse([testProfileEvaluator evaluate:scope], @"Expected the testProfileEvaluator evaluator to return false");
+    
+    // test the node type evaluator
+    parameters = @{kAlfrescoConfigEvaluatorParameterTypeName: @"fdk:everything"};
+    AlfrescoNodeTypeEvaluator *everythingTypeEvaluator = [[AlfrescoNodeTypeEvaluator alloc]
+                                                          initWithIdentifier:kAlfrescoConfigEvaluatorNodeType
+                                                          parameters:parameters session:self.currentSession];
+    XCTAssertTrue([everythingTypeEvaluator evaluate:scope], @"Expected the everythingTypeEvaluator evaluator to return true");
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterTypeName: @"custom:document"};
+    AlfrescoNodeTypeEvaluator *missingTypeEvaluator = [[AlfrescoNodeTypeEvaluator alloc]
+                                                       initWithIdentifier:kAlfrescoConfigEvaluatorNodeType
+                                                       parameters:parameters session:self.currentSession];
+    XCTAssertFalse([missingTypeEvaluator evaluate:scope], @"Expected the missingTypeEvaluator evaluator to return false");
+    
+    // test the aspect evaluator
+    parameters = @{kAlfrescoConfigEvaluatorParameterAspectName: @"cm:titled"};
+    AlfrescoAspectEvaluator *titledAspectEvaluator = [[AlfrescoAspectEvaluator alloc]
+                                                      initWithIdentifier:kAlfrescoConfigEvaluatorAspect
+                                                      parameters:parameters session:self.currentSession];
+    XCTAssertTrue([titledAspectEvaluator evaluate:scope], @"Expected the titledAspectEvaluator evaluator to return true");
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterAspectName: @"cm:dublincore"};
+    AlfrescoAspectEvaluator *dublinCoreAspectEvaluator = [[AlfrescoAspectEvaluator alloc]
+                                                          initWithIdentifier:kAlfrescoConfigEvaluatorAspect
+                                                          parameters:parameters session:self.currentSession];
+    XCTAssertFalse([dublinCoreAspectEvaluator evaluate:scope], @"Expected the dublinCoreAspectEvaluator evaluator to return false");
+    
+    // test form mode
+    parameters = @{kAlfrescoConfigEvaluatorParameterMode: @"edit"};
+    AlfrescoFormModeEvaluator *editModeEvaluator = [[AlfrescoFormModeEvaluator alloc]
+                                                    initWithIdentifier:kAlfrescoConfigEvaluatorFormMode
+                                                    parameters:parameters session:self.currentSession];
+    XCTAssertTrue([editModeEvaluator evaluate:scope], @"Expected the editModeEvaluator evaluator to return true");
+    
+    parameters = @{kAlfrescoConfigEvaluatorParameterMode: @"view"};
+    AlfrescoFormModeEvaluator *viewModeEvaluator = [[AlfrescoFormModeEvaluator alloc]
+                                                    initWithIdentifier:kAlfrescoConfigEvaluatorFormMode
+                                                    parameters:parameters session:self.currentSession];
+    XCTAssertFalse([viewModeEvaluator evaluate:scope], @"Expected the viewModeEvaluator evaluator to return false");
+    
+    self.lastTestSuccessful = YES;
+    self.callbackCompleted = YES;
 }
 
 - (void)testRepositoryConfig
@@ -467,6 +603,11 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 XCTAssertNil(view2.label, @"Expected label for view2 to be nil");
                 XCTAssertNil(view2.summary, @"Expected summary for view2 to be nil");
                 XCTAssertNil(view2.iconIdentifier, @"Expected icon identifier for view2 to be nil");
+                XCTAssertNotNil(view2.parameters, @"Expected parameters to be populated");
+                XCTAssertTrue(view2.parameters.count == 1,
+                              @"Expected there to be 1 parameter but there were %lu", (unsigned long)view2.parameters.count);
+                XCTAssertTrue([view2.parameters[@"startLocation"] isEqualToString:@"companyhome"],
+                              @"Expected the startLocation parameter to be 'companyhome' but was %@", view2.parameters[@"startLocation"]);
                 
                 // make sure the third item is a view
                 AlfrescoItemConfig *item3 = config.items[2];
@@ -637,22 +778,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     if (self.setUpSuccess)
     {
         self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
-        
-        // manually create a document object that is cm:content and has the titled and geographic aspects
-        NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
-                                     kCMISPropertyContentStreamMediaType: @"text/plain",
-                                     kCMISPropertyObjectId: @"1234567890",
-                                     kCMISPropertyName: @"dummy.txt",
-                                     kCMISPropertyObjectTypeId: @"cm:content",
-                                     kAlfrescoNodeAspects: @[@"cm:titled", @"cm:geographic"],
-                                     kCMISPropertyCreatedBy: @"mobile",
-                                     kCMISPropertyModifiedBy: @"mobile",
-                                     kCMISPropertyCreationDate: [NSDate date],
-                                     kCMISPropertyModificationDate: [NSDate date],
-                                     kAlfrescoModelPropertyTitle: @"Title",
-                                     kAlfrescoModelPropertyDescription: @"Description"};
-        
-        AlfrescoDocument *document = [[AlfrescoDocument alloc] initWithProperties:properties];
+        AlfrescoDocument *document = [self documentWithAspects];
         
         // retrieve form config using scope
         AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier
@@ -781,22 +907,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
     if (self.setUpSuccess)
     {
         self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
-        
-        // manually create a document object that is fdk:everything and has the titled aspect
-        NSDictionary *properties = @{kCMISPropertyContentStreamLength: @(25),
-                                     kCMISPropertyContentStreamMediaType: @"text/plain",
-                                     kCMISPropertyObjectId: @"1234567890",
-                                     kCMISPropertyName: @"dummy.txt",
-                                     kCMISPropertyObjectTypeId: @"fdk:everything",
-                                     kAlfrescoNodeAspects: @[@"cm:titled"],
-                                     kCMISPropertyCreatedBy: @"mobile",
-                                     kCMISPropertyModifiedBy: @"mobile",
-                                     kCMISPropertyCreationDate: [NSDate date],
-                                     kCMISPropertyModificationDate: [NSDate date],
-                                     kAlfrescoModelPropertyTitle: @"Title",
-                                     kAlfrescoModelPropertyDescription: @"Description"};
-        
-        AlfrescoDocument *document = [[AlfrescoDocument alloc] initWithProperties:properties];
+        AlfrescoDocument *document = [self customDocumentWithAspects];
         
         // retrieve form config using scope
         AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier
@@ -821,14 +932,14 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                               @"Expected form config label to be '1column' but was %@", config.layout);
                 
                 // check the root field group
-                XCTAssertTrue(config.items.count == 1,
-                              @"Expected form to have 1 field group but there were %lu", (unsigned long)config.items.count);
-                AlfrescoFieldGroupConfig *rootFieldGroup = config.items.firstObject;
-                XCTAssertTrue(rootFieldGroup.items.count == 3,
-                              @"Expected root field group to have 3 items but there were %lu", (unsigned long)rootFieldGroup.items.count);
+                XCTAssertTrue(config.items.count == 3,
+                              @"Expected form to have 3 field groups but there were %lu", (unsigned long)config.items.count);
+                AlfrescoFieldGroupConfig *typeFieldGroup = config.items.firstObject;
+                XCTAssertTrue(typeFieldGroup.items.count == 3,
+                              @"Expected root field group to have 3 items but there were %lu", (unsigned long)typeFieldGroup.items.count);
                 
-                // check the sub group
-                AlfrescoItemConfig *item1 = rootFieldGroup.items.firstObject;
+                // check the type group
+                AlfrescoItemConfig *item1 = typeFieldGroup.items.firstObject;
                 XCTAssertTrue([item1 isKindOfClass:[AlfrescoFieldGroupConfig class]],
                               @"Expected the first item to be a field group but it was %@", item1);
                 AlfrescoFieldGroupConfig *fieldGroup1 = (AlfrescoFieldGroupConfig *)item1;
@@ -837,8 +948,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 XCTAssertTrue(fieldGroup1.items.count == 4,
                               @"Expected field group to have 4 items but there were %lu", (unsigned long)fieldGroup1.items.count);
                 
-                // check the other fields
-                AlfrescoItemConfig *item2 = rootFieldGroup.items[1];
+                // check the other type fields
+                AlfrescoItemConfig *item2 = typeFieldGroup.items[1];
                 XCTAssertTrue([item2 isKindOfClass:[AlfrescoFieldConfig class]],
                               @"Expected the second item to be a field but it was %@", item2);
                 AlfrescoFieldConfig *field2 = (AlfrescoFieldConfig *)item2;
@@ -847,7 +958,7 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 XCTAssertTrue([field2.label isEqualToString:@"Text"],
                               @"Expected field model identifier to be 'Text' but was %@", field2.label);
                 
-                AlfrescoItemConfig *item3 = rootFieldGroup.items[2];
+                AlfrescoItemConfig *item3 = typeFieldGroup.items[2];
                 XCTAssertTrue([item3 isKindOfClass:[AlfrescoFieldConfig class]],
                               @"Expected the third item to be a field but it was %@", item3);
                 AlfrescoFieldConfig *field3 = (AlfrescoFieldConfig *)item3;
@@ -856,6 +967,18 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 XCTAssertTrue([field3.label isEqualToString:@"Int"],
                               @"Expected field model identifier to be 'Int' but was %@", field3.label);
                 
+                // check the aspect groups
+                AlfrescoFieldGroupConfig *aspectFieldGroup1 = config.items[1];
+                XCTAssertTrue([aspectFieldGroup1.identifier isEqualToString:@"aspect:cm:geographic"],
+                              @"Expected group identifier to be 'aspect:cm:geographic' but was %@", aspectFieldGroup1.identifier);
+                XCTAssertTrue(aspectFieldGroup1.items.count == 2,
+                              @"Expected field group to have 2 items but there were %lu", (unsigned long)aspectFieldGroup1.items.count);
+                
+                AlfrescoFieldGroupConfig *aspectFieldGroup2 = config.items[2];
+                XCTAssertTrue([aspectFieldGroup2.identifier isEqualToString:@"aspect:audio:audio"],
+                              @"Expected group identifier to be 'aspect:audio:audio' but was %@", aspectFieldGroup2.identifier);
+                XCTAssertTrue(aspectFieldGroup2.items.count == 11,
+                              @"Expected field group to have 11 items but there were %lu", (unsigned long)aspectFieldGroup2.items.count);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -1073,6 +1196,139 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRepoVersionEvaluatorConfig
+{
+    if (self.setUpSuccess)
+    {
+        BOOL is42orAbove = NO;
+        if (([self.currentSession.repositoryInfo.majorVersion intValue] == 4 && [self.currentSession.repositoryInfo.minorVersion intValue] >= 2) ||
+            [self.currentSession.repositoryInfo.majorVersion intValue] >= 5)
+        {
+            is42orAbove = YES;
+        }
+        
+        self.configService = [[AlfrescoConfigService alloc] initWithSession:[self sessionForConfigService]];
+        
+        // retrieve view config for specific view
+        [self.configService retrieveViewGroupConfigWithIdentifier:@"evaluator-test" completionBlock:^(AlfrescoViewGroupConfig *config, NSError *error) {
+            if (config == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue([config.identifier isEqualToString:@"evaluator-test"],
+                              @"Expected view group config identifier to be 'evaluator-test' but it was %@", config.identifier);
+                XCTAssertTrue([config.label isEqualToString:@"Evaluator Test"],
+                              @"Expected view group label of 'Evaluator Test' but it was %@", config.label);
+                
+                XCTAssertNotNil(config.items, @"Expected items property to be populated");
+                
+                if (is42orAbove)
+                {
+                    // we should get 2 items for 4.2 servers and above
+                    XCTAssertTrue(config.items.count == 2, @"Expected there to be 2 items");
+                }
+                else
+                {
+                    // we should get 1 item for older servers
+                    XCTAssertTrue(config.items.count == 1, @"Expected there to be 1 item");
+                }
+                
+                // make sure the first item has the correct identifier
+                AlfrescoItemConfig *item1 = config.items[0];
+                XCTAssertTrue([item1.identifier isEqualToString:@"view-tasks"],
+                              @"Expected an identifier of 'view-tasks' but it was %@", item1.identifier);
+                
+                if (is42orAbove)
+                {
+                    // make sure the third item has the correct identifier
+                    AlfrescoItemConfig *item2 = config.items[1];
+                    XCTAssertTrue([item2.identifier isEqualToString:@"view-my-repository-files"],
+                                  @"Expected an identifier of 'view-my-repository-files' but it was %@", item2.identifier);
+                    XCTAssertTrue([item2.type isEqualToString:@"com.alfresco.client.view.repository"],
+                                  @"Expected a type of 'com.alfresco.client.view.repository' but it was %@", item2.type);
+                }
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testOtherEvaluatorConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigService]];
+        
+        // create the scope object that should filter out all but one field
+        NSDictionary *context1 = @{kAlfrescoConfigScopeContextFormMode: @"edit",
+                                  kAlfrescoConfigScopeContextNode: [self documentWithAspects]};
+        AlfrescoConfigScope *scope1 = [[AlfrescoConfigScope alloc] initWithProfile:@"custom" context:context1];
+        
+        [self.configService retrieveFormConfigWithIdentifier:@"evaluator-test" scope:scope1 completionBlock:^(AlfrescoFormConfig *config1, NSError *error1) {
+            if (config1 == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error1];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue([config1.identifier isEqualToString:@"evaluator-test"],
+                              @"Expected form config identifier to be 'evaluator-test' but was %@", config1.identifier);
+                XCTAssertTrue([config1.label isEqualToString:@"Evaluator Test"],
+                              @"Expected form config label to be 'Evaluator Test' but was %@", config1.label);
+                
+                // if all the evaluators have worked there should only be one field
+                XCTAssertTrue(config1.items.count == 1,
+                              @"Expected there to be 1 item, but there were: %lu", (unsigned long)config1.items.count);
+                
+                // now make sure they all appear with the correct scope
+                NSDictionary *context2 = @{kAlfrescoConfigScopeContextFormMode: @"view",
+                                          kAlfrescoConfigScopeContextNode: [self customDocumentWithAspects]};
+                AlfrescoConfigScope *scope2 = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier context:context2];
+                
+                [self.configService retrieveFormConfigWithIdentifier:@"evaluator-test" scope:scope2 completionBlock:^(AlfrescoFormConfig *config2, NSError *error2) {
+                    if (config2 == nil)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [self failureMessageFromError:error2];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        // there should now be 5 fields present
+                        XCTAssertTrue(config2.items.count == 5,
+                                      @"Expected there to be 5 items, but there were: %lu", (unsigned long)config2.items.count);
+                        
+                        self.lastTestSuccessful = YES;
+                        self.callbackCompleted = YES;
+                    }
+                }];
             }
         }];
         
