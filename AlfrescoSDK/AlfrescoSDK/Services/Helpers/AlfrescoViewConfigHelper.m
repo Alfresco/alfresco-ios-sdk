@@ -162,11 +162,15 @@
         NSString *itemType = groupItemJSON[kAlfrescoJSONItemType];
         if ([itemType isEqualToString:kAlfrescoJSONViewId])
         {
-            // create and store a reference config data object
-            AlfrescoConfigData *configData = [AlfrescoConfigData new];
-            configData.reference = groupItemJSON[kAlfrescoJSONViewId];
-            configData.evaluator = groupItemJSON[kAlfrescoJSONEvaluator];
-            [potentialItemsArray addObject:configData];
+            NSString *reference = groupItemJSON[kAlfrescoJSONViewId];
+            if (reference != nil)
+            {
+                // create and store a reference config data object
+                AlfrescoConfigData *configData = [AlfrescoConfigData new];
+                configData.reference = reference;
+                configData.evaluator = groupItemJSON[kAlfrescoJSONEvaluator];
+                [potentialItemsArray addObject:configData];
+            }
         }
         else if ([itemType isEqualToString:kAlfrescoJSONView])
         {
@@ -182,17 +186,24 @@
         }
         else if ([itemType isEqualToString:kAlfrescoJSONViewGroupId])
         {
-            // create and store a reference group config data object
-            AlfrescoGroupConfigData *configData = [AlfrescoGroupConfigData new];
-            configData.reference = groupItemJSON[kAlfrescoJSONViewGroupId];
-            configData.evaluator = groupItemJSON[kAlfrescoJSONEvaluator];
-            [potentialItemsArray addObject:configData];
+            NSString *reference = groupItemJSON[kAlfrescoJSONViewGroupId];
+            if (reference != nil)
+            {
+                // create and store a reference group config data object
+                AlfrescoGroupConfigData *configData = [AlfrescoGroupConfigData new];
+                configData.reference = reference;
+                configData.evaluator = groupItemJSON[kAlfrescoJSONEvaluator];
+                [potentialItemsArray addObject:configData];
+            }
         }
         else if ([itemType isEqualToString:kAlfrescoJSONViewGroup])
         {
             // recursively parse the inline view group
             NSDictionary *childViewGroupJSON = groupItemJSON[kAlfrescoJSONViewGroup];
-            [potentialItemsArray addObject:[self viewGroupDataFromJSON:childViewGroupJSON]];
+            if (childViewGroupJSON != nil)
+            {
+                [potentialItemsArray addObject:[self viewGroupDataFromJSON:childViewGroupJSON]];
+            }
         }
     }
     
@@ -224,59 +235,73 @@
 
 - (AlfrescoViewGroupConfig *)resolveViewGroupConfigFromData:(AlfrescoGroupConfigData *)groupConfigData scope:(AlfrescoConfigScope *)scope
 {
-    // firstly recursively resolve all potential items
-    NSMutableArray *items = [NSMutableArray array];
-    for (AlfrescoConfigData *configData in groupConfigData.potentialItems)
+    if (groupConfigData != nil)
     {
-        // only process items that match the evaluator
-        if ([self processEvaluator:configData.evaluator withScope:scope])
+        // firstly recursively resolve all potential items
+        NSMutableArray *items = [NSMutableArray array];
+        for (AlfrescoConfigData *configData in groupConfigData.potentialItems)
         {
-            if ([configData isKindOfClass:[AlfrescoGroupConfigData class]])
+            // only process items that match the evaluator
+            if ([self processEvaluator:configData.evaluator withScope:scope])
             {
-                if (configData.reference != nil)
+                if ([configData isKindOfClass:[AlfrescoGroupConfigData class]])
                 {
-                    // it's a reference to another view group so find first match and then recursively resolve
-                    AlfrescoGroupConfigData *groupConfigData = [self viewGroupDataForIdentifier:configData.reference scope:scope];
-                    AlfrescoViewGroupConfig *viewGroupConfig = [self resolveViewGroupConfigFromData:groupConfigData scope:scope];
-                    [items addObject:viewGroupConfig];
-                }
-                else
-                {
-                    // it's another view group, recursively resolve
-                    AlfrescoViewGroupConfig *viewGroupConfig = [self resolveViewGroupConfigFromData:(AlfrescoGroupConfigData*)configData scope:scope];
-                    [items addObject:viewGroupConfig];
-                }
-            }
-            else
-            {
-                if (configData.reference != nil)
-                {
-                    // it's a reference to a view, retrieve view config
-                    AlfrescoViewConfig *viewConfig = self.views[configData.reference];
-                    if (viewConfig != nil)
+                    if (configData.reference != nil)
                     {
-                        [items addObject:viewConfig];
+                        // it's a reference to another view group so find first match and then recursively resolve
+                        AlfrescoGroupConfigData *groupConfigData = [self viewGroupDataForIdentifier:configData.reference scope:scope];
+                        if (groupConfigData != nil)
+                        {
+                            AlfrescoViewGroupConfig *viewGroupConfig = [self resolveViewGroupConfigFromData:groupConfigData scope:scope];
+                            [items addObject:viewGroupConfig];
+                        }
+                        else
+                        {
+                            AlfrescoLogWarning(@"Ignoring reference to an invalid view group id reference: %@", configData.reference);
+                        }
                     }
                     else
                     {
-                        AlfrescoLogWarning(@"Ignoring reference to an invalid view id reference: %@", configData.reference);
+                        // it's another view group, recursively resolve
+                        AlfrescoViewGroupConfig *viewGroupConfig = [self resolveViewGroupConfigFromData:(AlfrescoGroupConfigData*)configData scope:scope];
+                        [items addObject:viewGroupConfig];
                     }
                 }
                 else
                 {
-                    // it's an inline view, create view config
-                    AlfrescoViewConfig *viewConfig = [[AlfrescoViewConfig alloc] initWithDictionary:configData.properties];
-                    [items addObject:viewConfig];
+                    if (configData.reference != nil)
+                    {
+                        // it's a reference to a view, retrieve view config
+                        AlfrescoViewConfig *viewConfig = self.views[configData.reference];
+                        if (viewConfig != nil)
+                        {
+                            [items addObject:viewConfig];
+                        }
+                        else
+                        {
+                            AlfrescoLogWarning(@"Ignoring reference to an invalid view id reference: %@", configData.reference);
+                        }
+                    }
+                    else
+                    {
+                        // it's an inline view, create view config
+                        AlfrescoViewConfig *viewConfig = [[AlfrescoViewConfig alloc] initWithDictionary:configData.properties];
+                        [items addObject:viewConfig];
+                    }
                 }
             }
         }
+        
+        // create and return the final view group config object
+        NSMutableDictionary *viewGroupProperties = [NSMutableDictionary dictionaryWithDictionary:groupConfigData.properties];
+        viewGroupProperties[kAlfrescoGroupConfigPropertyItems] = items;
+        
+        return [[AlfrescoViewGroupConfig alloc] initWithDictionary:viewGroupProperties];
     }
-    
-    // create and return the final view group config object
-    NSMutableDictionary *viewGroupProperties = [NSMutableDictionary dictionaryWithDictionary:groupConfigData.properties];
-    viewGroupProperties[kAlfrescoGroupConfigPropertyItems] = items;
-    
-    return [[AlfrescoViewGroupConfig alloc] initWithDictionary:viewGroupProperties];
+    else
+    {
+        return nil;
+    }
 }
 
 @end
