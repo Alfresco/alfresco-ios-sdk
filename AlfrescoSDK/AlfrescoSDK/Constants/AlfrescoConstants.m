@@ -145,9 +145,9 @@ NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";
 /**
  Configuration Constants
  */
-NSString * const kAlfrescoConfigServiceParameterApplicationId = @"org.alfresco.mobile.config.application.id";
-NSString * const kAlfrescoConfigServiceParameterProfileId = @"org.alfresco.mobile.config.profile.id";
-NSString * const kAlfrescoConfigServiceParameterLocalFile = @"org.alfresco.mobile.config.local.file";
+NSString * const kAlfrescoConfigServiceParameterApplicationId = @"org.alfresco.mobile.internal.config.application.id";
+NSString * const kAlfrescoConfigServiceParameterProfileId = @"org.alfresco.mobile.internal.config.profile.id";
+NSString * const kAlfrescoConfigServiceParameterFolder = @"org.alfresco.mobile.internal.config.folder";
 
 NSString * const kAlfrescoConfigScopeContextNode = @"org.alfresco.mobile.config.scope.context.node";
 NSString * const kAlfrescoConfigScopeContextFormMode = @"org.alfresco.mobile.config.scope.context.form.mode";

@@ -423,13 +423,14 @@ extern NSString * const kAlfrescoJSONField;
 extern NSString * const kAlfrescoJSONFields;
 extern NSString * const kAlfrescoJSONModelId;
 
+extern NSString * const kAlfrescoConfigServiceParameterFileName;
+extern NSString * const kAlfrescoConfigServiceDefaultFileName;
 extern NSString * const kAlfrescoConfigProfileDefaultIdentifier;
 extern NSString * const kAlfrescoConfigProfileDefaultLabel;
 extern NSString * const kAlfrescoConfigFormTypePrefix;
 extern NSString * const kAlfrescoConfigFormAspectPrefix;
 extern NSString * const kAlfrescoConfigFormTypeProperties;
 extern NSString * const kAlfrescoConfigFormAspectProperties;
-
 extern NSString * const kAlfrescoConfigEvaluatorRepositoryVersion;
 extern NSString * const kAlfrescoConfigEvaluatorNodeType;
 extern NSString * const kAlfrescoConfigEvaluatorAspect;

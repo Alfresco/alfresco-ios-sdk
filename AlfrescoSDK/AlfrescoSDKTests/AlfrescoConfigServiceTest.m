@@ -25,31 +25,34 @@
 #import "AlfrescoConfigEvaluator.h"
 #import "CMISConstants.h"
 
-NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
+NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios.test";
 
 @implementation AlfrescoConfigServiceTest
 
 - (NSDictionary *)dictionaryForConfigServiceValidTests
 {
-    NSString *configFilePath = [[NSBundle bundleForClass:self.class] pathForResource:@"valid-config-test.json" ofType:nil];
+    NSString *configFolderPath = [NSBundle bundleForClass:self.class].resourcePath;
     NSDictionary *parameters = @{kAlfrescoConfigServiceParameterApplicationId: kAlfrescoTestApplicationId,
-                                 kAlfrescoConfigServiceParameterLocalFile: [NSURL URLWithString:configFilePath]};
+                                 kAlfrescoConfigServiceParameterFolder: configFolderPath,
+                                 kAlfrescoConfigServiceParameterFileName: @"valid-config-test.json"};
     return parameters;
 }
 
 - (NSDictionary *)dictionaryForConfigServiceInvalidTests
 {
-    NSString *configFilePath = [[NSBundle bundleForClass:self.class] pathForResource:@"invalid-config-test.json" ofType:nil];
+    NSString *configFolderPath = [NSBundle bundleForClass:self.class].resourcePath;
     NSDictionary *parameters = @{kAlfrescoConfigServiceParameterApplicationId: kAlfrescoTestApplicationId,
-                                 kAlfrescoConfigServiceParameterLocalFile: [NSURL URLWithString:configFilePath]};
+                                 kAlfrescoConfigServiceParameterFolder: configFolderPath,
+                                 kAlfrescoConfigServiceParameterFileName: @"invalid-config-test.json"};
     return parameters;
 }
 
 - (NSDictionary *)dictionaryForConfigServiceEmptyTest
 {
-    NSString *configFilePath = [[NSBundle bundleForClass:self.class] pathForResource:@"empty-config-test.json" ofType:nil];
+    NSString *configFolderPath = [NSBundle bundleForClass:self.class].resourcePath;
     NSDictionary *parameters = @{kAlfrescoConfigServiceParameterApplicationId: kAlfrescoTestApplicationId,
-                                 kAlfrescoConfigServiceParameterLocalFile: [NSURL URLWithString:configFilePath]};
+                                 kAlfrescoConfigServiceParameterFolder: configFolderPath,
+                                 kAlfrescoConfigServiceParameterFileName: @"empty-config-test.json"};
     return parameters;
 }
 
@@ -240,16 +243,16 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 XCTAssertTrue(defaultProfile.isDefault, @"Expected the default profile to be marked as default");
                 XCTAssertTrue([defaultProfile.label isEqualToString:@"Default Profile"],
                               @"Expected default profile label to be 'Default Profile' but was %@", defaultProfile.label);
-                XCTAssertTrue([defaultProfile.summary isEqualToString:@"Description of the Default Profile"],
-                              @"Expected default profile summary to be 'Description of the Default Profile' but was %@", defaultProfile.summary);
+                XCTAssertTrue([defaultProfile.summary isEqualToString:@"Description of the default profile"],
+                              @"Expected default profile summary to be 'Description of the default profile' but was %@", defaultProfile.summary);
                 XCTAssertTrue([defaultProfile.rootViewId isEqualToString:@"root-navigation"],
                               @"Expected default profile rootViewId to be 'root-navigation' but was %@", defaultProfile.rootViewId);
                 
                 XCTAssertFalse(customProfile.isDefault, @"Expected the custom profile to not be marked as default");
                 XCTAssertTrue([customProfile.label isEqualToString:@"Custom Profile"],
                               @"Expected custom profile label to be 'Custom Profile' but was %@", customProfile.label);
-                XCTAssertTrue([customProfile.summary isEqualToString:@"Description of the custom Profile"],
-                              @"Expected custom profile summary to be 'Description of the custom Profile' but was %@", customProfile.summary);
+                XCTAssertTrue([customProfile.summary isEqualToString:@"Description of the custom profile"],
+                              @"Expected custom profile summary to be 'Description of the custom profile' but was %@", customProfile.summary);
                 XCTAssertTrue([customProfile.rootViewId isEqualToString:@"views-menu-default"],
                               @"Expected custom profile rootViewId to be 'views-menu-default' but was %@", customProfile.rootViewId);
                 
@@ -268,8 +271,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                         XCTAssertFalse(profile1.isDefault, @"Expected the retrieved profile to not be marked as default");
                         XCTAssertTrue([profile1.label isEqualToString:@"Custom Profile"],
                                       @"Expected retrieved profile label to be 'Custom Profile' but was %@", profile1.label);
-                        XCTAssertTrue([profile1.summary isEqualToString:@"Description of the custom Profile"],
-                                      @"Expected retrieved profile summary to be 'Description of the custom Profile' but was %@", profile1.summary);
+                        XCTAssertTrue([profile1.summary isEqualToString:@"Description of the custom profile"],
+                                      @"Expected retrieved profile summary to be 'Description of the custom profile' but was %@", profile1.summary);
                         XCTAssertTrue([profile1.rootViewId isEqualToString:@"views-menu-default"],
                                       @"Expected retrieved profile rootViewId to be 'views-menu-default' but was %@", profile1.rootViewId);
                         
@@ -288,8 +291,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                                 XCTAssertTrue(profile2.isDefault, @"Expected the retrieved profile to be marked as default");
                                 XCTAssertTrue([profile2.label isEqualToString:@"Default Profile"],
                                               @"Expected retrieved profile label to be 'Default Profile' but was %@", profile2.label);
-                                XCTAssertTrue([profile2.summary isEqualToString:@"Description of the Default Profile"],
-                                              @"Expected retrieved profile summary to be 'Description of the Default Profile' but was %@", profile2.summary);
+                                XCTAssertTrue([profile2.summary isEqualToString:@"Description of the default profile"],
+                                              @"Expected retrieved profile summary to be 'Description of the default profile' but was %@", profile2.summary);
                                 XCTAssertTrue([profile2.rootViewId isEqualToString:@"root-navigation"],
                                               @"Expected retrieved profile rootViewId to be 'root-navigation' but was %@", profile2.rootViewId);
                                 
@@ -696,62 +699,62 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 AlfrescoFieldConfig *nameField = typeProperties[0];
                 XCTAssertTrue([nameField.modelIdentifier isEqualToString:@"cm:name"],
                               @"Expected first field to be cm:name but was %@", nameField.identifier);
-                XCTAssertTrue([nameField.label isEqualToString:@"cm_contentmodel.property.cm_name.title"],
-                              @"Expected first field to have label of 'cm_contentmodel.property.cm_name.title' but was %@", nameField.label);
+                XCTAssertTrue([nameField.label isEqualToString:@"Name"],
+                              @"Expected first field to have label of 'Name' but was %@", nameField.label);
                 
                 AlfrescoFieldConfig *titleField = typeProperties[1];
                 XCTAssertTrue([titleField.modelIdentifier isEqualToString:@"cm:title"],
                               @"Expected second field to be cm:title but was %@", titleField.identifier);
-                XCTAssertTrue([titleField.label isEqualToString:@"cm_contentmodel.property.cm_title.title"],
-                              @"Expected second field to have label of 'cm_contentmodel.property.cm_title.title' but was %@", titleField.label);
+                XCTAssertTrue([titleField.label isEqualToString:@"Title"],
+                              @"Expected second field to have label of 'Title' but was %@", titleField.label);
                 
                 AlfrescoFieldConfig *descriptionField = typeProperties[2];
                 XCTAssertTrue([descriptionField.modelIdentifier isEqualToString:@"cm:description"],
                               @"Expected third field to be cm:description but was %@", descriptionField.identifier);
-                XCTAssertTrue([descriptionField.label isEqualToString:@"cm_contentmodel.property.cm_description.title"],
-                              @"Expected third field to have label of 'cm_contentmodel.property.cm_description.title' but was %@", descriptionField.label);
+                XCTAssertTrue([descriptionField.label isEqualToString:@"Description"],
+                              @"Expected third field to have label of 'Description' but was %@", descriptionField.label);
                 
                 AlfrescoFieldConfig *mimetypeField = typeProperties[3];
                 XCTAssertTrue([mimetypeField.modelIdentifier isEqualToString:@"mimetype"],
                               @"Expected fourth field to be mimetype but was %@", mimetypeField.identifier);
-                XCTAssertTrue([mimetypeField.label isEqualToString:@"cm_contentmodel.property.cm_mimetype.title"],
-                              @"Expected fourth field to have label of 'cm_contentmodel.property.cm_mimetype.title' but was %@", mimetypeField.label);
+                XCTAssertTrue([mimetypeField.label isEqualToString:@"Mimetype"],
+                              @"Expected fourth field to have label of 'Mimetype' but was %@", mimetypeField.label);
                 
                 AlfrescoFieldConfig *authorField = typeProperties[4];
                 XCTAssertTrue([authorField.modelIdentifier isEqualToString:@"cm:author"],
                               @"Expected fifth field to be cm:author but was %@", authorField.identifier);
-                XCTAssertTrue([authorField.label isEqualToString:@"cm_contentmodel.property.cm_author.title"],
-                              @"Expected fifth field to have label of 'cm_contentmodel.property.cm_author.title' but was %@", authorField.label);
+                XCTAssertTrue([authorField.label isEqualToString:@"Author"],
+                              @"Expected fifth field to have label of 'Author' but was %@", authorField.label);
                 
                 AlfrescoFieldConfig *sizeField = typeProperties[5];
                 XCTAssertTrue([sizeField.modelIdentifier isEqualToString:@"size"],
                               @"Expected sixth field to be size but was %@", sizeField.modelIdentifier);
-                XCTAssertTrue([sizeField.label isEqualToString:@"cm_contentmodel.property.cm_size.title"],
-                              @"Expected sixth field to have label of 'cm_contentmodel.property.cm_size.title' but was %@", sizeField.label);
+                XCTAssertTrue([sizeField.label isEqualToString:@"Size"],
+                              @"Expected sixth field to have label of 'Size' but was %@", sizeField.label);
                 
                 AlfrescoFieldConfig *creatorField = typeProperties[6];
                 XCTAssertTrue([creatorField.modelIdentifier isEqualToString:@"cm:creator"],
                               @"Expected seventh field to be cm:creator but was %@", creatorField.identifier);
-                XCTAssertTrue([creatorField.label isEqualToString:@"cm_contentmodel.property.cm_creator.title"],
-                              @"Expected seventh field to have label of 'cm_contentmodel.property.cm_creator.title' but was %@", creatorField.label);
+                XCTAssertTrue([creatorField.label isEqualToString:@"Created By"],
+                              @"Expected seventh field to have label of 'Created By' but was %@", creatorField.label);
                 
                 AlfrescoFieldConfig *createdField = typeProperties[7];
                 XCTAssertTrue([createdField.modelIdentifier isEqualToString:@"cm:created"],
                               @"Expected eigth field to be cm:created but was %@", createdField.identifier);
-                XCTAssertTrue([createdField.label isEqualToString:@"cm_contentmodel.property.cm_created.title"],
-                              @"Expected eigth field to have label of 'cm_contentmodel.property.cm_created.title' but was %@", creatorField.label);
+                XCTAssertTrue([createdField.label isEqualToString:@"Created"],
+                              @"Expected eigth field to have label of 'Created' but was %@", creatorField.label);
                 
                 AlfrescoFieldConfig *modifierField = typeProperties[8];
                 XCTAssertTrue([modifierField.modelIdentifier isEqualToString:@"cm:modifier"],
                               @"Expected ninth field to be cm:modifier but was %@", modifierField.identifier);
-                XCTAssertTrue([modifierField.label isEqualToString:@"cm_contentmodel.property.cm_modifier.title"],
-                              @"Expected ninth field to have label of 'cm_contentmodel.property.cm_modifier.title' but was %@", modifierField.label);
+                XCTAssertTrue([modifierField.label isEqualToString:@"Modified By"],
+                              @"Expected ninth field to have label of 'Modified By' but was %@", modifierField.label);
                 
                 AlfrescoFieldConfig *modifiedField = typeProperties[9];
                 XCTAssertTrue([modifiedField.modelIdentifier isEqualToString:@"cm:modified"],
                               @"Expected tenth field to be cm:modified but was %@", modifiedField.identifier);
-                XCTAssertTrue([modifiedField.label isEqualToString:@"cm_contentmodel.property.cm_modified.title"],
-                              @"Expected tenth field to have label of 'cm_contentmodel.property.cm_modified.title' but was %@", modifiedField.label);
+                XCTAssertTrue([modifiedField.label isEqualToString:@"Modified"],
+                              @"Expected tenth field to have label of 'Modified' but was %@", modifiedField.label);
                 
                 // get the field config for the aspect properties group
                 NSArray *aspectProperties = [groups[1] items];
@@ -761,14 +764,14 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 AlfrescoFieldConfig *latitudeField = aspectProperties[0];
                 XCTAssertTrue([latitudeField.modelIdentifier isEqualToString:@"cm:latitude"],
                               @"Expected first aspect field to be cm:latitude but was %@", latitudeField.identifier);
-                XCTAssertTrue([latitudeField.label isEqualToString:@"cm_contentmodel.property.cm_latitude.title"],
-                              @"Expected first aspect field to have label of 'cm_contentmodel.property.cm_latitude.title' but was %@", latitudeField.label);
+                XCTAssertTrue([latitudeField.label isEqualToString:@"Latitude"],
+                              @"Expected first aspect field to have label of 'Latitude' but was %@", latitudeField.label);
                 
                 AlfrescoFieldConfig *longitudeField = aspectProperties[1];
                 XCTAssertTrue([longitudeField.modelIdentifier isEqualToString:@"cm:longitude"],
                               @"Expected second aspect field to be cm:longitude but was %@", longitudeField.identifier);
-                XCTAssertTrue([longitudeField.label isEqualToString:@"cm_contentmodel.property.cm_longitude.title"],
-                              @"Expected second aspect field to have label of 'cm_contentmodel.property.cm_longitude.title' but was %@", longitudeField.label);
+                XCTAssertTrue([longitudeField.label isEqualToString:@"Longitude"],
+                              @"Expected second aspect field to have label of 'Longitude' but was %@", longitudeField.label);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -996,8 +999,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 AlfrescoFieldConfig *nameField = typePropertiesGroup.items[0];
                 XCTAssertTrue([nameField.modelIdentifier isEqualToString:@"cm:name"],
                               @"Expected first field to be cm:name but was %@", nameField.identifier);
-                XCTAssertTrue([nameField.label isEqualToString:@"cm_contentmodel.property.cm_name.title"],
-                              @"Expected first field to have label of 'cm_contentmodel.property.cm_name.title' but was %@", nameField.label);
+                XCTAssertTrue([nameField.label isEqualToString:@"Name"],
+                              @"Expected first field to have label of 'Name' but was %@", nameField.label);
                 
                 // get the field config for the aspect properties group
                 AlfrescoFieldGroupConfig *aspectPropertiesGroup = config.items[1];
@@ -1007,14 +1010,14 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
                 AlfrescoFieldConfig *latitudeField = aspectPropertiesGroup.items[0];
                 XCTAssertTrue([latitudeField.modelIdentifier isEqualToString:@"cm:latitude"],
                               @"Expected first aspect field to be cm:latitude but was %@", latitudeField.identifier);
-                XCTAssertTrue([latitudeField.label isEqualToString:@"cm_contentmodel.property.cm_latitude.title"],
-                              @"Expected first aspect field to have label of 'cm_contentmodel.property.cm_latitude.title' but was %@", latitudeField.label);
+                XCTAssertTrue([latitudeField.label isEqualToString:@"Latitude"],
+                              @"Expected first aspect field to have label of 'Latitude' but was %@", latitudeField.label);
                 
                 AlfrescoFieldConfig *longitudeField = aspectPropertiesGroup.items[1];
                 XCTAssertTrue([longitudeField.modelIdentifier isEqualToString:@"cm:longitude"],
                               @"Expected second aspect field to be cm:longitude but was %@", longitudeField.identifier);
-                XCTAssertTrue([longitudeField.label isEqualToString:@"cm_contentmodel.property.cm_longitude.title"],
-                              @"Expected second aspect field to have label of 'cm_contentmodel.property.cm_longitude.title' but was %@", longitudeField.label);
+                XCTAssertTrue([longitudeField.label isEqualToString:@"Longitude"],
+                              @"Expected second aspect field to have label of 'Longitude' but was %@", longitudeField.label);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -1418,20 +1421,12 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
         
         // retrieve an invalid profile
         [self.configService retrieveProfileWithIdentifier:@"invalid" completionBlock:^(AlfrescoProfileConfig *config, NSError *error) {
-            if (config != nil)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = @"Expected retrieval of invalid profile to fail";
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertNotNil(error, @"Expected to recieve an error when retrieving an invalid profile");
-                XCTAssertTrue(error.code == kAlfrescoErrorCodeConfigNotFound, @"Expected the error code to be 1402 but it was %ld", (long)error.code);
-                
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
+            
+            XCTAssertNil(config, @"Expected config to be nil when retrieving an invalid profile");
+            XCTAssertNil(error, @"Expected error to be nil when retrieving an invalid profile");
+            
+            self.lastTestSuccessful = YES;
+            self.callbackCompleted = YES;
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -1476,6 +1471,31 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
 }
 
 - (void)testInvalidFeatureConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
+        
+        // retrieve an invalid profile
+        [self.configService retrieveFeatureConfigWithIdentifier:@"invalid" completionBlock:^(AlfrescoFeatureConfig *config, NSError *error) {
+            
+            XCTAssertNil(config, @"Expected config to be nil when retrieving an invalid feature");
+            XCTAssertNil(error, @"Expected error to be nil when retrieving an invalid feature");
+            
+            self.lastTestSuccessful = YES;
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testInvalidFeaturesConfig
 {
     if (self.setUpSuccess)
     {
@@ -1547,20 +1567,12 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios";
         self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
         
         [self.configService retrieveViewConfigWithIdentifier:@"missing-view-type" completionBlock:^(AlfrescoViewConfig *config, NSError *error) {
-            if (config != nil)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = @"Expected retrieval of invalid view to fail";
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertNotNil(error, @"Expected to recieve an error when retrieving an invalid view");
-                XCTAssertTrue(error.code == kAlfrescoErrorCodeConfigNotFound, @"Expected the error code to be 1402 but it was %ld", (long)error.code);
-                
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
+            
+            XCTAssertNil(config, @"Expected config to be nil when retrieving an invalid view");
+            XCTAssertNil(error, @"Expected error to be nil when retrieving an invalid view");
+            
+            self.lastTestSuccessful = YES;
+            self.callbackCompleted = YES;
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];

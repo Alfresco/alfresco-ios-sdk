@@ -77,7 +77,7 @@
                 XCTAssertTrue([namePropertyDefiniton.summary isEqualToString:@"Name"],
                               @"Expected summary to be 'Name' but it was %@", namePropertyDefiniton.summary);
                 XCTAssertTrue(namePropertyDefiniton.type == AlfrescoPropertyTypeString,
-                              @"Expected type to be a string but it was %ld", namePropertyDefiniton.type);
+                              @"Expected type to be a string but it was %d", (int)namePropertyDefiniton.type);
                 XCTAssertTrue(namePropertyDefiniton.isRequired, @"Expected isRequired to be true");
                 XCTAssertFalse(namePropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
                 XCTAssertFalse(namePropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
@@ -95,7 +95,7 @@
                 XCTAssertTrue([creationDatePropertyDefiniton.summary isEqualToString:@"The object creation date"],
                               @"Expected summary to be 'The object creation date' but it was %@", creationDatePropertyDefiniton.summary);
                 XCTAssertTrue(creationDatePropertyDefiniton.type == AlfrescoPropertyTypeDateTime,
-                              @"Expected type to be a date time but it was %ld", creationDatePropertyDefiniton.type);
+                              @"Expected type to be a date time but it was %d", (int)creationDatePropertyDefiniton.type);
                 XCTAssertFalse(creationDatePropertyDefiniton.isRequired, @"Expected isRequired to be false");
                 XCTAssertTrue(creationDatePropertyDefiniton.isReadOnly, @"Expected isReadOnly to be true");
                 XCTAssertFalse(creationDatePropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
@@ -170,7 +170,7 @@
                 XCTAssertTrue([namePropertyDefiniton.summary isEqualToString:@"Name"],
                               @"Expected summary to be 'Name' but it was %@", namePropertyDefiniton.summary);
                 XCTAssertTrue(namePropertyDefiniton.type == AlfrescoPropertyTypeString,
-                              @"Expected type to be a string but it was %ld", namePropertyDefiniton.type);
+                              @"Expected type to be a string but it was %d", (int)namePropertyDefiniton.type);
                 XCTAssertTrue(namePropertyDefiniton.isRequired, @"Expected isRequired to be true");
                 XCTAssertFalse(namePropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
                 XCTAssertFalse(namePropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
@@ -188,7 +188,7 @@
                 XCTAssertTrue([creationDatePropertyDefiniton.summary isEqualToString:@"The object creation date"],
                               @"Expected summary to be 'The object creation date' but it was %@", creationDatePropertyDefiniton.summary);
                 XCTAssertTrue(creationDatePropertyDefiniton.type == AlfrescoPropertyTypeDateTime,
-                              @"Expected type to be a date time but it was %ld", creationDatePropertyDefiniton.type);
+                              @"Expected type to be a date time but it was %d", (int)creationDatePropertyDefiniton.type);
                 XCTAssertFalse(creationDatePropertyDefiniton.isRequired, @"Expected isRequired to be false");
                 XCTAssertTrue(creationDatePropertyDefiniton.isReadOnly, @"Expected isReadOnly to be true");
                 XCTAssertFalse(creationDatePropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
@@ -285,7 +285,7 @@
                     XCTAssertTrue([mandatoryPropertyDefiniton.summary isEqualToString:@"fdk:mandatory"],
                                   @"Expected summary to be 'fdk:mandatory' but it was %@", mandatoryPropertyDefiniton.summary);
                     XCTAssertTrue(mandatoryPropertyDefiniton.type == AlfrescoPropertyTypeString,
-                                  @"Expected type to be a string but it was %ld", mandatoryPropertyDefiniton.type);
+                                  @"Expected type to be a string but it was %d", (int)mandatoryPropertyDefiniton.type);
                     XCTAssertTrue(mandatoryPropertyDefiniton.isRequired, @"Expected isRequired to be true");
                     XCTAssertFalse(mandatoryPropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
                     XCTAssertFalse(mandatoryPropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
@@ -312,27 +312,27 @@
                     AlfrescoPropertyDefinition *longPropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"fdk:long"];
                     XCTAssertNotNil(longPropertyDefiniton, @"Expected to find a property definition for fdk:long");
                     XCTAssertTrue(longPropertyDefiniton.type == AlfrescoPropertyTypeInteger,
-                                  @"Expected type of fdk:long to be an integer but it was %ld", longPropertyDefiniton.type);
+                                  @"Expected type of fdk:long to be an integer but it was %d", (int)longPropertyDefiniton.type);
                     
                     AlfrescoPropertyDefinition *doublePropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"fdk:double"];
                     XCTAssertNotNil(doublePropertyDefiniton, @"Expected to find a property definition for fdk:double");
                     XCTAssertTrue(doublePropertyDefiniton.type == AlfrescoPropertyTypeDecimal,
-                                  @"Expected type of fdk:double to be a decimal but it was %ld", doublePropertyDefiniton.type);
+                                  @"Expected type of fdk:double to be a decimal but it was %d", (int)doublePropertyDefiniton.type);
                     
                     AlfrescoPropertyDefinition *datePropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"fdk:date"];
                     XCTAssertNotNil(datePropertyDefiniton, @"Expected to find a property definition for fdk:date");
                     XCTAssertTrue(datePropertyDefiniton.type == AlfrescoPropertyTypeDateTime,
-                                  @"Expected type of fdk:date to be a date but it was %ld", datePropertyDefiniton.type);
+                                  @"Expected type of fdk:date to be a date but it was %d", (int)datePropertyDefiniton.type);
                     
                     AlfrescoPropertyDefinition *noderefPropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"fdk:noderef"];
                     XCTAssertNotNil(noderefPropertyDefiniton, @"Expected to find a property definition for fdk:noderef");
                     XCTAssertTrue(noderefPropertyDefiniton.type == AlfrescoPropertyTypeId,
-                                  @"Expected type of fdk:noderef to be an id but it was %ld", noderefPropertyDefiniton.type);
+                                  @"Expected type of fdk:noderef to be an id but it was %d", (int)noderefPropertyDefiniton.type);
                     
                     AlfrescoPropertyDefinition *boolPropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"fdk:boolean"];
                     XCTAssertNotNil(boolPropertyDefiniton, @"Expected to find a property definition for fdk:boolean");
                     XCTAssertTrue(boolPropertyDefiniton.type == AlfrescoPropertyTypeBoolean,
-                                  @"Expected type of fdk:boolean to be a boolean but it was %ld", boolPropertyDefiniton.type);
+                                  @"Expected type of fdk:boolean to be a boolean but it was %d", (int)boolPropertyDefiniton.type);
                     
                     AlfrescoPropertyDefinition *multiValuedPropertyDefiniton = [typeDefinition propertyDefinitionForPropertyWithName:@"fdk:textMultiple"];
                     XCTAssertNotNil(multiValuedPropertyDefiniton, @"Expected to find a property definition for fdk:textMultiple");
@@ -395,7 +395,7 @@
                 XCTAssertTrue([xResolutionPropertyDefiniton.summary isEqualToString:@"Horizontal resolution in pixels per unit"],
                               @"Expected summary to be 'Horizontal resolution in pixels per unit' but it was %@", xResolutionPropertyDefiniton.summary);
                 XCTAssertTrue(xResolutionPropertyDefiniton.type == AlfrescoPropertyTypeDecimal,
-                              @"Expected type to be a decimal but it was %ld", xResolutionPropertyDefiniton.type);
+                              @"Expected type to be a decimal but it was %d", (int)xResolutionPropertyDefiniton.type);
                 XCTAssertFalse(xResolutionPropertyDefiniton.isRequired, @"Expected isRequired to be false");
                 XCTAssertFalse(xResolutionPropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
                 XCTAssertFalse(xResolutionPropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
@@ -510,7 +510,7 @@
                 // make sure the error is as expected
                 XCTAssertNotNil(docTypeDefError, @"Expected to recieve an error");
                 XCTAssertTrue(docTypeDefError.code == kAlfrescoErrorCodeModelDefinitionNotFound,
-                              @"Expected the error code to be 1301 but was %lu", docTypeDefError.code);
+                              @"Expected the error code to be 1301 but was %lu", (unsigned long)docTypeDefError.code);
                 
                 // make sure an invalid folder type name gives an error
                 [self.modelDefinitionService retrieveDefinitionForFolderType:@"invalid:type" completionBlock:^(AlfrescoFolderTypeDefinition *folderTypeDefinition, NSError *folderTypeDefError) {
@@ -519,7 +519,7 @@
                         // make sure the error is as expected
                         XCTAssertNotNil(folderTypeDefError, @"Expected to recieve an error");
                         XCTAssertTrue(folderTypeDefError.code == kAlfrescoErrorCodeModelDefinitionNotFound,
-                                      @"Expected the error code to be 1301 but was %lu", folderTypeDefError.code);
+                                      @"Expected the error code to be 1301 but was %lu", (unsigned long)folderTypeDefError.code);
                         
                         // make sure an invalid aspect name gives an error
                         [self.modelDefinitionService retrieveDefinitionForAspect:@"invalid:type" completionBlock:^(AlfrescoAspectDefinition *aspectDefinition, NSError *aspectDefError) {
@@ -528,7 +528,7 @@
                                 // make sure the error is as expected
                                 XCTAssertNotNil(aspectDefError, @"Expected to recieve an error");
                                 XCTAssertTrue(aspectDefError.code == kAlfrescoErrorCodeModelDefinitionNotFound,
-                                              @"Expected the error code to be 1301 but was %lu", aspectDefError.code);
+                                              @"Expected the error code to be 1301 but was %lu", (unsigned long)aspectDefError.code);
                                 
                                 self.lastTestSuccessful = YES;
                                 self.callbackCompleted = YES;
@@ -625,7 +625,7 @@
                 XCTAssertTrue([titlePropertyDefiniton.summary isEqualToString:@"Content Title"],
                               @"Expected summary to be 'Content Title' but it was %@", titlePropertyDefiniton.summary);
                 XCTAssertTrue(titlePropertyDefiniton.type == AlfrescoPropertyTypeString,
-                              @"Expected type to be a string but it was %ld", titlePropertyDefiniton.type);
+                              @"Expected type to be a string but it was %d", (int)titlePropertyDefiniton.type);
                 XCTAssertFalse(titlePropertyDefiniton.isRequired, @"Expected isRequired to be false");
                 XCTAssertFalse(titlePropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
                 XCTAssertFalse(titlePropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
@@ -698,7 +698,7 @@
                 XCTAssertTrue([titlePropertyDefiniton.summary isEqualToString:@"Content Title"],
                               @"Expected summary to be 'Content Title' but it was %@", titlePropertyDefiniton.summary);
                 XCTAssertTrue(titlePropertyDefiniton.type == AlfrescoPropertyTypeString,
-                              @"Expected type to be a string but it was %ld", titlePropertyDefiniton.type);
+                              @"Expected type to be a string but it was %d", (int)titlePropertyDefiniton.type);
                 XCTAssertFalse(titlePropertyDefiniton.isRequired, @"Expected isRequired to be false");
                 XCTAssertFalse(titlePropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
                 XCTAssertFalse(titlePropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");

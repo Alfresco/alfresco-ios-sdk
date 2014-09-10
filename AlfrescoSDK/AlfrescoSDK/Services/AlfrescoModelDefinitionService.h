@@ -20,17 +20,6 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoSession.h"
-#import "AlfrescoDocumentTypeDefinition.h"
-#import "AlfrescoFolderTypeDefinition.h"
-#import "AlfrescoTaskTypeDefinition.h"
-#import "AlfrescoAspectDefinition.h"
-
-// TODO: move to public constants file...
-typedef void (^AlfrescoDocumentTypeDefinitionCompletionBlock)(AlfrescoDocumentTypeDefinition *typeDefinition, NSError *error);
-typedef void (^AlfrescoFolderTypeDefinitionCompletionBlock)(AlfrescoFolderTypeDefinition *typeDefinition, NSError *error);
-typedef void (^AlfrescoTaskTypeDefinitionCompletionBlock)(AlfrescoTaskTypeDefinition *typeDefinition, NSError *error);
-typedef void (^AlfrescoAspectDefinitionCompletionBlock)(AlfrescoAspectDefinition *aspectDefinition, NSError *error);
-
 
 @interface AlfrescoModelDefinitionService : NSObject
 

@@ -40,9 +40,9 @@ NSString * const kAlfrescoErrorDescriptionRefreshTokenInvalid = @"Refresh token 
 NSString * const kAlfrescoErrorDescriptionAPIRateLimitExceeded = @"API rate limit exceeded";
 
 NSString * const kAlfrescoErrorDescriptionJSONParsing = @"JSON Data parsing Error";
-NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON Data are nil/empty";
-NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntry = @"JSON Data: missing entry element";
-NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntries = @"JSON Data: missing entries element";
+NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON data is either nil or empty";
+NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntry = @"JSON data is missing an entry property";
+NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntries = @"JSON data is missing an entries property";
 
 NSString * const kAlfrescoErrorDescriptionComment = @"Comment Service Error";
 NSString * const kAlfrescoErrorDescriptionCommentNoCommentFound = @"Comment Service Error: No Comments were found";
@@ -89,7 +89,6 @@ NSString * const kAlfrescoErrorDescriptionModelDefinitionNotFound = @"Model Defi
 
 NSString * const kAlfrescoErrorDescriptionConfig = @"Config Service Error";
 NSString * const kAlfrescoErrorDescriptionConfigInitializationFailed = @"Config Service Error: Initialization Failed";
-NSString * const kAlfrescoErrorDescriptionConfigNotFound = @"Config Service Error: Requested configuration was not found.";
 
 // Keys used in userInfo dictionary
 NSString * const kAlfrescoErrorKeyHTTPResponseCode = @"org.alfresco.mobile.error.http.response.code";
@@ -410,9 +409,6 @@ NSString * const kAlfrescoErrorKeyHTTPResponseBody = @"org.alfresco.mobile.error
             break;
         case kAlfrescoErrorCodeConfigInitializationFailed:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionConfigInitializationFailed;
-            break;
-        case kAlfrescoErrorCodeConfigNotFound:
-            alfrescoErrorDescription = kAlfrescoErrorDescriptionConfigNotFound;
             break;
         default:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionUnknown;

@@ -13,14 +13,14 @@
         "default":
         {
             "default": true,
-            "label-id": "Default Profile",
-            "description-id": "Description of the Default Profile",
+            "label-id": "profile.default.label",
+            "description-id": "profile.default.description",
             "root-view-id": "root-navigation"
         },
         "custom":
         {
-            "label-id": "Custom Profile",
-            "description-id": "Description of the custom Profile",
+            "label-id": "profile.custom.label",
+            "description-id": "profile.custom.description",
             "root-view-id": "views-menu-default"
         }
     },
@@ -28,13 +28,13 @@
     [
         {
             "id": "com.alfresco.client.feature.dataprotection",
-            "label-id": "Data Protection",
-            "description-id": "Enable data protection by default for all account"
+            "label-id": "feature.data-protection.label",
+            "description-id": "feature.data-protection.description"
         },
         {
              "id": "com.alfresco.client.feature.storage",
-             "label-id": "Storage",
-             "description-id": "Define where to store the information in general"
+             "label-id": "feature.storgage.label",
+             "description-id": "feature.storgage.description"
         }
     ],
     "view-groups":
