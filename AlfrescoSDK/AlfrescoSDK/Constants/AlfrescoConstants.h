@@ -41,6 +41,10 @@
 #import "AlfrescoRepositoryConfig.h"
 #import "AlfrescoViewConfig.h"
 #import "AlfrescoViewGroupConfig.h"
+#import "AlfrescoDocumentTypeDefinition.h"
+#import "AlfrescoFolderTypeDefinition.h"
+#import "AlfrescoTaskTypeDefinition.h"
+#import "AlfrescoAspectDefinition.h"
 
 @protocol AlfrescoSession;
 /** The AlfrescoConstants used in the SDK.
@@ -88,6 +92,11 @@ typedef void (^AlfrescoProfileConfigCompletionBlock)(AlfrescoProfileConfig *conf
 typedef void (^AlfrescoRepositoryConfigCompletionBlock)(AlfrescoRepositoryConfig *config, NSError *error);
 typedef void (^AlfrescoViewConfigCompletionBlock)(AlfrescoViewConfig *config, NSError *error);
 typedef void (^AlfrescoViewGroupConfigCompletionBlock)(AlfrescoViewGroupConfig *config, NSError *error);
+// model definition
+typedef void (^AlfrescoDocumentTypeDefinitionCompletionBlock)(AlfrescoDocumentTypeDefinition *typeDefinition, NSError *error);
+typedef void (^AlfrescoFolderTypeDefinitionCompletionBlock)(AlfrescoFolderTypeDefinition *typeDefinition, NSError *error);
+typedef void (^AlfrescoTaskTypeDefinitionCompletionBlock)(AlfrescoTaskTypeDefinition *typeDefinition, NSError *error);
+typedef void (^AlfrescoAspectDefinitionCompletionBlock)(AlfrescoAspectDefinition *aspectDefinition, NSError *error);
 
 /**---------------------------------------------------------------------------------------
  * @name Session parameters
