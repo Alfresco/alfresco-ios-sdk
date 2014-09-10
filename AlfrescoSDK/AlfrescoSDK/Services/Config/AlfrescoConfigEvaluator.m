@@ -98,6 +98,7 @@
 
 @end
 
+// TODO: replace this implementation with AlfrescoRepositoryCapabilitiesEvaluator
 @implementation AlfrescoRepositoryVersionEvaluator
 
 - (BOOL)evaluate:(AlfrescoConfigScope *)scope
@@ -108,8 +109,6 @@
     {
         AlfrescoRepositoryInfo *repoInfo = self.session.repositoryInfo;
         NSString *edition = self.parameters[kAlfrescoConfigEvaluatorParameterEdition];
-     
-        // TODO: move this to Util methods and fix RepositoryInfo to handle community letter
         
         // check edition first
         if (edition == nil || [edition isEqualToString:repoInfo.edition])
@@ -143,7 +142,7 @@
                     }
                     else if ([repoInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity])
                     {
-                        // TODO: handle a, b, c, d versions
+                        // handle a, b, c, d versions
                     }
                 }
                             

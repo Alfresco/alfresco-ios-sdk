@@ -35,8 +35,8 @@
 #import "AlfrescoWorkflowConfig.h"
 
 /**
- The ConfigService retrieves JSON based configuration data either from the Data Dictionary
- in the connected repository or from a local file containing configuration data.
+ The AlfrescoConfigService allows apps to behave and provide capabilities based upon a 
+ configuration file persisted in the repository.
  */
 @interface AlfrescoConfigService : NSObject
 

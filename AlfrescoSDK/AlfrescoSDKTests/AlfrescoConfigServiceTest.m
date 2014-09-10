@@ -999,8 +999,8 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios.test";
                 AlfrescoFieldConfig *nameField = typePropertiesGroup.items[0];
                 XCTAssertTrue([nameField.modelIdentifier isEqualToString:@"cm:name"],
                               @"Expected first field to be cm:name but was %@", nameField.identifier);
-                XCTAssertTrue([nameField.label isEqualToString:@"cm_contentmodel.property.cm_name.title"],
-                              @"Expected first field to have label of 'cm_contentmodel.property.cm_name.title' but was %@", nameField.label);
+                XCTAssertTrue([nameField.label isEqualToString:@"Name"],
+                              @"Expected first field to have label of 'Name' but was %@", nameField.label);
                 
                 // get the field config for the aspect properties group
                 AlfrescoFieldGroupConfig *aspectPropertiesGroup = config.items[1];
@@ -1010,14 +1010,14 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios.test";
                 AlfrescoFieldConfig *latitudeField = aspectPropertiesGroup.items[0];
                 XCTAssertTrue([latitudeField.modelIdentifier isEqualToString:@"cm:latitude"],
                               @"Expected first aspect field to be cm:latitude but was %@", latitudeField.identifier);
-                XCTAssertTrue([latitudeField.label isEqualToString:@"cm_contentmodel.property.cm_latitude.title"],
-                              @"Expected first aspect field to have label of 'cm_contentmodel.property.cm_latitude.title' but was %@", latitudeField.label);
+                XCTAssertTrue([latitudeField.label isEqualToString:@"Latitude"],
+                              @"Expected first aspect field to have label of 'Latitude' but was %@", latitudeField.label);
                 
                 AlfrescoFieldConfig *longitudeField = aspectPropertiesGroup.items[1];
                 XCTAssertTrue([longitudeField.modelIdentifier isEqualToString:@"cm:longitude"],
                               @"Expected second aspect field to be cm:longitude but was %@", longitudeField.identifier);
-                XCTAssertTrue([longitudeField.label isEqualToString:@"cm_contentmodel.property.cm_longitude.title"],
-                              @"Expected second aspect field to have label of 'cm_contentmodel.property.cm_longitude.title' but was %@", longitudeField.label);
+                XCTAssertTrue([longitudeField.label isEqualToString:@"Longitude"],
+                              @"Expected second aspect field to have label of 'Longitude' but was %@", longitudeField.label);
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -1421,20 +1421,12 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios.test";
         
         // retrieve an invalid profile
         [self.configService retrieveProfileWithIdentifier:@"invalid" completionBlock:^(AlfrescoProfileConfig *config, NSError *error) {
-            if (config != nil)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = @"Expected retrieval of invalid profile to fail";
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertNotNil(error, @"Expected to recieve an error when retrieving an invalid profile");
-                XCTAssertTrue(error.code == kAlfrescoErrorCodeConfigNotFound, @"Expected the error code to be 1402 but it was %ld", (long)error.code);
-                
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
+            
+            XCTAssertNil(config, @"Expected config to be nil when retrieving an invalid profile");
+            XCTAssertNil(error, @"Expected error to be nil when retrieving an invalid profile");
+            
+            self.lastTestSuccessful = YES;
+            self.callbackCompleted = YES;
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
@@ -1479,6 +1471,31 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios.test";
 }
 
 - (void)testInvalidFeatureConfig
+{
+    if (self.setUpSuccess)
+    {
+        self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
+        
+        // retrieve an invalid profile
+        [self.configService retrieveFeatureConfigWithIdentifier:@"invalid" completionBlock:^(AlfrescoFeatureConfig *config, NSError *error) {
+            
+            XCTAssertNil(config, @"Expected config to be nil when retrieving an invalid feature");
+            XCTAssertNil(error, @"Expected error to be nil when retrieving an invalid feature");
+            
+            self.lastTestSuccessful = YES;
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testInvalidFeaturesConfig
 {
     if (self.setUpSuccess)
     {
@@ -1550,20 +1567,12 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios.test";
         self.configService = [[AlfrescoConfigService alloc] initWithDictionary:[self dictionaryForConfigServiceInvalidTests]];
         
         [self.configService retrieveViewConfigWithIdentifier:@"missing-view-type" completionBlock:^(AlfrescoViewConfig *config, NSError *error) {
-            if (config != nil)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = @"Expected retrieval of invalid view to fail";
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertNotNil(error, @"Expected to recieve an error when retrieving an invalid view");
-                XCTAssertTrue(error.code == kAlfrescoErrorCodeConfigNotFound, @"Expected the error code to be 1402 but it was %ld", (long)error.code);
-                
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
+            
+            XCTAssertNil(config, @"Expected config to be nil when retrieving an invalid view");
+            XCTAssertNil(error, @"Expected error to be nil when retrieving an invalid view");
+            
+            self.lastTestSuccessful = YES;
+            self.callbackCompleted = YES;
         }];
         
         [self waitUntilCompleteWithFixedTimeInterval];
