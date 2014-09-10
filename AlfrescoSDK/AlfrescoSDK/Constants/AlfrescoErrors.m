@@ -40,9 +40,9 @@ NSString * const kAlfrescoErrorDescriptionRefreshTokenInvalid = @"Refresh token 
 NSString * const kAlfrescoErrorDescriptionAPIRateLimitExceeded = @"API rate limit exceeded";
 
 NSString * const kAlfrescoErrorDescriptionJSONParsing = @"JSON Data parsing Error";
-NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON Data are nil/empty";
-NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntry = @"JSON Data: missing entry element";
-NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntries = @"JSON Data: missing entries element";
+NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON data is either nil or empty";
+NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntry = @"JSON data is missing an entry property";
+NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntries = @"JSON data is missing an entries property";
 
 NSString * const kAlfrescoErrorDescriptionComment = @"Comment Service Error";
 NSString * const kAlfrescoErrorDescriptionCommentNoCommentFound = @"Comment Service Error: No Comments were found";

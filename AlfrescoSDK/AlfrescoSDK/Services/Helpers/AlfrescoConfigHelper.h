@@ -27,10 +27,10 @@
 @interface AlfrescoConfigHelper : NSObject
 
 @property (nonatomic, strong, readonly) NSDictionary *json;
-@property (nonatomic, strong, readonly) NSDictionary *messages;
+@property (nonatomic, strong, readonly) NSBundle *bundle;
 @property (nonatomic, strong, readonly) NSDictionary *evaluators;
 
-- (instancetype)initWithJSON:(NSDictionary *)json messages:(NSDictionary *)messages evaluators:(NSDictionary *)evaluators;
+- (instancetype)initWithJSON:(NSDictionary *)json bundle:(NSBundle *)bundle evaluators:(NSDictionary *)evaluators;
 
 - (void)parse;
 

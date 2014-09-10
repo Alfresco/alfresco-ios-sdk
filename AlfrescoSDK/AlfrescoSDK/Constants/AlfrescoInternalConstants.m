@@ -466,6 +466,8 @@ NSString * const kAlfrescoJSONField = @"field";
 NSString * const kAlfrescoJSONFields = @"fields";
 NSString * const kAlfrescoJSONModelId = @"model-id";
 
+NSString * const kAlfrescoConfigServiceParameterFileName = @"org.alfresco.mobile.internal.config.file.name";
+NSString * const kAlfrescoConfigServiceDefaultFileName = @"config.json";
 NSString * const kAlfrescoConfigProfileDefaultIdentifier = @"default";
 NSString * const kAlfrescoConfigProfileDefaultLabel = @"Default";
 NSString * const kAlfrescoConfigFormTypePrefix = @"type:";

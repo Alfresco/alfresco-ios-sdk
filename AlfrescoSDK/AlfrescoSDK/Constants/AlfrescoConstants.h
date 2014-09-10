@@ -209,7 +209,7 @@ extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoConfigServiceParameterApplicationId;
 extern NSString * const kAlfrescoConfigServiceParameterProfileId;
-extern NSString * const kAlfrescoConfigServiceParameterLocalFile;
+extern NSString * const kAlfrescoConfigServiceParameterFolder;
 
 extern NSString * const kAlfrescoConfigScopeContextNode;
 extern NSString * const kAlfrescoConfigScopeContextFormMode;

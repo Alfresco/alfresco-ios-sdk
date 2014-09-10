@@ -46,6 +46,7 @@
 @property (nonatomic, strong) NSURL *localFileURL;
 
 // cached configuration
+@property (nonatomic, strong) NSBundle *stringsBundle;
 @property (nonatomic, strong) NSDictionary *evaluators;
 @property (nonatomic, strong) AlfrescoConfigInfo *configInfo;
 @property (nonatomic, strong) AlfrescoRepositoryConfig *repositoryConfig;
@@ -113,8 +114,8 @@
             // pull parameters from session
             self.applicationId = [self.session objectForParameter:kAlfrescoConfigServiceParameterApplicationId];
             
-            // TODO: Determine if this is the correct location and retrieve via a CMIS query or use the internal non localised path
-            NSString *configPath = [NSString stringWithFormat:@"/Data Dictionary/Client Configuration/Mobile/%@/config.json", self.applicationId];
+            // TODO: use the internal non localised path, this may require us to use a query
+            NSString *configPath = [NSString stringWithFormat:@"/Data Dictionary/Client Configuration/%@/config.json", self.applicationId];
             
             // retrieve the configuration content
             AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.session];
@@ -125,6 +126,10 @@
                     AlfrescoRequest *contentRequest = [docFolderService retrieveContentOfDocument:(AlfrescoDocument*)configNode completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveContentError) {
                         if (configNode != nil)
                         {
+                            // TODO: pull all *.strings files from the server's Messages folder and create a bundle from them
+                            //self.stringsBundle = [self processRemoteMessageFiles:completionBlock];
+                            
+                            // process the JSON
                             [self processJSONData:[NSData dataWithContentsOfFile:contentFile.fileUrl.path]
                                   completionBlock:completionBlock];
                         }
@@ -148,10 +153,25 @@
         {
             // pull parameters from dictionary
             self.applicationId = self.parameters[kAlfrescoConfigServiceParameterApplicationId];
-            NSURL *localFile = self.parameters[kAlfrescoConfigServiceParameterLocalFile];
+            NSString *configFolder = self.parameters[kAlfrescoConfigServiceParameterFolder];
+            NSString *configFileName = self.parameters[kAlfrescoConfigServiceParameterFileName];
+            if (configFileName == nil)
+            {
+                configFileName = kAlfrescoConfigServiceDefaultFileName;
+            }
             
+            // strip the extension from the config file name
+            NSString* configFileNameWithoutExtension = [[configFileName lastPathComponent] stringByDeletingPathExtension];
+            
+            // build paths to config json and bundle
+            NSString *configFilePath = [NSString stringWithFormat:@"%@/%@", configFolder, configFileName];
+            NSString *bundleFilePath = [NSString stringWithFormat:@"%@/%@.bundle", configFolder, configFileNameWithoutExtension];
+            
+            // try and load the bundle holding the strings
+            self.stringsBundle = [NSBundle bundleWithPath:bundleFilePath];
+                    
             // process the JSON data from the local file
-            [self processJSONData:[NSData dataWithContentsOfFile:localFile.path]
+            [self processJSONData:[NSData dataWithContentsOfFile:configFilePath]
                   completionBlock:completionBlock];
             
             return nil;
@@ -180,19 +200,19 @@
             [self parseConfigInfo:jsonDictionary];
             [self parseRepositoryConfig:jsonDictionary];
             
-            self.profileConfigHelper = [[AlfrescoProfileConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
+            self.profileConfigHelper = [[AlfrescoProfileConfigHelper alloc] initWithJSON:jsonDictionary bundle:self.stringsBundle evaluators:self.evaluators];
             [self.profileConfigHelper parse];
             
-            self.featureConfigHelper = [[AlfrescoFeatureConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
+            self.featureConfigHelper = [[AlfrescoFeatureConfigHelper alloc] initWithJSON:jsonDictionary bundle:self.stringsBundle evaluators:self.evaluators];
             [self.featureConfigHelper parse];
             
-            self.creationConfigHelper = [[AlfrescoCreationConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
+            self.creationConfigHelper = [[AlfrescoCreationConfigHelper alloc] initWithJSON:jsonDictionary bundle:self.stringsBundle evaluators:self.evaluators];
             [self.creationConfigHelper parse];
             
-            self.viewConfigHelper = [[AlfrescoViewConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
+            self.viewConfigHelper = [[AlfrescoViewConfigHelper alloc] initWithJSON:jsonDictionary bundle:self.stringsBundle evaluators:self.evaluators];
             [self.viewConfigHelper parse];
             
-            self.formConfigHelper = [[AlfrescoFormConfigHelper alloc] initWithJSON:jsonDictionary messages:nil evaluators:self.evaluators];
+            self.formConfigHelper = [[AlfrescoFormConfigHelper alloc] initWithJSON:jsonDictionary bundle:self.stringsBundle evaluators:self.evaluators];
             [self.formConfigHelper parse];
             
             // TODO: Determine if we fail if anything mandatory is missing i.e. configInfo?

@@ -160,6 +160,7 @@
 		580800D318C0DCD0005D075A /* AlfrescoWorkflowProcessTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 580800CF18C0DCD0005D075A /* AlfrescoWorkflowProcessTests.m */; };
 		580800D418C0DCD0005D075A /* AlfrescoWorkflowTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 580800D118C0DCD0005D075A /* AlfrescoWorkflowTaskTests.m */; };
 		58176BBF18ED788B002CF79E /* AlfrescoUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 58176BBE18ED788B002CF79E /* AlfrescoUtilsTest.m */; };
+		582380BE19C065580011B39E /* valid-config-test.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 582380BD19C065580011B39E /* valid-config-test.bundle */; };
 		582AEA591989100300CD551D /* AlfrescoAspectDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410BA198679C20047EBDF /* AlfrescoAspectDefinition.h */; };
 		582AEA5A1989100300CD551D /* AlfrescoDocumentTypeDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410B1198679630047EBDF /* AlfrescoDocumentTypeDefinition.h */; };
 		582AEA5B1989100300CD551D /* AlfrescoFolderTypeDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410B4198679780047EBDF /* AlfrescoFolderTypeDefinition.h */; };
@@ -864,6 +865,7 @@
 		581FC4B61973D80B00045087 /* AlfrescoConfigServiceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoConfigServiceTest.m; sourceTree = "<group>"; };
 		581FC4B81973D96E00045087 /* AlfrescoConfigService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoConfigService.h; sourceTree = "<group>"; };
 		581FC4B91973D96E00045087 /* AlfrescoConfigService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoConfigService.m; sourceTree = "<group>"; };
+		582380BD19C065580011B39E /* valid-config-test.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "valid-config-test.bundle"; sourceTree = "<group>"; };
 		585E2CE919B872CD009A8778 /* AlfrescoConfigEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoConfigEvaluator.h; sourceTree = "<group>"; };
 		585E2CEA19B872CD009A8778 /* AlfrescoConfigEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoConfigEvaluator.m; sourceTree = "<group>"; };
 		585E2CED19B9F586009A8778 /* invalid-config-test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "invalid-config-test.json"; sourceTree = "<group>"; };
@@ -1384,6 +1386,7 @@
 				585E2CF319B9F879009A8778 /* empty-config-test.json */,
 				585E2CED19B9F586009A8778 /* invalid-config-test.json */,
 				585E2CEE19B9F586009A8778 /* valid-config-test.json */,
+				582380BD19C065580011B39E /* valid-config-test.bundle */,
 				4E7A81E716E0AF35000A4335 /* small_test.txt */,
 				4E24640E15ED1BC000168C5F /* millenium-dome.jpg */,
 				4E2271C615E62675006644DA /* versioned-quote.txt */,
@@ -1955,6 +1958,7 @@
 				585E2CF419B9F879009A8778 /* empty-config-test.json in Resources */,
 				4E24640F15ED1BC000168C5F /* millenium-dome.jpg in Resources */,
 				4E7A81E816E0AF35000A4335 /* small_test.txt in Resources */,
+				582380BE19C065580011B39E /* valid-config-test.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

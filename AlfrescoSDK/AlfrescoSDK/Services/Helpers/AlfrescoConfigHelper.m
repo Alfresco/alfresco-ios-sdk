@@ -33,20 +33,20 @@
 
 @interface AlfrescoConfigHelper ()
 @property (nonatomic, strong, readwrite) NSDictionary *json;
-@property (nonatomic, strong, readwrite) NSDictionary *messages;
+@property (nonatomic, strong, readwrite) NSBundle *bundle;
 @property (nonatomic, strong, readwrite) NSDictionary *evaluators;
 @end
 
 
 @implementation AlfrescoConfigHelper
 
-- (instancetype)initWithJSON:(NSDictionary *)json messages:(NSDictionary *)messages evaluators:(NSDictionary *)evaluators
+- (instancetype)initWithJSON:(NSDictionary *)json bundle:(NSBundle *)bundle evaluators:(NSDictionary *)evaluators
 {
     self = [super init];
     if (nil != self)
     {
         self.json = json;
-        self.messages = messages;
+        self.bundle = bundle;
         self.evaluators = evaluators;
     }
     
@@ -77,16 +77,26 @@
     NSString *labelId = json[kAlfrescoJSONLabelId];
     if (labelId != nil)
     {
-        // TODO: lookup label id from messages file
-        properties[kAlfrescoBaseConfigPropertyLabel] = labelId;
+        // lookup label id from bundle
+        NSString *label = labelId;
+        if (self.bundle != nil)
+        {
+            label = NSLocalizedStringWithDefaultValue(labelId, nil, self.bundle, labelId, nil);
+        }
+        properties[kAlfrescoBaseConfigPropertyLabel] = label;
     }
     
     // process description
     NSString *descriptionId = json[kAlfrescoJSONDescriptionId];
     if (descriptionId != nil)
     {
-        // TODO: lookup description id from messages file
-        properties[kAlfrescoBaseConfigPropertySummary] = descriptionId;
+        // lookup label id from bundle
+        NSString *description = descriptionId;
+        if (self.bundle != nil)
+        {
+            description = NSLocalizedStringWithDefaultValue(descriptionId, nil, self.bundle, descriptionId, nil);
+        }
+        properties[kAlfrescoBaseConfigPropertySummary] = description;
     }
     
     // process icon
