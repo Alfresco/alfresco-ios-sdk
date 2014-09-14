@@ -402,6 +402,7 @@
                                             // session creation is complete, call the original completion block
                                             AlfrescoLogDebug(@"Session established for user %@, repo version: %@ %@ Edition",
                                                              self.personIdentifier, self.repositoryInfo.version, self.repositoryInfo.edition);
+                                            AlfrescoLogDebug(@"Using patched version of ObjectiveCMIS 0.3");
                                             completionBlock(self, nil);
                                         }
                                     }];
@@ -411,6 +412,7 @@
                                     // session creation is complete, call the original completion block
                                     AlfrescoLogDebug(@"Session established for user %@, repo version: %@ %@ Edition",
                                                      self.personIdentifier, self.repositoryInfo.version, self.repositoryInfo.edition);
+                                    AlfrescoLogDebug(@"Using patched version of ObjectiveCMIS 0.3");
                                     completionBlock(self, nil);
                                 }
                             }

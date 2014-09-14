@@ -169,6 +169,7 @@
 		58604DA118F2A2BC002B09A5 /* AlfrescoLegacyAPIRatingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 58604D9718F2A2BC002B09A5 /* AlfrescoLegacyAPIRatingService.m */; };
 		58604DA218F2A2BC002B09A5 /* AlfrescoLegacyAPISiteService.m in Sources */ = {isa = PBXBuildFile; fileRef = 58604D9918F2A2BC002B09A5 /* AlfrescoLegacyAPISiteService.m */; };
 		58604DA318F2A2BC002B09A5 /* AlfrescoLegacyAPITaggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 58604D9B18F2A2BC002B09A5 /* AlfrescoLegacyAPITaggingService.m */; };
+		5886D56D19C339AD002288C5 /* libObjectiveCMIS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5886D56C19C339AD002288C5 /* libObjectiveCMIS.a */; };
 		58E3B6E218D30BC500360B6A /* AlfrescoListingFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E3B6E118D30BC500360B6A /* AlfrescoListingFilter.m */; };
 		58F4646118BF6B9300C8A28D /* AlfrescoRepositoryInfoBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F4646018BF6B9300C8A28D /* AlfrescoRepositoryInfoBuilder.m */; };
 		58FE7B2A18D3713D00E28197 /* AlfrescoListingFilter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 58E3B6E018D30BC500360B6A /* AlfrescoListingFilter.h */; };
@@ -375,7 +376,7 @@
 		4EA2AE4616DE25DE0053D05D /* CMISLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISLog.h; sourceTree = "<group>"; };
 		4EA6D4E715D2B444004059AF /* AlfrescoSortingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSortingUtils.h; sourceTree = "<group>"; };
 		4EA6D4E815D2B444004059AF /* AlfrescoSortingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSortingUtils.m; sourceTree = "<group>"; };
-		4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.1-debug.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAlfrescoSDKv1.3.1-debug.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.2-debug.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAlfrescoSDKv1.3.2-debug.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB0769A15B00D8E00DF7DED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4EB0769E15B00D8E00DF7DED /* AlfrescoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "AlfrescoSDK-Prefix.pch"; sourceTree = "<group>"; };
 		4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfrescoSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -503,6 +504,7 @@
 		58604D9918F2A2BC002B09A5 /* AlfrescoLegacyAPISiteService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoLegacyAPISiteService.m; sourceTree = "<group>"; };
 		58604D9A18F2A2BC002B09A5 /* AlfrescoLegacyAPITaggingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoLegacyAPITaggingService.h; sourceTree = "<group>"; };
 		58604D9B18F2A2BC002B09A5 /* AlfrescoLegacyAPITaggingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoLegacyAPITaggingService.m; sourceTree = "<group>"; };
+		5886D56C19C339AD002288C5 /* libObjectiveCMIS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libObjectiveCMIS.a; path = CMIS/libObjectiveCMIS.a; sourceTree = SOURCE_ROOT; };
 		58B9C8EB18E30692001D5C1B /* CMISAce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAce.h; sourceTree = "<group>"; };
 		58B9C8EC18E30692001D5C1B /* CMISAceParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAceParser.h; sourceTree = "<group>"; };
 		58B9C8ED18E30692001D5C1B /* CMISAcl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAcl.h; sourceTree = "<group>"; };
@@ -641,6 +643,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5886D56D19C339AD002288C5 /* libObjectiveCMIS.a in Frameworks */,
 				7300369E192A5C6A006733EC /* SystemConfiguration.framework in Frameworks */,
 				279C02851892CA2700BC8628 /* Foundation.framework in Frameworks */,
 			);
@@ -774,7 +777,7 @@
 		4EB0769815B00D8E00DF7DED /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.1-debug.a */,
+				4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.2-debug.a */,
 				4EB076A715B00D8E00DF7DED /* AlfrescoSDKTests.xctest */,
 			);
 			name = Products;
@@ -882,6 +885,7 @@
 		4EB076C415B00EE700DF7DED /* CMIS */ = {
 			isa = PBXGroup;
 			children = (
+				5886D56C19C339AD002288C5 /* libObjectiveCMIS.a */,
 				73CB831816C4187500B780A6 /* ObjectiveCMIS */,
 				4E39DF66163AA2D900F21DE6 /* AlfrescoCMIS */,
 			);
@@ -1233,7 +1237,7 @@
 			);
 			name = AlfrescoSDK;
 			productName = AlfrescoSDK;
-			productReference = 4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.1-debug.a */;
+			productReference = 4EB0769715B00D8E00DF7DED /* libAlfrescoSDKv1.3.2-debug.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		4EB076A615B00D8E00DF7DED /* AlfrescoSDKTests */ = {
@@ -1504,10 +1508,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/CMIS\"",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"\"$(SRCROOT)/CMIS/libObjectiveCMIS.a\"",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1611,10 +1612,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/CMIS\"",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"\"$(SRCROOT)/CMIS/libObjectiveCMIS-debug.a\"",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)-debug";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1635,10 +1633,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/CMIS\"",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"\"$(SRCROOT)/CMIS/libObjectiveCMIS.a\"",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
