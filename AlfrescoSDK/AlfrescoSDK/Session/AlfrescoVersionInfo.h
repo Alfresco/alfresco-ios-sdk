@@ -18,24 +18,16 @@
  *****************************************************************************
  */
 
-/** AlfrescoRepositoryInfoBuilder
- 
- Author: Gavin Cornwell (Alfresco)
- */
-
 #import <Foundation/Foundation.h>
-#import "AlfrescoRepositoryInfo.h"
-#import "AlfrescoVersionInfo.h"
-#import "CMISSession.h"
 
-@interface AlfrescoRepositoryInfoBuilder : NSObject
+@interface AlfrescoVersionInfo : NSObject
 
-@property (nonatomic, assign) BOOL isCloud;
-@property (nonatomic, strong) AlfrescoVersionInfo *versionInfo;
-@property (nonatomic, strong) CMISSession *cmisSession;
-@property (nonatomic, strong) NSData *workflowDefinitionData;
+@property (nonatomic, strong, readonly) NSString *edition;
+@property (nonatomic, strong, readonly) NSNumber *majorVersion;
+@property (nonatomic, strong, readonly) NSNumber *minorVersion;
+@property (nonatomic, strong, readonly) NSNumber *maintenanceVersion;
+@property (nonatomic, strong, readonly) NSString *buildNumber;
 
-// Builds an AlfrescoRepositoryInfo object using the currently held information.
-- (AlfrescoRepositoryInfo *)repositoryInfoFromCurrentState;
+- (instancetype)initWithVersionString:(NSString*)version edition:(NSString *)edition;
 
 @end

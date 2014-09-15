@@ -30,13 +30,10 @@
     NSString *identifier = self.cmisSession.repositoryInfo.identifier;
     NSString *summary = self.cmisSession.repositoryInfo.desc;
     NSString *version = self.cmisSession.repositoryInfo.productVersion;
-    NSArray *versionArray = [version componentsSeparatedByString:@"."];
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSNumber *majorVersionNumber = [formatter numberFromString:versionArray[0]];
-    NSNumber *minorVersionNumber = [formatter numberFromString:versionArray[1]];
-    NSArray *buildArray = [versionArray[2] componentsSeparatedByString:@"("];
-    NSNumber *maintenanceVersion = [formatter numberFromString:[buildArray[0] stringByReplacingOccurrencesOfString:@" " withString:@""]];
-    NSString *buildNumber =  [buildArray[1] stringByReplacingOccurrencesOfString:@")" withString:@""];
+    NSNumber *majorVersionNumber = self.versionInfo.majorVersion;
+    NSNumber *minorVersionNumber = self.versionInfo.minorVersion;
+    NSNumber *maintenanceVersion = self.versionInfo.maintenanceVersion;
+    NSString *buildNumber = self.versionInfo.buildNumber;
     
     NSMutableDictionary *capabilities = [NSMutableDictionary dictionary];
     if (self.isCloud)

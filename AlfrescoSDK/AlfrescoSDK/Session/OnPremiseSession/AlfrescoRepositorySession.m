@@ -18,19 +18,19 @@
 
 #import "AlfrescoRepositorySession.h"
 #import "AlfrescoInternalConstants.h"
-#import "CMISSession.h"
-#import "CMISStandardUntrustedSSLAuthenticationProvider.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
 #import "AlfrescoCMISObjectConverter.h"
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoLog.h"
-#import <objc/runtime.h>
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoRepositoryInfoBuilder.h"
 #import "AlfrescoCMISUtil.h"
 #import "CMISErrors.h"
+#import "CMISSession.h"
+#import "CMISStandardUntrustedSSLAuthenticationProvider.h"
+#import <objc/runtime.h>
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -170,118 +170,146 @@
                                   andPassword:(NSString *)password
                               completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
-    // start by looking for public API CMIS Atom binding
-    __block NSString *cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoPublicAPICMISAtomPath];
-    
-    // determine if we have to use a custom binding URL
-    BOOL useCustomBinding = NO;
-    NSString *customBindingURL = (self.sessionData)[kAlfrescoCMISBindingURL];
-    if (customBindingURL)
-    {
-        NSString *binding = ([customBindingURL hasPrefix:@"/"]) ? customBindingURL : [NSString stringWithFormat:@"/%@",customBindingURL];
-        cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:binding];
-        useCustomBinding = YES;
-    }
-    
-    // setup CMIS session parameters
-    CMISSessionParameters *cmisSessionParams = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
-    cmisSessionParams.username = username;
-    cmisSessionParams.password = password;
-    cmisSessionParams.atomPubUrl = [NSURL URLWithString:cmisUrl];
-    
-    // setup custom CMIS network provider, if necessary
-    if ((self.sessionData)[kAlfrescoCMISNetworkProvider])
-    {
-        id customCMISNetworkProvider = (self.sessionData)[kAlfrescoCMISNetworkProvider];
-        BOOL conformsToCMISNetworkProvider = [customCMISNetworkProvider conformsToProtocol:@protocol(CMISNetworkProvider)];
-        
-        if (conformsToCMISNetworkProvider)
+    // firstly call the "server" webscript to retrieve version information
+    AlfrescoRequest *request = [AlfrescoRequest new];
+    NSString *serverInfoString = [kAlfrescoLegacyAPIPath stringByAppendingString:kAlfrescoLegacyServerAPI];
+    NSURL *serverInfoUrl = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:serverInfoString];
+    [self.networkProvider executeRequestWithURL:serverInfoUrl session:self alfrescoRequest:request
+                                completionBlock:^(NSData *serverInfoData, NSError *serverInfoError) {
+        if (serverInfoData == nil)
         {
-            cmisSessionParams.networkProvider = (id<CMISNetworkProvider>)customCMISNetworkProvider;
+            AlfrescoLogError(@"Server info retrieval failed: %@", [serverInfoError localizedDescription]);
+            completionBlock(nil, serverInfoError);
         }
         else
         {
-            @throw([NSException exceptionWithName:@"Error with custom CMIS network provider"
-                                           reason:@"The custom network provider must be an object that conforms to the CMISNetworkProvider protocol"
-                                         userInfo:nil]);
-        }
-    }
-    
-    // setup SSL related features
-    BOOL allowUntrustedSSLCertificate = [(self.sessionData)[kAlfrescoAllowUntrustedSSLCertificate] boolValue];
-    BOOL connectUsingSSLCertificate = [(self.sessionData)[kAlfrescoConnectUsingClientSSLCertificate] boolValue];
-    
-    if (connectUsingSSLCertificate)
-    {
-        // if client certificates are required, certificate credentials need to be setup for auth provider
-        NSURLCredential *credential = (self.sessionData)[kAlfrescoClientCertificateCredentials];
-        CMISStandardAuthenticationProvider *authProvider = [[CMISStandardAuthenticationProvider alloc] initWithUsername:username password:password];
-        authProvider.credential = credential;
-        cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
-    }
-    else if (allowUntrustedSSLCertificate)
-    {
-        // If connections are allowed for untrusted SSL certificates, we need a custom CMISAuthenticationProvider: CMISStandardUntrustedSSLAuthenticationProvider
-        CMISStandardUntrustedSSLAuthenticationProvider *authProvider = [[CMISStandardUntrustedSSLAuthenticationProvider alloc] initWithUsername:username password:password];
-        cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
-    }
-    
-    // try to get repositories
-    AlfrescoRequest *request = [AlfrescoRequest new];
-    AlfrescoLogDebug(@"Attempting session creation using: %@", cmisUrl);
-    request.httpRequest = [CMISSession arrayOfRepositories:cmisSessionParams completionBlock:^(NSArray *repositories, NSError *error) {
-        if (repositories == nil)
-        {
-            // check that the failure wasn't due to incorrect credentials,
-            // little point carrying on with incorrect username/password!
-            if (error.code == kCMISErrorCodeUnauthorized)
+            // extract version info from the response
+            NSError *parseError = nil;
+            id serverInfoDictionary = [NSJSONSerialization JSONObjectWithData:serverInfoData options:0 error:&parseError];
+            if (serverInfoDictionary == nil)
             {
-                NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
-                completionBlock(nil, alfrescoError);
+                AlfrescoLogError(@"Failed to parse server version response", [parseError localizedDescription]);
+                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:parseError andAlfrescoErrorCode:kAlfrescoErrorCodeSession]);
             }
             else
             {
-                // public API failed so now try the legacy CMIS Atom API
-                cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyCMISAtomPath];
-                AlfrescoLogDebug(@"Attempting session creation using: %@", cmisUrl);
-                cmisSessionParams.atomPubUrl = [NSURL URLWithString:cmisUrl];
+                // get the edition string
+                NSString *editionKeyPath = [[NSString alloc] initWithFormat:@"%@.%@", kAlfrescoJSONData, kAlfrescoRepositoryEdition];
+                NSString *edition = [serverInfoDictionary valueForKeyPath:editionKeyPath];
+                
+                // get the version string
+                NSString *versionKeyPath = [[NSString alloc] initWithFormat:@"%@.%@", kAlfrescoJSONData, kAlfrescoRepositoryVersion];
+                NSString *version = [serverInfoDictionary valueForKeyPath:versionKeyPath];
+                
+                // create and store the version info
+                AlfrescoVersionInfo *versionInfo = [[AlfrescoVersionInfo alloc] initWithVersionString:version edition:edition];
+                self.repositoryInfoBuilder.versionInfo = versionInfo;
+                
+                // determine which CMIS entry point to use
+                NSString *cmisURL = [self cmisURLForAlfrescoVersion:versionInfo];
+                
+                // determine if we have to use a custom binding URL
+                BOOL useCustomBinding = NO;
+                NSString *customBindingURL = (self.sessionData)[kAlfrescoCMISBindingURL];
+                if (customBindingURL)
+                {
+                    NSString *binding = ([customBindingURL hasPrefix:@"/"]) ? customBindingURL : [NSString stringWithFormat:@"/%@",customBindingURL];
+                    cmisURL = [[self.baseUrl absoluteString] stringByAppendingString:binding];
+                    useCustomBinding = YES;
+                }
+                
+                // setup CMIS session parameters
+                CMISSessionParameters *cmisSessionParams = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
+                cmisSessionParams.username = username;
+                cmisSessionParams.password = password;
+                cmisSessionParams.atomPubUrl = [NSURL URLWithString:cmisURL];
+                
+                // setup custom CMIS network provider, if necessary
+                if ((self.sessionData)[kAlfrescoCMISNetworkProvider])
+                {
+                    id customCMISNetworkProvider = (self.sessionData)[kAlfrescoCMISNetworkProvider];
+                    BOOL conformsToCMISNetworkProvider = [customCMISNetworkProvider conformsToProtocol:@protocol(CMISNetworkProvider)];
+                    
+                    if (conformsToCMISNetworkProvider)
+                    {
+                        cmisSessionParams.networkProvider = (id<CMISNetworkProvider>)customCMISNetworkProvider;
+                    }
+                    else
+                    {
+                        @throw([NSException exceptionWithName:@"Error with custom CMIS network provider"
+                                                       reason:@"The custom network provider must be an object that conforms to the CMISNetworkProvider protocol"
+                                                     userInfo:nil]);
+                    }
+                }
+                
+                // setup SSL related features
+                BOOL allowUntrustedSSLCertificate = [(self.sessionData)[kAlfrescoAllowUntrustedSSLCertificate] boolValue];
+                BOOL connectUsingSSLCertificate = [(self.sessionData)[kAlfrescoConnectUsingClientSSLCertificate] boolValue];
+                
+                if (connectUsingSSLCertificate)
+                {
+                    // if client certificates are required, certificate credentials need to be setup for auth provider
+                    NSURLCredential *credential = (self.sessionData)[kAlfrescoClientCertificateCredentials];
+                    CMISStandardAuthenticationProvider *authProvider = [[CMISStandardAuthenticationProvider alloc] initWithUsername:username password:password];
+                    authProvider.credential = credential;
+                    cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
+                }
+                else if (allowUntrustedSSLCertificate)
+                {
+                    // If connections are allowed for untrusted SSL certificates, we need a custom CMISAuthenticationProvider: CMISStandardUntrustedSSLAuthenticationProvider
+                    CMISStandardUntrustedSSLAuthenticationProvider *authProvider = [[CMISStandardUntrustedSSLAuthenticationProvider alloc] initWithUsername:username password:password];
+                    cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
+                }
+
+                AlfrescoLogDebug(@"Retrieving repositories using: %@", cmisURL);
                 request.httpRequest = [CMISSession arrayOfRepositories:cmisSessionParams completionBlock:^(NSArray *repositories, NSError *error) {
                     if (repositories == nil)
                     {
-                        // legacy CMIS Atom API failed so now try the original webscript CMIS API
-                        cmisUrl = [[self.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyCMISPath];
-                        AlfrescoLogDebug(@"Attempting session creation using: %@", cmisUrl);
-                        cmisSessionParams.atomPubUrl = [NSURL URLWithString:cmisUrl];
-                        request.httpRequest = [CMISSession arrayOfRepositories:cmisSessionParams completionBlock:^(NSArray *repositories, NSError *error) {
-                            if (repositories == nil)
-                            {
-                                // we don't have any other entry points to try so give up and return error
-                                NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
-                                completionBlock(nil, alfrescoError);
-                            }
-                            else
-                            {
-                                // establish the session
-                                [self establishAlfrescoSessionWithSessionParameters:cmisSessionParams repositories:repositories completionBlock:completionBlock];
-                            }
-                        }];
+                        NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+                        completionBlock(nil, alfrescoError);
                     }
                     else
                     {
                         // establish the session
-                        [self establishAlfrescoSessionWithSessionParameters:cmisSessionParams repositories:repositories completionBlock:completionBlock];
+                        AlfrescoRequest *creationSessionRequest = [self establishAlfrescoSessionWithSessionParameters:cmisSessionParams
+                                                                                                         repositories:repositories
+                                                                                                      completionBlock:completionBlock];
+                        request.httpRequest = creationSessionRequest.httpRequest;
                     }
                 }];
             }
         }
-        else
-        {
-            // establish the session
-            [self establishAlfrescoSessionWithSessionParameters:cmisSessionParams repositories:repositories completionBlock:completionBlock];
-        }
     }];
     
     return request;
+}
+
+- (NSString *)cmisURLForAlfrescoVersion:(AlfrescoVersionInfo *)versionInfo
+{
+    // default CMIS URL is the public API atom binding
+    NSString *cmisPath = kAlfrescoPublicAPICMISAtomPath;
+    
+    if ([versionInfo.majorVersion intValue] == 3 && [versionInfo.minorVersion intValue] >= 4)
+    {
+        // use the legacy webscript CMIS implementation on 3.4.x servers
+        cmisPath = kAlfrescoLegacyCMISPath;
+    }
+    else if ([versionInfo.majorVersion intValue] == 4)
+    {
+        if ([versionInfo.minorVersion intValue] >= 2 &&
+            [versionInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise])
+        {
+            // 4.2 Enterprise and above can use the public API
+            cmisPath = kAlfrescoPublicAPICMISAtomPath;
+        }
+        else
+        {
+            // any other 4.x server must use the webscript OpenCMIS implementation
+            cmisPath = kAlfrescoLegacyCMISAtomPath;
+        }
+    }
+    
+    return [[self.baseUrl absoluteString] stringByAppendingString:cmisPath];
 }
 
 #pragma clang diagnostic push
@@ -303,7 +331,7 @@
     else
     {
         CMISRepositoryInfo *repoInfo = repositories[0];
-        AlfrescoLogDebug(@"Found repository with ID: %@", repoInfo.identifier);
+        AlfrescoLogDebug(@"Connecting to repository with id: %@", repoInfo.identifier);
     
         // setup CMIS session params
         cmisSessionParams.repositoryId = repoInfo.identifier;
@@ -350,72 +378,39 @@
                         NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:workflowDefinitionString];
                         [self.networkProvider executeRequestWithURL:url session:self alfrescoRequest:request
                                                     completionBlock:^(NSData *workflowData, NSError *workflowError) {
-                            if (workflowError)
+                            if (workflowData == nil)
                             {
-                                AlfrescoLogError(@"Workflow definitions retrieval failed: %@", [workflowError localizedDescription]);
-                                completionBlock(nil, workflowError);
+                                AlfrescoLogWarning(@"Workflow definitions retrieval failed: %@", [workflowError localizedDescription]);
                             }
-                            else
+                            
+                            // store the retrieved workflow definition data
+                            self.repositoryInfoBuilder.workflowDefinitionData = workflowData;
+                            
+                            // build the repositoryInfo object
+                            self.repositoryInfo = [self.repositoryInfoBuilder repositoryInfoFromCurrentState];
+                            
+                            // check the repository product name and edition are not malformed due to MNT-6405
+                            if ([self.repositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionUnknown])
                             {
-                                // store the retrieved workflow definition data
-                                self.repositoryInfoBuilder.workflowDefinitionData = workflowData;
+                                // edition has not be been populated correctly, retrieve it from the version info object
+                                // and update edition string by calling setter via performSelector
+                                SEL setEditionSelector = sel_registerName("setEdition:");
+                                [self.repositoryInfo performSelector:setEditionSelector withObject:self.repositoryInfoBuilder.versionInfo.edition];
                                 
-                                // build the repositoryInfo object
-                                self.repositoryInfo = [self.repositoryInfoBuilder repositoryInfoFromCurrentState];
-                                self.repositoryInfoBuilder = nil;
-                                
-                                // check the repository product name and edition are not malformed due to MNT-6405
-                                if ([self.repositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionUnknown])
-                                {
-                                    // edition has not be been populated correctly, retrieve it from legacy "server" API
-                                    NSString *serverInfoString = [kAlfrescoLegacyAPIPath stringByAppendingString:kAlfrescoLegacyServerAPI];
-                                    NSURL *serverInfoUrl = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:serverInfoString];
-                                    [self.networkProvider executeRequestWithURL:serverInfoUrl session:self alfrescoRequest:request
-                                                                completionBlock:^(NSData *serverInfoData, NSError *serverInfoError) {
-                                        if (serverInfoData == nil)
-                                        {
-                                            AlfrescoLogError(@"Server info retrieval failed: %@", [serverInfoError localizedDescription]);
-                                            completionBlock(nil, serverInfoError);
-                                        }
-                                        else
-                                        {
-                                            // extract the edition from the response
-                                            NSError *parseError = nil;
-                                            id serverInfoDictionary = [NSJSONSerialization JSONObjectWithData:serverInfoData options:0 error:&parseError];
-                                            if (serverInfoDictionary != nil)
-                                            {
-                                                NSString *keyPath = [[NSString alloc] initWithFormat:@"%@.%@", kAlfrescoJSONData, kAlfrescoRepositoryEdition];
-                                                NSString *edition = [serverInfoDictionary valueForKeyPath:keyPath];
-                                                if (edition != nil)
-                                                {
-                                                    // update edition string by calling setter via performSelector
-                                                    SEL setEditionSelector = sel_registerName("setEdition:");
-                                                    [self.repositoryInfo performSelector:setEditionSelector withObject:edition];
-                                                    
-                                                    // update the product name by calling setter via performSelector
-                                                    NSString *fixedProductName = [NSString stringWithFormat:kAlfrescoRepositoryNamePattern, self.repositoryInfo.edition];
-                                                    SEL setNameSelector = sel_registerName("setName:");
-                                                    [self.repositoryInfo performSelector:setNameSelector withObject:fixedProductName];
-                                                }
-                                            }
-                                            
-                                            // session creation is complete, call the original completion block
-                                            AlfrescoLogDebug(@"Session established for user %@, repo version: %@ %@ Edition",
-                                                             self.personIdentifier, self.repositoryInfo.version, self.repositoryInfo.edition);
-                                            AlfrescoLogDebug(@"Using patched version of ObjectiveCMIS 0.3");
-                                            completionBlock(self, nil);
-                                        }
-                                    }];
-                                }
-                                else
-                                {
-                                    // session creation is complete, call the original completion block
-                                    AlfrescoLogDebug(@"Session established for user %@, repo version: %@ %@ Edition",
-                                                     self.personIdentifier, self.repositoryInfo.version, self.repositoryInfo.edition);
-                                    AlfrescoLogDebug(@"Using patched version of ObjectiveCMIS 0.3");
-                                    completionBlock(self, nil);
-                                }
+                                // update the product name by calling setter via performSelector
+                                NSString *fixedProductName = [NSString stringWithFormat:kAlfrescoRepositoryNamePattern, self.repositoryInfo.edition];
+                                SEL setNameSelector = sel_registerName("setName:");
+                                [self.repositoryInfo performSelector:setNameSelector withObject:fixedProductName];
                             }
+                            
+                            // discard the repository builder
+                            self.repositoryInfoBuilder = nil;
+                            
+                            // session creation is complete, call the original completion block
+                            AlfrescoLogDebug(@"Session established for user %@, repo version: %@ %@ Edition",
+                                             self.personIdentifier, self.repositoryInfo.version, self.repositoryInfo.edition);
+                            AlfrescoLogDebug(@"Using patched version of ObjectiveCMIS 0.3");
+                            completionBlock(self, nil);
                         }];
                     }
                 }];
