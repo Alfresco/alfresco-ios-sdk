@@ -46,9 +46,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
            secretKey:(NSString *)secretKey
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
-    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:kAlfrescoCloudDefaultRedirectURI
@@ -64,9 +61,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
          redirectURI:(NSString *)redirectURI
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
-    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:redirectURI
@@ -82,9 +76,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
           parameters:(NSDictionary *)parameters
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
-    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:kAlfrescoCloudDefaultRedirectURI
@@ -101,17 +92,13 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
           parameters:(NSDictionary *)parameters
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
-    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
+    [AlfrescoErrors assertStringArgumentNotNilOrEmpty:apiKey argumentName:@"apiKey"];
+    [AlfrescoErrors assertStringArgumentNotNilOrEmpty:secretKey argumentName:@"secretKey"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
     self = [super init];
     if (nil != self)
     {
-        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:apiKey argumentName:@"apiKey"];
-        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:secretKey argumentName:@"secretKey"];
-        //        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:redirectURI argumentName:@"redirectURI"];
-        [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-        
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
         self.baseURL = [NSString stringWithFormat:@"%@%@", kAlfrescoCloudURL, kAlfrescoOAuthAuthorize];
@@ -124,8 +111,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
                 self.baseURL = [NSString stringWithFormat:@"%@%@",supplementedURL,kAlfrescoOAuthAuthorize];
             }
         }
-        
-        
     }
     return self;
 }
@@ -169,14 +154,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
 
 
 #if defined(__IPHONE_5_0) || defined (__IPHONE_5_1)
-- (void)viewDidUnload
-{
-    self.oauthData = nil;
-    self.connection = nil;
-    self.receivedData = nil;
-    [super viewDidUnload];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     return YES;
@@ -187,15 +164,6 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
 {
     [self.activityIndicator stopAnimating];
     [super viewWillDisappear:animated];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    self.oauthData = nil;
-    self.connection = nil;
-    self.receivedData = nil;
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma private methods
@@ -421,7 +389,28 @@ static NSString * const kOAuthRequestDenyAction = @"action=Deny";
         {
             helper = [[AlfrescoOAuthHelper alloc] initWithParameters:nil delegate:self.oauthDelegate];
         }
-        [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
+        
+        // MOBSDK-772: if, for some unknown reason, oauthData is nil, create and return an error
+        if (self.oauthData == nil)
+        {
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeOAuthDataMissing];
+            
+            AlfrescoLogError(@"OAuth data is missing!");
+            if (nil != self.oauthDelegate)
+            {
+                if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
+                {
+                    [self.oauthDelegate oauthLoginDidFailWithError:error];
+                }
+            }
+            
+            self.completionBlock(nil, error);
+            [self reloadAndReset];
+        }
+        else
+        {
+            [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
+        }
     }
     else
     {
