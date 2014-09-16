@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4EB0769615B00D8E00DF7DED"
-               BuildableName = "libAlfrescoSDKv1.3.1.a"
+               BuildableName = "libAlfrescoSDKv1.3.2.a"
                BlueprintName = "AlfrescoSDK"
                ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
             </BuildableReference>
@@ -63,6 +63,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4EB0769615B00D8E00DF7DED"
+            BuildableName = "libAlfrescoSDKv1.3.2.a"
+            BlueprintName = "AlfrescoSDK"
+            ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
