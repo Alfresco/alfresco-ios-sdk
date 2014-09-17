@@ -209,13 +209,11 @@
                 NSString *cmisURL = [self cmisURLForAlfrescoVersion:versionInfo];
                 
                 // determine if we have to use a custom binding URL
-                BOOL useCustomBinding = NO;
                 NSString *customBindingURL = (self.sessionData)[kAlfrescoCMISBindingURL];
                 if (customBindingURL)
                 {
                     NSString *binding = ([customBindingURL hasPrefix:@"/"]) ? customBindingURL : [NSString stringWithFormat:@"/%@",customBindingURL];
                     cmisURL = [[self.baseUrl absoluteString] stringByAppendingString:binding];
-                    useCustomBinding = YES;
                 }
                 
                 // setup CMIS session parameters
