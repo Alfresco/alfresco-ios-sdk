@@ -40,9 +40,6 @@
            secretKey:(NSString *)secretKey
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
-    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:kAlfrescoCloudDefaultRedirectURI
@@ -58,9 +55,6 @@
          redirectURI:(NSString *)redirectURI
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
-    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:redirectURI
@@ -76,9 +70,6 @@
           parameters:(NSDictionary *)parameters
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
-    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     return [self initWithAPIKey:apiKey
                       secretKey:secretKey
                     redirectURI:kAlfrescoCloudDefaultRedirectURI
@@ -95,17 +86,12 @@
           parameters:(NSDictionary *)parameters
      completionBlock:(AlfrescoOAuthCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:apiKey argumentName:@"apiKey"];
-    [AlfrescoErrors assertArgumentNotNil:secretKey argumentName:@"secretKey"];
+    [AlfrescoErrors assertStringArgumentNotNilOrEmpty:apiKey argumentName:@"apiKey"];
+    [AlfrescoErrors assertStringArgumentNotNilOrEmpty:secretKey argumentName:@"secretKey"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     self = [super init];
     if (nil != self)
     {
-        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:apiKey argumentName:@"apiKey"];
-        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:secretKey argumentName:@"secretKey"];
-        //        [AlfrescoErrors assertStringArgumentNotNilOrEmpty:redirectURI argumentName:@"redirectURI"];
-        [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-        
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
         self.baseURL = [AlfrescoOAuthHelper buildCloudURLFromParameters:parameters];
@@ -152,14 +138,6 @@
 
 
 #if defined(__IPHONE_5_0) || defined (__IPHONE_5_1)
-- (void)viewDidUnload
-{
-    self.oauthData = nil;
-    self.connection = nil;
-    self.receivedData = nil;
-    [super viewDidUnload];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     return YES;
@@ -170,14 +148,6 @@
 {
     [self.activityIndicator stopAnimating];
     [super viewWillDisappear:animated];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    self.oauthData = nil;
-    self.connection = nil;
-    self.receivedData = nil;
-    [super didReceiveMemoryWarning];
 }
 
 #pragma private methods
@@ -366,7 +336,28 @@
     if (nil != code)
     {
         self.hasValidAuthenticationCode = YES;
-        [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
+        
+        // MOBSDK-772: if, for some reason, oauthData is nil, create and return an error
+        if (self.oauthData == nil)
+        {
+            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeOAuthDataMissing];
+            
+            AlfrescoLogError(@"OAuth data is missing!");
+            if (nil != self.oauthDelegate)
+            {
+                if ([self.oauthDelegate respondsToSelector:@selector(oauthLoginDidFailWithError:)])
+                {
+                    [self.oauthDelegate oauthLoginDidFailWithError:error];
+                }
+            }
+            
+            self.completionBlock(nil, error);
+            [self reloadAndReset];
+        }
+        else
+        {
+            [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
+        }
     }
     else
     {

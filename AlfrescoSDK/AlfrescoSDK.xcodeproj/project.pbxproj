@@ -188,6 +188,9 @@
 		582AEA5F1989100300CD551D /* AlfrescoTaskTypeDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410B7198679920047EBDF /* AlfrescoTaskTypeDefinition.h */; };
 		582AEA601989100300CD551D /* AlfrescoConfigService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 581FC4B81973D96E00045087 /* AlfrescoConfigService.h */; };
 		582AEA611989100300CD551D /* AlfrescoModelDefinitionService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 588410C019868AEE0047EBDF /* AlfrescoModelDefinitionService.h */; };
+		5841357B19D03DAC0045CA34 /* AlfrescoVersionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5841357A19D03DAC0045CA34 /* AlfrescoVersionInfo.m */; };
+		5841357D19D045AD0045CA34 /* libObjectiveCMIS-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5841357C19D045AD0045CA34 /* libObjectiveCMIS-iOS.a */; };
+		5841357F19D045BC0045CA34 /* libObjectiveCMIS-OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5841357E19D045BC0045CA34 /* libObjectiveCMIS-OSX.a */; };
 		585E2CEF19B9F60B009A8778 /* invalid-config-test.json in Resources */ = {isa = PBXBuildFile; fileRef = 585E2CED19B9F586009A8778 /* invalid-config-test.json */; };
 		585E2CF019B9F60B009A8778 /* valid-config-test.json in Resources */ = {isa = PBXBuildFile; fileRef = 585E2CEE19B9F586009A8778 /* valid-config-test.json */; };
 		585E2CF119B9F60C009A8778 /* invalid-config-test.json in Resources */ = {isa = PBXBuildFile; fileRef = 585E2CED19B9F586009A8778 /* invalid-config-test.json */; };
@@ -888,6 +891,10 @@
 		582380D119C0813D0011B39E /* AlfrescoViewConfigHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoViewConfigHelper.m; sourceTree = "<group>"; };
 		582380E419C082220011B39E /* AlfrescoClientBasedConfigService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoClientBasedConfigService.h; sourceTree = "<group>"; };
 		582380E519C082220011B39E /* AlfrescoClientBasedConfigService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoClientBasedConfigService.m; sourceTree = "<group>"; };
+		5841357919D03DAC0045CA34 /* AlfrescoVersionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoVersionInfo.h; sourceTree = "<group>"; };
+		5841357A19D03DAC0045CA34 /* AlfrescoVersionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoVersionInfo.m; sourceTree = "<group>"; };
+		5841357C19D045AD0045CA34 /* libObjectiveCMIS-iOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libObjectiveCMIS-iOS.a"; path = "CMIS/libObjectiveCMIS-iOS.a"; sourceTree = SOURCE_ROOT; };
+		5841357E19D045BC0045CA34 /* libObjectiveCMIS-OSX.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libObjectiveCMIS-OSX.a"; path = "CMIS/libObjectiveCMIS-OSX.a"; sourceTree = SOURCE_ROOT; };
 		585E2CED19B9F586009A8778 /* invalid-config-test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "invalid-config-test.json"; sourceTree = "<group>"; };
 		585E2CEE19B9F586009A8778 /* valid-config-test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "valid-config-test.json"; sourceTree = "<group>"; };
 		585E2CF319B9F879009A8778 /* empty-config-test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "empty-config-test.json"; sourceTree = "<group>"; };
@@ -1134,6 +1141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7300369E192A5C6A006733EC /* SystemConfiguration.framework in Frameworks */,
+				5841357D19D045AD0045CA34 /* libObjectiveCMIS-iOS.a in Frameworks */,
 				279C02851892CA2700BC8628 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1168,6 +1176,7 @@
 			files = (
 				73D01DF5197FC3D00065E107 /* SystemConfiguration.framework in Frameworks */,
 				73D01DF6197FC3D00065E107 /* Foundation.framework in Frameworks */,
+				5841357F19D045BC0045CA34 /* libObjectiveCMIS-OSX.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1411,6 +1420,8 @@
 		4EB076C415B00EE700DF7DED /* CMIS */ = {
 			isa = PBXGroup;
 			children = (
+				5841357C19D045AD0045CA34 /* libObjectiveCMIS-iOS.a */,
+				5841357E19D045BC0045CA34 /* libObjectiveCMIS-OSX.a */,
 				739C91CB19801E2000C721D8 /* ObjectiveCMIS */,
 				4E39DF66163AA2D900F21DE6 /* AlfrescoCMIS */,
 			);
@@ -1534,6 +1545,8 @@
 				4EB0774E15B00EE700DF7DED /* AlfrescoBasicAuthenticationProvider.h */,
 				4EB0774F15B00EE700DF7DED /* AlfrescoBasicAuthenticationProvider.m */,
 				4EB0775215B00EE700DF7DED /* AlfrescoSession.h */,
+				5841357919D03DAC0045CA34 /* AlfrescoVersionInfo.h */,
+				5841357A19D03DAC0045CA34 /* AlfrescoVersionInfo.m */,
 				4E944AF615E3D67200E89D69 /* CloudSession */,
 				4E0457BE1608C0EE005A6C76 /* OAuth */,
 				4E944AF715E3D67F00E89D69 /* OnPremiseSession */,
@@ -1935,7 +1948,7 @@
 		4EB0768E15B00D8E00DF7DED /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = 4EB0769115B00D8E00DF7DED /* Build configuration list for PBXProject "AlfrescoSDK" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2068,6 +2081,7 @@
 				588410BC198679C20047EBDF /* AlfrescoAspectDefinition.m in Sources */,
 				58604D9F18F2A2BC002B09A5 /* AlfrescoLegacyAPIJoinSiteRequest.m in Sources */,
 				58604DA218F2A2BC002B09A5 /* AlfrescoLegacyAPISiteService.m in Sources */,
+				5841357B19D03DAC0045CA34 /* AlfrescoVersionInfo.m in Sources */,
 				58F4646118BF6B9300C8A28D /* AlfrescoRepositoryInfoBuilder.m in Sources */,
 				27B3A43818EC668A00925962 /* AlfrescoPublicAPISiteService.m in Sources */,
 				582380DC19C0813D0011B39E /* AlfrescoProfileConfigHelper.m in Sources */,
@@ -2375,8 +2389,10 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2407,11 +2423,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/CMIS\"",
 					"/Users/gcornwell/Development/devenv/projects/objectivecmis/build/Debug-universal",
+					"$(PROJECT_DIR)/CMIS",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"\"$(SRCROOT)/CMIS/libObjectiveCMIS-iOS.a\"",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2447,8 +2461,10 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2483,8 +2499,10 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2515,11 +2533,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/CMIS\"",
 					"/Users/gcornwell/Development/devenv/projects/objectivecmis/build/Debug-universal",
+					"$(PROJECT_DIR)/CMIS",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"\"$(SRCROOT)/CMIS/libObjectiveCMIS-iOS-debug.a\"",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)-debug";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2540,11 +2556,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/CMIS\"",
 					"/Users/gcornwell/Development/devenv/projects/objectivecmis/build/Debug-universal",
+					"$(PROJECT_DIR)/CMIS",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"\"$(SRCROOT)/CMIS/libObjectiveCMIS-iOS.a\"",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2638,6 +2652,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/AlfrescoSDK.dst;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -2646,12 +2661,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/CMIS\"",
+					"$(PROJECT_DIR)/CMIS",
 				);
 				MACH_O_TYPE = mh_dylib;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"\"$(SRCROOT)/CMIS/libObjectiveCMIS-OSX-debug.a\"",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)-debug";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -2664,6 +2677,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/AlfrescoSDK.dst;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -2672,12 +2686,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/CMIS\"",
+					"$(PROJECT_DIR)/CMIS",
 				);
 				MACH_O_TYPE = mh_dylib;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"\"$(SRCROOT)/CMIS/libObjectiveCMIS-OSX.a\"",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -2690,6 +2702,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/AlfrescoSDK.dst;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -2698,12 +2711,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/CMIS\"",
+					"$(PROJECT_DIR)/CMIS",
 				);
 				MACH_O_TYPE = mh_dylib;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"\"$(SRCROOT)/CMIS/libObjectiveCMIS-OSX.a\"",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)v$(ALFRESCO_SDK_VERSION)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
