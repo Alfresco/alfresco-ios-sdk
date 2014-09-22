@@ -18,10 +18,13 @@
 
 #import "AlfrescoUtilsTest.h"
 #import "AlfrescoConstants.h"
+#import "AlfrescoInternalConstants.h"
 #import "AlfrescoListingContext.h"
 #import "AlfrescoActivityStreamService.h"
 #import "AlfrescoCommentService.h"
+#import "AlfrescoConfigService.h"
 #import "AlfrescoDocumentFolderService.h"
+#import "AlfrescoModelDefinitionService.h"
 #import "AlfrescoPersonService.h"
 #import "AlfrescoRatingService.h"
 #import "AlfrescoSearchService.h"
@@ -30,6 +33,7 @@
 #import "AlfrescoVersionService.h"
 #import "AlfrescoWorkflowService.h"
 #import "AlfrescoObjectConverter.h"
+#import "AlfrescoVersionInfo.h"
 
 @implementation AlfrescoUtilsTest
 
@@ -89,8 +93,14 @@
     AlfrescoCommentService *commentService = [[AlfrescoCommentService alloc] initWithSession:nil];
     XCTAssertNil(commentService, @"Expected commentService to be nil as it was created with a nil session");
     
+    AlfrescoConfigService *configService = [[AlfrescoConfigService alloc] initWithSession:nil];
+    XCTAssertNil(configService, @"Expected configService to be nil as it was created with a nil session");
+    
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:nil];
     XCTAssertNil(docFolderService, @"Expected docFolderService to be nil as it was created with a nil session");
+    
+    AlfrescoModelDefinitionService *modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:nil];
+    XCTAssertNil(modelDefinitionService, @"Expected modelDefinitionService to be nil as it was created with a nil session");
     
     AlfrescoPersonService *personService = [[AlfrescoPersonService alloc] initWithSession:nil];
     XCTAssertNil(personService, @"Expected personService to be nil as it was created with a nil session");
@@ -162,6 +172,86 @@
                                                           withMappedKeys:@{@"id": @"id"}];
     XCTAssertTrue(targetDictionary.count == 1, @"Expected the target dictionary to have 1 item still but it had %lu", (long)targetDictionary.count);
     XCTAssertTrue([targetDictionary[@"id"] isEqualToString:@"123"], @"Expected target dictionary to still have the 'id' key");
+}
+
+- (void)testVersionInfo
+{
+    AlfrescoVersionInfo *test1 = [[AlfrescoVersionInfo alloc] initWithVersionString:@"3.4.10 (703)"
+                                                                            edition:kAlfrescoRepositoryEditionEnterprise];
+    XCTAssertTrue([test1.majorVersion intValue] == 3,
+                  @"Expected major version to be 3 but it was %@", test1.majorVersion);
+    XCTAssertTrue([test1.minorVersion intValue] == 4,
+                  @"Expected minor version to be 4 but it was %@", test1.minorVersion);
+    XCTAssertTrue([test1.maintenanceVersion intValue] == 10,
+                  @"Expected maintenance version to be 10 but it was %@", test1.maintenanceVersion);
+    XCTAssertTrue([test1.buildNumber isEqualToString:@"703"],
+                  @"Expected build number to be 703 but it was %@", test1.buildNumber);
+    
+    AlfrescoVersionInfo *test2 = [[AlfrescoVersionInfo alloc] initWithVersionString:@"4.0.2 (966)"
+                                                                            edition:kAlfrescoRepositoryEditionEnterprise];
+    XCTAssertTrue([test2.majorVersion intValue] == 4,
+                  @"Expected major version to be 4 but it was %@", test2.majorVersion);
+    XCTAssertTrue([test2.minorVersion intValue] == 0,
+                  @"Expected minor version to be 0 but it was %@", test2.minorVersion);
+    XCTAssertTrue([test2.maintenanceVersion intValue] == 2,
+                  @"Expected maintenance version to be 2 but it was %@", test2.maintenanceVersion);
+    XCTAssertTrue([test2.buildNumber isEqualToString:@"966"],
+                  @"Expected build number to be 966 but it was %@", test2.buildNumber);
+    
+    AlfrescoVersionInfo *test3 = [[AlfrescoVersionInfo alloc] initWithVersionString:@"4.2.0 (.3 r60922-b49)"
+                                                                            edition:kAlfrescoRepositoryEditionEnterprise];
+    XCTAssertTrue([test3.majorVersion intValue] == 4,
+                  @"Expected major version to be 4 but it was %@", test3.majorVersion);
+    XCTAssertTrue([test3.minorVersion intValue] == 2,
+                  @"Expected minor version to be 2 but it was %@", test3.minorVersion);
+    XCTAssertTrue([test3.maintenanceVersion intValue] == 0,
+                  @"Expected maintenance version to be 0 but it was %@", test3.maintenanceVersion);
+    XCTAssertTrue([test3.buildNumber isEqualToString:@".3 r60922-b49"],
+                  @"Expected build number to be '.3 r60922-b49' but it was %@", test3.buildNumber);
+    
+    AlfrescoVersionInfo *test4 = [[AlfrescoVersionInfo alloc] initWithVersionString:@"4.2.0 (@build-number@)"
+                                                                            edition:kAlfrescoRepositoryEditionCommunity];
+    XCTAssertTrue([test4.majorVersion intValue] == 4,
+                  @"Expected major version to be 4 but it was %@", test4.majorVersion);
+    XCTAssertTrue([test4.minorVersion intValue] == 2,
+                  @"Expected minor version to be 2 but it was %@", test4.minorVersion);
+    XCTAssertTrue([test4.maintenanceVersion intValue] == 0,
+                  @"Expected maintenance version to be 0 but it was %@", test4.maintenanceVersion);
+    XCTAssertTrue([test4.buildNumber isEqualToString:@"@build-number@"],
+                  @"Expected build number to be '@build-number@' but it was %@", test4.buildNumber);
+    
+    AlfrescoVersionInfo *test5 = [[AlfrescoVersionInfo alloc] initWithVersionString:@"4.1.0"
+                                                                            edition:kAlfrescoRepositoryEditionEnterprise];
+    XCTAssertTrue([test5.majorVersion intValue] == 4,
+                  @"Expected major version to be 4 but it was %@", test5.majorVersion);
+    XCTAssertTrue([test5.minorVersion intValue] == 1,
+                  @"Expected minor version to be 1 but it was %@", test5.minorVersion);
+    XCTAssertTrue([test5.maintenanceVersion intValue] == 0,
+                  @"Expected maintenance version to be 0 but it was %@", test5.maintenanceVersion);
+    XCTAssertNil(test5.buildNumber, @"Expected build number to be nil but it was %@", test5.buildNumber);
+    
+    AlfrescoVersionInfo *test6 = [[AlfrescoVersionInfo alloc] initWithVersionString:@"4.1"
+                                                                            edition:kAlfrescoRepositoryEditionEnterprise];
+    XCTAssertTrue([test6.majorVersion intValue] == 4,
+                  @"Expected major version to be 4 but it was %@", test6.majorVersion);
+    XCTAssertTrue([test6.minorVersion intValue] == 1,
+                  @"Expected minor version to be 1 but it was %@", test6.minorVersion);
+    XCTAssertNotNil(test6.maintenanceVersion);
+    XCTAssertTrue([test6.maintenanceVersion intValue] == 0,
+                  @"Expected maintenance version to be 0 but it was %@", test6.maintenanceVersion);
+    XCTAssertNil(test6.buildNumber, @"Expected build number to be nil but it was %@", test6.buildNumber);
+    
+    AlfrescoVersionInfo *test7 = [[AlfrescoVersionInfo alloc] initWithVersionString:@"5"
+                                                                            edition:kAlfrescoRepositoryEditionCommunity];
+    XCTAssertTrue([test7.majorVersion intValue] == 5,
+                  @"Expected major version to be 5 but it was %@", test7.majorVersion);
+    XCTAssertNotNil(test7.minorVersion);
+    XCTAssertTrue([test7.minorVersion intValue] == 0,
+                  @"Expected minor version to be 0 but it was %@", test7.minorVersion);
+    XCTAssertNotNil(test7.maintenanceVersion);
+    XCTAssertTrue([test7.maintenanceVersion intValue] == 0,
+                  @"Expected maintenance version to be 0 but it was %@", test7.maintenanceVersion);
+    XCTAssertNil(test7.buildNumber, @"Expected build number to be nil but it was %@", test7.buildNumber);
 }
 
 @end

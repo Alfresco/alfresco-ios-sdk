@@ -25,11 +25,13 @@
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoRepositoryInfo.h"
+#import "AlfrescoVersionInfo.h"
 #import "CMISSession.h"
 
 @interface AlfrescoRepositoryInfoBuilder : NSObject
 
 @property (nonatomic, assign) BOOL isCloud;
+@property (nonatomic, strong) AlfrescoVersionInfo *versionInfo;
 @property (nonatomic, strong) CMISSession *cmisSession;
 @property (nonatomic, strong) NSData *workflowDefinitionData;
 
