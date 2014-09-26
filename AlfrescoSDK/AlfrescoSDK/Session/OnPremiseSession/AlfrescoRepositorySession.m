@@ -222,6 +222,7 @@
                 cmisSessionParams.username = username;
                 cmisSessionParams.password = password;
                 cmisSessionParams.atomPubUrl = [NSURL URLWithString:cmisURL];
+                [cmisSessionParams setObject:@NO forKey:kCMISSessionParameterSendCookies];
                 
                 // setup custom CMIS network provider, if necessary
                 if ((self.sessionData)[kAlfrescoCMISNetworkProvider])

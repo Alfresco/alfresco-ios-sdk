@@ -65,6 +65,9 @@
     
     [urlRequest setHTTPMethod:method];
     
+    // never send cookies
+    urlRequest.HTTPShouldHandleCookies = NO;
+    
     [headers enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
         if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {

@@ -18,6 +18,7 @@
 
 #import "AlfrescoBaseTest.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoErrors.h"
 #import "CMISConstants.h"
 
 // kAlfrescoTestServersConfigDirectory is expected to be found in the user's home folder.
@@ -457,6 +458,15 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         if (underlyingError != nil)
         {
             message = [message stringByAppendingFormat:@" - %@", underlyingError];
+        }
+        else
+        {
+            // look for HTTP error code as a last resort
+            NSNumber *httpStatusCode = error.userInfo[kAlfrescoErrorKeyHTTPResponseCode];
+            if (httpStatusCode)
+            {
+                message = [message stringByAppendingFormat:@" (HTTP Status Code: %d)", [httpStatusCode intValue]];
+            }
         }
     }
     

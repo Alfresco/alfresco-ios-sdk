@@ -177,7 +177,7 @@
     [AlfrescoErrors assertArgumentNotNil:file argumentName:@"file"];
     [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
     [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:documentName argumentName:@"folderName"];
+    [AlfrescoErrors assertArgumentNotNil:documentName argumentName:@"documentName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     NSDictionary *processedProperties = [self propertiesForName:documentName properties:properties type:type aspects:aspects isFolder:NO];
@@ -268,7 +268,7 @@
     [AlfrescoErrors assertArgumentNotNil:contentStream argumentName:@"contentStream"];
     [AlfrescoErrors assertArgumentNotNil:folder argumentName:@"folder"];
     [AlfrescoErrors assertArgumentNotNil:folder.identifier argumentName:@"folder.identifier"];
-    [AlfrescoErrors assertArgumentNotNil:documentName argumentName:@"folderName"];
+    [AlfrescoErrors assertArgumentNotNil:documentName argumentName:@"documentName"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
 
     NSDictionary *processedProperties = [self propertiesForName:documentName properties:properties type:type aspects:aspects isFolder:NO];
@@ -1317,7 +1317,7 @@
 - (AlfrescoRequest *)refreshNode:(AlfrescoNode *)node
                  completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
 {
-    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"identifier"];
+    [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
     AlfrescoRequest *request = [self retrieveNodeWithIdentifier:node.identifier completionBlock:completionBlock];

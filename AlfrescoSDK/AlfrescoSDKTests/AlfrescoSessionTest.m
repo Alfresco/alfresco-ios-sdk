@@ -556,11 +556,28 @@
             XCTAssertNotNil(sessionRepositoryInfo.version, @"Expected the version of the repository not to be nil");
             XCTAssertNotNil(sessionRepositoryInfo.capabilities, @"Expected the capabilities of the repository not to be nil");
             
-            BOOL isRunningOnVersion4 = [sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike];
-            
             XCTAssertTrue([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] || [sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity], @"Expected the edition to be Enterprise or Community but it is %@", sessionRepositoryInfo.edition);
             
-            if (isRunningOnVersion4)
+            BOOL isRunningOnVersion4 = [sessionRepositoryInfo.majorVersion intValue] == 4;
+            BOOL isRunningOnVersion5 = [sessionRepositoryInfo.majorVersion intValue] == 5;
+            
+            if (isRunningOnVersion5)
+            {
+                XCTAssertTrue([sessionRepositoryInfo.majorVersion intValue] == 5, @"Expected the major version to be 5");
+                XCTAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 0, @"Expected the minor version to be 0 or more");
+                
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike],
+                              @"Version 5 of the OnPremise server should support the like capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount],
+                              @"Version 5 of the OnPremise server should support comments count capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine],
+                              @"Version 5 of the OnPremise server should support the Activiti workflow engine");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine],
+                               @"Version 5 of the OnPremise server should not support the JBPM engine");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 5 of the OnPremise server should support the public API");
+            }
+            else if (isRunningOnVersion4)
             {
                 XCTAssertTrue([sessionRepositoryInfo.majorVersion intValue] == 4, @"Expected the major version to be 4");
                 
@@ -589,11 +606,10 @@
                                   @"Version 4.2 or later of the Enterprise server should support the public API");
                 }
                 
-                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity] &&
-                         [sessionRepositoryInfo.minorVersion intValue] >= 3)
+                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity])
                 {
-                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
-                                  @"Version 4.3 or later of the Community server should support the public API");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 4 of the Community server should not support the public API");
                 }
             }
             else

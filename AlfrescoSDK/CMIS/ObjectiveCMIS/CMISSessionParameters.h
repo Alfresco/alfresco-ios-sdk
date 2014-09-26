@@ -46,6 +46,12 @@ extern NSString * const kCMISSessionParameterLinkCacheSize;
  */
 extern NSString * const kCMISSessionParameterTypeDefinitionCacheSize;
 
+/**
+ * Key for setting whether cookies should be added to requests. 
+ * Value should be a boolean flag, default is YES.
+ */
+extern NSString * const kCMISSessionParameterSendCookies;
+
 
 @interface CMISSessionParameters : NSObject
 
