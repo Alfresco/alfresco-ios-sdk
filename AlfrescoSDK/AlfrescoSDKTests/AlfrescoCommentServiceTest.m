@@ -196,8 +196,10 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
             }
             else
             {
-                XCTAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent], @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
-                XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName], @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
+                XCTAssertTrueWeakSelf([[comment.content lowercaseString] isEqualToString:kAlfrescoTestCommentContent],
+                                      @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
+                XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName],
+                                      @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
                 
                 [weakSelf.commentService retrieveCommentsForNode:weakSelf.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error) {
                     if (nil == array)
@@ -212,8 +214,10 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                         XCTAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %lu", (unsigned long)array.count);
                         if (array.count > 0)
                         {
-                            XCTAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent], @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
-                            XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName], @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
+                            XCTAssertTrueWeakSelf([[comment.content lowercaseString] isEqualToString:kAlfrescoTestCommentContent],
+                                                  @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
+                            XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName],
+                                                  @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
                             XCTAssertNotNilWeakSelf(comment.createdAt, @"createdAt should not be nil");
                             XCTAssertNotNilWeakSelf(comment.modifiedAt, @"modifiedAt should not be nil");
                             XCTAssertFalseWeakSelf(comment.isEdited, @"isEdited should return false");
@@ -268,8 +272,10 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
             else
             {
                 __block AlfrescoComment *strongComment = comment;
-                XCTAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent], @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
-                XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName], @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
+                XCTAssertTrueWeakSelf([[comment.content lowercaseString] isEqualToString:kAlfrescoTestCommentContent],
+                                      @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
+                XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName],
+                                      @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
                 
                 [weakSelf.commentService retrieveCommentsForNode:weakSelf.testAlfrescoDocument completionBlock:^(NSArray *array, NSError *error) {
                     if (nil == array)
@@ -284,8 +290,10 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                         XCTAssertTrueWeakSelf(1 == array.count, @"expected one comment for the node but received %lu", (unsigned long)array.count);
                         if (array.count > 0)
                         {
-                            XCTAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent], @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
-                            XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName], @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
+                            XCTAssertTrueWeakSelf([[comment.content lowercaseString] isEqualToString:kAlfrescoTestCommentContent],
+                                                  @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
+                            XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName],
+                                                  @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
                             XCTAssertNotNilWeakSelf(comment.createdAt, @"createdAt should not be nil");
                             XCTAssertNotNilWeakSelf(comment.modifiedAt, @"modifiedAt should not be nil");
                         }
@@ -575,8 +583,10 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
             }
             else
             {
-                XCTAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent], @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
-                XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName], @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
+                XCTAssertTrueWeakSelf([[comment.content lowercaseString] isEqualToString:kAlfrescoTestCommentContent],
+                                      @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
+                XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName],
+                                      @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
                 
                 [weakSelf.commentService updateCommentOnNode:weakSelf.testAlfrescoDocument comment:comment content:kAlfrescoTestCommentContent2 completionBlock:^(AlfrescoComment *comment, NSError *error) {
                     if (nil == comment)
@@ -587,7 +597,8 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
                     }
                     else
                     {
-                        XCTAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent2], @"comment should be %@, but received %@", kAlfrescoTestCommentContent2, comment.content);
+                        XCTAssertTrueWeakSelf([[comment.content lowercaseString] isEqualToString:kAlfrescoTestCommentContent2],
+                                              @"comment should be %@, but received %@", kAlfrescoTestCommentContent2, comment.content);
                         
                         [weakSelf.commentService deleteCommentFromNode:weakSelf.testAlfrescoDocument comment:comment completionBlock:^(BOOL success, NSError *error) {
                             if (!success)
@@ -639,7 +650,8 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
             }
             else
             {
-                XCTAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent], @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
+                XCTAssertTrueWeakSelf([[comment.content lowercaseString] isEqualToString:kAlfrescoTestCommentContent],
+                                      @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
                 XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName], @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
                 
                 [weakSelf.commentService updateCommentOnNode:weakSelf.testAlfrescoDocument comment:comment content:content completionBlock:^(AlfrescoComment *comment, NSError *error) {
@@ -702,7 +714,8 @@ static NSString * const kAlfrescoTestCommentContent2 = @"<p>test2</p>";
             }
             else
             {
-                XCTAssertTrueWeakSelf([comment.content isEqualToString:kAlfrescoTestCommentContent], @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
+                XCTAssertTrueWeakSelf([[comment.content lowercaseString] isEqualToString:kAlfrescoTestCommentContent],
+                                      @"comment should be %@, but received %@", kAlfrescoTestCommentContent, comment.content);
                 XCTAssertTrueWeakSelf([comment.createdBy isEqualToString:weakSelf.userName], @"comment.createdBy should be %@ but received %@", weakSelf.userName, comment.createdBy);
                 
                 [weakSelf.commentService updateCommentOnNode:weakSelf.testAlfrescoDocument comment:comment content:content completionBlock:^(AlfrescoComment *comment, NSError *error) {

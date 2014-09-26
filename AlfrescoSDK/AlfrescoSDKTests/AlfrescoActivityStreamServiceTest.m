@@ -214,7 +214,7 @@
              if (nil == site || nil != error)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
                  self.callbackCompleted = YES;
              }
              else
@@ -281,7 +281,7 @@
              if (nil == site || nil != error)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
                  self.callbackCompleted = YES;
              }
              else

@@ -24,6 +24,7 @@
  */
 
 #import "AlfrescoWorkflowProcessDefinitionTests.h"
+#import "AlfrescoInternalConstants.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoLog.h"
 
@@ -110,10 +111,24 @@ static NSString * const kAlfrescoActivitiAdhocProcessDefinitionKey = @"activitiA
                             {
                                 XCTAssertTrue([processDefinition.identifier isEqualToString:[kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition]],
                                               @"Expected adhoc identifer to be activiti$activitiAdhoc:1:4 but it was %@", processDefinition.identifier);
-                                XCTAssertTrue([processDefinition.name isEqualToString:@"Adhoc Workflow"],
-                                              @"Expected adhoc name to be 'Adhoc Workflow' but it was %@", processDefinition.name);
-                                XCTAssertTrue([processDefinition.summary isEqualToString:@"Assign arbitrary task to colleague using Activiti workflow engine"],
-                                              @"Expected adhoc summary to be 'Assign arbitrary task to colleague using Activiti workflow engine' but it was %@", processDefinition.summary);
+                                
+                                if ([self.currentSession.repositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity] &&
+                                    [self.currentSession.repositoryInfo.majorVersion intValue] == 4 &&
+                                    [self.currentSession.repositoryInfo.minorVersion intValue] == 2)
+                                {
+                                    XCTAssertTrue([processDefinition.name isEqualToString:@"New Task"],
+                                                  @"Expected adhoc name to be 'New Task' but it was %@", processDefinition.name);
+                                    XCTAssertTrue([processDefinition.summary isEqualToString:@"Assign a new task to yourself or a colleague"],
+                                                  @"Expected adhoc summary to be 'Assign arbitrary task to colleague using Activiti workflow engine' but it was %@", processDefinition.summary);
+                                }
+                                else
+                                {
+                                    XCTAssertTrue([processDefinition.name isEqualToString:@"Adhoc Workflow"],
+                                                  @"Expected adhoc name to be 'Adhoc Workflow' but it was %@", processDefinition.name);
+                                    XCTAssertTrue([processDefinition.summary isEqualToString:@"Assign arbitrary task to colleague using Activiti workflow engine"],
+                                                  @"Expected adhoc summary to be 'Assign arbitrary task to colleague using Activiti workflow engine' but it was %@", processDefinition.summary);
+                                }
+                                
                                 XCTAssertTrue([processDefinition.version intValue] == 1, @"Expected adhoc version to be 1 but it was %d", [processDefinition.version intValue]);
                                 
                                 adhocDefinitionFound = YES;

@@ -152,6 +152,7 @@ extern NSString * const kCMISCoreOrderable;
 extern NSString * const kCMISCoreOpenChoice;
 extern NSString * const kCMISCoreChoice;
 extern NSString * const kCMISCoreChoiceString;
+extern NSString * const kCMISCoreDefaultValue;
 extern NSString * const kCMISCoreVersionable;
 extern NSString * const kCMISCoreContentStreamAllowed;
 extern NSString * const kCMISCoreAllowed;
