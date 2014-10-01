@@ -497,6 +497,20 @@ static const double kFavoritesRequestRateLimit = 0.1; // seconds between request
     return request;
 }
 
+#pragma mark Overridden methods
+
+- (void)extractMetadataForNode:(AlfrescoNode *)node alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+{
+    // MOBSDK-784: We don't need to extract metadata when using the public API as it's done for us, so
+    // make this a no-op.
+}
+
+- (void)generateThumbnailForNode:(AlfrescoNode *)node alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
+{
+    // MOBSDK-784: We don't need to generate a thumbnail when using the public API as it's done for us, so
+    // make this a no-op.
+}
+
 #pragma mark Internal private methods
 
 - (void)favoritesArrayWithData:(NSData *)data completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
