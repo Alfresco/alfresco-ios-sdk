@@ -1176,7 +1176,12 @@
                                  requestBody:jsonData
                                                  method:kAlfrescoHTTPPost
                                         alfrescoRequest:alfrescoRequest
-                             completionBlock:^(NSData *data, NSError *error){}];
+                             completionBlock:^(NSData *data, NSError *error){
+                                 if (error)
+                                 {
+                                     AlfrescoLogError(@"Extract metadata call failed: %@", error);
+                                 }
+                             }];
 }
 
 - (void)generateThumbnailForNode:(AlfrescoNode *)node alfrescoRequest:(AlfrescoRequest *)alfrescoRequest
@@ -1198,7 +1203,12 @@
                                             requestBody:jsonData
                                                  method:kAlfrescoHTTPPost
                                         alfrescoRequest:alfrescoRequest
-                                        completionBlock:^(NSData *data, NSError *error){}];
+                                        completionBlock:^(NSData *data, NSError *error){
+                                            if (error)
+                                            {
+                                                AlfrescoLogError(@"Generate thumbnail call failed: %@", error);
+                                            }
+                                        }];
 }
 
 - (NSString *)propertyType:(NSString *)type aspects:(NSArray *)aspects isFolder:(BOOL)isFolder
