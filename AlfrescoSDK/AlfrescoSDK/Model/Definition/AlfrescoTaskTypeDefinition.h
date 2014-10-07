@@ -20,6 +20,10 @@
 
 #import "AlfrescoNodeTypeDefinition.h"
 
+/**
+ * AlfrescoTaskTypeDefinition represents the definition of a task defined in the model.
+ */
+
 @interface AlfrescoTaskTypeDefinition : AlfrescoNodeTypeDefinition
 
 @end

@@ -20,8 +20,14 @@
 
 #import "AlfrescoModelDefinition.h"
 
+/**
+ * AlfrescoNodeTypeDefinition represents the definition of an item in the repository content 
+ * model that can have aspects applied to it.
+ */
+
 @interface AlfrescoNodeTypeDefinition : AlfrescoModelDefinition
 
+/// An array of NSString objects representing the mandatory aspects defined for the item.
 @property (nonatomic, strong, readonly) NSArray *mandatoryAspects;
 
 @end

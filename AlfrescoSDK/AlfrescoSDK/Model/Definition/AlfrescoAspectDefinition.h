@@ -20,6 +20,10 @@
 
 #import "AlfrescoModelDefinition.h"
 
+/** 
+ * AlfrescoAspectDefinition represents the definition of an aspect defined in the content model.
+ */
+
 @interface AlfrescoAspectDefinition : AlfrescoModelDefinition
 
 @end

@@ -21,27 +21,36 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoPropertyDefinition.h"
 
+/**
+ * AlfrescoModelDefinition represents the definition of an item in the repository content model.
+ */
+
 @interface AlfrescoModelDefinition : NSObject <NSCoding>
 
-
+/// The name of the model item.
 @property (nonatomic, strong, readonly) NSString *name;
 
-
+/// The localized title of the model item.
 @property (nonatomic, strong, readonly) NSString *title;
 
-
+/// The localized description of the model item.
 @property (nonatomic, strong, readonly) NSString *summary;
 
-
+/// The name of the model item's parent, nil if the model item does not have a parent.
 @property (nonatomic, strong, readonly) NSString *parent;
 
-
+/// An array of NSString objects representing the names of the properties defined for the model item.
 @property (nonatomic, strong, readonly) NSArray *propertyNames;
 
 
 - (instancetype)initWithDictionary:(NSDictionary *)properties;
 
-
+/**
+ * Returns the property definition for the property with the given name.
+ 
+ @param name The name of the property definition to retrieve.
+ @returns An AlfrescoPropertyDefinition object or nil if the property does not exist.
+ */
 - (AlfrescoPropertyDefinition *)propertyDefinitionForPropertyWithName:(NSString *)name;
 
 @end

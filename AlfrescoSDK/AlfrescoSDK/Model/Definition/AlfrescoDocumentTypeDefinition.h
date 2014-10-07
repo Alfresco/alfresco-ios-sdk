@@ -20,6 +20,10 @@
 
 #import "AlfrescoNodeTypeDefinition.h"
 
+/**
+ * AlfrescoDocumentTypeDefinition represents the definition of a document type defined in the content model.
+ */
+
 @interface AlfrescoDocumentTypeDefinition : AlfrescoNodeTypeDefinition
 
 @end

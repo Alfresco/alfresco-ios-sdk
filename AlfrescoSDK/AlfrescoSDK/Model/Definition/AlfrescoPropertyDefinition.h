@@ -21,32 +21,37 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoProperty.h"
 
+/**
+ * AlfrescoPropertyDefinition represents the definition of a property.
+ */
+
 @interface AlfrescoPropertyDefinition : NSObject
 
+/// The name of the property.
 @property (nonatomic, strong, readonly) NSString *name;
 
-
+/// The localized title of the property.
 @property (nonatomic, strong, readonly) NSString *title;
 
-
+/// The localized description of the property.
 @property (nonatomic, strong, readonly) NSString *summary;
 
-
+/// The type of the property.
 @property (nonatomic, assign, readonly) AlfrescoPropertyType type;
 
-
+/// Indicates whether the property requires a value to be provided.
 @property (nonatomic, assign, readonly) BOOL isRequired;
 
-
+/// Indicates whether the property value is read only.
 @property (nonatomic, assign, readonly) BOOL isReadOnly;
 
-
+/// Indicates whether the property can hold multiple values.
 @property (nonatomic, assign, readonly) BOOL isMultiValued;
 
-
+/// The default value of the property, this will be an array for multi valued properties.
 @property (nonatomic, assign, readonly) id defaultValue;
 
-
+/// An array of objects representing the values the property value can hold.
 @property (nonatomic, strong, readonly) NSArray *allowableValues;
 
 
