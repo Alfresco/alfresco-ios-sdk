@@ -34,6 +34,7 @@
 #import "AlfrescoWorkflowService.h"
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoVersionInfo.h"
+#import "AlfrescoFileManager.h"
 
 @implementation AlfrescoUtilsTest
 
@@ -252,6 +253,49 @@
     XCTAssertTrue([test7.maintenanceVersion intValue] == 0,
                   @"Expected maintenance version to be 0 but it was %@", test7.maintenanceVersion);
     XCTAssertNil(test7.buildNumber, @"Expected build number to be nil but it was %@", test7.buildNumber);
+}
+
+- (void)testFileManager
+{
+    AlfrescoFileManager *fileManager = [AlfrescoFileManager sharedManager];
+    // create a temporary file with some contents
+    NSString *contents = @"This is the original content";
+    NSString *tempPath = [fileManager.temporaryDirectory stringByAppendingString:[[NSUUID UUID] UUIDString]];
+    
+    NSError *error = nil;
+    [fileManager createFileAtPath:tempPath contents:[contents dataUsingEncoding:NSUTF8StringEncoding] error:&error];
+    XCTAssertNil(error, @"Expected the temp file to be created successfully");
+
+    // replace the file created above with some new content
+    NSString *replacementContent = @"This is the replacement content";
+    [fileManager replaceFileAtURL:[NSURL fileURLWithPath:tempPath] contents:[replacementContent dataUsingEncoding:NSUTF8StringEncoding] error:&error];
+    XCTAssertNil(error, @"Expected the temp file to be replaced successfully");
+    XCTAssertTrue([fileManager fileExistsAtPath:tempPath], @"Expected the temp file to still exist");
+    
+    // ensure the content was replaced
+    NSData *retrievedContent = [fileManager dataWithContentsOfURL:[NSURL fileURLWithPath:tempPath]];
+    NSString *retrievedContentString = [[NSString alloc] initWithData:retrievedContent encoding:NSUTF8StringEncoding];
+    XCTAssertTrue([retrievedContentString isEqualToString:replacementContent],
+                  @"Expected the content to match but it was: %@", retrievedContentString);
+    
+    // copy the file to another temporary file
+    NSString *copiedTempPath = [fileManager.temporaryDirectory stringByAppendingString:[[NSUUID UUID] UUIDString]];
+    [fileManager copyItemAtPath:tempPath toPath:copiedTempPath error:&error];
+    XCTAssertNil(error, @"Expected the temp file to be copied successfully");
+    XCTAssertTrue([fileManager fileExistsAtPath:copiedTempPath], @"Expected the copied file to exist");
+    NSData *copiedContent = [fileManager dataWithContentsOfURL:[NSURL fileURLWithPath:copiedTempPath]];
+    NSString *copiedContentString = [[NSString alloc] initWithData:copiedContent encoding:NSUTF8StringEncoding];
+    XCTAssertTrue([copiedContentString isEqualToString:replacementContent],
+                  @"Expected the copied content to match but it was: %@", retrievedContentString);
+    
+    // remove the temp files
+    [fileManager removeItemAtPath:tempPath error:&error];
+    XCTAssertNil(error, @"Expected the temp file to be deleted successfully");
+    XCTAssertFalse([fileManager fileExistsAtPath:tempPath], @"Did not expect to find the temp file");
+    
+    [fileManager removeItemAtURL:[NSURL fileURLWithPath:copiedTempPath] error:&error];
+    XCTAssertNil(error, @"Expected the copied file to be deleted successfully");
+    XCTAssertFalse([fileManager fileExistsAtPath:copiedTempPath], @"Did not expect to find the copied file");
 }
 
 @end

@@ -214,6 +214,8 @@
 		588410BF198679E60047EBDF /* AlfrescoPropertyDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 588410BE198679E60047EBDF /* AlfrescoPropertyDefinition.m */; };
 		588410C219868AEE0047EBDF /* AlfrescoModelDefinitionService.m in Sources */ = {isa = PBXBuildFile; fileRef = 588410C119868AEE0047EBDF /* AlfrescoModelDefinitionService.m */; };
 		588410C519868FE10047EBDF /* AlfrescoModelDefinitionServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 588410C419868FE10047EBDF /* AlfrescoModelDefinitionServiceTest.m */; };
+		588EB34D19E433C60012BA6B /* AlfrescoDefaultFileManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73971A8D16AD5B700056031F /* AlfrescoDefaultFileManager.h */; };
+		588EB34E19E434000012BA6B /* AlfrescoDefaultFileManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73971A8D16AD5B700056031F /* AlfrescoDefaultFileManager.h */; };
 		58AA490F19AE07BE0094185D /* AlfrescoConfigServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 581FC4B61973D80B00045087 /* AlfrescoConfigServiceTest.m */; };
 		58AA491119AE0D8A0094185D /* AlfrescoConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = 581FC4B91973D96E00045087 /* AlfrescoConfigService.m */; };
 		58AA491219AE0D910094185D /* AlfrescoConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = 581FC4B91973D96E00045087 /* AlfrescoConfigService.m */; };
@@ -512,6 +514,7 @@
 			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				588EB34D19E433C60012BA6B /* AlfrescoDefaultFileManager.h in CopyFiles */,
 				732C0AA719951E490032831C /* AlfrescoActionConfig.h in CopyFiles */,
 				732C0AA819951E490032831C /* AlfrescoActionGroupConfig.h in CopyFiles */,
 				732C0AA919951E490032831C /* AlfrescoBaseConfig.h in CopyFiles */,
@@ -600,6 +603,7 @@
 			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				588EB34E19E434000012BA6B /* AlfrescoDefaultFileManager.h in CopyFiles */,
 				734D8258199257B500538915 /* AlfrescoOAuthNSLoginViewController.h in CopyFiles */,
 				73D01DF8197FC3D00065E107 /* AlfrescoListingFilter.h in CopyFiles */,
 				73D01DF9197FC3D00065E107 /* AlfrescoSDK.h in CopyFiles */,

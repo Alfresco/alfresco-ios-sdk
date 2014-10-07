@@ -121,6 +121,26 @@
 - (BOOL)moveItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error;
 
 /**
+ Replaces the content of the file at the given path with the given content.
+ */
+- (BOOL)replaceFileAtPath:(NSString *)path contents:(NSData *)data error:(NSError **)error;
+
+/**
+ Replaces the content of the file at the given path with the contents of another file.
+ */
+- (BOOL)replaceFileAtPath:(NSString *)destinationPath withContentsOfFileAtPath:(NSString *)sourcePath error:(NSError **)error;
+
+/**
+ Replaces the content of the file at the given URL with the given content.
+ */
+- (BOOL)replaceFileAtURL:(NSURL *)URL contents:(NSData *)data error:(NSError **)error;
+
+/**
+ Replaces the content of the file at the given URL with the contents of another file.
+ */
+- (BOOL)replaceFileAtURL:(NSURL *)destinationURL withContentsOfFileAtURL:(NSURL *)sourceURL error:(NSError **)error;
+
+/**
  Call this to return the attributes of a given item at a path
  
  @returns dictionary - dictionary containing fileSize, isFolder and lastModifiedDate

@@ -134,6 +134,34 @@
                                  userInfo:nil];
 }
 
+- (BOOL)replaceFileAtPath:(NSString *)path contents:(NSData *)data error:(NSError **)error
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in the subclass %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]
+                                 userInfo:nil];
+}
+
+- (BOOL)replaceFileAtPath:(NSString *)destinationPath withContentsOfFileAtPath:(NSString *)sourcePath error:(NSError **)error
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in the subclass %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]
+                                 userInfo:nil];
+}
+
+- (BOOL)replaceFileAtURL:(NSURL *)URL contents:(NSData *)data error:(NSError **)error
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in the subclass %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]
+                                 userInfo:nil];
+}
+
+- (BOOL)replaceFileAtURL:(NSURL *)destinationURL withContentsOfFileAtURL:(NSURL *)sourceURL error:(NSError **)error
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in the subclass %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])]
+                                 userInfo:nil];
+}
+
 - (NSDictionary *)attributesOfItemAtPath:(NSString *)path error:(NSError **)error
 {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
