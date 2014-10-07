@@ -67,6 +67,8 @@ NSString * const kAlfrescoCapabilityCommentsCount = @"CapabilityCommentsCount";
 NSString * const kAlfrescoCapabilityPublicAPI = @"CapabilityPublicAPI";
 NSString * const kAlfrescoCapabilityActivitiWorkflowEngine = @"CapabilityActivitiWorkflowEngine";
 NSString * const kAlfrescoCapabilityJBPMWorkflowEngine = @"CapabilityJBPMWorkflowEngine";
+NSString * const kAlfrescoCapabilityMyFiles = @"CapabilityMyFiles";
+NSString * const kAlfrescoCapabilitySharedFiles = @"CapabilitySharedFiles";
 
 /**
  File Attribute Constants

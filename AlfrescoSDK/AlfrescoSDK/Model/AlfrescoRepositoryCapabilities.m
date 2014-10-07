@@ -26,6 +26,8 @@ static NSInteger kRepositoryCapabilitiesModelVersion = 1;
 @property (nonatomic, assign, readwrite) BOOL doesSupportPublicAPI;
 @property (nonatomic, assign, readwrite) BOOL doesSupportActivitiWorkflowEngine;
 @property (nonatomic, assign, readwrite) BOOL doesSupportJBPMWorkflowEngine;
+@property (nonatomic, assign, readwrite) BOOL doesSupportMyFiles;
+@property (nonatomic, assign, readwrite) BOOL doesSupportSharedFiles;
 @end
 
 @implementation AlfrescoRepositoryCapabilities
@@ -42,6 +44,8 @@ static NSInteger kRepositoryCapabilitiesModelVersion = 1;
             self.doesSupportPublicAPI = [[properties valueForKey:kAlfrescoCapabilityPublicAPI] boolValue];
             self.doesSupportActivitiWorkflowEngine = [[properties valueForKey:kAlfrescoCapabilityActivitiWorkflowEngine] boolValue];
             self.doesSupportJBPMWorkflowEngine = [[properties valueForKey:kAlfrescoCapabilityJBPMWorkflowEngine] boolValue];
+            self.doesSupportMyFiles = [[properties valueForKey:kAlfrescoCapabilityMyFiles] boolValue];
+            self.doesSupportSharedFiles = [[properties valueForKey:kAlfrescoCapabilitySharedFiles] boolValue];
         }
         else
         {
@@ -50,6 +54,8 @@ static NSInteger kRepositoryCapabilitiesModelVersion = 1;
             self.doesSupportPublicAPI = NO;
             self.doesSupportActivitiWorkflowEngine = NO;
             self.doesSupportJBPMWorkflowEngine = NO;
+            self.doesSupportMyFiles = NO;
+            self.doesSupportSharedFiles = NO;
         }
     }
     return self;
@@ -78,6 +84,14 @@ static NSInteger kRepositoryCapabilitiesModelVersion = 1;
     {
         return self.doesSupportJBPMWorkflowEngine;
     }
+    else if ([capability isEqualToString:kAlfrescoCapabilityMyFiles])
+    {
+        return self.doesSupportMyFiles;
+    }
+    else if ([capability isEqualToString:kAlfrescoCapabilitySharedFiles])
+    {
+        return self.doesSupportSharedFiles;
+    }
     
     return NO;
 }
@@ -90,6 +104,8 @@ static NSInteger kRepositoryCapabilitiesModelVersion = 1;
     [aCoder encodeBool:self.doesSupportPublicAPI forKey:kAlfrescoCapabilityPublicAPI];
     [aCoder encodeBool:self.doesSupportActivitiWorkflowEngine forKey:kAlfrescoCapabilityActivitiWorkflowEngine];
     [aCoder encodeBool:self.doesSupportJBPMWorkflowEngine forKey:kAlfrescoCapabilityJBPMWorkflowEngine];
+    [aCoder encodeBool:self.doesSupportMyFiles forKey:kAlfrescoCapabilityMyFiles];
+    [aCoder encodeBool:self.doesSupportSharedFiles forKey:kAlfrescoCapabilitySharedFiles];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -104,6 +120,8 @@ static NSInteger kRepositoryCapabilitiesModelVersion = 1;
         self.doesSupportPublicAPI = [aDecoder decodeBoolForKey:kAlfrescoCapabilityPublicAPI];
         self.doesSupportActivitiWorkflowEngine = [aDecoder decodeBoolForKey:kAlfrescoCapabilityActivitiWorkflowEngine];
         self.doesSupportJBPMWorkflowEngine = [aDecoder decodeBoolForKey:kAlfrescoCapabilityJBPMWorkflowEngine];
+        self.doesSupportMyFiles = [aDecoder decodeBoolForKey:kAlfrescoCapabilityMyFiles];
+        self.doesSupportSharedFiles =[aDecoder decodeBoolForKey:kAlfrescoCapabilitySharedFiles];
     }
     return self;
 }

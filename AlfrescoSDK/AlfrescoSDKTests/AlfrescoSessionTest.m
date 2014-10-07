@@ -576,6 +576,10 @@
                                @"Version 5 of the OnPremise server should not support the JBPM engine");
                 XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
                                   @"Version 5 of the OnPremise server should support the public API");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                              @"Version 5 of the OnPremise server should support My Files");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                              @"Version 5 of the OnPremise server should support Shared Files");
             }
             else if (isRunningOnVersion4)
             {
@@ -597,6 +601,10 @@
                 {
                     XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
                                   @"Version 4.0 of the Enterprise server should not support the public API");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                                   @"Version 4.0 of the Enterprise server should not support My Files");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                                   @"Version 4.0 of the Enterprise server should not support Shared Files");
                 }
                 
                 if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] &&
@@ -604,12 +612,20 @@
                 {
                     XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
                                   @"Version 4.2 or later of the Enterprise server should support the public API");
+                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                                  @"Version 4.2 or later of the Enterprise server should support My Files");
+                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                                  @"Version 4.2 or later of the Enterprise server should support Shared Files");
                 }
                 
                 if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity])
                 {
                     XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
                                   @"Version 4 of the Community server should not support the public API");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                                   @"Version 4 of the Community server should not support the My Files");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                                   @"Version 4 of the Community server should not support the Shared Files");
                 }
             }
             else
@@ -618,11 +634,20 @@
                 
                 XCTAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 4, @"Expected the minor version to be 4 or more");
                 
-                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 3 of the OnPremise server should not support the like capability");
-                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 3 of the OnPremise server should not support comments count capability");
-                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI], @"Version 3 of the OnPremise server should not support the public API");
-                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine], @"Version 3 of the OnPremise server should not support the Activiti workflow engine");
-                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine], @"Version 3 of the OnPremise server should support the JBPM engine");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike],
+                               @"Version 3 of the OnPremise server should not support the like capability");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount],
+                               @"Version 3 of the OnPremise server should not support comments count capability");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                               @"Version 3 of the OnPremise server should not support the public API");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine],
+                               @"Version 3 of the OnPremise server should not support the Activiti workflow engine");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine],
+                              @"Version 3 of the OnPremise server should support the JBPM engine");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                               @"Version 3 of the OnPremise server should not support My Files");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                               @"Version 3 of the OnPremise server should not support Shared Files");
             }
             
             self.lastTestSuccessful = YES;
@@ -651,6 +676,8 @@
             XCTAssertTrue(capabilities.doesSupportPublicAPI, @"Expected the public API to be supported");
             XCTAssertTrue(capabilities.doesSupportActivitiWorkflowEngine, @"Expected the Activiti workflow engine to be supported");
             XCTAssertFalse(capabilities.doesSupportJBPMWorkflowEngine, @"Did not expect the JBPM workflow engine to be supported");
+            XCTAssertFalse(capabilities.doesSupportMyFiles, @"Did not expect My Files to be supported");
+            XCTAssertFalse(capabilities.doesSupportSharedFiles, @"Did not expect Shared Files to be supported");
             
             self.lastTestSuccessful = YES;
         }
