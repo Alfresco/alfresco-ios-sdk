@@ -18,10 +18,9 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowObjectConverter
+// AlfrescoWorkflowObjectConverter
  
- Author: Tauseef Mughal (Alfresco)
- */
+// Author: Tauseef Mughal (Alfresco)
 
 #import "AlfrescoObjectConverter.h"
 

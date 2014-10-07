@@ -23,41 +23,67 @@
 
 @interface AlfrescoModelDefinitionService : NSObject
 
-/**---------------------------------------------------------------------------------------
- * @name Initialisation methods
- *  ---------------------------------------------------------------------------------------
- */
-
 /** Initialises with a standard Cloud or OnPremise session.
  
  @param session the AlfrescoSession to initialise the config service with.
  */
 - (id)initWithSession:(id<AlfrescoSession>)session;
 
+/** Retrieves the definition of the given document type.
+ 
+ @param type The name of the type to be retrieved, for example "cm:content".
+ @param completionBlock The block that's called with the definition of the type.
+ */
 - (AlfrescoRequest *)retrieveDefinitionForDocumentType:(NSString *)type
                                        completionBlock:(AlfrescoDocumentTypeDefinitionCompletionBlock)completionBlock;
 
-
+/** Retrieves the definition of the given document. The definition of any properties defined by aspects applied
+    to the document will also be included in the returned type definition.
+ 
+ @param document The document to retrieve the type definition for.
+ @param completionBlock The block that's called with the definition of the type.
+ */
 - (AlfrescoRequest *)retrieveDefinitionForDocument:(AlfrescoDocument *)document
                                    completionBlock:(AlfrescoDocumentTypeDefinitionCompletionBlock)completionBlock;
 
-
+/** Retrieves the definition of the given folder type.
+ 
+ @param type The name of the type to be retrieved, for example "cm:folder".
+ @param completionBlock The block that's called with the definition of the type.
+ */
 - (AlfrescoRequest *)retrieveDefinitionForFolderType:(NSString *)type
                                      completionBlock:(AlfrescoFolderTypeDefinitionCompletionBlock)completionBlock;
 
-
+/** Retrieves the definition of the given folder. The definition of any properties defined by aspects applied
+ to the folder will also be included in the returned type definition.
+ 
+ @param folder The folder to retrieve the type definition for.
+ @param completionBlock The block that's called with the definition of the type.
+ */
 - (AlfrescoRequest *)retrieveDefinitionForFolder:(AlfrescoFolder *)folder
                                  completionBlock:(AlfrescoFolderTypeDefinitionCompletionBlock)completionBlock;
 
-
+/** Retrieves the definition of the given aspect.
+ 
+ @param aspect The name of the aspect to be retrieved, for example "exif:exif".
+ @param completionBlock The block that's called with the definition of the aspect.
+ */
 - (AlfrescoRequest *)retrieveDefinitionForAspect:(NSString *)aspect
                                  completionBlock:(AlfrescoAspectDefinitionCompletionBlock)completionBlock;
 
-
+/** Retrieves the definition of the given task type.
+ 
+ @param type The name of the type to be retrieved, for example "bpm:task".
+ @param completionBlock The block that's called with the definition of the type.
+ */
 - (AlfrescoRequest *)retrieveDefinitionForTaskType:(NSString *)type
                                    completionBlock:(AlfrescoTaskTypeDefinitionCompletionBlock)completionBlock;
 
-
+/** Retrieves the definition of the given task.
+ 
+ @param task The task to retrieve the type definition for.
+ @param completionBlock The block that's called with the definition of the type.
+ */
 - (AlfrescoRequest *)retrieveDefinitionForTask:(AlfrescoWorkflowTask *)task
                                completionBlock:(AlfrescoTaskTypeDefinitionCompletionBlock)completionBlock;
 

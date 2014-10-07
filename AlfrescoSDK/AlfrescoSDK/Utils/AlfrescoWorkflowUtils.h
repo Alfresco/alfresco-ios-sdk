@@ -18,10 +18,9 @@
  *****************************************************************************
  */
 
-/** AlfrescoWorkflowUtils
+// AlfrescoWorkflowUtils
  
- Author: Tauseef Mughal (Alfresco)
- */
+// Author: Tauseef Mughal (Alfresco)
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoWorkflowProcess.h"
