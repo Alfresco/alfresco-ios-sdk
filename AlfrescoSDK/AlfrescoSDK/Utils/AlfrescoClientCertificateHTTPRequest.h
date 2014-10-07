@@ -18,12 +18,10 @@
  *****************************************************************************
  */
 
-/**
- * The AlfrescoClientCertificateHTTPRequest class utilizes NSURLConnection to make requests.
- * It allows SSL connections based on client certificate authentication.
- 
- * Author: Mohamad Saeedi (Alfresco)
- */
+// The AlfrescoClientCertificateHTTPRequest class utilizes NSURLConnection to make requests.
+// It allows SSL connections based on client certificate authentication.
+
+// Author: Mohamad Saeedi (Alfresco)
 
 #import "AlfrescoDefaultHTTPRequest.h"
 

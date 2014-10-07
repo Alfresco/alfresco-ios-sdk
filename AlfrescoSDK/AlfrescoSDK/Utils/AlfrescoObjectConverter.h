@@ -18,10 +18,10 @@
  *****************************************************************************
  */
 
-/** AlfrescoObjectConverter
- 
- Author: Tauseef Mughal (Alfresco)
- */
+// AlfrescoObjectConverter
+
+// Author: Tauseef Mughal (Alfresco)
+
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoErrors.h"

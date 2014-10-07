@@ -44,9 +44,6 @@
 
 - (AlfrescoSite *)siteWithShortName:(NSString *)shortName;
 
-/**
- clears all entries in the cache
- */
 - (void)clear;
 
 @end

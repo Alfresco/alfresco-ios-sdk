@@ -22,11 +22,11 @@
 
 @interface AlfrescoLegacyAPIJoinSiteRequest : NSObject <NSCoding>
 
-/// Returns the short name of the site.
+// Returns the short name of the site.
 @property (nonatomic, strong, readonly) NSString *shortName;
-/// Returns the identifier of the site.
+// Returns the identifier of the site.
 @property (nonatomic, strong, readonly) NSString *identifier;
-/// message for the join request.
+// message for the join request.
 @property (nonatomic, strong, readonly) NSString *message;
 
 - (id)initWithIdentifier:(NSString *)identifier message:(NSString *)message;

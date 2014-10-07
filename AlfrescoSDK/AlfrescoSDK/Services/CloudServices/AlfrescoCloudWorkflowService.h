@@ -18,11 +18,6 @@
  *****************************************************************************
  */
 
-/** AlfrescoCloudWorkflowService
- 
- Author: Tauseef Mughal (Alfresco)
- */
-
 #import "AlfrescoWorkflowService.h"
 #import "AlfrescoPublicAPIWorkflowService.h"
 

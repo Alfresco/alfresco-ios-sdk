@@ -18,10 +18,10 @@
  *****************************************************************************
  */
 
-/** AlfrescoRepositoryInfoBuilder
+// AlfrescoRepositoryInfoBuilder
  
- Author: Gavin Cornwell (Alfresco)
- */
+// Author: Gavin Cornwell (Alfresco)
+
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoRepositoryInfo.h"

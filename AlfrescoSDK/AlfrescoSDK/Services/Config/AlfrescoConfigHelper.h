@@ -21,41 +21,35 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoConfigScope.h"
 
-/**
- * Helper class used to parse and resolve config.
- */
+// Helper class used to parse and resolve config.
 @interface AlfrescoConfigHelper : NSObject
 
 @property (nonatomic, strong, readonly) NSDictionary *json;
 @property (nonatomic, strong, readonly) NSBundle *bundle;
 @property (nonatomic, strong, readonly) NSDictionary *evaluators;
 
+// Initialises the helper with the JSON, strings and evaluators
 - (instancetype)initWithJSON:(NSDictionary *)json bundle:(NSBundle *)bundle evaluators:(NSDictionary *)evaluators;
 
+// Parses the config JSON, a subclasses have to override this method.
 - (void)parse;
 
-/**
- * Extracts the properties required to construct AlfrescoItemConfig objects
- * from the given JSON data.
- */
+// Extracts the properties required to construct AlfrescoItemConfig objects from the given JSON data.
 - (NSMutableDictionary *)configPropertiesFromJSON:(NSDictionary *)json;
 
+// Determines whether the given scope object passes the evaluator with the give identifier.
 - (BOOL)processEvaluator:(NSString *)evaluatorId withScope:(AlfrescoConfigScope *)scope;
 
 @end
 
-/**
- * AlfrescoConfigData is an in-memory representation of an idividual item of config.
- */
+// AlfrescoConfigData is an in-memory representation of an idividual item of config.
 @interface AlfrescoConfigData : NSObject
 @property (nonatomic, strong) NSDictionary *properties;
 @property (nonatomic, strong) NSString *reference;
 @property (nonatomic, strong) NSString *evaluator;
 @end
 
-/**
- * AlfrescoGroupConfigData is an in-memory representation of a group of config items.
- */
+// AlfrescoGroupConfigData is an in-memory representation of a group of config items.
 @interface AlfrescoGroupConfigData : AlfrescoConfigData
 @property (nonatomic, strong) NSArray *potentialItems;
 @end

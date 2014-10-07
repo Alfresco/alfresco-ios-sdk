@@ -2433,6 +2433,9 @@
 {
     if (self.setUpSuccess)
     {
+        [self.currentSession setObject:@YES forParameter:kAlfrescoMetadataExtraction];
+        [self.currentSession setObject:@YES forParameter:kAlfrescoThumbnailCreation];
+        
         NSString *filename = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.testImageName];
         NSMutableDictionary *props = [NSMutableDictionary dictionaryWithCapacity:4];
         // provide the objectTypeId so we can specify the cm:author aspect

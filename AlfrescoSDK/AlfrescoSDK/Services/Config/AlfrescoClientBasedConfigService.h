@@ -21,11 +21,9 @@
 #import <Foundation/Foundation.h>
 #import "AlfrescoConfigService.h"
 
-/**
- AlfrescoClientBasedConfigService retrieves JSON based configuration data either from the Data Dictionary
- in the connected repository or from a local file containing configuration data and parses it locally, 
- including the resolution of all localised strings.
- */
+// AlfrescoClientBasedConfigService retrieves JSON based configuration data either from the Data Dictionary
+// in the connected repository or from a local file containing configuration data and parses it locally,
+// including the resolution of all localised strings.
 @interface AlfrescoClientBasedConfigService : AlfrescoConfigService
 
 @end

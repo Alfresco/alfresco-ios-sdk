@@ -48,6 +48,8 @@
         [capabilities setValue:@YES forKey:kAlfrescoCapabilityPublicAPI];
         [capabilities setValue:@YES forKey:kAlfrescoCapabilityActivitiWorkflowEngine];
         [capabilities setValue:@NO forKey:kAlfrescoCapabilityJBPMWorkflowEngine];
+        [capabilities setValue:@NO forKey:kAlfrescoCapabilityMyFiles];
+        [capabilities setValue:@NO forKey:kAlfrescoCapabilitySharedFiles];
     }
     else
     {
@@ -82,21 +84,27 @@
             [capabilities setValue:@YES forKey:kAlfrescoCapabilityLike];
             [capabilities setValue:@YES forKey:kAlfrescoCapabilityCommentsCount];
             
-            // determine whether the public API is available
+            // determine whether the public API and shared/my files are available
             float version = [[NSString stringWithFormat:@"%i.%i", majorVersionNumber.intValue, minorVersionNumber.intValue] floatValue];
             if ([repoDictionary[kAlfrescoRepositoryEdition] isEqualToString:kAlfrescoRepositoryEditionEnterprise] && version >= 4.2f)
             {
-                // public Workflow API available in Alfresco 4.2 Enterprise Edition and newer
+                // available in Alfresco 4.2 Enterprise Edition and newer
                 [capabilities setValue:@YES forKey:kAlfrescoCapabilityPublicAPI];
+                [capabilities setValue:@YES forKey:kAlfrescoCapabilityMyFiles];
+                [capabilities setValue:@YES forKey:kAlfrescoCapabilitySharedFiles];
             }
             else if ([repoDictionary[kAlfrescoRepositoryEdition] isEqualToString:kAlfrescoRepositoryEditionCommunity] && version >= 4.3f)
             {
-                // public Workflow API available in Alfresco 4.3 Community Edition and newer
+                // available in Alfresco 4.3 Community Edition and newer
                 [capabilities setValue:@YES forKey:kAlfrescoCapabilityPublicAPI];
+                [capabilities setValue:@YES forKey:kAlfrescoCapabilityMyFiles];
+                [capabilities setValue:@YES forKey:kAlfrescoCapabilitySharedFiles];
             }
             else
             {
                 [capabilities setValue:@NO forKey:kAlfrescoCapabilityPublicAPI];
+                [capabilities setValue:@NO forKey:kAlfrescoCapabilityMyFiles];
+                [capabilities setValue:@NO forKey:kAlfrescoCapabilitySharedFiles];
             }
         }
         

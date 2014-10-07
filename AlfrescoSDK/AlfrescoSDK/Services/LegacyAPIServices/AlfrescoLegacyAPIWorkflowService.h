@@ -18,11 +18,6 @@
  *****************************************************************************
  */
 
-/** AlfrescoLegacyAPIWorkflowService
- 
- Author: Tauseef Mughal (Alfresco)
- */
-
 #import "AlfrescoWorkflowService.h"
 
 @interface AlfrescoLegacyAPIWorkflowService : AlfrescoWorkflowService

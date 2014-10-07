@@ -20,6 +20,10 @@
 
 #import "AlfrescoNodeTypeDefinition.h"
 
+/**
+ * AlfrescoFolderTypeDefinition represents the definition of a folder type defined in the content model.
+ */
+
 @interface AlfrescoFolderTypeDefinition : AlfrescoNodeTypeDefinition
 
 @end
