@@ -50,6 +50,7 @@
 @property BOOL isUsingBaseAuthenticationProvider;
 @property (nonatomic, strong, readwrite) NSArray *unremovableSessionKeys;
 @property (nonatomic, strong, readwrite) AlfrescoCloudNetwork *network;
+@property (nonatomic, strong, readwrite) NSArray *networks;
 @end
 
 
@@ -172,24 +173,9 @@
 
 - (AlfrescoRequest *)retrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
-    [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.networkProvider executeRequestWithURL:self.baseURLWithoutNetwork
-                                        session:self alfrescoRequest:request
-                                completionBlock:^(NSData *data, NSError *error){
-        if (nil == data)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *networks = [self networkArrayFromJSONData:data error:&conversionError];
-            completionBlock(networks, conversionError);
-        }
-    }];
-    return request;
+    // MOBSDK-743: networks are now stored during session creation so we can just return the array
+    completionBlock(self.networks, nil);
+    return nil;
 }
 
 /**
@@ -286,6 +272,28 @@
 
 #pragma mark - Private methods
 
+- (AlfrescoRequest *)internalRetrieveNetworksWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    id<AlfrescoAuthenticationProvider> authProvider = [self authProviderToBeUsed];
+    [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.networkProvider executeRequestWithURL:self.baseURLWithoutNetwork
+                                        session:self alfrescoRequest:request
+                                completionBlock:^(NSData *data, NSError *error){
+                                    if (nil == data)
+                                    {
+                                        completionBlock(nil, error);
+                                    }
+                                    else
+                                    {
+                                        NSError *conversionError = nil;
+                                        self.networks = [self networkArrayFromJSONData:data error:&conversionError];
+                                        completionBlock(self.networks, conversionError);
+                                    }
+                                }];
+    return request;
+}
+
 - (id)authProviderToBeUsed
 {
     if (self.isUsingBaseAuthenticationProvider)
@@ -321,7 +329,7 @@
     self.baseURLWithoutNetwork = [self.baseUrl copy];
     _oauthData = oauthData; ///setting oauthData only via instance variable. The setter method recreates a CMIS session and this shouldn't be used here.
     
-    __block AlfrescoRequest *request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
+    __block AlfrescoRequest *request = [self internalRetrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
         if (nil == networks)
         {
             completionBlock(nil, error);
@@ -482,7 +490,7 @@
 
 /**
 This authentication method authorises the user to access the home network assigned to the account. It first searches the available networks for the user
- (using retrieveNetworksWithCompletionBlock) and from within that block proceeds to full authentication for a specific network.
+ (using internalRetrieveNetworksWithCompletionBlock) and from within that block proceeds to full authentication for a specific network.
  */
 - (AlfrescoRequest *)authenticateWithEmailAddress:(NSString *)emailAddress
                                          password:(NSString *)password
@@ -502,7 +510,7 @@ This authentication method authorises the user to access the home network assign
     self.password = password;
     self.personIdentifier = emailAddress;
     
-    __block AlfrescoRequest *request = [self retrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
+    __block AlfrescoRequest *request = [self internalRetrieveNetworksWithCompletionBlock:^(NSArray *networks, NSError *error) {
         if (nil == networks)
         {
             completionBlock(nil, error);
@@ -517,6 +525,7 @@ This authentication method authorises the user to access the home network assign
             }
             else
             {
+                self.network = homeNetwork;
                 AlfrescoRequest *authRequest = [self authenticateWithEmailAddress:emailAddress
                                                                          password:password
                                                                           network:homeNetwork.identifier
