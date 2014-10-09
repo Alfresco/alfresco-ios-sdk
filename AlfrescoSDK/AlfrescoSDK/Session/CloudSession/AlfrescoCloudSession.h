@@ -31,12 +31,16 @@
  */
 
 @interface AlfrescoCloudSession : NSObject <AlfrescoSession>
+
+/// The network this session is connected to.
 @property (nonatomic, strong, readonly) AlfrescoCloudNetwork *network;
+
+/// An array of AlfrescoCloudNetwork objects representing the networks the connected user has access to.
+@property (nonatomic, strong, readonly) NSArray *networks;
 
 /**
  There is a custom setter method of oauthData, which is used for refreshing access tokens. This resets the authentication and CMIS session.
  For initialising a AlfrescoCloudSession, one of the connectWithOAuthData methods must be used.
- @param oauthData
  */
 @property (nonatomic, strong) AlfrescoOAuthData *oauthData;
 
