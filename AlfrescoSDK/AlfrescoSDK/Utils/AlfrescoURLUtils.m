@@ -20,6 +20,7 @@
 
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoErrors.h"
 
 @implementation AlfrescoURLUtils
 
@@ -30,6 +31,9 @@
 
 + (NSURL *)buildURLFromBaseURLString:(NSString *)baseURL extensionURL:(NSString *)extensionURL listingContext:(AlfrescoListingContext *)listingContext
 {
+    [AlfrescoErrors assertStringArgumentNotNilOrEmpty:baseURL argumentName:@"baseURL"];
+    [AlfrescoErrors assertStringArgumentNotNilOrEmpty:extensionURL argumentName:@"extensionURL"];
+    
     NSMutableString *mutableRequestString = [NSMutableString string];
     if ([baseURL hasSuffix:@"/"] && [extensionURL hasPrefix:@"/"])
     {

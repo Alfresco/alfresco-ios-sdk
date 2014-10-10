@@ -34,7 +34,7 @@
                 filter:(NSString *)filter
          relationships:(CMISIncludeRelationship)relationships
       includePolicyIds:(BOOL)includePolicyIds
-       renditionFilder:(NSString *)renditionFilter
+       renditionFilter:(NSString *)renditionFilter
             includeACL:(BOOL)includeACL
     includeAllowableActions:(BOOL)includeAllowableActions
        completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
@@ -47,7 +47,7 @@
                       filter:(NSString *)filter
                relationships:(CMISIncludeRelationship)relationships
             includePolicyIds:(BOOL)includePolicyIds
-             renditionFilder:(NSString *)renditionFilter
+             renditionFilter:(NSString *)renditionFilter
                   includeACL:(BOOL)includeACL
      includeAllowableActions:(BOOL)includeAllowableActions
              completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
