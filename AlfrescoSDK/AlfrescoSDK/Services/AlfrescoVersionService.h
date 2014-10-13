@@ -126,5 +126,18 @@
                      completionBlock:(AlfrescoDocumentCompletionBlock)completionBlock
                        progressBlock:(AlfrescoProgressBlock)progressBlock;
 
+/** Retrieves a list of documents the current has checked out.
+ 
+ @param completionBlock The block that's called with the checked out documents.
+ */
+- (AlfrescoRequest *)retrieveCheckedOutDocumentsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+/** Retrieves a list of documents the current has checked out.
+ 
+ @param listingContext The listing context with a paging definition that's used to retrieve the checked out documents.
+ @param completionBlock The block that's called with the checked out documents.
+ */
+- (AlfrescoRequest *)retrieveCheckedOutDocumentsWithListingContext:(AlfrescoListingContext *)listingContext
+                                                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 @end

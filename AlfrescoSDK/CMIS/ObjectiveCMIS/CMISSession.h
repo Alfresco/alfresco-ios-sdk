@@ -76,7 +76,20 @@
  */
 - (CMISRequest*)retrieveFolderWithOperationContext:(CMISOperationContext *)operationContext
                            completionBlock:(void (^)(CMISFolder *folder, NSError *error))completionBlock;
- 
+
+/**
+ * Retrieves a list of documents the current user has checked out.
+ * completionBlock returns the checked out documents as a paged results object or nil if unsuccessful.
+ */
+- (CMISRequest*)retrieveCheckedOutDocumentsWithCompletionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
+
+/**
+ * Retrieves a list of documents the current user has checked out using the provided operation context.
+ * completionBlock returns the checked out documents as a paged results object or nil if unsuccessful.
+ */
+- (CMISRequest*)retrieveCheckedOutDocumentsWithOperationContext:(CMISOperationContext *)operationContext
+                                                completionBlock:(void (^)(CMISPagedResult *result, NSError *error))completionBlock;
+
 /**
  * Retrieves the object with the given identifier.
  * completionBlock returns the CMIS object or nil if unsuccessful
