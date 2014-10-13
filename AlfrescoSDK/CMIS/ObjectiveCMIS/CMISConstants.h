@@ -103,6 +103,7 @@ extern NSString * const kCMISParameterIncludeAllowableActions;
 extern NSString * const kCMISParameterFilter;
 extern NSString * const kCMISParameterMaxItems;
 extern NSString * const kCMISParameterObjectId;
+extern NSString * const kCMISParameterFolderId;
 extern NSString * const kCMISParameterOrderBy;
 extern NSString * const kCMISParameterIncludePathSegment;
 extern NSString * const kCMISParameterIncludeRelationships;
