@@ -41,7 +41,7 @@
 
 - (AlfrescoNode *)nodeFromCMISObjectData:(CMISObjectData *)cmisObjectData;
 
-- (AlfrescoDocument *)documentFromCMISQueryResult:(CMISQueryResult *)cmisQueryResult;
+- (AlfrescoNode *)nodeFromCMISQueryResult:(CMISQueryResult *)cmisQueryResult;
 
 - (AlfrescoDocumentTypeDefinition *)documentTypeDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition;
 
