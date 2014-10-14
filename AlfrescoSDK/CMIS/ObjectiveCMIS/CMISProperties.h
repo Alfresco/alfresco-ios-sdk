@@ -32,6 +32,9 @@
 // adds a property
 - (void)addProperty:(CMISPropertyData *)propertyData;
 
+// removes a property
+- (void)removePropertyWithId:(NSString *)propertyId;
+
 /**
 * Returns a property by id.
 * <p>
@@ -39,7 +42,7 @@
 * result properties, this method might not always work as expected with
 * some repositories. Use {@link #getPropertyByQueryName(String)} instead.
 */
-- (CMISPropertyData *)propertyForId:(NSString *)id;
+- (CMISPropertyData *)propertyForId:(NSString *)propertyId;
 
 /**
  * Returns a property by query name or alias.
@@ -60,7 +63,7 @@
 /**
  * Returns a property multi-value by id.
  */
-- (NSArray *)propertyMultiValueById:(NSString *)id;
+- (NSArray *)propertyMultiValueById:(NSString *)propertyId;
 
 /**
  * Returns a property multi-value by query name or alias.

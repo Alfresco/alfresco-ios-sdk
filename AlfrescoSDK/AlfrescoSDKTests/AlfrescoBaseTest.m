@@ -55,11 +55,15 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
             testServer = @"localhost";
         }
     }
-    
+
     NSString *homePath = environmentVariables[@"IPHONE_SIMULATOR_HOST_HOME"];
     if (!homePath)
     {
-        homePath = environmentVariables[@"HOME"];
+        homePath = environmentVariables[@"SIMULATOR_HOST_HOME"];
+        if (!homePath)
+        {
+            homePath = environmentVariables[@"HOME"];
+        }
     }
     
     self.userTestConfigFolder = [NSString pathWithComponents:@[homePath, kAlfrescoTestServersConfigDirectory]];

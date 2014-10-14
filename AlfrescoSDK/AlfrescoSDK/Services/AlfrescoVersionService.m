@@ -276,7 +276,11 @@
     AlfrescoRequest *request = [AlfrescoRequest new];
     if (properties != nil)
     {
-        [AlfrescoCMISUtil preparePropertiesForUpdate:properties node:document cmisSession:self.cmisSession completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
+        [AlfrescoCMISUtil preparePropertiesForUpdate:properties
+                                             aspects:nil
+                                                node:document
+                                         cmisSession:self.cmisSession
+                                     completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
             if (cmisProperties != nil)
             {
                 request.httpRequest = checkin(cmisProperties);
@@ -348,7 +352,11 @@
     AlfrescoRequest *request = [AlfrescoRequest new];
     if (properties != nil)
     {
-        [AlfrescoCMISUtil preparePropertiesForUpdate:properties node:document cmisSession:self.cmisSession completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
+        [AlfrescoCMISUtil preparePropertiesForUpdate:properties
+                                             aspects:nil
+                                                node:document
+                                         cmisSession:self.cmisSession
+                                     completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
             if (cmisProperties != nil)
             {
                 request.httpRequest = checkin(cmisProperties);

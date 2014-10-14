@@ -6173,6 +6173,84 @@
     }
 }
 
+- (void)testAddAspects
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        // get the current count of applied aspects
+        unsigned long numberOfAppliedAspects = self.testAlfrescoDocument.aspects.count;
+        
+        // add a new aspect
+        [self.dfService addAspectsToNode:self.testAlfrescoDocument
+                                 aspects:@[kAlfrescoModelAspectExif]
+                         completionBlock:^(AlfrescoNode *addAspectsNode, NSError *addAspectsError) {
+            if (addAspectsNode == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:addAspectsError];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue(addAspectsNode.aspects.count >= (numberOfAppliedAspects + 1),
+                              @"Expected the aspect count to have increased");
+                XCTAssertTrue([addAspectsNode.aspects containsObject:kAlfrescoModelAspectExif],
+                              @"Expected the node to have the exif aspect applied");
+                
+                // update an exif property value and add another 2 aspects (setting the property of one)
+                NSDictionary *properties = @{kAlfrescoModelPropertyExifManufacturer: @"Canon",
+                                             kAlfrescoModelPropertyAudioAlbum: @"Album Title"};
+                [self.dfService updatePropertiesOfNode:addAspectsNode
+                                            properties:properties
+                                               aspects:@[kAlfrescoModelAspectAudio, kAlfrescoModelAspectGeographic]
+                                       completionBlock:^(AlfrescoNode *updateNode, NSError *updateError) {
+                    if (updateNode == nil)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [self failureMessageFromError:addAspectsError];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertTrue(updateNode.aspects.count >= (numberOfAppliedAspects + 3),
+                                      @"Expected the aspect count to have increased");
+                        XCTAssertTrue([updateNode.aspects containsObject:kAlfrescoModelAspectExif],
+                                      @"Expected the node to have the exif aspect applied");
+                        XCTAssertTrue([updateNode.aspects containsObject:kAlfrescoModelAspectAudio],
+                                      @"Expected the node to have the audio aspect applied");
+                        XCTAssertTrue([updateNode.aspects containsObject:kAlfrescoModelAspectGeographic],
+                                      @"Expected the node to have the geographic aspect applied");
+                        
+                        // check the property values got set
+                        AlfrescoProperty *manufacturer = updateNode.properties[kAlfrescoModelPropertyExifManufacturer];
+                        AlfrescoProperty *album = updateNode.properties[kAlfrescoModelPropertyAudioAlbum];
+                        
+                        XCTAssertNotNil(manufacturer, @"Expected to find the manufacturer property");
+                        XCTAssertNotNil(album, @"Expected to find the album property");
+                        
+                        XCTAssertTrue([manufacturer.value isEqualToString:@"Canon"],
+                                      @"Expected the manufacturer property value to be 'Canon' but it was: %@", manufacturer.value);
+                        XCTAssertTrue([album.value isEqualToString:@"Album Title"],
+                                      @"Expected the album property value to be 'Album Title' but it was: %@", album.value);
+                        
+                        self.lastTestSuccessful = YES;
+                        self.callbackCompleted = YES;
+                    }
+                }];
+            }
+        }];
+
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 #pragma mark unit test internal methods
 
 - (BOOL)nodeArray:(NSArray *)nodeArray containsName:(NSString *)name
