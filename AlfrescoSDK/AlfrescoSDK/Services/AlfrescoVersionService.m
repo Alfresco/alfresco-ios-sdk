@@ -377,7 +377,8 @@
 
 - (AlfrescoRequest *)retrieveCheckedOutDocumentsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
-    return [self retrieveCheckedOutDocumentsWithListingContext:self.session.defaultListingContext
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveCheckedOutDocumentsWithListingContext:listingContext
                                                completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
         completionBlock(pagingResult.objects, error);
     }];

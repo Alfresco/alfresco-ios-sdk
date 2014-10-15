@@ -203,7 +203,9 @@ extern NSString * const kAlfrescoCloudURL;
 extern NSString * const kAlfrescoCloudDefaultRedirectURI;
 extern NSString * const kAlfrescoCloudAPIPath;
 extern NSString * const kAlfrescoCloudCMISPath;
+extern NSString * const kAlfrescoCloudCMIS11AtomPath;
 extern NSString * const kAlfrescoCloudAPIRateLimitExceeded;
+extern NSString * const kAlfrescoCloudAPIQuery;
 extern NSString * const kAlfrescoHomeNetworkType;
 
 extern NSString * const kAlfrescoPublicAPIJSONList;

@@ -55,5 +55,6 @@
 @property (nonatomic, strong, readonly) NSString *fullAddress;
 
 - (id)initWithProperties:(NSDictionary *)properties;
+- (id)initWithDictionary:(NSDictionary *)properties;
 
 @end
