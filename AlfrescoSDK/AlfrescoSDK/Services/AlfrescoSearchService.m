@@ -29,6 +29,7 @@
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoCMISUtil.h"
+#import "AlfrescoLog.h"
 
 @interface AlfrescoSearchService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -178,7 +179,7 @@
             NSMutableArray *resultArray = [NSMutableArray array];
             for (CMISQueryResult *queryResult in pagedResult.resultArray)
             {
-                [resultArray addObject:[self.objectConverter documentFromCMISQueryResult:queryResult]];
+                [resultArray addObject:[self.objectConverter nodeFromCMISQueryResult:queryResult]];
             }
             NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
             completionBlock(sortedArray, nil);
@@ -214,7 +215,7 @@
             NSMutableArray *resultArray = [NSMutableArray array];
             for (CMISQueryResult *queryResult in pagedResult.resultArray)
             {
-                [resultArray addObject:[self.objectConverter documentFromCMISQueryResult:queryResult]];
+                [resultArray addObject:[self.objectConverter nodeFromCMISQueryResult:queryResult]];
             }
             NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedArray listingContext:listingContext];
@@ -227,11 +228,15 @@
 
 #pragma mark Internal methods
 
-- (NSString *) createSearchQuery:(NSString *)keywords  options:(AlfrescoKeywordSearchOptions *)options
+- (NSString *)createSearchQuery:(NSString *)keywords  options:(AlfrescoKeywordSearchOptions *)options
 {
-    NSMutableString *searchQuery = [NSMutableString stringWithString:@"SELECT * FROM cmis:document WHERE ("];
-    BOOL firstKeyword = YES;
+    // process keywords into an array after replacing quotes and escaping apostrophes (MOBSDK-754)
+    keywords = [keywords stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+    keywords = [keywords stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
     NSArray *keywordArray = [keywords componentsSeparatedByString:@" "];
+    
+    NSMutableString *searchQuery = [NSMutableString stringWithFormat:@"SELECT * FROM %@ WHERE (", options.typeName];
+    BOOL firstKeyword = YES;
     for (NSString *keyword in keywordArray)
     {
         if (!firstKeyword)
@@ -274,8 +279,9 @@
         }
     }
     
-    return searchQuery;
+    AlfrescoLogDebug(@"Query: %@", searchQuery);
     
+    return searchQuery;
 }
 
 

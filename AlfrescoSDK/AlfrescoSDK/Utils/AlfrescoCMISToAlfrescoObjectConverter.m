@@ -250,17 +250,24 @@
     return [self nodeFromCMISObject:cmisObject];
 }
 
-- (AlfrescoDocument *)documentFromCMISQueryResult:(CMISQueryResult *)cmisQueryResult
+- (AlfrescoNode *)nodeFromCMISQueryResult:(CMISQueryResult *)cmisQueryResult
 {
     CMISSession *cmisSession = [self.session objectForParameter:kAlfrescoSessionKeyCmisSession];
     CMISObjectData *data = [[CMISObjectData alloc] init];
     data.identifier = [[cmisQueryResult propertyForId:kCMISPropertyObjectId] firstValue];
-    data.baseType = CMISBaseTypeDocument;
     data.properties = cmisQueryResult.properties;
     data.allowableActions = cmisQueryResult.allowableActions;
     
+    // determine the base type of the object
+    data.baseType = CMISBaseTypeDocument;
+    NSString *baseTypeId = [[cmisQueryResult propertyForId:kCMISPropertyBaseTypeId] firstValue];
+    if ([baseTypeId isEqualToString:kCMISPropertyObjectTypeIdValueFolder])
+    {
+        data.baseType = CMISBaseTypeFolder;
+    }
+    
     CMISObject *cmisObject = [cmisSession.objectConverter convertObjectInternal:data];
-    return (AlfrescoDocument *)[self nodeFromCMISObject:cmisObject];
+    return [self nodeFromCMISObject:cmisObject];
 }
 
 - (AlfrescoDocumentTypeDefinition *)documentTypeDefinitionFromCMISTypeDefinition:(CMISTypeDefinition *)cmisTypeDefinition

@@ -172,63 +172,45 @@
     {
         self.personService = [[AlfrescoPersonService alloc] initWithSession:self.currentSession];
         
-        if (self.isCloud)
-        {
-            @try
-            {
-                [self.personService searchWithKeywords:self.userName completionBlock:nil];
-                
-                // if we get here the exception was not thrown
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = @"Expected an exception to be thrown as searchWithKeywords is not implemented on the Cloud";
-            }
-            @catch (NSException *exception)
-            {
-                self.lastTestSuccessful = YES;
-            }
-            @finally
-            {
-                self.callbackCompleted = YES;
-            }
-            
-            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-        }
-        else
-        {
-            [self.personService searchWithKeywords:self.userName completionBlock:^(NSArray *array, NSError *error) {
-                 if (nil == array)
-                 {
-                     self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = @"Failed to retrieve person.";
-                 }
-                 else
-                 {
-                     XCTAssertNotNil(array,@"Array should not be nil");
-                     // Might get multiple search results, so enumerate and find the one we're looking for
-                     __block AlfrescoPerson *person = nil;
-                     [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                         if ([[(AlfrescoPerson *)obj identifier] isEqualToString:self.userName])
-                         {
-                             person = (AlfrescoPerson *)obj;
-                             *stop = YES;
-                         }
-                     }];
-                     XCTAssertTrue([self.userName isEqualToString:person.identifier],@"person.username is %@ but should be %@", person.identifier, self.userName);
-                     XCTAssertTrue([self.firstName isEqualToString:person.firstName],@"person.username is %@ but should be %@", person.firstName, self.firstName);
-                     XCTAssertNotNil(person.lastName, @"Persons last name should not be nil");
-                     XCTAssertNotNil(person.fullName, @"Persons full name sbould not be nil");
-                     if (person.avatarIdentifier)
+        [self.personService searchWithKeywords:self.userName completionBlock:^(NSArray *array, NSError *error) {
+             if (nil == array)
+             {
+                 self.lastTestSuccessful = NO;
+                 self.lastTestFailureMessage = @"Failed to retrieve person.";
+             }
+             else
+             {
+                 XCTAssertNotNil(array,@"Array should not be nil");
+                 // Might get multiple search results, so enumerate and find the one we're looking for
+                 __block AlfrescoPerson *person = nil;
+                 [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                     if ([[(AlfrescoPerson *)obj identifier] isEqualToString:self.userName])
                      {
-                         XCTAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
+                         person = (AlfrescoPerson *)obj;
+                         *stop = YES;
                      }
-                     self.lastTestSuccessful = YES;
+                 }];
+                 
+                 XCTAssertTrue([self.userName isEqualToString:person.identifier],
+                               @"person.username is %@ but should be %@", person.identifier, self.userName);
+                 XCTAssertTrue([self.firstName isEqualToString:person.firstName],
+                               @"person.username is %@ but should be %@", person.firstName, self.firstName);
+                 XCTAssertNotNil(person.lastName, @"Persons last name should not be nil");
+                 XCTAssertNotNil(person.fullName, @"Persons full name should not be nil");
+                 XCTAssertNotNil(person.company, @"Persons company should not be nil");
+                 
+                 if (person.avatarIdentifier)
+                 {
+                     XCTAssertTrue([person.avatarIdentifier length] > 0, @"Avatar length should be longer than 0");
                  }
-                 self.callbackCompleted = YES;
-             }];
-            [self waitUntilCompleteWithFixedTimeInterval];
-            
-            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
-        }
+                 
+                 self.lastTestSuccessful = YES;
+             }
+             self.callbackCompleted = YES;
+         }];
+        [self waitUntilCompleteWithFixedTimeInterval];
+        
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }
     else
     {

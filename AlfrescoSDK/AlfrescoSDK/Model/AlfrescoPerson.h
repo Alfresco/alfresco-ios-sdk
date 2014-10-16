@@ -85,5 +85,6 @@
 @property (nonatomic, strong, readonly) AlfrescoCompany *company;
 
 - (id)initWithProperties:(NSDictionary *)properties;
+- (id)initWithDictionary:(NSDictionary *)properties;
 
 @end

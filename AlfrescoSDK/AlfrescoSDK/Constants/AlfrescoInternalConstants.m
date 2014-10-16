@@ -239,8 +239,10 @@ NSString * const kAlfrescoDocumentLibrary = @"documentLibrary";
 NSString * const kAlfrescoCloudURL = @"https://api.alfresco.com";
 NSString * const kAlfrescoCloudDefaultRedirectURI = @"http://www.alfresco.com/mobile-auth-callback.html";
 NSString * const kAlfrescoCloudCMISPath = @"/public/cmis/versions/1.0/atom";
+NSString * const kAlfrescoCloudCMIS11AtomPath = @"/public/cmis/versions/1.1/atom";
 NSString * const kAlfrescoCloudAPIPath  = @"/public/alfresco/versions/1/";
 NSString * const kAlfrescoCloudAPIRateLimitExceeded = @"API plan limit exceeded";
+NSString * const kAlfrescoCloudAPIQuery = @"/query";
 NSString * const kAlfrescoHomeNetworkType = @"homeNetwork";
 
 /**

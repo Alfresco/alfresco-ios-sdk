@@ -356,6 +356,7 @@ static NSSet *audioAspectProperties;
 }
 
 + (void)preparePropertiesForUpdate:(NSDictionary *)alfrescoProperties
+                           aspects:(NSArray *)aspects
                               node:(AlfrescoNode *)node
                        cmisSession:(CMISSession *)cmisSession
                    completionBlock:(void (^)(CMISProperties *cmisProperties, NSError *error))completionBlock
@@ -375,8 +376,12 @@ static NSSet *audioAspectProperties;
         [cmisProperties setValue:node.name forKey:kCMISPropertyName];
     }
     
+    // combine provided aspects with those already on the node
+    NSMutableArray *allAspects = [[NSMutableArray alloc] initWithArray:aspects];
+    [allAspects addObjectsFromArray:node.aspects];
+    
     // set the fully qualified objectTypeId
-    NSString *objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:alfrescoProperties type:node.type aspects:node.aspects folder:node.isFolder];
+    NSString *objectTypeId = [AlfrescoCMISUtil prepareObjectTypeIdForProperties:alfrescoProperties type:node.type aspects:allAspects folder:node.isFolder];
     [cmisProperties setValue:objectTypeId forKey:kCMISPropertyObjectTypeId];
     
     // TODO: determine if we really need to re-retrieve the object
@@ -400,21 +405,11 @@ static NSSet *audioAspectProperties;
                  }
                  else
                  {
-                     // re-build dictionary just to remove the objectTypeId property, CMISProperties should provide a remove method!
-                     CMISProperties *updatedProperties = [[CMISProperties alloc] init];
-                     NSEnumerator *enumerator = [convertedProperties.propertiesDictionary keyEnumerator];
-                     for (NSString *cmisKey in enumerator)
-                     {
-                         if (![cmisKey isEqualToString:kCMISPropertyObjectTypeId])
-                         {
-                             CMISPropertyData *propData = (convertedProperties.propertiesDictionary)[cmisKey];
-                             [updatedProperties addProperty:propData];
-                         }
-                     }
-                     updatedProperties.extensions = convertedProperties.extensions;
+                     // remove the objectTypeId property
+                     [convertedProperties removePropertyWithId:kCMISPropertyObjectTypeId];
                      
                      // return the properties
-                     completionBlock(updatedProperties, nil);
+                     completionBlock(convertedProperties, nil);
                  }
              }];
         }

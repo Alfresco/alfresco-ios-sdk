@@ -18,6 +18,7 @@
 
 #import "AlfrescoSearchServiceTest.h"
 #import "AlfrescoLog.h"
+#import "CMISConstants.h"
 
 @interface AlfrescoSearchServiceTest ()
 + (BOOL)containsTestFile:(NSString *)name array:(NSArray *)array;
@@ -32,7 +33,7 @@
  @Unique_TCRef 42S0
  */
 
-- (void)testQueryWithKeywords
+- (void)testQueryWithDocumentKeywords
 {
     if (self.setUpSuccess)
     {
@@ -61,11 +62,65 @@
                     }
                     else
                     {
+                        // check the first result is an AlfrescoDocument object
+                        id firstResult = array.firstObject;
+                        XCTAssertTrue([firstResult isKindOfClass:[AlfrescoDocument class]],
+                                      @"Expected first result to be an AlfrescoDocument object but it was: %@", firstResult);
+                        
                         BOOL arrayContainsTestFile = [AlfrescoSearchServiceTest containsTestFile:self.testSearchFileName array:array];
                         AlfrescoLogDebug(@"Search Term: %@", searchTerm);
                         AlfrescoLogDebug(@"Results array size is: %i, and the first object is: %@", [array count], [array[0] name]);
                         XCTAssertTrue(arrayContainsTestFile, @"the uploaded file should be found and part of the search array");
                         self.lastTestSuccessful = arrayContainsTestFile;
+                    }
+                }
+                self.callbackCompleted = YES;
+            }];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testQueryWithFolderKeywords
+{
+    if (self.setUpSuccess)
+    {
+        if (!self.isCloud)
+        {
+            self.searchService = [[AlfrescoSearchService alloc] initWithSession:self.currentSession];
+            
+            AlfrescoKeywordSearchOptions *searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithTypeName:kCMISPropertyObjectTypeIdValueFolder];
+            
+            // search folders
+            [self.searchService searchWithKeywords:self.testSiteName options:searchOptions completionBlock:^(NSArray *array, NSError *error) {
+                if (nil == array)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                }
+                else
+                {
+                    XCTAssertNotNil(array, @"array should not be nil");
+                    XCTAssertTrue(array.count >= 1, @"expected at least 1 search result but got %lu", (unsigned long)array.count);
+                    if (array.count == 0)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = @"No query result";
+                    }
+                    else
+                    {
+                        // check the first result is an AlfrescoFolder object
+                        id firstResult = array.firstObject;
+                        XCTAssertTrue([firstResult isKindOfClass:[AlfrescoFolder class]],
+                                      @"Expected first result to be an AlfrescoFolder object but it was: %@", firstResult);
+                        
+                        self.lastTestSuccessful = YES;
                     }
                 }
                 self.callbackCompleted = YES;
@@ -376,6 +431,8 @@
         XCTAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
         XCTAssertTrue(searchOptions.exactMatch, @"Expected the exact match to be true");
         XCTAssertTrue(searchOptions.includeContent, @"Expected the include content property to be true");
+        XCTAssertTrue([searchOptions.typeName isEqualToString:kCMISPropertyObjectTypeIdValueDocument],
+                      @"Expected type name property to be 'cmis:document' but it was: %@", searchOptions.typeName);
         
         searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithExactMatch:NO includeContent:YES folder:self.currentSession.rootFolder includeDescendants:YES];
         XCTAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
@@ -383,11 +440,31 @@
         XCTAssertTrue(searchOptions.includeContent, @"Expected the include content to be true");
         XCTAssertTrue([searchOptions.folder isEqual:self.currentSession.rootFolder], @"Expected the folder to be that of the the sessions root folder");
         XCTAssertTrue(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
+        XCTAssertTrue([searchOptions.typeName isEqualToString:kCMISPropertyObjectTypeIdValueDocument],
+                      @"Expected type name property to be 'cmis:document' but it was: %@", searchOptions.typeName);
         
         searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithFolder:self.currentSession.rootFolder includeDescendants:NO];
         XCTAssertNotNil(self.currentSession.rootFolder, @"The folder in the search options should not be nil");
         XCTAssertTrue([searchOptions.folder isEqual:self.currentSession.rootFolder], @"Expected the folder to be that of the the sessions root folder");
         XCTAssertFalse(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
+        XCTAssertTrue([searchOptions.typeName isEqualToString:kCMISPropertyObjectTypeIdValueDocument],
+                      @"Expected type name property to be 'cmis:document' but it was: %@", searchOptions.typeName);
+        
+        searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithTypeName:kCMISPropertyObjectTypeIdValueFolder];
+        XCTAssertNil(searchOptions.folder, @"The folder in the search options should be nil");
+        XCTAssertTrue(searchOptions.includeDescendants, @"Expected the include descendants property to be true");
+        XCTAssertFalse(searchOptions.includeContent, @"Expected the include content property to be false");
+        XCTAssertFalse(searchOptions.exactMatch, @"Expected the exact match property to be false");
+        XCTAssertTrue([searchOptions.typeName isEqualToString:kCMISPropertyObjectTypeIdValueFolder],
+                      @"Expected type name property to be 'cmis:folder' but it was: %@", searchOptions.typeName);
+        
+        searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithTypeName:kAlfrescoModelTypeContent];
+        XCTAssertTrue([searchOptions.typeName isEqualToString:kCMISPropertyObjectTypeIdValueDocument],
+                      @"Expected type name property to be 'cmis:document' but it was: %@", searchOptions.typeName);
+        
+        searchOptions = [[AlfrescoKeywordSearchOptions alloc] initWithTypeName:kAlfrescoModelTypeFolder];
+        XCTAssertTrue([searchOptions.typeName isEqualToString:kCMISPropertyObjectTypeIdValueFolder],
+                      @"Expected type name property to be 'cmis:folder' but it was: %@", searchOptions.typeName);
     }
     else
     {

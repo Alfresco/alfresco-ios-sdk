@@ -1038,6 +1038,14 @@
                                  properties:(NSDictionary *)properties
                             completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
 {
+    return [self updatePropertiesOfNode:node properties:properties aspects:nil completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)updatePropertiesOfNode:(AlfrescoNode *)node
+                                 properties:(NSDictionary *)properties
+                                    aspects:(NSArray *)aspects
+                            completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
+{
     [AlfrescoErrors assertArgumentNotNil:properties argumentName:@"properties"];
     [AlfrescoErrors assertArgumentNotNil:node argumentName:@"node"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
@@ -1046,50 +1054,60 @@
     NSString *versionSeriesId = [node propertyValueWithName:kCMISPropertyVersionSeriesId];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [AlfrescoCMISUtil preparePropertiesForUpdate:properties node:node cmisSession:self.cmisSession
+    [AlfrescoCMISUtil preparePropertiesForUpdate:properties
+                                         aspects:aspects
+                                            node:node
+                                     cmisSession:self.cmisSession
                                  completionBlock:^(CMISProperties *cmisProperties, NSError *prepareError) {
-        if (cmisProperties == nil)
-        {
-            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:prepareError];
-            completionBlock(nil, alfrescoError);
-        }
-        else
-        {
-            CMISStringInOutParameter *inOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:node.identifier];
-            request.httpRequest = [self.cmisSession.binding.objectService
-                                   updatePropertiesForObject:inOutParam
-                                   properties:cmisProperties
-                                   changeToken:nil
-                                   completionBlock:^(NSError *updateError){
-                                       if (nil != updateError)
-                                       {
-                                           NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:updateError];
-                                           completionBlock(nil, alfrescoError);
-                                       }
-                                       else
-                                       {
-                                           request.httpRequest = [self.cmisSession retrieveObject:versionSeriesId completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError) {
-                                               if (nil == updatedCMISObject)
-                                               {
-                                                   completionBlock(nil, retrievalError);
-                                               }
-                                               else
-                                               {
-                                                   AlfrescoNode *resultNode = [self.objectConverter nodeFromCMISObject:updatedCMISObject];
-                                                   NSError *conversionError = nil;
-                                                   if (nil == resultNode)
-                                                   {
-                                                       conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
-                                                   }
-                                                   completionBlock(resultNode, conversionError);
-                                               }
-                                           }];
-                                       }
-                                   }];
-        }
-    }];
-
+         if (cmisProperties == nil)
+         {
+             NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:prepareError];
+             completionBlock(nil, alfrescoError);
+         }
+         else
+         {
+             CMISStringInOutParameter *inOutParam = [CMISStringInOutParameter inOutParameterUsingInParameter:node.identifier];
+             request.httpRequest = [self.cmisSession.binding.objectService
+                                    updatePropertiesForObject:inOutParam
+                                    properties:cmisProperties
+                                    changeToken:nil
+                                    completionBlock:^(NSError *updateError){
+                if (nil != updateError)
+                {
+                    NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:updateError];
+                    completionBlock(nil, alfrescoError);
+                }
+                else
+                {
+                    request.httpRequest = [self.cmisSession retrieveObject:versionSeriesId completionBlock:^(CMISObject *updatedCMISObject, NSError *retrievalError) {
+                        if (nil == updatedCMISObject)
+                        {
+                            completionBlock(nil, retrievalError);
+                        }
+                        else
+                        {
+                            AlfrescoNode *resultNode = [self.objectConverter nodeFromCMISObject:updatedCMISObject];
+                            NSError *conversionError = nil;
+                            if (nil == resultNode)
+                            {
+                                conversionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeDocumentFolderFailedToConvertNode];
+                            }
+                            completionBlock(resultNode, conversionError);
+                        }
+                    }];
+                }
+            }];
+         }
+     }];
+    
     return request;
+}
+
+- (AlfrescoRequest *)addAspectsToNode:(AlfrescoNode *)node
+                              aspects:(NSArray *)aspects
+                      completionBlock:(AlfrescoNodeCompletionBlock)completionBlock
+{
+    return [self updatePropertiesOfNode:node properties:@{} aspects:aspects completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)deleteNode:(AlfrescoNode *)node

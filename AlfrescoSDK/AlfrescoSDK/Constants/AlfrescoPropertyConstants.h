@@ -25,6 +25,32 @@
  k<class-name>Property<property-name>
  */
 
+extern NSString * const kAlfrescoPersonIdentifier;
+extern NSString * const kAlfrescoPersonFirstName;
+extern NSString * const kAlfrescoPersonLastName;
+extern NSString * const kAlfrescoPersonAvatarIdentifier;
+extern NSString * const kAlfrescoPersonJobTitle;
+extern NSString * const kAlfrescoPersonLocation;
+extern NSString * const kAlfrescoPersonSummary;
+extern NSString * const kAlfrescoPersonTelephoneNumber;
+extern NSString * const kAlfrescoPersonMobileNumber;
+extern NSString * const kAlfrescoPersonEmail;
+extern NSString * const kAlfrescoPersonSkypeId;
+extern NSString * const kAlfrescoPersonInstantMessageId;
+extern NSString * const kAlfrescoPersonGoogleId;
+extern NSString * const kAlfrescoPersonStatus;
+extern NSString * const kAlfrescoPersonStatusTime;
+extern NSString * const kAlfrescoPersonCompany;
+
+extern NSString * const kAlfrescoCompanyName;
+extern NSString * const kAlfrescoCompanyAddressLine1;
+extern NSString * const kAlfrescoCompanyAddressLine2;
+extern NSString * const kAlfrescoCompanyAddressLine3;
+extern NSString * const kAlfrescoCompanyPostCode;
+extern NSString * const kAlfrescoCompanyTelephoneNumber;
+extern NSString * const kAlfrescoCompanyFaxNumber;
+extern NSString * const kAlfrescoCompanyEmail;
+
 extern NSString * const kAlfrescoBaseConfigPropertyIdentifier;
 extern NSString * const kAlfrescoBaseConfigPropertyLabel;
 extern NSString * const kAlfrescoBaseConfigPropertySummary;

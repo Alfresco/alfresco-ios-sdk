@@ -18,6 +18,8 @@
 
 #import "AlfrescoCompany.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoPropertyConstants.h"
+#import "CMISDictionaryUtil.h"
 
 static NSInteger kCompanyModelVersion = 1;
 
@@ -35,6 +37,45 @@ static NSInteger kCompanyModelVersion = 1;
 
 @implementation AlfrescoCompany
 
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.name = [properties cmis_objectForKeyNotNull:kAlfrescoCompanyName];
+        self.addressLine1 = [properties cmis_objectForKeyNotNull:kAlfrescoCompanyAddressLine1];
+        self.addressLine2 = [properties cmis_objectForKeyNotNull:kAlfrescoCompanyAddressLine2];
+        self.addressLine3 = [properties cmis_objectForKeyNotNull:kAlfrescoCompanyAddressLine3];
+        self.postCode = [properties cmis_objectForKeyNotNull:kAlfrescoCompanyPostCode];
+        self.telephoneNumber = [properties cmis_objectForKeyNotNull:kAlfrescoCompanyTelephoneNumber];
+        self.faxNumber = [properties cmis_objectForKeyNotNull:kAlfrescoCompanyFaxNumber];
+        self.email = [properties cmis_objectForKeyNotNull:kAlfrescoCompanyEmail];
+        
+        [self generateFullAddress];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (nil != self)
+    {
+        //uncomment this line if you need to check the model version
+        //NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoCompany"];
+        self.name = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyName];
+        self.addressLine1 = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyAddressLine1];
+        self.addressLine2 = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyAddressLine2];
+        self.addressLine3 = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyAddressLine3];
+        self.postCode = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyPostcode];
+        self.telephoneNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyTelephone];
+        self.faxNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyFaxNumber];
+        self.email = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyEmail];
+        self.fullAddress = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyFullAddress];
+    }
+    return self;
+}
+
 - (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super init];
@@ -44,23 +85,7 @@ static NSInteger kCompanyModelVersion = 1;
         [self setCloudProperties:properties];
         
         self.name = [self valueForProperty:kAlfrescoJSONCompanyName inProperties:properties];
-        
-        if (self.addressLine1 && self.addressLine1.length > 0)
-        {
-            self.fullAddress = self.addressLine1;
-        }
-        if (self.addressLine2 && self.addressLine2.length > 0)
-        {
-            self.fullAddress = [NSString stringWithFormat:@"%@, %@", self.fullAddress, self.addressLine2];
-        }
-        if (self.addressLine3 && self.addressLine3.length > 0)
-        {
-            self.fullAddress = [NSString stringWithFormat:@"%@, %@", self.fullAddress, self.addressLine3];
-        }
-        if (self.postCode && self.postCode.length > 0)
-        {
-            self.fullAddress = [NSString stringWithFormat:@"%@, %@", self.fullAddress, self.postCode];
-        }
+        [self generateFullAddress];
     }
     return self;
 }
@@ -129,6 +154,26 @@ static NSInteger kCompanyModelVersion = 1;
     }
 }
 
+- (void)generateFullAddress
+{
+    if (self.addressLine1 && self.addressLine1.length > 0)
+    {
+        self.fullAddress = self.addressLine1;
+    }
+    if (self.addressLine2 && self.addressLine2.length > 0)
+    {
+        self.fullAddress = [NSString stringWithFormat:@"%@, %@", self.fullAddress, self.addressLine2];
+    }
+    if (self.addressLine3 && self.addressLine3.length > 0)
+    {
+        self.fullAddress = [NSString stringWithFormat:@"%@, %@", self.fullAddress, self.addressLine3];
+    }
+    if (self.postCode && self.postCode.length > 0)
+    {
+        self.fullAddress = [NSString stringWithFormat:@"%@, %@", self.fullAddress, self.postCode];
+    }
+}
+
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeInteger:kCompanyModelVersion forKey:@"AlfrescoCompany"];
@@ -141,26 +186,6 @@ static NSInteger kCompanyModelVersion = 1;
     [aCoder encodeObject:self.faxNumber forKey:kAlfrescoJSONCompanyFaxNumber];
     [aCoder encodeObject:self.email forKey:kAlfrescoJSONCompanyEmail];
     [aCoder encodeObject:self.fullAddress forKey:kAlfrescoJSONCompanyFullAddress];
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super init];
-    if (nil != self)
-    {
-        //uncomment this line if you need to check the model version
-        //NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoCompany"];
-        self.name = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyName];
-        self.addressLine1 = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyAddressLine1];
-        self.addressLine2 = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyAddressLine2];
-        self.addressLine3 = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyAddressLine3];
-        self.postCode = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyPostcode];
-        self.telephoneNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyTelephone];
-        self.faxNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyFaxNumber];
-        self.email = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyEmail];
-        self.fullAddress = [aDecoder decodeObjectForKey:kAlfrescoJSONCompanyFullAddress];
-    }
-    return self;
 }
 
 - (id)valueForProperty:(NSString *)property inProperties:(NSDictionary *)properties

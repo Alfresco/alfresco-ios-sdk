@@ -39,7 +39,7 @@
     {
         if ([object isKindOfClass:[CMISQueryResult class]])
         {
-            [children addObject:[converter documentFromCMISQueryResult:object]];
+            [children addObject:[converter nodeFromCMISQueryResult:object]];
         }
         else
         {
