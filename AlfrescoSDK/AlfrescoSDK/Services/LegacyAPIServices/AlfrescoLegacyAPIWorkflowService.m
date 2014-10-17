@@ -586,7 +586,7 @@
             remapValue = formattedDateString;
         }
         
-        // process the keys (apply appropriate prefix for form processor i.e. prop_ or assoc_)
+        // process the keys (apply appropriate prefix for form processor i.e. prop_ or assoc_ and change : to _)
         NSString *processedKey = [self processVariableKey:key];
         requestBody[processedKey] = remapValue;
     }
@@ -785,12 +785,12 @@
         if ([AlfrescoWorkflowUtils isActivitiTask:task])
         {
             // always set the transition to "next" for activiti tasks
-            requestBody[kAlfrescoWorkflowVariableTaskTransition] = kAlfrescoWorkflowLegacyJSONNext;
+            requestBody[kAlfrescoWorkflowLegacyJSONTransitions] = kAlfrescoWorkflowLegacyJSONNext;
         }
         else if ([AlfrescoWorkflowUtils isJBPMTask:task])
         {
             // if jbpm task and there is no transition set, set it to ""
-            requestBody[kAlfrescoWorkflowVariableTaskTransition] = @"";
+            requestBody[kAlfrescoWorkflowLegacyJSONTransitions] = @"";
         }
     }
     
@@ -1115,6 +1115,9 @@
 {
     NSString *processedKey = key;
     
+    // replace any : characters (from the standard model names) with _
+    processedKey = [processedKey stringByReplacingOccurrencesOfString:@":" withString:@"_"];
+    
     // check whether the key already has either prefix
     if ([key rangeOfString:kAlfrescoWorkflowLegacyJSONPropertyPrefix].location == NSNotFound &&
         [key rangeOfString:kAlfrescoWorkflowLegacyJSONAssociationPrefix].location == NSNotFound)
@@ -1122,7 +1125,7 @@
         // Ideally we should look up the variable using the Alfresco model defined for the
         // workflow/task to determine which prefix is required, for now presume a property
         
-        processedKey = [kAlfrescoWorkflowLegacyJSONPropertyPrefix stringByAppendingString:key];
+        processedKey = [kAlfrescoWorkflowLegacyJSONPropertyPrefix stringByAppendingString:processedKey];
     }
     
     return processedKey;

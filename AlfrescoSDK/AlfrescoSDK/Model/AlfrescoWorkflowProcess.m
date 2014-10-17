@@ -185,13 +185,13 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.summary = (NSString *)titleVariable.value;
     }
     
-    AlfrescoProperty *priorityVariable = variables[kAlfrescoWorkflowVariableProcessPriority];
+    AlfrescoProperty *priorityVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessPriority];
     if (priorityVariable.value != [NSNull null])
     {
         self.priority = (NSNumber *)priorityVariable.value;
     }
     
-    AlfrescoProperty *dueDateVariable = variables[kAlfrescoWorkflowVariableProcessDueDate];
+    AlfrescoProperty *dueDateVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessDueDate];
     if (dueDateVariable.value != [NSNull null])
     {
         self.dueAt = (NSDate *)dueDateVariable.value;

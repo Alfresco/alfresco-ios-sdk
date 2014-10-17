@@ -141,6 +141,8 @@ NSString * const kAlfrescoWorkflowLegacyJSONBPMPackageContainer = @"bpm_package"
 NSString * const kAlfrescoWorkflowLegacyJSONOwner = @"cm_owner";
 
 NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDescription = @"bpm_description";
+NSString * const kAlfrescoWorkflowPublicBPMJSONProcessPriority = @"bpm_workflowPriority";
+NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDueDate = @"bpm_workflowDueDate";
 NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignee = @"bpm_assignee";
 NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignees = @"bpm_assignees";
 
@@ -151,6 +153,7 @@ NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsAdd = @"assoc_p
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsRemove = @"assoc_packageItems_removed";
 
 NSString * const kAlfrescoWorkflowLegacyJSONBPMStatus = @"prop_bpm_status";
+NSString * const kAlfrescoWorkflowLegacyJSONTransitions = @"prop_transitions";
 NSString * const kAlfrescoWorkflowLegacyJSONNext = @"Next";
 NSString * const kAlfrescoWorkflowLegacyJSONCompleted = @"Completed";
 NSString * const kAlfrescoWorkflowLegacyJSONItemValue = @"itemValueType";

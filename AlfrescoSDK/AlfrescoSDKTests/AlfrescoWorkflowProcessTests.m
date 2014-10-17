@@ -102,7 +102,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                             reviewKey = kAlfrescoActivitiReviewProcessDefinitionKey;
                         }
                         
-                        // go through the processes looking for the adhoc workflow
+                        // go through the processes looking for the review workflow
                         for (AlfrescoWorkflowProcess *process in array)
                         {
                             if ([process.processDefinitionKey isEqualToString:reviewKey])

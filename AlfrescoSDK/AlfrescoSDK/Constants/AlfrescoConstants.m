@@ -163,15 +163,15 @@ NSString * const kAlfrescoModelPropertyAudioCompressor = @"audio:compressor";
 /**
  Workflow Task Constants
  */
-NSString * const kAlfrescoWorkflowVariableProcessName = @"bpm_workflowDescription";
-NSString * const kAlfrescoWorkflowVariableProcessPriority = @"bpm_workflowPriority";
-NSString * const kAlfrescoWorkflowVariableProcessDueDate = @"bpm_workflowDueDate";
-NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications = @"bpm_sendEMailNotifications";
-NSString * const kAlfrescoWorkflowVariableProcessApprovalRate = @"wf_requiredApprovePercent";
-NSString * const kAlfrescoWorkflowVariableTaskTransition = @"prop_transitions";
-NSString * const kAlfrescoWorkflowVariableTaskComment = @"bpm_comment";
-NSString * const kAlfrescoWorkflowVariableTaskStatus = @"bpm_status";
-NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome = @"wf_reviewOutcome";
+NSString * const kAlfrescoWorkflowVariableProcessName = @"bpm:workflowDescription";
+NSString * const kAlfrescoWorkflowVariableProcessPriority = @"bpm:workflowPriority";
+NSString * const kAlfrescoWorkflowVariableProcessDueDate = @"bpm:workflowDueDate";
+NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications = @"bpm:sendEMailNotifications";
+NSString * const kAlfrescoWorkflowVariableProcessApprovalRate = @"wf:requiredApprovePercent";
+NSString * const kAlfrescoWorkflowVariableTaskTransition = @"transition";
+NSString * const kAlfrescoWorkflowVariableTaskComment = @"bpm:comment";
+NSString * const kAlfrescoWorkflowVariableTaskStatus = @"bpm:status";
+NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome = @"wf:reviewOutcome";
 
 NSString * const kAlfrescoWorkflowTaskTransitionApprove = @"Approve";
 NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";

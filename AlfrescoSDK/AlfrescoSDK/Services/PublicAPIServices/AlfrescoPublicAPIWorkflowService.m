@@ -564,7 +564,10 @@
             remapValue = [self.dateFormatter stringFromDate:valueForCurrentKey];
         }
         
-        // remapped keys
+        // replace any : characters (from the standard model names) with _
+        key = [key stringByReplacingOccurrencesOfString:@":" withString:@"_"];
+        
+        // store variable
         completeVariables[key] = remapValue;
     }
     
@@ -881,7 +884,10 @@
             NSMutableArray *variablesArray = [NSMutableArray array];
             for (NSString *variableName in [parameter allKeys])
             {
-                [variablesArray addObject:@{kAlfrescoWorkflowPublicJSONName: variableName,
+                // replace any : characters (from the standard model names) with _
+                NSString *processedVariableName = [variableName stringByReplacingOccurrencesOfString:@":" withString:@"_"];
+                
+                [variablesArray addObject:@{kAlfrescoWorkflowPublicJSONName: processedVariableName,
                                             kAlfrescoWorkflowPublicJSONVariableValue: parameter[variableName],
                                             kAlfrescoWorkflowPublicJSONVariableScope: kAlfrescoWorkflowPublicJSONVariableScopeLocal}];
             }
