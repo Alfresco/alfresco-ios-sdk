@@ -212,9 +212,47 @@
             else
             {
                 AlfrescoWorkflowProcess *process = workflowProcesses[0];
-                AlfrescoRequest *retrieveRequest = [self retrieveVariablesForProcess:process completionBlock:completionBlock];
+                AlfrescoRequest *retrieveRequest = [self retrieveVariablesForProcess:process completionBlock:^(NSDictionary *variables, NSError *error) {
+                    if (variables)
+                    {
+                        // using KVO pass the variables to the process object
+                        [process setValue:variables forKey:@"variables"];
+                        completionBlock(process, nil);
+                    }
+                    else
+                    {
+                        completionBlock(nil, error);
+                    }
+                }];
                 request.httpRequest = retrieveRequest.httpRequest;
             }
+        }
+    }];
+    
+    return request;
+}
+
+- (AlfrescoRequest *)retrieveVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                 completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *urlString = [kAlfrescoPublicAPIWorkflowVariables stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
+    
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:urlString];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (error)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSDictionary *workflowVariables = [self.workflowObjectConverter variablesFromPublicJSONData:data conversionError:&conversionError];
+            completionBlock(workflowVariables, conversionError);
         }
     }];
     
@@ -473,6 +511,34 @@
     return request;
 }
 
+- (AlfrescoRequest *)retrieveVariablesForTask:(AlfrescoWorkflowTask *)task
+                              completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    
+    NSString *urlString = [kAlfrescoPublicAPIWorkflowTaskVariables stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
+    
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:urlString];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (error)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSDictionary *workflowVariables = [self.workflowObjectConverter variablesFromPublicJSONData:data conversionError:&conversionError];
+            completionBlock(workflowVariables, conversionError);
+        }
+    }];
+    
+    return request;
+}
+
 - (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task
                                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
@@ -564,8 +630,8 @@
             remapValue = [self.dateFormatter stringFromDate:valueForCurrentKey];
         }
         
-        // replace any : characters (from the standard model names) with _
-        key = [key stringByReplacingOccurrencesOfString:@":" withString:@"_"];
+        // encode the variable name
+        key = [AlfrescoWorkflowObjectConverter encodeVariableName:key];
         
         // store variable
         completeVariables[key] = remapValue;
@@ -629,10 +695,19 @@
             else
             {
                 AlfrescoWorkflowProcess *process = [[AlfrescoWorkflowProcess alloc] initWithProperties:(NSDictionary *)workflowProcessesDictionary];
-                
-                [self retrieveVariablesForProcess:process completionBlock:^(AlfrescoWorkflowProcess *processWithVariables, NSError *variablesError) {
-                    completionBlock(processWithVariables, variablesError);
+                AlfrescoRequest *retrieveRequest = [self retrieveVariablesForProcess:process completionBlock:^(NSDictionary *variables, NSError *error) {
+                    if (variables)
+                    {
+                        // using KVO pass the variables to the process object
+                        [process setValue:variables forKey:@"variables"];
+                        completionBlock(process, nil);
+                    }
+                    else
+                    {
+                        completionBlock(nil, error);
+                    }
                 }];
+                request.httpRequest = retrieveRequest.httpRequest;
             }
         }
     }];
@@ -674,6 +749,49 @@
     return [self startProcessForProcessDefinition:processDefinition assignees:assignees variables:populatedVariables attachments:attachmentNodes completionBlock:completionBlock];
 }
 
+- (AlfrescoRequest *)updateVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                     variables:(NSDictionary *)variables
+                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    [AlfrescoErrors assertArgumentNotNil:variables argumentName:@"variables"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    // create array structure for request body
+    NSArray *requestBodyArray = [self variableJSONArrayForDictionary:variables scope:nil];
+    
+    // create request body data
+    NSError *requestBodyConversionError = nil;
+    NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestBodyArray options:0 error:&requestBodyConversionError];
+    
+    if (requestBodyConversionError)
+    {
+        completionBlock(NO, [AlfrescoErrors alfrescoErrorWithUnderlyingError:requestBodyConversionError
+                                                        andAlfrescoErrorCode:kAlfrescoErrorCodeWorkflow]);
+        return nil;
+    }
+    else
+    {
+        // build URL
+        NSString *urlString = [kAlfrescoPublicAPIWorkflowVariables stringByReplacingOccurrencesOfString:kAlfrescoProcessID
+                                                                                             withString:process.identifier];
+        
+        NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:urlString];
+        
+        // execute request
+        AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+        [self.session.networkProvider executeRequestWithURL:url session:self.session
+                                                requestBody:requestData method:kAlfrescoHTTPPost
+                                            alfrescoRequest:request
+                                            completionBlock:^(NSData *data, NSError *error) {
+            // call the provided completion block
+            completionBlock(data != nil, error);
+        }];
+
+        return request;
+    }
+}
+
 - (AlfrescoRequest *)deleteProcess:(AlfrescoWorkflowProcess *)process
                    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
@@ -700,6 +818,50 @@
 
 #pragma mark Tasks
 
+- (AlfrescoRequest *)updateVariablesForTask:(AlfrescoWorkflowTask *)task
+                                  variables:(NSDictionary *)variables
+                            completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
+    [AlfrescoErrors assertArgumentNotNil:variables argumentName:@"variables"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    // create array structure for request body
+    NSArray *requestBodyArray = [self variableJSONArrayForDictionary:variables
+                                                               scope:kAlfrescoWorkflowPublicJSONVariableScopeLocal];
+    
+    // create request body data
+    NSError *requestBodyConversionError = nil;
+    NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestBodyArray options:0 error:&requestBodyConversionError];
+    
+    if (requestBodyConversionError)
+    {
+        completionBlock(NO, [AlfrescoErrors alfrescoErrorWithUnderlyingError:requestBodyConversionError
+                                                        andAlfrescoErrorCode:kAlfrescoErrorCodeWorkflow]);
+        return nil;
+    }
+    else
+    {
+        // build URL
+        NSString *urlString = [kAlfrescoPublicAPIWorkflowTaskVariables stringByReplacingOccurrencesOfString:kAlfrescoTaskID
+                                                                                                 withString:task.identifier];
+        
+        NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:urlString];
+        
+        // execute request
+        AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+        [self.session.networkProvider executeRequestWithURL:url session:self.session
+                                                requestBody:requestData method:kAlfrescoHTTPPost
+                                            alfrescoRequest:request
+                                            completionBlock:^(NSData *data, NSError *error) {
+                                                // call the provided completion block
+                                                completionBlock(data != nil, error);
+                                            }];
+        
+        return request;
+    }
+}
+
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
                         variables:(NSDictionary *)variables
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
@@ -710,40 +872,40 @@
         parameters[kAlfrescoWorkflowPublicJSONVariables] = variables;
     }
     
-    return [self updateTask:task parameters:parameters completionBlock:completionBlock];
+    return [self transitionTask:task parameters:parameters completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)claimTask:(AlfrescoWorkflowTask *)task
                completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTask:task
-                 parameters:@{kAlfrescoWorkflowTaskState: kAlfrescoPublicAPIWorkflowTaskStateClaimed}
-            completionBlock:completionBlock];
+    return [self transitionTask:task
+                     parameters:@{kAlfrescoWorkflowTaskState: kAlfrescoPublicAPIWorkflowTaskStateClaimed}
+                completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)unclaimTask:(AlfrescoWorkflowTask *)task
                  completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTask:task
-                 parameters:@{kAlfrescoWorkflowTaskState: kAlfrescoPublicAPIWorkflowTaskStateUnclaimed}
-            completionBlock:completionBlock];
+    return [self transitionTask:task
+                     parameters:@{kAlfrescoWorkflowTaskState: kAlfrescoPublicAPIWorkflowTaskStateUnclaimed}
+                completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)reassignTask:(AlfrescoWorkflowTask *)task
                        toAssignee:(AlfrescoPerson *)assignee
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTask:task
-                 parameters:@{kAlfrescoWorkflowPublicJSONAssignee: assignee.identifier}
-            completionBlock:completionBlock];
+    return [self transitionTask:task
+                     parameters:@{kAlfrescoWorkflowPublicJSONAssignee: assignee.identifier}
+                completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)resolveTask:(AlfrescoWorkflowTask *)task
                  completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTask:task
-                 parameters:@{kAlfrescoWorkflowTaskState: kAlfrescoPublicAPIWorkflowTaskStateResolved}
-            completionBlock:completionBlock];
+    return [self transitionTask:task
+                     parameters:@{kAlfrescoWorkflowTaskState: kAlfrescoPublicAPIWorkflowTaskStateResolved}
+                completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)addAttachmentToTask:(AlfrescoWorkflowTask *)task
@@ -856,9 +1018,9 @@
     }
 }
 
-- (AlfrescoRequest *)updateTask:(AlfrescoWorkflowTask *)task
-                     parameters:(NSDictionary *)parameters
-                completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
+- (AlfrescoRequest *)transitionTask:(AlfrescoWorkflowTask *)task
+                         parameters:(NSDictionary *)parameters
+                    completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
     [AlfrescoErrors assertArgumentNotNil:parameters argumentName:@"parameters"];
@@ -876,21 +1038,9 @@
         // Special handling for variables
         if ([key isEqualToString:kAlfrescoWorkflowPublicJSONVariables])
         {
-            // Generate dictionary for each variable
-            
-            // NOTE: currently we have no way of knowing whether a variable is "local" or "global", as
-            // we're updating a task lets presume it's local for now, once we support variables on a
-            // task we can maintain a list of local and global variables and refer to that.
-            NSMutableArray *variablesArray = [NSMutableArray array];
-            for (NSString *variableName in [parameter allKeys])
-            {
-                // replace any : characters (from the standard model names) with _
-                NSString *processedVariableName = [variableName stringByReplacingOccurrencesOfString:@":" withString:@"_"];
-                
-                [variablesArray addObject:@{kAlfrescoWorkflowPublicJSONName: processedVariableName,
-                                            kAlfrescoWorkflowPublicJSONVariableValue: parameter[variableName],
-                                            kAlfrescoWorkflowPublicJSONVariableScope: kAlfrescoWorkflowPublicJSONVariableScopeLocal}];
-            }
+            // Generate an array of dictionary objects
+            NSArray *variablesArray = [self variableJSONArrayForDictionary:parameter
+                                                                     scope:kAlfrescoWorkflowPublicJSONVariableScopeLocal];
             
             // Add variables array
             requestBodyDictionary[kAlfrescoWorkflowPublicJSONVariables] = variablesArray;
@@ -917,32 +1067,36 @@
     
     if (requestBodyConversionError)
     {
-        AlfrescoLogDebug(@"Request could not be parsed correctly in %@", NSStringFromSelector(_cmd));
+        completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:requestBodyConversionError
+                                                        andAlfrescoErrorCode:kAlfrescoErrorCodeWorkflow]);
         return nil;
     }
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPut alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            id workflowTaskJSONObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
-            if (conversionError || ![workflowTaskJSONObject isKindOfClass:[NSDictionary class]])
+    else
+    {
+        AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+        [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPut alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+            if (error)
             {
-                completionBlock(nil, conversionError);
+                completionBlock(nil, error);
             }
             else
             {
-                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject];
-                completionBlock(task, conversionError);
+                NSError *conversionError = nil;
+                id workflowTaskJSONObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
+                if (conversionError || ![workflowTaskJSONObject isKindOfClass:[NSDictionary class]])
+                {
+                    completionBlock(nil, conversionError);
+                }
+                else
+                {
+                    AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:(NSDictionary *)workflowTaskJSONObject];
+                    completionBlock(task, conversionError);
+                }
             }
-        }
-    }];
-    return request;
+        }];
+        
+        return request;
+    }
 }
 
 - (AlfrescoRequest *)fallbackretrieveProcessesWithStatus:(NSString *)status listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
@@ -983,11 +1137,13 @@
                 
                 for (AlfrescoWorkflowProcess *process in workflowProcesses)
                 {
-                    [self retrieveVariablesForProcess:process completionBlock:^(AlfrescoWorkflowProcess *processWithVariables, NSError *variablesError) {
+                    [self retrieveVariablesForProcess:process completionBlock:^(NSDictionary *variables, NSError *error) {
                         callbacks++;
-                        if (processWithVariables)
+                        if (variables)
                         {
-                            [processesWithVariables addObject:processWithVariables];
+                            // using KVO pass the variables to the process object
+                            [process setValue:variables forKey:@"variables"];
+                            [processesWithVariables addObject:process];
                         }
                         
                         if (callbacks == workflowProcesses.count)
@@ -1006,33 +1162,38 @@
     return request;
 }
 
-- (AlfrescoRequest *)retrieveVariablesForProcess:(AlfrescoWorkflowProcess *)process completionBlock:(AlfrescoProcessCompletionBlock)completionBlock
+- (NSArray *)variableJSONArrayForDictionary:(NSDictionary *)variables scope:(NSString *)scope;
 {
-    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-    [AlfrescoErrors assertArgumentNotNil:process argumentName:@"process"];
+    // build an array of dictionaries representing the provided variables
+    NSMutableArray *jsonArray = [NSMutableArray array];
     
-    NSString *urlString = [kAlfrescoPublicAPIWorkflowVariables stringByReplacingOccurrencesOfString:kAlfrescoProcessID withString:process.identifier];
-    
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:urlString];
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
+    for (NSString *variableName in [variables allKeys])
+    {
+        id variableValue = variables[variableName];
+        
+        // if the variable is a date, change to a string
+        if ([variableValue isKindOfClass:[NSDate class]])
         {
-            completionBlock(nil, error);
+            variableValue = [self.dateFormatter stringFromDate:variableValue];
         }
-        else
+        
+        // encode the variable name
+        NSString *processedVariableName = [AlfrescoWorkflowObjectConverter encodeVariableName:variableName];
+        
+        NSMutableDictionary *variableDictionary = [NSMutableDictionary dictionary];
+        variableDictionary[kAlfrescoWorkflowPublicJSONName] = processedVariableName;
+        variableDictionary[kAlfrescoWorkflowPublicJSONVariableValue] = variableValue;
+        
+        if (scope)
         {
-            NSError *conversionError = nil;
-            NSDictionary *workflowVariables = [self.workflowObjectConverter workflowVariablesFromPublicJSONData:data conversionError:&conversionError];
-            
-            // set the readonly property using KVO
-            [process setValue:workflowVariables forKey:@"variables"];
-            
-            completionBlock(process, error);
+            variableDictionary[kAlfrescoWorkflowPublicJSONVariableScope] = scope;
         }
-    }];
-    return request;
+        
+        // add to json array
+        [jsonArray addObject:variableDictionary];
+    }
+    
+    return jsonArray;
 }
 
 - (AlfrescoRequest *)retrieveProcessesWithStatus:(NSString *)status listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock

@@ -28,6 +28,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoProperty.h"
 #import "AlfrescoWorkflowUtils.h"
+#import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
 
 static NSString * const kAlfrescoJBPMPrefix = @"jbpm$";
@@ -316,13 +317,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
-        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
-        {
-            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
-        }
-        
-        [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+        [self createAdhocProcessWithAssignees:nil variables:nil attachments:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -394,13 +389,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
-        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
-        {
-            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
-        }
-        
-        [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+        [self createAdhocProcessWithAssignees:nil variables:nil attachments:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -560,13 +549,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
-        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
-        {
-            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
-        }
-        
-        [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+        [self createAdhocProcessWithAssignees:nil variables:nil attachments:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -628,13 +611,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
     {
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
-        NSString *processDefinitionID = kAlfrescoActivitiAdhocProcessDefinition;
-        if (!self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
-        {
-            processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
-        }
-        
-        [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+        [self createAdhocProcessWithAssignees:nil variables:nil attachments:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -723,7 +700,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
             processDefinitionID = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
         }
         
-        [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+        [self createAdhocProcessWithAssignees:nil variables:nil attachments:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -779,7 +756,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
         
         NSArray *attachmentArray = @[self.testAlfrescoDocument];
         
-        [self createProcessUsingProcessDefinitionIdentifier:processDefinitionID assignees:nil variables:nil attachements:attachmentArray completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+        [self createAdhocProcessWithAssignees:nil variables:nil attachments:attachmentArray completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
@@ -825,13 +802,132 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
     }
 }
 
+- (void)testUpdateAndRetrieveVariables
+{
+    if (self.setUpSuccess)
+    {
+        if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+            
+            // setup variables to create process with
+            NSString *processDescription = @"iOS SDK Unit Test Process";
+            NSNumber *processPriority = [NSNumber numberWithInt:3];
+            NSDate *processDueDate = [NSDate date];
+            NSNumber *processSendEmail = @(NO);
+            
+            NSDictionary *variables = @{kAlfrescoWorkflowVariableProcessDescription: processDescription,
+                                        kAlfrescoWorkflowVariableProcessPriority: processPriority,
+                                        kAlfrescoWorkflowVariableProcessDueDate: processDueDate,
+                                        kAlfrescoWorkflowVariableProcessSendEmailNotifications: processSendEmail};
+            
+            // create an adhoc process
+            [self createAdhocProcessWithAssignees:nil variables:variables attachments:nil completionBlock:^(AlfrescoWorkflowProcess *createdProcess, NSError *creationError) {
+                if (createdProcess == nil)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [self failureMessageFromError:creationError];
+                    self.callbackCompleted = YES;
+                }
+                else
+                {
+                    // setup variables to update on process
+                    NSNumber *processPriority = [NSNumber numberWithInt:1];
+                    NSDate *processDueDate = [NSDate date];
+                    
+                    NSDictionary *variables = @{kAlfrescoWorkflowVariableProcessPriority: processPriority,
+                                                kAlfrescoWorkflowVariableProcessDueDate: processDueDate};
+                    
+                    // update the variables on the process just created
+                    [self.workflowService updateVariablesForProcess:createdProcess variables:variables
+                                                    completionBlock:^(BOOL succeeded, NSError *updateError) {
+                        if (!succeeded)
+                        {
+                            self.lastTestSuccessful = NO;
+                            self.lastTestFailureMessage = [self failureMessageFromError:updateError];
+                            self.callbackCompleted = YES;
+                        }
+                        else
+                        {
+                            [self.workflowService retrieveVariablesForProcess:createdProcess
+                                                              completionBlock:^(NSDictionary *variables, NSError *retrieveError) {
+                                if (variables == nil)
+                                {
+                                    self.lastTestSuccessful = NO;
+                                    self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
+                                    self.callbackCompleted = YES;
+                                }
+                                else
+                                {
+                                    // ensure provided variables are present and correct
+                                    AlfrescoProperty *retrievedDescription = variables[kAlfrescoWorkflowVariableProcessDescription];
+                                    AlfrescoProperty *retrievedSendEmail = variables[kAlfrescoWorkflowVariableProcessSendEmailNotifications];
+                                    
+                                    XCTAssertNotNil(retrievedDescription, @"Expected to find the description variable");
+                                    XCTAssertNotNil(retrievedSendEmail, @"Expected to find the send email variable");
+                                    
+                                    XCTAssertTrue([retrievedDescription.value isEqualToString:processDescription],
+                                                  @"Expected the description variable to be '%@' but it was: %@", processDescription, retrievedDescription);
+                                    XCTAssertTrue([retrievedSendEmail.value boolValue] == processSendEmail.boolValue,
+                                                  @"Expected the send email variable to be '%@' but it was: %@", processSendEmail, retrievedSendEmail);
+                                    
+                                    // ensure the updated variables are present and correct
+                                    AlfrescoProperty *updatedPriority = variables[kAlfrescoWorkflowVariableProcessPriority];
+                                    AlfrescoProperty *updatedDueDate = variables[kAlfrescoWorkflowVariableProcessDueDate];
+                                    
+                                    XCTAssertNotNil(updatedPriority, @"Expected to find the priority variable");
+                                    XCTAssertNotNil(updatedDueDate, @"Expected to find the due date variable");
+                                    
+                                    XCTAssertTrue([updatedPriority.value intValue] == processPriority.intValue,
+                                                  @"Expected the priority variable to be '%@' but it was: %@", processPriority, updatedPriority);
+                                    
+                                    // delete the process we created
+                                    [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                                        self.lastTestSuccessful = YES;
+                                        self.callbackCompleted = YES;
+                                    }];
+                                }
+                            }];
+                        }
+                    }];
+                }
+            }];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 #pragma mark - Private Functions
 
-- (void)createProcessUsingProcessDefinitionIdentifier:(NSString *)processDefinitionID assignees:(NSArray *)assignees variables:(NSDictionary *)variables attachements:(NSArray *)attachmentNodes completionBlock:(void (^)(AlfrescoWorkflowProcess *createdProcess, NSError *creationError))completionBlock
+- (void)createAdhocProcessWithAssignees:(NSArray *)assignees variables:(NSDictionary *)variables attachments:(NSArray *)attachmentNodes completionBlock:(void (^)(AlfrescoWorkflowProcess *createdProcess, NSError *creationError))completionBlock
 {
+    // determine which adhoc process definition to use
+    NSString *processDefinitionId = nil;
+    if (self.currentSession.repositoryInfo.capabilities.doesSupportActivitiWorkflowEngine)
+    {
+        if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI)
+        {
+            processDefinitionId = kAlfrescoActivitiAdhocProcessDefinition;
+        }
+        else
+        {
+            processDefinitionId = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiAdhocProcessDefinition];
+        }
+    }
+    else
+    {
+        processDefinitionId = [kAlfrescoJBPMPrefix stringByAppendingString:kAlfrescoJBPMAdhocProcessDefinitionKey];
+    }
+    
     self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
     
-    [self.workflowService retrieveProcessDefinitionWithIdentifier:processDefinitionID completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
+    [self.workflowService retrieveProcessDefinitionWithIdentifier:processDefinitionId completionBlock:^(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *retrieveError) {
         
         // define the process creation block
         void (^createProcessWithDefinition)(AlfrescoWorkflowProcessDefinition *definition) = ^(AlfrescoWorkflowProcessDefinition *definition) {
@@ -844,20 +940,17 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                 processVariables[kAlfrescoWorkflowVariableProcessName] = processName;
             }
             
+            // start the process
             [self.workflowService startProcessForProcessDefinition:definition assignees:assignees variables:processVariables attachments:attachmentNodes completionBlock:^(AlfrescoWorkflowProcess *process, NSError *startError) {
-                if (startError)
-                {
-                    completionBlock(nil, startError);
-                }
-                else
-                {
-                    completionBlock(process, startError);
-                }
+                // call the completion block
+                completionBlock(process, startError);
             }];
         };
         
         if (retrieveError)
         {
+            // 3.x servers do not support retrieval of workflow definitions by id, f this error has occurred
+            // manually construct a JBPM adhoc process definition object to use.
             if (retrieveError.code == kAlfrescoErrorCodeWorkflowFunctionNotSupported)
             {
                 NSDictionary *properties = @{@"id" : @"jbpm$1",

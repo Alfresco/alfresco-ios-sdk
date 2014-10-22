@@ -70,6 +70,7 @@ NSString * const kAlfrescoLegacyAPIWorkflowTaskAttachments = @"formdefinitions";
 NSString * const kAlfrescoLegacyAPIWorkflowTaskFormProcessor = @"task/{taskId}/formprocessor";
 NSString * const kAlfrescoPublicAPIWorkflowTasks = @"tasks";
 NSString * const kAlfrescoPublicAPIWorkflowSingleTask = @"tasks/{taskId}";
+NSString * const kAlfrescoPublicAPIWorkflowTaskVariables = @"tasks/{taskId}/variables";
 NSString * const kAlfrescoPublicAPIWorkflowTaskAttachments = @"tasks/{taskId}/items";
 NSString * const kAlfrescoPublicAPIWorkflowTaskSingleAttachment = @"tasks/{taskId}/items/{itemId}";
 

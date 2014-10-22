@@ -236,6 +236,7 @@ extern NSString * const kAlfrescoModelPropertyAudioCompressor;
  * @name Workflow Constants
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoWorkflowVariableProcessName;
+extern NSString * const kAlfrescoWorkflowVariableProcessDescription;
 extern NSString * const kAlfrescoWorkflowVariableProcessPriority;
 extern NSString * const kAlfrescoWorkflowVariableProcessDueDate;
 extern NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications;

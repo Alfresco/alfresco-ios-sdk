@@ -253,6 +253,14 @@
     return request;
 }
 
+- (AlfrescoRequest *)retrieveVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                 completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
+    completionBlock(nil, notSupportedError);
+    return nil;
+}
+
 - (AlfrescoRequest *)retrieveImageForProcess:(AlfrescoWorkflowProcess *)process
                              completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
@@ -488,6 +496,34 @@
     return request;
 }
 
+- (AlfrescoRequest *)retrieveVariablesForTask:(AlfrescoWorkflowTask *)task
+                              completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (!data)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            // NOTE: we should really lookup the type definition of the task to properly type all the variables
+            
+            NSError *conversionError = nil;
+            NSDictionary *variables = [self.workflowObjectConverter taskVariablesFromLegacyJSONData:data conversionError:&conversionError];
+            completionBlock(variables, conversionError);
+        }
+    }];
+    
+    return request;
+}
+
 - (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task
                                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
@@ -707,6 +743,15 @@
     return request;
 }
 
+- (AlfrescoRequest *)updateVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                     variables:(NSDictionary *)variables
+                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
+    completionBlock(NO, notSupportedError);
+    return nil;
+}
+
 - (AlfrescoRequest *)deleteProcess:(AlfrescoWorkflowProcess *)process
                    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
@@ -729,6 +774,7 @@
     }];
     return request;
 }
+
 - (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition
                                                  name:(NSString *)name
                                              priority:(NSNumber *)priority
@@ -765,6 +811,24 @@
 }
 
 #pragma mark Tasks
+
+- (AlfrescoRequest *)updateVariablesForTask:(AlfrescoWorkflowTask *)task
+                                  variables:(NSDictionary *)variables
+                            completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    // encode the provided variables before updating
+    NSMutableDictionary *processedVariables = [NSMutableDictionary dictionary];
+    for (NSString *key in [variables allKeys])
+    {
+        NSString *variableName = [AlfrescoWorkflowObjectConverter encodeVariableName:key];
+        processedVariables[variableName] = variables[key];
+    }
+    
+    // update the task
+    return [self updateTask:task requestBody:processedVariables completionBlock:^(AlfrescoWorkflowTask *task, NSError *error) {
+        completionBlock(task != nil, error);
+    }];
+}
 
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
                         variables:(NSDictionary *)variables
@@ -858,20 +922,20 @@
 - (AlfrescoRequest *)claimTask:(AlfrescoWorkflowTask *)task
                completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTaskState:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : self.session.personIdentifier} completionBlock:completionBlock];
+    return [self updateTask:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : self.session.personIdentifier} completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)unclaimTask:(AlfrescoWorkflowTask *)task
                  completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTaskState:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : [NSNull null]} completionBlock:completionBlock];
+    return [self updateTask:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : [NSNull null]} completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)reassignTask:(AlfrescoWorkflowTask *)task
                        toAssignee:(AlfrescoPerson *)assignee
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTaskState:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : assignee.identifier} completionBlock:completionBlock];
+    return [self updateTask:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : assignee.identifier} completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)resolveTask:(AlfrescoWorkflowTask *)task
@@ -967,9 +1031,9 @@
     return request;
 }
 
-- (AlfrescoRequest *)updateTaskState:(AlfrescoWorkflowTask *)task
-                         requestBody:(NSDictionary *)requestDictionary
-                     completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
+- (AlfrescoRequest *)updateTask:(AlfrescoWorkflowTask *)task
+                    requestBody:(NSDictionary *)requestDictionary
+                completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
     [AlfrescoErrors assertArgumentNotNil:requestDictionary argumentName:@"requestDictionary"];
@@ -984,28 +1048,31 @@
     
     if (requestBodyConversionError)
     {
-        AlfrescoLogDebug(@"Request could not be parsed correctly in %@", NSStringFromSelector(_cmd));
+        completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:requestBodyConversionError
+                                                         andAlfrescoErrorCode:kAlfrescoErrorCodeWorkflow]);
         return nil;
     }
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPut alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
-            
-            NSDictionary *entry = ((NSDictionary *) responseObject)[kAlfrescoWorkflowLegacyJSONData];
-            AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry];
-            completionBlock(task, conversionError);
-        }
-    }];
-    
-    return request;
+    else
+    {
+        AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+        [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPut alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+            if (error)
+            {
+                completionBlock(nil, error);
+            }
+            else
+            {
+                NSError *conversionError = nil;
+                id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
+                
+                NSDictionary *entry = ((NSDictionary *) responseObject)[kAlfrescoWorkflowLegacyJSONData];
+                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry];
+                completionBlock(task, conversionError);
+            }
+        }];
+        
+        return request;
+    }
 }
 
 - (void)retrieveAlfrescoNodes:(NSArray *)alfrescoNodeIdentifiers
@@ -1115,8 +1182,8 @@
 {
     NSString *processedKey = key;
     
-    // replace any : characters (from the standard model names) with _
-    processedKey = [processedKey stringByReplacingOccurrencesOfString:@":" withString:@"_"];
+    // encode the variable name
+    processedKey = [AlfrescoWorkflowObjectConverter encodeVariableName:key];
     
     // check whether the key already has either prefix
     if ([key rangeOfString:kAlfrescoWorkflowLegacyJSONPropertyPrefix].location == NSNotFound &&

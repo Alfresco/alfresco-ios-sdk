@@ -114,6 +114,13 @@
     return nil;
 }
 
+- (AlfrescoRequest *)retrieveVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                 completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (AlfrescoRequest *)retrieveImageForProcess:(AlfrescoWorkflowProcess *)process
                              completionBlock:(AlfrescoContentFileCompletionBlock)completionBlock
 {
@@ -173,6 +180,13 @@
     return nil;
 }
 
+- (AlfrescoRequest *)retrieveVariablesForTask:(AlfrescoWorkflowTask *)task
+                              completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (AlfrescoRequest *)retrieveAttachmentsForTask:(AlfrescoWorkflowTask *)task
                                 completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
 {
@@ -207,6 +221,14 @@
     return nil;
 }
 
+- (AlfrescoRequest *)updateVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                     variables:(NSDictionary *)variables
+                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (AlfrescoRequest *)deleteProcess:(AlfrescoWorkflowProcess *)process
                    completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
 {
@@ -215,6 +237,14 @@
 }
 
 #pragma mark Tasks
+
+- (AlfrescoRequest *)updateVariablesForTask:(AlfrescoWorkflowTask *)task
+                                  variables:(NSDictionary *)variables
+                            completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
 
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
                         variables:(NSDictionary *)variables

@@ -44,7 +44,6 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSNumber *priority;
 @property (nonatomic, strong, readwrite) NSString *summary;
 @property (nonatomic, strong, readwrite) NSString *initiatorUsername;
-@property (nonatomic, strong, readwrite) NSDictionary *variables;
 
 @end
 
@@ -86,7 +85,6 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.startedAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONStartedAt]];
         self.endedAt = [self.dateFormatter dateFromString:entry[kAlfrescoWorkflowPublicJSONEndedAt]];
         self.initiatorUsername = entry[kAlfrescoWorkflowPublicJSONStartUserID];
-        self.variables = convertedVariables;
     }
     else
     {
@@ -121,8 +119,6 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         {
             self.initiatorUsername = initiator;
         }
-        
-        self.variables = [objectConverter workflowVariablesFromLegacyProperties:properties];
     }
 }
 
@@ -139,7 +135,6 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     [aCoder encodeObject:self.summary forKey:kAlfrescoWorkflowPublicJSONDescription];
     [aCoder encodeObject:self.priority forKey:kAlfrescoWorkflowPublicJSONPriority];
     [aCoder encodeObject:self.initiatorUsername forKey:kAlfrescoWorkflowPublicJSONStartUserID];
-    [aCoder encodeObject:self.variables forKey:kAlfrescoWorkflowPublicJSONProcessVariables];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -158,7 +153,6 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.summary = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONDescription];
         self.priority = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONPriority];
         self.initiatorUsername = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONStartUserID];
-        self.variables = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONProcessVariables];
     }
     return self;
 }
@@ -167,9 +161,6 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 
 - (void)setVariables:(NSDictionary *)variables
 {
-    _variables = variables;
-    
-    // If on public API, set the name variable.
     // No clean way to determine public or legacy API being used. Check to see if $ symbol exists.
     if (!self.name && [self.identifier rangeOfString:@"$"].location == NSNotFound)
     {
@@ -179,19 +170,19 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 
 - (void)setPropertiesFromVariables:(NSDictionary *)variables
 {
-    AlfrescoProperty *titleVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessDescription];
+    AlfrescoProperty *titleVariable = variables[kAlfrescoWorkflowVariableProcessDescription];
     if (titleVariable.value != [NSNull null])
     {
         self.summary = (NSString *)titleVariable.value;
     }
     
-    AlfrescoProperty *priorityVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessPriority];
+    AlfrescoProperty *priorityVariable = variables[kAlfrescoWorkflowVariableProcessPriority];
     if (priorityVariable.value != [NSNull null])
     {
         self.priority = (NSNumber *)priorityVariable.value;
     }
     
-    AlfrescoProperty *dueDateVariable = variables[kAlfrescoWorkflowPublicBPMJSONProcessDueDate];
+    AlfrescoProperty *dueDateVariable = variables[kAlfrescoWorkflowVariableProcessDueDate];
     if (dueDateVariable.value != [NSNull null])
     {
         self.dueAt = (NSDate *)dueDateVariable.value;

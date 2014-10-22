@@ -35,6 +35,7 @@
 #import "AlfrescoObjectConverter.h"
 #import "AlfrescoVersionInfo.h"
 #import "AlfrescoFileManager.h"
+#import "AlfrescoWorkflowObjectConverter.h"
 
 @implementation AlfrescoUtilsTest
 
@@ -296,6 +297,32 @@
     [fileManager removeItemAtURL:[NSURL fileURLWithPath:copiedTempPath] error:&error];
     XCTAssertNil(error, @"Expected the copied file to be deleted successfully");
     XCTAssertFalse([fileManager fileExistsAtPath:copiedTempPath], @"Did not expect to find the copied file");
+}
+
+- (void)testWorkflowVariableDecoding
+{
+    NSString *decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:nil];
+    XCTAssertNil(decodedVariableName, @"Expected the decoded variable name to be nil");
+    
+    NSString *rawVariableName = kAlfrescoWorkflowVariableTaskTransition;
+    decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:rawVariableName];
+    XCTAssertTrue([decodedVariableName isEqualToString:kAlfrescoWorkflowVariableTaskTransition],
+                  @"Expected decoded variable name to be '%@' but it was: %@", kAlfrescoWorkflowVariableTaskTransition, decodedVariableName);
+    
+    rawVariableName = @"_startTaskId";
+    decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:rawVariableName];
+    XCTAssertTrue([decodedVariableName isEqualToString:rawVariableName],
+                  @"Expected decoded variable name to be '%@' but it was: %@", rawVariableName, decodedVariableName);
+    
+    rawVariableName = @"bpm_status";
+    decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:rawVariableName];
+    XCTAssertTrue([decodedVariableName isEqualToString:kAlfrescoWorkflowVariableTaskStatus],
+                  @"Expected decoded variable name to be '%@' but it was: %@", kAlfrescoWorkflowVariableTaskStatus, decodedVariableName);
+    
+    rawVariableName = @"custom_name_with_more_underscores";
+    decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:rawVariableName];
+    XCTAssertTrue([decodedVariableName isEqualToString:@"custom:name_with_more_underscores"],
+                  @"Expected decoded variable name to be 'custom:name_with_more_underscores' but it was: %@", decodedVariableName);
 }
 
 @end

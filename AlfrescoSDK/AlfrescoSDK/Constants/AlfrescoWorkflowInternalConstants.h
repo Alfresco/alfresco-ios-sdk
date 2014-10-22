@@ -70,6 +70,7 @@ extern NSString * const kAlfrescoLegacyAPIWorkflowTaskAttachments;
 extern NSString * const kAlfrescoLegacyAPIWorkflowTaskFormProcessor;
 extern NSString * const kAlfrescoPublicAPIWorkflowTasks;
 extern NSString * const kAlfrescoPublicAPIWorkflowSingleTask;
+extern NSString * const kAlfrescoPublicAPIWorkflowTaskVariables;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskAttachments;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskSingleAttachment;
 

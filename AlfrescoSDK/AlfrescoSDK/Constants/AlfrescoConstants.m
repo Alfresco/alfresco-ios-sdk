@@ -164,6 +164,7 @@ NSString * const kAlfrescoModelPropertyAudioCompressor = @"audio:compressor";
  Workflow Task Constants
  */
 NSString * const kAlfrescoWorkflowVariableProcessName = @"bpm:workflowDescription";
+NSString * const kAlfrescoWorkflowVariableProcessDescription = @"bpm:workflowDescription";
 NSString * const kAlfrescoWorkflowVariableProcessPriority = @"bpm:workflowPriority";
 NSString * const kAlfrescoWorkflowVariableProcessDueDate = @"bpm:workflowDueDate";
 NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications = @"bpm:sendEMailNotifications";
