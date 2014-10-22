@@ -238,7 +238,8 @@
                     XCTAssertTrue(typeDefinition.propertyNames.count > 40,
                                   @"Expected there to be more than 40 property names but there were %lu", (long)typeDefinition.propertyNames.count);
                     
-                    if ([self.currentSession.repositoryInfo.majorVersion intValue] == 4 && [self.currentSession.repositoryInfo.minorVersion intValue] == 0)
+                    if ([self.currentSession.repositoryInfo.majorVersion intValue] == 3 ||
+                        ([self.currentSession.repositoryInfo.majorVersion intValue] == 4 && [self.currentSession.repositoryInfo.minorVersion intValue] == 0))
                     {
                         XCTAssertTrue([typeDefinition.title isEqualToString:@"D:fdk:everything"],
                                       @"Expected definition name to be 'D:fdk:everything' but it was %@", typeDefinition.title);
