@@ -139,28 +139,31 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios.test";
 {
     if (self.setUpSuccess)
     {
-        self.configService = [[AlfrescoConfigService alloc] initWithSession:[self sessionForConfigService]];
-        
-        // retrieve basic config information
-        [self.configService retrieveConfigInfoWithCompletionBlock:^(AlfrescoConfigInfo *configInfo, NSError *error) {
-            if (configInfo == nil)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [self failureMessageFromError:error];
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertTrue([configInfo.schemaVersion isEqualToString:@"0.1"],
-                              @"Expected schema version to be 0.1 but it was %@", configInfo.schemaVersion);
-                
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
-        }];
-        
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        if (!self.isCloud)
+        {
+            self.configService = [[AlfrescoConfigService alloc] initWithSession:[self sessionForConfigService]];
+            
+            // retrieve basic config information
+            [self.configService retrieveConfigInfoWithCompletionBlock:^(AlfrescoConfigInfo *configInfo, NSError *error) {
+                if (configInfo == nil)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [self failureMessageFromError:error];
+                    self.callbackCompleted = YES;
+                }
+                else
+                {
+                    XCTAssertTrue([configInfo.schemaVersion isEqualToString:@"0.1"],
+                                  @"Expected schema version to be 0.1 but it was %@", configInfo.schemaVersion);
+                    
+                    self.lastTestSuccessful = YES;
+                    self.callbackCompleted = YES;
+                }
+            }];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
     }
     else
     {
@@ -1100,38 +1103,41 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios.test";
                               kAlfrescoConfigScopeContextFormMode: @"edit"};
     AlfrescoConfigScope *scope = [[AlfrescoConfigScope alloc] initWithProfile:kAlfrescoConfigProfileDefaultIdentifier context:context];
     
-    // test the repository version evaluator
-    NSDictionary *parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @">=",
-                                 kAlfrescoConfigEvaluatorParameterMajorVersion: @(4)};
-    AlfrescoRepositoryVersionEvaluator *v4RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
-                                                                  initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
-                                                                  parameters:parameters session:self.currentSession];
-    if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
+    if (!self.isCloud)
     {
-        XCTAssertTrue([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return true");
-    }
-    else
-    {
-        XCTAssertFalse([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return false");
+        // test the repository version evaluator
+        NSDictionary *parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @">=",
+                                     kAlfrescoConfigEvaluatorParameterMajorVersion: @(4)};
+        AlfrescoRepositoryVersionEvaluator *v4RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
+                                                                      initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
+                                                                      parameters:parameters session:self.currentSession];
+        if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
+        {
+            XCTAssertTrue([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return true");
+        }
+        else
+        {
+            XCTAssertFalse([v4RepoVersionEvaluator evaluate:scope], @"Expected the v4RepoVersionEvaluator evaluator to return false");
+        }
+        
+        parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @"==",
+                       kAlfrescoConfigEvaluatorParameterMajorVersion: @(3),
+                       kAlfrescoConfigEvaluatorParameterMinorVersion: @(4)};
+        AlfrescoRepositoryVersionEvaluator *v34RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
+                                                                       initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
+                                                                       parameters:parameters session:self.currentSession];
+        if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
+        {
+            XCTAssertFalse([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return false");
+        }
+        else
+        {
+            XCTAssertTrue([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return true");
+        }
     }
     
-    parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @"==",
-                   kAlfrescoConfigEvaluatorParameterMajorVersion: @(3),
-                   kAlfrescoConfigEvaluatorParameterMinorVersion: @(4)};
-    AlfrescoRepositoryVersionEvaluator *v34RepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
-                                                                   initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
-                                                                   parameters:parameters session:self.currentSession];
-    if ([self.currentSession.repositoryInfo.majorVersion intValue] >= 4)
-    {
-        XCTAssertFalse([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return false");
-    }
-    else
-    {
-        XCTAssertTrue([v34RepoVersionEvaluator evaluate:scope], @"Expected the v34RepoVersionEvaluator evaluator to return true");
-    }
-    
-    parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @"==",
-                   kAlfrescoConfigEvaluatorParameterEdition: kAlfrescoRepositoryEditionCloud};
+    NSDictionary *parameters = @{kAlfrescoConfigEvaluatorParameterOperator: @"==",
+                                 kAlfrescoConfigEvaluatorParameterEdition: kAlfrescoRepositoryEditionCloud};
     AlfrescoRepositoryVersionEvaluator *cloudRepoVersionEvaluator = [[AlfrescoRepositoryVersionEvaluator alloc]
                                                                      initWithIdentifier:kAlfrescoConfigEvaluatorRepositoryVersion
                                                                      parameters:parameters session:self.currentSession];
@@ -1204,65 +1210,68 @@ NSString * const kAlfrescoTestApplicationId = @"com.alfresco.mobile.ios.test";
 {
     if (self.setUpSuccess)
     {
-        BOOL is42orAbove = NO;
-        if (([self.currentSession.repositoryInfo.majorVersion intValue] == 4 && [self.currentSession.repositoryInfo.minorVersion intValue] >= 2) ||
-            [self.currentSession.repositoryInfo.majorVersion intValue] >= 5)
+        if (!self.isCloud)
         {
-            is42orAbove = YES;
-        }
-        
-        self.configService = [[AlfrescoConfigService alloc] initWithSession:[self sessionForConfigService]];
-        
-        // retrieve view config for specific view
-        [self.configService retrieveViewGroupConfigWithIdentifier:@"evaluator-test" completionBlock:^(AlfrescoViewGroupConfig *config, NSError *error) {
-            if (config == nil)
+            BOOL is42orAbove = NO;
+            if (([self.currentSession.repositoryInfo.majorVersion intValue] == 4 && [self.currentSession.repositoryInfo.minorVersion intValue] >= 2) ||
+                [self.currentSession.repositoryInfo.majorVersion intValue] >= 5)
             {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [self failureMessageFromError:error];
-                self.callbackCompleted = YES;
+                is42orAbove = YES;
             }
-            else
-            {
-                XCTAssertTrue([config.identifier isEqualToString:@"evaluator-test"],
-                              @"Expected view group config identifier to be 'evaluator-test' but it was %@", config.identifier);
-                XCTAssertTrue([config.label isEqualToString:@"Evaluator Test"],
-                              @"Expected view group label of 'Evaluator Test' but it was %@", config.label);
-                
-                XCTAssertNotNil(config.items, @"Expected items property to be populated");
-                
-                if (is42orAbove)
+            
+            self.configService = [[AlfrescoConfigService alloc] initWithSession:[self sessionForConfigService]];
+            
+            // retrieve view config for specific view
+            [self.configService retrieveViewGroupConfigWithIdentifier:@"evaluator-test" completionBlock:^(AlfrescoViewGroupConfig *config, NSError *error) {
+                if (config == nil)
                 {
-                    // we should get 2 items for 4.2 servers and above
-                    XCTAssertTrue(config.items.count == 2, @"Expected there to be 2 items");
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [self failureMessageFromError:error];
+                    self.callbackCompleted = YES;
                 }
                 else
                 {
-                    // we should get 1 item for older servers
-                    XCTAssertTrue(config.items.count == 1, @"Expected there to be 1 item");
+                    XCTAssertTrue([config.identifier isEqualToString:@"evaluator-test"],
+                                  @"Expected view group config identifier to be 'evaluator-test' but it was %@", config.identifier);
+                    XCTAssertTrue([config.label isEqualToString:@"Evaluator Test"],
+                                  @"Expected view group label of 'Evaluator Test' but it was %@", config.label);
+                    
+                    XCTAssertNotNil(config.items, @"Expected items property to be populated");
+                    
+                    if (is42orAbove)
+                    {
+                        // we should get 2 items for 4.2 servers and above
+                        XCTAssertTrue(config.items.count == 2, @"Expected there to be 2 items");
+                    }
+                    else
+                    {
+                        // we should get 1 item for older servers
+                        XCTAssertTrue(config.items.count == 1, @"Expected there to be 1 item");
+                    }
+                    
+                    // make sure the first item has the correct identifier
+                    AlfrescoItemConfig *item1 = config.items[0];
+                    XCTAssertTrue([item1.identifier isEqualToString:@"view-tasks"],
+                                  @"Expected an identifier of 'view-tasks' but it was %@", item1.identifier);
+                    
+                    if (is42orAbove)
+                    {
+                        // make sure the third item has the correct identifier
+                        AlfrescoItemConfig *item2 = config.items[1];
+                        XCTAssertTrue([item2.identifier isEqualToString:@"view-my-repository-files"],
+                                      @"Expected an identifier of 'view-my-repository-files' but it was %@", item2.identifier);
+                        XCTAssertTrue([item2.type isEqualToString:@"com.alfresco.client.view.repository"],
+                                      @"Expected a type of 'com.alfresco.client.view.repository' but it was %@", item2.type);
+                    }
+                    
+                    self.lastTestSuccessful = YES;
+                    self.callbackCompleted = YES;
                 }
-                
-                // make sure the first item has the correct identifier
-                AlfrescoItemConfig *item1 = config.items[0];
-                XCTAssertTrue([item1.identifier isEqualToString:@"view-tasks"],
-                              @"Expected an identifier of 'view-tasks' but it was %@", item1.identifier);
-                
-                if (is42orAbove)
-                {
-                    // make sure the third item has the correct identifier
-                    AlfrescoItemConfig *item2 = config.items[1];
-                    XCTAssertTrue([item2.identifier isEqualToString:@"view-my-repository-files"],
-                                  @"Expected an identifier of 'view-my-repository-files' but it was %@", item2.identifier);
-                    XCTAssertTrue([item2.type isEqualToString:@"com.alfresco.client.view.repository"],
-                                  @"Expected a type of 'com.alfresco.client.view.repository' but it was %@", item2.type);
-                }
-                
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
-        }];
-        
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            }];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
     }
     else
     {
