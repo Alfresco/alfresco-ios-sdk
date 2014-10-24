@@ -59,6 +59,23 @@ NSString * const kAlfrescoFilterValueWorkflowStatusActive = @"active";
 NSString * const kAlfrescoFilterValueWorkflowStatusCompleted = @"completed";
 NSString * const kAlfrescoFilterValueWorkflowStatusAny = @"any";
 
+NSString * const kAlfrescoFilterByWorkflowDueDate = @"dueDate";
+NSString * const kAlfrescoFilterValueWorkflowDueDateToday = @"today";
+NSString * const kAlfrescoFilterValueWorkflowDueDateTomorrow = @"tomorrow";
+NSString * const kAlfrescoFilterValueWorkflowDueDate7Days = @"week";
+NSString * const kAlfrescoFilterValueWorkflowDueDateOverdue = @"overdue";
+NSString * const kAlfrescoFilterValueWorkflowDueDateNone = @"none";
+
+NSString * const kAlfrescoFilterByWorkflowPriority = @"priority";
+NSString * const kAlfrescoFilterValueWorkflowPriorityLow = @"low";
+NSString * const kAlfrescoFilterValueWorkflowPriorityMedium = @"medium";
+NSString * const kAlfrescoFilterValueWorkflowPriorityHigh = @"high";
+
+NSString * const kAlfrescoFilterByWorkflowAssignee = @"assignee";
+NSString * const kAlfrescoFilterValueWorkflowAssigneeMe = @"me";
+NSString * const kAlfrescoFilterValueWorkflowAssigneeUnasssigned = @"unassigned";
+NSString * const kAlfrescoFilterValueWorkflowAssigneeAll = @"all";
+
 /**
  Capabilities constants
  */

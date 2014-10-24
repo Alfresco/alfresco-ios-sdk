@@ -38,6 +38,7 @@
 @property (nonatomic, strong, readonly) NSString *summary;
 @property (nonatomic, strong, readonly) NSNumber *priority;
 @property (nonatomic, strong, readonly) NSString *assigneeIdentifier;
+@property (nonatomic, assign, readonly) BOOL completed;
 
 - (id)initWithProperties:(NSDictionary *)properties;
 

@@ -197,7 +197,227 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
     }
 }
 
-- (void)testRetrieveTaskForProcess
+- (void)testRetrieveTasksWithHighPriority
+{
+    if (self.setUpSuccess)
+    {
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        // setup variables to create process with
+        NSDictionary *variables = @{kAlfrescoWorkflowVariableProcessPriority: @(1)};
+        
+        // create a workflow with high priority
+        [self createAdhocTaskAndProcessWithVariables:variables completionBlock:^(AlfrescoWorkflowProcess *createdProcess, AlfrescoWorkflowTask *createdTask, NSError *creationError) {
+            if (createdProcess == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:creationError];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // create filter to only return high priority workflows
+                AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc]
+                                                        initWithFilter:kAlfrescoFilterByWorkflowPriority value:kAlfrescoFilterValueWorkflowPriorityHigh];
+                AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
+                
+                [self.workflowService retrieveTasksWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
+                    if (retrieveError)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertTrue(pagingResult.objects.count >= 1, @"There should be at least one result");
+                        
+                        // check every task returned has a high priority
+                        for (AlfrescoWorkflowTask *task in pagingResult.objects)
+                        {
+                            XCTAssertTrue(task.priority.intValue == 1,
+                                          @"Only expected to get tasks that are high priority but task %@ has a priority of: %d",
+                                          task.identifier, task.priority.intValue);
+                        }
+                        
+                        // delete the process we created
+                        [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                            self.lastTestSuccessful = YES;
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveTasksDueInNext7Days
+{
+    if (self.setUpSuccess)
+    {
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        // setup variables to create process with (due date in 5 days time)
+        NSDate *dateNow = [[NSDate alloc] init];
+        NSDate *dueDate = [dateNow dateByAddingTimeInterval:(60*60*24*5)];
+        NSDate *oneWeekDate = [dateNow dateByAddingTimeInterval:(60*60*24*7)];
+        NSDictionary *variables = @{kAlfrescoWorkflowVariableProcessDueDate: dueDate};
+        
+        // create a workflow with high priority
+        [self createAdhocTaskAndProcessWithVariables:variables completionBlock:^(AlfrescoWorkflowProcess *createdProcess, AlfrescoWorkflowTask *createdTask, NSError *creationError) {
+            if (createdProcess == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:creationError];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // create filter to only return high priority workflows
+                AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc]
+                                                        initWithFilter:kAlfrescoFilterByWorkflowDueDate value:kAlfrescoFilterValueWorkflowDueDate7Days];
+                AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
+                
+                [self.workflowService retrieveTasksWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
+                    if (retrieveError)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertTrue(pagingResult.objects.count >= 1, @"There should be at least one result");
+                        
+                        // check every task returned has a due date less than a week away
+                        for (AlfrescoWorkflowTask *task in pagingResult.objects)
+                        {
+                            XCTAssertNotNil(task.dueAt, @"Expected dueAt to be populated");
+                            
+                            NSDate *retrievedDueDate = task.dueAt;
+                            NSComparisonResult result = [retrievedDueDate compare:oneWeekDate];
+                            
+                            XCTAssertTrue(result == NSOrderedAscending,
+                                          @"Only expected to get tasks that are due in the next week but task %@ is due: %@",
+                                          task.identifier, task.dueAt);
+                        }
+                        
+                        // delete the process we created
+                        [self deleteCreatedTestProcess:createdProcess completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                            self.lastTestSuccessful = YES;
+                            self.callbackCompleted = YES;
+                        }];
+                    }
+                }];
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveUnassignedTasks
+{
+    if (self.setUpSuccess)
+    {
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc]
+                                                initWithFilter:kAlfrescoFilterByWorkflowAssignee value:kAlfrescoFilterValueWorkflowAssigneeUnasssigned];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
+        
+        [self.workflowService retrieveTasksWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
+            if (retrieveError)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
+                
+                // check every task returned has a nil assignee
+                for (AlfrescoWorkflowTask *task in pagingResult.objects)
+                {
+                    XCTAssertNil(task.assigneeIdentifier,
+                                 @"Only expected to get tasks that have no assignee but task %@ is assigned to: %@",
+                                task.identifier, task.assigneeIdentifier);
+                }
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveCompleteTasks
+{
+    if (self.setUpSuccess)
+    {
+        self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+        
+        AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc]
+                                                initWithFilter:kAlfrescoFilterByWorkflowStatus value:kAlfrescoFilterValueWorkflowStatusCompleted];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
+        
+        [self.workflowService retrieveTasksWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
+            if (retrieveError)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
+                
+                // check every task returned has an end date and is marked as complete
+                for (AlfrescoWorkflowTask *task in pagingResult.objects)
+                {
+                    XCTAssertTrue(task.completed,
+                                  @"Only expected to get tasks that are complete but task %@ is not", task.identifier);
+                    
+                    XCTAssertNotNil(task.endedAt,
+                                    @"Only expected to get tasks that have an end date but task %@ does not", task.identifier);
+                }
+                
+                self.lastTestSuccessful = YES;
+                self.callbackCompleted = YES;
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveTasksForProcess
 {
     if (self.setUpSuccess)
     {
@@ -501,7 +721,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
             if (creationError)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [creationError localizedDescription], [creationError localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:creationError];
                 self.callbackCompleted = YES;
             }
             else
@@ -513,7 +733,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                     if (completedError)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [completedError localizedDescription], [completedError localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:completedError];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -525,12 +745,28 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         XCTAssertNotNil(completedTask.priority, @"Expected the priority property to be populated");
                         XCTAssertNotNil(completedTask.assigneeIdentifier, @"Expected the assigneeIdentifier property to be populated");
                         XCTAssertNotNil(completedTask.endedAt, @"Expected the endedAt property to be populated");
+                        XCTAssertTrue(completedTask.completed, @"Expected the completed property to be true");
                         
-                        // TODO: once we support retrieval of task variables make sure the comment is present.
-                        
-                        [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
-                            self.lastTestSuccessful = succeeded;
-                            self.callbackCompleted = YES;
+                        // retrieve the variables for the task and ensure the comment was saved
+                        [self.workflowService retrieveVariablesForTask:completedTask completionBlock:^(NSDictionary *variables, NSError *retrieveError) {
+                            if (retrieveError)
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
+                                self.callbackCompleted = YES;
+                            }
+                            else
+                            {
+                                AlfrescoProperty *updatedComment = variables[kAlfrescoWorkflowVariableTaskComment];
+                                XCTAssertNotNil(updatedComment, @"Expected to find the comment variable");
+                                XCTAssertTrue([updatedComment.value isEqualToString:taskComment],
+                                              @"Expected the comment variable to be '%@' but it was: %@", taskComment, updatedComment.value);
+                                
+                                [self deleteCreatedTestProcess:process completionBlock:^(BOOL succeeded, NSError *error) {
+                                    self.lastTestSuccessful = succeeded;
+                                    self.callbackCompleted = YES;
+                                }];
+                            }
                         }];
                     }
                 }];

@@ -247,7 +247,8 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                 // check every process returned is active
                 for (AlfrescoWorkflowProcess *process in array)
                 {
-                    XCTAssertTrue(process.endedAt == nil, @"Only expected to get processes that are active but process %@ has an end date set", process.identifier);
+                    XCTAssertFalse(process.completed,
+                                  @"Only expected to get processes that are active but process %@ is marked as complete", process.identifier);
                 }
                 
                 self.lastTestSuccessful = YES;
@@ -293,7 +294,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                 // check every process returned is completed
                 for (AlfrescoWorkflowProcess *process in array)
                 {
-                    XCTAssertTrue(process.endedAt != nil, @"Only expected to get processes that are complete but process %@ does not have an end date set", process.identifier);
+                    XCTAssertTrue(process.completed, @"Only expected to get processes that are complete but process %@ is not", process.identifier);
                 }
                 
                 self.lastTestSuccessful = YES;

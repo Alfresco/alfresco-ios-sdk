@@ -127,6 +127,24 @@ extern NSString * const kAlfrescoFilterValueWorkflowStatusActive;
 extern NSString * const kAlfrescoFilterValueWorkflowStatusCompleted;
 extern NSString * const kAlfrescoFilterValueWorkflowStatusAny;
 
+extern NSString * const kAlfrescoFilterByWorkflowDueDate;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDateToday;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDateTomorrow;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDate7Days;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDateOverdue;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDateNone;
+
+extern NSString * const kAlfrescoFilterByWorkflowPriority;
+extern NSString * const kAlfrescoFilterValueWorkflowPriorityLow;
+extern NSString * const kAlfrescoFilterValueWorkflowPriorityMedium;
+extern NSString * const kAlfrescoFilterValueWorkflowPriorityHigh;
+
+extern NSString * const kAlfrescoFilterByWorkflowAssignee;
+extern NSString * const kAlfrescoFilterValueWorkflowAssigneeMe;
+extern NSString * const kAlfrescoFilterValueWorkflowAssigneeUnasssigned;
+extern NSString * const kAlfrescoFilterValueWorkflowAssigneeAll;
+
+
 /**---------------------------------------------------------------------------------------
  * @name capability constants
  --------------------------------------------------------------------------------------- */

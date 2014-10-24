@@ -44,6 +44,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSNumber *priority;
 @property (nonatomic, strong, readwrite) NSString *summary;
 @property (nonatomic, strong, readwrite) NSString *initiatorUsername;
+@property (nonatomic, assign, readwrite) BOOL completed;
 
 @end
 
@@ -120,6 +121,9 @@ static NSInteger kWorkflowProcessModelVersion = 1;
             self.initiatorUsername = initiator;
         }
     }
+    
+    // set the completed flag
+    self.completed = (self.endedAt != nil);
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
@@ -153,6 +157,9 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.summary = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONDescription];
         self.priority = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONPriority];
         self.initiatorUsername = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONStartUserID];
+        
+        // set the completed flag
+        self.completed = (self.endedAt != nil);
     }
     return self;
 }
