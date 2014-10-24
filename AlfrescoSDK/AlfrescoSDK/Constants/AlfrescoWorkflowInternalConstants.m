@@ -151,7 +151,8 @@ NSString * const kAlfrescoWorkflowLegacyJSONBPMPriority = @"bpm_priority";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMDescription = @"bpm_description";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMAssignee = @"bpm_assignee";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMPackageContainer = @"bpm_package";
-
+NSString * const kAlfrescoWorkflowLegacyJSONState = @"state";
+NSString * const kAlfrescoWorkflowLegacyJSONStateCompleted = @"COMPLETED";
 NSString * const kAlfrescoWorkflowLegacyJSONOwner = @"cm_owner";
 
 NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDescription = @"bpm_description";

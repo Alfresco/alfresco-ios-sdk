@@ -399,8 +399,13 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                     XCTAssertTrue(task.completed,
                                   @"Only expected to get tasks that are complete but task %@ is not", task.identifier);
                     
-                    XCTAssertNotNil(task.endedAt,
-                                    @"Only expected to get tasks that have an end date but task %@ does not", task.identifier);
+                    // A bug on 4.0.x servers can leave the endDate unset so don't test
+                    if (!([self.currentSession.repositoryInfo.majorVersion intValue] == 4 &&
+                          [self.currentSession.repositoryInfo.minorVersion intValue] == 0))
+                    {
+                        XCTAssertNotNil(task.endedAt,
+                                        @"Only expected to get tasks that have an end date but task %@ does not", task.identifier);
+                    }
                 }
                 
                 self.lastTestSuccessful = YES;

@@ -151,7 +151,8 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONBPMPriority;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMDescription;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMAssignee;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMPackageContainer;
-
+extern NSString * const kAlfrescoWorkflowLegacyJSONState;
+extern NSString * const kAlfrescoWorkflowLegacyJSONStateCompleted;
 extern NSString * const kAlfrescoWorkflowLegacyJSONOwner;
 
 extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDescription;

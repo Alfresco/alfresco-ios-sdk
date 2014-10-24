@@ -139,6 +139,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
     [aCoder encodeObject:self.summary forKey:kAlfrescoWorkflowPublicJSONDescription];
     [aCoder encodeObject:self.priority forKey:kAlfrescoWorkflowPublicJSONPriority];
     [aCoder encodeObject:self.initiatorUsername forKey:kAlfrescoWorkflowPublicJSONStartUserID];
+    [aCoder encodeBool:self.completed forKey:kAlfrescoWorkflowLegacyJSONState];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -157,9 +158,7 @@ static NSInteger kWorkflowProcessModelVersion = 1;
         self.summary = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONDescription];
         self.priority = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONPriority];
         self.initiatorUsername = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONStartUserID];
-        
-        // set the completed flag
-        self.completed = (self.endedAt != nil);
+        self.completed = [aDecoder decodeBoolForKey:kAlfrescoWorkflowLegacyJSONState];
     }
     return self;
 }
