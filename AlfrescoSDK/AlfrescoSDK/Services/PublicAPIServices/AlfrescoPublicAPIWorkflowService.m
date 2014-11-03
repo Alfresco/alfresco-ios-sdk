@@ -1372,7 +1372,7 @@
     {
         [self appendBooleanPredicateToWhereClause:whereClause
                                              name:kAlfrescoPublicAPIWorkflowProcessIncludeVariables
-                                            value:@YES
+                                            value:YES
                                          operator:@"="];
     }
     
