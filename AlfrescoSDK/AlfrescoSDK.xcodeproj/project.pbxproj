@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0800984917A6B4B40018C20A /* AlfrescoFavoritesCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0800984717A6B4B40018C20A /* AlfrescoFavoritesCache.m */; };
-		0800984A17A6B4B40018C20A /* AlfrescoFavoritesCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0800984717A6B4B40018C20A /* AlfrescoFavoritesCache.m */; };
 		080828AA1850D257000524A3 /* AlfrescoClientCertificateHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 080828A81850D257000524A3 /* AlfrescoClientCertificateHTTPRequest.m */; };
 		08FC125A17BE1EDD0096F21E /* AlfrescoCompany.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC125817BE1EDD0096F21E /* AlfrescoCompany.m */; };
 		08FC13FA1754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13F81754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m */; };
@@ -214,6 +213,9 @@
 		588410BF198679E60047EBDF /* AlfrescoPropertyDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 588410BE198679E60047EBDF /* AlfrescoPropertyDefinition.m */; };
 		588410C219868AEE0047EBDF /* AlfrescoModelDefinitionService.m in Sources */ = {isa = PBXBuildFile; fileRef = 588410C119868AEE0047EBDF /* AlfrescoModelDefinitionService.m */; };
 		588410C519868FE10047EBDF /* AlfrescoModelDefinitionServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 588410C419868FE10047EBDF /* AlfrescoModelDefinitionServiceTest.m */; };
+		588D9F501A0928CB000E00B9 /* AlfrescoModelDefinitionService.m in Sources */ = {isa = PBXBuildFile; fileRef = 588410C119868AEE0047EBDF /* AlfrescoModelDefinitionService.m */; };
+		588D9F511A092979000E00B9 /* AlfrescoModelDefinitionServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 588410C419868FE10047EBDF /* AlfrescoModelDefinitionServiceTest.m */; };
+		588D9F521A092E21000E00B9 /* valid-config-test.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 582380BD19C065580011B39E /* valid-config-test.bundle */; };
 		588EB34D19E433C60012BA6B /* AlfrescoDefaultFileManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73971A8D16AD5B700056031F /* AlfrescoDefaultFileManager.h */; };
 		588EB34E19E434000012BA6B /* AlfrescoDefaultFileManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73971A8D16AD5B700056031F /* AlfrescoDefaultFileManager.h */; };
 		58AA490F19AE07BE0094185D /* AlfrescoConfigServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 581FC4B61973D80B00045087 /* AlfrescoConfigServiceTest.m */; };
@@ -342,7 +344,6 @@
 		7333E5CF197FD15000B4CB1D /* AlfrescoLogTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8218AF5816DFCC6D001CE051 /* AlfrescoLogTest.m */; };
 		7333E5D0197FD15000B4CB1D /* AlfrescoSiteServiceForSecondaryUserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E685AD2173BB64700BB7CCC /* AlfrescoSiteServiceForSecondaryUserTests.m */; };
 		7333E5D1197FD15000B4CB1D /* AlfrescoSessionCustomCMISTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E685AD5173BDB9600BB7CCC /* AlfrescoSessionCustomCMISTests.m */; };
-		7333E5D2197FD15000B4CB1D /* AlfrescoFavoritesCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0800984717A6B4B40018C20A /* AlfrescoFavoritesCache.m */; };
 		7333E5D4197FD15000B4CB1D /* AlfrescoWorkflowProcessDefinitionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 580800CD18C0DCD0005D075A /* AlfrescoWorkflowProcessDefinitionTests.m */; };
 		7333E5D8197FD15000B4CB1D /* AlfrescoWorkflowProcessTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 580800CF18C0DCD0005D075A /* AlfrescoWorkflowProcessTests.m */; };
 		7333E5D9197FD15000B4CB1D /* AlfrescoWorkflowTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 580800D118C0DCD0005D075A /* AlfrescoWorkflowTaskTests.m */; };
@@ -2070,6 +2071,7 @@
 				585E2CF519B9F879009A8778 /* empty-config-test.json in Resources */,
 				7333E5E4197FD15000B4CB1D /* millenium-dome.jpg in Resources */,
 				7333E5E5197FD15000B4CB1D /* small_test.txt in Resources */,
+				588D9F521A092E21000E00B9 /* valid-config-test.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2247,7 +2249,6 @@
 				8218AF5916DFCC6D001CE051 /* AlfrescoLogTest.m in Sources */,
 				4E685AD3173BB64700BB7CCC /* AlfrescoSiteServiceForSecondaryUserTests.m in Sources */,
 				4E685AD6173BDB9700BB7CCC /* AlfrescoSessionCustomCMISTests.m in Sources */,
-				0800984A17A6B4B40018C20A /* AlfrescoFavoritesCache.m in Sources */,
 				580800D218C0DCD0005D075A /* AlfrescoWorkflowProcessDefinitionTests.m in Sources */,
 				580800D318C0DCD0005D075A /* AlfrescoWorkflowProcessTests.m in Sources */,
 				58AA490F19AE07BE0094185D /* AlfrescoConfigServiceTest.m in Sources */,
@@ -2274,9 +2275,9 @@
 				7333E5CD197FD15000B4CB1D /* AlfrescoSessionTest.m in Sources */,
 				7333E5CE197FD15000B4CB1D /* AlfrescoSpecificCMISTests.m in Sources */,
 				7333E5CF197FD15000B4CB1D /* AlfrescoLogTest.m in Sources */,
+				588D9F511A092979000E00B9 /* AlfrescoModelDefinitionServiceTest.m in Sources */,
 				7333E5D0197FD15000B4CB1D /* AlfrescoSiteServiceForSecondaryUserTests.m in Sources */,
 				7333E5D1197FD15000B4CB1D /* AlfrescoSessionCustomCMISTests.m in Sources */,
-				7333E5D2197FD15000B4CB1D /* AlfrescoFavoritesCache.m in Sources */,
 				7333E5D4197FD15000B4CB1D /* AlfrescoWorkflowProcessDefinitionTests.m in Sources */,
 				7333E5D8197FD15000B4CB1D /* AlfrescoWorkflowProcessTests.m in Sources */,
 				7333E5D9197FD15000B4CB1D /* AlfrescoWorkflowTaskTests.m in Sources */,
@@ -2367,6 +2368,7 @@
 				73D01DC7197FC3D00065E107 /* AlfrescoRepositorySession.m in Sources */,
 				58F2A5A91A07BB360071DCB5 /* AlfrescoPropertyDefinition.m in Sources */,
 				58F2A5A41A07BB270071DCB5 /* AlfrescoAspectDefinition.m in Sources */,
+				588D9F501A0928CB000E00B9 /* AlfrescoModelDefinitionService.m in Sources */,
 				73D01DC8197FC3D00065E107 /* AlfrescoCloudNetwork.m in Sources */,
 				73D01DC9197FC3D00065E107 /* AlfrescoLegacyAPIRatingService.m in Sources */,
 				73D01DCA197FC3D00065E107 /* AlfrescoCloudSession.m in Sources */,
