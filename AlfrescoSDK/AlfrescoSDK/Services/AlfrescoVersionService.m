@@ -18,14 +18,15 @@
 
 #import "AlfrescoVersionService.h"
 #import "AlfrescoInternalConstants.h"
-#import "CMISVersioningService.h"
-#import "CMISDocument.h"
-#import "CMISSession.h"
-#import "CMISOperationContext.h"
 #import "AlfrescoCMISToAlfrescoObjectConverter.h"
 #import "AlfrescoPagingUtils.h"
 #import "AlfrescoSortingUtils.h"
 #import "AlfrescoCMISUtil.h"
+#import "CMISVersioningService.h"
+#import "CMISDocument.h"
+#import "CMISSession.h"
+#import "CMISOperationContext.h"
+#import "CMISPagedResult.h"
 
 @interface AlfrescoVersionService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
@@ -275,7 +276,11 @@
     AlfrescoRequest *request = [AlfrescoRequest new];
     if (properties != nil)
     {
-        [AlfrescoCMISUtil preparePropertiesForUpdate:properties node:document cmisSession:self.cmisSession completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
+        [AlfrescoCMISUtil preparePropertiesForUpdate:properties
+                                             aspects:nil
+                                                node:document
+                                         cmisSession:self.cmisSession
+                                     completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
             if (cmisProperties != nil)
             {
                 request.httpRequest = checkin(cmisProperties);
@@ -347,7 +352,11 @@
     AlfrescoRequest *request = [AlfrescoRequest new];
     if (properties != nil)
     {
-        [AlfrescoCMISUtil preparePropertiesForUpdate:properties node:document cmisSession:self.cmisSession completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
+        [AlfrescoCMISUtil preparePropertiesForUpdate:properties
+                                             aspects:nil
+                                                node:document
+                                         cmisSession:self.cmisSession
+                                     completionBlock:^(CMISProperties *cmisProperties, NSError *error) {
             if (cmisProperties != nil)
             {
                 request.httpRequest = checkin(cmisProperties);
@@ -362,6 +371,69 @@
     {
         request.httpRequest = checkin(nil);
     }
+    
+    return request;
+}
+
+- (AlfrescoRequest *)retrieveCheckedOutDocumentsWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveCheckedOutDocumentsWithListingContext:listingContext
+                                               completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        completionBlock(pagingResult.objects, error);
+    }];
+}
+
+
+- (AlfrescoRequest *)retrieveCheckedOutDocumentsWithListingContext:(AlfrescoListingContext *)listingContext
+                                                   completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    if (nil == listingContext)
+    {
+        listingContext = self.session.defaultListingContext;
+    }
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    
+    CMISOperationContext *opContext = [CMISOperationContext defaultOperationContext];
+    if (listingContext.maxItems > 0)
+    {
+        opContext.maxItemsPerPage = listingContext.maxItems;
+        opContext.skipCount = listingContext.skipCount;
+    }
+    
+    request.httpRequest = [self.cmisSession retrieveCheckedOutDocumentsWithOperationContext:opContext completionBlock:^(CMISPagedResult *pagedResult, NSError *error) {
+        if (nil == pagedResult)
+        {
+            NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+            completionBlock(nil, alfrescoError);
+        }
+        else
+        {
+            AlfrescoPagingResult *pagingResult = nil;
+            NSMutableArray *children = [NSMutableArray array];
+            for (CMISObject *node in pagedResult.resultArray)
+            {
+                [children addObject:[self.objectConverter nodeFromCMISObject:node]];
+            }
+            NSArray *sortedChildren = nil;
+            if (0 < children.count)
+            {
+                sortedChildren = [AlfrescoSortingUtils sortedArrayForArray:children
+                                                                   sortKey:listingContext.sortProperty
+                                                             supportedKeys:self.supportedSortKeys
+                                                                defaultKey:self.defaultSortKey
+                                                                 ascending:listingContext.sortAscending];
+            }
+            else
+            {
+                sortedChildren = @[];
+            }
+            pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedChildren hasMoreItems:pagedResult.hasMoreItems totalItems:(int)pagedResult.numItems];
+            completionBlock(pagingResult, nil);
+        }
+    }];
     
     return request;
 }

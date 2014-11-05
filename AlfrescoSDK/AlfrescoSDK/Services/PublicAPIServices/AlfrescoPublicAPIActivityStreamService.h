@@ -18,10 +18,6 @@
  *****************************************************************************
  */
 
-/** AlfrescoPublicAPIWorkflowService
- 
- */
-
 #import "AlfrescoActivityStreamService.h"
 
 @interface AlfrescoPublicAPIActivityStreamService : AlfrescoActivityStreamService

@@ -27,6 +27,7 @@
 #import "AlfrescoURLUtils.h"
 #import "AlfrescoRepositoryInfoBuilder.h"
 #import "AlfrescoCMISUtil.h"
+#import "CMISConstants.h"
 #import "CMISErrors.h"
 #import "CMISSession.h"
 #import "CMISStandardUntrustedSSLAuthenticationProvider.h"
@@ -221,6 +222,7 @@
                 cmisSessionParams.username = username;
                 cmisSessionParams.password = password;
                 cmisSessionParams.atomPubUrl = [NSURL URLWithString:cmisURL];
+                [cmisSessionParams setObject:@NO forKey:kCMISSessionParameterSendCookies];
                 
                 // setup custom CMIS network provider, if necessary
                 if ((self.sessionData)[kAlfrescoCMISNetworkProvider])
@@ -407,7 +409,8 @@
                             // session creation is complete, call the original completion block
                             AlfrescoLogDebug(@"Session established for user %@, repo version: %@ %@ Edition",
                                              self.personIdentifier, self.repositoryInfo.version, self.repositoryInfo.edition);
-                            AlfrescoLogDebug(@"Using patched version of ObjectiveCMIS 0.3");
+                            AlfrescoLogInfo(@"Using Alfresco SDK v%@ and ObjectiveCMIS v%@", kAlfrescoSDKVersion, kCMISLibraryVersion);
+
                             completionBlock(self, nil);
                         }];
                     }

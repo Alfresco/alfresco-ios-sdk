@@ -21,6 +21,7 @@
 #import "AlfrescoDefaultFileManager.h"
 #import "AlfrescoConstants.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoContentFile.h"
 
 @implementation AlfrescoDefaultFileManager
 
@@ -88,6 +89,47 @@
 - (BOOL)moveItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error
 {
     return [[NSFileManager defaultManager] moveItemAtURL:sourceURL toURL:destinationURL error:error];
+}
+
+- (BOOL)replaceFileAtPath:(NSString *)path contents:(NSData *)data error:(NSError **)error
+{
+    BOOL successful = NO;
+    
+    // create a temporary file to hold the given contents
+    NSString *tempFilename = [[NSUUID UUID] UUIDString];
+    if (nil != tempFilename)
+    {
+        NSString *tempPath = [self.temporaryDirectory stringByAppendingString:tempFilename];
+        successful = [[NSFileManager defaultManager] createFileAtPath:tempPath contents:data attributes:nil];
+        
+        if (successful)
+        {
+            // replace the existing file with the given contents
+            successful = [self replaceFileAtPath:path withContentsOfFileAtPath:tempPath error:error];
+        }
+    }
+    
+    return successful;
+}
+
+- (BOOL)replaceFileAtPath:(NSString *)destinationPath withContentsOfFileAtPath:(NSString *)sourcePath error:(NSError **)error
+{
+    NSURL *destinationURL = [NSURL fileURLWithPath:destinationPath];
+    NSURL *sourceURL = [NSURL fileURLWithPath:sourcePath];
+    
+    return [self replaceFileAtURL:destinationURL withContentsOfFileAtURL:sourceURL error:error];
+}
+
+- (BOOL)replaceFileAtURL:(NSURL *)URL contents:(NSData *)data error:(NSError **)error
+{
+    return [self replaceFileAtPath:URL.path contents:data error:error];
+}
+
+- (BOOL)replaceFileAtURL:(NSURL *)destinationURL withContentsOfFileAtURL:(NSURL *)sourceURL error:(NSError **)error
+{
+    NSURL *resultingItemURL = nil;
+    
+    return [[NSFileManager defaultManager] replaceItemAtURL:destinationURL withItemAtURL:sourceURL backupItemName:nil options:NSFileManagerItemReplacementUsingNewMetadataOnly resultingItemURL:&resultingItemURL error:error];
 }
 
 - (NSDictionary *)attributesOfItemAtPath:(NSString *)path error:(NSError **)error

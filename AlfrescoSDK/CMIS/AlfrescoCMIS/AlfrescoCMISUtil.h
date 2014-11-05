@@ -53,6 +53,7 @@
  * Prepares the given dictionary of Alfresco properties for update via CMIS
  */
 + (void)preparePropertiesForUpdate:(NSDictionary *)alfrescoProperties
+                           aspects:(NSArray *)aspects
                               node:(AlfrescoNode *)node
                        cmisSession:(CMISSession *)cmisSession
                    completionBlock:(void (^)(CMISProperties *cmisProperties, NSError *error))completionBlock;

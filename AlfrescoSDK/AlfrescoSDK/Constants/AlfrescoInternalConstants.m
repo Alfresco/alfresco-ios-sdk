@@ -39,6 +39,11 @@ NSString * const kAlfrescoCMISModelPrefix = @"cmis:";
 NSString * const kAlfrescoCMISFolderTypePrefix = @"F:";
 NSString * const kAlfrescoCMISDocumentTypePrefix = @"D:";
 NSString * const kAlfrescoCMISAspectPrefix = @"P:";
+NSString * const kAlfrescoCMISNamespace = @"http://www.alfresco.org";
+NSString * const kAlfrescoCMISSetAspects = @"setAspects";
+NSString * const kAlfrescoCMISAspectsToAdd = @"aspectsToAdd";
+NSString * const kAlfrescoCMISMandatoryAspects = @"mandatoryAspects";
+
 
 /**
  Content Model constants
@@ -104,11 +109,14 @@ NSString * const kAlfrescoReverseComments = @"reverse";
  */
 NSString * const kAlfrescoSessionKeyCmisSession = @"alfresco_session_key_cmis_session";
 NSString * const kAlfrescoSessionCloudURL = @"org.alfresco.mobile.internal.session.cloud.url";
+NSString * const kAlfrescoOAuthRequestDenyAction = @"action=Deny";
 NSString * const kAlfrescoSessionCloudBasicAuth = @"org.alfresco.mobile.internal.session.cloud.basic";
 NSString * const kAlfrescoSessionUsername = @"org.alfresco.mobile.internal.session.username";
 NSString * const kAlfrescoSessionPassword = @"org.alfresco.mobile.internal.session.password";
 NSString * const kAlfrescoSessionCacheSites = @"org.alfresco.mobile.internal.cache.sites";
 NSString * const kAlfrescoSessionCacheFavorites = @"org.alfresco.mobile.internal.cache.favorites";
+NSString * const kAlfrescoSessionCacheDefinitionType = @"org.alfresco.mobile.internal.cache.definition.type";
+NSString * const kAlfrescoSessionCacheDefinitionAspect = @"org.alfresco.mobile.internal.cache.definition.aspect";
 // Temporary for ACE-1445
 NSString * const kAlfrescoSessionAlternatePersonIdentifier = @"org.alfresco.mobile.internal.session.personIdentifier";
 
@@ -231,8 +239,10 @@ NSString * const kAlfrescoDocumentLibrary = @"documentLibrary";
 NSString * const kAlfrescoCloudURL = @"https://api.alfresco.com";
 NSString * const kAlfrescoCloudDefaultRedirectURI = @"http://www.alfresco.com/mobile-auth-callback.html";
 NSString * const kAlfrescoCloudCMISPath = @"/public/cmis/versions/1.0/atom";
+NSString * const kAlfrescoCloudCMIS11AtomPath = @"/public/cmis/versions/1.1/atom";
 NSString * const kAlfrescoCloudAPIPath  = @"/public/alfresco/versions/1/";
 NSString * const kAlfrescoCloudAPIRateLimitExceeded = @"API plan limit exceeded";
+NSString * const kAlfrescoCloudAPIQuery = @"/query";
 NSString * const kAlfrescoHomeNetworkType = @"homeNetwork";
 
 /**
@@ -416,3 +426,69 @@ NSString * const kAlfrescoPersonPropertyCompanyPostcode = @"companyPostcode";
 NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber = @"companyTelephoneNumber";
 NSString * const kAlfrescoPersonPropertyCompanyFaxNumber = @"companyFaxNumber";
 NSString * const kAlfrescoPersonPropertyCompanyEmail = @"companyEmail";
+
+NSString * const kAlfrescoJSONEvaluator = @"evaluator";
+NSString * const kAlfrescoJSONEvaluators = @"evaluators";
+NSString * const kAlfrescoJSONMatchAny = @"match-any";
+NSString * const kAlfrescoJSONMatchAll = @"match-all";
+NSString * const kAlfrescoJSONInfo = @"info";
+NSString * const kAlfrescoJSONSchemaVersion = @"schema-version";
+NSString * const kAlfrescoJSONConfigVersion = @"config-version";
+NSString * const kAlfrescoJSONRepository = @"repository";
+NSString * const kAlfrescoJSONShareURL = @"share-url";
+NSString * const kAlfrescoJSONCMISURL = @"cmis-url";
+NSString * const kAlfrescoJSONProfiles = @"profiles";
+NSString * const kAlfrescoJSONDefault = @"default";
+NSString * const kAlfrescoJSONLabelId = @"label-id";
+NSString * const kAlfrescoJSONDescriptionId = @"description-id";
+NSString * const kAlfrescoJSONIconId = @"icon-id";
+NSString * const kAlfrescoJSONFormId = @"form-id";
+NSString * const kAlfrescoJSONRootViewId = @"root-view-id";
+NSString * const kAlfrescoJSONFeatures = @"features";
+NSString * const kAlfrescoJSONItemType = @"item-type";
+NSString * const kAlfrescoJSONViewGroups = @"view-groups";
+NSString * const kAlfrescoJSONViewGroupId = @"view-group-id";
+NSString * const kAlfrescoJSONViewGroup = @"view-group";
+NSString * const kAlfrescoJSONViewId = @"view-id";
+NSString * const kAlfrescoJSONViews = @"views";
+NSString * const kAlfrescoJSONView = @"view";
+NSString * const kAlfrescoJSONType = @"type";
+NSString * const kAlfrescoJSONParams = @"params";
+NSString * const kAlfrescoJSONCreation = @"creation";
+NSString * const kAlfrescoJSONMimeTypes = @"mime-types";
+NSString * const kAlfrescoJSONDocumentTypes = @"document-types";
+NSString * const kAlfrescoJSONFolderTypes = @"folder-types";
+NSString * const kAlfrescoJSONForms = @"forms";
+NSString * const kAlfrescoJSONLayout = @"layout";
+NSString * const kAlfrescoJSONFieldGroupId = @"field-group-id";
+NSString * const kAlfrescoJSONFieldGroups = @"field-groups";
+NSString * const kAlfrescoJSONFieldGroup = @"field-group";
+NSString * const kAlfrescoJSONFieldId = @"field-id";
+NSString * const kAlfrescoJSONField = @"field";
+NSString * const kAlfrescoJSONFields = @"fields";
+NSString * const kAlfrescoJSONModelId = @"model-id";
+
+NSString * const kAlfrescoConfigServiceParameterFileName = @"org.alfresco.mobile.internal.config.file.name";
+NSString * const kAlfrescoConfigServiceDefaultFileName = @"config.json";
+NSString * const kAlfrescoConfigProfileDefaultIdentifier = @"default";
+NSString * const kAlfrescoConfigProfileDefaultLabel = @"Default";
+NSString * const kAlfrescoConfigFormTypePrefix = @"type:";
+NSString * const kAlfrescoConfigFormAspectPrefix = @"aspect:";
+NSString * const kAlfrescoConfigFormTypeProperties = @"${type-properties}";
+NSString * const kAlfrescoConfigFormAspectProperties = @"${aspects}";
+NSString * const kAlfrescoConfigEvaluatorRepositoryVersion = @"com.alfresco.client.evaluator.isRepositoryVersion";
+NSString * const kAlfrescoConfigEvaluatorNodeType = @"com.alfresco.client.evaluator.nodeType";
+NSString * const kAlfrescoConfigEvaluatorAspect = @"com.alfresco.client.evaluator.hasAspect";
+NSString * const kAlfrescoConfigEvaluatorProfile = @"com.alfresco.client.evaluator.hasProfile";
+NSString * const kAlfrescoConfigEvaluatorFormMode = @"com.alfresco.client.evaluator.formMode";
+NSString * const kAlfrescoConfigEvaluatorParameterProfile = @"profile";
+NSString * const kAlfrescoConfigEvaluatorParameterTypeName = @"typeName";
+NSString * const kAlfrescoConfigEvaluatorParameterAspectName = @"aspectName";
+NSString * const kAlfrescoConfigEvaluatorParameterOperator = @"operator";
+NSString * const kAlfrescoConfigEvaluatorParameterEdition = @"edition";
+NSString * const kAlfrescoConfigEvaluatorParameterMajorVersion = @"majorVersion";
+NSString * const kAlfrescoConfigEvaluatorParameterMinorVersion = @"minorVersion";
+NSString * const kAlfrescoConfigEvaluatorParameterMaintenanceVersion = @"maintenanceVersion";
+NSString * const kAlfrescoConfigEvaluatorParameterMode = @"mode";
+NSString * const kAlfrescoConfigEvaluatorParameterEvaluatorIds = @"evaluatorIds";
+NSString * const kAlfrescoConfigEvaluatorParameterMatchAll = @"matchAll";

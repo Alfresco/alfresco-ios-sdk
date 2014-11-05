@@ -19,8 +19,9 @@
  
 #import <Foundation/Foundation.h>
 #import "CMISEnums.h"
+#import "CMISExtensionData.h"
 
-@interface CMISPropertyData : NSObject
+@interface CMISPropertyData : CMISExtensionData
 
 @property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *localName;

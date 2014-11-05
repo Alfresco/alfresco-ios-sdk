@@ -18,11 +18,6 @@
  *****************************************************************************
  */
 
-/** The AlfrescoPlaceholderWorkflowService
- 
- Author: Tauseef Mughal (Alfresco)
- */
-
 #import "AlfrescoWorkflowService.h"
 
 @interface AlfrescoPlaceholderWorkflowService : AlfrescoWorkflowService

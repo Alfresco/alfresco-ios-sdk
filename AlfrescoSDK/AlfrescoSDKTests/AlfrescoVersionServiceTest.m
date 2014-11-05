@@ -564,6 +564,100 @@
     }
 }
 
+- (void)testRetrieveCheckedOutDocuments
+{
+    if (self.setUpSuccess)
+    {
+        self.versionService = [[AlfrescoVersionService alloc] initWithSession:self.currentSession];
+        
+        [self.versionService checkoutDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoDocument *checkedOutDocument, NSError *checkoutError) {
+            if (checkedOutDocument == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:checkoutError];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                // remember the nodeIdentifier of the private working copy
+                NSString *pwcNodeIdentifier = checkedOutDocument.identifier;
+                
+                // retrieve the checked out documents
+                [self.versionService retrieveCheckedOutDocumentsWithCompletionBlock:^(NSArray *checkedOutDocs, NSError *retrieveError) {
+                    if (checkedOutDocs == nil)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        // make sure the one we just checked out is present
+                        BOOL pwcFound = NO;
+                        for (AlfrescoDocument *document in checkedOutDocs)
+                        {
+                            if ([document.identifier isEqualToString:pwcNodeIdentifier])
+                            {
+                                pwcFound = YES;
+                                break;
+                            }
+                        }
+                        
+                        XCTAssertTrue(pwcFound, @"Expected to find the private working copy in the list of checked out documents");
+                        
+                        // cancel the checkout
+                        [self.versionService cancelCheckoutOfDocument:checkedOutDocument completionBlock:^(BOOL succeeded, NSError *cancelCheckoutError) {
+                            if (succeeded)
+                            {
+                                // retrieve the checked out documents again
+                                [self.versionService retrieveCheckedOutDocumentsWithCompletionBlock:^(NSArray *checkedOutDocs2, NSError *retrieveError2) {
+                                    if (checkedOutDocs2 == nil)
+                                    {
+                                        self.lastTestSuccessful = NO;
+                                        self.lastTestFailureMessage = [self failureMessageFromError:retrieveError2];
+                                        self.callbackCompleted = YES;
+                                    }
+                                    else
+                                    {
+                                        // make sure the one we just checked out is no longer present
+                                        BOOL pwcFound = NO;
+                                        for (AlfrescoDocument *document in checkedOutDocs2)
+                                        {
+                                            if ([document.identifier isEqualToString:pwcNodeIdentifier])
+                                            {
+                                                pwcFound = YES;
+                                                break;
+                                            }
+                                        }
+                                        
+                                        XCTAssertFalse(pwcFound, @"Did not expect to find the private working copy in the list of checked out documents");
+                                        
+                                        self.lastTestSuccessful = YES;
+                                        self.callbackCompleted = YES;
+                                    }
+                                }];
+                            }
+                            else
+                            {
+                                self.lastTestSuccessful = NO;
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"Cancel Checkout Error: %@ - %@", [cancelCheckoutError localizedDescription], [cancelCheckoutError localizedFailureReason]];
+                                self.callbackCompleted = YES;
+                            }
+                        }];
+                    }
+                }];
+            }
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 + (BOOL)isHigherVersionLabel:(NSString *)lastVersionLabel previousLabel:(NSString *)previousLabel
 {
     if (nil == lastVersionLabel || nil == previousLabel)

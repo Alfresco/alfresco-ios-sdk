@@ -22,7 +22,7 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoLog.h"
-#import "AlfrescoReachability.h"
+#import "CMISReachability.h"
 
 @interface AlfrescoDefaultHTTPRequest()
 @property (nonatomic, strong) NSURLConnection *connection;
@@ -65,6 +65,9 @@
     
     [urlRequest setHTTPMethod:method];
     
+    // never send cookies
+    urlRequest.HTTPShouldHandleCookies = NO;
+    
     [headers enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
         if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {
@@ -93,8 +96,8 @@
     self.connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self startImmediately:NO];
     [self.connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
-    AlfrescoReachability *reach = [AlfrescoReachability internetReachability];
-    if (reach.hasInternetConnection)
+    CMISReachability *reachability = [CMISReachability networkReachability];
+    if (reachability.hasNetworkConnection)
     {
         [self.connection start];
     }
@@ -180,7 +183,10 @@
             }
             else
             {
-                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse];
+                NSDictionary *userInfo = @{kAlfrescoErrorKeyHTTPResponseCode: @(self.statusCode),
+                                           kAlfrescoErrorKeyHTTPResponseBody: self.responseData};
+                
+                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse userInfo:userInfo];
             }
         }
     }

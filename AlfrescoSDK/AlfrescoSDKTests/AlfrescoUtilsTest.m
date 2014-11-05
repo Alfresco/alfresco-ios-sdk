@@ -22,7 +22,9 @@
 #import "AlfrescoListingContext.h"
 #import "AlfrescoActivityStreamService.h"
 #import "AlfrescoCommentService.h"
+#import "AlfrescoConfigService.h"
 #import "AlfrescoDocumentFolderService.h"
+#import "AlfrescoModelDefinitionService.h"
 #import "AlfrescoPersonService.h"
 #import "AlfrescoRatingService.h"
 #import "AlfrescoSearchService.h"
@@ -30,7 +32,10 @@
 #import "AlfrescoTaggingService.h"
 #import "AlfrescoVersionService.h"
 #import "AlfrescoWorkflowService.h"
+#import "AlfrescoObjectConverter.h"
 #import "AlfrescoVersionInfo.h"
+#import "AlfrescoFileManager.h"
+#import "AlfrescoWorkflowObjectConverter.h"
 
 @implementation AlfrescoUtilsTest
 
@@ -90,8 +95,14 @@
     AlfrescoCommentService *commentService = [[AlfrescoCommentService alloc] initWithSession:nil];
     XCTAssertNil(commentService, @"Expected commentService to be nil as it was created with a nil session");
     
+    AlfrescoConfigService *configService = [[AlfrescoConfigService alloc] initWithSession:nil];
+    XCTAssertNil(configService, @"Expected configService to be nil as it was created with a nil session");
+    
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:nil];
     XCTAssertNil(docFolderService, @"Expected docFolderService to be nil as it was created with a nil session");
+    
+    AlfrescoModelDefinitionService *modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:nil];
+    XCTAssertNil(modelDefinitionService, @"Expected modelDefinitionService to be nil as it was created with a nil session");
     
     AlfrescoPersonService *personService = [[AlfrescoPersonService alloc] initWithSession:nil];
     XCTAssertNil(personService, @"Expected personService to be nil as it was created with a nil session");
@@ -113,6 +124,56 @@
     
     AlfrescoWorkflowService *workflowService = [[AlfrescoWorkflowService alloc] initWithSession:nil];
     XCTAssertNil(workflowService, @"Expected workflowService to be nil as it was created with a nil session");
+}
+
+- (void)testMappingDictionaryKeys
+{
+    NSDictionary *sourceDictionary = @{@"id": @"123", @"label-id": @"an-nls-id", @"description": @"The description"};
+    
+    NSDictionary *targetDictionary = [AlfrescoObjectConverter dictionaryFromDictionary:sourceDictionary
+                                                                        withMappedKeys:@{@"id": @"identifier",
+                                                                                         @"label-id": @"label",
+                                                                                         @"description": @"summary"}];
+    
+    // make sure new keys are present
+    XCTAssertNotNil(targetDictionary[@"identifier"], @"Expected to find key 'identifier'");
+    XCTAssertNotNil(targetDictionary[@"label"], @"Expected to find key 'label'");
+    XCTAssertNotNil(targetDictionary[@"summary"], @"Expected to find key 'summary'");
+    
+    // make sure old keys are removed
+    XCTAssertNil(targetDictionary[@"id"], @"Did not expect to find key 'id'");
+    XCTAssertNil(targetDictionary[@"label-id"], @"Did not expect to find key 'label-id'");
+    XCTAssertNil(targetDictionary[@"description"], @"Did not expect to find key 'description'");
+    
+    // make sure values are still correct
+    NSString *identifier = targetDictionary[@"identifier"];
+    XCTAssertTrue([identifier isEqualToString:@"123"], @"Expected value of 'identifier' to be '123' but it was %@", identifier);
+    NSString *label = targetDictionary[@"label"];
+    XCTAssertTrue([label isEqualToString:@"an-nls-id"], @"Expected value of 'label' to be 'an-nls-id' but it was %@", label);
+    NSString *summary = targetDictionary[@"summary"];
+    XCTAssertTrue([summary isEqualToString:@"The description"], @"Expected value of 'summary' to be 'The description' but it was %@", summary);
+    
+    // test non-existent keys and Null
+    sourceDictionary = @{@"id": @"123", @"null": [NSNull new]};
+    targetDictionary = [AlfrescoObjectConverter dictionaryFromDictionary:sourceDictionary
+                                                          withMappedKeys:@{@"id": @"identifier",
+                                                                           @"default": @"isDefault",
+                                                                           @"null": @"nullObject"}];
+    XCTAssertTrue(targetDictionary.count == 2, @"Expected the dictionary to have 2 entries but it has %lu", (long)targetDictionary.count);
+    XCTAssertNotNil(targetDictionary[@"identifier"], @"Expected to find key 'identifier'");
+    XCTAssertNil(targetDictionary[@"default"], @"Did not expect to find key 'default'");
+    XCTAssertNil(targetDictionary[@"isDefault"], @"Did not expect to find key 'isDefault'");
+    XCTAssertNotNil(targetDictionary[@"nullObject"], @"Expected to find key 'nullObject'");
+    XCTAssertNil(targetDictionary[@"null"], @"Did not expect to find key 'null'");
+    XCTAssertTrue([targetDictionary[@"nullObject"] isKindOfClass:[NSNull class]],
+                  @"Expected 'nullObject' to be an NSNull class but it was %@", targetDictionary[@"nullObject"]);
+    
+    // test protection against removing existing items i.e. if the existing and mapped key are the same
+    sourceDictionary = @{@"id": @"123"};
+    targetDictionary = [AlfrescoObjectConverter dictionaryFromDictionary:sourceDictionary
+                                                          withMappedKeys:@{@"id": @"id"}];
+    XCTAssertTrue(targetDictionary.count == 1, @"Expected the target dictionary to have 1 item still but it had %lu", (long)targetDictionary.count);
+    XCTAssertTrue([targetDictionary[@"id"] isEqualToString:@"123"], @"Expected target dictionary to still have the 'id' key");
 }
 
 - (void)testVersionInfo
@@ -193,6 +254,75 @@
     XCTAssertTrue([test7.maintenanceVersion intValue] == 0,
                   @"Expected maintenance version to be 0 but it was %@", test7.maintenanceVersion);
     XCTAssertNil(test7.buildNumber, @"Expected build number to be nil but it was %@", test7.buildNumber);
+}
+
+- (void)testFileManager
+{
+    AlfrescoFileManager *fileManager = [AlfrescoFileManager sharedManager];
+    // create a temporary file with some contents
+    NSString *contents = @"This is the original content";
+    NSString *tempPath = [fileManager.temporaryDirectory stringByAppendingString:[[NSUUID UUID] UUIDString]];
+    
+    NSError *error = nil;
+    [fileManager createFileAtPath:tempPath contents:[contents dataUsingEncoding:NSUTF8StringEncoding] error:&error];
+    XCTAssertNil(error, @"Expected the temp file to be created successfully");
+
+    // replace the file created above with some new content
+    NSString *replacementContent = @"This is the replacement content";
+    [fileManager replaceFileAtURL:[NSURL fileURLWithPath:tempPath] contents:[replacementContent dataUsingEncoding:NSUTF8StringEncoding] error:&error];
+    XCTAssertNil(error, @"Expected the temp file to be replaced successfully");
+    XCTAssertTrue([fileManager fileExistsAtPath:tempPath], @"Expected the temp file to still exist");
+    
+    // ensure the content was replaced
+    NSData *retrievedContent = [fileManager dataWithContentsOfURL:[NSURL fileURLWithPath:tempPath]];
+    NSString *retrievedContentString = [[NSString alloc] initWithData:retrievedContent encoding:NSUTF8StringEncoding];
+    XCTAssertTrue([retrievedContentString isEqualToString:replacementContent],
+                  @"Expected the content to match but it was: %@", retrievedContentString);
+    
+    // copy the file to another temporary file
+    NSString *copiedTempPath = [fileManager.temporaryDirectory stringByAppendingString:[[NSUUID UUID] UUIDString]];
+    [fileManager copyItemAtPath:tempPath toPath:copiedTempPath error:&error];
+    XCTAssertNil(error, @"Expected the temp file to be copied successfully");
+    XCTAssertTrue([fileManager fileExistsAtPath:copiedTempPath], @"Expected the copied file to exist");
+    NSData *copiedContent = [fileManager dataWithContentsOfURL:[NSURL fileURLWithPath:copiedTempPath]];
+    NSString *copiedContentString = [[NSString alloc] initWithData:copiedContent encoding:NSUTF8StringEncoding];
+    XCTAssertTrue([copiedContentString isEqualToString:replacementContent],
+                  @"Expected the copied content to match but it was: %@", retrievedContentString);
+    
+    // remove the temp files
+    [fileManager removeItemAtPath:tempPath error:&error];
+    XCTAssertNil(error, @"Expected the temp file to be deleted successfully");
+    XCTAssertFalse([fileManager fileExistsAtPath:tempPath], @"Did not expect to find the temp file");
+    
+    [fileManager removeItemAtURL:[NSURL fileURLWithPath:copiedTempPath] error:&error];
+    XCTAssertNil(error, @"Expected the copied file to be deleted successfully");
+    XCTAssertFalse([fileManager fileExistsAtPath:copiedTempPath], @"Did not expect to find the copied file");
+}
+
+- (void)testWorkflowVariableDecoding
+{
+    NSString *decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:nil];
+    XCTAssertNil(decodedVariableName, @"Expected the decoded variable name to be nil");
+    
+    NSString *rawVariableName = kAlfrescoWorkflowVariableTaskTransition;
+    decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:rawVariableName];
+    XCTAssertTrue([decodedVariableName isEqualToString:kAlfrescoWorkflowVariableTaskTransition],
+                  @"Expected decoded variable name to be '%@' but it was: %@", kAlfrescoWorkflowVariableTaskTransition, decodedVariableName);
+    
+    rawVariableName = @"_startTaskId";
+    decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:rawVariableName];
+    XCTAssertTrue([decodedVariableName isEqualToString:rawVariableName],
+                  @"Expected decoded variable name to be '%@' but it was: %@", rawVariableName, decodedVariableName);
+    
+    rawVariableName = @"bpm_status";
+    decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:rawVariableName];
+    XCTAssertTrue([decodedVariableName isEqualToString:kAlfrescoWorkflowVariableTaskStatus],
+                  @"Expected decoded variable name to be '%@' but it was: %@", kAlfrescoWorkflowVariableTaskStatus, decodedVariableName);
+    
+    rawVariableName = @"custom_name_with_more_underscores";
+    decodedVariableName = [AlfrescoWorkflowObjectConverter decodeVariableName:rawVariableName];
+    XCTAssertTrue([decodedVariableName isEqualToString:@"custom:name_with_more_underscores"],
+                  @"Expected decoded variable name to be 'custom:name_with_more_underscores' but it was: %@", decodedVariableName);
 }
 
 @end

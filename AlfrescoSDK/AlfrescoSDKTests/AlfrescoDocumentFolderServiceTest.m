@@ -46,12 +46,12 @@
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -66,12 +66,12 @@
                  XCTAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  XCTAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                       }
                       else
                       {
@@ -110,11 +110,11 @@
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
             if (nil == folder)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:createError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -130,11 +130,11 @@
                 XCTAssertTrue([newDescriptionProp.value isEqualToString:testDescription], @"cm:description: %@ does not match %@", newDescriptionProp.value, testDescription);
                 XCTAssertTrue([newTitleProp.value isEqualToString:testTitle], @"cm:title: %@ does not match %@", newTitleProp.value, testTitle);
                 
-                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError) {
                     if (!success)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:deleteError]];
                     }
                     else
                     {
@@ -169,11 +169,11 @@
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
             if (nil == folder)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:createError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -208,7 +208,7 @@
                         if (!success)
                         {
                             self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                            self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:deleteError]];
                         }
                         else
                         {
@@ -246,15 +246,15 @@
         props[@"cm:description"] = @"test description";
         props[@"cm:title"] = @"test title";
         
-        // create a new folder in the repository's root folder
+        // create a new folder in the test folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError1)
          {
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError1];
                  self.callbackCompleted = YES;
              }
              else
@@ -263,18 +263,18 @@
                  XCTAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@",folderName);
                  __block AlfrescoFolder *strongFolder = folder;
                  
-                 [weakService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [weakService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                           self.callbackCompleted = YES;
                       }
                       else
                       {
                           NSString *subfolder = [AlfrescoBaseTest addTimeStampToFileOrFolderName:@"SomeTestFolder"];
-                          [weakService createFolderWithName:subfolder inParentFolder:strongFolder properties:props completionBlock:^(AlfrescoFolder *nonFolder, NSError *error){
+                          [weakService createFolderWithName:subfolder inParentFolder:strongFolder properties:props completionBlock:^(AlfrescoFolder *nonFolder, NSError *createError2){
                               if (nil == nonFolder)
                               {
                                   self.lastTestSuccessful = YES;
@@ -319,11 +319,11 @@
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *unitTestFolder, NSError *error) {
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *unitTestFolder, NSError *createError) {
             if (nil == unitTestFolder)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:createError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -342,7 +342,7 @@
                     if (!success)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:deleteError]];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -389,11 +389,11 @@
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
             if (nil == folder)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:createError];
                 self.callbackCompleted = YES;
             }
             else
@@ -412,16 +412,16 @@
                  * FIXME: 07/Jun/2013 - Potential transaction completion race condition here..?
                  */
                 
-                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError) {
                     if (!success)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                         self.callbackCompleted = YES;
                     }
                     else
                     {
-                        [weakService retrieveDocumentsInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error) {
+                        [weakService retrieveDocumentsInFolder:strongFolder completionBlock:^(NSArray *array, NSError *retrieveError) {
                             if (nil == array)
                             {
                                 self.lastTestSuccessful = YES;
@@ -464,12 +464,12 @@
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -484,17 +484,17 @@
                  XCTAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  XCTAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                           self.callbackCompleted = YES;
                       }
                       else
                       {
-                          [weakService retrieveFoldersInFolder:strongFolder completionBlock:^(NSArray *array, NSError *error){
+                          [weakService retrieveFoldersInFolder:strongFolder completionBlock:^(NSArray *array, NSError *retrieveError){
                               if (nil == array)
                               {
                                   self.lastTestSuccessful = YES;
@@ -543,12 +543,12 @@
         
         // create a new folder in the repository's root folder
         [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -563,12 +563,12 @@
                  XCTAssertTrue([newDescriptionProp.value isEqualToString:description], @"cm:description property value does not match expected value %@",description);
                  XCTAssertTrue([newTitleProp.value isEqualToString:title], @"cm:title property value does not match expected value %@",title);
                  
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                       }
                       else
                       {
@@ -607,11 +607,11 @@
         props[@"cm:title"] = title;
         
         // create a new folder in the repository's root folder
-        [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
             if (nil == folder)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:createError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -626,11 +626,11 @@
                 XCTAssertTrue([newDescriptionProp.value isEqualToString:description], @"cm:description property value does not match expected value %@. Instead we get %@",description, newDescriptionProp.value);
                 XCTAssertTrue([newTitleProp.value isEqualToString:title], @"cm:title property value does not match expected value %@. Instead we get %@",title, newTitleProp.value);
                 
-                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError) {
                     if (!success)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:deleteError]];
                     }
                     else
                     {
@@ -667,7 +667,7 @@
         
         // create a new folder in the repository's root folder
         [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
@@ -681,11 +681,11 @@
                  XCTAssertTrue([folder.name isEqualToString:name], @"folder name should be %@, but instead we got %@",name, folder.name);
                  
                  
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                       }
                       else
                       {
@@ -724,7 +724,7 @@
         
         // create a new folder in the repository's root folder
         [self.dfService createFolderWithName:name inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
@@ -738,12 +738,12 @@
                  XCTAssertTrue([folder.name isEqualToString:name], @"folder name should be %@, but instead we got %@",name, folder.name);
                  
                  
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                       }
                       else
                       {
@@ -779,7 +779,7 @@
              if (nil == rootFolder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
              }
              else
              {
@@ -815,7 +815,7 @@
              if (nil == array)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
              }
              else
              {
@@ -858,12 +858,12 @@
         properties[@"cm:title"] = @"Test Title";
         
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
             
             if (folder == nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:createError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -881,23 +881,23 @@
                 // search folder using paging
                 AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:100 skipCount:0];
                 __block AlfrescoFolder *blockFolder = folder;
-                [weakService retrieveChildrenInFolder:blockFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                [weakService retrieveChildrenInFolder:blockFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
                     if (pagingResult == nil)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:retrieveError]];
                         self.callbackCompleted = YES;
                     }
                     else
                     {
                         XCTAssertTrue(pagingResult.totalItems == 0, @"Expected 0 folder children, got back %i", pagingResult.totalItems);
                         
-                        [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
+                        [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *deleteError)
                          {
                              if (!success)
                              {
                                  self.lastTestSuccessful = NO;
-                                 self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                 self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@", deleteError];
                              }
                              else
                              {
@@ -935,7 +935,7 @@
             if (pagingResult == nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -970,7 +970,7 @@
             if (pagingResult == nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -1051,11 +1051,10 @@
                                 inParentFolder:self.testDocFolder
                                  contentStream:contentStream
                                     properties:properties
-                               completionBlock:^(AlfrescoDocument *document, NSError *error){
+                               completionBlock:^(AlfrescoDocument *document, NSError *createError){
                                    if (nil == document)
                                    {
-                                       AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
-                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not upload test document. Error %@",[error localizedDescription]];
+                                       self.lastTestFailureMessage = [self failureMessageFromError:createError];
                                        self.lastTestSuccessful = NO;
                                        self.callbackCompleted = YES;
                                    }
@@ -1070,15 +1069,14 @@
                                        AlfrescoProperty *newTitleProp = newFolderProps[@"cm:title"];
                                        XCTAssertTrue([newDescriptionProp.value isEqualToString:@"Test Description"], @"cm:description property value does not match - we got %@", newDescriptionProp.value);
                                        XCTAssertTrue([newTitleProp.value isEqualToString:@"Test Title"], @"cm:title property value does not match - we got %@", newTitleProp.value);
-                                       [weakFolderServer deleteNode:document completionBlock:^(BOOL succeeded, NSError *error){
+                                       [weakFolderServer deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError) {
                                            if (succeeded)
                                            {
                                                self.lastTestSuccessful = YES;
                                            }
                                            else
                                            {
-                                               AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
-                                               self.lastTestFailureMessage = [NSString stringWithFormat:@"Could not delete very small test document. Error %@",[error localizedDescription]];
+                                               self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                                                self.lastTestSuccessful = NO;
                                            }
                                            self.callbackCompleted = YES;
@@ -1107,7 +1105,6 @@
 {
     if (self.setUpSuccess)
     {
-        
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithCapacity:4];
@@ -1119,67 +1116,62 @@
         __weak AlfrescoDocumentFolderService *weakFolderServer = self.dfService;
         
         // check document with * in the file name
-        [self.dfService createDocumentWithName:@"createDocumentTest*.jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
-            if (error == nil)
+        [self.dfService createDocumentWithName:@"createDocumentTest*.jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *createError1) {
+            if (createError1 == nil)
             {
-                XCTAssertTrue(error != nil, @"Expected an error to be thrown");
+                XCTAssertTrue(createError1 != nil, @"Expected an error to be thrown");
                 self.lastTestSuccessful = NO;
                 self.callbackCompleted = YES;
             }
             else
             {
-                AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                 XCTAssertFalse(document != nil, @"Expected the document not to be created");
                 
                 // check document with " in the file name
-                [weakFolderServer createDocumentWithName:@"createDocumentTest\".jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
-                    if (error == nil)
+                [weakFolderServer createDocumentWithName:@"createDocumentTest\".jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *createError2) {
+                    if (createError2 == nil)
                     {
-                        XCTAssertTrue(error != nil, @"Expected an error to be thrown");
+                        XCTAssertTrue(createError2 != nil, @"Expected an error to be thrown");
                         self.lastTestSuccessful = NO;
                         self.callbackCompleted = YES;
                     }
                     else
                     {
-                        AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                         XCTAssertFalse(document != nil, @"Expected the document not to be created");
                         
                         // check document with / and \ in the file name
-                        [weakFolderServer createDocumentWithName:@"createDocumentTest\\.jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
-                            if (error == nil)
+                        [weakFolderServer createDocumentWithName:@"createDocumentTest\\.jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *createError3) {
+                            if (createError3 == nil)
                             {
-                                XCTAssertTrue(error != nil, @"Expected an error to be thrown");
+                                XCTAssertTrue(createError3 != nil, @"Expected an error to be thrown");
                                 self.lastTestSuccessful = NO;
                                 self.callbackCompleted = YES;
                             }
                             else
                             {
-                                AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                                 XCTAssertFalse(document != nil, @"Expected the document not to be created");
                                 
                                 // check document with empty name
-                                [weakFolderServer createDocumentWithName:@"createDocument//Test.jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
-                                    if (error == nil)
+                                [weakFolderServer createDocumentWithName:@"createDocument//Test.jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *createError4) {
+                                    if (createError4 == nil)
                                     {
-                                        XCTAssertTrue(error != nil, @"Expected an error to be thrown");
+                                        XCTAssertTrue(createError4 != nil, @"Expected an error to be thrown");
                                         self.lastTestSuccessful = NO;
                                         self.callbackCompleted = YES;
                                     }
                                     else
                                     {
-                                        AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                                         XCTAssertFalse(document != nil, @"Expected the document not to be created");
                                         
                                         // check document with empty name
-                                        [weakFolderServer createDocumentWithName:@"" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
-                                            if (error == nil)
+                                        [weakFolderServer createDocumentWithName:@"" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *createError5) {
+                                            if (createError5 == nil)
                                             {
-                                                XCTAssertTrue(error != nil, @"Expected an error to be thrown");
+                                                XCTAssertTrue(createError5 != nil, @"Expected an error to be thrown");
                                                 self.lastTestSuccessful = NO;
                                             }
                                             else
                                             {
-                                                AlfrescoLogError(@"The following error occured trying to create the file: %@ - %@", [error localizedDescription], [error localizedFailureReason]);
                                                 XCTAssertFalse(document != nil, @"Expected the document not to be created");
                                                 if (!document)
                                                 {
@@ -1238,12 +1230,12 @@
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -1258,22 +1250,22 @@
                  XCTAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  XCTAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  __block AlfrescoFolder *blockFolder = folder;
-                 [weakService retrieveChildrenInFolder:blockFolder completionBlock:^(NSArray *children, NSError *error){
+                 [weakService retrieveChildrenInFolder:blockFolder completionBlock:^(NSArray *children, NSError *retrieveError){
                      if(nil == children)
                      {
                          self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                          self.callbackCompleted = YES;
                      }
                      else
                      {
                          XCTAssertTrue(children.count == 0, @"folder should be empty, instead we get %lu entries", (unsigned long)children.count);
-                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
+                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *deleteError)
                           {
                               if (!success)
                               {
                                   self.lastTestSuccessful = NO;
-                                  self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                               }
                               else
                               {
@@ -1285,11 +1277,7 @@
                          
                      }
                  }];
-                 
              }
-             
-             
-             
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -1318,12 +1306,12 @@
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -1338,22 +1326,22 @@
                  XCTAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  XCTAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  __block AlfrescoFolder *blockFolder = folder;
-                 [weakService retrieveDocumentsInFolder:blockFolder completionBlock:^(NSArray *children, NSError *error){
+                 [weakService retrieveDocumentsInFolder:blockFolder completionBlock:^(NSArray *children, NSError *retrieveError){
                      if(nil == children)
                      {
                          self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                          self.callbackCompleted = YES;
                      }
                      else
                      {
                          XCTAssertTrue(children.count == 0, @"folder should contain no documents, instead we get %lu entries", (unsigned long)children.count);
-                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
+                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *deleteError)
                           {
                               if (!success)
                               {
                                   self.lastTestSuccessful = NO;
-                                  self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                               }
                               else
                               {
@@ -1362,14 +1350,9 @@
                               
                               self.callbackCompleted = YES;
                           }];
-                         
                      }
                  }];
-                 
              }
-             
-             
-             
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -1397,12 +1380,12 @@
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -1417,22 +1400,22 @@
                  XCTAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  XCTAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  __block AlfrescoFolder *blockFolder = folder;
-                 [weakService retrieveFoldersInFolder:blockFolder completionBlock:^(NSArray *children, NSError *error){
+                 [weakService retrieveFoldersInFolder:blockFolder completionBlock:^(NSArray *children, NSError *retrieveError){
                      if(nil == children)
                      {
                          self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                          self.callbackCompleted = YES;
                      }
                      else
                      {
                          XCTAssertTrue(children.count == 0, @"folder should contain no folders, instead we get %lu entries", (unsigned long)children.count);
-                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *error)
+                         [weakService deleteNode:blockFolder completionBlock:^(BOOL success, NSError *deleteError)
                           {
                               if (!success)
                               {
                                   self.lastTestSuccessful = NO;
-                                  self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                  self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                               }
                               else
                               {
@@ -1441,14 +1424,9 @@
                               
                               self.callbackCompleted = YES;
                           }];
-                         
                      }
                  }];
-                 
              }
-             
-             
-             
          }];
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
@@ -1475,23 +1453,23 @@
         
         //        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
         
-        [self.dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *array, NSError *error){
+        [self.dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *array, NSError *retrieveError1){
             if (nil == array)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError1];
                 self.callbackCompleted = YES;
             }
             else
             {
                 __block NSUInteger numberOfChildren = array.count;
                 XCTAssertFalse(0 == numberOfChildren, @"There should be at least 1 child element in the folder");
-                [self.dfService retrieveChildrenInFolder:self.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                [self.dfService retrieveChildrenInFolder:self.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError2)
                  {
                      if (nil == pagingResult)
                      {
                          self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         self.lastTestFailureMessage = [self failureMessageFromError:retrieveError2];
                      }
                      else
                      {
@@ -1543,7 +1521,7 @@
              if (nil == pagingResult)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
              }
              else
              {
@@ -1591,7 +1569,7 @@
              if (nil == node)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
              }
              else
              {
@@ -1635,7 +1613,7 @@
              else
              {
                  XCTAssertNil(node, @"Expected empty node");
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
                  self.lastTestSuccessful = NO;
              }
              self.callbackCompleted = YES;
@@ -1665,7 +1643,7 @@
              if (nil == array)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
              }
              else
              {
@@ -1692,7 +1670,7 @@
                  else
                  {
                      self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.lastTestFailureMessage = [self failureMessageFromError:error];
                  }
                  
              }
@@ -1726,7 +1704,7 @@
                  {
                      documentService = nil;
                      self.lastTestSuccessful = NO;
-                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                     self.lastTestFailureMessage = [self failureMessageFromError:error];
                      self.callbackCompleted = YES;
                  }
                  else
@@ -1793,23 +1771,23 @@
         __block int skipCount = 1;
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:maxItems skipCount:skipCount];
         //        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
-        [self.dfService retrieveDocumentsInFolder:self.testDocFolder completionBlock:^(NSArray *foundDocuments, NSError *error){
+        [self.dfService retrieveDocumentsInFolder:self.testDocFolder completionBlock:^(NSArray *foundDocuments, NSError *retrieveError1){
             if (nil == foundDocuments)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError1];
                 self.callbackCompleted = YES;
             }
             else
             {
                 __block NSUInteger numberOfDocs = foundDocuments.count;
                 XCTAssertFalse(0 == numberOfDocs, @"We should have at least 1 document in the folder. Instead we got none");
-                [self.dfService retrieveDocumentsInFolder:self.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                [self.dfService retrieveDocumentsInFolder:self.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError2)
                  {
                      if (nil == pagingResult)
                      {
                          self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         self.lastTestFailureMessage = [self failureMessageFromError:retrieveError2];
                      }
                      else
                      {
@@ -1874,7 +1852,7 @@
              if (nil == pagingResult)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
              }
              else
              {
@@ -1911,7 +1889,7 @@
              if (nil == array)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
              }
              else
              {
@@ -1967,22 +1945,22 @@
         AlfrescoListingContext *paging = [[AlfrescoListingContext alloc] initWithMaxItems:1 skipCount:skipCount];
         
         //        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
-        [self.dfService retrieveFoldersInFolder:self.testDocFolder completionBlock:^(NSArray *foundFolders, NSError *error){
+        [self.dfService retrieveFoldersInFolder:self.testDocFolder completionBlock:^(NSArray *foundFolders, NSError *retrieveError1){
             if (nil == foundFolders)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError1];
                 self.callbackCompleted = YES;
             }
             else
             {
                 __block NSUInteger numberOfFolders = foundFolders.count;
-                [self.dfService retrieveFoldersInFolder:self.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error)
+                [self.dfService retrieveFoldersInFolder:self.testDocFolder listingContext:paging completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError2)
                  {
                      if (nil == pagingResult)
                      {
                          self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                         self.lastTestFailureMessage = [self failureMessageFromError:retrieveError2];
                      }
                      else
                      {
@@ -2039,7 +2017,7 @@
              if (nil == node)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:error];
              }
              else
              {
@@ -2078,12 +2056,12 @@
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -2098,17 +2076,17 @@
                  XCTAssertTrue([newDescriptionProp.value isEqualToString:@"test description"], @"cm:description property value does not match");
                  XCTAssertTrue([newTitleProp.value isEqualToString:@"test title"], @"cm:title property value does not match");
                  
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                           self.callbackCompleted = YES;
                       }
                       else
                       {
-                          [weakService retrieveNodeWithIdentifier:strongFolder.identifier completionBlock:^(AlfrescoNode *node, NSError *error){
+                          [weakService retrieveNodeWithIdentifier:strongFolder.identifier completionBlock:^(AlfrescoNode *node, NSError *retrieveError){
                               if (nil == node)
                               {
                                   self.lastTestSuccessful = YES;
@@ -2148,21 +2126,22 @@
     if (self.setUpSuccess)
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:self.fixedFileName];
-        [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error) {
+        [self.dfService retrieveNodeWithFolderPath:self.testFolderPathName completionBlock:^(AlfrescoNode *node, NSError *error) {
             if (nil == node)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
                 XCTAssertNotNil(node, @"node should not be nil");
                 XCTAssertNotNil(node.identifier, @"nodeRef should not be nil");
-                XCTAssertTrue([node.name isEqualToString:self.fixedFileName], @"name should be equal to %@",self.fixedFileName);
-                // REMOVED UNTIL BUG MOBSDK-462 IS RESOLVED
-                //                XCTAssertTrue(node.isFolder, @"Node should be a folder");
-                //                XCTAssertFalse(node.isDocument, @"Node should not be a document");
+                XCTAssertTrue(node.isFolder, @"Node should be a folder");
+                XCTAssertFalse(node.isDocument, @"Node should not be a document");
+                
+                // extract the node name from the path
+                NSString *folderName = [[self.testFolderPathName componentsSeparatedByString:@"/"] lastObject];
+                XCTAssertTrue([node.name isEqualToString:folderName], @"name should be equal to %@", folderName);
                 
                 self.lastTestSuccessful = YES;
             }
@@ -2196,12 +2175,12 @@
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -2210,17 +2189,17 @@
                  XCTAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@",folderName);
                  __block NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:folderName];
                  // check the properties were added at creation time
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                           self.callbackCompleted = YES;
                       }
                       else
                       {
-                          [weakService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *error){
+                          [weakService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *node, NSError *retrieveError){
                               if (nil == node)
                               {
                                   self.lastTestSuccessful = YES;
@@ -2265,7 +2244,7 @@
             if (nil == folder)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -2301,12 +2280,12 @@
         
         // get the documents of the repository's root folder
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
-        [self.dfService retrieveDocumentsInFolder:self.testDocFolder completionBlock:^(NSArray *array, NSError *error)
+        [self.dfService retrieveDocumentsInFolder:self.testDocFolder completionBlock:^(NSArray *array, NSError *retrieveFolderError)
          {
              if (nil == array)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:retrieveFolderError];
                  self.callbackCompleted = YES;
              }
              else
@@ -2314,12 +2293,12 @@
                  XCTAssertTrue(array.count > 0, @"Expected more than 0 documents");
                  if (array.count > 0)
                  {
-                     [weakDfService retrieveContentOfDocument:array[0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
+                     [weakDfService retrieveContentOfDocument:array[0] completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveContentError)
                       {
                           if (nil == contentFile)
                           {
                               self.lastTestSuccessful = NO;
-                              self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                              self.lastTestFailureMessage = [self failureMessageFromError:retrieveContentError];
                           }
                           else
                           {
@@ -2381,11 +2360,11 @@
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
-        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *blockError) {
+        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *createError) {
             if (nil == document)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:createError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -2405,16 +2384,16 @@
                 __block AlfrescoDocument *strongDocument = document;
                 
                 // delete the test document
-                [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
+                [weakService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError) {
                     if (!success)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:deleteError]];
                         self.callbackCompleted = YES;
                     }
                     else
                     {
-                        [weakService retrieveContentOfDocument:strongDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+                        [weakService retrieveContentOfDocument:strongDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveError){
                             if (nil == contentFile)
                             {
                                 self.lastTestSuccessful = YES;
@@ -2469,11 +2448,11 @@
         [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder
                                    contentFile:self.testImageFile
                                     properties:props
-                               completionBlock:^(AlfrescoDocument *document, NSError *blockError){
+                               completionBlock:^(AlfrescoDocument *document, NSError *createError){
                                    if (nil == document)
                                    {
                                        self.lastTestSuccessful = NO;
-                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                                       self.lastTestFailureMessage = [self failureMessageFromError:createError];
                                        self.callbackCompleted = YES;
                                    }
                                    else
@@ -2498,12 +2477,12 @@
                                        XCTAssertFalse(newAuthorProp.isMultiValued, @"isMultiValued property should not be nil");
                                        
                                        // delete the test document
-                                       [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                       [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
                                         {
                                             if (!success)
                                             {
                                                 self.lastTestSuccessful = NO;
-                                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                                             }
                                             else
                                             {
@@ -2544,11 +2523,11 @@
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
-        [self.dfService retrieveContentOfDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+        [self.dfService retrieveContentOfDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveError){
             if (nil == contentFile)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                 self.callbackCompleted = YES;
             }
             else
@@ -2563,7 +2542,7 @@
                 if (nil == stringContent)
                 {
                     self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
+                    self.lastTestFailureMessage = [self failureMessageFromError:readError];
                     self.callbackCompleted = YES;
                 }
                 else
@@ -2579,13 +2558,13 @@
                     [NSThread sleepForTimeInterval:1];
                     
                     [weakDfService updateContentOfDocument:self.testAlfrescoDocument contentFile:updatedContentFile
-                                           completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error)
+                                           completionBlock:^(AlfrescoDocument *updatedDocument, NSError *updateError)
                      {
                          
                          if (nil == updatedDocument)
                          {
                              self.lastTestSuccessful = NO;
-                             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                             self.lastTestFailureMessage = [self failureMessageFromError:updateError];
                              self.callbackCompleted = YES;
                          }
                          else
@@ -2598,11 +2577,11 @@
                              XCTAssertTrue(previousVersionNumber < updatedVersionNumber, @"expected the updated AlfrescoDocument object to have a higher version number, but previous %f is not less than %f", previousVersionNumber, updatedVersionNumber);
                              XCTAssertTrue([previousLastModificationDate compare:updatedDocument.modifiedAt] == NSOrderedAscending, @"expected the returned AlfrescoDocument object to have a newer last modification date");
                              
-                             [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *error){
+                             [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *contentError){
                                  if (nil == checkContentFile)
                                  {
                                      self.lastTestSuccessful = NO;
-                                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                     self.lastTestFailureMessage = [self failureMessageFromError:contentError];
                                  }
                                  else
                                  {
@@ -2618,7 +2597,7 @@
                                      if (nil == checkContentString)
                                      {
                                          self.lastTestSuccessful = NO;
-                                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [checkError localizedDescription], [checkError localizedFailureReason]];
+                                         self.lastTestFailureMessage = [self failureMessageFromError:checkError];
                                      }
                                      else
                                      {
@@ -2671,11 +2650,11 @@
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
-        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *blockError) {
+        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *createError) {
             if (nil == document)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:createError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -2695,11 +2674,11 @@
                 __block AlfrescoDocument *strongDocument = document;
                 
                 // delete the test document
-                [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
+                [weakService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError) {
                     if (!success)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -2707,7 +2686,7 @@
                         __block NSString *updatedContent = [NSString stringWithFormat:@"and we added some text."];
                         NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
                         __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:@"text/plain"];
-                        [weakService updateContentOfDocument:strongDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDoc, NSError *error) {
+                        [weakService updateContentOfDocument:strongDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDoc, NSError *updateError) {
                             if (nil == updatedDoc)
                             {
                                 self.lastTestSuccessful = YES;
@@ -2753,11 +2732,11 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
         
-        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *imageDoc, NSError *blockError) {
+        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *imageDoc, NSError *createError) {
             if (nil == imageDoc)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:createError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -2769,7 +2748,7 @@
                     if (nil == node)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [updateError localizedDescription], [blockError localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:updateError]];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -2785,7 +2764,7 @@
                             if (!succeeded)
                             {
                                 self.lastTestSuccessful = NO;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [updateError localizedDescription], [blockError localizedFailureReason]];
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@", [self failureMessageFromError:deleteError]];
                             }
                             else
                             {
@@ -2821,11 +2800,11 @@
          inParentFolder:self.testDocFolder
          contentFile:self.testImageFile
          properties:nil
-         completionBlock:^(AlfrescoDocument *doc, NSError *error) {
+         completionBlock:^(AlfrescoDocument *doc, NSError *createError) {
              if (nil == doc)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -2834,7 +2813,7 @@
                      if (nil == node)
                      {
                          self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [propError localizedDescription], [propError localizedFailureReason]];
+                         self.lastTestFailureMessage = [self failureMessageFromError:propError];
                          self.callbackCompleted = YES;
                      }
                      else
@@ -2849,7 +2828,7 @@
                              if (!succeeded)
                              {
                                  self.lastTestSuccessful = NO;
-                                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                                 self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                              }
                              else
                              {
@@ -2887,13 +2866,13 @@
         
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
         
-        [self.dfService retrieveContentOfDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error)
+        [self.dfService retrieveContentOfDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveError)
          {
              
              if (nil == contentFile)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                  self.callbackCompleted = YES;
              }
              else
@@ -2911,12 +2890,12 @@
                  propDict[kAlfrescoModelPropertyAudioArtist] = @"Leftfield";
                  propDict[kAlfrescoModelPropertyAudioAlbum] = @"Leftism";
                  
-                 [weakDfService updatePropertiesOfNode:self.testAlfrescoDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error)
+                 [weakDfService updatePropertiesOfNode:self.testAlfrescoDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *updateError)
                   {
                       if (nil == updatedNode)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:updateError];
                       }
                       else
                       {
@@ -3012,11 +2991,11 @@
         [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder
                                    contentFile:self.testImageFile
                                     properties:props
-                               completionBlock:^(AlfrescoDocument *document, NSError *blockError){
+                               completionBlock:^(AlfrescoDocument *document, NSError *createError){
                                    if (nil == document)
                                    {
                                        self.lastTestSuccessful = NO;
-                                       self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [blockError localizedDescription], [blockError localizedFailureReason]];
+                                       self.lastTestFailureMessage = [self failureMessageFromError:createError];
                                        self.callbackCompleted = YES;
                                    }
                                    else
@@ -3037,17 +3016,17 @@
                                        __block AlfrescoDocument *strongDocument = document;
                                        
                                        // delete the test document
-                                       [weakService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                                       [weakService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
                                         {
                                             if (!success)
                                             {
                                                 self.lastTestSuccessful = NO;
-                                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                                self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                                                 self.callbackCompleted = YES;
                                             }
                                             else
                                             {
-                                                [weakService updatePropertiesOfNode:strongDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *error){
+                                                [weakService updatePropertiesOfNode:strongDocument properties:propDict completionBlock:^(AlfrescoNode *updatedNode, NSError *updateError){
                                                     if (nil == updatedNode)
                                                     {
                                                         self.lastTestSuccessful = YES;
@@ -3090,13 +3069,13 @@
         
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:@"RemoteAPIDeleteTest"];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:nil
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -3104,12 +3083,12 @@
                  XCTAssertNotNil(folder, @"folder should not be nil");
                  XCTAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@", folderName);
                  
-                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError)
                   {
                       if (!success)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                       }
                       else
                       {
@@ -3147,12 +3126,12 @@
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props
-                             completionBlock:^(AlfrescoFolder *unitTestFolder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *unitTestFolder, NSError *createError1)
          {
              if (nil == unitTestFolder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError1];
                  self.callbackCompleted = YES;
              }
              else
@@ -3160,21 +3139,21 @@
                  XCTAssertNotNil(unitTestFolder, @"folder should not be nil");
                  XCTAssertTrue([unitTestFolder.name isEqualToString:folderName], @"folder name should be %@",folderName);
                  NSString *subtestFolder = [AlfrescoBaseTest addTimeStampToFileOrFolderName:@"SomeTestFolder"];
-                 [weakService createFolderWithName:subtestFolder inParentFolder:unitTestFolder properties:props completionBlock:^(AlfrescoFolder *internalFolder, NSError *internalError){
+                 [weakService createFolderWithName:subtestFolder inParentFolder:unitTestFolder properties:props completionBlock:^(AlfrescoFolder *internalFolder, NSError *createError2){
                      if (nil == internalFolder)
                      {
                          self.lastTestSuccessful = NO;
-                         self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [internalError localizedDescription], [internalError localizedFailureReason]];
+                         self.lastTestFailureMessage = [self failureMessageFromError:createError2];
                          self.callbackCompleted = YES;
                      }
                      else
                      {
-                         [weakService deleteNode:unitTestFolder completionBlock:^(BOOL success, NSError *innerError)
+                         [weakService deleteNode:unitTestFolder completionBlock:^(BOOL success, NSError *deleteError)
                           {
                               if (!success)
                               {
                                   self.lastTestSuccessful = NO;
-                                  self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [innerError localizedDescription], [innerError localizedFailureReason]];
+                                  self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                               }
                               else
                               {
@@ -3214,13 +3193,13 @@
         
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:@"RemoteAPIDeleteTest"];
         [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:nil
-                             completionBlock:^(AlfrescoFolder *folder, NSError *error)
+                             completionBlock:^(AlfrescoFolder *folder, NSError *createError)
          {
              
              if (nil == folder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:createError];
                  self.callbackCompleted = YES;
              }
              else
@@ -3228,17 +3207,17 @@
                  XCTAssertNotNil(folder, @"folder should not be nil");
                  XCTAssertTrue([folder.name isEqualToString:folderName], @"folder name should be %@", folderName);
                  __block AlfrescoFolder *strongFolder = folder;
-                 [weakService deleteNode:folder completionBlock:^(BOOL success, NSError *error)
+                 [weakService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError1)
                   {
                       if (!success)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:deleteError1];
                           self.callbackCompleted = YES;
                       }
                       else
                       {
-                          [weakService deleteNode:strongFolder completionBlock:^(BOOL success, NSError *error)
+                          [weakService deleteNode:strongFolder completionBlock:^(BOOL success, NSError *deleteError2)
                            {
                                if (!success)
                                {
@@ -3281,12 +3260,12 @@
         //        __weak AlfrescoDocumentFolderService *weakSelf = self.dfService;
         
         // get the children of the repository's root folder
-        [self.dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *array, NSError *error)
+        [self.dfService retrieveChildrenInFolder:self.testDocFolder completionBlock:^(NSArray *array, NSError *retrieveError)
          {
              if (nil == array)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                  self.callbackCompleted = YES;
              }
              else
@@ -3383,24 +3362,24 @@
     if (self.setUpSuccess)
     {
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        [self.dfService retrieveRootFolderWithCompletionBlock:^(AlfrescoFolder *rootFolder, NSError *error)
+        [self.dfService retrieveRootFolderWithCompletionBlock:^(AlfrescoFolder *rootFolder, NSError *retrieveError)
          {
              if (nil == rootFolder)
              {
                  self.lastTestSuccessful = NO;
-                 self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                 self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                  self.callbackCompleted = YES;
              }
              else
              {
                  XCTAssertNotNil(rootFolder,@"root folder should not be nil");
                  self.lastTestSuccessful = YES;
-                 [self.dfService retrievePermissionsOfNode:rootFolder completionBlock:^(AlfrescoPermissions *permissions, NSError *error)
+                 [self.dfService retrievePermissionsOfNode:rootFolder completionBlock:^(AlfrescoPermissions *permissions, NSError *permissionsError)
                   {
                       if (nil == permissions)
                       {
                           self.lastTestSuccessful = NO;
-                          self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                          self.lastTestFailureMessage = [self failureMessageFromError:permissionsError];
                       }
                       else
                       {
@@ -3545,12 +3524,12 @@
             
             __weak AlfrescoDocumentFolderService *weakFolderService = self.dfService;
             
-            [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error){
+            [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *retrieveError){
                 
                 if (node == nil)
                 {
                     self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                     self.callbackCompleted = YES;
                 }
                 else
@@ -3616,7 +3595,7 @@
                         if (modifiedNode == nil || modifiedError != nil)
                         {
                             self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [modifiedError localizedDescription], [modifiedError localizedFailureReason]];
+                            self.lastTestFailureMessage = [self failureMessageFromError:modifiedError];
                             self.callbackCompleted = YES;
                         }
                         else
@@ -3744,12 +3723,12 @@
         
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
         
-        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+        [self.dfService createDocumentWithName:filename inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *createError) {
             
-            if (document == nil && error != nil)
+            if (document == nil && createError != nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:createError];
                 self.callbackCompleted = YES;
             }
             else
@@ -3764,7 +3743,7 @@
                 
                 XCTAssertTrue([document hasAspectWithName:@"cm:titled"], @"The document should have the title aspect associated to it");
                 
-                [weakDfService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
+                [weakDfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError) {
                     
                     if (success)
                     {
@@ -3772,7 +3751,7 @@
                     }
                     else
                     {
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                         self.lastTestSuccessful = NO;
                     }
                     self.callbackCompleted = YES;
@@ -3805,24 +3784,24 @@
         __weak AlfrescoDocumentFolderService *weakService = self.dfService;
         
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:nil completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:nil completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
             
-            if (folder == nil || error != nil)
+            if (folder == nil || createError != nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:createError];
                 self.callbackCompleted = YES;
             }
             else
             {
                 XCTAssertNotNil(folder, @"The folder is nil");
                 
-                [weakService retrievePermissionsOfNode:folder completionBlock:^(AlfrescoPermissions *permissions, NSError *error) {
+                [weakService retrievePermissionsOfNode:folder completionBlock:^(AlfrescoPermissions *permissions, NSError *permissionsError) {
                     
-                    if (permissions == nil && error != nil)
+                    if (permissions == nil && permissionsError != nil)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:permissionsError];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -3832,12 +3811,12 @@
                         XCTAssertTrue(permissions.canDelete, @"Expected to be able to delete the folder");
                         XCTAssertTrue(permissions.canEdit, @"Expected to be able to edit the folder");
                         
-                        [weakService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                        [weakService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError) {
                             
                             if (success)
                             {
                                 self.lastTestSuccessful = YES;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                             }
                             else
                             {
@@ -3874,12 +3853,12 @@
         NSString *folderPath = [self.testFolderPathName stringByAppendingPathComponent:self.fixedFileName];
         
         // Running as admin, read and write access should be true
-        [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *documentNode, NSError *error) {
+        [self.dfService retrieveNodeWithFolderPath:folderPath completionBlock:^(AlfrescoNode *documentNode, NSError *retrieveError) {
             
             if (documentNode == nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                 self.callbackCompleted = YES;
             }
             else
@@ -3887,12 +3866,12 @@
                 XCTAssertNotNil(documentNode, @"Document node is nil");
                 XCTAssertTrue(documentNode.isDocument, @"Expected the node returned to be a document");
                 
-                [weakService retrievePermissionsOfNode:documentNode completionBlock:^(AlfrescoPermissions *permissions, NSError *error) {
+                [weakService retrievePermissionsOfNode:documentNode completionBlock:^(AlfrescoPermissions *permissions, NSError *permissionsError) {
                     
-                    if (permissions == nil && error != nil)
+                    if (permissions == nil && permissionsError != nil)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:permissionsError];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -3935,7 +3914,7 @@
             if (entireArray == nil || entireError != nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [entireError localizedDescription], [entireError localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:entireError];
                 self.callbackCompleted = YES;
             }
             else
@@ -3950,7 +3929,7 @@
                     if (pagingResult == nil || error != nil)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [entireError localizedDescription], [entireError localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:error];
                     }
                     else
                     {
@@ -4038,12 +4017,12 @@
         
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
         
-        [self.dfService retrieveContentOfDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error){
+        [self.dfService retrieveContentOfDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveError){
             
             if (contentFile == nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:retrieveError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -4058,7 +4037,7 @@
                 if (stringContent == nil)
                 {
                     self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
+                    self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:readError]];
                     self.callbackCompleted = YES;
                 }
                 else
@@ -4067,11 +4046,11 @@
                     NSData *data = [updatedContent dataUsingEncoding:NSUTF8StringEncoding];
                     __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:contentFile.mimeType];
 
-                    [weakDfService updateContentOfDocument:self.testAlfrescoDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error) {
+                    [weakDfService updateContentOfDocument:self.testAlfrescoDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDocument, NSError *updateError) {
                         if (updatedDocument == nil)
                         {
                             self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                            self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@", [self failureMessageFromError:updateError]];
                             self.callbackCompleted = YES;
                         }
                         else
@@ -4079,11 +4058,11 @@
                             XCTAssertNotNil(updatedDocument.identifier, @"Updated document identifier is nil");
                             XCTAssertTrue(updatedDocument.contentLength > 100, @"Content length is not > 100 - actual value %llu", updatedDocument.contentLength);
                             
-                            [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *error){
+                            [weakDfService retrieveContentOfDocument:updatedDocument completionBlock:^(AlfrescoContentFile *checkContentFile, NSError *contentError){
                                 if (checkContentFile == nil)
                                 {
                                     self.lastTestSuccessful = NO;
-                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"#4 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"#4 %@", [self failureMessageFromError:contentError]];
                                 }
                                 else
                                 {
@@ -4157,12 +4136,12 @@
         //        __weak AlfrescoDocumentFolderServiceTest *weakSelf = self;
         
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:originalProperties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:originalProperties completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
             
-            if (folder == nil || error != nil)
+            if (folder == nil || createError != nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:createError];
                 self.callbackCompleted = YES;
             }
             else
@@ -4184,12 +4163,12 @@
                 newFolderProperties[@"cm:title"] = updatedTitleString;
                 newFolderProperties[@"cmis:name"] = updatedNameString;
                 
-                [self.dfService updatePropertiesOfNode:folder properties:newFolderProperties completionBlock:^(AlfrescoNode *node, NSError *err) {
+                [self.dfService updatePropertiesOfNode:folder properties:newFolderProperties completionBlock:^(AlfrescoNode *node, NSError *updateError) {
                     
-                    if (node == nil || err != nil)
+                    if (node == nil || updateError != nil)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:updateError];
                     }
                     else
                     {
@@ -4212,12 +4191,12 @@
                         self.lastTestSuccessful = YES;
                     }
                     
-                    [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                    [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError) {
                         
                         if (!success)
                         {
                             self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                            self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                         }
                         else
                         {
@@ -4248,7 +4227,7 @@
             if (nil == node)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -4312,7 +4291,7 @@
             if (fileContent)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -4520,16 +4499,16 @@
         properties[@"cm:title"] = @"test title";
         properties[@"cmis:name"] = duplicateFileName;
         
-        [self.dfService createDocumentWithName:duplicateFileName inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *error) {
+        [self.dfService createDocumentWithName:duplicateFileName inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:properties completionBlock:^(AlfrescoDocument *document, NSError *createError) {
             
             if (document == nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:createError];
             }
             else
             {
-                XCTAssertNil(error, @"Error occured trying to create document the first time");
+                XCTAssertNil(createError, @"Error occured trying to create document the first time");
                 
                 NSMutableDictionary *props = [NSMutableDictionary dictionary];
                 props[@"cmis:name"] = duplicateFileName;
@@ -4635,13 +4614,13 @@
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
             
             if (folder)
             {
                 self.lastTestSuccessful = NO;
-                [self.dfService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *error){
-                    if (nil != error)
+                [self.dfService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *deleteError){
+                    if (nil != deleteError)
                     {
                         self.lastTestSuccessful = NO;
                         self.lastTestFailureMessage = @"Failure to delete node";
@@ -4656,7 +4635,7 @@
             else
             {
                 XCTAssertNil(folder, @"Folder should be nil as it should not have been created successfully due to invalid properties");
-                XCTAssertNotNil(error, @"Error should have occured trying to set the created date");
+                XCTAssertNotNil(createError, @"Error should have occured trying to set the created date");
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -4697,13 +4676,13 @@
         // set the created value to yesterday
         props[@"cm:created"] = yesterday;
         
-        [self.dfService createDocumentWithName:@"testDocument.jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *error) {
+        [self.dfService createDocumentWithName:@"testDocument.jpg" inParentFolder:self.testDocFolder contentFile:self.testImageFile properties:props completionBlock:^(AlfrescoDocument *document, NSError *createError) {
             
             if (document)
             {
                 self.lastTestSuccessful = NO;
-                [self.dfService deleteNode:document completionBlock:^(BOOL succeeded, NSError *error){
-                    if (nil != error)
+                [self.dfService deleteNode:document completionBlock:^(BOOL succeeded, NSError *deleteError){
+                    if (nil != deleteError)
                     {
                         self.lastTestSuccessful = NO;
                         self.lastTestFailureMessage = @"Failure to delete node";
@@ -4718,7 +4697,7 @@
             else
             {
                 XCTAssertNil(document, @"Document should be nil as it should not have been created successfully due to invalid properties");
-                XCTAssertNotNil(error, @"Error should have occured trying to set the created date");
+                XCTAssertNotNil(createError, @"Error should have occured trying to set the created date");
                 
                 self.lastTestSuccessful = YES;
                 self.callbackCompleted = YES;
@@ -4748,16 +4727,16 @@
         
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:5 skipCount:0 sortProperty:@"***" sortAscending:NO];
         
-        [self.dfService retrieveDocumentsInFolder:self.testDocFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        [self.dfService retrieveDocumentsInFolder:self.testDocFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
             
-            if (error)
+            if (retrieveError)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
             }
             else
             {
-                XCTAssertNil(error, @"The retrieval should not have caused an error");
+                XCTAssertNil(retrieveError, @"The retrieval should not have caused an error");
                 XCTAssertNotNil(pagingResult, @"Paging result should not be nil");
                 XCTAssertTrue([pagingResult.objects count] <= 5, @"The objects array should contain 5 or less result objects, but instead got back %lu", (unsigned long)pagingResult.objects.count);
                 
@@ -4825,7 +4804,7 @@
             if (error)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -4889,11 +4868,11 @@
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
-            if (error)
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
+            if (createError)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:createError]];
                 self.callbackCompleted = YES;
             }
             else
@@ -4912,7 +4891,7 @@
                     if (subFolderError)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [subFolderError localizedDescription], [subFolderError localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:subFolderError]];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -4924,7 +4903,7 @@
                             if (childrenError)
                             {
                                 self.lastTestSuccessful = NO;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [childrenError localizedDescription], [childrenError localizedFailureReason]];
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@", [self failureMessageFromError:childrenError]];
                             }
                             else
                             {
@@ -4946,8 +4925,8 @@
                                 XCTAssertNotNil(subFolderNode.aspects, @"The aspects of the subfolder should not be nil");
                             }
                             
-                            [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *error) {
-                                if (error == nil)
+                            [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                                if (deleteError == nil)
                                 {
                                     self.lastTestSuccessful = succeeded;
                                 }
@@ -4987,11 +4966,11 @@
         props[@"cm:title"] = parentFolderTitle;
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
         // create a new folder in the repository's root folder
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *error) {
-            if (error)
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:props completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
+            if (createError)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:createError];
                 self.callbackCompleted = YES;
             }
             else
@@ -5013,7 +4992,7 @@
                     if (docError)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@ - %@", [docError localizedDescription], [docError localizedFailureReason]];
+                        self.lastTestFailureMessage = [NSString stringWithFormat:@"#1 %@", [self failureMessageFromError:docError]];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -5026,7 +5005,7 @@
                             if (childrenError)
                             {
                                 self.lastTestSuccessful = NO;
-                                self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@ - %@", [childrenError localizedDescription], [childrenError localizedFailureReason]];
+                                self.lastTestFailureMessage = [NSString stringWithFormat:@"#2 %@", [self failureMessageFromError:childrenError]];
                             }
                             else
                             {
@@ -5051,13 +5030,13 @@
                             double delayInSeconds = 2.0;
                             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
                             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                                [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *error) {
-                                    if (error == nil)
+                                [weakFolderService deleteNode:folder completionBlock:^(BOOL succeeded, NSError *deleteError) {
+                                    if (deleteError == nil)
                                     {
                                         self.lastTestSuccessful = succeeded;
                                     }
                                     
-                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"#3 %@", [self failureMessageFromError:deleteError]];
                                     self.callbackCompleted = YES;
                                 }];
                             });
@@ -5097,11 +5076,11 @@
         properties[@"cm:title"] = subFolderTitle;
         
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *error) {
-            if (error)
+        [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:properties completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
+            if (createError)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:createError];
                 self.callbackCompleted = YES;
             }
             else
@@ -5121,7 +5100,7 @@
                     if (retrievedError)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrievedError localizedDescription], [retrievedError localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:retrievedError];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -5178,7 +5157,7 @@
             if (error)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -5226,12 +5205,12 @@
         
         __weak AlfrescoDocumentFolderService *weakDocumentService = self.dfService;
         
-        [self.dfService retrieveContentOfDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *error) {
+        [self.dfService retrieveContentOfDocument:self.testAlfrescoDocument completionBlock:^(AlfrescoContentFile *contentFile, NSError *retrieveError) {
             
             if (contentFile == nil)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                 self.callbackCompleted = YES;
             }
             else
@@ -5248,7 +5227,7 @@
                 if (stringContent == nil)
                 {
                     self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [readError localizedDescription], [readError localizedFailureReason]];
+                    self.lastTestFailureMessage = [self failureMessageFromError:readError];
                     self.callbackCompleted = YES;
                 }
                 else
@@ -5259,12 +5238,12 @@
                     
                     __block AlfrescoContentFile *updatedContentFile = [[AlfrescoContentFile alloc] initWithData:data mimeType:contentFile.mimeType];
                     
-                    [weakDocumentService updateContentOfDocument:self.testAlfrescoDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDocument, NSError *error) {
+                    [weakDocumentService updateContentOfDocument:self.testAlfrescoDocument contentFile:updatedContentFile completionBlock:^(AlfrescoDocument *updatedDocument, NSError *updateError) {
                         
                         if (updatedDocument == nil)
                         {
                             self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                            self.lastTestFailureMessage = [self failureMessageFromError:updateError];
                             self.callbackCompleted = YES;
                         }
                         else
@@ -5276,7 +5255,7 @@
                                 if (checkContentFile == nil)
                                 {
                                     self.lastTestSuccessful = NO;
-                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [checkError localizedDescription], [checkError localizedFailureReason]];
+                                    self.lastTestFailureMessage = [self failureMessageFromError:checkError];
                                 }
                                 else
                                 {
@@ -5333,11 +5312,11 @@
             
             self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
             
-            [self.dfService createDocumentWithName:customTypeTestFileName inParentFolder:self.testDocFolder contentFile:contentFile properties:props aspects:nil type:@"fdk:everything" completionBlock:^(AlfrescoDocument *document, NSError *error){
+            [self.dfService createDocumentWithName:customTypeTestFileName inParentFolder:self.testDocFolder contentFile:contentFile properties:props aspects:nil type:@"fdk:everything" completionBlock:^(AlfrescoDocument *document, NSError *createError){
                 if (nil == document)
                 {
                     self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    self.lastTestFailureMessage = [self failureMessageFromError:createError];
                     self.callbackCompleted = YES;
                 }
                 else
@@ -5348,12 +5327,12 @@
                     XCTAssertTrue(document.contentLength > 10, @"expected content to be filled");
                     
                     // delete the test document
-                    [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error)
+                    [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError)
                      {
                          if (!success)
                          {
                              self.lastTestSuccessful = NO;
-                             self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                             self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                          }
                          else
                          {
@@ -5402,11 +5381,11 @@
             
             self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
             
-            [self.dfService createDocumentWithName:customTypeTestFileName inParentFolder:self.testDocFolder contentFile:contentFile properties:props aspects:nil type:@"fdk:everything" completionBlock:^(AlfrescoDocument *document, NSError *error){
+            [self.dfService createDocumentWithName:customTypeTestFileName inParentFolder:self.testDocFolder contentFile:contentFile properties:props aspects:nil type:@"fdk:everything" completionBlock:^(AlfrescoDocument *document, NSError *createError){
                 if (nil == document)
                 {
                     self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    self.lastTestFailureMessage = [self failureMessageFromError:createError];
                     self.callbackCompleted = YES;
                 }
                 else
@@ -5445,7 +5424,7 @@
                         if (nil == updatedNode)
                         {
                             self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [updateError localizedDescription], [updateError localizedFailureReason]];
+                            self.lastTestFailureMessage = [self failureMessageFromError:updateError];
                             self.callbackCompleted = YES;
                         }
                         else
@@ -5474,7 +5453,7 @@
                                  if (!success)
                                  {
                                      self.lastTestSuccessful = NO;
-                                     self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [deleteError localizedDescription], [deleteError localizedFailureReason]];
+                                     self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                                  }
                                  else
                                  {
@@ -5505,21 +5484,21 @@
         
         // create a new folder in the repository's root folder
         NSString *folderName = [AlfrescoBaseTest addTimeStampToFileOrFolderName:self.unitTestFolder];
-        AlfrescoRequest *request = [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:nil completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        AlfrescoRequest *request = [self.dfService createFolderWithName:folderName inParentFolder:self.testDocFolder properties:nil completionBlock:^(AlfrescoFolder *folder, NSError *createError) {
             if (nil == folder)
             {
                 // Should also get a cancellation error code
-                XCTAssertEqual(error.localizedDescription, kAlfrescoErrorDescriptionNetworkRequestCancelled, @"Expected cancellation error description, not \"%@\"", error.localizedDescription);
+                XCTAssertEqual(createError.localizedDescription, kAlfrescoErrorDescriptionNetworkRequestCancelled, @"Expected cancellation error description, not \"%@\"", createError.localizedDescription);
                 
                 // Try to clean-up as it's possible the folder will have got created anyway
-                [self.dfService retrieveNodeWithFolderPath:folderName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
+                [self.dfService retrieveNodeWithFolderPath:folderName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *retrieveError) {
                     if (nil != node)
                     {
                         self.lastTestSuccessful = NO;
                         self.lastTestFailureMessage = @"Folder creation was cancelled but the folder was created on the server";
                         
                         // delete the folder to clean up
-                        [self.dfService deleteNode:node completionBlock:^(BOOL success, NSError *error) {
+                        [self.dfService deleteNode:node completionBlock:^(BOOL success, NSError *deleteError) {
                             self.callbackCompleted = YES;
                         }];
                     }
@@ -5536,10 +5515,10 @@
                 self.lastTestFailureMessage = @"The request to create a folder was not cancelled correctly.";
 
                 // delete the folder to clean up
-                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *error) {
+                [self.dfService deleteNode:folder completionBlock:^(BOOL success, NSError *deleteError) {
                     if (!success)
                     {
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                     }
                     
                     self.callbackCompleted = YES;
@@ -5570,14 +5549,14 @@
         AlfrescoContentFile *textContentFile = [[AlfrescoContentFile alloc] initWithData:fileData mimeType:@"text/plain"];
         
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
-        AlfrescoRequest *request = [self.dfService createDocumentWithName:documentName inParentFolder:self.testDocFolder contentFile:textContentFile properties:nil completionBlock:^(AlfrescoDocument *document, NSError *error) {
+        AlfrescoRequest *request = [self.dfService createDocumentWithName:documentName inParentFolder:self.testDocFolder contentFile:textContentFile properties:nil completionBlock:^(AlfrescoDocument *document, NSError *createError) {
             if (nil == document)
             {
                 // Should also get a cancellation error code
-                XCTAssertEqual(error.localizedDescription, kAlfrescoErrorDescriptionNetworkRequestCancelled, @"Expected cancellation error description, not \"%@\"", error.localizedDescription);
+                XCTAssertEqual(createError.localizedDescription, kAlfrescoErrorDescriptionNetworkRequestCancelled, @"Expected cancellation error description, not \"%@\"", createError.localizedDescription);
 
                 // Try to clean-up as it's possible the document will have got created anyway
-                [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *error) {
+                [self.dfService retrieveNodeWithFolderPath:documentName relativeToFolder:self.testDocFolder completionBlock:^(AlfrescoNode *node, NSError *retrieveError) {
                     if (node == nil)
                     {
                         // test is successful if the document was not created on the server
@@ -5591,7 +5570,7 @@
                         self.lastTestFailureMessage = @"Document creation was cancelled but the document was created on the server";
                         
                         // delete the document to clean up
-                        [self.dfService deleteNode:node completionBlock:^(BOOL success, NSError *error) {
+                        [self.dfService deleteNode:node completionBlock:^(BOOL success, NSError *deleteError) {
                             self.callbackCompleted = YES;
                         }];
                     }
@@ -5603,10 +5582,10 @@
                 self.lastTestFailureMessage = @"The request to create a document was not cancelled correctly.";
                 
                 // delete the document to clean up
-                [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *error) {
+                [self.dfService deleteNode:document completionBlock:^(BOOL success, NSError *deleteError) {
                     if (!success)
                     {
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:deleteError];
                     }
                     
                     self.callbackCompleted = YES;
@@ -5638,7 +5617,7 @@
             if (error)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -5688,7 +5667,7 @@
             if (error)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -5732,7 +5711,7 @@
             if (error)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -5782,7 +5761,7 @@
             if (error)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -5826,7 +5805,7 @@
             if (error)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -5863,7 +5842,7 @@
             if (error)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
             }
             else
             {
@@ -5891,16 +5870,16 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
-        [weakDfService isFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+        [weakDfService isFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *isFavoriteError1) {
             if (succeeded)
             {
                 XCTAssertFalse(isFavorited, @"Document should not be marked as favorite");
                 
-                [weakDfService addFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                [weakDfService addFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *addError) {
                     if (!succeeded)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:addError];
                         self.callbackCompleted = YES;
                     }
                     else
@@ -5913,11 +5892,11 @@
                         }
                         else
                         {
-                            [weakDfService isFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                            [weakDfService isFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *isFavoriteError2) {
                                 if (!succeeded)
                                 {
                                     self.lastTestSuccessful = NO;
-                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                    self.lastTestFailureMessage = [self failureMessageFromError:isFavoriteError2];
                                 }
                                 else
                                 {
@@ -5933,7 +5912,7 @@
             else
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:isFavoriteError1];
                 self.callbackCompleted = YES;
             }
         }];
@@ -5982,7 +5961,7 @@
                                 else
                                 {
                                     self.lastTestSuccessful = NO;
-                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [isFavoriteError localizedDescription], [isFavoriteError localizedFailureReason]];
+                                    self.lastTestFailureMessage = [self failureMessageFromError:isFavoriteError];
                                     self.callbackCompleted = YES;
                                 }
                             }];
@@ -5990,7 +5969,7 @@
                         else
                         {
                             self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [nodeError localizedDescription], [nodeError localizedFailureReason]];
+                            self.lastTestFailureMessage = [self failureMessageFromError:nodeError];
                             self.callbackCompleted = YES;
                         }
                     }];
@@ -5998,7 +5977,7 @@
                 else
                 {
                     self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [favoriteSitesError localizedDescription], [favoriteSitesError localizedFailureReason]];
+                    self.lastTestFailureMessage = [self failureMessageFromError:favoriteSitesError];
                     self.callbackCompleted = YES;
                 }
             }];
@@ -6020,22 +5999,22 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
-        [weakDfService addFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+        [weakDfService addFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *addFavoriteError) {
             if (!succeeded)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:addFavoriteError];
             }
             else
             {
                 XCTAssertTrue(isFavorited, @"node should be marked as favorite");
                 
                 // retrieve favorite documents and make sure it appears in the list
-                [weakDfService retrieveFavoriteDocumentsWithCompletionBlock:^(NSArray *array, NSError *error) {
+                [weakDfService retrieveFavoriteDocumentsWithCompletionBlock:^(NSArray *array, NSError *retrieveError) {
                     if (array == nil)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                     }
                     else
                     {
@@ -6071,11 +6050,11 @@
         self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
         
         __weak AlfrescoDocumentFolderService *weakDfService = self.dfService;
-        [weakDfService addFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+        [weakDfService addFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *addError) {
             if (!succeeded)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:addError];
                 self.callbackCompleted = YES;
             }
             else
@@ -6088,22 +6067,22 @@
                 }
                 else
                 {
-                    [weakDfService removeFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *error) {
+                    [weakDfService removeFavorite:self.testAlfrescoDocument completionBlock:^(BOOL succeeded, BOOL isFavorited, NSError *removeError) {
                         if (!succeeded)
                         {
                             self.lastTestSuccessful = NO;
-                            self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                            self.lastTestFailureMessage = [self failureMessageFromError:removeError];
                         }
                         else
                         {
                             XCTAssertFalse(isFavorited, @"Document should no longer be marked as favorite");
                             
                             // retrieve favorite documents and make sure it does not appear in the list
-                            [weakDfService retrieveFavoriteDocumentsWithCompletionBlock:^(NSArray *array, NSError *error) {
+                            [weakDfService retrieveFavoriteDocumentsWithCompletionBlock:^(NSArray *array, NSError *retrieveError) {
                                 if (array == nil)
                                 {
                                     self.lastTestSuccessful = NO;
-                                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                                    self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                                 }
                                 else
                                 {
@@ -6152,7 +6131,7 @@
             if (!succeeded)
             {
                 self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [taggingError localizedDescription], [taggingError localizedFailureReason]];
+                self.lastTestFailureMessage = [self failureMessageFromError:taggingError];
                 self.callbackCompleted = YES;
             }
             else
@@ -6163,7 +6142,7 @@
                     if (document == nil)
                     {
                         self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [retrieveError localizedDescription], [retrieveError localizedFailureReason]];
+                        self.lastTestFailureMessage = [self failureMessageFromError:retrieveError];
                     }
                     else
                     {
@@ -6185,6 +6164,84 @@
             }
         }];
         
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testAddAspects
+{
+    if (self.setUpSuccess)
+    {
+        self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+        
+        // get the current count of applied aspects
+        unsigned long numberOfAppliedAspects = self.testAlfrescoDocument.aspects.count;
+        
+        // add a new aspect
+        [self.dfService addAspectsToNode:self.testAlfrescoDocument
+                                 aspects:@[kAlfrescoModelAspectExif]
+                         completionBlock:^(AlfrescoNode *addAspectsNode, NSError *addAspectsError) {
+            if (addAspectsNode == nil)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:addAspectsError];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertTrue(addAspectsNode.aspects.count >= (numberOfAppliedAspects + 1),
+                              @"Expected the aspect count to have increased");
+                XCTAssertTrue([addAspectsNode.aspects containsObject:kAlfrescoModelAspectExif],
+                              @"Expected the node to have the exif aspect applied");
+                
+                // update an exif property value and add another 2 aspects (setting the property of one)
+                NSDictionary *properties = @{kAlfrescoModelPropertyExifManufacturer: @"Canon",
+                                             kAlfrescoModelPropertyAudioAlbum: @"Album Title"};
+                [self.dfService updatePropertiesOfNode:addAspectsNode
+                                            properties:properties
+                                               aspects:@[kAlfrescoModelAspectAudio, kAlfrescoModelAspectGeographic]
+                                       completionBlock:^(AlfrescoNode *updateNode, NSError *updateError) {
+                    if (updateNode == nil)
+                    {
+                        self.lastTestSuccessful = NO;
+                        self.lastTestFailureMessage = [self failureMessageFromError:addAspectsError];
+                        self.callbackCompleted = YES;
+                    }
+                    else
+                    {
+                        XCTAssertTrue(updateNode.aspects.count >= (numberOfAppliedAspects + 3),
+                                      @"Expected the aspect count to have increased");
+                        XCTAssertTrue([updateNode.aspects containsObject:kAlfrescoModelAspectExif],
+                                      @"Expected the node to have the exif aspect applied");
+                        XCTAssertTrue([updateNode.aspects containsObject:kAlfrescoModelAspectAudio],
+                                      @"Expected the node to have the audio aspect applied");
+                        XCTAssertTrue([updateNode.aspects containsObject:kAlfrescoModelAspectGeographic],
+                                      @"Expected the node to have the geographic aspect applied");
+                        
+                        // check the property values got set
+                        AlfrescoProperty *manufacturer = updateNode.properties[kAlfrescoModelPropertyExifManufacturer];
+                        AlfrescoProperty *album = updateNode.properties[kAlfrescoModelPropertyAudioAlbum];
+                        
+                        XCTAssertNotNil(manufacturer, @"Expected to find the manufacturer property");
+                        XCTAssertNotNil(album, @"Expected to find the album property");
+                        
+                        XCTAssertTrue([manufacturer.value isEqualToString:@"Canon"],
+                                      @"Expected the manufacturer property value to be 'Canon' but it was: %@", manufacturer.value);
+                        XCTAssertTrue([album.value isEqualToString:@"Album Title"],
+                                      @"Expected the album property value to be 'Album Title' but it was: %@", album.value);
+                        
+                        self.lastTestSuccessful = YES;
+                        self.callbackCompleted = YES;
+                    }
+                }];
+            }
+        }];
+
         [self waitUntilCompleteWithFixedTimeInterval];
         XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
     }

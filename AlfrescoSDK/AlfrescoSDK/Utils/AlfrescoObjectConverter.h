@@ -18,10 +18,10 @@
  *****************************************************************************
  */
 
-/** AlfrescoObjectConverter
- 
- Author: Tauseef Mughal (Alfresco)
- */
+// AlfrescoObjectConverter
+
+// Author: Tauseef Mughal (Alfresco)
+
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoErrors.h"
@@ -45,5 +45,7 @@
 + (NSDictionary *)paginationJSONFromOldAPIData:(NSData *)data error:(NSError **)outError;
 
 + (NSDictionary *)pagingFromOldAPIData:(NSData *)data error:(NSError **)outError;
+
++ (NSDictionary *)dictionaryFromDictionary:(NSDictionary *)source withMappedKeys:(NSDictionary *)keyMappings;
 
 @end

@@ -32,26 +32,19 @@
 @property (nonatomic, strong, readonly) NSArray *favoriteDocuments;
 @property (nonatomic, strong, readonly) NSArray *favoriteFolders;
 
-/**
- Build the cache.
- */
+
+// Builds the cache.
 - (AlfrescoRequest *)buildCacheWithDelegate:(id<AlfrescoFavoritesCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
-/**
- Caches the given node with given flag. If the node already exists in the cache it's favortie state
- will be updated otherwise the node is added to the cache with the given state.
- */
+// Caches the given node with given flag. If the node already exists in the cache it's favortie state
+// will be updated otherwise the node is added to the cache with the given state.
 - (void)cacheNode:(AlfrescoNode *)node favorite:(BOOL)favorite;
 
-/**
- Determines whether the given node has been favorited. If the node is in the cache an NSNumber object
- is returned representing the state, if nil is returned the node is not known to the cache.
- */
+// Determines whether the given node has been favorited. If the node is in the cache an NSNumber object
+// is returned representing the state, if nil is returned the node is not known to the cache.
 - (NSNumber *)isNodeFavorited:(AlfrescoNode *)node;
 
-/**
- clears all entries in the cache.
- */
+// clears all entries in the cache.
 - (void)clear;
 
 @end

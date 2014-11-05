@@ -22,7 +22,8 @@
 #import "AlfrescoLog.h"
 @implementation AlfrescoSessionTest
 
-#pragma mark - AlfrescoRepository Specific Tests
+#pragma mark - On-premise Specific Tests
+
 /*
  @Unique_TCRef 77F8
  */
@@ -64,55 +65,104 @@
 }
 
 #pragma mark - Cloud Specific Tests
+
 /*
  @Unique_TCRef 70S1
  @Unique_TCRef 70S0
  */
 
- // Commented until MOBSDK-543 is resolved
-
-/*
 - (void)testRetrieveNetworks
 {
-    [self runAllSitesTest:^{
-        
+    if (self.setUpSuccess)
+    {
         if (self.isCloud)
         {
-            [(AlfrescoCloudSession *)self.currentSession retrieveNetworksWithCompletionBlock:^(NSArray *array, NSError *error) {
+            AlfrescoCloudSession *cloudSession = (AlfrescoCloudSession *)self.currentSession;
+            [cloudSession retrieveNetworksWithCompletionBlock:^(NSArray *array, NSError *error) {
                 
-                if (array == nil || error != nil)
+                if (array == nil)
                 {
                     self.lastTestSuccessful = NO;
-                    self.lastTestFailureMessage = [NSString stringWithFormat:@"%@ - %@", [error localizedDescription], [error localizedFailureReason]];
+                    self.lastTestFailureMessage = [self failureMessageFromError:error];
                     self.callbackCompleted = YES;
                 }
                 else
                 {
-                    self.lastTestSuccessful = YES;
-                    AlfrescoLogDebug(@"testRetrieveNetworksTest");
-                    AlfrescoLogDebug(@"%@", array);
+                    AlfrescoCloudNetwork *network = cloudSession.network;
+                    XCTAssertNotNil(network, @"Expected the network property to be set");
+                    XCTAssertNotNil(cloudSession.networks, @"Expected the networks property to be set");
+                    XCTAssertTrue(cloudSession.networks.count > 0, @"Expected at least one network");
                     
-                    for (AlfrescoCloudNetwork *network in array)
-                    {
-                        AlfrescoLogDebug(@"identifier: %@", network.identifier);
-                        AlfrescoLogDebug(@"isHomeNetwork: %i", network.isHomeNetwork);
-                        AlfrescoLogDebug(@"isPaidNetwork: %i", network.isPaidNetwork);
-                        AlfrescoLogDebug(@"subscriptionLevel: %@", network.subscriptionLevel);
-                        AlfrescoLogDebug(@"createdAt: %@", network.createdAt);
-                        AlfrescoLogDebug(@"\n\n");
-                        
-                        XCTAssertTrue(network.isHomeNetwork, @"network is home network");
-                        XCTAssertNotNil(network.createdAt, @"createdAt property is set");
-                    }
+                    // check network properties
+                    XCTAssertTrue(network.isHomeNetwork, @"Expected network to be marked as the home network");
+                    XCTAssertTrue(network.isEnabled, @"Expected network to be marked as enabled");
+                    XCTAssertTrue(network.isPaidNetwork, @"Expected network to be marked as paid");
+                    XCTAssertNotNil(network.identifier, @"Expected identifier property to be set");
+                    XCTAssertNotNil(network.subscriptionLevel, @"Expected subscriptionLevel property to be set");
+                    XCTAssertNotNil(network.createdAt, @"Expected createdAt property to be set");
+                    XCTAssertTrue([network.subscriptionLevel isEqualToString:@"Enterprise"],
+                                  @"Expected subscription level to be 'Enterprise' but it was: %@", network.subscriptionLevel);
+                    
+                    self.lastTestSuccessful = YES;
                     self.callbackCompleted = YES;
                 }
+                
                 XCTAssertTrue(self.lastTestSuccessful, @"Unable to retrieve networks for the current cloud session");
             }];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
         }
-        
-    }];
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
 }
- */
+
+- (void)testOAuthSerialization
+{
+    if (self.setUpSuccess)
+    {
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+        
+        NSString *apiKey = @"ThisIsMyAPIKey-For-Alfresco-In-The-Cloud";
+        NSString *secretKey = @"ThisIsMySecretKey-For-Alfresco-In-The-Cloud";
+        NSString *redirect = @"http://www.alfresco.com";
+        
+        NSString *accessToken = @"6dbe853d-8390-4a69-b3d5-20e2125fb6e4";
+        NSString *refreshToken = @"087ed018-c29e-4b69-8c94-95805dd03a4f";
+        NSNumber *expiresIn = @3600;
+        NSString *tokenType = @"Bearer";
+        NSString *scope = @"pub_api";
+        
+        dictionary[kAlfrescoJSONAccessToken] = accessToken;
+        dictionary[kAlfrescoJSONRefreshToken] = refreshToken;
+        
+        dictionary[kAlfrescoJSONExpiresIn] = expiresIn;
+        dictionary[kAlfrescoJSONTokenType] = tokenType;
+        dictionary[kAlfrescoJSONScope] = scope;
+        
+        AlfrescoOAuthData *origOAuthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirect jsonDictionary:dictionary];
+        NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:origOAuthData];
+        
+        AlfrescoOAuthData *archivedOAuthData = [NSKeyedUnarchiver unarchiveObjectWithData:archivedData];
+        XCTAssertTrue([apiKey isEqualToString:archivedOAuthData.apiKey], @"apiKey should be the same but we got %@", archivedOAuthData.apiKey);
+        XCTAssertTrue([secretKey isEqualToString:archivedOAuthData.secretKey], @"secretKey should be the same but we got %@", archivedOAuthData.secretKey);
+        XCTAssertTrue([redirect isEqualToString:archivedOAuthData.redirectURI], @"redirect should be the same but we got %@", archivedOAuthData.redirectURI);
+        XCTAssertTrue([accessToken isEqualToString:archivedOAuthData.accessToken], @"accessToken should be the same but we got %@", archivedOAuthData.accessToken);
+        XCTAssertTrue([refreshToken isEqualToString:archivedOAuthData.refreshToken], @"refreshToken should be the same but we got %@", archivedOAuthData.refreshToken);
+        XCTAssertTrue([tokenType isEqualToString:archivedOAuthData.tokenType], @"tokenType should be the same but we got %@", archivedOAuthData.tokenType);
+        XCTAssertTrue([scope isEqualToString:archivedOAuthData.scope], @"scope should be the same but we got %@", archivedOAuthData.scope);
+        XCTAssertEqual(3600, [archivedOAuthData.expiresIn intValue], @"Expires in should be 3600, but instead it is %d",[archivedOAuthData.expiresIn intValue]);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+#pragma mark - Generic Tests
 
 /*
  @Unique_TCRef 74F1
@@ -151,7 +201,6 @@
     }
 }
 
-#pragma mark - Generic Tests
 /*
  @Unique_TCRef 79S1
  @Unique_TCRef 62S1
@@ -556,11 +605,32 @@
             XCTAssertNotNil(sessionRepositoryInfo.version, @"Expected the version of the repository not to be nil");
             XCTAssertNotNil(sessionRepositoryInfo.capabilities, @"Expected the capabilities of the repository not to be nil");
             
-            BOOL isRunningOnVersion4 = [sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike];
-            
             XCTAssertTrue([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] || [sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity], @"Expected the edition to be Enterprise or Community but it is %@", sessionRepositoryInfo.edition);
             
-            if (isRunningOnVersion4)
+            BOOL isRunningOnVersion4 = [sessionRepositoryInfo.majorVersion intValue] == 4;
+            BOOL isRunningOnVersion5 = [sessionRepositoryInfo.majorVersion intValue] == 5;
+            
+            if (isRunningOnVersion5)
+            {
+                XCTAssertTrue([sessionRepositoryInfo.majorVersion intValue] == 5, @"Expected the major version to be 5");
+                XCTAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 0, @"Expected the minor version to be 0 or more");
+                
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike],
+                              @"Version 5 of the OnPremise server should support the like capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount],
+                              @"Version 5 of the OnPremise server should support comments count capability");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine],
+                              @"Version 5 of the OnPremise server should support the Activiti workflow engine");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine],
+                               @"Version 5 of the OnPremise server should not support the JBPM engine");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 5 of the OnPremise server should support the public API");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                              @"Version 5 of the OnPremise server should support My Files");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                              @"Version 5 of the OnPremise server should support Shared Files");
+            }
+            else if (isRunningOnVersion4)
             {
                 XCTAssertTrue([sessionRepositoryInfo.majorVersion intValue] == 4, @"Expected the major version to be 4");
                 
@@ -580,6 +650,10 @@
                 {
                     XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
                                   @"Version 4.0 of the Enterprise server should not support the public API");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                                   @"Version 4.0 of the Enterprise server should not support My Files");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                                   @"Version 4.0 of the Enterprise server should not support Shared Files");
                 }
                 
                 if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionEnterprise] &&
@@ -587,13 +661,20 @@
                 {
                     XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
                                   @"Version 4.2 or later of the Enterprise server should support the public API");
+                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                                  @"Version 4.2 or later of the Enterprise server should support My Files");
+                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                                  @"Version 4.2 or later of the Enterprise server should support Shared Files");
                 }
                 
-                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity] &&
-                         [sessionRepositoryInfo.minorVersion intValue] >= 3)
+                if ([sessionRepositoryInfo.edition isEqualToString:kAlfrescoRepositoryEditionCommunity])
                 {
-                    XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
-                                  @"Version 4.3 or later of the Community server should support the public API");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                                  @"Version 4 of the Community server should not support the public API");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                                   @"Version 4 of the Community server should not support the My Files");
+                    XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                                   @"Version 4 of the Community server should not support the Shared Files");
                 }
             }
             else
@@ -602,11 +683,20 @@
                 
                 XCTAssertTrue([sessionRepositoryInfo.minorVersion intValue] >= 4, @"Expected the minor version to be 4 or more");
                 
-                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike], @"Version 3 of the OnPremise server should not support the like capability");
-                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount], @"Version 3 of the OnPremise server should not support comments count capability");
-                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI], @"Version 3 of the OnPremise server should not support the public API");
-                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine], @"Version 3 of the OnPremise server should not support the Activiti workflow engine");
-                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine], @"Version 3 of the OnPremise server should support the JBPM engine");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityLike],
+                               @"Version 3 of the OnPremise server should not support the like capability");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityCommentsCount],
+                               @"Version 3 of the OnPremise server should not support comments count capability");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityPublicAPI],
+                               @"Version 3 of the OnPremise server should not support the public API");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityActivitiWorkflowEngine],
+                               @"Version 3 of the OnPremise server should not support the Activiti workflow engine");
+                XCTAssertTrue([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityJBPMWorkflowEngine],
+                              @"Version 3 of the OnPremise server should support the JBPM engine");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilityMyFiles],
+                               @"Version 3 of the OnPremise server should not support My Files");
+                XCTAssertFalse([sessionRepositoryInfo.capabilities doesSupportCapability:kAlfrescoCapabilitySharedFiles],
+                               @"Version 3 of the OnPremise server should not support Shared Files");
             }
             
             self.lastTestSuccessful = YES;
@@ -635,53 +725,13 @@
             XCTAssertTrue(capabilities.doesSupportPublicAPI, @"Expected the public API to be supported");
             XCTAssertTrue(capabilities.doesSupportActivitiWorkflowEngine, @"Expected the Activiti workflow engine to be supported");
             XCTAssertFalse(capabilities.doesSupportJBPMWorkflowEngine, @"Did not expect the JBPM workflow engine to be supported");
+            XCTAssertFalse(capabilities.doesSupportMyFiles, @"Did not expect My Files to be supported");
+            XCTAssertFalse(capabilities.doesSupportSharedFiles, @"Did not expect Shared Files to be supported");
             
             self.lastTestSuccessful = YES;
         }
         XCTAssertTrue(self.lastTestSuccessful, @"The session does not contain valid respository information");
     }
-    else
-    {
-        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
-    }
-}
-
-- (void)testOAuthSerialization
-{
-    if (self.setUpSuccess)
-    {
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-        
-        NSString *apiKey = @"ThisIsMyAPIKey-For-Alfresco-In-The-Cloud";
-        NSString *secretKey = @"ThisIsMySecretKey-For-Alfresco-In-The-Cloud";
-        NSString *redirect = @"http://www.alfresco.com";
-        
-        NSString *accessToken = @"6dbe853d-8390-4a69-b3d5-20e2125fb6e4";
-        NSString *refreshToken = @"087ed018-c29e-4b69-8c94-95805dd03a4f";
-        NSNumber *expiresIn = @3600;
-        NSString *tokenType = @"Bearer";
-        NSString *scope = @"pub_api";
-        
-        dictionary[kAlfrescoJSONAccessToken] = accessToken;
-        dictionary[kAlfrescoJSONRefreshToken] = refreshToken;
-        
-        dictionary[kAlfrescoJSONExpiresIn] = expiresIn;
-        dictionary[kAlfrescoJSONTokenType] = tokenType;
-        dictionary[kAlfrescoJSONScope] = scope;
-        
-        AlfrescoOAuthData *origOAuthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirect jsonDictionary:dictionary];
-        NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:origOAuthData];
-        
-        AlfrescoOAuthData *archivedOAuthData = [NSKeyedUnarchiver unarchiveObjectWithData:archivedData];
-        XCTAssertTrue([apiKey isEqualToString:archivedOAuthData.apiKey], @"apiKey should be the same but we got %@", archivedOAuthData.apiKey);
-        XCTAssertTrue([secretKey isEqualToString:archivedOAuthData.secretKey], @"secretKey should be the same but we got %@", archivedOAuthData.secretKey);
-        XCTAssertTrue([redirect isEqualToString:archivedOAuthData.redirectURI], @"redirect should be the same but we got %@", archivedOAuthData.redirectURI);
-        XCTAssertTrue([accessToken isEqualToString:archivedOAuthData.accessToken], @"accessToken should be the same but we got %@", archivedOAuthData.accessToken);
-        XCTAssertTrue([refreshToken isEqualToString:archivedOAuthData.refreshToken], @"refreshToken should be the same but we got %@", archivedOAuthData.refreshToken);
-        XCTAssertTrue([tokenType isEqualToString:archivedOAuthData.tokenType], @"tokenType should be the same but we got %@", archivedOAuthData.tokenType);
-        XCTAssertTrue([scope isEqualToString:archivedOAuthData.scope], @"scope should be the same but we got %@", archivedOAuthData.scope);
-        XCTAssertEqual(3600, [archivedOAuthData.expiresIn intValue], @"Expires in should be 3600, but instead it is %d",[archivedOAuthData.expiresIn intValue]);
-     }
     else
     {
         XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));

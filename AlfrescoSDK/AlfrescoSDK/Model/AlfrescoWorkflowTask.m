@@ -42,6 +42,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
 @property (nonatomic, strong, readwrite) NSString *summary;
 @property (nonatomic, strong, readwrite) NSNumber *priority;
 @property (nonatomic, strong, readwrite) NSString *assigneeIdentifier;
+@property (nonatomic, assign, readwrite) BOOL completed;
 
 @end
 
@@ -77,6 +78,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         self.name = entry[kAlfrescoWorkflowPublicJSONName];
         self.priority = entry[kAlfrescoWorkflowPublicJSONPriority];
         self.assigneeIdentifier = entry[kAlfrescoWorkflowPublicJSONAssignee];
+        self.completed = (self.endedAt != nil);
     }
     else
     {
@@ -106,6 +108,9 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         {
             self.assigneeIdentifier = taskProperties[kAlfrescoWorkflowLegacyJSONOwner];
         }
+        
+        NSString *state = properties[kAlfrescoWorkflowLegacyJSONState];
+        self.completed = [state isEqualToString:kAlfrescoWorkflowLegacyJSONStateCompleted];
     }
 }
 
@@ -123,6 +128,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
     [aCoder encodeObject:self.summary forKey:kAlfrescoWorkflowPublicJSONName];
     [aCoder encodeObject:self.priority forKey:kAlfrescoWorkflowPublicJSONPriority];
     [aCoder encodeObject:self.assigneeIdentifier forKey:kAlfrescoWorkflowPublicJSONAssignee];
+    [aCoder encodeBool:self.completed forKey:kAlfrescoWorkflowLegacyJSONState];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -142,6 +148,7 @@ static NSInteger kWorkflowTaskModelVersion = 1;
         self.summary = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONName];
         self.priority = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONPriority];
         self.assigneeIdentifier = [aDecoder decodeObjectForKey:kAlfrescoWorkflowPublicJSONAssignee];
+        self.completed = [aDecoder decodeBoolForKey:kAlfrescoWorkflowLegacyJSONState];
     }
     return self;
 }

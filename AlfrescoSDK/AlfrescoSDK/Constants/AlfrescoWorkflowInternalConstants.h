@@ -53,14 +53,10 @@ extern NSString * const kAlfrescoPublicAPIWorkflowProcessImage;
 extern NSString * const kAlfrescoPublicAPIWorkflowVariables;
 
 // Workflows/Processes - Parameters
+extern NSString * const kAlfrescoLegacyAPIWorkflowProcessInitiator;
 extern NSString * const kAlfrescoLegacyAPIWorkflowProcessState;
 extern NSString * const kAlfrescoLegacyAPIWorkflowStatusInProgress;
 extern NSString * const kAlfrescoLegacyAPIWorkflowStatusCompleted;
-extern NSString * const kAlfrescoPublicAPIWorkflowProcessStatus;
-extern NSString * const kAlfrescoPublicAPIWorkflowProcessWhereParameter;
-extern NSString * const kAlfrescoPublicAPIWorkflowProcessStatusAny;
-extern NSString * const kAlfrescoPublicAPIWorkflowProcessStatusActive;
-extern NSString * const kAlfrescoPublicAPIWorkflowProcessStatusCompleted;
 extern NSString * const kAlfrescoPublicAPIWorkflowProcessIncludeVariables;
 
 // Tasks
@@ -70,22 +66,40 @@ extern NSString * const kAlfrescoLegacyAPIWorkflowTaskAttachments;
 extern NSString * const kAlfrescoLegacyAPIWorkflowTaskFormProcessor;
 extern NSString * const kAlfrescoPublicAPIWorkflowTasks;
 extern NSString * const kAlfrescoPublicAPIWorkflowSingleTask;
+extern NSString * const kAlfrescoPublicAPIWorkflowTaskVariables;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskAttachments;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskSingleAttachment;
 
 // Tasks - Parameters
-extern NSString * const kAlfrescoWorkflowTaskSelectParameter;
-extern NSString * const kAlfrescoWorkflowTaskState;
+extern NSString * const kAlfrescoPublicAPIWorkflowTaskSelectParameter;
+extern NSString * const kAlfrescoPublicAPIWorkflowTaskState;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskAssignee;
+extern NSString * const kAlfrescoPublicAPIWorkflowTaskCandidateUser;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskStateCompleted;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskStateClaimed;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskStateUnclaimed;
 extern NSString * const kAlfrescoPublicAPIWorkflowTaskStateResolved;
+extern NSString * const kAlfrescoLegacyAPIWorkflowTaskAuthority;
+extern NSString * const kAlfrescoLegacyAPIWorkflowTaskPooled;
 extern NSString * const kAlfrescoLegacyAPIWorkflowItemKind;
 extern NSString * const kAlfrescoLegacyAPIWorkflowItemTypeTask;
 extern NSString * const kAlfrescoLegacyAPIWorkflowItemID;
 extern NSString * const kAlfrescoLegacyAPIWorkflowFields;
 extern NSString * const kAlfrescoLegacyAPIWorkflowPackageItems;
+
+// Common Public API  Paramters
+extern NSString * const kAlfrescoPublicAPIWorkflowWhere;
+extern NSString * const kAlfrescoPublicAPIWorkflowStatus;
+extern NSString * const kAlfrescoPublicAPIWorkflowStatusAny;
+extern NSString * const kAlfrescoPublicAPIWorkflowStatusActive;
+extern NSString * const kAlfrescoPublicAPIWorkflowStatusCompleted;
+extern NSString * const kAlfrescoPublicAPIWorkflowPriority;
+extern NSString * const kAlfrescoPublicAPIWorkflowDueAt;
+
+// Common Legacy API Parameters
+extern NSString * const kAlfrescoLegacyAPIWorkflowPriority;
+extern NSString * const kAlfrescoLegacyAPIWorkflowDueBefore;
+extern NSString * const kAlfrescoLegacyAPIWorkflowDueAfter;
 
 // Person nodeRef
 extern NSString * const kAlfrescoLegacyAPIPersonNodeRef;
@@ -137,10 +151,13 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONBPMPriority;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMDescription;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMAssignee;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMPackageContainer;
-
+extern NSString * const kAlfrescoWorkflowLegacyJSONState;
+extern NSString * const kAlfrescoWorkflowLegacyJSONStateCompleted;
 extern NSString * const kAlfrescoWorkflowLegacyJSONOwner;
 
 extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDescription;
+extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessPriority;
+extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDueDate;
 extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignee;
 extern NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignees;
 
@@ -151,6 +168,7 @@ extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsAdd;
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsRemove;
 
 extern NSString * const kAlfrescoWorkflowLegacyJSONBPMStatus;
+extern NSString * const kAlfrescoWorkflowLegacyJSONTransitions;
 extern NSString * const kAlfrescoWorkflowLegacyJSONNext;
 extern NSString * const kAlfrescoWorkflowLegacyJSONCompleted;
 extern NSString * const kAlfrescoWorkflowLegacyJSONItemValue;

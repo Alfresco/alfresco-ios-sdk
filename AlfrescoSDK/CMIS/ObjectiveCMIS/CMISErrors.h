@@ -33,13 +33,15 @@ typedef NS_ENUM(NSInteger, CMISErrorCodes)
     kCMISErrorCodeBasicMaximum = 255,
 
     //basic CMIS errors
-    kCMISErrorCodeNoReturn = 0,
+    kCMISErrorCodeUnknown = 0,
     kCMISErrorCodeConnection = 1,
     kCMISErrorCodeProxyAuthentication = 2,
     kCMISErrorCodeUnauthorized = 3,
     kCMISErrorCodeNoRootFolderFound = 4,
     kCMISErrorCodeNoRepositoryFound = 5,
     kCMISErrorCodeCancelled = 6,
+    kCMISErrorCodeParsingFailed = 7,
+    kCMISErrorCodeNoNetworkConnection = 8,
     
     //error ranges for General errors
     kCMISErrorCodeGeneralMinimum = 256,
@@ -73,13 +75,15 @@ typedef NS_ENUM(NSInteger, CMISErrorCodes)
 extern NSString * const kCMISErrorDomainName;
 //to be used in the userInfo dictionary as Localized error description
 //Basic Errors
-extern NSString * const kCMISErrorDescriptionNoReturn;
+extern NSString * const kCMISErrorDescriptionUnknown;
 extern NSString * const kCMISErrorDescriptionConnection;
 extern NSString * const kCMISErrorDescriptionProxyAuthentication;
 extern NSString * const kCMISErrorDescriptionUnauthorized;
 extern NSString * const kCMISErrorDescriptionNoRootFolderFound;
 extern NSString * const kCMISErrorDescriptionRepositoryNotFound;
 extern NSString * const kCMISErrorDescriptionCancelled;
+extern NSString * const kCMISErrorDescriptionParsingFailed;
+extern NSString * const kCMISErrorDescriptionNoNetworkConnection;
 //General errors as defined in 2.2.1.4.1 of spec
 extern NSString * const kCMISErrorDescriptionInvalidArgument;
 extern NSString * const kCMISErrorDescriptionObjectNotFound;

@@ -18,11 +18,10 @@
  *****************************************************************************
  */
 
-/** The AlfrescoDefaultFileManager is a file manager which mirrors the functionality
- of the Apple NSFileManager.
- 
- Author: Tauseef Mughal (Alfresco)
- */
+// The AlfrescoDefaultFileManager is a file manager which mirrors the functionality of the Apple NSFileManager.
+
+// Author: Tauseef Mughal (Alfresco)
+
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoFileManager.h"

@@ -19,19 +19,21 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISEnums.h"
+#import "CMISExtensionData.h"
 
 @class CMISPropertyDefinition;
 
 
-@interface CMISTypeDefinition : NSObject
+@interface CMISTypeDefinition : CMISExtensionData
 
-@property (nonatomic, strong) NSString *id;
+@property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *localName;
-@property (nonatomic, strong) NSString *localNameSpace;
+@property (nonatomic, strong) NSString *localNamespace;
 @property (nonatomic, strong) NSString *displayName;
 @property (nonatomic, strong) NSString *queryName;
-@property (nonatomic, strong) NSString *description;
+@property (nonatomic, strong) NSString *summary;
 @property (nonatomic, assign) CMISBaseType baseTypeId;
+@property (nonatomic, strong) NSString *parentTypeId;
 
 @property (nonatomic, assign, getter = isCreatable) BOOL creatable;
 @property (nonatomic, assign, getter = isFileable) BOOL fileable;

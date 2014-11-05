@@ -31,15 +31,15 @@
  * completionBlock returns object list or nil if unsuccessful
  */
 - (CMISRequest*)retrieveChildren:(NSString *)objectId
-                 orderBy:(NSString *)orderBy
-                  filter:(NSString *)filter
-           relationships:(CMISIncludeRelationship)relationships
-         renditionFilter:(NSString *)renditionFilter
- includeAllowableActions:(BOOL)includeAllowableActions
-      includePathSegment:(BOOL)includePathSegment
-               skipCount:(NSNumber *)skipCount
-                maxItems:(NSNumber *)maxItems
-         completionBlock:(void (^)(CMISObjectList *objectList, NSError *error))completionBlock;
+                         orderBy:(NSString *)orderBy
+                          filter:(NSString *)filter
+                   relationships:(CMISIncludeRelationship)relationships
+                 renditionFilter:(NSString *)renditionFilter
+         includeAllowableActions:(BOOL)includeAllowableActions
+              includePathSegment:(BOOL)includePathSegment
+                       skipCount:(NSNumber *)skipCount
+                        maxItems:(NSNumber *)maxItems
+                 completionBlock:(void (^)(CMISObjectList *objectList, NSError *error))completionBlock;
 
 /**
  * Retrieves the parent of a given object.
@@ -49,12 +49,24 @@
  * completionBlock returns array of parents or nil if unsuccessful
  */
 - (CMISRequest*)retrieveParentsForObject:(NSString *)objectId
-                          filter:(NSString *)filter
-                   relationships:(CMISIncludeRelationship)relationships
-                 renditionFilter:(NSString *)renditionFilter
-         includeAllowableActions:(BOOL)includeAllowableActions
-      includeRelativePathSegment:(BOOL)includeRelativePathSegment
-                 completionBlock:(void (^)(NSArray *parents, NSError *error))completionBlock;
+                                  filter:(NSString *)filter
+                           relationships:(CMISIncludeRelationship)relationships
+                         renditionFilter:(NSString *)renditionFilter
+                 includeAllowableActions:(BOOL)includeAllowableActions
+              includeRelativePathSegment:(BOOL)includeRelativePathSegment
+                         completionBlock:(void (^)(NSArray *parents, NSError *error))completionBlock;
 
+/**
+ * Retrieves the checked out documents for the current user.
+ */
+- (CMISRequest*)retrieveCheckedOutDocumentsInFolder:(NSString *)folderId
+                                            orderBy:(NSString *)orderBy
+                                             filter:(NSString *)filter
+                                      relationships:(CMISIncludeRelationship)relationships
+                                    renditionFilter:(NSString *)renditionFilter
+                            includeAllowableActions:(BOOL)includeAllowableActions
+                                          skipCount:(NSNumber *)skipCount
+                                           maxItems:(NSNumber *)maxItems
+                                    completionBlock:(void (^)(CMISObjectList *objectList, NSError *error))completionBlock;
 
 @end

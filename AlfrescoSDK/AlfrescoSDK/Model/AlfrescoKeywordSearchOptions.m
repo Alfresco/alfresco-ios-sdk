@@ -17,16 +17,10 @@
  ******************************************************************************/
 
 #import "AlfrescoKeywordSearchOptions.h"
+#import "AlfrescoConstants.h"
+#import "CMISConstants.h"
 
 static NSUInteger kKeywordSearchModelVersion = 1;
-
-@interface AlfrescoKeywordSearchOptions ()
-@property (nonatomic, assign, readwrite) BOOL exactMatch;
-@property (nonatomic, assign, readwrite) BOOL includeContent;
-@property (nonatomic, assign, readwrite) BOOL includeDescendants;
-@property (nonatomic, assign, readwrite) BOOL includeAll;
-@property (nonatomic, strong, readwrite) AlfrescoFolder *folder;
-@end
 
 @implementation AlfrescoKeywordSearchOptions
 
@@ -65,6 +59,7 @@ static NSUInteger kKeywordSearchModelVersion = 1;
         self.includeContent = includeContent;
         self.includeDescendants = includeDescendants;
         self.includeAll = NO;
+        self.typeName = kCMISPropertyObjectTypeIdValueDocument;
     }
     return self;
 }
@@ -79,6 +74,33 @@ static NSUInteger kKeywordSearchModelVersion = 1;
     return self;
 }
 
+- (id)initWithTypeName:(NSString *)typeName
+{
+    self = [self initWithExactMatch:NO includeContent:NO folder:nil includeDescendants:YES];
+    if (self)
+    {
+        self.typeName = typeName;
+    }
+    return self;
+}
+
+- (NSString *)typeName
+{
+    // make sure the CMIS type gets returned if the Alfresco model was used
+    if ([_typeName isEqualToString:kAlfrescoModelTypeContent])
+    {
+        return kCMISPropertyObjectTypeIdValueDocument;
+    }
+    else if ([_typeName isEqualToString:kAlfrescoModelTypeFolder])
+    {
+        return kCMISPropertyObjectTypeIdValueFolder;
+    }
+    else
+    {
+        return _typeName;
+    }
+}
+
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeInteger:kKeywordSearchModelVersion forKey:@"AlfrescoKeywordSearchOptions"];
@@ -86,6 +108,7 @@ static NSUInteger kKeywordSearchModelVersion = 1;
     [aCoder encodeBool:self.includeContent forKey:@"includeContent"];
     [aCoder encodeBool:self.includeDescendants forKey:@"includeDescendants"];
     [aCoder encodeObject:self.folder forKey:@"folder"];
+    [aCoder encodeObject:self.typeName forKey:@"typeName"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -99,6 +122,7 @@ static NSUInteger kKeywordSearchModelVersion = 1;
         self.exactMatch = [aDecoder decodeBoolForKey:@"exactMatch"];
         self.includeContent = [aDecoder decodeBoolForKey:@"includeContent"];
         self.includeDescendants = [aDecoder decodeBoolForKey:@"includeDescendants"];
+        self.typeName = [aDecoder decodeObjectForKey:@"typeName"];
     }
     return self;
 }

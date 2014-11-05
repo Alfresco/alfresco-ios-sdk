@@ -40,7 +40,8 @@
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
 @property (nonatomic, strong, readwrite) AlfrescoDocumentFolderService *documentService;
 @property (nonatomic, strong, readwrite) AlfrescoWorkflowObjectConverter *workflowObjectConverter;
-@property (nonatomic, strong, readwrite) NSDateFormatter *dateFormatter;
+@property (nonatomic, strong, readwrite) NSDateFormatter *isoDateFormatter;
+@property (nonatomic, strong, readwrite) NSDateFormatter *dueDateFormatter;
 
 @end
 
@@ -55,8 +56,10 @@
         self.baseApiUrl = [[self.session.baseUrl absoluteString] stringByAppendingString:kAlfrescoLegacyAPIPath];
         self.workflowObjectConverter = [[AlfrescoWorkflowObjectConverter alloc] init];
         self.documentService = [[AlfrescoDocumentFolderService alloc] initWithSession:session];
-        self.dateFormatter = [[NSDateFormatter alloc] init];
-        [self.dateFormatter setDateFormat:kAlfrescoISO8601DateStringFormat];
+        self.isoDateFormatter = [[NSDateFormatter alloc] init];
+        self.isoDateFormatter.dateFormat = kAlfrescoISO8601DateStringFormat;
+        self.dueDateFormatter = [[NSDateFormatter alloc] init];
+        self.dueDateFormatter.dateFormat = @"yyyy-MM-dd'T'00:00:00.000+00:00";
     }
     
     return self;
@@ -182,28 +185,14 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowInstances stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    // construct the query string
+    NSString *queryString = [self constructQueryStringFromListingFilter:listingContext.listingFilter isProcess:YES];
     
-    // for now map the new filter listing to the existing state constants (now internal) but these should be removed soon
-    if ([listingContext.listingFilter hasFilter:kAlfrescoFilterByWorkflowStatus])
-    {
-        NSString *requestedState = [listingContext.listingFilter valueForFilter:kAlfrescoFilterByWorkflowStatus];
-        
-        if (![requestedState isEqualToString:kAlfrescoFilterValueWorkflowStatusAny])
-        {
-            NSString *stateParameterValue = kAlfrescoLegacyAPIWorkflowStatusInProgress;
-            
-            if ([requestedState isEqualToString:kAlfrescoFilterValueWorkflowStatusCompleted])
-            {
-                stateParameterValue = kAlfrescoLegacyAPIWorkflowStatusCompleted;
-            }
-        
-            requestString = [requestString stringByAppendingFormat:@"&%@=%@", kAlfrescoLegacyAPIWorkflowProcessState, stateParameterValue];
-        }
-    }
-    
+    // construct the url
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowInstances stringByAppendingFormat:@"?%@", queryString];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     
+    // get the processes
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
         if (error)
@@ -251,6 +240,14 @@
         }
     }];
     return request;
+}
+
+- (AlfrescoRequest *)retrieveVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                 completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
+    completionBlock(nil, notSupportedError);
+    return nil;
 }
 
 - (AlfrescoRequest *)retrieveImageForProcess:(AlfrescoWorkflowProcess *)process
@@ -407,23 +404,10 @@
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTasks stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
-    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            NSArray *tasks = [self.workflowObjectConverter workflowTasksFromLegacyJSONData:data conversionError:&conversionError];
-            completionBlock(tasks, conversionError);
-        }
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveTasksWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        completionBlock(pagingResult.objects, error);
     }];
-    return request;
 }
 
 - (AlfrescoRequest *)retrieveTasksWithListingContext:(AlfrescoListingContext *)listingContext
@@ -436,7 +420,11 @@
         listingContext = self.session.defaultListingContext;
     }
 
-    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTasks stringByReplacingOccurrencesOfString:kAlfrescoPersonId withString:self.session.personIdentifier];
+    // construct the query string
+    NSString *queryString = [self constructQueryStringFromListingFilter:listingContext.listingFilter isProcess:NO];
+    
+    // construct the url
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowTasks stringByAppendingFormat:@"?%@", queryString];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString listingContext:listingContext];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -485,6 +473,34 @@
             completionBlock(task, conversionError);
         }
     }];
+    return request;
+}
+
+- (AlfrescoRequest *)retrieveVariablesForTask:(AlfrescoWorkflowTask *)task
+                              completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *requestString = [kAlfrescoLegacyAPIWorkflowSingleTask stringByReplacingOccurrencesOfString:kAlfrescoTaskID withString:task.identifier];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (!data)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            // NOTE: we should really lookup the type definition of the task to properly type all the variables
+            
+            NSError *conversionError = nil;
+            NSDictionary *variables = [self.workflowObjectConverter taskVariablesFromLegacyJSONData:data conversionError:&conversionError];
+            completionBlock(variables, conversionError);
+        }
+    }];
+    
     return request;
 }
 
@@ -574,7 +590,7 @@
         }
         else if ([valueForCurrentKey isKindOfClass:[NSDate class]])
         {
-            NSString *formattedDateString = [self.dateFormatter stringFromDate:valueForCurrentKey];
+            NSString *formattedDateString = [self.isoDateFormatter stringFromDate:valueForCurrentKey];
             
             // GMT gets a "Z" suffix instead of a time offset
             if (![formattedDateString hasSuffix:@"Z"])
@@ -586,7 +602,7 @@
             remapValue = formattedDateString;
         }
         
-        // process the keys (apply appropriate prefix for form processor i.e. prop_ or assoc_)
+        // process the keys (apply appropriate prefix for form processor i.e. prop_ or assoc_ and change : to _)
         NSString *processedKey = [self processVariableKey:key];
         requestBody[processedKey] = remapValue;
     }
@@ -617,7 +633,7 @@
     
     if (documentsAdded)
     {
-        [requestBody setValue:documentsAdded forKey:kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsAdd];
+        requestBody[kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsAdd] = documentsAdded;
     }
     
     void (^parseAndSendCreationRequest)(AlfrescoRequest *request) = ^(AlfrescoRequest *request){
@@ -687,11 +703,11 @@
 
             if (assignees.count == 1)
             {
-                [requestBody setValue:assigneesAdded forKey:kAlfrescoWorkflowLegacyJSONBPMProcessAssignee];
+                requestBody[kAlfrescoWorkflowLegacyJSONBPMProcessAssignee] = assigneesAdded;
             }
             else
             {
-                [requestBody setValue:assigneesAdded forKey:kAlfrescoWorkflowLegacyJSONBPMProcessAssignees];
+                requestBody[kAlfrescoWorkflowLegacyJSONBPMProcessAssignees] = assigneesAdded;
             }
             
             parseAndSendCreationRequest(request);
@@ -700,11 +716,20 @@
     else
     {
         [self retrieveNodeRefForUsername:self.session.personIdentifier completionBlock:^(NSString *nodeRef, NSError *error) {
-            [requestBody setValue:nodeRef forKey:kAlfrescoWorkflowLegacyJSONBPMProcessAssignee];
+            requestBody[kAlfrescoWorkflowLegacyJSONBPMProcessAssignee] = nodeRef;
             parseAndSendCreationRequest(request);
         }];
     }
     return request;
+}
+
+- (AlfrescoRequest *)updateVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                     variables:(NSDictionary *)variables
+                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    NSError *notSupportedError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeWorkflowFunctionNotSupported];
+    completionBlock(NO, notSupportedError);
+    return nil;
 }
 
 - (AlfrescoRequest *)deleteProcess:(AlfrescoWorkflowProcess *)process
@@ -729,6 +754,7 @@
     }];
     return request;
 }
+
 - (AlfrescoRequest *)startProcessForProcessDefinition:(AlfrescoWorkflowProcessDefinition *)processDefinition
                                                  name:(NSString *)name
                                              priority:(NSNumber *)priority
@@ -766,6 +792,24 @@
 
 #pragma mark Tasks
 
+- (AlfrescoRequest *)updateVariablesForTask:(AlfrescoWorkflowTask *)task
+                                  variables:(NSDictionary *)variables
+                            completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock
+{
+    // encode the provided variables before updating
+    NSMutableDictionary *processedVariables = [NSMutableDictionary dictionary];
+    for (NSString *key in [variables allKeys])
+    {
+        NSString *variableName = [AlfrescoWorkflowObjectConverter encodeVariableName:key];
+        processedVariables[variableName] = variables[key];
+    }
+    
+    // update the task
+    return [self updateTask:task requestBody:processedVariables completionBlock:^(AlfrescoWorkflowTask *task, NSError *error) {
+        completionBlock(task != nil, error);
+    }];
+}
+
 - (AlfrescoRequest *)completeTask:(AlfrescoWorkflowTask *)task
                         variables:(NSDictionary *)variables
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
@@ -785,12 +829,12 @@
         if ([AlfrescoWorkflowUtils isActivitiTask:task])
         {
             // always set the transition to "next" for activiti tasks
-            requestBody[kAlfrescoWorkflowVariableTaskTransition] = kAlfrescoWorkflowLegacyJSONNext;
+            requestBody[kAlfrescoWorkflowLegacyJSONTransitions] = kAlfrescoWorkflowLegacyJSONNext;
         }
         else if ([AlfrescoWorkflowUtils isJBPMTask:task])
         {
             // if jbpm task and there is no transition set, set it to ""
-            requestBody[kAlfrescoWorkflowVariableTaskTransition] = @"";
+            requestBody[kAlfrescoWorkflowLegacyJSONTransitions] = @"";
         }
     }
     
@@ -858,20 +902,20 @@
 - (AlfrescoRequest *)claimTask:(AlfrescoWorkflowTask *)task
                completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTaskState:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : self.session.personIdentifier} completionBlock:completionBlock];
+    return [self updateTask:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : self.session.personIdentifier} completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)unclaimTask:(AlfrescoWorkflowTask *)task
                  completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTaskState:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : [NSNull null]} completionBlock:completionBlock];
+    return [self updateTask:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : [NSNull null]} completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)reassignTask:(AlfrescoWorkflowTask *)task
                        toAssignee:(AlfrescoPerson *)assignee
                   completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
-    return [self updateTaskState:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : assignee.identifier} completionBlock:completionBlock];
+    return [self updateTask:task requestBody:@{kAlfrescoWorkflowLegacyJSONOwner : assignee.identifier} completionBlock:completionBlock];
 }
 
 - (AlfrescoRequest *)resolveTask:(AlfrescoWorkflowTask *)task
@@ -967,9 +1011,9 @@
     return request;
 }
 
-- (AlfrescoRequest *)updateTaskState:(AlfrescoWorkflowTask *)task
-                         requestBody:(NSDictionary *)requestDictionary
-                     completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
+- (AlfrescoRequest *)updateTask:(AlfrescoWorkflowTask *)task
+                    requestBody:(NSDictionary *)requestDictionary
+                completionBlock:(AlfrescoTaskCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:task argumentName:@"task"];
     [AlfrescoErrors assertArgumentNotNil:requestDictionary argumentName:@"requestDictionary"];
@@ -984,28 +1028,31 @@
     
     if (requestBodyConversionError)
     {
-        AlfrescoLogDebug(@"Request could not be parsed correctly in %@", NSStringFromSelector(_cmd));
+        completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:requestBodyConversionError
+                                                         andAlfrescoErrorCode:kAlfrescoErrorCodeWorkflow]);
         return nil;
     }
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPut alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
-        if (error)
-        {
-            completionBlock(nil, error);
-        }
-        else
-        {
-            NSError *conversionError = nil;
-            id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
-            
-            NSDictionary *entry = ((NSDictionary *) responseObject)[kAlfrescoWorkflowLegacyJSONData];
-            AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry];
-            completionBlock(task, conversionError);
-        }
-    }];
-    
-    return request;
+    else
+    {
+        AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+        [self.session.networkProvider executeRequestWithURL:url session:self.session requestBody:requestData method:kAlfrescoHTTPPut alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+            if (error)
+            {
+                completionBlock(nil, error);
+            }
+            else
+            {
+                NSError *conversionError = nil;
+                id responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&conversionError];
+                
+                NSDictionary *entry = ((NSDictionary *) responseObject)[kAlfrescoWorkflowLegacyJSONData];
+                AlfrescoWorkflowTask *task = [[AlfrescoWorkflowTask alloc] initWithProperties:entry];
+                completionBlock(task, conversionError);
+            }
+        }];
+        
+        return request;
+    }
 }
 
 - (void)retrieveAlfrescoNodes:(NSArray *)alfrescoNodeIdentifiers
@@ -1115,6 +1162,9 @@
 {
     NSString *processedKey = key;
     
+    // encode the variable name
+    processedKey = [AlfrescoWorkflowObjectConverter encodeVariableName:key];
+    
     // check whether the key already has either prefix
     if ([key rangeOfString:kAlfrescoWorkflowLegacyJSONPropertyPrefix].location == NSNotFound &&
         [key rangeOfString:kAlfrescoWorkflowLegacyJSONAssociationPrefix].location == NSNotFound)
@@ -1122,10 +1172,153 @@
         // Ideally we should look up the variable using the Alfresco model defined for the
         // workflow/task to determine which prefix is required, for now presume a property
         
-        processedKey = [kAlfrescoWorkflowLegacyJSONPropertyPrefix stringByAppendingString:key];
+        processedKey = [kAlfrescoWorkflowLegacyJSONPropertyPrefix stringByAppendingString:processedKey];
     }
     
     return processedKey;
+}
+
+- (NSString *)constructQueryStringFromListingFilter:(AlfrescoListingFilter *)filter
+                                          isProcess:(BOOL)isProcess
+{
+    NSMutableString *queryString = [NSMutableString new];
+    
+    // generate state parameter
+    if ([filter hasFilter:kAlfrescoFilterByWorkflowStatus])
+    {
+        NSString *stateParameterValue = nil;
+        
+        if ([[filter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStatusActive])
+        {
+            stateParameterValue = kAlfrescoLegacyAPIWorkflowStatusInProgress;
+        }
+        else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStatusCompleted])
+        {
+            stateParameterValue = kAlfrescoLegacyAPIWorkflowStatusCompleted;
+        }
+        
+        [self appendParameterToQueryString:queryString
+                                      name:kAlfrescoLegacyAPIWorkflowProcessState
+                                     value:stateParameterValue];
+    }
+    
+    // generate priority parameters
+    if ([filter hasFilter:kAlfrescoFilterByWorkflowPriority])
+    {
+        NSString *priority = @"1";
+        if ([[filter valueForFilter:kAlfrescoFilterByWorkflowPriority] isEqualToString:kAlfrescoFilterValueWorkflowPriorityMedium])
+        {
+            priority = @"2";
+        }
+        else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowPriority] isEqualToString:kAlfrescoFilterValueWorkflowPriorityLow])
+        {
+            priority = @"3";
+        }
+        
+        [self appendParameterToQueryString:queryString
+                                      name:kAlfrescoLegacyAPIWorkflowPriority
+                                     value:priority];
+    }
+    
+    // generate parameters for tasks
+    if (isProcess)
+    {
+        // generate initiator parameter
+        [self appendParameterToQueryString:queryString
+                                      name:kAlfrescoLegacyAPIWorkflowProcessInitiator
+                                     value:self.session.personIdentifier];
+    }
+    else
+    {
+        // generate due date parameters
+        if ([filter hasFilter:kAlfrescoFilterByWorkflowDueDate])
+        {
+            NSDate *now = [NSDate date];
+            NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+            
+            if ([[filter valueForFilter:kAlfrescoFilterByWorkflowDueDate] isEqualToString:kAlfrescoFilterValueWorkflowDueDateToday])
+            {
+                NSDateComponents *components = [NSDateComponents new];
+                components.day = -1;
+                NSDate *yesterday = [gregorian dateByAddingComponents:components toDate:now options:0];
+                [self appendParameterToQueryString:queryString
+                                              name:kAlfrescoLegacyAPIWorkflowDueAfter
+                                             value:[self.dueDateFormatter stringFromDate:yesterday]];
+                
+                components.day = 1;
+                NSDate *tomorrow = [gregorian dateByAddingComponents:components toDate:now options:0];
+                [self appendParameterToQueryString:queryString
+                                              name:kAlfrescoLegacyAPIWorkflowDueBefore
+                                                   value:[self.dueDateFormatter stringFromDate:tomorrow]];
+            }
+            else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowDueDate] isEqualToString:kAlfrescoFilterValueWorkflowDueDateTomorrow])
+            {
+                [self appendParameterToQueryString:queryString
+                                              name:kAlfrescoLegacyAPIWorkflowDueAfter
+                                             value:[self.dueDateFormatter stringFromDate:now]];
+                
+                NSDateComponents *components = [NSDateComponents new];
+                components.day = 2;
+                NSDate *dayAfterTomorrow = [gregorian dateByAddingComponents:components toDate:now options:0];
+                [self appendParameterToQueryString:queryString
+                                              name:kAlfrescoLegacyAPIWorkflowDueBefore
+                                             value:[self.dueDateFormatter stringFromDate:dayAfterTomorrow]];
+            }
+            else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowDueDate] isEqualToString:kAlfrescoFilterValueWorkflowDueDate7Days])
+            {
+                NSDateComponents *components = [NSDateComponents new];
+                components.day = 7;
+                NSDate *oneWeek = [gregorian dateByAddingComponents:components toDate:now options:0];
+                
+                [self appendParameterToQueryString:queryString
+                                              name:kAlfrescoLegacyAPIWorkflowDueBefore
+                                             value:[self.dueDateFormatter stringFromDate:oneWeek]];
+            }
+            else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowDueDate] isEqualToString:kAlfrescoFilterValueWorkflowDueDateOverdue])
+            {
+                [self appendParameterToQueryString:queryString
+                                              name:kAlfrescoLegacyAPIWorkflowDueBefore
+                                             value:[self.dueDateFormatter stringFromDate:now]];
+            }
+        }
+        
+        // generate authority parameter
+        [self appendParameterToQueryString:queryString
+                                      name:kAlfrescoLegacyAPIWorkflowTaskAuthority
+                                     value:self.session.personIdentifier];
+        
+        if ([filter hasFilter:kAlfrescoFilterByWorkflowAssignee])
+        {
+            if ([[filter valueForFilter:kAlfrescoFilterByWorkflowAssignee] isEqualToString:kAlfrescoFilterValueWorkflowAssigneeUnasssigned])
+            {
+                [self appendParameterToQueryString:queryString
+                                              name:kAlfrescoLegacyAPIWorkflowTaskPooled
+                                             value:@"true"];
+            }
+            else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowAssignee] isEqualToString:kAlfrescoFilterValueWorkflowAssigneeMe])
+            {
+                [self appendParameterToQueryString:queryString
+                                              name:kAlfrescoLegacyAPIWorkflowTaskPooled
+                                             value:@"false"];
+            }
+        }
+    }
+    
+    return queryString;
+}
+
+- (void)appendParameterToQueryString:(NSMutableString *)queryString name:(NSString *)name value:(NSString *)value
+{
+    // only proceed if all parameters are provided
+    if (queryString && name && value)
+    {
+        if (queryString.length > 0)
+        {
+            [queryString appendString:@"&"];
+        }
+        
+        [queryString appendFormat:@"%@=%@", name, value];
+    }
 }
 
 @end

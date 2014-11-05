@@ -27,20 +27,34 @@
  */
 
 @interface AlfrescoRepositoryCapabilities : NSObject <NSCoding>
+
+/// Indicates whether the server connected to supports the ability to like nodes.
 @property (nonatomic, assign, readonly) BOOL doesSupportLikingNodes;
+
+/// Indicates whether the server connected to provides comment counts.
 @property (nonatomic, assign, readonly) BOOL doesSupportCommentCounts;
+
+/// Indicates whether the server connected to supports the public API.
 @property (nonatomic, assign, readonly) BOOL doesSupportPublicAPI;
+
+/// Indicates whether the server connected to supports the Activiti workflow engine and it's enabled.
 @property (nonatomic, assign, readonly) BOOL doesSupportActivitiWorkflowEngine;
+
+/// Indicates whether the server connected to supports the JBPM workflow engine and it's enabled.
 @property (nonatomic, assign, readonly) BOOL doesSupportJBPMWorkflowEngine;
+
+/// Indicates whether the server connected to supports the My Files folder.
+@property (nonatomic, assign, readonly) BOOL doesSupportMyFiles;
+
+/// Indicates whether the server connected to supports the Shared folder.
+@property (nonatomic, assign, readonly) BOOL doesSupportSharedFiles;
 
 - (id)initWithProperties:(NSDictionary *)properties;
 
 /**
- Checks whether the capability is supported. At present 2 capabilities are available
- - kAlfrescoCapabilityLike
- - kAlfrescoCapabilityCommentsCount
+ Checks whether a capability is supported.
 
- @param capability - the defined capability to check.  
+ @param capability - the defined capability to check (one of the constants starting with "kAlfrescoCapability")
  */
 - (BOOL)doesSupportCapability:(NSString *)capability;
 

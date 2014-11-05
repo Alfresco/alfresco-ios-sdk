@@ -40,7 +40,7 @@ NSString * const kAlfrescoPublicAPIWorkflowSingleProcessDefinition = @"process-d
 NSString * const kAlfrescoPublicAPIWorkflowProcessDefinitionFormModel = @"process-definitions/{processDefinitionId}/start-form-model";
 
 // Workflows Instances/Processes
-NSString * const kAlfrescoLegacyAPIWorkflowInstances = @"workflow-instances?initiator={personID}";
+NSString * const kAlfrescoLegacyAPIWorkflowInstances = @"workflow-instances";
 NSString * const kAlfrescoLegacyAPIWorkflowSingleInstance = @"workflow-instances/{processId}";
 NSString * const kAlfrescoLegacyAPIWorkflowTasksForInstance = @"workflow-instances/{processId}?includeTasks=true";
 NSString * const kAlfrescoLegacyAPIWorkflowProcessDiagram = @"workflow-instances/{processId}/diagram";
@@ -53,39 +53,53 @@ NSString * const kAlfrescoPublicAPIWorkflowProcessImage = @"processes/{processId
 NSString * const kAlfrescoPublicAPIWorkflowVariables = @"processes/{processId}/variables";
 
 // Workflows/Processes - Parameters
+NSString * const kAlfrescoLegacyAPIWorkflowProcessInitiator = @"initiator";
 NSString * const kAlfrescoLegacyAPIWorkflowProcessState = @"state";
 NSString * const kAlfrescoLegacyAPIWorkflowStatusInProgress = @"active";
 NSString * const kAlfrescoLegacyAPIWorkflowStatusCompleted = @"completed";
-NSString * const kAlfrescoPublicAPIWorkflowProcessStatus = @"status";
-NSString * const kAlfrescoPublicAPIWorkflowProcessStatusAny = @"any";
-NSString * const kAlfrescoPublicAPIWorkflowProcessStatusActive = @"active";
-NSString * const kAlfrescoPublicAPIWorkflowProcessStatusCompleted = @"completed";
 NSString * const kAlfrescoPublicAPIWorkflowProcessIncludeVariables = @"includeVariables";
-NSString * const kAlfrescoPublicAPIWorkflowProcessWhereParameter = @"where";
 
 // Tasks
-NSString * const kAlfrescoLegacyAPIWorkflowTasks = @"task-instances?authority={personID}";
+NSString * const kAlfrescoLegacyAPIWorkflowTasks = @"task-instances";
 NSString * const kAlfrescoLegacyAPIWorkflowSingleTask = @"task-instances/{taskId}";
 NSString * const kAlfrescoLegacyAPIWorkflowTaskAttachments = @"formdefinitions";
 NSString * const kAlfrescoLegacyAPIWorkflowTaskFormProcessor = @"task/{taskId}/formprocessor";
 NSString * const kAlfrescoPublicAPIWorkflowTasks = @"tasks";
 NSString * const kAlfrescoPublicAPIWorkflowSingleTask = @"tasks/{taskId}";
+NSString * const kAlfrescoPublicAPIWorkflowTaskVariables = @"tasks/{taskId}/variables";
 NSString * const kAlfrescoPublicAPIWorkflowTaskAttachments = @"tasks/{taskId}/items";
 NSString * const kAlfrescoPublicAPIWorkflowTaskSingleAttachment = @"tasks/{taskId}/items/{itemId}";
 
 // Tasks - Parameters
-NSString * const kAlfrescoWorkflowTaskSelectParameter = @"select";
-NSString * const kAlfrescoWorkflowTaskState = @"state";
+NSString * const kAlfrescoPublicAPIWorkflowTaskSelectParameter = @"select";
+NSString * const kAlfrescoPublicAPIWorkflowTaskState = @"state";
 NSString * const kAlfrescoPublicAPIWorkflowTaskStateCompleted = @"completed";
 NSString * const kAlfrescoPublicAPIWorkflowTaskStateClaimed = @"claimed";
 NSString * const kAlfrescoPublicAPIWorkflowTaskStateUnclaimed = @"unclaimed";
 NSString * const kAlfrescoPublicAPIWorkflowTaskStateResolved = @"resolved";
 NSString * const kAlfrescoPublicAPIWorkflowTaskAssignee = @"assignee";
+NSString * const kAlfrescoPublicAPIWorkflowTaskCandidateUser = @"candidateUser";
+NSString * const kAlfrescoLegacyAPIWorkflowTaskAuthority = @"authority";
+NSString * const kAlfrescoLegacyAPIWorkflowTaskPooled = @"pooledTasks";
 NSString * const kAlfrescoLegacyAPIWorkflowItemKind = @"itemKind";
 NSString * const kAlfrescoLegacyAPIWorkflowItemTypeTask = @"task";
 NSString * const kAlfrescoLegacyAPIWorkflowItemID = @"itemId";
 NSString * const kAlfrescoLegacyAPIWorkflowFields = @"fields";
 NSString * const kAlfrescoLegacyAPIWorkflowPackageItems = @"packageItems";
+
+// Common Public API Parameters
+NSString * const kAlfrescoPublicAPIWorkflowWhere = @"where";
+NSString * const kAlfrescoPublicAPIWorkflowStatus = @"status";
+NSString * const kAlfrescoPublicAPIWorkflowStatusAny = @"any";
+NSString * const kAlfrescoPublicAPIWorkflowStatusActive = @"active";
+NSString * const kAlfrescoPublicAPIWorkflowStatusCompleted = @"completed";
+NSString * const kAlfrescoPublicAPIWorkflowPriority = @"priority";
+NSString * const kAlfrescoPublicAPIWorkflowDueAt = @"dueAt";
+
+// Common Legacy API Parameters
+NSString * const kAlfrescoLegacyAPIWorkflowPriority = @"priority";
+NSString * const kAlfrescoLegacyAPIWorkflowDueBefore = @"dueBefore";
+NSString * const kAlfrescoLegacyAPIWorkflowDueAfter = @"dueAfter";
 
 // Person nodeRef
 NSString * const kAlfrescoLegacyAPIPersonNodeRef = @"forms/picker/authority/children?selectableType=cm:person&searchTerm={personID}&size=1";
@@ -137,10 +151,13 @@ NSString * const kAlfrescoWorkflowLegacyJSONBPMPriority = @"bpm_priority";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMDescription = @"bpm_description";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMAssignee = @"bpm_assignee";
 NSString * const kAlfrescoWorkflowLegacyJSONBPMPackageContainer = @"bpm_package";
-
+NSString * const kAlfrescoWorkflowLegacyJSONState = @"state";
+NSString * const kAlfrescoWorkflowLegacyJSONStateCompleted = @"COMPLETED";
 NSString * const kAlfrescoWorkflowLegacyJSONOwner = @"cm_owner";
 
 NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDescription = @"bpm_description";
+NSString * const kAlfrescoWorkflowPublicBPMJSONProcessPriority = @"bpm_workflowPriority";
+NSString * const kAlfrescoWorkflowPublicBPMJSONProcessDueDate = @"bpm_workflowDueDate";
 NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignee = @"bpm_assignee";
 NSString * const kAlfrescoWorkflowPublicBPMJSONProcessAssignees = @"bpm_assignees";
 
@@ -151,6 +168,7 @@ NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsAdd = @"assoc_p
 NSString * const kAlfrescoWorkflowLegacyJSONBPMProcessAttachmentsRemove = @"assoc_packageItems_removed";
 
 NSString * const kAlfrescoWorkflowLegacyJSONBPMStatus = @"prop_bpm_status";
+NSString * const kAlfrescoWorkflowLegacyJSONTransitions = @"prop_transitions";
 NSString * const kAlfrescoWorkflowLegacyJSONNext = @"Next";
 NSString * const kAlfrescoWorkflowLegacyJSONCompleted = @"Completed";
 NSString * const kAlfrescoWorkflowLegacyJSONItemValue = @"itemValueType";

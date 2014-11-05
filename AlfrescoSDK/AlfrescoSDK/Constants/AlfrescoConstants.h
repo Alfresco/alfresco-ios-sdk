@@ -33,6 +33,18 @@
 #import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoWorkflowProcess.h"
 #import "AlfrescoWorkflowTask.h"
+#import "AlfrescoConfigInfo.h"
+#import "AlfrescoCreationConfig.h"
+#import "AlfrescoFeatureConfig.h"
+#import "AlfrescoFormConfig.h"
+#import "AlfrescoProfileConfig.h"
+#import "AlfrescoRepositoryConfig.h"
+#import "AlfrescoViewConfig.h"
+#import "AlfrescoViewGroupConfig.h"
+#import "AlfrescoDocumentTypeDefinition.h"
+#import "AlfrescoFolderTypeDefinition.h"
+#import "AlfrescoTaskTypeDefinition.h"
+#import "AlfrescoAspectDefinition.h"
 
 @protocol AlfrescoSession;
 /** The AlfrescoConstants used in the SDK.
@@ -71,7 +83,20 @@ typedef void (^AlfrescoProcessDefinitionCompletionBlock)(AlfrescoWorkflowProcess
 typedef void (^AlfrescoProcessCompletionBlock)(AlfrescoWorkflowProcess *process, NSError *error);
 typedef void (^AlfrescoTaskCompletionBlock)(AlfrescoWorkflowTask *task, NSError *error);
 typedef void (^AlfrescoDictionaryCompletionBlock)(NSDictionary *dictionary, NSError *error);
-
+// config
+typedef void (^AlfrescoConfigInfoCompletionBlock)(AlfrescoConfigInfo *configInfo, NSError *error);
+typedef void (^AlfrescoCreationConfigCompletionBlock)(AlfrescoCreationConfig *config, NSError *error);
+typedef void (^AlfrescoFeatureConfigCompletionBlock)(AlfrescoFeatureConfig *config, NSError *error);
+typedef void (^AlfrescoFormConfigCompletionBlock)(AlfrescoFormConfig *config, NSError *error);
+typedef void (^AlfrescoProfileConfigCompletionBlock)(AlfrescoProfileConfig *config, NSError *error);
+typedef void (^AlfrescoRepositoryConfigCompletionBlock)(AlfrescoRepositoryConfig *config, NSError *error);
+typedef void (^AlfrescoViewConfigCompletionBlock)(AlfrescoViewConfig *config, NSError *error);
+typedef void (^AlfrescoViewGroupConfigCompletionBlock)(AlfrescoViewGroupConfig *config, NSError *error);
+// model definition
+typedef void (^AlfrescoDocumentTypeDefinitionCompletionBlock)(AlfrescoDocumentTypeDefinition *typeDefinition, NSError *error);
+typedef void (^AlfrescoFolderTypeDefinitionCompletionBlock)(AlfrescoFolderTypeDefinition *typeDefinition, NSError *error);
+typedef void (^AlfrescoTaskTypeDefinitionCompletionBlock)(AlfrescoTaskTypeDefinition *typeDefinition, NSError *error);
+typedef void (^AlfrescoAspectDefinitionCompletionBlock)(AlfrescoAspectDefinition *aspectDefinition, NSError *error);
 
 /**---------------------------------------------------------------------------------------
  * @name Session parameters
@@ -102,6 +127,24 @@ extern NSString * const kAlfrescoFilterValueWorkflowStatusActive;
 extern NSString * const kAlfrescoFilterValueWorkflowStatusCompleted;
 extern NSString * const kAlfrescoFilterValueWorkflowStatusAny;
 
+extern NSString * const kAlfrescoFilterByWorkflowDueDate;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDateToday;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDateTomorrow;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDate7Days;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDateOverdue;
+extern NSString * const kAlfrescoFilterValueWorkflowDueDateNone;
+
+extern NSString * const kAlfrescoFilterByWorkflowPriority;
+extern NSString * const kAlfrescoFilterValueWorkflowPriorityLow;
+extern NSString * const kAlfrescoFilterValueWorkflowPriorityMedium;
+extern NSString * const kAlfrescoFilterValueWorkflowPriorityHigh;
+
+extern NSString * const kAlfrescoFilterByWorkflowAssignee;
+extern NSString * const kAlfrescoFilterValueWorkflowAssigneeMe;
+extern NSString * const kAlfrescoFilterValueWorkflowAssigneeUnasssigned;
+extern NSString * const kAlfrescoFilterValueWorkflowAssigneeAll;
+
+
 /**---------------------------------------------------------------------------------------
  * @name capability constants
  --------------------------------------------------------------------------------------- */
@@ -110,6 +153,8 @@ extern NSString * const kAlfrescoCapabilityCommentsCount;
 extern NSString * const kAlfrescoCapabilityPublicAPI;
 extern NSString * const kAlfrescoCapabilityActivitiWorkflowEngine;
 extern NSString * const kAlfrescoCapabilityJBPMWorkflowEngine;
+extern NSString * const kAlfrescoCapabilityMyFiles;
+extern NSString * const kAlfrescoCapabilitySharedFiles;
 
 /**---------------------------------------------------------------------------------------
  * @name File Attribute Constants
@@ -145,6 +190,38 @@ extern NSString * const kAlfrescoModelPropertyDescription;
 extern NSString * const kAlfrescoModelPropertyAuthor;
 extern NSString * const kAlfrescoModelPropertyLatitude;
 extern NSString * const kAlfrescoModelPropertyLongitude;
+
+extern NSString * const kAlfrescoModelPropertyUserName;
+extern NSString * const kAlfrescoModelPropertyFirstName;
+extern NSString * const kAlfrescoModelPropertyLastName;
+extern NSString * const kAlfrescoModelPropertyMiddleName;
+extern NSString * const kAlfrescoModelPropertyEmail;
+extern NSString * const kAlfrescoModelPropertyOrganization;
+extern NSString * const kAlfrescoModelPropertyOrganizationId;
+extern NSString * const kAlfrescoModelPropertyHomeFolder;
+extern NSString * const kAlfrescoModelPropertyHomeFolderProvider;
+extern NSString * const kAlfrescoModelPropertyPresenceProvider;
+extern NSString * const kAlfrescoModelPropertyPresenceUserName;
+extern NSString * const kAlfrescoModelPropertyJobTitle;
+extern NSString * const kAlfrescoModelPropertyLocation;
+extern NSString * const kAlfrescoModelPropertyPersonDescription;
+extern NSString * const kAlfrescoModelPropertyTelephone;
+extern NSString * const kAlfrescoModelPropertyMobile;
+extern NSString * const kAlfrescoModelPropertySkype;
+extern NSString * const kAlfrescoModelPropertyInstantMsg;
+extern NSString * const kAlfrescoModelPropertyUserStatus;
+extern NSString * const kAlfrescoModelPropertyUserStatusTime;
+extern NSString * const kAlfrescoModelPropertyGoogleUserName;
+extern NSString * const kAlfrescoModelPropertyEmailFeedDisabled;
+extern NSString * const kAlfrescoModelPropertySubscriptionsPrivate;
+extern NSString * const kAlfrescoModelPropertyCompanyAddress1;
+extern NSString * const kAlfrescoModelPropertyCompanyAddress2;
+extern NSString * const kAlfrescoModelPropertyCompanyAddress3;
+extern NSString * const kAlfrescoModelPropertyCompanyPostCode;
+extern NSString * const kAlfrescoModelPropertyCompanyTelephone;
+extern NSString * const kAlfrescoModelPropertyCompanyFax;
+extern NSString * const kAlfrescoModelPropertyCompanyEmail;
+
 extern NSString * const kAlfrescoModelPropertyExifDateTimeOriginal;
 extern NSString * const kAlfrescoModelPropertyExifPixelXDimension;
 extern NSString * const kAlfrescoModelPropertyExifPixelYDimension;
@@ -160,6 +237,7 @@ extern NSString * const kAlfrescoModelPropertyExifOrientation;
 extern NSString * const kAlfrescoModelPropertyExifXResolution;
 extern NSString * const kAlfrescoModelPropertyExifYResolution;
 extern NSString * const kAlfrescoModelPropertyExifResolutionUnit;
+
 extern NSString * const kAlfrescoModelPropertyAudioAlbum;
 extern NSString * const kAlfrescoModelPropertyAudioArtist;
 extern NSString * const kAlfrescoModelPropertyAudioComposer;
@@ -176,6 +254,7 @@ extern NSString * const kAlfrescoModelPropertyAudioCompressor;
  * @name Workflow Constants
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoWorkflowVariableProcessName;
+extern NSString * const kAlfrescoWorkflowVariableProcessDescription;
 extern NSString * const kAlfrescoWorkflowVariableProcessPriority;
 extern NSString * const kAlfrescoWorkflowVariableProcessDueDate;
 extern NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications;
@@ -187,3 +266,15 @@ extern NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome;
 
 extern NSString * const kAlfrescoWorkflowTaskTransitionApprove;
 extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
+
+/**---------------------------------------------------------------------------------------
+ * @name Configuration Constants
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoConfigServiceParameterApplicationId;
+extern NSString * const kAlfrescoConfigServiceParameterProfileId;
+extern NSString * const kAlfrescoConfigServiceParameterFolder;
+
+extern NSString * const kAlfrescoConfigScopeContextNode;
+extern NSString * const kAlfrescoConfigScopeContextFormMode;
+
+

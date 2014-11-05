@@ -437,6 +437,31 @@
                                  properties:(NSDictionary *)properties
                             completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
 
+/** Updates the properties of a specific node.
+ Versioning is not guaranteed with this method, if the repository is configured to version on property changes the update will generate
+ a new minor version. If a new version is required use the checkout and checkin methods in AlfrescoVersionService.
+ 
+ @param node The node that needs to be updated.
+ @param properties The properties that need to be updated for the given node.
+ @param aspects A list of aspects to add to the node
+ @param completionBlock The block that's called with the updated node in case the operation succeeds.
+ */
+- (AlfrescoRequest *)updatePropertiesOfNode:(AlfrescoNode *)node
+                                 properties:(NSDictionary *)properties
+                                    aspects:(NSArray *)aspects
+                            completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
+
+/** Adds aspects to a specific node.
+ 
+ @param node The node that will have the aspects applied.
+ @param aspects A list of aspects to add to the node.
+ @param completionBlock The block that's called when the operation completes.
+ */
+- (AlfrescoRequest *)addAspectsToNode:(AlfrescoNode *)node
+                              aspects:(NSArray *)aspects
+                      completionBlock:(AlfrescoNodeCompletionBlock)completionBlock;
+
+
 /**---------------------------------------------------------------------------------------
  * @name Deletes a node.
  *  ---------------------------------------------------------------------------------------

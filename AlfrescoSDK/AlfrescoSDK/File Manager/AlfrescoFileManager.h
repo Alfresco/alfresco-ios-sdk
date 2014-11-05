@@ -63,14 +63,14 @@
  */
 - (BOOL)fileExistsAtPath:(NSString *)path isDirectory:(BOOL *)isDirectory;
 
-/*
+/**
  Call this to create a file with data passed in at a given location
  
  @returns bool - True if the file was created successfully
  */
 - (BOOL)createFileAtPath:(NSString *)path contents:(NSData *)data error:(NSError **)error;
 
-/*
+/**
  Call this to create a directory at a given path. Set the createIntermediateDirectories to true if you would like to
  create leading directories if they do not exist
  
@@ -78,94 +78,114 @@
  */
 - (BOOL)createDirectoryAtPath:(NSString *)path withIntermediateDirectories:(BOOL)createIntermediates attributes:(NSDictionary *)attributes error:(NSError **)error;
 
-/*
+/**
  Call this to remove an item at a given path
  
  @returns bool - True if the file/folder was removed successfully
  */
 - (BOOL)removeItemAtPath:(NSString *)path error:(NSError **)error;
 
-/*
+/**
  Call this to remove an item at a given URL
  
  @returns bool - True if the file/folder was removed successfully
  */
 - (BOOL)removeItemAtURL:(NSURL *)URL error:(NSError **)error;
 
-/*
+/**
  Call this to copy an item from a given path to another path within the current file system
  
  @returns bool - True if the file was copied successfully
  */
 - (BOOL)copyItemAtPath:(NSString *)sourcePath toPath:(NSString *)destinationPath error:(NSError **)error;
 
-/*
+/**
  Call this to copy an item from a given URL to another URL within the current file system
  
  @returns bool - True if the file was copied successfully
  */
 - (BOOL)copyItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error;
 
-/*
+/**
  Call this to move an item from a given path to another within the current file system
  
  @returns bool - True if the item was moved successfully
  */
 - (BOOL)moveItemAtPath:(NSString *)sourcePath toPath:(NSString *)destinationPath error:(NSError **)error;
 
-/*
+/**
  Call this to move an item from a given URL to another URL within the current file system
  
  @returns bool - True if the file was moved successfully
  */
 - (BOOL)moveItemAtURL:(NSURL *)sourceURL toURL:(NSURL *)destinationURL error:(NSError **)error;
 
-/*
+/**
+ Replaces the content of the file at the given path with the given content.
+ */
+- (BOOL)replaceFileAtPath:(NSString *)path contents:(NSData *)data error:(NSError **)error;
+
+/**
+ Replaces the content of the file at the given path with the contents of another file.
+ */
+- (BOOL)replaceFileAtPath:(NSString *)destinationPath withContentsOfFileAtPath:(NSString *)sourcePath error:(NSError **)error;
+
+/**
+ Replaces the content of the file at the given URL with the given content.
+ */
+- (BOOL)replaceFileAtURL:(NSURL *)URL contents:(NSData *)data error:(NSError **)error;
+
+/**
+ Replaces the content of the file at the given URL with the contents of another file.
+ */
+- (BOOL)replaceFileAtURL:(NSURL *)destinationURL withContentsOfFileAtURL:(NSURL *)sourceURL error:(NSError **)error;
+
+/**
  Call this to return the attributes of a given item at a path
  
  @returns dictionary - dictionary containing fileSize, isFolder and lastModifiedDate
  */
 - (NSDictionary *)attributesOfItemAtPath:(NSString *)path error:(NSError **)error;
 
-/*
+/**
  Call this to return an array of all items in a given directory
  
  @returns array - array containing a list of items in a given directory
  */
 - (NSArray *)contentsOfDirectoryAtPath:(NSString *)directoryPath error:(NSError **)error;
 
-/*
+/**
  Enumerates through a given directory either including or not including sub directories
  */
 - (BOOL)enumerateThroughDirectory:(NSString *)directory includingSubDirectories:(BOOL)includeSubDirectories withBlock:(void (^)(NSString *fullFilePath))block error:(NSError **)error;
 
-/*
+/**
  Returns the data representation of the file at a given URL
  
  @returns data - NSData representation of the item at the given URL location
  */
 - (NSData *)dataWithContentsOfURL:(NSURL *)url;
 
-/*
+/**
  Call this to append data to the file at a given path
  */
 - (void)appendToFileAtPath:(NSString *)filePath data:(NSData *)data;
 
-/*
+/**
  Call this to retrieve the internal filePath from a file name
  
  @returns string - the filePath in relation to a given fileName
  */
 - (NSString *)internalFilePathFromName:(NSString *)fileName;
 
-/*
+/**
  Call this to return an input stream to the requested file path.
  
  @returns inputStream - an input stream to the requested file path
  */
 - (NSInputStream *)inputStreamWithFilePath:(NSString *)filePath;
 
-/*
+/**
  Call this to return an output stream to the requested file path.
  
  @returns outputStream - an output stream to the requested file path

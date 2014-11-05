@@ -59,6 +59,23 @@ NSString * const kAlfrescoFilterValueWorkflowStatusActive = @"active";
 NSString * const kAlfrescoFilterValueWorkflowStatusCompleted = @"completed";
 NSString * const kAlfrescoFilterValueWorkflowStatusAny = @"any";
 
+NSString * const kAlfrescoFilterByWorkflowDueDate = @"dueDate";
+NSString * const kAlfrescoFilterValueWorkflowDueDateToday = @"today";
+NSString * const kAlfrescoFilterValueWorkflowDueDateTomorrow = @"tomorrow";
+NSString * const kAlfrescoFilterValueWorkflowDueDate7Days = @"week";
+NSString * const kAlfrescoFilterValueWorkflowDueDateOverdue = @"overdue";
+NSString * const kAlfrescoFilterValueWorkflowDueDateNone = @"none";
+
+NSString * const kAlfrescoFilterByWorkflowPriority = @"priority";
+NSString * const kAlfrescoFilterValueWorkflowPriorityLow = @"low";
+NSString * const kAlfrescoFilterValueWorkflowPriorityMedium = @"medium";
+NSString * const kAlfrescoFilterValueWorkflowPriorityHigh = @"high";
+
+NSString * const kAlfrescoFilterByWorkflowAssignee = @"assignee";
+NSString * const kAlfrescoFilterValueWorkflowAssigneeMe = @"me";
+NSString * const kAlfrescoFilterValueWorkflowAssigneeUnasssigned = @"unassigned";
+NSString * const kAlfrescoFilterValueWorkflowAssigneeAll = @"all";
+
 /**
  Capabilities constants
  */
@@ -67,6 +84,8 @@ NSString * const kAlfrescoCapabilityCommentsCount = @"CapabilityCommentsCount";
 NSString * const kAlfrescoCapabilityPublicAPI = @"CapabilityPublicAPI";
 NSString * const kAlfrescoCapabilityActivitiWorkflowEngine = @"CapabilityActivitiWorkflowEngine";
 NSString * const kAlfrescoCapabilityJBPMWorkflowEngine = @"CapabilityJBPMWorkflowEngine";
+NSString * const kAlfrescoCapabilityMyFiles = @"CapabilityMyFiles";
+NSString * const kAlfrescoCapabilitySharedFiles = @"CapabilitySharedFiles";
 
 /**
  File Attribute Constants
@@ -99,6 +118,37 @@ NSString * const kAlfrescoModelPropertyDescription = @"cm:description";
 NSString * const kAlfrescoModelPropertyAuthor = @"cm:author";
 NSString * const kAlfrescoModelPropertyLatitude = @"cm:latitude";
 NSString * const kAlfrescoModelPropertyLongitude = @"cm:longitude";
+NSString * const kAlfrescoModelPropertyUserName = @"cm:userName";
+NSString * const kAlfrescoModelPropertyFirstName = @"cm:firstName";
+NSString * const kAlfrescoModelPropertyLastName = @"cm:lastName";
+NSString * const kAlfrescoModelPropertyMiddleName = @"cm:middleName";
+NSString * const kAlfrescoModelPropertyEmail = @"cm:email";
+NSString * const kAlfrescoModelPropertyOrganization = @"cm:organization";
+NSString * const kAlfrescoModelPropertyOrganizationId = @"cm:organizationId";
+NSString * const kAlfrescoModelPropertyHomeFolder = @"cm:homeFolder";
+NSString * const kAlfrescoModelPropertyHomeFolderProvider = @"cm:homeFolderProvider";
+NSString * const kAlfrescoModelPropertyPresenceProvider = @"cm:presenceProvider";
+NSString * const kAlfrescoModelPropertyPresenceUserName = @"cm:presenceUsername";
+NSString * const kAlfrescoModelPropertyJobTitle = @"cm:jobtitle";
+NSString * const kAlfrescoModelPropertyLocation = @"cm:location";
+NSString * const kAlfrescoModelPropertyPersonDescription = @"cm:persondescription";
+NSString * const kAlfrescoModelPropertyTelephone = @"cm:telephone";
+NSString * const kAlfrescoModelPropertyMobile = @"cm:mobile";
+NSString * const kAlfrescoModelPropertySkype = @"cm:skype";
+NSString * const kAlfrescoModelPropertyInstantMsg = @"cm:instantmsg";
+NSString * const kAlfrescoModelPropertyUserStatus = @"cm:userStatus";
+NSString * const kAlfrescoModelPropertyUserStatusTime = @"cm:userStatusTime";
+NSString * const kAlfrescoModelPropertyGoogleUserName = @"cm:googleusername";
+NSString * const kAlfrescoModelPropertyEmailFeedDisabled = @"cm:emailFeedDisabled";
+NSString * const kAlfrescoModelPropertySubscriptionsPrivate = @"cm:subscriptionsPrivate";
+NSString * const kAlfrescoModelPropertyCompanyAddress1 = @"cm:companyaddress1";
+NSString * const kAlfrescoModelPropertyCompanyAddress2 = @"cm:companyaddress2";
+NSString * const kAlfrescoModelPropertyCompanyAddress3 = @"cm:companyaddress3";
+NSString * const kAlfrescoModelPropertyCompanyPostCode = @"cm:companypostcode";
+NSString * const kAlfrescoModelPropertyCompanyTelephone = @"cm:companytelephone";
+NSString * const kAlfrescoModelPropertyCompanyFax = @"cm:companyfax";
+NSString * const kAlfrescoModelPropertyCompanyEmail = @"cm:companyemail";
+
 NSString * const kAlfrescoModelPropertyExifDateTimeOriginal = @"exif:dateTimeOriginal";
 NSString * const kAlfrescoModelPropertyExifPixelXDimension = @"exif:pixelXDimension";
 NSString * const kAlfrescoModelPropertyExifPixelYDimension = @"exif:pixelYDimension";
@@ -114,6 +164,7 @@ NSString * const kAlfrescoModelPropertyExifOrientation = @"exif:orientation";
 NSString * const kAlfrescoModelPropertyExifXResolution = @"exif:xResolution";
 NSString * const kAlfrescoModelPropertyExifYResolution = @"exif:yResolution";
 NSString * const kAlfrescoModelPropertyExifResolutionUnit = @"exif:resolutionUnit";
+
 NSString * const kAlfrescoModelPropertyAudioAlbum = @"audio:album";
 NSString * const kAlfrescoModelPropertyAudioArtist = @"audio:artist";
 NSString * const kAlfrescoModelPropertyAudioComposer = @"audio:composer";
@@ -129,15 +180,27 @@ NSString * const kAlfrescoModelPropertyAudioCompressor = @"audio:compressor";
 /**
  Workflow Task Constants
  */
-NSString * const kAlfrescoWorkflowVariableProcessName = @"bpm_workflowDescription";
-NSString * const kAlfrescoWorkflowVariableProcessPriority = @"bpm_workflowPriority";
-NSString * const kAlfrescoWorkflowVariableProcessDueDate = @"bpm_workflowDueDate";
-NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications = @"bpm_sendEMailNotifications";
-NSString * const kAlfrescoWorkflowVariableProcessApprovalRate = @"wf_requiredApprovePercent";
-NSString * const kAlfrescoWorkflowVariableTaskTransition = @"prop_transitions";
-NSString * const kAlfrescoWorkflowVariableTaskComment = @"bpm_comment";
-NSString * const kAlfrescoWorkflowVariableTaskStatus = @"bpm_status";
-NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome = @"wf_reviewOutcome";
+NSString * const kAlfrescoWorkflowVariableProcessName = @"bpm:workflowDescription";
+NSString * const kAlfrescoWorkflowVariableProcessDescription = @"bpm:workflowDescription";
+NSString * const kAlfrescoWorkflowVariableProcessPriority = @"bpm:workflowPriority";
+NSString * const kAlfrescoWorkflowVariableProcessDueDate = @"bpm:workflowDueDate";
+NSString * const kAlfrescoWorkflowVariableProcessSendEmailNotifications = @"bpm:sendEMailNotifications";
+NSString * const kAlfrescoWorkflowVariableProcessApprovalRate = @"wf:requiredApprovePercent";
+NSString * const kAlfrescoWorkflowVariableTaskTransition = @"transition";
+NSString * const kAlfrescoWorkflowVariableTaskComment = @"bpm:comment";
+NSString * const kAlfrescoWorkflowVariableTaskStatus = @"bpm:status";
+NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome = @"wf:reviewOutcome";
 
 NSString * const kAlfrescoWorkflowTaskTransitionApprove = @"Approve";
 NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";
+
+/**
+ Configuration Constants
+ */
+NSString * const kAlfrescoConfigServiceParameterApplicationId = @"org.alfresco.mobile.internal.config.application.id";
+NSString * const kAlfrescoConfigServiceParameterProfileId = @"org.alfresco.mobile.internal.config.profile.id";
+NSString * const kAlfrescoConfigServiceParameterFolder = @"org.alfresco.mobile.internal.config.folder";
+
+NSString * const kAlfrescoConfigScopeContextNode = @"org.alfresco.mobile.config.scope.context.node";
+NSString * const kAlfrescoConfigScopeContextFormMode = @"org.alfresco.mobile.config.scope.context.form.mode";
+

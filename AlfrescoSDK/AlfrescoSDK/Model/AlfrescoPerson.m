@@ -18,6 +18,8 @@
 
 #import "AlfrescoPerson.h"
 #import "AlfrescoInternalConstants.h"
+#import "AlfrescoPropertyConstants.h"
+#import "CMISDictionaryUtil.h"
 
 static NSInteger kPersonModelVersion = 1;
 
@@ -43,6 +45,61 @@ static NSInteger kPersonModelVersion = 1;
 
 @implementation AlfrescoPerson
 
+- (id)initWithDictionary:(NSDictionary *)properties
+{
+    self = [super init];
+    if (nil != self)
+    {
+        self.identifier = [properties cmis_objectForKeyNotNull:kAlfrescoPersonIdentifier];
+        self.firstName = [properties cmis_objectForKeyNotNull:kAlfrescoPersonFirstName];
+        self.lastName = [properties cmis_objectForKeyNotNull:kAlfrescoPersonLastName];
+        self.avatarIdentifier = [properties cmis_objectForKeyNotNull:kAlfrescoPersonAvatarIdentifier];
+        self.jobTitle = [properties cmis_objectForKeyNotNull:kAlfrescoPersonJobTitle];
+        self.location = [properties cmis_objectForKeyNotNull:kAlfrescoPersonLocation];
+        self.summary = [properties cmis_objectForKeyNotNull:kAlfrescoPersonSummary];
+        self.telephoneNumber = [properties cmis_objectForKeyNotNull:kAlfrescoPersonTelephoneNumber];
+        self.mobileNumber = [properties cmis_objectForKeyNotNull:kAlfrescoPersonMobileNumber];
+        self.email = [properties cmis_objectForKeyNotNull:kAlfrescoPersonEmail];
+        self.skypeId = [properties cmis_objectForKeyNotNull:kAlfrescoPersonSkypeId];
+        self.instantMessageId = [properties cmis_objectForKeyNotNull:kAlfrescoPersonInstantMessageId];
+        self.googleId = [properties cmis_objectForKeyNotNull:kAlfrescoPersonGoogleId];
+        self.status = [properties cmis_objectForKeyNotNull:kAlfrescoPersonStatus];
+        self.statusTime = [properties cmis_objectForKeyNotNull:kAlfrescoPersonStatusTime];
+        self.company = [properties cmis_objectForKeyNotNull:kAlfrescoPersonCompany];
+        
+        [self generateFullNameProperty];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (nil != self)
+    {
+        //uncomment this line if you need to check the model version
+        //NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoPerson"];
+        self.avatarIdentifier = [aDecoder decodeObjectForKey:kAlfrescoJSONAvatarId];
+        self.firstName = [aDecoder decodeObjectForKey:kAlfrescoJSONFirstName];
+        self.lastName = [aDecoder decodeObjectForKey:kAlfrescoJSONLastName];
+        self.fullName = [aDecoder decodeObjectForKey:kAlfrescoJSONFullName];
+        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
+        self.jobTitle = [aDecoder decodeObjectForKey:kAlfrescoPublicAPIJSONJobTitle];
+        self.location = [aDecoder decodeObjectForKey:kAlfrescoJSONLocation];
+        self.summary = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
+        self.telephoneNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONTelephoneNumber];
+        self.mobileNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONMobileNumber];
+        self.skypeId = [aDecoder decodeObjectForKey:kAlfrescoJSONSkypeId];
+        self.instantMessageId = [aDecoder decodeObjectForKey:kAlfrescoJSONInstantMessageId];
+        self.status = [aDecoder decodeObjectForKey:kAlfrescoJSONStatus];
+        self.statusTime = [aDecoder decodeObjectForKey:kAlfrescoJSONStatusTime];
+        self.googleId = [aDecoder decodeObjectForKey:kAlfrescoJSONGoogleId];
+        self.email = [aDecoder decodeObjectForKey:kAlfrescoJSONEmail];
+        self.company = [aDecoder decodeObjectForKey:kAlfrescoJSONCompany];
+    }
+    return self;
+}
+
 - (id)initWithProperties:(NSDictionary *)properties
 {
     self = [super init];
@@ -61,26 +118,7 @@ static NSInteger kPersonModelVersion = 1;
         self.statusTime = [self valueForProperty:kAlfrescoJSONStatusTime inProperties:properties];
         self.company = [self valueForProperty:kAlfrescoJSONCompany inProperties:properties];
         
-        
-        if (self.lastName != nil && self.lastName.length > 0)
-        {
-            if (self.firstName != nil && self.firstName.length > 0)
-            {
-                self.fullName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
-            }
-            else
-            {
-                self.fullName = self.lastName;
-            }
-        }
-        else if (self.firstName != nil && self.firstName.length > 0)
-        {
-            self.fullName = self.firstName;
-        }
-        else
-        {
-            self.fullName = self.identifier;
-        }
+        [self generateFullNameProperty];
     }
     return self;
 }
@@ -156,6 +194,29 @@ static NSInteger kPersonModelVersion = 1;
     }
 }
 
+- (void)generateFullNameProperty
+{
+    if (self.lastName != nil && self.lastName.length > 0)
+    {
+        if (self.firstName != nil && self.firstName.length > 0)
+        {
+            self.fullName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
+        }
+        else
+        {
+            self.fullName = self.lastName;
+        }
+    }
+    else if (self.firstName != nil && self.firstName.length > 0)
+    {
+        self.fullName = self.firstName;
+    }
+    else
+    {
+        self.fullName = self.identifier;
+    }
+}
+
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeInteger:kPersonModelVersion forKey:@"AlfrescoPerson"];
@@ -176,34 +237,6 @@ static NSInteger kPersonModelVersion = 1;
     [aCoder encodeObject:self.googleId forKey:kAlfrescoJSONGoogleId];
     [aCoder encodeObject:self.email forKey:kAlfrescoJSONEmail];
     [aCoder encodeObject:self.company forKey:kAlfrescoJSONCompany];
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super init];
-    if (nil != self)
-    {
-        //uncomment this line if you need to check the model version
-        //NSInteger version = [aDecoder decodeIntForKey:@"AlfrescoPerson"];
-        self.avatarIdentifier = [aDecoder decodeObjectForKey:kAlfrescoJSONAvatarId];
-        self.firstName = [aDecoder decodeObjectForKey:kAlfrescoJSONFirstName];
-        self.lastName = [aDecoder decodeObjectForKey:kAlfrescoJSONLastName];
-        self.fullName = [aDecoder decodeObjectForKey:kAlfrescoJSONFullName];
-        self.identifier = [aDecoder decodeObjectForKey:kAlfrescoJSONIdentifier];
-        self.jobTitle = [aDecoder decodeObjectForKey:kAlfrescoPublicAPIJSONJobTitle];
-        self.location = [aDecoder decodeObjectForKey:kAlfrescoJSONLocation];
-        self.summary = [aDecoder decodeObjectForKey:kAlfrescoJSONDescription];
-        self.telephoneNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONTelephoneNumber];
-        self.mobileNumber = [aDecoder decodeObjectForKey:kAlfrescoJSONMobileNumber];
-        self.skypeId = [aDecoder decodeObjectForKey:kAlfrescoJSONSkypeId];
-        self.instantMessageId = [aDecoder decodeObjectForKey:kAlfrescoJSONInstantMessageId];
-        self.status = [aDecoder decodeObjectForKey:kAlfrescoJSONStatus];
-        self.statusTime = [aDecoder decodeObjectForKey:kAlfrescoJSONStatusTime];
-        self.googleId = [aDecoder decodeObjectForKey:kAlfrescoJSONGoogleId];
-        self.email = [aDecoder decodeObjectForKey:kAlfrescoJSONEmail];
-        self.company = [aDecoder decodeObjectForKey:kAlfrescoJSONCompany];
-    }
-    return self;
 }
 
 - (id)valueForProperty:(NSString *)property inProperties:(NSDictionary *)properties

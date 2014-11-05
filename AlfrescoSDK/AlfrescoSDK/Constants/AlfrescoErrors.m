@@ -41,9 +41,9 @@ NSString * const kAlfrescoErrorDescriptionAPIRateLimitExceeded = @"API rate limi
 NSString * const kAlfrescoErrorDescriptionOAuthDataMissing = @"OAuth data is missing";
 
 NSString * const kAlfrescoErrorDescriptionJSONParsing = @"JSON Data parsing Error";
-NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON Data are nil/empty";
-NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntry = @"JSON Data: missing entry element";
-NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntries = @"JSON Data: missing entries element";
+NSString * const kAlfrescoErrorDescriptionJSONParsingNilData = @"JSON data is either nil or empty";
+NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntry = @"JSON data is missing an entry property";
+NSString * const kAlfrescoErrorDescriptionJSONParsingNoEntries = @"JSON data is missing an entries property";
 
 NSString * const kAlfrescoErrorDescriptionComment = @"Comment Service Error";
 NSString * const kAlfrescoErrorDescriptionCommentNoCommentFound = @"Comment Service Error: No Comments were found";
@@ -85,6 +85,17 @@ NSString * const kAlfrescoErrorDescriptionWorkflowNoTaskFound = @"Workflow Task 
 
 NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
 
+NSString * const kAlfrescoErrorDescriptionModelDefinition = @"Model Definition Service Error";
+NSString * const kAlfrescoErrorDescriptionModelDefinitionNotFound = @"Model Definition Service Error: Requested definition was not found.";
+
+NSString * const kAlfrescoErrorDescriptionConfig = @"Config Service Error";
+NSString * const kAlfrescoErrorDescriptionConfigInitializationFailed = @"Config Service Error: Initialization Failed";
+
+// Keys used in userInfo dictionary
+NSString * const kAlfrescoErrorKeyHTTPResponseCode = @"org.alfresco.mobile.error.http.response.code";
+NSString * const kAlfrescoErrorKeyHTTPResponseBody = @"org.alfresco.mobile.error.http.response.body";
+
+
 @implementation AlfrescoErrors
 
 + (NSError *)alfrescoErrorWithUnderlyingError:(NSError *)error andAlfrescoErrorCode:(AlfrescoErrorCodes)code
@@ -97,19 +108,56 @@ NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
     {
         return error;
     }
+    
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
+    errorInfo[NSLocalizedDescriptionKey] = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
     errorInfo[NSUnderlyingErrorKey] = error;
+    
+    // use the underlying error failure reason, if present
+    if (error.localizedFailureReason != nil)
+    {
+        errorInfo[NSLocalizedFailureReasonErrorKey] = error.localizedFailureReason;
+    }
+
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
 }
 
 
 + (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code
 {
+    // create error with code, description and reason
     NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
-    [errorInfo setValue:[AlfrescoErrors descriptionForAlfrescoErrorCode:code] forKey:NSLocalizedDescriptionKey];
     NSString *standardDescription = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
-    [errorInfo setValue:standardDescription forKey:NSLocalizedFailureReasonErrorKey];
+    errorInfo[NSLocalizedDescriptionKey] = standardDescription;
+    errorInfo[NSLocalizedFailureReasonErrorKey] = standardDescription;
+    
+    return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
+}
+
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code reason:(NSString *)reason
+{
+    // create error with code, description and optional reason
+    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionary];
+    errorInfo[NSLocalizedDescriptionKey] = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
+    
+    if (reason != nil)
+    {
+        errorInfo[NSLocalizedFailureReasonErrorKey] = reason;
+    }
+    
+    return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
+}
+
++ (NSError *)alfrescoErrorWithAlfrescoErrorCode:(AlfrescoErrorCodes)code userInfo:(NSDictionary *)userInfo
+{
+    NSMutableDictionary *errorInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+    
+    // ensure the dictionary has the error description
+    if (errorInfo[NSLocalizedDescriptionKey] == nil)
+    {
+        errorInfo[NSLocalizedDescriptionKey] = [AlfrescoErrors descriptionForAlfrescoErrorCode:code];
+    }
+    
     return [NSError errorWithDomain:kAlfrescoErrorDomainName code:code userInfo:errorInfo];
 }
 
@@ -353,6 +401,18 @@ NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
             break;
         case kAlfrescoErrorCodeVersion:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionVersion;
+            break;
+        case kAlfrescoErrorCodeModelDefinition:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionModelDefinition;
+            break;
+        case kAlfrescoErrorCodeModelDefinitionNotFound:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionModelDefinitionNotFound;
+            break;
+        case kAlfrescoErrorCodeConfig:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionConfig;
+            break;
+        case kAlfrescoErrorCodeConfigInitializationFailed:
+            alfrescoErrorDescription = kAlfrescoErrorDescriptionConfigInitializationFailed;
             break;
         default:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionUnknown;

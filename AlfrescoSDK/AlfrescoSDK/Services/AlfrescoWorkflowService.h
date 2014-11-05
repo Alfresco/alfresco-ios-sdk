@@ -107,6 +107,15 @@
                                    completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
 /**
+ Retrieves all the variables for the given process.
+ 
+ @param process The process to retrieve the variables for.
+ @param completionBlock The block that's called with the operation completes.
+ */
+- (AlfrescoRequest *)retrieveVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                 completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock;
+
+/**
  Retrieves an image of the given process. An image is only returned if the user has started the process or is involved in any of the tasks.
  
  @param process The process for which an image should be retrieved
@@ -184,6 +193,15 @@
                                 completionBlock:(AlfrescoTaskCompletionBlock)completionBlock;
 
 /**
+ Retrieves all the variables for the given task.
+ 
+ @param task The task to retrieve the variables for.
+ @param completionBlock The block that's called with the operation completes.
+ */
+- (AlfrescoRequest *)retrieveVariablesForTask:(AlfrescoWorkflowTask *)task
+                              completionBlock:(AlfrescoDictionaryCompletionBlock)completionBlock;
+
+/**
  Retrieves an array of AlfrescoNode's for a specific task. If there are no attachments, nil is returned in the completion block.
  
  @param task The task for which attachments should be retrieved
@@ -201,6 +219,8 @@
 /**
  Creates and returns a process for a given process definition.
  
+ NOTE: The variables should be provided in the standard content model format i.e. prefix:name.
+ 
  @param processDefinition The process definition the process should be modeled on
  @param assignees (optional) An array of AlfrescoPerson's to assign to the task. If this is left blank, the process will be assigned to the creator
  @param variables (optional) A dictionary of process variables to add at the start of the process. Variable keys must be the same as those defined in the workflow model definition in the repository
@@ -215,6 +235,8 @@
 
 /**
  A convenience method that creates and returns a process for a given process definition. This method takes an number of predefined variables.
+ 
+ NOTE: The variables should be provided in the standard content model format i.e. prefix:name.
  
  @param processDefinition The process definition the process should be modeled on
  @param name (optional) A descripton of the process to be created
@@ -237,6 +259,19 @@
                                       completionBlock:(AlfrescoProcessCompletionBlock)completionBlock;
 
 /**
+ Updates the given variables on the given process.
+ 
+ NOTE: The variables should be provided in the standard content model format i.e. prefix:name.
+ 
+ @param process The process to update the variables for.
+ @param variables The variables to set or update.
+ @param completionBlock The block that's called with the operation completes.
+ */
+- (AlfrescoRequest *)updateVariablesForProcess:(AlfrescoWorkflowProcess *)process
+                                     variables:(NSDictionary *)variables
+                               completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+
+/**
  Deletes a process.
  
  @param process The process to delete
@@ -252,7 +287,22 @@
  */
 
 /**
+ Updates the given variables on the given task.
+ 
+ NOTE: The variables should be provided in the standard content model format i.e. prefix:name.
+ 
+ @param task The task to update the variables for.
+ @param variables The variables to set or update.
+ @param completionBlock The block that's called with the operation completes.
+ */
+- (AlfrescoRequest *)updateVariablesForTask:(AlfrescoWorkflowTask *)task
+                                  variables:(NSDictionary *)variables
+                            completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
+
+/**
  Completes a given task.
+ 
+ NOTE: Any variables should be provided in the standard content model format i.e. prefix:name.
  
  @param task The task that should be marked as complete
  @param variables Any variables to add to the task

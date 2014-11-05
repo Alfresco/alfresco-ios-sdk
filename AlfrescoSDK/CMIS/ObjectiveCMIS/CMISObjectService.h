@@ -34,7 +34,7 @@
                 filter:(NSString *)filter
          relationships:(CMISIncludeRelationship)relationships
       includePolicyIds:(BOOL)includePolicyIds
-       renditionFilder:(NSString *)renditionFilter
+       renditionFilter:(NSString *)renditionFilter
             includeACL:(BOOL)includeACL
     includeAllowableActions:(BOOL)includeAllowableActions
        completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
@@ -47,7 +47,7 @@
                       filter:(NSString *)filter
                relationships:(CMISIncludeRelationship)relationships
             includePolicyIds:(BOOL)includePolicyIds
-             renditionFilder:(NSString *)renditionFilter
+             renditionFilter:(NSString *)renditionFilter
                   includeACL:(BOOL)includeACL
      includeAllowableActions:(BOOL)includeAllowableActions
              completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
@@ -163,7 +163,7 @@
  * uploads the file from the given path to the given folder.
  *
  * completionBlock - returns NSError nil if successful
-*/
+ */
 - (CMISRequest*)createDocumentFromFilePath:(NSString *)filePath
                                   mimeType:(NSString *)mimeType
                                 properties:(CMISProperties *)properties
@@ -183,6 +183,16 @@
                                 bytesExpected:(unsigned long long)bytesExpected // optional
                               completionBlock:(void (^)(NSString *objectId, NSError *error))completionBlock
                                 progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
+
+/**
+ * Moves the given object from the source folder to the target folder.
+ *
+ * completionBlock - returns NSError nil if successful
+ */
+- (CMISRequest*)moveObject:(NSString *)objectId
+                fromFolder:(NSString *)sourceFolderId
+                  toFolder:(NSString *)targetFolderId
+           completionBlock:(void (^)(CMISObjectData *objectData, NSError *error))completionBlock;
 
 /**
  * Deletes the given object.
@@ -205,7 +215,7 @@
 /**
  * Deletes the given folder and all of its subfolder and files
  *
- * Returns a list of objects which failed to be deleted.
+ * Returns a list of object ids which failed to be deleted.
  * completionBlock returns array of failed objects if any. NSError will be nil if successful
  */
 - (CMISRequest*)deleteTree:(NSString *)folderObjectId

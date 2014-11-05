@@ -19,13 +19,22 @@
 
 #import <Foundation/Foundation.h>
 
+// Session keys
+extern NSString * const kCMISAtomBindingSessionKeyObjectByIdUriBuilder;
+extern NSString * const kCMISAtomBindingSessionKeyObjectByPathUriBuilder;
+extern NSString * const kCMISAtomBindingSessionKeyChildrenByIdUriBuilder;
+extern NSString * const kCMISAtomBindingSessionKeyTypeByIdUriBuilder;
+extern NSString * const kCMISAtomBindingSessionKeyQueryUri;
+extern NSString * const kCMISAtomBindingSessionKeyQueryCollection;
+extern NSString * const kCMISAtomBindingSessionKeyCheckedoutCollection;
+extern NSString * const kCMISAtomBindingSessionKeyLinkCache;
+
 // Feed
 extern NSString * const kCMISAtomFeedNumItems;
 
 // Entry
 extern NSString * const kCMISAtomEntry;
 extern NSString * const kCMISAtomEntryLink;
-extern NSString * const kCMISAtomEntryLinkTypeAtomFeed;
 extern NSString * const kCMISAtomEntryRel;
 extern NSString * const kCMISAtomEntryHref;
 extern NSString * const kCMISAtomEntryType;
@@ -58,6 +67,13 @@ extern NSString * const kCMISAtomEntryDirect;
 extern NSString * const kCMISAtomCollectionQuery;
 extern NSString * const kCMISAtomCollectionCheckedout;
 
+// Media Types
+extern NSString * const kCMISMediaTypeFeed;
+extern NSString * const kCMISMediaTypeEntry;
+extern NSString * const kCMISMediaTypeChildren;
+extern NSString * const kCMISMediaTypeDescendants;
+extern NSString * const kCMISMediaTypeQuery;
+
 // Links
 extern NSString * const kCMISLinkRelationDown;
 extern NSString * const kCMISLinkRelationUp;
@@ -68,48 +84,11 @@ extern NSString * const kCMISLinkEditMedia;
 extern NSString * const kCMISLinkRelationNext;
 extern NSString * const kCMISLinkRelationWorkingCopy;
 
-// URL parameters
-extern NSString * const kCMISParameterChangeToken;
-extern NSString * const kCMISParameterOverwriteFlag;
-extern NSString * const kCMISParameterIncludeAllowableActions;
-extern NSString * const kCMISParameterFilter;
-extern NSString * const kCMISParameterMaxItems;
-extern NSString * const kCMISParameterObjectId;
-extern NSString * const kCMISParameterOrderBy;
-extern NSString * const kCMISParameterIncludePathSegment;
-extern NSString * const kCMISParameterIncludeRelationships;
-extern NSString * const kCMISParameterRenditionFilter;
-extern NSString * const kCMISParameterSkipCount;
-extern NSString * const kCMISParameterStreamId;
-extern NSString * const kCMISParameterAllVersions;
-extern NSString * const kCMISParameterContinueOnFailure;
-extern NSString * const kCMISParameterUnfileObjects;
-extern NSString * const kCMISParameterRelativePathSegment;
-extern NSString * const kCMISParameterMajor;
-extern NSString * const kCMISParameterCheckin;
-extern NSString * const kCMISParameterCheckinComment;
-
-// Parameter Values
-extern NSString * const kCMISParameterValueTrue;
-extern NSString * const kCMISParameterValueFalse;
-
 // Namespaces
 extern NSString * const kCMISNamespaceCmis;
 extern NSString * const kCMISNamespaceCmisRestAtom;
 extern NSString * const kCMISNamespaceAtom;
 extern NSString * const kCMISNamespaceApp;
-
-// Media Types
-extern NSString * const kCMISMediaTypeService;
-extern NSString * const kCMISMediaTypeFeed;
-extern NSString * const kCMISMediaTypeEntry;
-extern NSString * const kCMISMediaTypeChildren;
-extern NSString * const kCMISMediaTypeDescendants;
-extern NSString * const kCMISMediaTypeQuery;
-extern NSString * const kCMISMediaTypeAllowableAction;
-extern NSString * const kCMISMediaTypeAcl;
-extern NSString * const kCMISMediaTypeCmisAtom;
-extern NSString * const kCMISMediaTypeOctetStream;
 
 // App Element Names
 extern NSString * const kCMISAppWorkspace;
@@ -157,6 +136,7 @@ extern NSString * const kCMISCoreDisplayName;
 extern NSString * const kCMISCoreQueryName;
 extern NSString * const kCMISCoreDescription;
 extern NSString * const kCMISCoreBaseId;
+extern NSString * const kCMISCoreParentId;
 extern NSString * const kCMISCoreCreatable;
 extern NSString * const kCMISCoreFileable;
 extern NSString * const kCMISCoreQueryable;
@@ -170,6 +150,9 @@ extern NSString * const kCMISCoreInherited;
 extern NSString * const kCMISCoreRequired;
 extern NSString * const kCMISCoreOrderable;
 extern NSString * const kCMISCoreOpenChoice;
+extern NSString * const kCMISCoreChoice;
+extern NSString * const kCMISCoreChoiceString;
+extern NSString * const kCMISCoreDefaultValue;
 extern NSString * const kCMISCoreVersionable;
 extern NSString * const kCMISCoreContentStreamAllowed;
 extern NSString * const kCMISCoreAllowed;

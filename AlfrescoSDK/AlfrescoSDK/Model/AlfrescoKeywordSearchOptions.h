@@ -26,11 +26,12 @@
  */
 
 @interface AlfrescoKeywordSearchOptions : NSObject <NSCoding>
-@property (nonatomic, assign, readonly) BOOL exactMatch;
-@property (nonatomic, assign, readonly) BOOL includeContent;
-@property (nonatomic, assign, readonly) BOOL includeDescendants;
-@property (nonatomic, assign, readonly) BOOL includeAll;
-@property (nonatomic, strong, readonly) AlfrescoFolder *folder;
+@property (nonatomic, assign) BOOL exactMatch;
+@property (nonatomic, assign) BOOL includeContent;
+@property (nonatomic, assign) BOOL includeDescendants;
+@property (nonatomic, assign) BOOL includeAll;
+@property (nonatomic, strong) NSString *typeName;
+@property (nonatomic, strong) AlfrescoFolder *folder;
 
 /**
  @param exactMatch
@@ -65,5 +66,10 @@
  @param includeDescendants - search sub-folders as well
  */
 - (id)initWithExactMatch:(BOOL)exactMatch includeAll:(BOOL)includeAll folder:(AlfrescoFolder *)folder includeDescendants:(BOOL)includeDescendants;
+
+/**
+ @param typeName The name of the type to search for
+ */
+- (id)initWithTypeName:(NSString *)typeName;
 
 @end

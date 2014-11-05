@@ -18,11 +18,9 @@
  *****************************************************************************
  */
 
-/**
- The AlfrescoDefaultHTTPRequest class utilizes NSURLConnection to make requests.
- 
- Author: Tauseef Mughal (Alfresco)
- */
+// The AlfrescoDefaultHTTPRequest class utilizes NSURLConnection to make requests.
+
+// Author: Tauseef Mughal (Alfresco)
 
 #import <Foundation/Foundation.h>
 #import "AlfrescoConstants.h"

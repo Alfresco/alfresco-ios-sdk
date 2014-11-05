@@ -137,6 +137,47 @@
     return alfrescoRequest;
 }
 
++ (NSString *)buildOAuthURLWithBaseURLString:(NSString *)baseURLString apiKey:(NSString *)apiKey redirectURI:(NSString *)redirectURI
+{
+    NSString *authURLString = [NSString stringWithFormat:@"%@?%@&%@&%@&%@", baseURLString,
+                               [kAlfrescoOAuthClientID stringByReplacingOccurrencesOfString:kAlfrescoClientID withString:apiKey],
+                               [kAlfrescoOAuthRedirectURI stringByReplacingOccurrencesOfString:kAlfrescoRedirectURI withString:redirectURI],
+                               kAlfrescoOAuthScope, kAlfrescoOAuthResponseType];
+    return authURLString;
+}
+
++ (NSString *)buildCloudURLFromParameters:(NSDictionary *)parameters
+{
+    NSString *baseURL = [NSString stringWithFormat:@"%@%@", kAlfrescoCloudURL, kAlfrescoOAuthAuthorize];
+    if ([[parameters allKeys] containsObject:kAlfrescoSessionCloudURL])
+    {
+        NSString *supplementedURL = [parameters valueForKey:kAlfrescoSessionCloudURL];
+        baseURL = [NSString stringWithFormat:@"%@%@", supplementedURL, kAlfrescoOAuthAuthorize];
+    }
+    return baseURL;
+}
+
+- (NSString *)authorizationCodeFromURL:(NSURL *)url
+{
+    if (nil == url)
+    {
+        return nil;
+    }
+    
+    NSArray *components = [[url absoluteString] componentsSeparatedByString:@"code="];
+    if (2 == components.count)
+    {
+        self.receivedData = [NSMutableData data];
+        NSString *codeString = components[1];
+        NSArray *codeComponents = [codeString componentsSeparatedByString:@"&"];
+        if (codeComponents.count > 0)
+        {
+            return codeComponents[0];
+        }
+        
+    }
+    return nil;
+}
 
 #pragma NSURLConnection Delegate methods
 
