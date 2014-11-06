@@ -52,7 +52,7 @@ else
          JUNIT_FLAG="true"
       else
          # define the main command
-         BUILD_OPTS=(test -scheme $ALFRESCO_SDK_PRODUCT_NAME -destination OS=latest,name="iPhone Retina (4-inch)" TEST_SERVER=${param})
+         BUILD_OPTS=(test -scheme $ALFRESCO_SDK_PRODUCT_NAME -destination OS=latest,name="Resizable iPhone" TEST_SERVER=${param})
       fi
    done
 fi
