@@ -33,14 +33,6 @@
 #import "AlfrescoWorkflowProcessDefinition.h"
 #import "AlfrescoWorkflowProcess.h"
 #import "AlfrescoWorkflowTask.h"
-#import "AlfrescoConfigInfo.h"
-#import "AlfrescoCreationConfig.h"
-#import "AlfrescoFeatureConfig.h"
-#import "AlfrescoFormConfig.h"
-#import "AlfrescoProfileConfig.h"
-#import "AlfrescoRepositoryConfig.h"
-#import "AlfrescoViewConfig.h"
-#import "AlfrescoViewGroupConfig.h"
 #import "AlfrescoDocumentTypeDefinition.h"
 #import "AlfrescoFolderTypeDefinition.h"
 #import "AlfrescoTaskTypeDefinition.h"
@@ -78,21 +70,10 @@ typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSErr
 typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
 typedef void (^AlfrescoMemberCompletionBlock)(BOOL succeeded, BOOL isMember, NSError *error);
 typedef void (^AlfrescoFavoritedCompletionBlock)(BOOL succeeded, BOOL isFavorited, NSError *error);
-// workflow
 typedef void (^AlfrescoProcessDefinitionCompletionBlock)(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error);
 typedef void (^AlfrescoProcessCompletionBlock)(AlfrescoWorkflowProcess *process, NSError *error);
 typedef void (^AlfrescoTaskCompletionBlock)(AlfrescoWorkflowTask *task, NSError *error);
 typedef void (^AlfrescoDictionaryCompletionBlock)(NSDictionary *dictionary, NSError *error);
-// config
-typedef void (^AlfrescoConfigInfoCompletionBlock)(AlfrescoConfigInfo *configInfo, NSError *error);
-typedef void (^AlfrescoCreationConfigCompletionBlock)(AlfrescoCreationConfig *config, NSError *error);
-typedef void (^AlfrescoFeatureConfigCompletionBlock)(AlfrescoFeatureConfig *config, NSError *error);
-typedef void (^AlfrescoFormConfigCompletionBlock)(AlfrescoFormConfig *config, NSError *error);
-typedef void (^AlfrescoProfileConfigCompletionBlock)(AlfrescoProfileConfig *config, NSError *error);
-typedef void (^AlfrescoRepositoryConfigCompletionBlock)(AlfrescoRepositoryConfig *config, NSError *error);
-typedef void (^AlfrescoViewConfigCompletionBlock)(AlfrescoViewConfig *config, NSError *error);
-typedef void (^AlfrescoViewGroupConfigCompletionBlock)(AlfrescoViewGroupConfig *config, NSError *error);
-// model definition
 typedef void (^AlfrescoDocumentTypeDefinitionCompletionBlock)(AlfrescoDocumentTypeDefinition *typeDefinition, NSError *error);
 typedef void (^AlfrescoFolderTypeDefinitionCompletionBlock)(AlfrescoFolderTypeDefinition *typeDefinition, NSError *error);
 typedef void (^AlfrescoTaskTypeDefinitionCompletionBlock)(AlfrescoTaskTypeDefinition *typeDefinition, NSError *error);
@@ -267,14 +248,5 @@ extern NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome;
 extern NSString * const kAlfrescoWorkflowTaskTransitionApprove;
 extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
 
-/**---------------------------------------------------------------------------------------
- * @name Configuration Constants
- --------------------------------------------------------------------------------------- */
-extern NSString * const kAlfrescoConfigServiceParameterApplicationId;
-extern NSString * const kAlfrescoConfigServiceParameterProfileId;
-extern NSString * const kAlfrescoConfigServiceParameterFolder;
-
-extern NSString * const kAlfrescoConfigScopeContextNode;
-extern NSString * const kAlfrescoConfigScopeContextFormMode;
 
 
