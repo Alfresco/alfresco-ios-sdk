@@ -423,74 +423,78 @@
 {
     if (self.setUpSuccess)
     {
-        self.modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:self.currentSession];
-        
-        // retrieve task definition for wf:adhocTask
-        [self.modelDefinitionService retrieveDefinitionForTaskType:@"wf:adhocTask" completionBlock:^(AlfrescoTaskTypeDefinition *taskDefinition, NSError *error) {
-            if (taskDefinition == nil)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [self failureMessageFromError:error];
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertTrue([taskDefinition.name isEqualToString:@"wf:adhocTask"],
-                              @"Expected definition name to be 'wf:adhocTask' but it was %@", taskDefinition.name);
-                if ([self.currentSession.repositoryInfo.majorVersion intValue] > 4 ||
-                    ([self.currentSession.repositoryInfo.majorVersion intValue] == 4 && [self.currentSession.repositoryInfo.minorVersion intValue] > 1))
+        // only run this test on-prem as task types are not exposed on the cloud yet
+        if (!self.isCloud)
+        {
+            self.modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:self.currentSession];
+            
+            // retrieve task definition for wf:adhocTask
+            [self.modelDefinitionService retrieveDefinitionForTaskType:@"wf:adhocTask" completionBlock:^(AlfrescoTaskTypeDefinition *taskDefinition, NSError *error) {
+                if (taskDefinition == nil)
                 {
-                    XCTAssertTrue([taskDefinition.title isEqualToString:@"Task"],
-                                  @"Expected definition title to be 'Task' but it was %@", taskDefinition.title);
-                    XCTAssertTrue([taskDefinition.summary isEqualToString:@"Task allocated by colleague"],
-                                  @"Expected definition summary to be 'Task allocated by colleague' but it was %@", taskDefinition.summary);
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [self failureMessageFromError:error];
+                    self.callbackCompleted = YES;
                 }
                 else
                 {
-                    XCTAssertTrue([taskDefinition.title isEqualToString:@"Adhoc Task"],
-                                  @"Expected definition title to be 'Adhoc Task' but it was %@", taskDefinition.title);
-                    XCTAssertTrue([taskDefinition.summary isEqualToString:@"Adhoc Task allocated by colleague"],
-                                  @"Expected definition summary to be 'Adhoc Task allocated by colleague' but it was %@", taskDefinition.summary);
+                    XCTAssertTrue([taskDefinition.name isEqualToString:@"wf:adhocTask"],
+                                  @"Expected definition name to be 'wf:adhocTask' but it was %@", taskDefinition.name);
+                    if ([self.currentSession.repositoryInfo.majorVersion intValue] > 4 ||
+                        ([self.currentSession.repositoryInfo.majorVersion intValue] == 4 && [self.currentSession.repositoryInfo.minorVersion intValue] > 1))
+                    {
+                        XCTAssertTrue([taskDefinition.title isEqualToString:@"Task"],
+                                      @"Expected definition title to be 'Task' but it was %@", taskDefinition.title);
+                        XCTAssertTrue([taskDefinition.summary isEqualToString:@"Task allocated by colleague"],
+                                      @"Expected definition summary to be 'Task allocated by colleague' but it was %@", taskDefinition.summary);
+                    }
+                    else
+                    {
+                        XCTAssertTrue([taskDefinition.title isEqualToString:@"Adhoc Task"],
+                                      @"Expected definition title to be 'Adhoc Task' but it was %@", taskDefinition.title);
+                        XCTAssertTrue([taskDefinition.summary isEqualToString:@"Adhoc Task allocated by colleague"],
+                                      @"Expected definition summary to be 'Adhoc Task allocated by colleague' but it was %@", taskDefinition.summary);
+                    }
+                    XCTAssertTrue([taskDefinition.parent isEqualToString:@"bpm:workflowTask"],
+                                  @"Expected definition parent to be 'bpm:workflowTask' but it was %@", taskDefinition.parent);
+                    XCTAssertNotNil(taskDefinition.propertyNames, @"Expected propertyNames property to be populated");
+                    XCTAssertTrue(taskDefinition.propertyNames.count > 35,
+                                  @"Expected there to be more than 35 property names but there were %lu", (long)taskDefinition.propertyNames.count);
+                    
+                    // check for a few property names
+                    XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageActionGroup"],
+                                  @"Expected the bpm:packageActionGroup property to be present");
+                    XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageItemActionGroup"],
+                                  @"Expected the bpm:packageItemActionGroup property to be present");
+                    XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:status"],
+                                  @"Expected the bpm:status property to be present");
+                    
+                    // retrieve and check bpm:status property definition
+                    AlfrescoPropertyDefinition *statusPropertyDefiniton = [taskDefinition propertyDefinitionForPropertyWithName:@"bpm:status"];
+                    XCTAssertNotNil(statusPropertyDefiniton, @"Expected to find a property definition for bpm:status");
+                    XCTAssertTrue([statusPropertyDefiniton.name isEqualToString:@"bpm:status"],
+                                  @"Expected name to be 'bpm:status' but it was %@", statusPropertyDefiniton.name);
+                    XCTAssertTrue([statusPropertyDefiniton.title isEqualToString:@"Status"],
+                                  @"Expected title to be 'Status' but it was %@", statusPropertyDefiniton.title);
+                    XCTAssertTrue([statusPropertyDefiniton.summary isEqualToString:@"Status"],
+                                  @"Expected summary to be 'Status' but it was %@", statusPropertyDefiniton.summary);
+                    XCTAssertTrue(statusPropertyDefiniton.isRequired, @"Expected isRequired to be true");
+                    XCTAssertFalse(statusPropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
+                    XCTAssertFalse(statusPropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
+                    XCTAssertTrue([statusPropertyDefiniton.defaultValue isEqualToString:@"Not Yet Started"],
+                                  @"Expected default value to be 'Not Yet Started' but it was %@", statusPropertyDefiniton.defaultValue);
+                    XCTAssertNotNil(statusPropertyDefiniton.allowableValues, @"Expected allowable values to be set");
+                    XCTAssertTrue(statusPropertyDefiniton.allowableValues.count == 5,
+                                  @"Expected there to be 5 allowable values but there were %lu", (long)statusPropertyDefiniton.allowableValues.count);
+                    
+                    self.lastTestSuccessful = YES;
+                    self.callbackCompleted = YES;
                 }
-                XCTAssertTrue([taskDefinition.parent isEqualToString:@"bpm:workflowTask"],
-                              @"Expected definition parent to be 'bpm:workflowTask' but it was %@", taskDefinition.parent);
-                XCTAssertNotNil(taskDefinition.propertyNames, @"Expected propertyNames property to be populated");
-                XCTAssertTrue(taskDefinition.propertyNames.count > 35,
-                              @"Expected there to be more than 35 property names but there were %lu", (long)taskDefinition.propertyNames.count);
-                
-                // check for a few property names
-                XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageActionGroup"],
-                              @"Expected the bpm:packageActionGroup property to be present");
-                XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageItemActionGroup"],
-                              @"Expected the bpm:packageItemActionGroup property to be present");
-                XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:status"],
-                              @"Expected the bpm:status property to be present");
-                
-                // retrieve and check bpm:status property definition
-                AlfrescoPropertyDefinition *statusPropertyDefiniton = [taskDefinition propertyDefinitionForPropertyWithName:@"bpm:status"];
-                XCTAssertNotNil(statusPropertyDefiniton, @"Expected to find a property definition for bpm:status");
-                XCTAssertTrue([statusPropertyDefiniton.name isEqualToString:@"bpm:status"],
-                              @"Expected name to be 'bpm:status' but it was %@", statusPropertyDefiniton.name);
-                XCTAssertTrue([statusPropertyDefiniton.title isEqualToString:@"Status"],
-                              @"Expected title to be 'Status' but it was %@", statusPropertyDefiniton.title);
-                XCTAssertTrue([statusPropertyDefiniton.summary isEqualToString:@"Status"],
-                              @"Expected summary to be 'Status' but it was %@", statusPropertyDefiniton.summary);
-                XCTAssertTrue(statusPropertyDefiniton.isRequired, @"Expected isRequired to be true");
-                XCTAssertFalse(statusPropertyDefiniton.isReadOnly, @"Expected isReadOnly to be false");
-                XCTAssertFalse(statusPropertyDefiniton.isMultiValued, @"Expected isMultiValued to be false");
-                XCTAssertTrue([statusPropertyDefiniton.defaultValue isEqualToString:@"Not Yet Started"],
-                              @"Expected default value to be 'Not Yet Started' but it was %@", statusPropertyDefiniton.defaultValue);
-                XCTAssertNotNil(statusPropertyDefiniton.allowableValues, @"Expected allowable values to be set");
-                XCTAssertTrue(statusPropertyDefiniton.allowableValues.count == 5,
-                              @"Expected there to be 5 allowable values but there were %lu", (long)statusPropertyDefiniton.allowableValues.count);
-                
-                self.lastTestSuccessful = YES;
-                self.callbackCompleted = YES;
-            }
-        }];
-        
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+            }];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
     }
     else
     {
@@ -722,55 +726,59 @@
 {
     if (self.setUpSuccess)
     {
-        // retrieve any task
-        AlfrescoWorkflowService *workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
-        [workflowService retrieveTasksWithCompletionBlock:^(NSArray *tasks, NSError *tasksError) {
-            if (tasks == nil)
-            {
-                self.lastTestSuccessful = NO;
-                self.lastTestFailureMessage = [self failureMessageFromError:tasksError];
-                self.callbackCompleted = YES;
-            }
-            else
-            {
-                XCTAssertTrue(tasks.count > 0, @"Expected to find at least one task");
-                AlfrescoWorkflowTask *task = tasks[0];
-                
-                self.modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:self.currentSession];
-                [self.modelDefinitionService retrieveDefinitionForTask:task completionBlock:^(AlfrescoTaskTypeDefinition *taskDefinition, NSError *definitionError) {
-                    if (taskDefinition == nil)
-                    {
-                        self.lastTestSuccessful = NO;
-                        self.lastTestFailureMessage = [self failureMessageFromError:definitionError];
-                        self.callbackCompleted = YES;
-                    }
-                    else
-                    {
-                        // check the type definition matches the task
-                        XCTAssertTrue([task.type isEqualToString:taskDefinition.name],
-                                      @"Expected the type definition name to match the task type");
-                        
-                        // check for a few property names
-                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageActionGroup"],
-                                      @"Expected the bpm:packageActionGroup property to be present");
-                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageItemActionGroup"],
-                                      @"Expected the bpm:packageItemActionGroup property to be present");
-                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:status"],
-                                      @"Expected the bpm:status property to be present");
-                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:comment"],
-                                      @"Expected the bpm:comment property to be present");
-                        XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:description"],
-                                      @"Expected the bpm:description property to be present");
-                        
-                        self.lastTestSuccessful = YES;
-                        self.callbackCompleted = YES;
-                    }
-                }];
-            }
-        }];
-        
-        [self waitUntilCompleteWithFixedTimeInterval];
-        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        // only run this test on-prem as task types are not exposed on the cloud yet
+        if (!self.isCloud)
+        {
+            // retrieve any task
+            AlfrescoWorkflowService *workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
+            [workflowService retrieveTasksWithCompletionBlock:^(NSArray *tasks, NSError *tasksError) {
+                if (tasks == nil)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [self failureMessageFromError:tasksError];
+                    self.callbackCompleted = YES;
+                }
+                else
+                {
+                    XCTAssertTrue(tasks.count > 0, @"Expected to find at least one task");
+                    AlfrescoWorkflowTask *task = tasks[0];
+                    
+                    self.modelDefinitionService = [[AlfrescoModelDefinitionService alloc] initWithSession:self.currentSession];
+                    [self.modelDefinitionService retrieveDefinitionForTask:task completionBlock:^(AlfrescoTaskTypeDefinition *taskDefinition, NSError *definitionError) {
+                        if (taskDefinition == nil)
+                        {
+                            self.lastTestSuccessful = NO;
+                            self.lastTestFailureMessage = [self failureMessageFromError:definitionError];
+                            self.callbackCompleted = YES;
+                        }
+                        else
+                        {
+                            // check the type definition matches the task
+                            XCTAssertTrue([task.type isEqualToString:taskDefinition.name],
+                                          @"Expected the type definition name to match the task type");
+                            
+                            // check for a few property names
+                            XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageActionGroup"],
+                                          @"Expected the bpm:packageActionGroup property to be present");
+                            XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:packageItemActionGroup"],
+                                          @"Expected the bpm:packageItemActionGroup property to be present");
+                            XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:status"],
+                                          @"Expected the bpm:status property to be present");
+                            XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:comment"],
+                                          @"Expected the bpm:comment property to be present");
+                            XCTAssertTrue([taskDefinition.propertyNames containsObject:@"bpm:description"],
+                                          @"Expected the bpm:description property to be present");
+                            
+                            self.lastTestSuccessful = YES;
+                            self.callbackCompleted = YES;
+                        }
+                    }];
+                }
+            }];
+            
+            [self waitUntilCompleteWithFixedTimeInterval];
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
     }
     else
     {
