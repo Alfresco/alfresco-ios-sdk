@@ -88,9 +88,6 @@ NSString * const kAlfrescoErrorDescriptionVersion = @"Version Service Error";
 NSString * const kAlfrescoErrorDescriptionModelDefinition = @"Model Definition Service Error";
 NSString * const kAlfrescoErrorDescriptionModelDefinitionNotFound = @"Model Definition Service Error: Requested definition was not found.";
 
-NSString * const kAlfrescoErrorDescriptionConfig = @"Config Service Error";
-NSString * const kAlfrescoErrorDescriptionConfigInitializationFailed = @"Config Service Error: Initialization Failed";
-
 // Keys used in userInfo dictionary
 NSString * const kAlfrescoErrorKeyHTTPResponseCode = @"org.alfresco.mobile.error.http.response.code";
 NSString * const kAlfrescoErrorKeyHTTPResponseBody = @"org.alfresco.mobile.error.http.response.body";
@@ -407,12 +404,6 @@ NSString * const kAlfrescoErrorKeyHTTPResponseBody = @"org.alfresco.mobile.error
             break;
         case kAlfrescoErrorCodeModelDefinitionNotFound:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionModelDefinitionNotFound;
-            break;
-        case kAlfrescoErrorCodeConfig:
-            alfrescoErrorDescription = kAlfrescoErrorDescriptionConfig;
-            break;
-        case kAlfrescoErrorCodeConfigInitializationFailed:
-            alfrescoErrorDescription = kAlfrescoErrorDescriptionConfigInitializationFailed;
             break;
         default:
             alfrescoErrorDescription = kAlfrescoErrorDescriptionUnknown;

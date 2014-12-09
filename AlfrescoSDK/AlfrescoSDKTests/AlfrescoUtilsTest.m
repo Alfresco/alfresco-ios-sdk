@@ -22,7 +22,6 @@
 #import "AlfrescoListingContext.h"
 #import "AlfrescoActivityStreamService.h"
 #import "AlfrescoCommentService.h"
-#import "AlfrescoConfigService.h"
 #import "AlfrescoDocumentFolderService.h"
 #import "AlfrescoModelDefinitionService.h"
 #import "AlfrescoPersonService.h"
@@ -94,10 +93,7 @@
     
     AlfrescoCommentService *commentService = [[AlfrescoCommentService alloc] initWithSession:nil];
     XCTAssertNil(commentService, @"Expected commentService to be nil as it was created with a nil session");
-    
-    AlfrescoConfigService *configService = [[AlfrescoConfigService alloc] initWithSession:nil];
-    XCTAssertNil(configService, @"Expected configService to be nil as it was created with a nil session");
-    
+        
     AlfrescoDocumentFolderService *docFolderService = [[AlfrescoDocumentFolderService alloc] initWithSession:nil];
     XCTAssertNil(docFolderService, @"Expected docFolderService to be nil as it was created with a nil session");
     

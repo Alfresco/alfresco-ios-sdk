@@ -25,7 +25,7 @@
 
 /** Initialises with a standard Cloud or OnPremise session.
  
- @param session the AlfrescoSession to initialise the config service with.
+ @param session the AlfrescoSession to initialise the model definition service with.
  */
 - (id)initWithSession:(id<AlfrescoSession>)session;
 

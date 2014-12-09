@@ -20,6 +20,11 @@
 
 #import "AlfrescoLog.h"
 #import "CMISLog.h"
+#import <asl.h>
+
+@interface AlfrescoLog ()
+@property (nonatomic, strong) NSDateFormatter *dateFormatter;
+@end
 
 @implementation AlfrescoLog
 
@@ -41,6 +46,8 @@
     if (self)
     {
         _logLevel = ALFRESCO_LOG_LEVEL;
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        _dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
     }
     return self;
 }
@@ -199,6 +206,105 @@
         
         [self logMessage:message forLogLevel:AlfrescoLogLevelTrace];
     }
+}
+
+- (NSArray *)retrieveLogEntriesForApp:(NSString *)appName numberOfEntries:(int)entries
+{
+    // setup a query message
+    aslmsg q = asl_new(ASL_TYPE_QUERY);
+    
+    // limit search to application, if provided
+    if (appName)
+    {
+        const char *sender = [appName UTF8String];
+        asl_set_query(q, ASL_KEY_SENDER, sender, ASL_QUERY_OP_EQUAL);
+    }
+    
+    aslmsg m;
+    const char *msg, *time, *pid, *sender, *thread;
+    
+    // NOTE: There's no way to order results so we have to get everything
+    //       and then just return what was requested (as the most recent log
+    //       entries are at the end!)
+    
+    // perform search
+    NSMutableArray *allEntries = [NSMutableArray array];
+    aslresponse r = asl_search(NULL, q);
+    while (NULL != (m = asl_next(r)))
+    {
+        // get the message
+        msg = asl_get(m, ASL_KEY_MSG);
+        
+        // if there's no message skip this entry
+        if (msg)
+        {
+            NSString *entryTime;
+            
+            // try and get "CFLog Local Time" key first as it is more accurate
+            time = asl_get(m, [@"CFLog Local Time" UTF8String]);
+            if (time)
+            {
+                entryTime = [NSString stringWithUTF8String:time];
+            }
+            else
+            {
+                // retrieve the Time key representing time interval and format it
+                time = asl_get(m, ASL_KEY_TIME);
+                NSString *timeString = [NSString stringWithUTF8String:time];
+                NSTimeInterval timeInterval = [timeString doubleValue];
+                NSDate *time = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+                entryTime = [self.dateFormatter stringFromDate:time];
+            }
+            
+            // always start with the time
+            NSMutableString *entryString = [NSMutableString stringWithFormat:@"%@ ", entryTime];
+            
+            // add the sender, if present
+            sender = asl_get(m, ASL_KEY_SENDER);
+            if (sender)
+            {
+                [entryString appendString:[NSString stringWithUTF8String:sender]];
+            }
+            
+            [entryString appendString:@"["];
+            
+            // add the process id, if present
+            pid = asl_get(m, ASL_KEY_PID);
+            if (pid)
+            {
+                [entryString appendString:[NSString stringWithUTF8String:pid]];
+            }
+            
+            // add the thread, if present
+            thread = asl_get(m, [@"CFLog Thread" UTF8String]);
+            if (thread)
+            {
+                [entryString appendFormat:@":%@", [NSString stringWithUTF8String:thread]];
+            }
+            
+            // add the message
+            [entryString appendFormat:@"] %@", [NSString stringWithUTF8String:msg]];
+            
+            [allEntries addObject:entryString];
+        }
+    }
+    
+    // release response and query message
+    asl_release(r);
+    asl_release(q);
+    
+    NSArray *requestedEntries = allEntries;
+    
+    // extract requested entries if appropriate
+    if (entries > 0 && allEntries.count > entries)
+    {
+        NSRange range;
+        range.location = allEntries.count - entries;
+        range.length = entries;
+        requestedEntries = [allEntries subarrayWithRange:range];
+    }
+    
+    return requestedEntries;
 }
 
 #pragma mark - Helper methods

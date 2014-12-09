@@ -51,46 +51,6 @@ extern NSString * const kAlfrescoCompanyTelephoneNumber;
 extern NSString * const kAlfrescoCompanyFaxNumber;
 extern NSString * const kAlfrescoCompanyEmail;
 
-extern NSString * const kAlfrescoBaseConfigPropertyIdentifier;
-extern NSString * const kAlfrescoBaseConfigPropertyLabel;
-extern NSString * const kAlfrescoBaseConfigPropertySummary;
-
-extern NSString * const kAlfrescoConfigInfoPropertySchemaVersion;
-
-extern NSString * const kAlfrescoCreationConfigPropertyCreatableMimeTypes;
-extern NSString * const kAlfrescoCreationConfigPropertyCreatableDocumentTypes;
-extern NSString * const kAlfrescoCreationConfigPropertyCreatableFolderTypes;
-
-extern NSString * const kAlfrescoFieldConfigPropertyModelIdentifier;
-
-extern NSString * const kAlfrescoFieldConfigPropertyModelIdentifier;
-
-extern NSString * const kAlfrescoFormConfigPropertyLayout;
-
-extern NSString * const kAlfrescoGroupConfigPropertyItems;
-
-extern NSString * const kAlfrescoItemConfigPropertyIconIdentifier;
-extern NSString * const kAlfrescoItemConfigPropertyType;
-extern NSString * const kAlfrescoItemConfigPropertyParameters;
-
-extern NSString * const kAlfrescoProcessConfigPropertyIsVisible;
-
-extern NSString * const kAlfrescoProfileConfigPropertyIsDefault;
-extern NSString * const kAlfrescoProfileConfigPropertyRootViewId;
-
-extern NSString * const kAlfrescoRepositoryConfigPropertyShareURL;
-extern NSString * const kAlfrescoRepositoryConfigPropertyCMISURL;
-
-extern NSString * const kAlfrescoSearchConfigPropertySearchableDocumentTypes;
-extern NSString * const kAlfrescoSearchConfigPropertySearchableFolderTypes;
-
-extern NSString * const kAlfrescoTaskConfigPropertyIsVisible;
-
-extern NSString * const kAlfrescoViewConfigPropertyFormIdentifier;
-
-extern NSString * const kAlfrescoWorkflowConfigPropertyProcessConfig;
-extern NSString * const kAlfrescoWorkflowConfigPropertyTaskConfig;
-
 extern NSString * const kAlfrescoModelDefinitionPropertyName;
 extern NSString * const kAlfrescoModelDefinitionPropertyTitle;
 extern NSString * const kAlfrescoModelDefinitionPropertySummary;

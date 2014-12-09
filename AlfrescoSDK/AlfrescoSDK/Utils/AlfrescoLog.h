@@ -99,5 +99,12 @@ typedef NS_ENUM(NSUInteger, AlfrescoLogLevel)
  */
 - (void)logTrace:(NSString *)format, ...;
 
+/**
+ * Retrieves the requested number of log entries for the application with the given name.
+ * If appName is nil all log entries will be returned. If entries is not positive all available
+ * entries will be returned.
+ * NOTE: Calling this method can be expensive and memory intensive so it should not be called often.
+ */
+- (NSArray *)retrieveLogEntriesForApp:(NSString *)appName numberOfEntries:(int)entries;
 
 @end

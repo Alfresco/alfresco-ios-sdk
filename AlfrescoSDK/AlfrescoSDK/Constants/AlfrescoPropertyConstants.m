@@ -46,44 +46,6 @@ NSString * const kAlfrescoCompanyTelephoneNumber = @"telephoneNumber";
 NSString * const kAlfrescoCompanyFaxNumber = @"faxNumber";
 NSString * const kAlfrescoCompanyEmail = @"email";
 
-NSString * const kAlfrescoBaseConfigPropertyIdentifier = @"identifier";
-NSString * const kAlfrescoBaseConfigPropertyLabel = @"label";
-NSString * const kAlfrescoBaseConfigPropertySummary = @"summary";
-
-NSString * const kAlfrescoConfigInfoPropertySchemaVersion = @"schemaVersion";
-
-NSString * const kAlfrescoCreationConfigPropertyCreatableMimeTypes = @"creatableMimeTypes";
-NSString * const kAlfrescoCreationConfigPropertyCreatableDocumentTypes = @"createDocumentTypes";
-NSString * const kAlfrescoCreationConfigPropertyCreatableFolderTypes = @"creatableFolderTypes";
-
-NSString * const kAlfrescoFieldConfigPropertyModelIdentifier = @"modelIdentifier";
-
-NSString * const kAlfrescoFormConfigPropertyLayout = @"layout";
-
-NSString * const kAlfrescoGroupConfigPropertyItems = @"items";
-
-NSString * const kAlfrescoItemConfigPropertyIconIdentifier = @"iconIdentifier";
-NSString * const kAlfrescoItemConfigPropertyType = @"type";
-NSString * const kAlfrescoItemConfigPropertyParameters = @"parameters";
-
-NSString * const kAlfrescoProcessConfigPropertyIsVisible = @"isVisible";
-
-NSString * const kAlfrescoProfileConfigPropertyIsDefault = @"isDefault";
-NSString * const kAlfrescoProfileConfigPropertyRootViewId = @"rootViewId";
-
-NSString * const kAlfrescoRepositoryConfigPropertyShareURL = @"shareURL";
-NSString * const kAlfrescoRepositoryConfigPropertyCMISURL = @"cmisURL";
-
-NSString * const kAlfrescoSearchConfigPropertySearchableDocumentTypes = @"searchableDocumentTypes";
-NSString * const kAlfrescoSearchConfigPropertySearchableFolderTypes = @"searchableFolderTypes";
-
-NSString * const kAlfrescoTaskConfigPropertyIsVisible = @"isVisible";
-
-NSString * const kAlfrescoViewConfigPropertyFormIdentifier = @"formIdentifier";
-
-NSString * const kAlfrescoWorkflowConfigPropertyProcessConfig = @"processConfig";
-NSString * const kAlfrescoWorkflowConfigPropertyTaskConfig = @"taskConfig";
-
 NSString * const kAlfrescoModelDefinitionPropertyName = @"name";
 NSString * const kAlfrescoModelDefinitionPropertyTitle = @"title";
 NSString * const kAlfrescoModelDefinitionPropertySummary = @"summary";

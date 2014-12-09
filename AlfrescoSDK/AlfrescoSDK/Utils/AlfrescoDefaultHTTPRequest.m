@@ -117,6 +117,8 @@
     {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         self.statusCode = httpResponse.statusCode;
+        
+        if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {
             AlfrescoLogTrace(@"response status code: %d", self.statusCode);
         }
