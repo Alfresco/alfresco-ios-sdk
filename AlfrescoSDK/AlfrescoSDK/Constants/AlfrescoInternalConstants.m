@@ -426,3 +426,6 @@ NSString * const kAlfrescoPersonPropertyCompanyPostcode = @"companyPostcode";
 NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber = @"companyTelephoneNumber";
 NSString * const kAlfrescoPersonPropertyCompanyFaxNumber = @"companyFaxNumber";
 NSString * const kAlfrescoPersonPropertyCompanyEmail = @"companyEmail";
+
+NSString * const kAlfrescoDefaultBackgroundNetworkSessionId = @"Alfresco-iOS-SDK";
+NSString * const kAlfrescoDefaultBackgroundNetworkSessionSharedContainerId = @"Alfresco-iOS-SDK-Container";

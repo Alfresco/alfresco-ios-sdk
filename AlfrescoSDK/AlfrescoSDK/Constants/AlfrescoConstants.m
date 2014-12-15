@@ -32,6 +32,11 @@ NSString * const kAlfrescoSDKVersion = ALFRESCO_SDK_VERSION;
  */
 NSString * const kAlfrescoMetadataExtraction = @"org.alfresco.mobile.features.extractmetadata";
 NSString * const kAlfrescoThumbnailCreation = @"org.alfresco.mobile.features.generatethumbnails";
+NSString * const kAlfrescoCheckNetworkReachability = @"org.alfresco.mobile.features.checknetworkreachability";
+NSString * const kAlfrescoRequestTimeout = @"org.alfresco.mobile.features.requesttimeout";
+NSString * const kAlfrescoUseBackgroundNetworkSession = @"org.alfresco.mobile.features.usebackgroundnetworksession";
+NSString * const kAlfrescoBackgroundNetworkSessionId = @"org.alfresco.mobile.features.networksessionid";
+NSString * const kAlfrescoBackgroundNetworkSessionSharedContainerId = @"org.alfresco.mobile.features.networksessionsharedcontainerid";
 NSString * const kAlfrescoAllowUntrustedSSLCertificate = @"org.alfresco.mobile.features.allowuntrustedsslcertificate";
 NSString * const kAlfrescoConnectUsingClientSSLCertificate = @"org.alfresco.mobile.features.connectusingclientsslcertificate";
 NSString * const kAlfrescoClientCertificateCredentials = @"org.alfresco.mobile.features.clientcertificatecredentials";

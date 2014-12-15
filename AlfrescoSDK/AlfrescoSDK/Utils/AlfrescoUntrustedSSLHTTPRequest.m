@@ -19,7 +19,7 @@
  */
 
 /**
- The AlfrescoUntrustedSSLHTTPRequest class utilizes NSURLConnection to make requests.
+ The AlfrescoUntrustedSSLHTTPRequest class utilizes NSURLSession to make requests.
  It allows SSL connections to be made when the certificate is not trusted.
  
  Author: Mike Hatfield (Alfresco)
@@ -29,20 +29,18 @@
 
 @implementation AlfrescoUntrustedSSLHTTPRequest
 
-/**
- * Untrusted SSL connection support
- */
-- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
 {
-    if (challenge.previousFailureCount == 0 && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+    if (challenge.previousFailureCount == 0 &&
+        [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust] &&
+        [self.requestURL.host isEqualToString:challenge.protectionSpace.host])
     {
-        if ([self.requestURL.host isEqualToString:challenge.protectionSpace.host])
-        {
-            [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
-            return;
-        }
+        completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
     }
-    [challenge.sender cancelAuthenticationChallenge:challenge];
+    else
+    {
+        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
+    }
 }
 
 @end

@@ -52,6 +52,37 @@ extern NSString * const kCMISSessionParameterTypeDefinitionCacheSize;
  */
 extern NSString * const kCMISSessionParameterSendCookies;
 
+/**
+ * Key for setting whether network reachability checks should be made
+ * before making a newtork call. Default is YES.
+ */
+extern NSString * const kCMISSessionParameterCheckNetworkReachability;
+
+/**
+ * Key for setting the timeout interval (in seconds) for a network request, default is 60.
+ */
+extern NSString * const kCMISSessionParameterRequestTimeout;
+
+/**
+ * Key for setting whether a background session should be used for network calls,
+ * default is NO.
+ * This will cause downloads and uploads to occur in a separate process.
+ */
+extern NSString * const kCMISSessionParameterUseBackgroundNetworkSession;
+
+/**
+ * Key for setting the identifier to use for the background session, ignored unless
+ * kCMISSessionParameterUseBackgroundNetworkSession is set to YES.
+ * If not set, background sessions will use an identifier of "ObjectiveCMIS".
+ */
+extern NSString * const kCMISSessionParameterBackgroundNetworkSessionId;
+
+/**
+ * Key for setting the shared container identifier used by the background network session.
+ * If not set, an identifier of "ObjectiveCMISContainer" will be used.
+ */
+extern NSString * const kCMISSessionParameterBackgroundNetworkSessionSharedContainerId;
+
 
 @interface CMISSessionParameters : NSObject
 

@@ -122,6 +122,25 @@
              completionBlock:(void (^)(CMISObject *object, NSError *error))completionBlock;
 
 /**
+ * Retrieves the latest version in a version series with the given identifier of an arbitrary version in the version series.
+ * completionBlock returns the CMIS document or nil if unsuccessful
+ */
+- (CMISRequest*)retrieveDocumentOfLatestVersion:(NSString *)objectId completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
+
+/**
+ * Retrieves the latest version in a version series with the given identifier of an arbitrary version in the version series, using the provided operation context.
+ * completionBlock returns the CMIS document or nil if unsuccessful
+ */
+- (CMISRequest*)retrieveDocumentOfLatestVersion:(NSString *)objectId operationContext:(CMISOperationContext*)operationContext completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
+
+/**
+ * Retrieves the latest version in a version series with the given identifier of an arbitrary version in the version series, using the provided operation context.
+ * if major is 'YES' the latest major version will be returned, otherwise the very last version will be returned
+ * completionBlock returns the CMIS document or nil if unsuccessful
+ */
+- (CMISRequest*)retrieveDocumentOfLatestVersion:(NSString *)objectId operationContext:(CMISOperationContext*)operationContext major:(BOOL)major completionBlock:(void (^)(CMISDocument *document, NSError *error))completionBlock;
+
+/**
  * Retrieves the definition for the given type.
  * completionBlock returns the CMIS type definition or nil if unsuccessful
  */

@@ -124,9 +124,28 @@ useBase64Encoding:(BOOL)useBase64Encoding
 completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
  progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
+/**
+ * Invoke method used for downloads to a file.
+ * @param url the RESTful API URL to be used
+ * @param httpRequestMethod
+ * @param session
+ * @param outputFilePath the location of the file to write the response to
+ * @param bytesExpected the size of the content to be downloaded (optional)
+ * @param cmisRequest a handle to the CMISRequest allowing this HTTP request to be cancelled
+ * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
+ * @param progressBlock
+ */
+- (void)invoke:(NSURL *)url
+    httpMethod:(CMISHttpRequestMethod)httpRequestMethod
+       session:(CMISBindingSession *)session
+outputFilePath:(NSString *)outputFilePath
+ bytesExpected:(unsigned long long)bytesExpected
+   cmisRequest:(CMISRequest *)cmisRequest
+completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
+ progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock;
 
 /**
- * Invoke method used for downloads,
+ * Invoke method used for downloads to an output stream.
  * @param url the RESTful API URL to be used
  * @param httpRequestMethod
  * @param session
@@ -154,7 +173,7 @@ completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))comple
  * @param outputStream the stream pointing to the destination. Must be an instance or extension of NSOutputStream
  * @param bytesExpected the size of the content to be downloaded
  * @param offset the offset of the stream or null to read the stream from the beginning
- * @param legnth the maximum length of the stream or null to read to the end of the stream
+ * @param length the maximum length of the stream or null to read to the end of the stream
  * @param completionBlock returns an instance of the HTTPResponse if successful or nil otherwise
  * @param progressBlock
  * @param requestObject a handle to the CMISRequest allowing this HTTP request to be cancelled

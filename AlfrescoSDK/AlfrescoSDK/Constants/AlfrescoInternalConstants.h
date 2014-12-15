@@ -384,3 +384,6 @@ extern NSString * const kAlfrescoPersonPropertyCompanyTelephoneNumber;
 extern NSString * const kAlfrescoPersonPropertyCompanyFaxNumber;
 extern NSString * const kAlfrescoPersonPropertyCompanyEmail;
 
+extern NSString * const kAlfrescoDefaultBackgroundNetworkSessionId;
+extern NSString * const kAlfrescoDefaultBackgroundNetworkSessionSharedContainerId;
+

@@ -84,6 +84,11 @@ typedef void (^AlfrescoAspectDefinitionCompletionBlock)(AlfrescoAspectDefinition
  --------------------------------------------------------------------------------------- */
 extern NSString * const kAlfrescoMetadataExtraction;
 extern NSString * const kAlfrescoThumbnailCreation;
+extern NSString * const kAlfrescoCheckNetworkReachability;
+extern NSString * const kAlfrescoRequestTimeout;
+extern NSString * const kAlfrescoUseBackgroundNetworkSession;
+extern NSString * const kAlfrescoBackgroundNetworkSessionId;
+extern NSString * const kAlfrescoBackgroundNetworkSessionSharedContainerId;
 
 /**---------------------------------------------------------------------------------------
  * @name thumbnail constant
