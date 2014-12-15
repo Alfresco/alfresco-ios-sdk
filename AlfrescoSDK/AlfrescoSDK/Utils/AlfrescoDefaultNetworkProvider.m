@@ -20,8 +20,6 @@
 
 #import "AlfrescoDefaultNetworkProvider.h"
 #import "AlfrescoErrors.h"
-#import "AlfrescoSession.h"
-#import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoDefaultHTTPRequest.h"
 #import "AlfrescoUntrustedSSLHTTPRequest.h"
 #import "AlfrescoClientCertificateHTTPRequest.h"
@@ -76,9 +74,6 @@
                  outputStream:(NSOutputStream *)outputStream
               completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
-    id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
-    NSDictionary *headers = [authenticationProvider willApplyHTTPHeadersForSession:nil];
-    
     BOOL allowUntrustedSSLCertificate = NO;
     BOOL connectUsingClientCertificate = NO;
     
@@ -115,7 +110,7 @@
         {
             [alfrescoHTTPRequest connectWithURL:url
                                          method:method
-                                        headers:headers
+                                        session:session
                                     requestBody:requestBody
                                    outputStream:outputStream
                                 completionBlock:completionBlock];
@@ -124,7 +119,7 @@
         {
             [alfrescoHTTPRequest connectWithURL:url
                                          method:method
-                                        headers:headers
+                                        session:session
                                     requestBody:requestBody
                                 completionBlock:completionBlock];
         }

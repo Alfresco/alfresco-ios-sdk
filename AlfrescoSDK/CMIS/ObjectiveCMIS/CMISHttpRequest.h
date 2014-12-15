@@ -23,15 +23,16 @@
 #import "CMISRequest.h"
 @class CMISAuthenticationProvider;
 
-@interface CMISHttpRequest : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate, CMISCancellableRequest>
+@interface CMISHttpRequest : NSObject <CMISCancellableRequest, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
 @property (nonatomic, assign) CMISHttpRequestMethod requestMethod;
-@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, strong) NSURLSession *urlSession;
+@property (nonatomic, strong) NSURLSessionTask *sessionTask;
 @property (nonatomic, strong) NSData *requestBody;
 @property (nonatomic, strong) NSMutableData *responseBody;
 @property (nonatomic, strong) NSDictionary *additionalHeaders;
 @property (nonatomic, strong) NSHTTPURLResponse *response;
-@property (nonatomic, strong) id<CMISAuthenticationProvider> authenticationProvider;
+@property (nonatomic, strong) CMISBindingSession *session;
 @property (nonatomic, copy) void (^completionBlock)(CMISHttpResponse *httpResponse, NSError *error);
 
 /**
@@ -42,11 +43,11 @@
  * completionBlock returns a CMISHTTPResponse object or nil if unsuccessful
  */
 + (id)startRequest:(NSMutableURLRequest *)urlRequest
-                      httpMethod:(CMISHttpRequestMethod)httpRequestMethod
-                     requestBody:(NSData*)requestBody
-                         headers:(NSDictionary*)additionalHeaders
-          authenticationProvider:(id<CMISAuthenticationProvider>)authenticationProvider
-                 completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
+        httpMethod:(CMISHttpRequestMethod)httpRequestMethod
+       requestBody:(NSData*)requestBody
+           headers:(NSDictionary*)additionalHeaders
+           session:(CMISBindingSession *)session
+   completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock;
 
 /**
  * initialises with a specified HTTP method
@@ -56,5 +57,8 @@
 
 /// starts the URL request
 - (BOOL)startRequest:(NSMutableURLRequest*)urlRequest;
+
+/// Creates an appropriate task for the given request object.
+- (NSURLSessionTask *)taskForRequest:(NSURLRequest *)request;
 
 @end

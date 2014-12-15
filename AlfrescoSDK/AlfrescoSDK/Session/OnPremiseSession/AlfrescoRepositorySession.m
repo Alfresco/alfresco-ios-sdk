@@ -260,6 +260,27 @@
                     CMISStandardUntrustedSSLAuthenticationProvider *authProvider = [[CMISStandardUntrustedSSLAuthenticationProvider alloc] initWithUsername:username password:password];
                     cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
                 }
+                
+                // setup background network session
+                BOOL useBackgroundSession = [(self.sessionData)[kAlfrescoUseBackgroundNetworkSession] boolValue];
+                if (useBackgroundSession)
+                {
+                    NSString *backgroundId = self.sessionData[kAlfrescoBackgroundNetworkSessionId];
+                    if (!backgroundId)
+                    {
+                        backgroundId = kAlfrescoDefaultBackgroundNetworkSessionId;
+                    }
+                    
+                    NSString *containerId = self.sessionData[kAlfrescoBackgroundNetworkSessionSharedContainerId];
+                    if (!containerId)
+                    {
+                        containerId = kAlfrescoDefaultBackgroundNetworkSessionSharedContainerId;
+                    }
+                    
+                    [cmisSessionParams setObject:@(YES) forKey:kCMISSessionParameterUseBackgroundNetworkSession];
+                    [cmisSessionParams setObject:backgroundId forKey:kCMISSessionParameterBackgroundNetworkSessionId];
+                    [cmisSessionParams setObject:containerId forKey:kCMISSessionParameterBackgroundNetworkSessionSharedContainerId];
+                }
 
                 AlfrescoLogDebug(@"Retrieving repositories using: %@", cmisURL);
                 request.httpRequest = [CMISSession arrayOfRepositories:cmisSessionParams completionBlock:^(NSArray *repositories, NSError *error) {

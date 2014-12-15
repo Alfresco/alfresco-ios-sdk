@@ -62,7 +62,7 @@ typedef void (^CMISFetchNextPageBlock)(int skipCount, int maxItems, CMISFetchNex
  * enumerates through the items in a page
  * completionBlock returns NSError nil if successful
  */
-- (void)enumerateItemsUsingBlock:(void (^)(CMISObject *object, BOOL *stop))enumerationBlock
+- (void)enumerateItemsUsingBlock:(void (^)(id object, BOOL *stop))enumerationBlock
                  completionBlock:(void (^)(NSError *error))completionBlock;
 
 @end

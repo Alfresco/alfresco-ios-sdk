@@ -106,7 +106,7 @@ extern NSString * const kCMISErrorDescriptionVersioning;
  CMIS errors are created either 
  
  - directly. This is the case when an error is captured by one of the methods/classes in the CMIS library
- - indirectly. Errors have been created by classes/methods outside the CMIS library. Example errors created through NSURLConnection. In this case, the underlying error is copied into the CMIS error using the NSUnderlyingErrorKey in the userInfo Dictionary.
+ - indirectly. Errors have been created by classes/methods outside the CMIS library. Example errors created through NSURLSession. In this case, the underlying error is copied into the CMIS error using the NSUnderlyingErrorKey in the userInfo Dictionary.
  
  */
 @interface CMISErrors : NSObject

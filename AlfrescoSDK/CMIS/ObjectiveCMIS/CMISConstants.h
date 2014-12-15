@@ -137,10 +137,14 @@ extern NSString * const kCMISParameterValueReturnValueLatestMajor;
 // Common Media Types
 extern NSString * const kCMISMediaTypeOctetStream;
 
-//ContentStreamAllowed enum values
+// ContentStreamAllowed enum values
 extern NSString * const kCMISContentStreamAllowedValueRequired;
 extern NSString * const kCMISContentStreamAllowedValueAllowed;
 extern NSString * const kCMISContentStreamAllowedValueNotAllowed;
+
+// Background network default values
+extern NSString * const kCMISDefaultBackgroundNetworkSessionId;
+extern NSString * const kCMISDefaultBackgroundNetworkSessionSharedContainerId;
 
 + (NSSet *)repositoryCapabilityKeys;
 + (NSSet *)repositoryCapabilityNewTypeSettableAttributesKeys;

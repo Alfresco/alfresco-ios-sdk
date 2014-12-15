@@ -30,13 +30,13 @@
  * completionBlock returns CMISHttpResponse instance or nil if unsuccessful
  */
 + (id)startRequest:(NSMutableURLRequest *)urlRequest
-                            httpMethod:(CMISHttpRequestMethod)httpRequestMethod
-                           inputStream:(NSInputStream*)inputStream
-                               headers:(NSDictionary*)additionalHeaders
-                         bytesExpected:(unsigned long long)bytesExpected
-                authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
-                       completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
-                         progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
+        httpMethod:(CMISHttpRequestMethod)httpRequestMethod
+       inputStream:(NSInputStream*)inputStream
+           headers:(NSDictionary*)additionalHeaders
+     bytesExpected:(unsigned long long)bytesExpected
+           session:(CMISBindingSession *)session
+   completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
+     progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock;
 
 /**
  * starts a URL request with a provided input stream. The input stream has to point to the raw NON-encoded data set. This method will first write the 
@@ -47,7 +47,7 @@
        inputStream:(NSInputStream*)sourceInputStream
            headers:(NSDictionary*)additionalHeaders
      bytesExpected:(unsigned long long)bytesExpected
-authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
+           session:(CMISBindingSession *)session
          startData:(NSData *)startData
            endData:(NSData *)endData
  useBase64Encoding:(BOOL)useBase64Encoding

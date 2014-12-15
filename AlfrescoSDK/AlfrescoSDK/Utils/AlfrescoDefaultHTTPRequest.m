@@ -22,10 +22,12 @@
 #import "AlfrescoErrors.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoAuthenticationProvider.h"
 #import "CMISReachability.h"
 
 @interface AlfrescoDefaultHTTPRequest()
-@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, strong) NSURLSession *URLSession;
+@property (nonatomic, strong) NSURLSessionDataTask *sessionTask;
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic, assign) NSInteger statusCode;
 @property (nonatomic, copy) AlfrescoDataCompletionBlock completionBlock;
@@ -39,29 +41,57 @@
 
 - (void)connectWithURL:(NSURL*)requestURL
                 method:(NSString *)method
-               headers:(NSDictionary *)headers
+               session:(id<AlfrescoSession>)session
            requestBody:(NSData *)requestBody
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
-    [self connectWithURL:requestURL method:method headers:headers requestBody:requestBody outputStream:nil completionBlock:completionBlock];
+    [self connectWithURL:requestURL method:method session:session requestBody:requestBody outputStream:nil completionBlock:completionBlock];
 }
 
 - (void)connectWithURL:(NSURL*)requestURL
                 method:(NSString *)method
-               headers:(NSDictionary *)headers
+               session:(id<AlfrescoSession>)session
            requestBody:(NSData *)requestBody
           outputStream:(NSOutputStream *)outputStream
        completionBlock:(AlfrescoDataCompletionBlock)completionBlock
 {
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     
+    // check network reachability (unless it's disabled) and return early if appropriate
+    id checkNetworkReachability = [session objectForParameter:kAlfrescoCheckNetworkReachability];
+    if (!checkNetworkReachability || [checkNetworkReachability boolValue])
+    {
+        CMISReachability *reachability = [CMISReachability networkReachability];
+        if (!reachability.hasNetworkConnection)
+        {
+            NSError *noConnectionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoNetworkConnection];
+            
+            if (completionBlock != NULL)
+            {
+                completionBlock(nil, noConnectionError);
+            }
+            
+            return;
+        }
+    }
+
     self.completionBlock = completionBlock;
     self.requestURL = requestURL;
     AlfrescoLogDebug(@"%@ %@", method, requestURL);
     
+    id authenticationProvider = [session objectForParameter:kAlfrescoAuthenticationProviderObjectKey];
+    NSDictionary *headers = [authenticationProvider willApplyHTTPHeadersForSession:nil];
+    
+    NSTimeInterval timeout = 60;
+    NSNumber *timeoutParameter = [session objectForParameter:kAlfrescoRequestTimeout];
+    if (timeoutParameter)
+    {
+        timeout = [timeoutParameter doubleValue];
+    }
+    
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:requestURL
                                                               cachePolicy:NSURLRequestReloadIgnoringCacheData
-                                                          timeoutInterval:60];
+                                                          timeoutInterval:timeout];
     
     [urlRequest setHTTPMethod:method];
     
@@ -93,43 +123,95 @@
         [self.outputStream open];
     }
     self.responseData = nil;
-    self.connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self startImmediately:NO];
-    [self.connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
-    CMISReachability *reachability = [CMISReachability networkReachability];
-    if (reachability.hasNetworkConnection)
-    {
-        [self.connection start];
-    }
-    else
-    {
-        NSError *noConnectionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoNetworkConnection];
-        [self connection:self.connection didFailWithError:noConnectionError];
-    }
+    // NOTE: we only create a default session configuration object as file upload/download is performed
+    //       by the CMIS library, background mode was setup at session creation time
+    
+    // create session and task
+    self.URLSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
+                                                    delegate:self
+                                               delegateQueue:nil];
+    self.sessionTask = [self.URLSession dataTaskWithRequest:urlRequest];
+    
+    // execute the request
+    [self.sessionTask resume];
 }
 
-#pragma URL delegate methods
+#pragma mark Session delegate methods
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-    self.responseData = [NSMutableData data];
-    if ([response isKindOfClass:[NSHTTPURLResponse class]])
+    NSError *requestError = error;
+    
+    if (!requestError)
     {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        self.statusCode = httpResponse.statusCode;
+        // no error returned but we also need to check response code
+        if (self.statusCode < 200 || self.statusCode > 299)
+        {
+            if (self.statusCode == 401)
+            {
+                NSError *jsonError = nil;
+                id jsonDictionary = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&jsonError];
+                NSError *errorFromDescription = [AlfrescoErrors alfrescoErrorFromJSONParameters:jsonDictionary];
+                
+                if (!jsonError && errorFromDescription.code != kAlfrescoErrorCodeJSONParsing)
+                {
+                    requestError = errorFromDescription;
+                }
+                else
+                {
+                    requestError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnauthorisedAccess];
+                }
+            }
+            else
+            {
+                NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+                if ([responseString rangeOfString:kAlfrescoCloudAPIRateLimitExceeded].location != NSNotFound)
+                {
+                    requestError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeAPIRateLimitExceeded];
+                }
+                else
+                {
+                    NSDictionary *userInfo = @{kAlfrescoErrorKeyHTTPResponseCode: @(self.statusCode),
+                                               kAlfrescoErrorKeyHTTPResponseBody: self.responseData};
+                    
+                    requestError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse userInfo:userInfo];
+                }
+            }
+        }
         
         if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {
-            AlfrescoLogTrace(@"response status code: %d", self.statusCode);
+            AlfrescoLogTrace(@"response body: %@", [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding]);
         }
     }
-    else
+    
+    if (requestError)
     {
-        self.statusCode = -1;
+        // log the error
+        [[AlfrescoLog sharedInstance] logErrorFromError:requestError];
+        
+        // make sure we don't return any result
+        self.responseData = nil;
     }
+    
+    // call completion block
+    if (self.completionBlock != NULL)
+    {
+        // call the completion block on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.completionBlock(self.responseData, requestError);
+        });
+    }
+    
+    // clean up
+    [self.outputStream close];
+    self.outputStream = nil;
+    self.sessionTask = nil;
+    self.URLSession = nil;
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
 {
     if (nil == data)
     {
@@ -156,94 +238,39 @@
     }
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
 {
-    NSError *error = nil;
-    if (self.statusCode < 200 || self.statusCode > 299)
+    self.responseData = [NSMutableData data];
+    if ([response isKindOfClass:[NSHTTPURLResponse class]])
     {
-        if (self.statusCode == 401)
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        self.statusCode = httpResponse.statusCode;
+        
+        if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
         {
-            NSError *jsonError = nil;
-            id jsonDictionary = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&jsonError];
-            NSError *errorFromDescription = [AlfrescoErrors alfrescoErrorFromJSONParameters:jsonDictionary];
-            
-            if (!jsonError && errorFromDescription.code != kAlfrescoErrorCodeJSONParsing)
-            {
-                error = errorFromDescription;
-            }
-            else
-            {
-                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeUnauthorisedAccess];
-            }
-        }
-        else
-        {
-            NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
-            if ([responseString rangeOfString:kAlfrescoCloudAPIRateLimitExceeded].location != NSNotFound)
-            {
-                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeAPIRateLimitExceeded];
-            }
-            else
-            {
-                NSDictionary *userInfo = @{kAlfrescoErrorKeyHTTPResponseCode: @(self.statusCode),
-                                           kAlfrescoErrorKeyHTTPResponseBody: self.responseData};
-                
-                error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeHTTPResponse userInfo:userInfo];
-            }
+            AlfrescoLogTrace(@"response status code: %d", self.statusCode);
         }
     }
-    
-    if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
+    else
     {
-        AlfrescoLogTrace(@"response body: %@", [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding]);
+        self.statusCode = -1;
     }
     
-    [self.outputStream close];
-    self.outputStream = nil;
-    
-    if (self.completionBlock != NULL)
-    {
-        if (error)
-        {
-            self.completionBlock(nil, error);
-        }
-        else
-        {
-            self.completionBlock(self.responseData, nil);
-        }
-    }
-    
-    self.completionBlock = nil;
-    self.connection = nil;
-    self.responseData = nil;
+    completionHandler(NSURLSessionResponseAllow);
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    [self.outputStream close];
-    self.outputStream = nil;
-    
-    [[AlfrescoLog sharedInstance] logErrorFromError:error];
-    
-    if (self.completionBlock != NULL)
-    {
-        self.completionBlock(nil, error);
-    }
-    self.connection = nil;
-}
-
-
-#pragma Cancellation
+#pragma mark AlfrescoCancellableRequest method
 
 - (void)cancel
 {
-    if (self.connection)
+    if (self.URLSession)
     {
         AlfrescoDataCompletionBlock dataCompletionBlock = self.completionBlock;
         self.completionBlock = nil;
         
-        [self.connection cancel];
-        self.connection = nil;
+        [self.URLSession invalidateAndCancel];
+        self.URLSession = nil;
+        
         [self.outputStream close];
         self.outputStream = nil;
         

@@ -36,32 +36,16 @@
     return self;
 }
 
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
-{
-    if ([protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate] && self.credential.identity)
-    {
-        // Client certificate requested and certificate identity available
-        return YES;
-    }
-    
-    return NO;
-}
-
-- (void)connection:(NSURLConnection *)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-{
-    // nothing to do in the default implementation
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
 {
     BOOL isExpectedHost = [self.requestURL.host isEqualToString:challenge.protectionSpace.host];
-    if (challenge.previousFailureCount == 0 && isExpectedHost && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate])
+    if (challenge.previousFailureCount == 0 && isExpectedHost && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate] && self.credential.identity)
     {
-        [[challenge sender] useCredential:self.credential forAuthenticationChallenge:challenge];
+        completionHandler(NSURLSessionAuthChallengeUseCredential, self.credential);
     }
     else
     {
-        [challenge.sender cancelAuthenticationChallenge:challenge];
+        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
     }
 }
 

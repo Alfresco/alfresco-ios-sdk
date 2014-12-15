@@ -87,4 +87,27 @@
     }
 }
 
+- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
+          completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
+{
+    if (challenge.previousFailureCount == 0)
+    {
+        if (challenge.proposedCredential)
+        {
+            AlfrescoLogDebug(@"Authenticating with proposed credential");
+            completionHandler(NSURLSessionAuthChallengeUseCredential, challenge.proposedCredential);
+        }
+        else
+        {
+            AlfrescoLogDebug(@"Authenticating without credential");
+            completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+        }
+    }
+    else
+    {
+        AlfrescoLogDebug(@"Authentication failed, cancelling logon");
+        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
+    }
+}
+
 @end
