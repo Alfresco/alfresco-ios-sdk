@@ -387,25 +387,7 @@
     params.repositoryId = networkIdentifier;
     
     // setup background network session
-    BOOL useBackgroundSession = [(self.sessionData)[kAlfrescoUseBackgroundNetworkSession] boolValue];
-    if (useBackgroundSession)
-    {
-        NSString *backgroundId = self.sessionData[kAlfrescoBackgroundNetworkSessionId];
-        if (!backgroundId)
-        {
-            backgroundId = kAlfrescoDefaultBackgroundNetworkSessionId;
-        }
-        
-        NSString *containerId = self.sessionData[kAlfrescoBackgroundNetworkSessionSharedContainerId];
-        if (!containerId)
-        {
-            containerId = kAlfrescoDefaultBackgroundNetworkSessionSharedContainerId;
-        }
-        
-        [params setObject:@(YES) forKey:kCMISSessionParameterUseBackgroundNetworkSession];
-        [params setObject:backgroundId forKey:kCMISSessionParameterBackgroundNetworkSessionId];
-        [params setObject:containerId forKey:kCMISSessionParameterBackgroundNetworkSessionSharedContainerId];
-    }
+    [self setupCMISBackgroundNetworkSession:params];
 
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
     AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
@@ -592,6 +574,18 @@ This authentication method authorises the user to access the home network assign
     [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
 
     // setup background network session
+    [self setupCMISBackgroundNetworkSession:params];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+    AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
+                                                                              alfrescoRequest:request
+                                                                              completionBlock:completionBlock];
+    request.httpRequest = [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
+    return request;
+}
+
+- (void)setupCMISBackgroundNetworkSession:(CMISSessionParameters *)params
+{
     BOOL useBackgroundSession = [(self.sessionData)[kAlfrescoUseBackgroundNetworkSession] boolValue];
     if (useBackgroundSession)
     {
@@ -611,13 +605,6 @@ This authentication method authorises the user to access the home network assign
         [params setObject:backgroundId forKey:kCMISSessionParameterBackgroundNetworkSessionId];
         [params setObject:containerId forKey:kCMISSessionParameterBackgroundNetworkSessionSharedContainerId];
     }
-    
-    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
-    AlfrescoArrayCompletionBlock repositoryCompletionBlock = [self repositoriesWithParameters:params
-                                                                              alfrescoRequest:request
-                                                                              completionBlock:completionBlock];
-    request.httpRequest = [CMISSession arrayOfRepositories:params completionBlock:repositoryCompletionBlock];
-    return request;
 }
 
 /**
