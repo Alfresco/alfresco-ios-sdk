@@ -1791,30 +1791,24 @@
                      }
                      else
                      {
-                         XCTAssertTrue(pagingResult.totalItems == numberOfDocs, @"Expected more than %d documents in total, but got %d", maxItems, pagingResult.totalItems);
-                         NSInteger maxToBeFound = numberOfDocs - skipCount;
-                         if (maxToBeFound < 0)
+                         XCTAssertTrue(pagingResult.totalItems == -1, @"Expected the paging result to be -1 but got %d", pagingResult.totalItems);
+                         
+                         if (numberOfDocs > maxItems)
                          {
-                             maxToBeFound = 0;
-                         }
-                         if (maxItems <= maxToBeFound)
-                         {
-                             XCTAssertTrue(pagingResult.objects.count == maxItems, @"Expected %d documents, but got %lu", maxItems, (unsigned long)pagingResult.objects.count);
-                             if (maxItems < maxToBeFound)
+                             if (numberOfDocs == maxItems)
                              {
-                                 XCTAssertTrue(pagingResult.hasMoreItems, @"we should have more items than we got back");
+                                 XCTAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
                              }
                              else
                              {
-                                 XCTAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
+                                 XCTAssertTrue(pagingResult.hasMoreItems, @"we should have more items than we got back");
                              }
                          }
                          else
                          {
-                             XCTAssertTrue(pagingResult.objects.count == maxToBeFound, @"Expected %ld documents, but got %lu", (long)maxToBeFound, (unsigned long)pagingResult.objects.count);
+                             XCTAssertTrue(pagingResult.objects.count == numberOfDocs, @"Expected %ld documents, but got %lu", numberOfDocs, (unsigned long)pagingResult.objects.count);
                              XCTAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
                          }
-                         
                          
                          self.lastTestSuccessful = YES;
                      }
@@ -1857,7 +1851,7 @@
              else
              {
                  XCTAssertTrue(pagingResult.objects.count > 0, @"Expected more than 0 documents, but instead we got %lu", (unsigned long)pagingResult.objects.count);
-                 XCTAssertTrue(pagingResult.totalItems > 2, @"Expected more than 2 documents in total");
+                 XCTAssertTrue(pagingResult.totalItems == -1, @"Expected to get -1 for total items but got: %d", pagingResult.totalItems);
                  
                  self.lastTestSuccessful = YES;
              }
@@ -1964,11 +1958,10 @@
                      }
                      else
                      {
-                         XCTAssertTrue(pagingResult.totalItems == numberOfFolders, @"Expected %lu folders in total, but we have %lu", (unsigned long)numberOfFolders, (unsigned long)pagingResult.totalItems);
+                         XCTAssertTrue(pagingResult.totalItems == -1, @"Expected the paging result to be -1 but got %d", pagingResult.totalItems);
                          
                          if (numberOfFolders > maxItems)
                          {
-                             XCTAssertTrue(pagingResult.objects.count == maxItems, @"Expected at least %d folders, but got back %lu", maxItems, (unsigned long)pagingResult.objects.count);
                              if (numberOfFolders == maxItems)
                              {
                                  XCTAssertFalse(pagingResult.hasMoreItems, @"Expected no more folders available, but instead it says there are more items");
@@ -5162,10 +5155,13 @@
             else
             {
                 XCTAssertNotNil(pagingResult, @"The paging result should not be nil");
-                
-                XCTAssertTrue([pagingResult.objects count] == maxItemsExpected, @"Expected the objects array to be of size %i, instead got back a size %lu", maxItemsExpected, (unsigned long)pagingResult.objects.count);
+                // NOTE: we're not guaranteed to get the number of objects requested returned as filtering is performed on the client
+                //       so just check we didn't get too many.
+                XCTAssertTrue(pagingResult.objects.count <= maxItemsExpected,
+                              @"Expected the size of the objects array to be %d or less, but it was: %lu",
+                              maxItemsExpected, (unsigned long)pagingResult.objects.count);
                 XCTAssertTrue(pagingResult.hasMoreItems, @"Expected the paging result to have more items");
-                XCTAssertTrue(pagingResult.totalItems > maxItemsExpected, @"Expected the paging result to have more than %i items as the total number, but instead got back %i", maxItemsExpected, pagingResult.totalItems);
+                XCTAssertTrue(pagingResult.totalItems == -1, @"Expected the paging result to be -1 but got: %d", pagingResult.totalItems);
                 
                 // check if array is sorted correctly
                 NSArray *sortedArray = [pagingResult.objects sortedArrayUsingComparator:^(id a, id b) {
