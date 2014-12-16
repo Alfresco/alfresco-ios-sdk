@@ -1126,13 +1126,10 @@
                 orderBy = kAlfrescoModelPropertyTitle;
             }
         }
-        
-        // append DESC if descending sort has been requested
-        if (!listingContext.sortAscending)
-        {
-            orderBy = [NSString stringWithFormat:@"%@ DESC", orderBy];
-        }
     }
+    
+    // append sort order
+    orderBy = [NSString stringWithFormat:@"%@ %@", orderBy, listingContext.sortAscending ? @"ASC" : @"DESC"];
     
     return orderBy;
 }
