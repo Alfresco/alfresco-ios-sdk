@@ -261,6 +261,7 @@
 
 
 /** Retrieves all the documents in the given folder with a listing context.
+    NOTE: The number of returned results may not match the requested maxItems as filtering has to occur on the client.
  
  @param folder The folder for which the documents are retrieved.
  @param listingContext The listing context with a paging definition that's used to retrieve the documents.
@@ -280,7 +281,8 @@
                              completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
 
 
-/** Retrieves all the sub folders in the given folder with a listing context
+/** Retrieves all the sub folders in the given folder with a listing context.
+    NOTE: The number of returned results may not match the requested maxItems as filtering has to occur on the client.
  
  @param folder The folder for which the sub folders are retrieved.
  @param listingContext The listing context with a paging definition that's used to retrieve the sub folders.
