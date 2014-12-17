@@ -276,8 +276,10 @@
                 }
                 else
                 {
-                    // ideally here we'd go back to the server to find the answer but the legacy
-                    // API doesn't support it, so if it's not in the cache we'l presume it is not favorited
+                    // we could go back to the server here (if there was an API) but typically this method is
+                    // called for every node returned resulting in a large number of requests so we'll presume
+                    // the node is not a favorite, if it's state has changed on the server it will get picked up
+                    // when the cache is rebuilt.
                     completionBlock(YES, NO, nil);
                 }
             }
@@ -298,8 +300,10 @@
         }
         else
         {
-            // ideally here we'd go back to the server to find the answer but the legacy
-            // API doesn't support it, so if it's not in the cache we'l presume it is not favorited
+            // we could go back to the server here (if there was an API) but typically this method is
+            // called for every node returned resulting in a large number of requests so we'll presume
+            // the node is not a favorite, if it's state has changed on the server it will get picked up
+            // when the cache is rebuilt.
             completionBlock(YES, NO, nil);
         }
     }
