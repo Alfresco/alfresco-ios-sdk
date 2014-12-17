@@ -188,8 +188,11 @@
     
     if (requestError)
     {
-        // log the error
-        [[AlfrescoLog sharedInstance] logErrorFromError:requestError];
+        // log the error (if it's likely to be an unrecoverable error)
+        if (self.statusCode >= 500)
+        {
+            [[AlfrescoLog sharedInstance] logErrorFromError:requestError];
+        }
         
         // make sure we don't return any result
         self.responseData = nil;
