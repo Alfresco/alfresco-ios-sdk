@@ -386,7 +386,7 @@ static const double kFavoritesRequestRateLimit = 0.1; // seconds between request
                 }
                 else
                 {
-                    // we could go back to the server here but typically this method is called for every node returned
+                    // we could go back to the server here but typically this method is called for every node
                     // resulting in a large number of requests so we'll presume the node is not a favorite,
                     // if it's state has changed on the server it will get picked up when the cache is rebuilt.
                     completionBlock(YES, NO, nil);
@@ -409,7 +409,7 @@ static const double kFavoritesRequestRateLimit = 0.1; // seconds between request
         }
         else
         {
-            // we could go back to the server here but typically this method is called for every node returned
+            // we could go back to the server here but typically this method is called for every node
             // resulting in a large number of requests so we'll presume the node is not a favorite,
             // if it's state has changed on the server it will get picked up when the cache is rebuilt.
             completionBlock(YES, NO, nil);
