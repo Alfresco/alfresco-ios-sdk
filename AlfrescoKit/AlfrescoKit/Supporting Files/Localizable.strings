@@ -1,0 +1,72 @@
+/*
+ ******************************************************************************
+ * Copyright (C) 2005-2015 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Mobile SDK.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *****************************************************************************
+ */
+
+/**
+ Localizable.strings
+ AlfrescoKit
+ 
+ Author: Tauseef Mughal (Alfresco)
+ */
+
+
+/**
+ * Relative Dates
+ */
+"relative.date.past.n-years" = "%d years ago";
+"relative.date.past.one-year" = "A year ago";
+"relative.date.past.n-months" = "%d months ago";
+"relative.date.past.one-month" = "A month ago";
+"relative.date.past.n-weeks" = "%d weeks ago";
+"relative.date.past.one-week" = "A week ago";
+"relative.date.past.n-days" = "%d days ago";
+"relative.date.past.one-day" = "Yesterday";
+"relative.date.past.n-hours" = "%d hours ago";
+"relative.date.past.one-hour" = "An hour ago";
+"relative.date.past.n-minutes" = "%d minutes ago";
+"relative.date.past.one-minute" = "A minute ago";
+"relative.date.past.n-seconds" = "%d seconds ago";
+"relative.date.just-now" = "Just now";
+"relative.date.future.n-seconds" = "%d seconds from now";
+"relative.date.future.one-minute" = "A minute from now";
+"relative.date.future.n-minutes" = "%d minutes from now";
+"relative.date.future.one-hour" = "An hour from now";
+"relative.date.future.n-hours" = "%d hours from now";
+"relative.date.future.one-day" = "Tomorrow";
+"relative.date.future.n-days" = "%d days from now";
+"relative.date.future.one-week" = "A week from now";
+"relative.date.future.n-weeks" = "%d weeks from now";
+"relative.date.future.one-month" = "A month from now";
+"relative.date.future.n-months" = "%d months from now";
+"relative.date.future.one-year" = "A year from now";
+"relative.date.future.n-years" = "%d years from now";
+
+/**
+ * File Sizes
+ */
+"file.size.bytes" = "Bytes";
+"file.size.kilobytes" = "KB";
+"file.size.megabytes" = "MB";
+"file.size.gigabytes" = "GB";
+
+/**
+ * AKAlfrescoNodePickingListViewController
+ */
+"ak.alfresco.node.picking.list.view.controller" = "Choose";
+

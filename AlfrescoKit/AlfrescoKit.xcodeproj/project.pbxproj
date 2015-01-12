@@ -1,0 +1,965 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7374B89B1A6416050091A4FD /* AKAlfrescoNodeListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73B8C1D41A604F1600571B28 /* AKAlfrescoNodeListViewController.h */; };
+		7374B89C1A6416050091A4FD /* AKAlfrescoNodePickingListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73B8C1D81A604F1600571B28 /* AKAlfrescoNodePickingListViewController.h */; };
+		73B8C09A1A5D9B3700571B28 /* libAlfrescoKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */; };
+		73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a */; };
+		73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		73B8C1251A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1231A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h */; };
+		73B8C1261A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1241A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m */; };
+		73B8C1291A5EAF3900571B28 /* AlfrescoKit-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1281A5EAF3900571B28 /* AlfrescoKit-Prefix.pch */; };
+		73B8C1321A5EB25F00571B28 /* AlfrescoKit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */; };
+		73B8C1381A5ECA0100571B28 /* libAlfrescoKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */; };
+		73B8C1511A5ECFF100571B28 /* AKConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C14F1A5ECFF100571B28 /* AKConstants.h */; };
+		73B8C1521A5ECFF100571B28 /* AKConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1501A5ECFF100571B28 /* AKConstants.m */; };
+		73B8C1541A5ED13500571B28 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1531A5ED07100571B28 /* Info.plist */; };
+		73B8C1591A5ED77F00571B28 /* AKAlfrescoNodeCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1561A5ED77F00571B28 /* AKAlfrescoNodeCell.h */; };
+		73B8C15A1A5ED77F00571B28 /* AKAlfrescoNodeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1571A5ED77F00571B28 /* AKAlfrescoNodeCell.m */; };
+		73B8C15B1A5ED78600571B28 /* AKAlfrescoNodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1581A5ED77F00571B28 /* AKAlfrescoNodeCell.xib */; };
+		73B8C1901A5EDB3400571B28 /* large_audio.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C15F1A5EDB3400571B28 /* large_audio.png */; };
+		73B8C1911A5EDB3400571B28 /* large_audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1601A5EDB3400571B28 /* large_audio@2x.png */; };
+		73B8C1921A5EDB3400571B28 /* large_document.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1611A5EDB3400571B28 /* large_document.png */; };
+		73B8C1931A5EDB3400571B28 /* large_document@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1621A5EDB3400571B28 /* large_document@2x.png */; };
+		73B8C1941A5EDB3400571B28 /* large_excel.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1631A5EDB3400571B28 /* large_excel.png */; };
+		73B8C1951A5EDB3400571B28 /* large_excel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1641A5EDB3400571B28 /* large_excel@2x.png */; };
+		73B8C1961A5EDB3400571B28 /* large_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1651A5EDB3400571B28 /* large_image.png */; };
+		73B8C1971A5EDB3400571B28 /* large_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1661A5EDB3400571B28 /* large_image@2x.png */; };
+		73B8C1981A5EDB3400571B28 /* large_notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1671A5EDB3400571B28 /* large_notes.png */; };
+		73B8C1991A5EDB3400571B28 /* large_notes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1681A5EDB3400571B28 /* large_notes@2x.png */; };
+		73B8C19A1A5EDB3400571B28 /* large_pdf.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1691A5EDB3400571B28 /* large_pdf.png */; };
+		73B8C19B1A5EDB3400571B28 /* large_pdf@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C16A1A5EDB3400571B28 /* large_pdf@2x.png */; };
+		73B8C19C1A5EDB3400571B28 /* large_powerpoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C16B1A5EDB3400571B28 /* large_powerpoint.png */; };
+		73B8C19D1A5EDB3400571B28 /* large_powerpoint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C16C1A5EDB3400571B28 /* large_powerpoint@2x.png */; };
+		73B8C19E1A5EDB3400571B28 /* large_video.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C16D1A5EDB3400571B28 /* large_video.png */; };
+		73B8C19F1A5EDB3400571B28 /* large_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C16E1A5EDB3400571B28 /* large_video@2x.png */; };
+		73B8C1A01A5EDB3400571B28 /* large_word.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C16F1A5EDB3400571B28 /* large_word.png */; };
+		73B8C1A11A5EDB3400571B28 /* large_word@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1701A5EDB3400571B28 /* large_word@2x.png */; };
+		73B8C1A21A5EDB3400571B28 /* large_xml.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1711A5EDB3400571B28 /* large_xml.png */; };
+		73B8C1A31A5EDB3400571B28 /* large_xml@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1721A5EDB3400571B28 /* large_xml@2x.png */; };
+		73B8C1A41A5EDB3400571B28 /* large_zip.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1731A5EDB3400571B28 /* large_zip.png */; };
+		73B8C1A51A5EDB3400571B28 /* large_zip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1741A5EDB3400571B28 /* large_zip@2x.png */; };
+		73B8C1A61A5EDB3400571B28 /* small_audio.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1761A5EDB3400571B28 /* small_audio.png */; };
+		73B8C1A71A5EDB3400571B28 /* small_audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1771A5EDB3400571B28 /* small_audio@2x.png */; };
+		73B8C1A81A5EDB3400571B28 /* small_document.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1781A5EDB3400571B28 /* small_document.png */; };
+		73B8C1A91A5EDB3400571B28 /* small_document@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1791A5EDB3400571B28 /* small_document@2x.png */; };
+		73B8C1AA1A5EDB3400571B28 /* small_excel.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C17A1A5EDB3400571B28 /* small_excel.png */; };
+		73B8C1AB1A5EDB3400571B28 /* small_excel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C17B1A5EDB3400571B28 /* small_excel@2x.png */; };
+		73B8C1AC1A5EDB3400571B28 /* small_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C17C1A5EDB3400571B28 /* small_folder.png */; };
+		73B8C1AD1A5EDB3400571B28 /* small_folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C17D1A5EDB3400571B28 /* small_folder@2x.png */; };
+		73B8C1AE1A5EDB3400571B28 /* small_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C17E1A5EDB3400571B28 /* small_image.png */; };
+		73B8C1AF1A5EDB3400571B28 /* small_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C17F1A5EDB3400571B28 /* small_image@2x.png */; };
+		73B8C1B01A5EDB3400571B28 /* small_notes.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1801A5EDB3400571B28 /* small_notes.png */; };
+		73B8C1B11A5EDB3400571B28 /* small_notes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1811A5EDB3400571B28 /* small_notes@2x.png */; };
+		73B8C1B21A5EDB3400571B28 /* small_pdf.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1821A5EDB3400571B28 /* small_pdf.png */; };
+		73B8C1B31A5EDB3400571B28 /* small_pdf@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1831A5EDB3400571B28 /* small_pdf@2x.png */; };
+		73B8C1B41A5EDB3400571B28 /* small_powerpoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1841A5EDB3400571B28 /* small_powerpoint.png */; };
+		73B8C1B51A5EDB3400571B28 /* small_powerpoint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1851A5EDB3400571B28 /* small_powerpoint@2x.png */; };
+		73B8C1B61A5EDB3400571B28 /* small_site.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1861A5EDB3400571B28 /* small_site.png */; };
+		73B8C1B71A5EDB3400571B28 /* small_site@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1871A5EDB3400571B28 /* small_site@2x.png */; };
+		73B8C1B81A5EDB3400571B28 /* small_video.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1881A5EDB3400571B28 /* small_video.png */; };
+		73B8C1B91A5EDB3400571B28 /* small_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1891A5EDB3400571B28 /* small_video@2x.png */; };
+		73B8C1BA1A5EDB3400571B28 /* small_word.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C18A1A5EDB3400571B28 /* small_word.png */; };
+		73B8C1BB1A5EDB3400571B28 /* small_word@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C18B1A5EDB3400571B28 /* small_word@2x.png */; };
+		73B8C1BC1A5EDB3400571B28 /* small_xml.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C18C1A5EDB3400571B28 /* small_xml.png */; };
+		73B8C1BD1A5EDB3400571B28 /* small_xml@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C18D1A5EDB3400571B28 /* small_xml@2x.png */; };
+		73B8C1BE1A5EDB3400571B28 /* small_zip.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C18E1A5EDB3400571B28 /* small_zip.png */; };
+		73B8C1BF1A5EDB3400571B28 /* small_zip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C18F1A5EDB3400571B28 /* small_zip@2x.png */; };
+		73B8C1C81A5FE8F300571B28 /* green_selected_circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1C21A5FE6C300571B28 /* green_selected_circle.png */; };
+		73B8C1C91A5FE8F300571B28 /* green_selected_circle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1C31A5FE6C300571B28 /* green_selected_circle@2x.png */; };
+		73B8C1CD1A60331700571B28 /* AKUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1CB1A60331700571B28 /* AKUtility.h */; };
+		73B8C1CE1A60331700571B28 /* AKUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1CC1A60331700571B28 /* AKUtility.m */; };
+		73B8C1D01A603D7900571B28 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1CF1A60369600571B28 /* Localizable.strings */; };
+		73B8C1D21A6040A400571B28 /* SmallThumbnailImageMapping.plist in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1D11A6040A400571B28 /* SmallThumbnailImageMapping.plist */; };
+		73B8C1DA1A604F1600571B28 /* AKAlfrescoNodeListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1D41A604F1600571B28 /* AKAlfrescoNodeListViewController.h */; };
+		73B8C1DB1A604F1600571B28 /* AKAlfrescoNodeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1D51A604F1600571B28 /* AKAlfrescoNodeListViewController.m */; };
+		73B8C1DC1A604F1600571B28 /* AKAlfrescoNodePickingListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1D81A604F1600571B28 /* AKAlfrescoNodePickingListViewController.h */; };
+		73B8C1DD1A604F1600571B28 /* AKAlfrescoNodePickingListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1D91A604F1600571B28 /* AKAlfrescoNodePickingListViewController.m */; };
+		73B8C1DF1A604F2100571B28 /* AKAlfrescoNodeListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73B8C1D61A604F1600571B28 /* AKAlfrescoNodeListViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		73B8C09B1A5D9B3700571B28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 73B8C0861A5D9B3700571B28 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 73B8C08D1A5D9B3700571B28;
+			remoteInfo = AlfrescoKit;
+		};
+		73B8C0C61A5D9D1100571B28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 73B8C0BF1A5D9D1000571B28 /* AlfrescoSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4EB0769715B00D8E00DF7DED;
+			remoteInfo = "AlfrescoSDK-iOS";
+		};
+		73B8C0C81A5D9D1100571B28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 73B8C0BF1A5D9D1000571B28 /* AlfrescoSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4EB076A715B00D8E00DF7DED;
+			remoteInfo = "AlfrescoSDK-iOSTests";
+		};
+		73B8C0CA1A5D9D1100571B28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 73B8C0BF1A5D9D1000571B28 /* AlfrescoSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 73D01E2D197FC3D00065E107;
+			remoteInfo = "AlfrescoSDK-OSX";
+		};
+		73B8C0CC1A5D9D1100571B28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 73B8C0BF1A5D9D1000571B28 /* AlfrescoSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7333E5EA197FD15000B4CB1D;
+			remoteInfo = "AlfrescoSDK-OSXTests";
+		};
+		73B8C0CE1A5D9D2000571B28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 73B8C0BF1A5D9D1000571B28 /* AlfrescoSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 4EB0769615B00D8E00DF7DED;
+			remoteInfo = "AlfrescoSDK-iOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		73B8C08C1A5D9B3700571B28 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				7374B89B1A6416050091A4FD /* AKAlfrescoNodeListViewController.h in CopyFiles */,
+				7374B89C1A6416050091A4FD /* AKAlfrescoNodePickingListViewController.h in CopyFiles */,
+				73B8C1321A5EB25F00571B28 /* AlfrescoKit.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAlfrescoKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		73B8C0991A5D9B3700571B28 /* AlfrescoKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfrescoKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		73B8C09F1A5D9B3700571B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoKit.h; sourceTree = "<group>"; };
+		73B8C0BF1A5D9D1000571B28 /* AlfrescoSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AlfrescoSDK.xcodeproj; path = ../AlfrescoSDK/AlfrescoSDK.xcodeproj; sourceTree = "<group>"; };
+		73B8C11A1A5EAB1D00571B28 /* AlfrescoKitBundle.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfrescoKitBundle.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		73B8C11D1A5EAB1D00571B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		73B8C1231A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+AlfrescoKit.h"; sourceTree = "<group>"; };
+		73B8C1241A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+AlfrescoKit.m"; sourceTree = "<group>"; };
+		73B8C1281A5EAF3900571B28 /* AlfrescoKit-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AlfrescoKit-Prefix.pch"; sourceTree = "<group>"; };
+		73B8C14F1A5ECFF100571B28 /* AKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKConstants.h; sourceTree = "<group>"; };
+		73B8C1501A5ECFF100571B28 /* AKConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKConstants.m; sourceTree = "<group>"; };
+		73B8C1531A5ED07100571B28 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		73B8C1561A5ED77F00571B28 /* AKAlfrescoNodeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKAlfrescoNodeCell.h; sourceTree = "<group>"; };
+		73B8C1571A5ED77F00571B28 /* AKAlfrescoNodeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKAlfrescoNodeCell.m; sourceTree = "<group>"; };
+		73B8C1581A5ED77F00571B28 /* AKAlfrescoNodeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKAlfrescoNodeCell.xib; sourceTree = "<group>"; };
+		73B8C15F1A5EDB3400571B28 /* large_audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_audio.png; sourceTree = "<group>"; };
+		73B8C1601A5EDB3400571B28 /* large_audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_audio@2x.png"; sourceTree = "<group>"; };
+		73B8C1611A5EDB3400571B28 /* large_document.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_document.png; sourceTree = "<group>"; };
+		73B8C1621A5EDB3400571B28 /* large_document@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_document@2x.png"; sourceTree = "<group>"; };
+		73B8C1631A5EDB3400571B28 /* large_excel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_excel.png; sourceTree = "<group>"; };
+		73B8C1641A5EDB3400571B28 /* large_excel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_excel@2x.png"; sourceTree = "<group>"; };
+		73B8C1651A5EDB3400571B28 /* large_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_image.png; sourceTree = "<group>"; };
+		73B8C1661A5EDB3400571B28 /* large_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_image@2x.png"; sourceTree = "<group>"; };
+		73B8C1671A5EDB3400571B28 /* large_notes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_notes.png; sourceTree = "<group>"; };
+		73B8C1681A5EDB3400571B28 /* large_notes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_notes@2x.png"; sourceTree = "<group>"; };
+		73B8C1691A5EDB3400571B28 /* large_pdf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_pdf.png; sourceTree = "<group>"; };
+		73B8C16A1A5EDB3400571B28 /* large_pdf@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_pdf@2x.png"; sourceTree = "<group>"; };
+		73B8C16B1A5EDB3400571B28 /* large_powerpoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_powerpoint.png; sourceTree = "<group>"; };
+		73B8C16C1A5EDB3400571B28 /* large_powerpoint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_powerpoint@2x.png"; sourceTree = "<group>"; };
+		73B8C16D1A5EDB3400571B28 /* large_video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_video.png; sourceTree = "<group>"; };
+		73B8C16E1A5EDB3400571B28 /* large_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_video@2x.png"; sourceTree = "<group>"; };
+		73B8C16F1A5EDB3400571B28 /* large_word.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_word.png; sourceTree = "<group>"; };
+		73B8C1701A5EDB3400571B28 /* large_word@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_word@2x.png"; sourceTree = "<group>"; };
+		73B8C1711A5EDB3400571B28 /* large_xml.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_xml.png; sourceTree = "<group>"; };
+		73B8C1721A5EDB3400571B28 /* large_xml@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_xml@2x.png"; sourceTree = "<group>"; };
+		73B8C1731A5EDB3400571B28 /* large_zip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = large_zip.png; sourceTree = "<group>"; };
+		73B8C1741A5EDB3400571B28 /* large_zip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large_zip@2x.png"; sourceTree = "<group>"; };
+		73B8C1761A5EDB3400571B28 /* small_audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_audio.png; sourceTree = "<group>"; };
+		73B8C1771A5EDB3400571B28 /* small_audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_audio@2x.png"; sourceTree = "<group>"; };
+		73B8C1781A5EDB3400571B28 /* small_document.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_document.png; sourceTree = "<group>"; };
+		73B8C1791A5EDB3400571B28 /* small_document@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_document@2x.png"; sourceTree = "<group>"; };
+		73B8C17A1A5EDB3400571B28 /* small_excel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_excel.png; sourceTree = "<group>"; };
+		73B8C17B1A5EDB3400571B28 /* small_excel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_excel@2x.png"; sourceTree = "<group>"; };
+		73B8C17C1A5EDB3400571B28 /* small_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_folder.png; sourceTree = "<group>"; };
+		73B8C17D1A5EDB3400571B28 /* small_folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_folder@2x.png"; sourceTree = "<group>"; };
+		73B8C17E1A5EDB3400571B28 /* small_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_image.png; sourceTree = "<group>"; };
+		73B8C17F1A5EDB3400571B28 /* small_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_image@2x.png"; sourceTree = "<group>"; };
+		73B8C1801A5EDB3400571B28 /* small_notes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_notes.png; sourceTree = "<group>"; };
+		73B8C1811A5EDB3400571B28 /* small_notes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_notes@2x.png"; sourceTree = "<group>"; };
+		73B8C1821A5EDB3400571B28 /* small_pdf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_pdf.png; sourceTree = "<group>"; };
+		73B8C1831A5EDB3400571B28 /* small_pdf@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_pdf@2x.png"; sourceTree = "<group>"; };
+		73B8C1841A5EDB3400571B28 /* small_powerpoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_powerpoint.png; sourceTree = "<group>"; };
+		73B8C1851A5EDB3400571B28 /* small_powerpoint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_powerpoint@2x.png"; sourceTree = "<group>"; };
+		73B8C1861A5EDB3400571B28 /* small_site.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_site.png; sourceTree = "<group>"; };
+		73B8C1871A5EDB3400571B28 /* small_site@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_site@2x.png"; sourceTree = "<group>"; };
+		73B8C1881A5EDB3400571B28 /* small_video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_video.png; sourceTree = "<group>"; };
+		73B8C1891A5EDB3400571B28 /* small_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_video@2x.png"; sourceTree = "<group>"; };
+		73B8C18A1A5EDB3400571B28 /* small_word.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_word.png; sourceTree = "<group>"; };
+		73B8C18B1A5EDB3400571B28 /* small_word@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_word@2x.png"; sourceTree = "<group>"; };
+		73B8C18C1A5EDB3400571B28 /* small_xml.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_xml.png; sourceTree = "<group>"; };
+		73B8C18D1A5EDB3400571B28 /* small_xml@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_xml@2x.png"; sourceTree = "<group>"; };
+		73B8C18E1A5EDB3400571B28 /* small_zip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = small_zip.png; sourceTree = "<group>"; };
+		73B8C18F1A5EDB3400571B28 /* small_zip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "small_zip@2x.png"; sourceTree = "<group>"; };
+		73B8C1C21A5FE6C300571B28 /* green_selected_circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_selected_circle.png; sourceTree = "<group>"; };
+		73B8C1C31A5FE6C300571B28 /* green_selected_circle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_selected_circle@2x.png"; sourceTree = "<group>"; };
+		73B8C1CB1A60331700571B28 /* AKUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKUtility.h; sourceTree = "<group>"; };
+		73B8C1CC1A60331700571B28 /* AKUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKUtility.m; sourceTree = "<group>"; };
+		73B8C1CF1A60369600571B28 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		73B8C1D11A6040A400571B28 /* SmallThumbnailImageMapping.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SmallThumbnailImageMapping.plist; sourceTree = "<group>"; };
+		73B8C1D41A604F1600571B28 /* AKAlfrescoNodeListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKAlfrescoNodeListViewController.h; sourceTree = "<group>"; };
+		73B8C1D51A604F1600571B28 /* AKAlfrescoNodeListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKAlfrescoNodeListViewController.m; sourceTree = "<group>"; };
+		73B8C1D61A604F1600571B28 /* AKAlfrescoNodeListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKAlfrescoNodeListViewController.xib; sourceTree = "<group>"; };
+		73B8C1D81A604F1600571B28 /* AKAlfrescoNodePickingListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKAlfrescoNodePickingListViewController.h; sourceTree = "<group>"; };
+		73B8C1D91A604F1600571B28 /* AKAlfrescoNodePickingListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKAlfrescoNodePickingListViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		73B8C08B1A5D9B3700571B28 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73B8C0961A5D9B3700571B28 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73B8C09A1A5D9B3700571B28 /* libAlfrescoKit.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73B8C1171A5EAB1D00571B28 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73B8C1381A5ECA0100571B28 /* libAlfrescoKit.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		73B8C0851A5D9B3700571B28 = {
+			isa = PBXGroup;
+			children = (
+				73B8C0901A5D9B3700571B28 /* AlfrescoKit */,
+				73B8C0BE1A5D9CFF00571B28 /* AlfrescoSDK */,
+				73B8C09D1A5D9B3700571B28 /* AlfrescoKitTests */,
+				73B8C11B1A5EAB1D00571B28 /* AlfrescoKitBundle */,
+				73B8C08F1A5D9B3700571B28 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		73B8C08F1A5D9B3700571B28 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */,
+				73B8C0991A5D9B3700571B28 /* AlfrescoKitTests.xctest */,
+				73B8C11A1A5EAB1D00571B28 /* AlfrescoKitBundle.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		73B8C0901A5D9B3700571B28 /* AlfrescoKit */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */,
+				73B8C14E1A5ECFD600571B28 /* Constants */,
+				73B8C1221A5EAC9000571B28 /* Categories */,
+				73B8C1551A5ED72800571B28 /* Cells */,
+				73B8C1D31A604F1600571B28 /* Browsing View Controller */,
+				73B8C1D71A604F1600571B28 /* Picking View Controller */,
+				73B8C1CA1A6032FE00571B28 /* Utilities */,
+				73B8C1271A5EAF1D00571B28 /* Supporting Files */,
+			);
+			path = AlfrescoKit;
+			sourceTree = "<group>";
+		};
+		73B8C09D1A5D9B3700571B28 /* AlfrescoKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C09E1A5D9B3700571B28 /* Supporting Files */,
+			);
+			path = AlfrescoKitTests;
+			sourceTree = "<group>";
+		};
+		73B8C09E1A5D9B3700571B28 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C09F1A5D9B3700571B28 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		73B8C0BE1A5D9CFF00571B28 /* AlfrescoSDK */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C0BF1A5D9D1000571B28 /* AlfrescoSDK.xcodeproj */,
+			);
+			name = AlfrescoSDK;
+			sourceTree = "<group>";
+		};
+		73B8C0C01A5D9D1000571B28 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a */,
+				73B8C0C91A5D9D1100571B28 /* AlfrescoSDK-iOSTests.xctest */,
+				73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4-dev-debug.a */,
+				73B8C0CD1A5D9D1100571B28 /* AlfrescoSDK-OSXTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		73B8C11B1A5EAB1D00571B28 /* AlfrescoKitBundle */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C11C1A5EAB1D00571B28 /* Supporting Files */,
+			);
+			path = AlfrescoKitBundle;
+			sourceTree = "<group>";
+		};
+		73B8C11C1A5EAB1D00571B28 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C11D1A5EAB1D00571B28 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		73B8C1221A5EAC9000571B28 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C1231A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h */,
+				73B8C1241A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		73B8C1271A5EAF1D00571B28 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C15C1A5EDAD000571B28 /* Images */,
+				73B8C1281A5EAF3900571B28 /* AlfrescoKit-Prefix.pch */,
+				73B8C1531A5ED07100571B28 /* Info.plist */,
+				73B8C1CF1A60369600571B28 /* Localizable.strings */,
+				73B8C1D11A6040A400571B28 /* SmallThumbnailImageMapping.plist */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		73B8C14E1A5ECFD600571B28 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C14F1A5ECFF100571B28 /* AKConstants.h */,
+				73B8C1501A5ECFF100571B28 /* AKConstants.m */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		73B8C1551A5ED72800571B28 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C1561A5ED77F00571B28 /* AKAlfrescoNodeCell.h */,
+				73B8C1571A5ED77F00571B28 /* AKAlfrescoNodeCell.m */,
+				73B8C1581A5ED77F00571B28 /* AKAlfrescoNodeCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		73B8C15C1A5EDAD000571B28 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C15D1A5EDB3400571B28 /* Icons */,
+				73B8C1C11A5FE6C300571B28 /* Selection */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		73B8C15D1A5EDB3400571B28 /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C15E1A5EDB3400571B28 /* Large Images */,
+				73B8C1751A5EDB3400571B28 /* Small Images */,
+			);
+			path = Icons;
+			sourceTree = "<group>";
+		};
+		73B8C15E1A5EDB3400571B28 /* Large Images */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C15F1A5EDB3400571B28 /* large_audio.png */,
+				73B8C1601A5EDB3400571B28 /* large_audio@2x.png */,
+				73B8C1611A5EDB3400571B28 /* large_document.png */,
+				73B8C1621A5EDB3400571B28 /* large_document@2x.png */,
+				73B8C1631A5EDB3400571B28 /* large_excel.png */,
+				73B8C1641A5EDB3400571B28 /* large_excel@2x.png */,
+				73B8C1651A5EDB3400571B28 /* large_image.png */,
+				73B8C1661A5EDB3400571B28 /* large_image@2x.png */,
+				73B8C1671A5EDB3400571B28 /* large_notes.png */,
+				73B8C1681A5EDB3400571B28 /* large_notes@2x.png */,
+				73B8C1691A5EDB3400571B28 /* large_pdf.png */,
+				73B8C16A1A5EDB3400571B28 /* large_pdf@2x.png */,
+				73B8C16B1A5EDB3400571B28 /* large_powerpoint.png */,
+				73B8C16C1A5EDB3400571B28 /* large_powerpoint@2x.png */,
+				73B8C16D1A5EDB3400571B28 /* large_video.png */,
+				73B8C16E1A5EDB3400571B28 /* large_video@2x.png */,
+				73B8C16F1A5EDB3400571B28 /* large_word.png */,
+				73B8C1701A5EDB3400571B28 /* large_word@2x.png */,
+				73B8C1711A5EDB3400571B28 /* large_xml.png */,
+				73B8C1721A5EDB3400571B28 /* large_xml@2x.png */,
+				73B8C1731A5EDB3400571B28 /* large_zip.png */,
+				73B8C1741A5EDB3400571B28 /* large_zip@2x.png */,
+			);
+			path = "Large Images";
+			sourceTree = "<group>";
+		};
+		73B8C1751A5EDB3400571B28 /* Small Images */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C1761A5EDB3400571B28 /* small_audio.png */,
+				73B8C1771A5EDB3400571B28 /* small_audio@2x.png */,
+				73B8C1781A5EDB3400571B28 /* small_document.png */,
+				73B8C1791A5EDB3400571B28 /* small_document@2x.png */,
+				73B8C17A1A5EDB3400571B28 /* small_excel.png */,
+				73B8C17B1A5EDB3400571B28 /* small_excel@2x.png */,
+				73B8C17C1A5EDB3400571B28 /* small_folder.png */,
+				73B8C17D1A5EDB3400571B28 /* small_folder@2x.png */,
+				73B8C17E1A5EDB3400571B28 /* small_image.png */,
+				73B8C17F1A5EDB3400571B28 /* small_image@2x.png */,
+				73B8C1801A5EDB3400571B28 /* small_notes.png */,
+				73B8C1811A5EDB3400571B28 /* small_notes@2x.png */,
+				73B8C1821A5EDB3400571B28 /* small_pdf.png */,
+				73B8C1831A5EDB3400571B28 /* small_pdf@2x.png */,
+				73B8C1841A5EDB3400571B28 /* small_powerpoint.png */,
+				73B8C1851A5EDB3400571B28 /* small_powerpoint@2x.png */,
+				73B8C1861A5EDB3400571B28 /* small_site.png */,
+				73B8C1871A5EDB3400571B28 /* small_site@2x.png */,
+				73B8C1881A5EDB3400571B28 /* small_video.png */,
+				73B8C1891A5EDB3400571B28 /* small_video@2x.png */,
+				73B8C18A1A5EDB3400571B28 /* small_word.png */,
+				73B8C18B1A5EDB3400571B28 /* small_word@2x.png */,
+				73B8C18C1A5EDB3400571B28 /* small_xml.png */,
+				73B8C18D1A5EDB3400571B28 /* small_xml@2x.png */,
+				73B8C18E1A5EDB3400571B28 /* small_zip.png */,
+				73B8C18F1A5EDB3400571B28 /* small_zip@2x.png */,
+			);
+			path = "Small Images";
+			sourceTree = "<group>";
+		};
+		73B8C1C11A5FE6C300571B28 /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C1C21A5FE6C300571B28 /* green_selected_circle.png */,
+				73B8C1C31A5FE6C300571B28 /* green_selected_circle@2x.png */,
+			);
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		73B8C1CA1A6032FE00571B28 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C1CB1A60331700571B28 /* AKUtility.h */,
+				73B8C1CC1A60331700571B28 /* AKUtility.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		73B8C1D31A604F1600571B28 /* Browsing View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C1D41A604F1600571B28 /* AKAlfrescoNodeListViewController.h */,
+				73B8C1D51A604F1600571B28 /* AKAlfrescoNodeListViewController.m */,
+				73B8C1D61A604F1600571B28 /* AKAlfrescoNodeListViewController.xib */,
+			);
+			path = "Browsing View Controller";
+			sourceTree = "<group>";
+		};
+		73B8C1D71A604F1600571B28 /* Picking View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				73B8C1D81A604F1600571B28 /* AKAlfrescoNodePickingListViewController.h */,
+				73B8C1D91A604F1600571B28 /* AKAlfrescoNodePickingListViewController.m */,
+			);
+			path = "Picking View Controller";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		73B8C1121A5EAA3100571B28 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73B8C1DC1A604F1600571B28 /* AKAlfrescoNodePickingListViewController.h in Headers */,
+				73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */,
+				73B8C1CD1A60331700571B28 /* AKUtility.h in Headers */,
+				73B8C1251A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h in Headers */,
+				73B8C1511A5ECFF100571B28 /* AKConstants.h in Headers */,
+				73B8C1291A5EAF3900571B28 /* AlfrescoKit-Prefix.pch in Headers */,
+				73B8C1591A5ED77F00571B28 /* AKAlfrescoNodeCell.h in Headers */,
+				73B8C1DA1A604F1600571B28 /* AKAlfrescoNodeListViewController.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		73B8C08D1A5D9B3700571B28 /* AlfrescoKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 73B8C0A21A5D9B3700571B28 /* Build configuration list for PBXNativeTarget "AlfrescoKit" */;
+			buildPhases = (
+				73B8C08A1A5D9B3700571B28 /* Sources */,
+				73B8C08B1A5D9B3700571B28 /* Frameworks */,
+				73B8C08C1A5D9B3700571B28 /* CopyFiles */,
+				73B8C1121A5EAA3100571B28 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				73B8C0CF1A5D9D2000571B28 /* PBXTargetDependency */,
+			);
+			name = AlfrescoKit;
+			productName = AlfrescoKit;
+			productReference = 73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		73B8C0981A5D9B3700571B28 /* AlfrescoKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 73B8C0A51A5D9B3700571B28 /* Build configuration list for PBXNativeTarget "AlfrescoKitTests" */;
+			buildPhases = (
+				73B8C0951A5D9B3700571B28 /* Sources */,
+				73B8C0961A5D9B3700571B28 /* Frameworks */,
+				73B8C0971A5D9B3700571B28 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				73B8C09C1A5D9B3700571B28 /* PBXTargetDependency */,
+			);
+			name = AlfrescoKitTests;
+			productName = AlfrescoKitTests;
+			productReference = 73B8C0991A5D9B3700571B28 /* AlfrescoKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		73B8C1191A5EAB1D00571B28 /* AlfrescoKitBundle */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 73B8C11E1A5EAB1D00571B28 /* Build configuration list for PBXNativeTarget "AlfrescoKitBundle" */;
+			buildPhases = (
+				73B8C1161A5EAB1D00571B28 /* Sources */,
+				73B8C1171A5EAB1D00571B28 /* Frameworks */,
+				73B8C1181A5EAB1D00571B28 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AlfrescoKitBundle;
+			productName = AlfrescoKitBundle;
+			productReference = 73B8C11A1A5EAB1D00571B28 /* AlfrescoKitBundle.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		73B8C0861A5D9B3700571B28 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = Alfresco;
+				TargetAttributes = {
+					73B8C08D1A5D9B3700571B28 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					73B8C0981A5D9B3700571B28 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					73B8C1191A5EAB1D00571B28 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 73B8C0891A5D9B3700571B28 /* Build configuration list for PBXProject "AlfrescoKit" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 73B8C0851A5D9B3700571B28;
+			productRefGroup = 73B8C08F1A5D9B3700571B28 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 73B8C0C01A5D9D1000571B28 /* Products */;
+					ProjectRef = 73B8C0BF1A5D9D1000571B28 /* AlfrescoSDK.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				73B8C08D1A5D9B3700571B28 /* AlfrescoKit */,
+				73B8C1191A5EAB1D00571B28 /* AlfrescoKitBundle */,
+				73B8C0981A5D9B3700571B28 /* AlfrescoKitTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libAlfrescoSDK-iOSv1.4-dev-debug.a";
+			remoteRef = 73B8C0C61A5D9D1100571B28 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		73B8C0C91A5D9D1100571B28 /* AlfrescoSDK-iOSTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "AlfrescoSDK-iOSTests.xctest";
+			remoteRef = 73B8C0C81A5D9D1100571B28 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4-dev-debug.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libAlfrescoSDK-OSXv1.4-dev-debug.a";
+			remoteRef = 73B8C0CA1A5D9D1100571B28 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		73B8C0CD1A5D9D1100571B28 /* AlfrescoSDK-OSXTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "AlfrescoSDK-OSXTests.xctest";
+			remoteRef = 73B8C0CC1A5D9D1100571B28 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		73B8C0971A5D9B3700571B28 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73B8C1181A5EAB1D00571B28 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73B8C1C81A5FE8F300571B28 /* green_selected_circle.png in Resources */,
+				73B8C1C91A5FE8F300571B28 /* green_selected_circle@2x.png in Resources */,
+				73B8C1921A5EDB3400571B28 /* large_document.png in Resources */,
+				73B8C1AE1A5EDB3400571B28 /* small_image.png in Resources */,
+				73B8C1971A5EDB3400571B28 /* large_image@2x.png in Resources */,
+				73B8C1BA1A5EDB3400571B28 /* small_word.png in Resources */,
+				73B8C1951A5EDB3400571B28 /* large_excel@2x.png in Resources */,
+				73B8C1AF1A5EDB3400571B28 /* small_image@2x.png in Resources */,
+				73B8C1A21A5EDB3400571B28 /* large_xml.png in Resources */,
+				73B8C19D1A5EDB3400571B28 /* large_powerpoint@2x.png in Resources */,
+				73B8C19F1A5EDB3400571B28 /* large_video@2x.png in Resources */,
+				73B8C1AB1A5EDB3400571B28 /* small_excel@2x.png in Resources */,
+				73B8C1A61A5EDB3400571B28 /* small_audio.png in Resources */,
+				73B8C1B31A5EDB3400571B28 /* small_pdf@2x.png in Resources */,
+				73B8C1931A5EDB3400571B28 /* large_document@2x.png in Resources */,
+				73B8C1A81A5EDB3400571B28 /* small_document.png in Resources */,
+				73B8C1991A5EDB3400571B28 /* large_notes@2x.png in Resources */,
+				73B8C1541A5ED13500571B28 /* Info.plist in Resources */,
+				73B8C1B21A5EDB3400571B28 /* small_pdf.png in Resources */,
+				73B8C19E1A5EDB3400571B28 /* large_video.png in Resources */,
+				73B8C1B91A5EDB3400571B28 /* small_video@2x.png in Resources */,
+				73B8C1B81A5EDB3400571B28 /* small_video.png in Resources */,
+				73B8C1A11A5EDB3400571B28 /* large_word@2x.png in Resources */,
+				73B8C1981A5EDB3400571B28 /* large_notes.png in Resources */,
+				73B8C1A31A5EDB3400571B28 /* large_xml@2x.png in Resources */,
+				73B8C1B51A5EDB3400571B28 /* small_powerpoint@2x.png in Resources */,
+				73B8C1AD1A5EDB3400571B28 /* small_folder@2x.png in Resources */,
+				73B8C1BC1A5EDB3400571B28 /* small_xml.png in Resources */,
+				73B8C1B01A5EDB3400571B28 /* small_notes.png in Resources */,
+				73B8C1A41A5EDB3400571B28 /* large_zip.png in Resources */,
+				73B8C1BD1A5EDB3400571B28 /* small_xml@2x.png in Resources */,
+				73B8C1D01A603D7900571B28 /* Localizable.strings in Resources */,
+				73B8C1B61A5EDB3400571B28 /* small_site.png in Resources */,
+				73B8C1A51A5EDB3400571B28 /* large_zip@2x.png in Resources */,
+				73B8C1BF1A5EDB3400571B28 /* small_zip@2x.png in Resources */,
+				73B8C1AA1A5EDB3400571B28 /* small_excel.png in Resources */,
+				73B8C15B1A5ED78600571B28 /* AKAlfrescoNodeCell.xib in Resources */,
+				73B8C1A01A5EDB3400571B28 /* large_word.png in Resources */,
+				73B8C19C1A5EDB3400571B28 /* large_powerpoint.png in Resources */,
+				73B8C1B71A5EDB3400571B28 /* small_site@2x.png in Resources */,
+				73B8C19A1A5EDB3400571B28 /* large_pdf.png in Resources */,
+				73B8C1AC1A5EDB3400571B28 /* small_folder.png in Resources */,
+				73B8C1B41A5EDB3400571B28 /* small_powerpoint.png in Resources */,
+				73B8C1B11A5EDB3400571B28 /* small_notes@2x.png in Resources */,
+				73B8C1A71A5EDB3400571B28 /* small_audio@2x.png in Resources */,
+				73B8C1BB1A5EDB3400571B28 /* small_word@2x.png in Resources */,
+				73B8C1A91A5EDB3400571B28 /* small_document@2x.png in Resources */,
+				73B8C1961A5EDB3400571B28 /* large_image.png in Resources */,
+				73B8C1901A5EDB3400571B28 /* large_audio.png in Resources */,
+				73B8C19B1A5EDB3400571B28 /* large_pdf@2x.png in Resources */,
+				73B8C1941A5EDB3400571B28 /* large_excel.png in Resources */,
+				73B8C1D21A6040A400571B28 /* SmallThumbnailImageMapping.plist in Resources */,
+				73B8C1DF1A604F2100571B28 /* AKAlfrescoNodeListViewController.xib in Resources */,
+				73B8C1911A5EDB3400571B28 /* large_audio@2x.png in Resources */,
+				73B8C1BE1A5EDB3400571B28 /* small_zip.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		73B8C08A1A5D9B3700571B28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73B8C1261A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m in Sources */,
+				73B8C1521A5ECFF100571B28 /* AKConstants.m in Sources */,
+				73B8C1DB1A604F1600571B28 /* AKAlfrescoNodeListViewController.m in Sources */,
+				73B8C1DD1A604F1600571B28 /* AKAlfrescoNodePickingListViewController.m in Sources */,
+				73B8C1CE1A60331700571B28 /* AKUtility.m in Sources */,
+				73B8C15A1A5ED77F00571B28 /* AKAlfrescoNodeCell.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73B8C0951A5D9B3700571B28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73B8C1161A5EAB1D00571B28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		73B8C09C1A5D9B3700571B28 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 73B8C08D1A5D9B3700571B28 /* AlfrescoKit */;
+			targetProxy = 73B8C09B1A5D9B3700571B28 /* PBXContainerItemProxy */;
+		};
+		73B8C0CF1A5D9D2000571B28 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "AlfrescoSDK-iOS";
+			targetProxy = 73B8C0CE1A5D9D2000571B28 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		73B8C0A01A5D9B3700571B28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		73B8C0A11A5D9B3700571B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		73B8C0A31A5D9B3700571B28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "\"AlfrescoKit/Supporting Files/Info.plist\"";
+				INFOPLIST_PREFIX_HEADER = "\"AlfrescoKit/Supporting Files/AlfrescoSDK-Prefix.pch\"";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		73B8C0A41A5D9B3700571B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "\"AlfrescoKit/Supporting Files/Info.plist\"";
+				INFOPLIST_PREFIX_HEADER = "\"AlfrescoKit/Supporting Files/AlfrescoSDK-Prefix.pch\"";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		73B8C0A61A5D9B3700571B28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = AlfrescoKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		73B8C0A71A5D9B3700571B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = AlfrescoKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		73B8C11F1A5EAB1D00571B28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = AlfrescoKitBundle/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		73B8C1201A5EAB1D00571B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				INFOPLIST_FILE = AlfrescoKitBundle/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		73B8C0891A5D9B3700571B28 /* Build configuration list for PBXProject "AlfrescoKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73B8C0A01A5D9B3700571B28 /* Debug */,
+				73B8C0A11A5D9B3700571B28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		73B8C0A21A5D9B3700571B28 /* Build configuration list for PBXNativeTarget "AlfrescoKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73B8C0A31A5D9B3700571B28 /* Debug */,
+				73B8C0A41A5D9B3700571B28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		73B8C0A51A5D9B3700571B28 /* Build configuration list for PBXNativeTarget "AlfrescoKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73B8C0A61A5D9B3700571B28 /* Debug */,
+				73B8C0A71A5D9B3700571B28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		73B8C11E1A5EAB1D00571B28 /* Build configuration list for PBXNativeTarget "AlfrescoKitBundle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73B8C11F1A5EAB1D00571B28 /* Debug */,
+				73B8C1201A5EAB1D00571B28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 73B8C0861A5D9B3700571B28 /* Project object */;
+}
