@@ -136,7 +136,7 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
 - (void)setupToolbar
 {
     UIBarButtonItem *flexibleSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
-    UIBarButtonItem *chooseButton = [[UIBarButtonItem alloc] initWithTitle:@"Choose" style:UIBarButtonItemStylePlain target:self action:@selector(chooseButtonSelected:)];
+    UIBarButtonItem *chooseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"ak.alfresco.node.picking.list.view.controller", @"Choose") style:UIBarButtonItemStylePlain target:self action:@selector(chooseButtonSelected:)];
     
     self.toolbarItems = @[flexibleSpacer, chooseButton, flexibleSpacer];
 }

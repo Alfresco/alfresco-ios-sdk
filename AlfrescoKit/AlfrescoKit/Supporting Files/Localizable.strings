@@ -64,3 +64,9 @@
 "file.size.kilobytes" = "KB";
 "file.size.megabytes" = "MB";
 "file.size.gigabytes" = "GB";
+
+/**
+ * AKAlfrescoNodePickingListViewController
+ */
+"ak.alfresco.node.picking.list.view.controller" = "Choose";
+
