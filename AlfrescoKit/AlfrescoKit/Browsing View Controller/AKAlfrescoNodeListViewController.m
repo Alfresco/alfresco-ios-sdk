@@ -28,8 +28,8 @@
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, weak) IBOutlet UIToolbar *toolbar;
 // Data Structure
+@property (nonatomic, strong, readwrite) AlfrescoFolder *folder;
 @property (nonatomic, strong) NSMutableArray *tableViewData;
-@property (nonatomic, strong) AlfrescoFolder *folder;
 @property (nonatomic, strong) AlfrescoListingContext *listingContext;
 @property (nonatomic, strong) id<AlfrescoSession> session;
 @property (nonatomic, weak) AlfrescoRequest *currentRequest;

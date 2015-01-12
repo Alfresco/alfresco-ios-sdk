@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7374B89B1A6416050091A4FD /* AKAlfrescoNodeListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73B8C1D41A604F1600571B28 /* AKAlfrescoNodeListViewController.h */; };
+		7374B89C1A6416050091A4FD /* AKAlfrescoNodePickingListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73B8C1D81A604F1600571B28 /* AKAlfrescoNodePickingListViewController.h */; };
 		73B8C09A1A5D9B3700571B28 /* libAlfrescoKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */; };
 		73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a */; };
 		73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -134,6 +136,8 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				7374B89B1A6416050091A4FD /* AKAlfrescoNodeListViewController.h in CopyFiles */,
+				7374B89C1A6416050091A4FD /* AKAlfrescoNodePickingListViewController.h in CopyFiles */,
 				73B8C1321A5EB25F00571B28 /* AlfrescoKit.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -886,7 +890,7 @@
 		73B8C11F1A5EAB1D00571B28 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
+				COMBINE_HIDPI_IMAGES = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -904,7 +908,7 @@
 		73B8C1201A5EAB1D00571B28 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
+				COMBINE_HIDPI_IMAGES = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INFOPLIST_FILE = AlfrescoKitBundle/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
@@ -953,6 +957,7 @@
 				73B8C1201A5EAB1D00571B28 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

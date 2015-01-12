@@ -59,7 +59,7 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
     {
         self.nodePickerOptions = AKAlfrescoNodePickerTypeFolderPicker;
         self.delegate = delegate;
-        self.selectedNodes = (selectedNodes) ? selectedNodes : [NSMutableArray array];
+        self.selectedNodes = (selectedNodes) ?: [NSMutableArray array];
     }
     return self;
 }
@@ -108,7 +108,8 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
     [self setupToolbar];
     // Display the toolbar if required
     BOOL isFolderPicker = self.nodePickerOptions & AKAlfrescoNodePickerTypeFolderPicker;
-    BOOL isMultipleDocumentPicker = self.nodePickerOptions & AKAlfrescoNodePickerTypeDocumentPicker && self.nodePickerOptions & AKAlfrescoNodePickerTypeMultiplePicker;
+    BOOL isMultipleDocumentPicker = (self.nodePickerOptions & AKAlfrescoNodePickerTypeDocumentPicker) &&
+                                    (self.nodePickerOptions & AKAlfrescoNodePickerTypeMultiplePicker);
     
     if (isFolderPicker || isMultipleDocumentPicker)
     {
@@ -122,7 +123,7 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
 {
     if (self.nodePickerOptions & AKAlfrescoNodePickerTypeFolderPicker)
     {
-        [self.delegate nodePickingListViewController:self didSelectNodes:@[_folder]];
+        [self.delegate nodePickingListViewController:self didSelectNodes:@[self.folder]];
     }
     else if (self.nodePickerOptions & AKAlfrescoNodePickerTypeDocumentPicker)
     {

@@ -40,10 +40,8 @@
 @end
 
 @interface AKAlfrescoNodeListViewController : UIViewController
-{
-    AlfrescoFolder *_folder;
-}
 
+@property (nonatomic, strong, readonly) AlfrescoFolder *folder;
 @property (nonatomic, weak) id<AKAlfrescoNodeListViewControllerDelegate> delegate;
 
 - (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder session:(id<AlfrescoSession>)session;
