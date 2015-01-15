@@ -130,6 +130,11 @@ extern NSString * const kAlfrescoFilterValueWorkflowAssigneeMe;
 extern NSString * const kAlfrescoFilterValueWorkflowAssigneeUnasssigned;
 extern NSString * const kAlfrescoFilterValueWorkflowAssigneeAll;
 
+extern NSString * const kAlfrescoFilterBySiteVisibility;
+extern NSString * const kAlfrescoFilterValueSiteVisibilityPublic;
+extern NSString * const kAlfrescoFilterValueSiteVisibilityModerated;
+extern NSString * const kAlfrescoFilterValueSiteVisibilityPrivate;
+
 
 /**---------------------------------------------------------------------------------------
  * @name capability constants
