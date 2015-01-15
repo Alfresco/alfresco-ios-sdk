@@ -16,6 +16,8 @@
 		7343F9641A67DBF800C0664A /* UIImage+AlfrescoKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 7343F9621A67DBF800C0664A /* UIImage+AlfrescoKit.m */; };
 		7343F9671A67DD7700C0664A /* account-local.png in Resources */ = {isa = PBXBuildFile; fileRef = 7343F9651A67DD7700C0664A /* account-local.png */; };
 		7343F9681A67DD7700C0664A /* account-local@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7343F9661A67DD7700C0664A /* account-local@2x.png */; };
+		7343F96C1A6812CC00C0664A /* AKLoginService.h in Headers */ = {isa = PBXBuildFile; fileRef = 7343F96A1A6812CC00C0664A /* AKLoginService.h */; };
+		7343F96D1A6812CC00C0664A /* AKLoginService.m in Sources */ = {isa = PBXBuildFile; fileRef = 7343F96B1A6812CC00C0664A /* AKLoginService.m */; };
 		7374B89B1A6416050091A4FD /* AKAlfrescoNodeListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73B8C1D41A604F1600571B28 /* AKAlfrescoNodeListViewController.h */; };
 		7374B89C1A6416050091A4FD /* AKAlfrescoNodePickingListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73B8C1D81A604F1600571B28 /* AKAlfrescoNodePickingListViewController.h */; };
 		7374B8A21A65311C0091A4FD /* AKUserAccountListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7374B89F1A65311C0091A4FD /* AKUserAccountListViewController.h */; };
@@ -168,6 +170,8 @@
 		7343F9621A67DBF800C0664A /* UIImage+AlfrescoKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AlfrescoKit.m"; sourceTree = "<group>"; };
 		7343F9651A67DD7700C0664A /* account-local.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "account-local.png"; sourceTree = "<group>"; };
 		7343F9661A67DD7700C0664A /* account-local@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "account-local@2x.png"; sourceTree = "<group>"; };
+		7343F96A1A6812CC00C0664A /* AKLoginService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginService.h; sourceTree = "<group>"; };
+		7343F96B1A6812CC00C0664A /* AKLoginService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginService.m; sourceTree = "<group>"; };
 		7374B89F1A65311C0091A4FD /* AKUserAccountListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKUserAccountListViewController.h; sourceTree = "<group>"; };
 		7374B8A01A65311C0091A4FD /* AKUserAccountListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKUserAccountListViewController.m; sourceTree = "<group>"; };
 		7374B8A11A65311C0091A4FD /* AKUserAccountListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKUserAccountListViewController.xib; sourceTree = "<group>"; };
@@ -288,6 +292,15 @@
 				7343F95C1A67DB8E00C0664A /* account-type-onpremise@2x.png */,
 			);
 			path = Accounts;
+			sourceTree = "<group>";
+		};
+		7343F9691A6812B500C0664A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				7343F96A1A6812CC00C0664A /* AKLoginService.h */,
+				7343F96B1A6812CC00C0664A /* AKLoginService.m */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		7374B89E1A6531010091A4FD /* Accounts View Controller */ = {
@@ -436,6 +449,7 @@
 			children = (
 				73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */,
 				73B8C14E1A5ECFD600571B28 /* Constants */,
+				7343F9691A6812B500C0664A /* Services */,
 				7374B8A41A6531310091A4FD /* Model */,
 				73B8C1221A5EAC9000571B28 /* Categories */,
 				73B8C1551A5ED72800571B28 /* Cells */,
@@ -567,6 +581,7 @@
 				73B8C1DC1A604F1600571B28 /* AKAlfrescoNodePickingListViewController.h in Headers */,
 				73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */,
 				73B8C1CD1A60331700571B28 /* AKUtility.h in Headers */,
+				7343F96C1A6812CC00C0664A /* AKLoginService.h in Headers */,
 				73B8C1251A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h in Headers */,
 				7343F9631A67DBF800C0664A /* UIImage+AlfrescoKit.h in Headers */,
 				73B8C1511A5ECFF100571B28 /* AKConstants.h in Headers */,
@@ -802,6 +817,7 @@
 				7374B8A31A65311C0091A4FD /* AKUserAccountListViewController.m in Sources */,
 				73B8C1CE1A60331700571B28 /* AKUtility.m in Sources */,
 				73B8C15A1A5ED77F00571B28 /* AKAlfrescoNodeCell.m in Sources */,
+				7343F96D1A6812CC00C0664A /* AKLoginService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

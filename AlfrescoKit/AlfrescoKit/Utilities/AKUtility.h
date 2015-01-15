@@ -32,4 +32,6 @@
 + (NSString *)stringForFileSize:(unsigned long long)fileSize;
 + (UIImage *)smallIconForType:(NSString *)type;
 
++ (NSString *)onPremiseServerURLWithProtocol:(NSString *)protocol serverAddress:(NSString *)serverAddress port:(NSString *)port;
+
 @end

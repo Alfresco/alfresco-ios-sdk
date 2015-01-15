@@ -28,6 +28,9 @@
 @protocol AKUserAccount <NSObject>
 
 // This protocol is subject to change
+@property (nonatomic, assign) BOOL isOnPremiseAccount;
+
+// User for OnPremise Accounts
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *accountDescription;
@@ -35,6 +38,8 @@
 @property (nonatomic, strong) NSString *serverPort;
 @property (nonatomic, strong) NSString *protocol;
 @property (nonatomic, strong) NSString *serviceDocument;
-@property (nonatomic, assign) BOOL isOnPremiseAccount;
+
+// Used for Cloud Accounts
+@property (nonatomic, strong) AlfrescoOAuthData *oAuthData;
 
 @end

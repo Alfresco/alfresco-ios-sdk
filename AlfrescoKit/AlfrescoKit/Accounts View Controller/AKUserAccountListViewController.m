@@ -20,6 +20,7 @@
 
 #import "AKUserAccountListViewController.h"
 #import "AKUserAccount.h"
+#import "AKLoginService.h"
 
 static CGFloat const kAccountCellMinimumHeight = 60.0f;
 
@@ -35,6 +36,8 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
 @property (nonatomic, strong) NSArray *accountList;
 // Views
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
+// Services
+@property (nonatomic, strong) AKLoginService *loginService;
 @end
 
 @implementation AKUserAccountListViewController
@@ -51,6 +54,7 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
     {
         self.accountList = accountList;
         self.delegate = delegate;
+        self.loginService = [[AKLoginService alloc] init];
         self.title = AKLocalizedString(@"ak.user.account.list.view.controller.title", @"Accounts Title");
     }
     return self;
@@ -135,7 +139,10 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
             [self.delegate userAccountListViewController:self didSelectUserAccount:selectedAccount];
         }
         
-        // TODO: Handle account selection here, then call delegate
+        __weak typeof(self) weakSelf = self;
+        [self.loginService loginToAccount:selectedAccount networkIdentifier:nil completionBlock:^(BOOL successful, id<AlfrescoSession> session, NSError *error) {
+            [weakSelf.delegate userAccountListViewController:weakSelf didLoginSuccessfully:successful creatingSession:session];
+        }];
     }
     else if (indexPath.section == AccountTableViewControllerSectionDownloads)
     {

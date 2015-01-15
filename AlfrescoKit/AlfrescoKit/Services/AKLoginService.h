@@ -18,8 +18,17 @@
  *****************************************************************************
  */
 
-#import "AKConstants.h"
+/** Provides convenience methods to login to a specified AKUserAccount conforming object
+ 
+ Author: Tauseef Mughal (Alfresco)
+ */
 
-NSString * const kAlfrescoKitBundleName = @"AlfrescoKitBundle";
+#import <Foundation/Foundation.h>
+#import "AKUserAccount.h"
 
-NSString * const kAlfrescoOnPremiseServerURLTemplate = @"%@://%@:%@/alfresco";
+@interface AKLoginService : NSObject
+
+// Attempts login to either OnPremise or Cloud account with the credentials provided
+- (AlfrescoRequest *)loginToAccount:(id<AKUserAccount>)userAccount networkIdentifier:(NSString *)networkIdentifier completionBlock:(AKLoginCompletionBlock)completionBlock;
+
+@end

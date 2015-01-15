@@ -29,4 +29,9 @@
 #define AKLocalizedString(key, comment) \
         NSLocalizedStringFromTableInBundle((key), @"", [NSBundle alfrescoKitBundle], (comment))
 
+typedef void (^AKLoginCompletionBlock)(BOOL successful, id<AlfrescoSession> session, NSError *error);
+
 extern NSString * const kAlfrescoKitBundleName;
+
+// Server
+extern NSString * const kAlfrescoOnPremiseServerURLTemplate;
