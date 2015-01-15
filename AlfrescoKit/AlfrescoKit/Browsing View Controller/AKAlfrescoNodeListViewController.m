@@ -19,7 +19,6 @@
  */
 
 #import "AKAlfrescoNodeListViewController.h"
-#import "NSBundle+AlfrescoKit.h"
 #import "AKAlfrescoNodeCell.h"
 
 @interface AKAlfrescoNodeListViewController () <UITableViewDelegate, UITableViewDataSource>
@@ -58,6 +57,11 @@
         [self createServicesForSession:session];
     }
     return self;
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    return [super initWithNibName:nibNameOrNil bundle:[NSBundle alfrescoKitBundle]];
 }
 
 - (void)viewDidLoad
@@ -211,7 +215,7 @@
     
     if (!cell)
     {
-        cell = [[[NSBundle mainBundle] loadNibNamed:NSStringFromClass([AKAlfrescoNodeCell class]) owner:self options:nil] lastObject];
+        cell = [[[NSBundle alfrescoKitBundle] loadNibNamed:NSStringFromClass([AKAlfrescoNodeCell class]) owner:self options:nil] lastObject];
     }
     
     // customise cell

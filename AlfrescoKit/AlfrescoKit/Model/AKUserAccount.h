@@ -18,15 +18,23 @@
  *****************************************************************************
  */
 
-
-/** The umbrella header for AlfrescoKit
+/** AKUserAccount protocol
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#ifdef TARGET_OS_IPHONE
-#import "AKUserAccount.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#endif
+#import <Foundation/Foundation.h>
+
+@protocol AKUserAccount <NSObject>
+
+// This protocol is subject to change
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *password;
+@property (nonatomic, strong) NSString *accountDescription;
+@property (nonatomic, strong) NSString *serverAddress;
+@property (nonatomic, strong) NSString *serverPort;
+@property (nonatomic, strong) NSString *protocol;
+@property (nonatomic, strong) NSString *serviceDocument;
+@property (nonatomic, assign) BOOL isOnPremiseAccount;
+
+@end

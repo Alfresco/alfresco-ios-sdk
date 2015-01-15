@@ -18,15 +18,14 @@
  *****************************************************************************
  */
 
+#import "UIImage+AlfrescoKit.h"
+#import "NSBundle+AlfrescoKit.h"
 
-/** The umbrella header for AlfrescoKit
- 
- Author: Tauseef Mughal (Alfresco)
- */
+@implementation UIImage (AlfrescoKit)
 
-#ifdef TARGET_OS_IPHONE
-#import "AKUserAccount.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#endif
++ (UIImage *)imageFromAlfrescoKitBundleNamed:(NSString *)imageName
+{
+    return [UIImage imageNamed:imageName inBundle:[NSBundle alfrescoKitBundle] compatibleWithTraitCollection:nil];
+}
+
+@end

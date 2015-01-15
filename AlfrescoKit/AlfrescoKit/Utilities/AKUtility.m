@@ -45,13 +45,13 @@ static NSString * const kSmallThumbnailImageMappingPlist = @"SmallThumbnailImage
     
     NSString *(^relativeDateString)(NSString *key, NSInteger param) = ^NSString *(NSString *key, NSInteger param) {
         NSString *dateKey = [NSString stringWithFormat:@"relative.date.%@.%@", isTodayEarlierDate ? @"future" : @"past", key];
-        return [NSString stringWithFormat:NSLocalizedString(dateKey, @"Date string"), param];
+        return [NSString stringWithFormat:AKLocalizedString(dateKey, @"Date string"), param];
     };
     
     NSTimeInterval seconds_ago = [latest timeIntervalSinceDate:earliest];
     if (seconds_ago < 86400) // 24*60*60
     {
-        return NSLocalizedString(@"relative.date.today", @"Today");
+        return AKLocalizedString(@"relative.date.today", @"Today");;
     }
     
     double days_ago = round(seconds_ago / 86400); // 24*60*60
@@ -98,24 +98,27 @@ static NSString * const kSmallThumbnailImageMappingPlist = @"SmallThumbnailImage
     double floatSize = fileSize;
     if (fileSize < 1023)
     {
-        return([NSString stringWithFormat:@"%llu %@", fileSize, NSLocalizedString(@"file.size.bytes", @"file bytes, used as follows: '100 bytes'")]);
+        
+        return([NSString stringWithFormat:@"%llu %@", fileSize, AKLocalizedString(@"file.size.bytes", @"file bytes, used as follows: '100 bytes'")]);
     }
     
     floatSize = floatSize / 1024;
     if (floatSize < 1023)
     {
-        return([NSString stringWithFormat:@"%1.1f %@",floatSize, NSLocalizedString(@"file.size.kilobytes", @"Abbreviation for Kilobytes, used as follows: '17KB'")]);
+        return([NSString stringWithFormat:@"%1.1f %@", floatSize, AKLocalizedString(@"file.size.kilobytes", @"Abbreviation for Kilobytes, used as follows: '17KB'")]);
     }
     
     floatSize = floatSize / 1024;
     if (floatSize < 1023)
     {
-        return([NSString stringWithFormat:@"%1.1f %@",floatSize, NSLocalizedString(@"file.size.megabytes", @"Abbreviation for Megabytes, used as follows: '2MB'")]);
+        
+        return([NSString stringWithFormat:@"%1.1f %@", floatSize, AKLocalizedString(@"file.size.megabytes", @"AAbbreviation for Megabytes, used as follows: '2MB'")]);
     }
     
     floatSize = floatSize / 1024;
     
-    return ([NSString stringWithFormat:@"%1.1f %@",floatSize, NSLocalizedString(@"file.size.gigabytes", @"Abbrevation for Gigabyte, used as follows: '1GB'")]);
+    
+    return ([NSString stringWithFormat:@"%1.1f %@", floatSize, AKLocalizedString(@"file.size.gigabytes", @"Abbrevation for Gigabyte, used as follows: '1GB'")]);
 }
 
 + (UIImage *)smallIconForType:(NSString *)type
@@ -124,7 +127,7 @@ static NSString * const kSmallThumbnailImageMappingPlist = @"SmallThumbnailImage
     
     if (!smallIconMappings)
     {
-        NSString *plistPath = [[NSBundle mainBundle] pathForResource:kSmallThumbnailImageMappingPlist ofType:@"plist"];
+        NSString *plistPath = [[NSBundle alfrescoKitBundle] pathForResource:kSmallThumbnailImageMappingPlist ofType:@"plist"];
         smallIconMappings = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     }
     
@@ -135,7 +138,7 @@ static NSString * const kSmallThumbnailImageMappingPlist = @"SmallThumbnailImage
         imageName = @"small_document.png";
     }
     
-    return [UIImage imageNamed:imageName];
+    return [UIImage imageFromAlfrescoKitBundleNamed:imageName];
 }
 
 @end

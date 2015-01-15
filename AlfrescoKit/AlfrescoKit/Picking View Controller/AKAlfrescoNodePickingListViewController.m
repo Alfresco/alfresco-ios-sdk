@@ -137,7 +137,7 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
 - (void)setupToolbar
 {
     UIBarButtonItem *flexibleSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
-    UIBarButtonItem *chooseButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"ak.alfresco.node.picking.list.view.controller", @"Choose") style:UIBarButtonItemStylePlain target:self action:@selector(chooseButtonSelected:)];
+    UIBarButtonItem *chooseButton = [[UIBarButtonItem alloc] initWithTitle:AKLocalizedString(@"ak.alfresco.node.picking.list.view.controller", @"Choose") style:UIBarButtonItemStylePlain target:self action:@selector(chooseButtonSelected:)];
     
     self.toolbarItems = @[flexibleSpacer, chooseButton, flexibleSpacer];
 }
@@ -165,7 +165,7 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
     
     if (!cell)
     {
-        cell = [[[NSBundle mainBundle] loadNibNamed:NSStringFromClass([AKAlfrescoNodeCell class]) owner:self options:nil] lastObject];
+        cell = [[[NSBundle alfrescoKitBundle] loadNibNamed:NSStringFromClass([AKAlfrescoNodeCell class]) owner:self options:nil] lastObject];
     }
     
     // customise cell

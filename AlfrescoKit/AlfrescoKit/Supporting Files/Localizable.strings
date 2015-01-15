@@ -70,3 +70,10 @@
  */
 "ak.alfresco.node.picking.list.view.controller" = "Choose";
 
+/**
+ * AKUserAccountListViewController
+ */
+"ak.user.account.list.view.controller.title" = "Accounts";
+"ak.user.account.list.view.controller.section.header.accounts" = "Accounts";
+"ak.user.account.list.view.controller.section.header.local.files" = "Local Files";
+"ak.user.account.list.view.controller.cell.local.files" = "Local Files";

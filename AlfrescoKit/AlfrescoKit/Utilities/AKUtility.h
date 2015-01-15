@@ -18,8 +18,7 @@
  *****************************************************************************
  */
 
-
-/** Utility class to provide helper funstions to AlfrescoKit
+/** Utility class to provide helper functions to AlfrescoKit
  
  Author: Tauseef Mughal (Alfresco)
  */

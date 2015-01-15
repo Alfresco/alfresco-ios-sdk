@@ -18,7 +18,6 @@
  *****************************************************************************
  */
 
-
 /** Default representation of an AlfrescoNode in a table view.
  
  Author: Tauseef Mughal (Alfresco)

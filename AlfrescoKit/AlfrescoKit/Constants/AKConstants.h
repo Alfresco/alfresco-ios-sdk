@@ -18,12 +18,15 @@
  *****************************************************************************
  */
 
-
 /** AlfrescoKit constants
  
  Author: Tauseef Mughal (Alfresco)
  */
 
 #import <Foundation/Foundation.h>
+#import "NSBundle+AlfrescoKit.h"
+
+#define AKLocalizedString(key, comment) \
+        NSLocalizedStringFromTableInBundle((key), @"", [NSBundle alfrescoKitBundle], (comment))
 
 extern NSString * const kAlfrescoKitBundleName;
