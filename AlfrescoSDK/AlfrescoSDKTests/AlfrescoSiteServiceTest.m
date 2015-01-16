@@ -729,4 +729,259 @@
     }
 }
 
+- (void)testRetrieveAllPrivateSites
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoListingFilter *filter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterBySiteVisibility
+                                                                                value:kAlfrescoFilterValueSiteVisibilityPrivate];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:filter];
+        
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        // get all sites
+        [self.siteService retrieveAllSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                
+                // make sure all returned sites are private
+                for (AlfrescoSite *site in pagingResult.objects)
+                {
+                    XCTAssertTrue(site.visibility == AlfrescoSiteVisibilityPrivate, @"Expected all returned sites to be private");
+                }
+                
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveAllModeratedSites
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoListingFilter *filter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterBySiteVisibility
+                                                                                value:kAlfrescoFilterValueSiteVisibilityModerated];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:filter];
+        
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        // get all sites
+        [self.siteService retrieveAllSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                
+                // make sure all returned sites are moderated
+                for (AlfrescoSite *site in pagingResult.objects)
+                {
+                    XCTAssertTrue(site.visibility == AlfrescoSiteVisibilityModerated, @"Expected all returned sites to be moderated");
+                }
+                
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveAllPublicSites
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoListingFilter *filter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterBySiteVisibility
+                                                                                value:kAlfrescoFilterValueSiteVisibilityPublic];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:filter];
+        
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        // get all sites
+        [self.siteService retrieveAllSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                
+                // make sure all returned sites are public
+                for (AlfrescoSite *site in pagingResult.objects)
+                {
+                    XCTAssertTrue(site.visibility == AlfrescoSiteVisibilityPublic, @"Expected all returned sites to be public");
+                }
+                
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrievePrivateSitesForUser
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoListingFilter *filter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterBySiteVisibility
+                                                                                value:kAlfrescoFilterValueSiteVisibilityPrivate];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:filter];
+        
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        [self.siteService retrieveSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                
+                // make sure all returned sites are private
+                for (AlfrescoSite *site in pagingResult.objects)
+                {
+                    XCTAssertTrue(site.visibility == AlfrescoSiteVisibilityPrivate, @"Expected all returned sites to be private");
+                }
+                
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveModeratedSitesForUser
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoListingFilter *filter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterBySiteVisibility
+                                                                                value:kAlfrescoFilterValueSiteVisibilityModerated];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:filter];
+        
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        [self.siteService retrieveSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                
+                // make sure all returned sites are private
+                for (AlfrescoSite *site in pagingResult.objects)
+                {
+                    XCTAssertTrue(site.visibility == AlfrescoSiteVisibilityModerated, @"Expected all returned sites to be moderated");
+                }
+                
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrievePublicSitesForUser
+{
+    if (self.setUpSuccess)
+    {
+        AlfrescoListingFilter *filter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterBySiteVisibility
+                                                                                value:kAlfrescoFilterValueSiteVisibilityPublic];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:filter];
+        
+        self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+        
+        [self.siteService retrieveSitesWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                
+                // make sure all returned sites are public
+                for (AlfrescoSite *site in pagingResult.objects)
+                {
+                    XCTAssertTrue(site.visibility == AlfrescoSiteVisibilityPublic, @"Expected all returned sites to be public");
+                }
+                
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 @end

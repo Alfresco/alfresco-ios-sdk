@@ -148,7 +148,8 @@
             {
                 NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:weakSelf.siteCache.memberSites
                                                                          sortKey:weakSelf.defaultSortKey ascending:YES];
-                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedSites
+                NSArray *filteredSites = [self sitesArrayByApplyingFilter:listingContext.listingFilter sites:sortedSites];
+                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:filteredSites
                                                                                 listingContext:listingContext];
                 completionBlock(pagingResult, nil);
             }
@@ -163,7 +164,8 @@
         AlfrescoLogDebug(@"Cache hit: returning my sites from cache");
         NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:self.siteCache.memberSites
                                                                  sortKey:self.defaultSortKey ascending:YES];
-        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedSites
+        NSArray *filteredSites = [self sitesArrayByApplyingFilter:listingContext.listingFilter sites:sortedSites];
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:filteredSites
                                                                         listingContext:listingContext];
         completionBlock(pagingResult, nil);
     }
@@ -198,7 +200,8 @@
             {
                 NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:weakSelf.siteCache.favoriteSites
                                                                          sortKey:weakSelf.defaultSortKey ascending:YES];
-                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedSites
+                NSArray *filteredSites = [self sitesArrayByApplyingFilter:listingContext.listingFilter sites:sortedSites];
+                AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:filteredSites
                                                                                 listingContext:listingContext];
                 completionBlock(pagingResult, nil);
             }
@@ -213,7 +216,8 @@
         AlfrescoLogDebug(@"Cache hit: returning favorite sites from cache");
         NSArray *sortedSites = [AlfrescoSortingUtils sortedArrayForArray:self.siteCache.favoriteSites
                                                                  sortKey:self.defaultSortKey ascending:YES];
-        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedSites
+        NSArray *filteredSites = [self sitesArrayByApplyingFilter:listingContext.listingFilter sites:sortedSites];
+        AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:filteredSites
                                                                         listingContext:listingContext];
         completionBlock(pagingResult, nil);
     }
@@ -1167,9 +1171,12 @@
                         }
                     }
                 }
+
+                // filter sites
+                NSArray *filteredSites = [self sitesArrayByApplyingFilter:listingContext.listingFilter sites:sites];
                 
                 // call the completion
-                completionBlock([[AlfrescoPagingResult alloc] initWithArray:sites
+                completionBlock([[AlfrescoPagingResult alloc] initWithArray:filteredSites
                                                                hasMoreItems:pagingResult.hasMoreItems
                                                                  totalItems:pagingResult.totalItems], nil);
             }
@@ -1236,6 +1243,36 @@
     }];
     
     return request;
+}
+
+- (NSArray *)sitesArrayByApplyingFilter:(AlfrescoListingFilter *)filter sites:(NSArray *)sites
+{
+    NSArray *filteredSites = sites;
+    
+    if (filter && [filter hasFilter:kAlfrescoFilterBySiteVisibility])
+    {
+        NSPredicate *siteVisibilityPredicate = nil;
+        NSString *filterValue = [filter valueForFilter:kAlfrescoFilterBySiteVisibility];
+        if ([filterValue isEqualToString:kAlfrescoFilterValueSiteVisibilityPublic])
+        {
+            siteVisibilityPredicate = [NSPredicate predicateWithFormat:@"visibility == %d", AlfrescoSiteVisibilityPublic];
+        }
+        else if ([filterValue isEqualToString:kAlfrescoFilterValueSiteVisibilityPrivate])
+        {
+            siteVisibilityPredicate = [NSPredicate predicateWithFormat:@"visibility == %d", AlfrescoSiteVisibilityPrivate];
+        }
+        else if ([filterValue isEqualToString:kAlfrescoFilterValueSiteVisibilityModerated])
+        {
+            siteVisibilityPredicate = [NSPredicate predicateWithFormat:@"visibility == %d", AlfrescoSiteVisibilityModerated];
+        }
+     
+        if (siteVisibilityPredicate)
+        {
+            filteredSites = [sites filteredArrayUsingPredicate:siteVisibilityPredicate];
+        }
+    }
+    
+    return filteredSites;
 }
 
 @end
