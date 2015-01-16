@@ -21,3 +21,5 @@
 #import "AKConstants.h"
 
 NSString * const kAlfrescoKitBundleName = @"AlfrescoKitBundle";
+
+NSString * const kAlfrescoOnPremiseServerURLTemplate = @"%@://%@:%@/alfresco";

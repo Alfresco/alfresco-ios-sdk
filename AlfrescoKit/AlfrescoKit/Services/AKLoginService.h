@@ -18,15 +18,17 @@
  *****************************************************************************
  */
 
-
-/** The umbrella header for AlfrescoKit
+/** Provides convenience methods to login to a specified AKUserAccount conforming object
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#ifdef TARGET_OS_IPHONE
+#import <Foundation/Foundation.h>
 #import "AKUserAccount.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#endif
+
+@interface AKLoginService : NSObject
+
+// Attempts login to either OnPremise or Cloud account with the credentials provided
+- (AlfrescoRequest *)loginToAccount:(id<AKUserAccount>)userAccount networkIdentifier:(NSString *)networkIdentifier completionBlock:(AKLoginCompletionBlock)completionBlock;
+
+@end

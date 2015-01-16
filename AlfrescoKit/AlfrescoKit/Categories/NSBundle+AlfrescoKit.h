@@ -18,7 +18,6 @@
  *****************************************************************************
  */
 
-
 /** The NSBundle category for AlfrescoKit
  
  Author: Tauseef Mughal (Alfresco)
@@ -27,5 +26,7 @@
 #import <Foundation/Foundation.h>
 
 @interface NSBundle (AlfrescoKit)
+
++ (NSBundle *)alfrescoKitBundle;
 
 @end

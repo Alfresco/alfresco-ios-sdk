@@ -18,5 +18,6 @@
  *****************************************************************************
  */
 
-#import "NSBundle+AlfrescoKit.h"
 #import <AlfrescoSDK-iOS/AlfrescoSDK.h>
+#import "AKConstants.h"
+#import "UIImage+AlfrescoKit.h"

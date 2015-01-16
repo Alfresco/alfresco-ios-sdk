@@ -18,8 +18,7 @@
  *****************************************************************************
  */
 
-
-/** Utility class to provide helper funstions to AlfrescoKit
+/** Utility class to provide helper functions to AlfrescoKit
  
  Author: Tauseef Mughal (Alfresco)
  */
@@ -32,5 +31,7 @@
 + (NSString *)stringDateFromDate:(NSDate *)date;
 + (NSString *)stringForFileSize:(unsigned long long)fileSize;
 + (UIImage *)smallIconForType:(NSString *)type;
+
++ (NSString *)onPremiseServerURLWithProtocol:(NSString *)protocol serverAddress:(NSString *)serverAddress port:(NSString *)port;
 
 @end

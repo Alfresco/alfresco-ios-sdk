@@ -29,7 +29,7 @@
     
     if ([node isKindOfClass:[AlfrescoFolder class]])
     {
-        self.nodeImageView.image = [UIImage imageNamed:@"small_folder"];
+        self.nodeImageView.image = [UIImage imageFromAlfrescoKitBundleNamed:@"small_folder"];
         self.nodeDetailLabel.text = @"";
     }
     else
@@ -46,7 +46,7 @@
 {
     if (picked)
     {
-        self.nodeSelectedImageView.image = [UIImage imageNamed:@"green_selected_circle"];
+        self.nodeSelectedImageView.image = [UIImage imageFromAlfrescoKitBundleNamed:@"green_selected_circle"];
     }
     else
     {

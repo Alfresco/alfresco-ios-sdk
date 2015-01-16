@@ -18,7 +18,6 @@
  *****************************************************************************
  */
 
-
 /** Provides a node selection functionality in addition to browsing the repository
  
  Author: Tauseef Mughal (Alfresco)

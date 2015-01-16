@@ -18,7 +18,6 @@
  *****************************************************************************
  */
 
-
 /** Provides a basic list view controller to navigate through the repository hierarchy.
  
  Author: Tauseef Mughal (Alfresco)
