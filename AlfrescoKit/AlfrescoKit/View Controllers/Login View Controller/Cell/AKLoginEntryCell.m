@@ -18,21 +18,8 @@
  *****************************************************************************
  */
 
-/** Provides convenience methods to login to a specified AKUserAccount conforming object
- 
- Author: Tauseef Mughal (Alfresco)
- */
+#import "AKLoginEntryCell.h"
 
-#import <Foundation/Foundation.h>
-#import "AKUserAccount.h"
-
-@interface AKLoginService : NSObject
-
-// Attempts login to either OnPremise or Cloud account with the credentials provided
-- (AlfrescoRequest *)loginToAccount:(id<AKUserAccount>)userAccount networkIdentifier:(NSString *)networkIdentifier completionBlock:(AKLoginCompletionBlock)completionBlock;
-
-
-// Attempts to login to an OnPremise account using the username and password provided
-- (AlfrescoRequest *)loginToOnPremiseRepositoryWithAccount:(id<AKUserAccount>)account username:(NSString *)username password:(NSString *)password completionBlock:(AKLoginCompletionBlock)completionBlock;
+@implementation AKLoginEntryCell
 
 @end

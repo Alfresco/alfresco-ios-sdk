@@ -31,7 +31,8 @@
 
 - (void)userAccountListViewController:(AKUserAccountListViewController *)accountListViewController
                  didLoginSuccessfully:(BOOL)loginSuccessful
-                      creatingSession:(id<AlfrescoSession>)session;
+                      creatingSession:(id<AlfrescoSession>)session
+                                error:(NSError *)error;
 - (void)didSelectLocalFilesOnUserAccountListViewController:(AKUserAccountListViewController *)accountListViewController;
 
 @optional
