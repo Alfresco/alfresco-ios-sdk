@@ -77,3 +77,13 @@
 "ak.user.account.list.view.controller.section.header.accounts" = "Accounts";
 "ak.user.account.list.view.controller.section.header.local.files" = "Local Files";
 "ak.user.account.list.view.controller.cell.local.files" = "Local Files";
+
+/**
+ * AKUserAccountListViewController
+ */
+"ak.login.view.controller.title" = "Accounts";
+"ak.login.view.controller.cell.username.title" = "Username";
+"ak.login.view.controller.cell.username.placeholder" = "Username here";
+"ak.login.view.controller.cell.password.title" = "Password";
+"ak.login.view.controller.cell.password.placeholder" = "Password here";
+"ak.login.view.controller.login.button.title" = "Login";

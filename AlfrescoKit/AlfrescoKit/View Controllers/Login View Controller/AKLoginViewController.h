@@ -18,21 +18,33 @@
  *****************************************************************************
  */
 
-/** Provides convenience methods to login to a specified AKUserAccount conforming object
+/** Provides a basic login username and password entry. Attempts logging in before
+ invoking the callback with the appropiate response.
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "AKUserAccount.h"
 
-@interface AKLoginService : NSObject
+@class AKLoginViewController;
 
-// Attempts login to either OnPremise or Cloud account with the credentials provided
-- (AlfrescoRequest *)loginToAccount:(id<AKUserAccount>)userAccount networkIdentifier:(NSString *)networkIdentifier completionBlock:(AKLoginCompletionBlock)completionBlock;
+@protocol AKLoginViewControllerDelegate <NSObject>
 
+- (void)loginViewController:(AKLoginViewController *)loginController
+       didLoginSuccessfully:(BOOL)loginSuccessful
+                   username:(NSString *)username
+                   password:(NSString *)password
+            creatingSession:(id<AlfrescoSession>)session
+                      error:(NSError *)error;
 
-// Attempts to login to an OnPremise account using the username and password provided
-- (AlfrescoRequest *)loginToOnPremiseRepositoryWithAccount:(id<AKUserAccount>)account username:(NSString *)username password:(NSString *)password completionBlock:(AKLoginCompletionBlock)completionBlock;
+@end
+
+@interface AKLoginViewController : UIViewController
+
+@property (nonatomic, weak) id<AKLoginViewControllerDelegate> delegate;
+
+- (instancetype)initWithUserAccount:(id<AKUserAccount>)userAccount;
+- (instancetype)initWithUserAccount:(id<AKUserAccount>)userAccount delegate:(id<AKLoginViewControllerDelegate>)delegate;
 
 @end

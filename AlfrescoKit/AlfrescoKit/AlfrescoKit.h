@@ -29,4 +29,5 @@
 #import "AKAlfrescoNodeListViewController.h"
 #import "AKAlfrescoNodePickingListViewController.h"
 #import "AKUserAccountListViewController.h"
+#import "AKLoginViewController.h"
 #endif

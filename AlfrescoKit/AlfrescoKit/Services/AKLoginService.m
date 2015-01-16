@@ -29,7 +29,7 @@
     
     if (userAccount.isOnPremiseAccount)
     {
-        loginRequest = [self loginToOnPremiseRepositoryWithAccount:userAccount password:userAccount.password completionBlock:completionBlock];
+        loginRequest = [self loginToOnPremiseRepositoryWithAccount:userAccount username:userAccount.username password:userAccount.password completionBlock:completionBlock];
     }
     else
     {
@@ -39,16 +39,14 @@
     return loginRequest;
 }
 
-#pragma mark - Private Functions
-
-- (AlfrescoRequest *)loginToOnPremiseRepositoryWithAccount:(id<AKUserAccount>)account password:(NSString *)password completionBlock:(AKLoginCompletionBlock)completionBlock
+- (AlfrescoRequest *)loginToOnPremiseRepositoryWithAccount:(id<AKUserAccount>)account username:(NSString *)username password:(NSString *)password completionBlock:(AKLoginCompletionBlock)completionBlock
 {
     AlfrescoRequest *loginRequest = nil;
     
     NSString *repoServerURLString = [AKUtility onPremiseServerURLWithProtocol:account.protocol serverAddress:account.serverAddress port:account.serverPort];
     NSURL *repoURL = [NSURL URLWithString:repoServerURLString];
     
-    loginRequest = [AlfrescoRepositorySession connectWithUrl:repoURL username:account.username password:account.password completionBlock:^(id<AlfrescoSession> session, NSError *error) {
+    loginRequest = [AlfrescoRepositorySession connectWithUrl:repoURL username:username password:password completionBlock:^(id<AlfrescoSession> session, NSError *error) {
         if (error)
         {
             completionBlock(NO, nil, error);
@@ -61,6 +59,8 @@
     
     return loginRequest;
 }
+
+#pragma mark - Private Functions
 
 - (AlfrescoRequest *)loginToCloudRepositoryWithAccount:(id<AKUserAccount>)account networkIdentifier:(NSString *)networkIdentifier completionBlock:(AKLoginCompletionBlock)completionBlock
 {
