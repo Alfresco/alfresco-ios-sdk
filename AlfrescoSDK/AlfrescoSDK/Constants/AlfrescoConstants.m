@@ -86,6 +86,61 @@ NSString * const kAlfrescoFilterValueSiteVisibilityPublic = @"public";
 NSString * const kAlfrescoFilterValueSiteVisibilityModerated = @"moderated";
 NSString * const kAlfrescoFilterValueSiteVisibilityPrivate = @"private";
 
+NSString * const kAlfrescoFilterByActivityType = @"activityType";
+NSString * const kAlfrescoFilterValueActivityTypeSiteUserJoined = @"org.alfresco.site.user-joined";
+NSString * const kAlfrescoFilterValueActivityTypeSiteUserLeft = @"org.alfresco.site.user-left";
+NSString * const kAlfrescoFilterValueActivityTypeSiteUserRoleChanged = @"org.alfresco.site.user-role-changed";
+NSString * const kAlfrescoFilterValueActivityTypeSiteUserLiked = @"org.alfresco.site.liked";
+NSString * const kAlfrescoFilterValueActivityTypeSiteGroupAdded = @"org.alfresco.site.group-added";
+NSString * const kAlfrescoFilterValueActivityTypeSiteGroupRemoved = @"org.alfresco.site.group-removed";
+NSString * const kAlfrescoFilterValueActivityTypeSiteGroupRoleChanged = @"org.alfresco.site.group-role-changed";
+NSString * const kAlfrescoFilterValueActivityTypeFileCreated = @"org.alfresco.documentlibrary.file-created";
+NSString * const kAlfrescoFilterValueActivityTypeFileAdded = @"org.alfresco.documentlibrary.file-added";
+NSString * const kAlfrescoFilterValueActivityTypeFileUpdated = @"org.alfresco.documentlibrary.file-updated";
+NSString * const kAlfrescoFilterValueActivityTypeFileDeleted = @"org.alfresco.documentlibrary.file-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeFilePreviewed = @"org.alfresco.documentlibrary.file-previewed";
+NSString * const kAlfrescoFilterValueActivityTypeFileDownloaded = @"org.alfresco.documentlibrary.file-downloaded";
+NSString * const kAlfrescoFilterValueActivityTypeFileGoogleDocsCheckout = @"org.alfresco.documentlibrary.google-docs-checkout";
+NSString * const kAlfrescoFilterValueActivityTypeFileGoogleDocsCheckin = @"org.alfresco.documentlibrary.google-docs-checkin";
+NSString * const kAlfrescoFilterValueActivityTypeFileInlineEdit = @"org.alfresco.documentlibrary.inline-edit";
+NSString * const kAlfrescoFilterValueActivityTypeFileLiked = @"org.alfresco.documentlibrary.file-liked";
+NSString * const kAlfrescoFilterValueActivityTypeFilesAdded = @"org.alfresco.documentlibrary.files-added";
+NSString * const kAlfrescoFilterValueActivityTypeFilesUpdated = @"org.alfresco.documentlibrary.files-updated";
+NSString * const kAlfrescoFilterValueActivityTypeFilesDeleted = @"org.alfresco.documentlibrary.files-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeFolderAdded = @"org.alfresco.documentlibrary.folder-added";
+NSString * const kAlfrescoFilterValueActivityTypeFolderDeleted = @"org.alfresco.documentlibrary.folder-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeFolderLiked = @"org.alfresco.documentlibrary.folder-liked";
+NSString * const kAlfrescoFilterValueActivityTypeFoldersAdded = @"org.alfresco.documentlibrary.folders-added";
+NSString * const kAlfrescoFilterValueActivityTypeFoldersDeleted = @"org.alfresco.documentlibrary.folders-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeLinkCreated = @"org.alfresco.links.link-created";
+NSString * const kAlfrescoFilterValueActivityTypeLinkUpdated = @"org.alfresco.links.link-updated";
+NSString * const kAlfrescoFilterValueActivityTypeLinkDeleted = @"org.alfresco.links.link-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeCommentCreated = @"org.alfresco.comments.comment-created";
+NSString * const kAlfrescoFilterValueActivityTypeCommentUpdated = @"org.alfresco.comments.comment-updated";
+NSString * const kAlfrescoFilterValueActivityTypeCommentDeleted = @"org.alfresco.comments.comment-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeBlogPostCreated = @"org.alfresco.blog.post-created";
+NSString * const kAlfrescoFilterValueActivityTypeBlogPostUpdated = @"org.alfresco.blog.post-updated";
+NSString * const kAlfrescoFilterValueActivityTypeBlogPostDeleted = @"org.alfresco.blog.post-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeDiscussionPostCreated = @"org.alfresco.discussions.post-created";
+NSString * const kAlfrescoFilterValueActivityTypeDiscussionPostUpdated = @"org.alfresco.discussions.post-updated";
+NSString * const kAlfrescoFilterValueActivityTypeDiscussionPostDeleted = @"org.alfresco.discussions.post-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeDiscussionReplyCreated = @"org.alfresco.discussions.reply-created";
+NSString * const kAlfrescoFilterValueActivityTypeDiscussionReplyUpdated = @"org.alfresco.discussions.reply-updated";
+NSString * const kAlfrescoFilterValueActivityTypeCalendarEventCreated = @"org.alfresco.calendar.event-created";
+NSString * const kAlfrescoFilterValueActivityTypeCalendarEventUpdated = @"org.alfresco.calendar.event-updated";
+NSString * const kAlfrescoFilterValueActivityTypeCalendarEventDeleted = @"org.alfresco.calendar.event-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeWikiPageCreated = @"org.alfresco.wiki.page-created";
+NSString * const kAlfrescoFilterValueActivityTypeWikiPageUpdated = @"org.alfresco.wiki.page-updated";
+NSString * const kAlfrescoFilterValueActivityTypeWikiPageDeleted = @"org.alfresco.wiki.page-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeDataListCreated = @"org.alfresco.datalists.list-created";
+NSString * const kAlfrescoFilterValueActivityTypeDataListUpdated = @"org.alfresco.datalists.list-updated";
+NSString * const kAlfrescoFilterValueActivityTypeDataListDeleted = @"org.alfresco.datalists.list-deleted";
+NSString * const kAlfrescoFilterValueActivityTypeFollowed = @"org.alfresco.subscriptions.followed";
+NSString * const kAlfrescoFilterValueActivityTypeSubscribed = @"org.alfresco.subscriptions.subscribed";
+NSString * const kAlfrescoFilterValueActivityTypeProfileStatusChanged = @"org.alfresco.profile.status-changed";
+
+NSString * const kAlfrescoFilterByActivityUser = @"activityUser";
+
 /**
  Capabilities constants
  */

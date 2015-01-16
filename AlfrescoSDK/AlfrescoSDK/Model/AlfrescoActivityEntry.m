@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoActivityEntry.h"
+#import "AlfrescoConstants.h"
 #import "AlfrescoInternalConstants.h"
 #import "CMISDateUtil.h"
 
@@ -117,18 +118,17 @@ static NSUInteger kActivityModelVersion = 1;
 {
     if (!self.activityTypeDocumentCalculated)
     {
-        NSArray *determinateTypes = @[@"org.alfresco.documentlibrary.file-added",
-                                      @"org.alfresco.documentlibrary.file-created",
-                                      @"org.alfresco.documentlibrary.file-deleted",
-                                      @"org.alfresco.documentlibrary.file-updated",
-                                      @"org.alfresco.documentlibrary.file-liked",
-                                      @"org.alfresco.documentlibrary.google-docs-checkout",
-                                      @"org.alfresco.documentlibrary.google-docs-checkin",
-                                      @"org.alfresco.documentlibrary.inline-edit",
-                                      @"org.alfresco.documentlibrary.file-liked"];
-        NSArray *indeterminateTypes = @[@"org.alfresco.comments.comment-created",
-                                        @"org.alfresco.comments.comment-updated",
-                                        @"org.alfresco.comments.comment-deleted"];
+        NSArray *determinateTypes = @[kAlfrescoFilterValueActivityTypeFileAdded,
+                                      kAlfrescoFilterValueActivityTypeFileCreated,
+                                      kAlfrescoFilterValueActivityTypeFileDeleted,
+                                      kAlfrescoFilterValueActivityTypeFileUpdated,
+                                      kAlfrescoFilterValueActivityTypeFileLiked,
+                                      kAlfrescoFilterValueActivityTypeFileGoogleDocsCheckout,
+                                      kAlfrescoFilterValueActivityTypeFileGoogleDocsCheckin,
+                                      kAlfrescoFilterValueActivityTypeFileInlineEdit];
+        NSArray *indeterminateTypes = @[kAlfrescoFilterValueActivityTypeCommentCreated,
+                                        kAlfrescoFilterValueActivityTypeCommentUpdated,
+                                        kAlfrescoFilterValueActivityTypeCommentDeleted];
         
         if ([determinateTypes containsObject:self.type])
         {
@@ -157,12 +157,12 @@ static NSUInteger kActivityModelVersion = 1;
          org.alfresco.documentlibrary.files-updated={1} updated {0} documents
          */
         
-        NSArray *determinateTypes = @[@"org.alfresco.documentlibrary.folder-added",
-                                      @"org.alfresco.documentlibrary.folder-deleted",
-                                      @"org.alfresco.documentlibrary.folder-liked"];
-        NSArray *indeterminateTypes = @[@"org.alfresco.comments.comment-created",
-                                        @"org.alfresco.comments.comment-updated",
-                                        @"org.alfresco.comments.comment-deleted"];
+        NSArray *determinateTypes = @[kAlfrescoFilterValueActivityTypeFolderAdded,
+                                      kAlfrescoFilterValueActivityTypeFolderDeleted,
+                                      kAlfrescoFilterValueActivityTypeFolderLiked];
+        NSArray *indeterminateTypes = @[kAlfrescoFilterValueActivityTypeCommentCreated,
+                                        kAlfrescoFilterValueActivityTypeCommentUpdated,
+                                        kAlfrescoFilterValueActivityTypeCommentDeleted];
         
         if ([determinateTypes containsObject:self.type])
         {

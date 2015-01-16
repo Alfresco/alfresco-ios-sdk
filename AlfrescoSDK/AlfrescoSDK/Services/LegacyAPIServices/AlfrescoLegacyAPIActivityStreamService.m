@@ -51,11 +51,10 @@
     return self;
 }
 
-
- - (AlfrescoRequest *)retrieveActivityStreamWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
- {
-     return [self retrieveActivityStreamForPerson:self.session.personIdentifier completionBlock:completionBlock];
- }
+- (AlfrescoRequest *)retrieveActivityStreamWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    return [self retrieveActivityStreamForPerson:self.session.personIdentifier completionBlock:completionBlock];
+}
  
 - (AlfrescoRequest *)retrieveActivityStreamWithListingContext:(AlfrescoListingContext *)listingContext
                                  completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
@@ -63,76 +62,55 @@
     return [self retrieveActivityStreamForPerson:self.session.personIdentifier listingContext:listingContext completionBlock:completionBlock];
 }
  
- - (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
- {
-     [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
-     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyActivityAPI];
-     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
-         if (nil == responseData)
-         {
-             completionBlock(nil, error);
-         }
-         else
-         {
-             NSError *conversionError = nil;
-             NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
-             completionBlock(activityStreamArray, conversionError);
-         }
-     }];
-     return alfrescoRequest;
- }
+- (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveActivityStreamForPerson:personIdentifier
+                                  listingContext:listingContext
+                                 completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        completionBlock(pagingResult.objects, error);
+    }];
+}
  
- - (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext
- completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
- {
-     [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
-     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
-     if (nil == listingContext)
-     {
-         listingContext = self.session.defaultListingContext;
-     }
-     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyActivityAPI];
-     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
-         if (nil == responseData)
-         {
-             completionBlock(nil, error);
-         }
-         else
-         {
-             NSError *conversionError = nil;
-             NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
-             AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
-             completionBlock(pagingResult, conversionError);
-         }
-     }];
-     return alfrescoRequest;
- }
- 
- - (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
- {
-     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
-     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+- (AlfrescoRequest *)retrieveActivityStreamForPerson:(NSString *)personIdentifier listingContext:(AlfrescoListingContext *)listingContext completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:personIdentifier argumentName:@"personIdentifier"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
      
-     NSString *requestString = [kAlfrescoLegacyActivityForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
-     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
-     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-     [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
-         if (nil == responseData)
-         {
-             completionBlock(nil, error);
-         }
-         else
-         {
-             NSError *conversionError = nil;
-             NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
-             completionBlock(activityStreamArray, conversionError);
-         }
-     }];
-     return alfrescoRequest;
- }
+    if (nil == listingContext)
+    {
+        listingContext = self.session.defaultListingContext;
+    }
+     
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:kAlfrescoLegacyActivityAPI];
+    AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
+    [self.session.networkProvider executeRequestWithURL:url session:self.session alfrescoRequest:alfrescoRequest completionBlock:^(NSData *responseData, NSError *error){
+        if (nil == responseData)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
+            NSArray *filteredActivityStream = [self activityArrayByApplyingFilter:listingContext.listingFilter activities:activityStreamArray];
+            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:filteredActivityStream listingContext:listingContext];
+            completionBlock(pagingResult, conversionError);
+        }
+    }];
+
+    return alfrescoRequest;
+}
+ 
+- (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:-1];
+    return [self retrieveActivityStreamForSite:site
+                                listingContext:listingContext
+                               completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        completionBlock(pagingResult.objects, error);
+    }];
+}
  
 - (AlfrescoRequest *)retrieveActivityStreamForSite:(AlfrescoSite *)site
                    listingContext:(AlfrescoListingContext *)listingContext
@@ -140,10 +118,12 @@
 {
     [AlfrescoErrors assertArgumentNotNil:site argumentName:@"site"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
     if (nil == listingContext)
     {
         listingContext = self.session.defaultListingContext;
     }
+    
     NSString *requestString = [kAlfrescoLegacyActivityForSiteAPI stringByReplacingOccurrencesOfString:kAlfrescoSiteId withString:site.shortName];
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
     AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
@@ -156,14 +136,16 @@
         {
             NSError *conversionError = nil;
             NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
-            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:activityStreamArray listingContext:listingContext];
+            NSArray *filteredActivityStream = [self activityArrayByApplyingFilter:listingContext.listingFilter activities:activityStreamArray];
+            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:filteredActivityStream listingContext:listingContext];
             completionBlock(pagingResult, conversionError);
         }
     }];
+    
     return alfrescoRequest;
 }
  
- #pragma mark Activity stream service internal methods
+#pragma mark Activity stream service internal methods
  
 - (NSArray *) activityStreamArrayFromJSONData:(NSData *)data error:(NSError **)outError
 {
@@ -215,6 +197,31 @@
         [resultArray addObject:[[AlfrescoActivityEntry alloc] initWithProperties:activityDict]];
     }
     return resultArray;
+}
+
+// NOTE: Ideally this method should be in a common base class as it is almost identical to the implementation in AlfrescoPublicAPIActivityStreamService.m
+
+- (NSArray *)activityArrayByApplyingFilter:(AlfrescoListingFilter *)filter activities:(NSArray *)activities
+{
+    NSArray *filteredActivities = activities;
+    
+    if (filter)
+    {
+        if ([filter hasFilter:kAlfrescoFilterByActivityType])
+        {
+            NSString *filterValue = [filter valueForFilter:kAlfrescoFilterByActivityType];
+            NSPredicate *activityTypePredicate = [NSPredicate predicateWithFormat:@"type == %@", filterValue];
+            filteredActivities = [activities filteredArrayUsingPredicate:activityTypePredicate];
+        }
+        else if ([filter hasFilter:kAlfrescoFilterByActivityUser])
+        {
+            NSString *filterValue = [filter valueForFilter:kAlfrescoFilterByActivityUser];
+            NSPredicate *activityTypePredicate = [NSPredicate predicateWithFormat:@"createdBy == %@", filterValue];
+            filteredActivities = [activities filteredArrayUsingPredicate:activityTypePredicate];
+        }
+    }
+    
+    return filteredActivities;
 }
 
 @end

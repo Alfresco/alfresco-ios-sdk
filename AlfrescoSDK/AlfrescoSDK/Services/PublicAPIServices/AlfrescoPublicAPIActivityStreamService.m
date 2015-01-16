@@ -160,14 +160,16 @@
                     {
                         total = [[pagingInfo valueForKey:kAlfrescoPublicAPIJSONTotalItems] intValue];
                     }
-                    pagingResult = [[AlfrescoPagingResult alloc] initWithArray:activityStreamArray hasMoreItems:hasMore totalItems:total];
+                    NSArray *filteredActivityStream = [self activityArrayByApplyingFilter:listingContext.listingFilter activities:activityStreamArray];
+                    pagingResult = [[AlfrescoPagingResult alloc] initWithArray:filteredActivityStream hasMoreItems:hasMore totalItems:total];
                 }
                 pagingCompletionBlock(pagingResult, conversionError);
             }
             else
             {
                 NSArray *activityStreamArray = [self activityStreamArrayFromJSONData:responseData error:&conversionError];
-                arrayCompletionBlock(activityStreamArray, conversionError);
+                NSArray *filteredActivityStream = [self activityArrayByApplyingFilter:listingContext.listingFilter activities:activityStreamArray];
+                arrayCompletionBlock(filteredActivityStream, conversionError);
             }
             
         }
@@ -213,6 +215,31 @@
         [resultsArray addObject:[[AlfrescoActivityEntry alloc] initWithProperties:individualEntry]];
     }
     return resultsArray;
+}
+
+// NOTE: Ideally this method should be in a common base class as it is almost identical to the implementation in AlfrescoLegacyAPIActivityStreamService.m
+
+- (NSArray *)activityArrayByApplyingFilter:(AlfrescoListingFilter *)filter activities:(NSArray *)activities
+{
+    NSArray *filteredActivities = activities;
+    
+    if (filter)
+    {
+        if ([filter hasFilter:kAlfrescoFilterByActivityType])
+        {
+            NSString *filterValue = [filter valueForFilter:kAlfrescoFilterByActivityType];
+            NSPredicate *activityTypePredicate = [NSPredicate predicateWithFormat:@"type == %@", filterValue];
+            filteredActivities = [activities filteredArrayUsingPredicate:activityTypePredicate];
+        }
+        else if ([filter hasFilter:kAlfrescoFilterByActivityUser])
+        {
+            NSString *filterValue = [filter valueForFilter:kAlfrescoFilterByActivityUser];
+            NSPredicate *activityTypePredicate = [NSPredicate predicateWithFormat:@"createdBy == %@", filterValue];
+            filteredActivities = [activities filteredArrayUsingPredicate:activityTypePredicate];
+        }
+    }
+    
+    return filteredActivities;
 }
 
 @end
