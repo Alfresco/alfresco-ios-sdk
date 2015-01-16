@@ -130,6 +130,66 @@ extern NSString * const kAlfrescoFilterValueWorkflowAssigneeMe;
 extern NSString * const kAlfrescoFilterValueWorkflowAssigneeUnasssigned;
 extern NSString * const kAlfrescoFilterValueWorkflowAssigneeAll;
 
+extern NSString * const kAlfrescoFilterBySiteVisibility;
+extern NSString * const kAlfrescoFilterValueSiteVisibilityPublic;
+extern NSString * const kAlfrescoFilterValueSiteVisibilityModerated;
+extern NSString * const kAlfrescoFilterValueSiteVisibilityPrivate;
+
+extern NSString * const kAlfrescoFilterByActivityType;
+extern NSString * const kAlfrescoFilterValueActivityTypeSiteUserJoined;
+extern NSString * const kAlfrescoFilterValueActivityTypeSiteUserLeft;
+extern NSString * const kAlfrescoFilterValueActivityTypeSiteUserRoleChanged;
+extern NSString * const kAlfrescoFilterValueActivityTypeSiteUserLiked;
+extern NSString * const kAlfrescoFilterValueActivityTypeSiteGroupAdded;
+extern NSString * const kAlfrescoFilterValueActivityTypeSiteGroupRemoved;
+extern NSString * const kAlfrescoFilterValueActivityTypeSiteGroupRoleChanged;
+extern NSString * const kAlfrescoFilterValueActivityTypeFileCreated;
+extern NSString * const kAlfrescoFilterValueActivityTypeFileAdded;
+extern NSString * const kAlfrescoFilterValueActivityTypeFileUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeFileDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeFilePreviewed;
+extern NSString * const kAlfrescoFilterValueActivityTypeFileDownloaded;
+extern NSString * const kAlfrescoFilterValueActivityTypeFileGoogleDocsCheckout;
+extern NSString * const kAlfrescoFilterValueActivityTypeFileGoogleDocsCheckin;
+extern NSString * const kAlfrescoFilterValueActivityTypeFileInlineEdit;
+extern NSString * const kAlfrescoFilterValueActivityTypeFileLiked;
+extern NSString * const kAlfrescoFilterValueActivityTypeFilesAdded;
+extern NSString * const kAlfrescoFilterValueActivityTypeFilesUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeFilesDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeFolderAdded;
+extern NSString * const kAlfrescoFilterValueActivityTypeFolderDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeFolderLiked;
+extern NSString * const kAlfrescoFilterValueActivityTypeFoldersAdded;
+extern NSString * const kAlfrescoFilterValueActivityTypeFoldersDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeLinkCreated;
+extern NSString * const kAlfrescoFilterValueActivityTypeLinkUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeLinkDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeCommentCreated;
+extern NSString * const kAlfrescoFilterValueActivityTypeCommentUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeCommentDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeBlogPostCreated;
+extern NSString * const kAlfrescoFilterValueActivityTypeBlogPostUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeBlogPostDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeDiscussionPostCreated;
+extern NSString * const kAlfrescoFilterValueActivityTypeDiscussionPostUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeDiscussionPostDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeDiscussionReplyCreated;
+extern NSString * const kAlfrescoFilterValueActivityTypeDiscussionReplyUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeCalendarEventCreated;
+extern NSString * const kAlfrescoFilterValueActivityTypeCalendarEventUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeCalendarEventDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeWikiPageCreated;
+extern NSString * const kAlfrescoFilterValueActivityTypeWikiPageUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeWikiPageDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeDataListCreated;
+extern NSString * const kAlfrescoFilterValueActivityTypeDataListUpdated;
+extern NSString * const kAlfrescoFilterValueActivityTypeDataListDeleted;
+extern NSString * const kAlfrescoFilterValueActivityTypeFollowed;
+extern NSString * const kAlfrescoFilterValueActivityTypeSubscribed;
+extern NSString * const kAlfrescoFilterValueActivityTypeProfileStatusChanged;
+
+extern NSString * const kAlfrescoFilterByActivityUser;
+
 
 /**---------------------------------------------------------------------------------------
  * @name capability constants

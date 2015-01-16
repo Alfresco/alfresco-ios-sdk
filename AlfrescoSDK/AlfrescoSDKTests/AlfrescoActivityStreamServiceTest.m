@@ -318,17 +318,145 @@
     }
 }
 
+- (void)testRetrieveActivitiesFilteredByType
+{
+    if (self.setUpSuccess)
+    {
+        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
+
+        AlfrescoListingFilter *filter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterByActivityType
+                                                                                value:kAlfrescoFilterValueActivityTypeFileAdded];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:filter];
+        
+        // retrieve activity stream
+        [self.activityStreamService retrieveActivityStreamWithListingContext:listingContext
+                                                             completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                
+                // make sure all returned activities are "file added"
+                for (AlfrescoActivityEntry *entry in pagingResult.objects)
+                {
+                    XCTAssertTrue([entry.type isEqualToString:kAlfrescoFilterValueActivityTypeFileAdded],
+                                  @"Expected all returned activities to have a type of %@", kAlfrescoFilterValueActivityTypeFileAdded);
+                }
+                
+                self.lastTestSuccessful = YES;
+            }
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveActivitiesFilteredByUser
+{
+    if (self.setUpSuccess)
+    {
+        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
+        
+        AlfrescoListingFilter *filter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterByActivityUser value:self.userName];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:filter];
+        
+        // retrieve activity stream
+        [self.activityStreamService retrieveActivityStreamWithListingContext:listingContext
+                                                             completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+             
+                // make sure all returned activities are created by the current user
+                for (AlfrescoActivityEntry *entry in pagingResult.objects)
+                {
+                    XCTAssertTrue([entry.createdBy isEqualToString:self.userName],
+                                  @"Expected all returned activities to be created by %@", self.userName);
+                }
+             
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+- (void)testRetrieveActivitiesFilteredByNonExistentUser
+{
+    if (self.setUpSuccess)
+    {
+        self.activityStreamService = [[AlfrescoActivityStreamService alloc] initWithSession:self.currentSession];
+        
+        AlfrescoListingFilter *filter = [[AlfrescoListingFilter alloc] initWithFilter:kAlfrescoFilterByActivityUser value:@"abcdefg"];
+        AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:filter];
+        
+        // retrieve activity stream
+        [self.activityStreamService retrieveActivityStreamWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+            
+            if (nil == pagingResult)
+            {
+                self.lastTestSuccessful = NO;
+                self.lastTestFailureMessage = [self failureMessageFromError:error];
+                self.callbackCompleted = YES;
+            }
+            else
+            {
+                XCTAssertNotNil(pagingResult.objects, @"objects array should not be nil");
+                XCTAssertTrue(pagingResult.objects.count == 0,
+                              @"Expected an empty array but got %lu activities", (unsigned long)pagingResult.objects.count);
+                
+                self.lastTestSuccessful = YES;
+            }
+            
+            self.callbackCompleted = YES;
+        }];
+        
+        [self waitUntilCompleteWithFixedTimeInterval];
+        XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 #pragma mark - Test Utility methods
 
 - (BOOL)isSiteIdExpectedForActivity:(AlfrescoActivityEntry *)activity
 {
     // PublicAPI doesn't respond with siteId for certain activities
     if (self.currentSession.repositoryInfo.capabilities.doesSupportPublicAPI &&
-        [@[@"org.alfresco.site.user-left", @"org.alfresco.site.user-joined",
-           @"org.alfresco.documentlibrary.folder-added", @"org.alfresco.documentlibrary.folder-deleted",
-           @"org.alfresco.documentlibrary.files-added", @"org.alfresco.documentlibrary.files-deleted",
-           @"org.alfresco.documentlibrary.file-added", @"org.alfresco.documentlibrary.file-deleted",
-           @"org.alfresco.documentlibrary.file-created", @"org.alfresco.documentlibrary.file-updated"
+        [@[kAlfrescoFilterValueActivityTypeSiteUserLeft, kAlfrescoFilterValueActivityTypeSiteUserJoined,
+           kAlfrescoFilterValueActivityTypeFolderAdded, kAlfrescoFilterValueActivityTypeFolderDeleted,
+           kAlfrescoFilterValueActivityTypeFilesAdded, kAlfrescoFilterValueActivityTypeFilesDeleted,
+           kAlfrescoFilterValueActivityTypeFileAdded, kAlfrescoFilterValueActivityTypeFileDeleted,
+           kAlfrescoFilterValueActivityTypeFileCreated, kAlfrescoFilterValueActivityTypeFileUpdated
            ] containsObject:activity.type])
     {
         return NO;
