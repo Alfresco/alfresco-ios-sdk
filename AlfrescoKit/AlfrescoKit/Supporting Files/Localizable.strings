@@ -87,3 +87,11 @@
 "ak.login.view.controller.cell.password.title" = "Password";
 "ak.login.view.controller.cell.password.placeholder" = "Password here";
 "ak.login.view.controller.login.button.title" = "Login";
+
+/**
+ * AKSitesListViewController
+ */
+"ak.sites.view.controller.title" = "Sites";
+"ak.sites.view.controller.segment.control.mysites" = "My Sites";
+"ak.sites.view.controller.segment.control.favourites" = "Favorites";
+"ak.sites.view.controller.segment.control.allsites" = "All Sites";

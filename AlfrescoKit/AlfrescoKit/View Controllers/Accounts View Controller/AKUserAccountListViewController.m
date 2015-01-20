@@ -60,11 +60,6 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
     return self;
 }
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    return [super initWithNibName:nibNameOrNil bundle:[NSBundle alfrescoKitBundle]];
-}
-
 #pragma mark - UITableViewDataSource Methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

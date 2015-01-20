@@ -18,19 +18,16 @@
  *****************************************************************************
  */
 
-
-/** The umbrella header for AlfrescoKit
+/** AKSitesCell
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#ifdef TARGET_OS_IPHONE
-#import "AKUserAccount.h"
-#import "AKAlfrescoNetworkActivity.h"
-#import "AKUIViewController.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#import "AKLoginViewController.h"
-#import "AKSitesListViewController.h"
-#endif
+#import <UIKit/UIKit.h>
+
+@interface AKSitesCell : UITableViewCell
+
+@property (nonatomic, weak) IBOutlet UIImageView *siteImageView;
+@property (nonatomic, weak) IBOutlet UILabel *siteTextLabel;
+
+@end
