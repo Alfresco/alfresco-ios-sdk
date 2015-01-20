@@ -65,11 +65,6 @@ typedef NS_ENUM(NSUInteger, LoginEntryCell)
     return self;
 }
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    return [super initWithNibName:nibNameOrNil bundle:[NSBundle alfrescoKitBundle]];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];

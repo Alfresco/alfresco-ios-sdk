@@ -38,13 +38,13 @@
 
 @end
 
-@interface AKAlfrescoNodeListViewController : UIViewController
+@interface AKAlfrescoNodeListViewController : AKUIViewController
 
 @property (nonatomic, strong, readonly) AlfrescoFolder *folder;
 @property (nonatomic, weak) id<AKAlfrescoNodeListViewControllerDelegate> delegate;
 
-- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder session:(id<AlfrescoSession>)session;
-- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingcontext session:(id<AlfrescoSession>)session;
+- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder delegate:(id<AKAlfrescoNodeListViewControllerDelegate>)delegate session:(id<AlfrescoSession>)session;
+- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingcontext delegate:(id<AKAlfrescoNodeListViewControllerDelegate>)delegate session:(id<AlfrescoSession>)session;
 
 - (void)updateSession:(id<AlfrescoSession>)session;
 

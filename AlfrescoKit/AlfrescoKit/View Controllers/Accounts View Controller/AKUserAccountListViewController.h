@@ -41,7 +41,7 @@
 
 @end
 
-@interface AKUserAccountListViewController : UIViewController
+@interface AKUserAccountListViewController : AKUIViewController
 
 @property (nonatomic, weak) id<AKUserAccountListViewControllerDelegate> delegate;
 

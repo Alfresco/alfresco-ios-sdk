@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AKSitesListViewController">
+            <connections>
+                <outlet property="segmentControl" destination="1h0-Bx-zN5" id="e4U-8P-zpZ"/>
+                <outlet property="tableView" destination="w0x-A4-wdv" id="Hej-NN-aYl"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="64" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="w0x-A4-wdv">
+                    <rect key="frame" x="0.0" y="44" width="320" height="524"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="08k-Sb-k9Q"/>
+                        <outlet property="delegate" destination="-1" id="Xvv-4a-1jm"/>
+                    </connections>
+                </tableView>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="1h0-Bx-zN5">
+                    <rect key="frame" x="21" y="8" width="278" height="29"/>
+                    <segments>
+                        <segment title="First"/>
+                        <segment title="Second"/>
+                        <segment title="Third"/>
+                    </segments>
+                    <connections>
+                        <action selector="didChangeSegementTab:" destination="-1" eventType="valueChanged" id="hhU-9j-ze4"/>
+                    </connections>
+                </segmentedControl>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="1h0-Bx-zN5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="21" id="8pK-H8-zmH"/>
+                <constraint firstAttribute="trailing" secondItem="1h0-Bx-zN5" secondAttribute="trailing" constant="21" id="EXA-Ur-ZQ7"/>
+                <constraint firstItem="w0x-A4-wdv" firstAttribute="top" secondItem="1h0-Bx-zN5" secondAttribute="bottom" constant="8" id="Lza-9c-7D7"/>
+                <constraint firstAttribute="bottom" secondItem="w0x-A4-wdv" secondAttribute="bottom" id="Qix-ij-Bsx"/>
+                <constraint firstItem="1h0-Bx-zN5" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="eDV-eH-txO"/>
+                <constraint firstItem="w0x-A4-wdv" firstAttribute="top" secondItem="1h0-Bx-zN5" secondAttribute="bottom" constant="8" id="hrf-TM-WyW"/>
+                <constraint firstAttribute="trailing" secondItem="w0x-A4-wdv" secondAttribute="trailing" id="opU-fy-cGT"/>
+                <constraint firstItem="w0x-A4-wdv" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="swV-Ve-tDH"/>
+            </constraints>
+            <point key="canvasLocation" x="587" y="417"/>
+        </view>
+    </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

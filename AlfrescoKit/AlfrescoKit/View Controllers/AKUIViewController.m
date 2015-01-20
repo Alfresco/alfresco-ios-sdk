@@ -18,19 +18,17 @@
  *****************************************************************************
  */
 
-
-/** The umbrella header for AlfrescoKit
- 
- Author: Tauseef Mughal (Alfresco)
- */
-
-#ifdef TARGET_OS_IPHONE
-#import "AKUserAccount.h"
-#import "AKAlfrescoNetworkActivity.h"
 #import "AKUIViewController.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#import "AKLoginViewController.h"
-#import "AKSitesListViewController.h"
-#endif
+
+@interface AKUIViewController ()
+
+@end
+
+@implementation AKUIViewController
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    return [super initWithNibName:nibNameOrNil bundle:[NSBundle alfrescoKitBundle]];
+}
+
+@end

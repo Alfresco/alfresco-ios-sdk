@@ -40,7 +40,7 @@
 
 @end
 
-@interface AKLoginViewController : UIViewController
+@interface AKLoginViewController : AKUIViewController
 
 @property (nonatomic, weak) id<AKLoginViewControllerDelegate> delegate;
 

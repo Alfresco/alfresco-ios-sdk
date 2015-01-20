@@ -54,11 +54,10 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
                                         listingContext:(AlfrescoListingContext *)listingContext
                                                session:(id<AlfrescoSession>)session
 {
-    self = [self initWithAlfrescoFolder:folder listingContext:listingContext session:session];
+    self = [self initWithAlfrescoFolder:folder listingContext:listingContext delegate:delegate session:session];
     if (self)
     {
         self.nodePickerOptions = AKAlfrescoNodePickerTypeFolderPicker;
-        self.delegate = delegate;
         self.selectedNodes = (selectedNodes) ?: [NSMutableArray array];
     }
     return self;
@@ -80,7 +79,7 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
                                           listingContext:(AlfrescoListingContext *)listingContext
                                                  session:(id<AlfrescoSession>)session
 {
-    self = [self initWithAlfrescoFolder:folder listingContext:listingContext session:session];
+    self = [self initWithAlfrescoFolder:folder listingContext:listingContext delegate:delegate session:session];
     if (self)
     {
         self.nodePickerOptions = AKAlfrescoNodePickerTypeDocumentPicker;
@@ -88,7 +87,6 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
         {
             self.nodePickerOptions |= AKAlfrescoNodePickerTypeMultiplePicker;
         }
-        self.delegate = delegate;
         self.selectedNodes = (selectedNodes) ? selectedNodes : [NSMutableArray array];
         
     }

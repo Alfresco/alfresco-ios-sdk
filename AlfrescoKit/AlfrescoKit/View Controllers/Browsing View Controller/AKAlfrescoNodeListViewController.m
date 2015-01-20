@@ -40,12 +40,12 @@
 
 @implementation AKAlfrescoNodeListViewController
 
-- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder session:(id<AlfrescoSession>)session
+- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder delegate:(id<AKAlfrescoNodeListViewControllerDelegate>)delegate session:(id<AlfrescoSession>)session
 {
-    return [self initWithAlfrescoFolder:folder listingContext:nil session:session];
+    return [self initWithAlfrescoFolder:folder listingContext:nil delegate:delegate session:session];
 }
 
-- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingcontext session:(id<AlfrescoSession>)session
+- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingcontext delegate:(id<AKAlfrescoNodeListViewControllerDelegate>)delegate session:(id<AlfrescoSession>)session
 {
     self = [self init];
     if (self)
@@ -54,14 +54,10 @@
         self.listingContext = listingcontext;
         self.session = session;
         self.tableViewData = [NSMutableArray array];
+        self.delegate = delegate;
         [self createServicesForSession:session];
     }
     return self;
-}
-
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    return [super initWithNibName:nibNameOrNil bundle:[NSBundle alfrescoKitBundle]];
 }
 
 - (void)viewDidLoad
@@ -244,7 +240,7 @@
     
     if ([selectedNode isKindOfClass:[AlfrescoFolder class]])
     {
-        AKAlfrescoNodeListViewController *basicViewController = [[AKAlfrescoNodeListViewController alloc] initWithAlfrescoFolder:(AlfrescoFolder *)selectedNode listingContext:self.listingContext session:self.session];
+        AKAlfrescoNodeListViewController *basicViewController = [[AKAlfrescoNodeListViewController alloc] initWithAlfrescoFolder:(AlfrescoFolder *)selectedNode listingContext:self.listingContext delegate:self.delegate session:self.session];
         [self.navigationController pushViewController:basicViewController animated:YES];
     }
     else
