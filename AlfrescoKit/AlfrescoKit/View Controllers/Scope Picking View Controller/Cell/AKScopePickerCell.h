@@ -18,27 +18,16 @@
  *****************************************************************************
  */
 
-
-/** The umbrella header for AlfrescoKit
+/** AKScopePickerCell
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#ifdef TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
 
-// Protocols
-#import "AKUserAccount.h"
+@interface AKScopePickerCell : UITableViewCell
 
-// Models
-#import "AKScopeItem.h"
+@property (nonatomic, weak) IBOutlet UIImageView *scopeImageView;
+@property (nonatomic, weak) IBOutlet UILabel *scopeTextLabel;
 
-// Controllers
-#import "AKUIViewController.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#import "AKLoginViewController.h"
-#import "AKSitesListViewController.h"
-#import "AKScopePickingViewController.h"
-
-#endif
+@end

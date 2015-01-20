@@ -18,27 +18,18 @@
  *****************************************************************************
  */
 
-
-/** The umbrella header for AlfrescoKit
+/** AKScopeItem
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#ifdef TARGET_OS_IPHONE
+#import <Foundation/Foundation.h>
 
-// Protocols
-#import "AKUserAccount.h"
+@interface AKScopeItem : NSObject
 
-// Models
-#import "AKScopeItem.h"
+@property (nonatomic, strong, readonly) NSURL *imageURL;
+@property (nonatomic, strong, readonly) NSString *name;
 
-// Controllers
-#import "AKUIViewController.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#import "AKLoginViewController.h"
-#import "AKSitesListViewController.h"
-#import "AKScopePickingViewController.h"
+- (instancetype)initWithImageURL:(NSURL *)imageURL name:(NSString *)name;
 
-#endif
+@end

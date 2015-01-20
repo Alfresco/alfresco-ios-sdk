@@ -42,6 +42,16 @@
 		734CC37B1A6E6056005D148E /* AKSitesCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 734CC3781A6E6056005D148E /* AKSitesCell.h */; };
 		734CC37C1A6E6056005D148E /* AKSitesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 734CC3791A6E6056005D148E /* AKSitesCell.m */; };
 		734CC37D1A6E6141005D148E /* AKSitesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 734CC37A1A6E6056005D148E /* AKSitesCell.xib */; };
+		734CC3861A6E9F40005D148E /* AKScopeItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 734CC3841A6E9F40005D148E /* AKScopeItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		734CC3871A6E9F40005D148E /* AKScopeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 734CC3851A6E9F40005D148E /* AKScopeItem.m */; };
+		734CC38E1A6EA042005D148E /* AKScopePickingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 734CC38C1A6EA042005D148E /* AKScopePickingViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		734CC38F1A6EA042005D148E /* AKScopePickingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 734CC38D1A6EA042005D148E /* AKScopePickingViewController.m */; };
+		734CC3911A6EA058005D148E /* AKScopePickingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 734CC3901A6EA058005D148E /* AKScopePickingViewController.xib */; };
+		734CC3961A6EA58A005D148E /* AKScopePickerCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 734CC3931A6EA58A005D148E /* AKScopePickerCell.h */; };
+		734CC3971A6EA58A005D148E /* AKScopePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 734CC3941A6EA58A005D148E /* AKScopePickerCell.m */; };
+		734CC3981A6EA8DF005D148E /* AKScopeItem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 734CC3841A6E9F40005D148E /* AKScopeItem.h */; };
+		734CC3991A6EAA71005D148E /* AKScopePickingViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 734CC38C1A6EA042005D148E /* AKScopePickingViewController.h */; };
+		734CC39A1A6EAAFE005D148E /* AKScopePickerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 734CC3951A6EA58A005D148E /* AKScopePickerCell.xib */; };
 		736B573A1A6D268B0096E4A9 /* AKSitesListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 736B57371A6D268B0096E4A9 /* AKSitesListViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		736B573B1A6D268B0096E4A9 /* AKSitesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 736B57381A6D268B0096E4A9 /* AKSitesListViewController.m */; };
 		736B573E1A6D41D50096E4A9 /* AKSitesListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 736B57391A6D268B0096E4A9 /* AKSitesListViewController.xib */; };
@@ -167,6 +177,8 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				734CC3991A6EAA71005D148E /* AKScopePickingViewController.h in CopyFiles */,
+				734CC3981A6EA8DF005D148E /* AKScopeItem.h in CopyFiles */,
 				736B57421A6D60120096E4A9 /* AKSitesListViewController.h in CopyFiles */,
 				7343F9AD1A69601E00C0664A /* AKUserAccountListViewController.h in CopyFiles */,
 				7343F9AE1A69601E00C0664A /* AKAlfrescoNodeListViewController.h in CopyFiles */,
@@ -210,6 +222,14 @@
 		734CC3781A6E6056005D148E /* AKSitesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKSitesCell.h; sourceTree = "<group>"; };
 		734CC3791A6E6056005D148E /* AKSitesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKSitesCell.m; sourceTree = "<group>"; };
 		734CC37A1A6E6056005D148E /* AKSitesCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKSitesCell.xib; sourceTree = "<group>"; };
+		734CC3841A6E9F40005D148E /* AKScopeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKScopeItem.h; sourceTree = "<group>"; };
+		734CC3851A6E9F40005D148E /* AKScopeItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKScopeItem.m; sourceTree = "<group>"; };
+		734CC38C1A6EA042005D148E /* AKScopePickingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKScopePickingViewController.h; sourceTree = "<group>"; };
+		734CC38D1A6EA042005D148E /* AKScopePickingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKScopePickingViewController.m; sourceTree = "<group>"; };
+		734CC3901A6EA058005D148E /* AKScopePickingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKScopePickingViewController.xib; sourceTree = "<group>"; };
+		734CC3931A6EA58A005D148E /* AKScopePickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKScopePickerCell.h; sourceTree = "<group>"; };
+		734CC3941A6EA58A005D148E /* AKScopePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKScopePickerCell.m; sourceTree = "<group>"; };
+		734CC3951A6EA58A005D148E /* AKScopePickerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKScopePickerCell.xib; sourceTree = "<group>"; };
 		736B57371A6D268B0096E4A9 /* AKSitesListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKSitesListViewController.h; sourceTree = "<group>"; };
 		736B57381A6D268B0096E4A9 /* AKSitesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKSitesListViewController.m; sourceTree = "<group>"; };
 		736B57391A6D268B0096E4A9 /* AKSitesListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKSitesListViewController.xib; sourceTree = "<group>"; };
@@ -344,6 +364,7 @@
 				7343F9891A69548300C0664A /* Browsing View Controller */,
 				7343F9911A69548300C0664A /* Login View Controller */,
 				7343F9961A69548300C0664A /* Picking View Controller */,
+				734CC38B1A6EA018005D148E /* Scope Picking View Controller */,
 				736B57331A6D26640096E4A9 /* Sites View Controller */,
 			);
 			path = "View Controllers";
@@ -420,6 +441,27 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		734CC38B1A6EA018005D148E /* Scope Picking View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				734CC3921A6EA4F5005D148E /* Cell */,
+				734CC38C1A6EA042005D148E /* AKScopePickingViewController.h */,
+				734CC38D1A6EA042005D148E /* AKScopePickingViewController.m */,
+				734CC3901A6EA058005D148E /* AKScopePickingViewController.xib */,
+			);
+			path = "Scope Picking View Controller";
+			sourceTree = "<group>";
+		};
+		734CC3921A6EA4F5005D148E /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				734CC3931A6EA58A005D148E /* AKScopePickerCell.h */,
+				734CC3941A6EA58A005D148E /* AKScopePickerCell.m */,
+				734CC3951A6EA58A005D148E /* AKScopePickerCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		736B57331A6D26640096E4A9 /* Sites View Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -435,6 +477,8 @@
 			isa = PBXGroup;
 			children = (
 				7374B8A51A6531650091A4FD /* AKUserAccount.h */,
+				734CC3841A6E9F40005D148E /* AKScopeItem.h */,
+				734CC3851A6E9F40005D148E /* AKScopeItem.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -669,7 +713,9 @@
 				73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */,
 				7343F9991A69548300C0664A /* AKUserAccountListViewController.h in Headers */,
 				736B573A1A6D268B0096E4A9 /* AKSitesListViewController.h in Headers */,
+				734CC3861A6E9F40005D148E /* AKScopeItem.h in Headers */,
 				7343F99F1A69548300C0664A /* AKLoginViewController.h in Headers */,
+				734CC38E1A6EA042005D148E /* AKScopePickingViewController.h in Headers */,
 				736B57451A6D60C80096E4A9 /* AKUIViewController.h in Headers */,
 				734CC37B1A6E6056005D148E /* AKSitesCell.h in Headers */,
 				73B8C1CD1A60331700571B28 /* AKUtility.h in Headers */,
@@ -680,6 +726,7 @@
 				73B8C1511A5ECFF100571B28 /* AKConstants.h in Headers */,
 				7374B8A61A6531650091A4FD /* AKUserAccount.h in Headers */,
 				7343F99D1A69548300C0664A /* AKAlfrescoNodeCell.h in Headers */,
+				734CC3961A6EA58A005D148E /* AKScopePickerCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -862,6 +909,7 @@
 				7374B96E1A657B800091A4FD /* large_xml@2x.png in Resources */,
 				7374B9801A657B800091A4FD /* small_powerpoint@2x.png in Resources */,
 				7374B9781A657B800091A4FD /* small_folder@2x.png in Resources */,
+				734CC39A1A6EAAFE005D148E /* AKScopePickerCell.xib in Resources */,
 				7374B9871A657B800091A4FD /* small_xml.png in Resources */,
 				7374B97B1A657B800091A4FD /* small_notes.png in Resources */,
 				7374B96F1A657B800091A4FD /* large_zip.png in Resources */,
@@ -874,6 +922,7 @@
 				7374B98E1A657B800091A4FD /* Localizable.strings in Resources */,
 				7374B98F1A657B800091A4FD /* SmallThumbnailImageMapping.plist in Resources */,
 				7374B9751A657B800091A4FD /* small_excel.png in Resources */,
+				734CC3911A6EA058005D148E /* AKScopePickingViewController.xib in Resources */,
 				7374B96B1A657B800091A4FD /* large_word.png in Resources */,
 				7374B9671A657B800091A4FD /* large_powerpoint.png in Resources */,
 				7343F9A51A69549A00C0664A /* AKAlfrescoNodeCell.xib in Resources */,
@@ -906,10 +955,13 @@
 			files = (
 				734CC37C1A6E6056005D148E /* AKSitesCell.m in Sources */,
 				7343F9AB1A6954EE00C0664A /* AKLoginEntryCell.m in Sources */,
+				734CC3971A6EA58A005D148E /* AKScopePickerCell.m in Sources */,
 				7343F99E1A69548300C0664A /* AKAlfrescoNodeCell.m in Sources */,
+				734CC38F1A6EA042005D148E /* AKScopePickingViewController.m in Sources */,
 				736B57461A6D60C80096E4A9 /* AKUIViewController.m in Sources */,
 				73B8C1261A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m in Sources */,
 				73B8C1521A5ECFF100571B28 /* AKConstants.m in Sources */,
+				734CC3871A6E9F40005D148E /* AKScopeItem.m in Sources */,
 				7343F9641A67DBF800C0664A /* UIImage+AlfrescoKit.m in Sources */,
 				7343F99C1A69548300C0664A /* AKAlfrescoNodeListViewController.m in Sources */,
 				7343F9A21A69548300C0664A /* AKAlfrescoNodePickingListViewController.m in Sources */,
