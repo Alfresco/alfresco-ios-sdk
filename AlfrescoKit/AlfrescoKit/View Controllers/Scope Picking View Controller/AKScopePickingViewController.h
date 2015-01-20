@@ -18,27 +18,27 @@
  *****************************************************************************
  */
 
-
-/** The umbrella header for AlfrescoKit
+/** AKScopePickingViewController
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#ifdef TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
 
-// Protocols
-#import "AKUserAccount.h"
+@class AKScopeItem;
+@class AKScopePickingViewController;
 
-// Models
-#import "AKScopeItem.h"
+@protocol AKScopePickingViewControllerDelegate <NSObject>
 
-// Controllers
-#import "AKUIViewController.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#import "AKLoginViewController.h"
-#import "AKSitesListViewController.h"
-#import "AKScopePickingViewController.h"
+- (void)scopePickingController:(AKScopePickingViewController *)scopePickingController didSelectScopeItem:(AKScopeItem *)scopeItem;
 
-#endif
+@end
+
+@interface AKScopePickingViewController : AKUIViewController
+
+@property (nonatomic, weak) id<AKScopePickingViewControllerDelegate> delegate;
+
+- (instancetype)initWithScopeItems:(NSArray *)scopeItems;
+- (instancetype)initWithScopeItems:(NSArray *)scopeItems delegate:(id<AKScopePickingViewControllerDelegate>)delegate;
+
+@end

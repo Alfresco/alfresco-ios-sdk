@@ -95,3 +95,8 @@
 "ak.sites.view.controller.segment.control.mysites" = "My Sites";
 "ak.sites.view.controller.segment.control.favourites" = "Favorites";
 "ak.sites.view.controller.segment.control.allsites" = "All Sites";
+
+/**
+ * AKScopePickingViewController
+ */
+"ak.scope.picking.view.controller.title" = "Select Location";
