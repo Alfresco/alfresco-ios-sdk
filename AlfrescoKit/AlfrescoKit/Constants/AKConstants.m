@@ -22,4 +22,4 @@
 
 NSString * const kAlfrescoKitBundleName = @"AlfrescoKitBundle";
 
-NSString * const kAlfrescoOnPremiseServerURLTemplate = @"%@://%@:%@/alfresco";
+NSString * const kAlfrescoOnPremiseServerURLFormatString = @"%@://%@:%@/alfresco";

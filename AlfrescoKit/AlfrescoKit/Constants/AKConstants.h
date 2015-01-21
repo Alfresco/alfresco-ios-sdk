@@ -34,4 +34,4 @@ typedef void (^AKLoginCompletionBlock)(BOOL successful, id<AlfrescoSession> sess
 extern NSString * const kAlfrescoKitBundleName;
 
 // Server
-extern NSString * const kAlfrescoOnPremiseServerURLTemplate;
+extern NSString * const kAlfrescoOnPremiseServerURLFormatString;

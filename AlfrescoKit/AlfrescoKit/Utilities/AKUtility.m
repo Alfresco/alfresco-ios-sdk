@@ -143,7 +143,7 @@ static NSString * const kSmallThumbnailImageMappingPlist = @"SmallThumbnailImage
 
 + (NSString *)onPremiseServerURLWithProtocol:(NSString *)protocol serverAddress:(NSString *)serverAddress port:(NSString *)port
 {
-    return [NSString stringWithFormat:kAlfrescoOnPremiseServerURLTemplate, protocol, serverAddress, port];
+    return [NSString stringWithFormat:kAlfrescoOnPremiseServerURLFormatString, protocol, serverAddress, port];
 }
 
 @end
