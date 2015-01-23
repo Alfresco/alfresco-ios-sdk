@@ -22,8 +22,10 @@
 
 @interface AKScopeItem ()
 
+@property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSURL *imageURL;
 @property (nonatomic, strong, readwrite) NSString *name;
+@property (nonatomic, strong, readwrite) id userInfo;
 
 @end
 
@@ -31,11 +33,29 @@
 
 - (instancetype)initWithImageURL:(NSURL *)imageURL name:(NSString *)name
 {
+    
+    return [self initWithIdentifier:nil imageURL:imageURL name:name userInfo:nil];
+}
+
+- (instancetype)initWithImageURL:(NSURL *)imageURL name:(NSString *)name userInfo:(id)userInfo
+{
+    return [self initWithIdentifier:nil imageURL:imageURL name:name userInfo:userInfo];
+}
+
+- (instancetype)initWithIdentifier:(NSString *)identifier imageURL:(NSURL *)imageURL name:(NSString *)name
+{
+    return [self initWithIdentifier:identifier imageURL:imageURL name:name userInfo:nil];
+}
+
+- (instancetype)initWithIdentifier:(NSString *)identifier imageURL:(NSURL *)imageURL name:(NSString *)name userInfo:(id)userInfo
+{
     self = [self init];
     if (self)
     {
+        self.identifier = (identifier) ?: [[NSUUID UUID] UUIDString];
         self.name = name;
         self.imageURL = imageURL;
+        self.userInfo = userInfo;
     }
     return self;
 }
