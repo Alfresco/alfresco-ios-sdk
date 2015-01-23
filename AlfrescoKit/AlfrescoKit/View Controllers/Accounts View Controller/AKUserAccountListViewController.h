@@ -25,12 +25,14 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol AKUserAccount;
 @class AKUserAccountListViewController;
 
 @protocol AKUserAccountListViewControllerDelegate <NSObject>
 
 - (void)userAccountListViewController:(AKUserAccountListViewController *)accountListViewController
                  didLoginSuccessfully:(BOOL)loginSuccessful
+                            toAccount:(id<AKUserAccount>)account
                       creatingSession:(id<AlfrescoSession>)session
                                 error:(NSError *)error;
 - (void)didSelectLocalFilesOnUserAccountListViewController:(AKUserAccountListViewController *)accountListViewController;

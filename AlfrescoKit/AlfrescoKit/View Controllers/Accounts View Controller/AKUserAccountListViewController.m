@@ -136,7 +136,7 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
         
         __weak typeof(self) weakSelf = self;
         [self.loginService loginToAccount:selectedAccount networkIdentifier:nil completionBlock:^(BOOL successful, id<AlfrescoSession> session, NSError *error) {
-            [weakSelf.delegate userAccountListViewController:weakSelf didLoginSuccessfully:successful creatingSession:session error:error];
+            [weakSelf.delegate userAccountListViewController:weakSelf didLoginSuccessfully:successful toAccount:selectedAccount creatingSession:session error:error];
         }];
     }
     else if (indexPath.section == AccountTableViewControllerSectionDownloads)

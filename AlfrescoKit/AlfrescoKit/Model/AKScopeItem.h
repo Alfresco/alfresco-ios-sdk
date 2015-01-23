@@ -27,9 +27,14 @@
 
 @interface AKScopeItem : NSObject
 
+@property (nonatomic, strong, readonly) NSString *identifier;
 @property (nonatomic, strong, readonly) NSURL *imageURL;
 @property (nonatomic, strong, readonly) NSString *name;
+@property (nonatomic, strong, readonly) id userInfo;
 
 - (instancetype)initWithImageURL:(NSURL *)imageURL name:(NSString *)name;
+- (instancetype)initWithImageURL:(NSURL *)imageURL name:(NSString *)name userInfo:(id)userInfo;
+- (instancetype)initWithIdentifier:(NSString *)identifier imageURL:(NSURL *)imageURL name:(NSString *)name;
+- (instancetype)initWithIdentifier:(NSString *)identifier imageURL:(NSURL *)imageURL name:(NSString *)name userInfo:(id)userInfo;
 
 @end

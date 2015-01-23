@@ -25,12 +25,15 @@
 
 #import <Foundation/Foundation.h>
 
+@class AlfrescoOAuthData;
+
 @protocol AKUserAccount <NSObject>
 
 // This protocol is subject to change
 @property (nonatomic, assign) BOOL isOnPremiseAccount;
 
 // User for OnPremise Accounts
+@property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *accountDescription;
@@ -40,6 +43,7 @@
 @property (nonatomic, strong) NSString *serviceDocument;
 
 // Used for Cloud Accounts
+@property (nonatomic, strong) NSString *selectedNetworkIdentifier;
 @property (nonatomic, strong) AlfrescoOAuthData *oAuthData;
 
 @end
