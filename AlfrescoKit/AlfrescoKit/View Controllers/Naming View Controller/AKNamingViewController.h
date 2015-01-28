@@ -18,28 +18,26 @@
  *****************************************************************************
  */
 
-
-/** The umbrella header for AlfrescoKit
+/** Provides a name entry
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#ifdef TARGET_OS_IPHONE
-
-// Protocols
-#import "AKUserAccount.h"
-
-// Models
-#import "AKScopeItem.h"
-
-// Controllers
 #import "AKUIViewController.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#import "AKLoginViewController.h"
-#import "AKSitesListViewController.h"
-#import "AKScopePickingViewController.h"
-#import "AKNamingViewController.h"
 
-#endif
+@class AKNamingViewController;
+
+@protocol AKNamingViewControllerDelegate <NSObject>
+
+- (void)namingViewController:(AKNamingViewController *)namingController didEnterName:(NSString *)name userInfo:(id)userInfo;
+
+@end
+
+@interface AKNamingViewController : AKUIViewController
+
+@property (nonatomic, weak) id<AKNamingViewControllerDelegate> delegate;
+
+- (instancetype)initWithURL:(NSURL *)url delegate:(id<AKNamingViewControllerDelegate>)delegate;
+- (instancetype)initWithURL:(NSURL *)url delegate:(id<AKNamingViewControllerDelegate>)delegate userInfo:(id)userInfo;
+
+@end
