@@ -33,6 +33,7 @@
 
 - (void)loginViewController:(AKLoginViewController *)loginController
        didLoginSuccessfully:(BOOL)loginSuccessful
+                  toAccount:(id<AKUserAccount>)account
                    username:(NSString *)username
                    password:(NSString *)password
             creatingSession:(id<AlfrescoSession>)session
