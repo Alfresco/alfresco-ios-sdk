@@ -121,9 +121,9 @@ typedef NS_ENUM(NSUInteger, LoginEntryCell)
     
     // Preload the cell data
     self.usernameCell.titleTextLabel.text = AKLocalizedString(@"ak.login.view.controller.cell.username.title", @"Username title");
-    self.usernameCell.entryTextField.text = (self.account.username) ?: AKLocalizedString(@"ak.login.view.controller.cell.username.placeholder", "Username placeholder");;
+    self.usernameCell.entryTextField.text = (self.account.username) ?: AKLocalizedString(@"ak.login.view.controller.cell.username.placeholder", "Username placeholder");
     self.passwordCell.titleTextLabel.text = AKLocalizedString(@"ak.login.view.controller.cell.password.title", @"Password Title");
-    self.passwordCell.entryTextField.text = (self.account.password) ?: AKLocalizedString(@"ak.login.view.controller.cell.password.placeholder", @"Password placeholder");;
+    self.passwordCell.entryTextField.text = (self.account.password) ?: AKLocalizedString(@"ak.login.view.controller.cell.password.placeholder", @"Password placeholder");
 }
 
 - (void)loginButtonPressed:(id)sender

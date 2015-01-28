@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		731904F11A77DAF3001916D3 /* AKNamingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 731904EE1A77DAF3001916D3 /* AKNamingViewController.h */; };
+		731904F21A77DAF3001916D3 /* AKNamingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 731904EF1A77DAF3001916D3 /* AKNamingViewController.m */; };
+		731904F71A77E117001916D3 /* AKNamingCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 731904F41A77E117001916D3 /* AKNamingCell.h */; };
+		731904F81A77E117001916D3 /* AKNamingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 731904F51A77E117001916D3 /* AKNamingCell.m */; };
+		731904F91A77E11C001916D3 /* AKNamingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 731904F61A77E117001916D3 /* AKNamingCell.xib */; };
+		731904FA1A77E11F001916D3 /* AKNamingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 731904F01A77DAF3001916D3 /* AKNamingViewController.xib */; };
+		731904FB1A78F19E001916D3 /* AKNamingViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 731904EE1A77DAF3001916D3 /* AKNamingViewController.h */; };
 		7343F9541A67D88B00C0664A /* AKUserAccount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7374B8A51A6531650091A4FD /* AKUserAccount.h */; };
 		7343F95D1A67DB8E00C0664A /* account-type-cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 7343F9591A67DB8E00C0664A /* account-type-cloud.png */; };
 		7343F95E1A67DB8E00C0664A /* account-type-cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7343F95A1A67DB8E00C0664A /* account-type-cloud@2x.png */; };
@@ -178,6 +185,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				731904FB1A78F19E001916D3 /* AKNamingViewController.h in CopyFiles */,
 				73CD5B111A72ACB5000A5523 /* AKUIViewController.h in CopyFiles */,
 				734CC3991A6EAA71005D148E /* AKScopePickingViewController.h in CopyFiles */,
 				734CC3981A6EA8DF005D148E /* AKScopeItem.h in CopyFiles */,
@@ -194,6 +202,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		731904EE1A77DAF3001916D3 /* AKNamingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKNamingViewController.h; sourceTree = "<group>"; };
+		731904EF1A77DAF3001916D3 /* AKNamingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKNamingViewController.m; sourceTree = "<group>"; };
+		731904F01A77DAF3001916D3 /* AKNamingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKNamingViewController.xib; sourceTree = "<group>"; };
+		731904F41A77E117001916D3 /* AKNamingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKNamingCell.h; sourceTree = "<group>"; };
+		731904F51A77E117001916D3 /* AKNamingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKNamingCell.m; sourceTree = "<group>"; };
+		731904F61A77E117001916D3 /* AKNamingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKNamingCell.xib; sourceTree = "<group>"; };
 		7343F9591A67DB8E00C0664A /* account-type-cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "account-type-cloud.png"; sourceTree = "<group>"; };
 		7343F95A1A67DB8E00C0664A /* account-type-cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "account-type-cloud@2x.png"; sourceTree = "<group>"; };
 		7343F95B1A67DB8E00C0664A /* account-type-onpremise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "account-type-onpremise.png"; sourceTree = "<group>"; };
@@ -335,6 +349,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		731904EA1A77DACF001916D3 /* Naming View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				731904F31A77E0DB001916D3 /* Cell */,
+				731904EE1A77DAF3001916D3 /* AKNamingViewController.h */,
+				731904EF1A77DAF3001916D3 /* AKNamingViewController.m */,
+				731904F01A77DAF3001916D3 /* AKNamingViewController.xib */,
+			);
+			path = "Naming View Controller";
+			sourceTree = "<group>";
+		};
+		731904F31A77E0DB001916D3 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				731904F41A77E117001916D3 /* AKNamingCell.h */,
+				731904F51A77E117001916D3 /* AKNamingCell.m */,
+				731904F61A77E117001916D3 /* AKNamingCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		7343F9581A67DB4100C0664A /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
@@ -365,6 +400,7 @@
 				7343F9851A69548300C0664A /* Accounts View Controller */,
 				7343F9891A69548300C0664A /* Browsing View Controller */,
 				7343F9911A69548300C0664A /* Login View Controller */,
+				731904EA1A77DACF001916D3 /* Naming View Controller */,
 				7343F9961A69548300C0664A /* Picking View Controller */,
 				734CC38B1A6EA018005D148E /* Scope Picking View Controller */,
 				736B57331A6D26640096E4A9 /* Sites View Controller */,
@@ -717,6 +753,7 @@
 				736B573A1A6D268B0096E4A9 /* AKSitesListViewController.h in Headers */,
 				734CC3861A6E9F40005D148E /* AKScopeItem.h in Headers */,
 				7343F99F1A69548300C0664A /* AKLoginViewController.h in Headers */,
+				731904F11A77DAF3001916D3 /* AKNamingViewController.h in Headers */,
 				734CC38E1A6EA042005D148E /* AKScopePickingViewController.h in Headers */,
 				736B57451A6D60C80096E4A9 /* AKUIViewController.h in Headers */,
 				734CC37B1A6E6056005D148E /* AKSitesCell.h in Headers */,
@@ -728,6 +765,7 @@
 				73B8C1511A5ECFF100571B28 /* AKConstants.h in Headers */,
 				7374B8A61A6531650091A4FD /* AKUserAccount.h in Headers */,
 				7343F99D1A69548300C0664A /* AKAlfrescoNodeCell.h in Headers */,
+				731904F71A77E117001916D3 /* AKNamingCell.h in Headers */,
 				734CC3961A6EA58A005D148E /* AKScopePickerCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -882,6 +920,7 @@
 				7374B9791A657B800091A4FD /* small_image.png in Resources */,
 				7374B9621A657B800091A4FD /* large_image@2x.png in Resources */,
 				7374B9851A657B800091A4FD /* small_word.png in Resources */,
+				731904F91A77E11C001916D3 /* AKNamingCell.xib in Resources */,
 				7343F9A41A69549400C0664A /* AKAlfrescoNodeListViewController.xib in Resources */,
 				7374B9601A657B800091A4FD /* large_excel@2x.png in Resources */,
 				7343F9601A67DB8E00C0664A /* account-type-onpremise@2x.png in Resources */,
@@ -912,6 +951,7 @@
 				7374B9801A657B800091A4FD /* small_powerpoint@2x.png in Resources */,
 				7374B9781A657B800091A4FD /* small_folder@2x.png in Resources */,
 				734CC39A1A6EAAFE005D148E /* AKScopePickerCell.xib in Resources */,
+				731904FA1A77E11F001916D3 /* AKNamingViewController.xib in Resources */,
 				7374B9871A657B800091A4FD /* small_xml.png in Resources */,
 				7374B97B1A657B800091A4FD /* small_notes.png in Resources */,
 				7374B96F1A657B800091A4FD /* large_zip.png in Resources */,
@@ -958,6 +998,7 @@
 				734CC37C1A6E6056005D148E /* AKSitesCell.m in Sources */,
 				7343F9AB1A6954EE00C0664A /* AKLoginEntryCell.m in Sources */,
 				734CC3971A6EA58A005D148E /* AKScopePickerCell.m in Sources */,
+				731904F81A77E117001916D3 /* AKNamingCell.m in Sources */,
 				7343F99E1A69548300C0664A /* AKAlfrescoNodeCell.m in Sources */,
 				734CC38F1A6EA042005D148E /* AKScopePickingViewController.m in Sources */,
 				736B57461A6D60C80096E4A9 /* AKUIViewController.m in Sources */,
@@ -965,6 +1006,7 @@
 				73B8C1521A5ECFF100571B28 /* AKConstants.m in Sources */,
 				734CC3871A6E9F40005D148E /* AKScopeItem.m in Sources */,
 				7343F9641A67DBF800C0664A /* UIImage+AlfrescoKit.m in Sources */,
+				731904F21A77DAF3001916D3 /* AKNamingViewController.m in Sources */,
 				7343F99C1A69548300C0664A /* AKAlfrescoNodeListViewController.m in Sources */,
 				7343F9A21A69548300C0664A /* AKAlfrescoNodePickingListViewController.m in Sources */,
 				7343F99A1A69548300C0664A /* AKUserAccountListViewController.m in Sources */,

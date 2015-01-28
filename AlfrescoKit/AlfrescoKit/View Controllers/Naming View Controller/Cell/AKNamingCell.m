@@ -18,28 +18,13 @@
  *****************************************************************************
  */
 
-
-/** The umbrella header for AlfrescoKit
+/** Entry cell for the name controller
  
  Author: Tauseef Mughal (Alfresco)
  */
 
-#ifdef TARGET_OS_IPHONE
+#import "AKNamingCell.h"
 
-// Protocols
-#import "AKUserAccount.h"
+@implementation AKNamingCell
 
-// Models
-#import "AKScopeItem.h"
-
-// Controllers
-#import "AKUIViewController.h"
-#import "AKAlfrescoNodeListViewController.h"
-#import "AKAlfrescoNodePickingListViewController.h"
-#import "AKUserAccountListViewController.h"
-#import "AKLoginViewController.h"
-#import "AKSitesListViewController.h"
-#import "AKScopePickingViewController.h"
-#import "AKNamingViewController.h"
-
-#endif
+@end
