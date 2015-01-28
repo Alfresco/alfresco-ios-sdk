@@ -133,7 +133,7 @@ typedef NS_ENUM(NSUInteger, LoginEntryCell)
     
     __weak typeof(self) weakSelf = self;
     [self.loginService loginToOnPremiseRepositoryWithAccount:self.account username:username password:password completionBlock:^(BOOL successful, id<AlfrescoSession> session, NSError *error) {
-        [weakSelf.delegate loginViewController:weakSelf didLoginSuccessfully:successful username:username password:password creatingSession:session error:error];
+        [weakSelf.delegate loginViewController:weakSelf didLoginSuccessfully:successful toAccount:self.account username:username password:password creatingSession:session error:error];
     }];
 }
 
