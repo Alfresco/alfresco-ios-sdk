@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7313F2BF1A7A47B10069591F /* AKNetworkActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 7313F2BE1A7A47B10069591F /* AKNetworkActivity.h */; };
+		7313F2C31A7A4B0B0069591F /* AKNetworkActivity.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7313F2BE1A7A47B10069591F /* AKNetworkActivity.h */; };
 		731904F11A77DAF3001916D3 /* AKNamingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 731904EE1A77DAF3001916D3 /* AKNamingViewController.h */; };
 		731904F21A77DAF3001916D3 /* AKNamingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 731904EF1A77DAF3001916D3 /* AKNamingViewController.m */; };
 		731904F71A77E117001916D3 /* AKNamingCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 731904F41A77E117001916D3 /* AKNamingCell.h */; };
@@ -185,6 +187,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				7313F2C31A7A4B0B0069591F /* AKNetworkActivity.h in CopyFiles */,
 				731904FB1A78F19E001916D3 /* AKNamingViewController.h in CopyFiles */,
 				73CD5B111A72ACB5000A5523 /* AKUIViewController.h in CopyFiles */,
 				734CC3991A6EAA71005D148E /* AKScopePickingViewController.h in CopyFiles */,
@@ -202,6 +205,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7313F2BE1A7A47B10069591F /* AKNetworkActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKNetworkActivity.h; sourceTree = "<group>"; };
 		731904EE1A77DAF3001916D3 /* AKNamingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKNamingViewController.h; sourceTree = "<group>"; };
 		731904EF1A77DAF3001916D3 /* AKNamingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKNamingViewController.m; sourceTree = "<group>"; };
 		731904F01A77DAF3001916D3 /* AKNamingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKNamingViewController.xib; sourceTree = "<group>"; };
@@ -515,6 +519,7 @@
 			isa = PBXGroup;
 			children = (
 				7374B8A51A6531650091A4FD /* AKUserAccount.h */,
+				7313F2BE1A7A47B10069591F /* AKNetworkActivity.h */,
 				734CC3841A6E9F40005D148E /* AKScopeItem.h */,
 				734CC3851A6E9F40005D148E /* AKScopeItem.m */,
 			);
@@ -748,6 +753,7 @@
 			files = (
 				7343F9A11A69548300C0664A /* AKAlfrescoNodePickingListViewController.h in Headers */,
 				7343F99B1A69548300C0664A /* AKAlfrescoNodeListViewController.h in Headers */,
+				7313F2BF1A7A47B10069591F /* AKNetworkActivity.h in Headers */,
 				73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */,
 				7343F9991A69548300C0664A /* AKUserAccountListViewController.h in Headers */,
 				736B573A1A6D268B0096E4A9 /* AKSitesListViewController.h in Headers */,

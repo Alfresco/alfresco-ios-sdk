@@ -27,7 +27,7 @@
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="Z8S-V8-TsL"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <textInputTraits key="textInputTraits"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                     </textField>
                 </subviews>
                 <constraints>

@@ -31,13 +31,14 @@ typedef NS_ENUM(NSUInteger, LoginEntryCell)
     LoginEntryCellPassword
 };
 
-@interface AKLoginViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface AKLoginViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
 // Views
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIView *loginFooterView;
 @property (nonatomic, strong) AKLoginEntryCell *usernameCell;
 @property (nonatomic, strong) AKLoginEntryCell *passwordCell;
+@property (nonatomic, weak) UITextField *activeTextField;
 // Data Structure
 @property (nonatomic, strong) id<AKUserAccount> account;
 // Services
@@ -115,9 +116,13 @@ typedef NS_ENUM(NSUInteger, LoginEntryCell)
     
     // Additional setup
     self.usernameCell.entryTextField.placeholder = AKLocalizedString(@"ak.login.view.controller.cell.username.placeholder", "Username placeholder");
+    self.usernameCell.entryTextField.returnKeyType = UIReturnKeyNext;
     self.passwordCell.entryTextField.placeholder = AKLocalizedString(@"ak.login.view.controller.cell.password.placeholder", @"Password placeholder");
     self.passwordCell.entryTextField.secureTextEntry = YES;
     self.passwordCell.entryTextField.clearsOnBeginEditing = YES;
+    // Set delegates
+    self.usernameCell.entryTextField.delegate = self;
+    self.passwordCell.entryTextField.delegate = self;
     
     // Preload the cell data
     self.usernameCell.titleTextLabel.text = AKLocalizedString(@"ak.login.view.controller.cell.username.title", @"Username title");
@@ -128,13 +133,24 @@ typedef NS_ENUM(NSUInteger, LoginEntryCell)
 
 - (void)loginButtonPressed:(id)sender
 {
+    [self.usernameCell.entryTextField resignFirstResponder];
+    [self.passwordCell.entryTextField resignFirstResponder];
+    
     NSString *username = self.usernameCell.entryTextField.text;
     NSString *password = self.passwordCell.entryTextField.text;
     
     __weak typeof(self) weakSelf = self;
-    [self.loginService loginToOnPremiseRepositoryWithAccount:self.account username:username password:password completionBlock:^(BOOL successful, id<AlfrescoSession> session, NSError *error) {
+    __block AlfrescoRequest *request = nil;
+    request = [self.loginService loginToOnPremiseRepositoryWithAccount:self.account username:username password:password completionBlock:^(BOOL successful, id<AlfrescoSession> session, NSError *error) {
+        [weakSelf.delegate controller:self didCompleteRequest:request error:error];
         [weakSelf.delegate loginViewController:weakSelf didLoginSuccessfully:successful toAccount:self.account username:username password:password creatingSession:session error:error];
+        
+        if (!successful)
+        {
+            [weakSelf.activeTextField becomeFirstResponder];
+        }
     }];
+    [self.delegate controller:self didStartRequest:request];
 }
 
 #pragma mark - UITableViewDataSource Methods
@@ -182,6 +198,26 @@ typedef NS_ENUM(NSUInteger, LoginEntryCell)
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return kLoginButtonContainerHeight;
+}
+
+#pragma mark - UITextFieldDelegate Methods
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.activeTextField = textField;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (textField == self.passwordCell.entryTextField)
+    {
+        [self loginButtonPressed:nil];
+    }
+    else if (textField == self.usernameCell.entryTextField)
+    {
+        [self.passwordCell.entryTextField becomeFirstResponder];
+    }
+    return YES;
 }
 
 @end

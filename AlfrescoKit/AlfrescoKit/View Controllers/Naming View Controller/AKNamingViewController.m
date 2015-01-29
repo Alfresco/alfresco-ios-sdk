@@ -114,6 +114,7 @@ static CGFloat const kUploadButtonContainerHeight = 50.0f;
     NSString *enteredName = [self.namingCell.entryTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (enteredName && enteredName.length > 0)
     {
+        [self.namingCell.entryTextField resignFirstResponder];
         [self.delegate namingViewController:self didEnterName:enteredName userInfo:self.userInfo];
     }
 }

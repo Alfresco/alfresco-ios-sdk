@@ -103,7 +103,7 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
 
 - (AlfrescoRequest *)loadSitesForType:(AKSitesType)siteType listingContext:(AlfrescoListingContext *)listingContext appendingToCurrentDataSet:(BOOL)append
 {
-    AlfrescoRequest *loadRequest = nil;
+    __block AlfrescoRequest *loadRequest = nil;
     
     if (!listingContext)
     {
@@ -112,6 +112,11 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
     
     __weak typeof(self) weakSelf = self;
     void (^reloadBlock)(AlfrescoPagingResult *pagingResult, NSError *pagingError) = ^(AlfrescoPagingResult *pagingResult, NSError *pagingError) {
+        if (!append)
+        {
+            [weakSelf.delegate controller:weakSelf didCompleteRequest:loadRequest error:pagingError];
+        }
+        
         if (pagingError)
         {
             // handle error
@@ -163,6 +168,11 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
             
         default:
             break;
+    }
+    
+    if (!append)
+    {
+        [self.delegate controller:self didStartRequest:loadRequest];
     }
     
     return loadRequest;
@@ -220,9 +230,12 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
     AlfrescoSite *selectedSite = self.sitesArray[indexPath.row];
     
     __weak typeof(self) weakSelf = self;
-    [self.siteService retrieveDocumentLibraryFolderForSite:selectedSite.shortName completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+    __block AlfrescoRequest *request = nil;
+    request = [self.siteService retrieveDocumentLibraryFolderForSite:selectedSite.shortName completionBlock:^(AlfrescoFolder *folder, NSError *error) {
+        [weakSelf.delegate controller:weakSelf didCompleteRequest:request error:error];
         [weakSelf.delegate sitesListViewController:weakSelf didSelectSite:selectedSite documentLibraryFolder:folder error:error];
     }];
+    [self.delegate controller:self didStartRequest:request];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath

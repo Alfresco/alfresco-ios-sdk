@@ -24,11 +24,12 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "AKNetworkActivity.h"
 
 @protocol AKUserAccount;
 @class AKUserAccountListViewController;
 
-@protocol AKUserAccountListViewControllerDelegate <NSObject>
+@protocol AKUserAccountListViewControllerDelegate <NSObject, AKNetworkActivity>
 
 - (void)userAccountListViewController:(AKUserAccountListViewController *)accountListViewController
                  didLoginSuccessfully:(BOOL)loginSuccessful
