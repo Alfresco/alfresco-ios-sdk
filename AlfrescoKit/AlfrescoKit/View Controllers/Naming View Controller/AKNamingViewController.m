@@ -72,7 +72,7 @@ static CGFloat const kUploadButtonContainerHeight = 50.0f;
         UIButton *uploadButton = [UIButton buttonWithType:UIButtonTypeSystem];
         uploadButton.translatesAutoresizingMaskIntoConstraints = NO;
         
-        [uploadButton setTitle:AKLocalizedString(@"ak.naming.view.controller.upload.button.title", @"Upload Title") forState:UIControlStateNormal];
+        [uploadButton setTitle:AKLocalizedString(@"ak.naming.view.controller.select.button.title", @"Select Title") forState:UIControlStateNormal];
         [uploadButton addTarget:self action:@selector(uploadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [uploadContainer addSubview:uploadButton];
         
@@ -114,6 +114,7 @@ static CGFloat const kUploadButtonContainerHeight = 50.0f;
     NSString *enteredName = [self.namingCell.entryTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (enteredName && enteredName.length > 0)
     {
+        [self.namingCell.entryTextField resignFirstResponder];
         [self.delegate namingViewController:self didEnterName:enteredName userInfo:self.userInfo];
     }
 }

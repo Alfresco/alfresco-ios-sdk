@@ -18,25 +18,18 @@
  *****************************************************************************
  */
 
-/** AlfrescoKit constants
+/** AKNetworkActivity protocol
  
  Author: Tauseef Mughal (Alfresco)
  */
 
 #import <Foundation/Foundation.h>
-#import "NSBundle+AlfrescoKit.h"
 
-#define AKLocalizedString(key, comment) \
-        NSLocalizedStringFromTableInBundle((key), @"", [NSBundle alfrescoKitBundle], (comment))
+@class AlfrescoRequest;
 
-// Completion Blocks
-typedef void (^AKLoginCompletionBlock)(BOOL successful, id<AlfrescoSession> session, NSError *error);
+@protocol AKNetworkActivity <NSObject>
 
-// Max items
-extern NSUInteger const kMaximumItemsToRetrieveAtOneTime;
+- (void)controller:(UIViewController *)controller didStartRequest:(AlfrescoRequest *)request;
+- (void)controller:(UIViewController *)controller didCompleteRequest:(AlfrescoRequest *)request error:(NSError *)error;
 
-// AlfrescoKit bundle name
-extern NSString * const kAlfrescoKitBundleName;
-
-// OnPremise server url format
-extern NSString * const kAlfrescoOnPremiseServerURLFormatString;
+@end

@@ -21,6 +21,7 @@
 #import "AKUserAccountListViewController.h"
 #import "AKUserAccount.h"
 #import "AKLoginService.h"
+#import "AKNetworkActivity.h"
 
 static CGFloat const kAccountCellMinimumHeight = 60.0f;
 
@@ -135,9 +136,16 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
         }
         
         __weak typeof(self) weakSelf = self;
-        [self.loginService loginToAccount:selectedAccount networkIdentifier:nil completionBlock:^(BOOL successful, id<AlfrescoSession> session, NSError *error) {
+        __block AlfrescoRequest *request = nil;
+        request = [self.loginService loginToAccount:selectedAccount networkIdentifier:nil completionBlock:^(BOOL successful, id<AlfrescoSession> session, NSError *error) {
+            [weakSelf.delegate controller:weakSelf didCompleteRequest:request error:error];
             [weakSelf.delegate userAccountListViewController:weakSelf didLoginSuccessfully:successful toAccount:selectedAccount creatingSession:session error:error];
         }];
+        
+        if (!request.isCancelled)
+        {
+            [self.delegate controller:self didStartRequest:request];
+        }
     }
     else if (indexPath.section == AccountTableViewControllerSectionDownloads)
     {

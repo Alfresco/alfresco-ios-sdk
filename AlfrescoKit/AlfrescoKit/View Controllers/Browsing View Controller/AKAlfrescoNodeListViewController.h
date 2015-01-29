@@ -24,11 +24,11 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <AlfrescoSDK-iOS/AlfrescoSDK.h>
+#import "AKNetworkActivity.h"
 
 @class AKAlfrescoNodeListViewController;
 
-@protocol AKAlfrescoNodeListViewControllerDelegate <NSObject>
+@protocol AKAlfrescoNodeListViewControllerDelegate <NSObject, AKNetworkActivity>
 
 @optional
 - (void)listViewController:(AKAlfrescoNodeListViewController *)listViewController didRetrieveItems:(NSArray *)items;
@@ -44,7 +44,7 @@
 @property (nonatomic, weak) id<AKAlfrescoNodeListViewControllerDelegate> delegate;
 
 - (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder delegate:(id<AKAlfrescoNodeListViewControllerDelegate>)delegate session:(id<AlfrescoSession>)session;
-- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingcontext delegate:(id<AKAlfrescoNodeListViewControllerDelegate>)delegate session:(id<AlfrescoSession>)session;
+- (instancetype)initWithAlfrescoFolder:(AlfrescoFolder *)folder listingContext:(AlfrescoListingContext *)listingContext delegate:(id<AKAlfrescoNodeListViewControllerDelegate>)delegate session:(id<AlfrescoSession>)session;
 
 - (void)updateSession:(id<AlfrescoSession>)session;
 

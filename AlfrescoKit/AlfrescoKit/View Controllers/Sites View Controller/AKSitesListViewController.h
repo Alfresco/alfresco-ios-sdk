@@ -24,10 +24,11 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "AKNetworkActivity.h"
 
 @class AKSitesListViewController;
 
-@protocol AKSitesListViewControllerDelegate <NSObject>
+@protocol AKSitesListViewControllerDelegate <NSObject, AKNetworkActivity>
 
 - (void)sitesListViewController:(AKSitesListViewController *)sitesListViewController
                   didSelectSite:(AlfrescoSite *)site
