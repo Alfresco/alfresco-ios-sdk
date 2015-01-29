@@ -141,7 +141,11 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
             [weakSelf.delegate controller:weakSelf didCompleteRequest:request error:error];
             [weakSelf.delegate userAccountListViewController:weakSelf didLoginSuccessfully:successful toAccount:selectedAccount creatingSession:session error:error];
         }];
-        [self.delegate controller:self didStartRequest:request];
+        
+        if (!request.isCancelled)
+        {
+            [self.delegate controller:self didStartRequest:request];
+        }
     }
     else if (indexPath.section == AccountTableViewControllerSectionDownloads)
     {

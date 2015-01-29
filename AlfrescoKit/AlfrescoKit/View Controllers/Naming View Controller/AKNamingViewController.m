@@ -72,7 +72,7 @@ static CGFloat const kUploadButtonContainerHeight = 50.0f;
         UIButton *uploadButton = [UIButton buttonWithType:UIButtonTypeSystem];
         uploadButton.translatesAutoresizingMaskIntoConstraints = NO;
         
-        [uploadButton setTitle:AKLocalizedString(@"ak.naming.view.controller.upload.button.title", @"Upload Title") forState:UIControlStateNormal];
+        [uploadButton setTitle:AKLocalizedString(@"ak.naming.view.controller.select.button.title", @"Select Title") forState:UIControlStateNormal];
         [uploadButton addTarget:self action:@selector(uploadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [uploadContainer addSubview:uploadButton];
         

@@ -150,7 +150,11 @@ typedef NS_ENUM(NSUInteger, LoginEntryCell)
             [weakSelf.activeTextField becomeFirstResponder];
         }
     }];
-    [self.delegate controller:self didStartRequest:request];
+    
+    if (!request.isCancelled)
+    {
+        [self.delegate controller:self didStartRequest:request];
+    }
 }
 
 #pragma mark - UITableViewDataSource Methods

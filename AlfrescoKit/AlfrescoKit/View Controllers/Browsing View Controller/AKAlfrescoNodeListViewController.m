@@ -21,8 +21,6 @@
 #import "AKAlfrescoNodeListViewController.h"
 #import "AKAlfrescoNodeCell.h"
 
-static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
-
 @interface AKAlfrescoNodeListViewController () <UITableViewDelegate, UITableViewDataSource>
 
 // Views
@@ -56,7 +54,7 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
         self.listingContext = listingContext;
         if (!listingContext)
         {
-            self.listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:kMaximumSitesToRetrieveAtOneTime];
+            self.listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:kMaximumItemsToRetrieveAtOneTime];
         }
         self.session = session;
         self.tableViewData = [NSMutableArray array];
@@ -81,6 +79,13 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
         __block AlfrescoRequest *request = nil;
         request = [self retrieveRootFolderWithCompletionBlock:^(AlfrescoFolder *rootFolder, NSError *rootError) {
             [weakSelf.delegate controller:weakSelf didCompleteRequest:request error:rootError];
+            /*
+             * Needs further investigation.
+             *
+             * The delay has been added to ensure that after didCompleteRequest is executed, the progess views in didStart are
+             * successfully re-added to the controller's view when subsequent network calls are made.
+             * It appears, that the progess view does not get re-added unless there is a small delay between the two calls.
+             */
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (rootError)
                 {
@@ -96,7 +101,10 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
                 }
             });
         }];
-        [self.delegate controller:self didStartRequest:request];
+        if (!request.isCancelled)
+        {
+            [self.delegate controller:self didStartRequest:request];
+        }
         self.currentRequest = request;
     }
 }
@@ -130,77 +138,43 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
 {
     __weak typeof(self) weakSelf = self;
     __block AlfrescoRequest *request = nil;
-    if (listingContext)
-    {
-        request = [self.documentService retrieveChildrenInFolder:folder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
-            [weakSelf.delegate controller:self didCompleteRequest:request error:error];
-            if (error)
+    request = [self.documentService retrieveChildrenInFolder:folder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+        [weakSelf.delegate controller:self didCompleteRequest:request error:error];
+        if (error)
+        {
+            if ([weakSelf.delegate respondsToSelector:@selector(listViewController:didFailToRetrieveItemsWithError:)])
             {
-                if ([weakSelf.delegate respondsToSelector:@selector(listViewController:didFailToRetrieveItemsWithError:)])
-                {
-                    [weakSelf.delegate listViewController:weakSelf didFailToRetrieveItemsWithError:error];
-                }
+                [weakSelf.delegate listViewController:weakSelf didFailToRetrieveItemsWithError:error];
+            }
+        }
+        else
+        {
+            if (append)
+            {
+                [weakSelf.tableViewData addObjectsFromArray:pagingResult.objects];
+                [weakSelf.tableView reloadData];
             }
             else
             {
-                if (append)
-                {
-                    [weakSelf.tableViewData addObjectsFromArray:pagingResult.objects];
-                    [weakSelf.tableView reloadData];
-                }
-                else
-                {
-                    [weakSelf.tableViewData removeAllObjects];
-                    [weakSelf.tableViewData addObjectsFromArray:pagingResult.objects];
-                    [weakSelf.tableView reloadData];
-                }
-                
-                weakSelf.moreItemsAvailable = pagingResult.hasMoreItems;
-                weakSelf.tableView.tableFooterView = nil;
-                
-                if ([weakSelf.delegate respondsToSelector:@selector(listViewController:didRetrieveItems:)])
-                {
-                    [weakSelf.delegate listViewController:weakSelf didRetrieveItems:pagingResult.objects];
-                }
+                [weakSelf.tableViewData removeAllObjects];
+                [weakSelf.tableViewData addObjectsFromArray:pagingResult.objects];
+                [weakSelf.tableView reloadData];
             }
-        }];
-    }
-    else
-    {
-        request = [self.documentService retrieveChildrenInFolder:folder completionBlock:^(NSArray *array, NSError *error) {
-            [weakSelf.delegate controller:self didCompleteRequest:request error:error];
-            if (error)
+            
+            weakSelf.moreItemsAvailable = pagingResult.hasMoreItems;
+            weakSelf.tableView.tableFooterView = nil;
+            
+            if ([weakSelf.delegate respondsToSelector:@selector(listViewController:didRetrieveItems:)])
             {
-                if ([weakSelf.delegate respondsToSelector:@selector(listViewController:didFailToRetrieveItemsWithError:)])
-                {
-                    [weakSelf.delegate listViewController:weakSelf didFailToRetrieveItemsWithError:error];
-                }
+                [weakSelf.delegate listViewController:weakSelf didRetrieveItems:pagingResult.objects];
             }
-            else
-            {
-                if (append)
-                {
-                    [weakSelf.tableViewData addObjectsFromArray:array];
-                    [weakSelf.tableView reloadData];
-                }
-                else
-                {
-                    [weakSelf.tableViewData removeAllObjects];
-                    [weakSelf.tableViewData addObjectsFromArray:array];
-                    [weakSelf.tableView reloadData];
-                }
-                
-                weakSelf.moreItemsAvailable = NO;
-                
-                if ([weakSelf.delegate respondsToSelector:@selector(listViewController:didRetrieveItems:)])
-                {
-                    [weakSelf.delegate listViewController:weakSelf didRetrieveItems:array];
-                }
-            }
-        }];
-    }
+        }
+    }];
     
-    [self.delegate controller:self didStartRequest:request];
+    if (!request.isCancelled)
+    {
+        [self.delegate controller:self didStartRequest:request];
+    }
     
     return request;
 }

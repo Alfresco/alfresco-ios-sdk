@@ -28,8 +28,6 @@ typedef NS_ENUM(NSUInteger, AKSitesType)
     AKSitesTypeAllSites
 };
 
-static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
-
 @interface AKSitesListViewController ()
 
 // Views
@@ -71,7 +69,7 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
         self.listingContext = listingContext;
         if (!listingContext)
         {
-            self.listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:kMaximumSitesToRetrieveAtOneTime];
+            self.listingContext = [[AlfrescoListingContext alloc] initWithMaxItems:kMaximumItemsToRetrieveAtOneTime];
         }
         self.delegate = delegate;
         self.session = session;
@@ -170,7 +168,7 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
             break;
     }
     
-    if (!append)
+    if (!append && !loadRequest.isCancelled)
     {
         [self.delegate controller:self didStartRequest:loadRequest];
     }
@@ -235,7 +233,11 @@ static NSUInteger const kMaximumSitesToRetrieveAtOneTime = 50;
         [weakSelf.delegate controller:weakSelf didCompleteRequest:request error:error];
         [weakSelf.delegate sitesListViewController:weakSelf didSelectSite:selectedSite documentLibraryFolder:folder error:error];
     }];
-    [self.delegate controller:self didStartRequest:request];
+    
+    if (!request.isCancelled)
+    {
+        [self.delegate controller:self didStartRequest:request];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
