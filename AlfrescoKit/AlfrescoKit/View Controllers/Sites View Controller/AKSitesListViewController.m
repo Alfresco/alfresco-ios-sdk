@@ -23,8 +23,8 @@
 
 typedef NS_ENUM(NSUInteger, AKSitesType)
 {
-    AKSitesTypeMySites = 0,
-    AKSitesTypeFavourites,
+    AKSitesTypeFavourites = 0,
+    AKSitesTypeMySites,
     AKSitesTypeAllSites
 };
 
@@ -89,7 +89,7 @@ typedef NS_ENUM(NSUInteger, AKSitesType)
     [self.segmentControl setTitle:AKLocalizedString(@"ak.sites.view.controller.segment.control.favourites", @"Favourite Sites") forSegmentAtIndex:AKSitesTypeFavourites];
     [self.segmentControl setTitle:AKLocalizedString(@"ak.sites.view.controller.segment.control.allsites", @"All Sites") forSegmentAtIndex:AKSitesTypeAllSites];
     
-    [self loadSitesForType:AKSitesTypeMySites listingContext:nil appendingToCurrentDataSet:NO];
+    [self loadSitesForType:AKSitesTypeFavourites listingContext:nil appendingToCurrentDataSet:NO];
 }
 
 #pragma mark - Private Methods
@@ -168,7 +168,7 @@ typedef NS_ENUM(NSUInteger, AKSitesType)
             break;
     }
     
-    if (!append && !loadRequest.isCancelled)
+    if (!append && (loadRequest && !loadRequest.isCancelled))
     {
         [self.delegate controller:self didStartRequest:loadRequest];
     }
