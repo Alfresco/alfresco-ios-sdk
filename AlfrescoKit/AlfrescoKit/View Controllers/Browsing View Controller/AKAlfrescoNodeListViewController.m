@@ -79,27 +79,19 @@
         __block AlfrescoRequest *request = nil;
         request = [self retrieveRootFolderWithCompletionBlock:^(AlfrescoFolder *rootFolder, NSError *rootError) {
             [weakSelf.delegate controller:weakSelf didCompleteRequest:request error:rootError];
-            /*
-             * Needs further investigation.
-             *
-             * The delay has been added to ensure that after didCompleteRequest is executed, the progess views in didStart are
-             * successfully re-added to the controller's view when subsequent network calls are made.
-             * It appears, that the progess view does not get re-added unless there is a small delay between the two calls.
-             */
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if (rootError)
+            
+            if (rootError)
+            {
+                if ([weakSelf.delegate respondsToSelector:@selector(listViewController:didFailToRetrieveItemsWithError:)])
                 {
-                    if ([weakSelf.delegate respondsToSelector:@selector(listViewController:didFailToRetrieveItemsWithError:)])
-                    {
-                        [weakSelf.delegate listViewController:weakSelf didFailToRetrieveItemsWithError:rootError];
-                    }
+                    [weakSelf.delegate listViewController:weakSelf didFailToRetrieveItemsWithError:rootError];
                 }
-                else
-                {
-                    weakSelf.folder = rootFolder;
-                    weakSelf.currentRequest = [weakSelf retrieveChildrenForFolder:weakSelf.folder listingContext:self.listingContext appendingToCurrentDataSet:NO];
-                }
-            });
+            }
+            else
+            {
+                weakSelf.folder = rootFolder;
+                weakSelf.currentRequest = [weakSelf retrieveChildrenForFolder:weakSelf.folder listingContext:self.listingContext appendingToCurrentDataSet:NO];
+            }
         }];
         if (!request.isCancelled)
         {
