@@ -41,5 +41,6 @@
 #import "AKSitesListViewController.h"
 #import "AKScopePickingViewController.h"
 #import "AKNamingViewController.h"
+#import "AKLocalFilesViewController.h"
 
 #endif

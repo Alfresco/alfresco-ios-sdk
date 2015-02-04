@@ -133,6 +133,10 @@
 		73B8C1CD1A60331700571B28 /* AKUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1CB1A60331700571B28 /* AKUtility.h */; };
 		73B8C1CE1A60331700571B28 /* AKUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1CC1A60331700571B28 /* AKUtility.m */; };
 		73CD5B111A72ACB5000A5523 /* AKUIViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 736B57431A6D60C80096E4A9 /* AKUIViewController.h */; };
+		73F8D0151A8231A800793309 /* AKLocalFilesViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 73F8D0121A8231A800793309 /* AKLocalFilesViewController.h */; };
+		73F8D0161A8231A800793309 /* AKLocalFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73F8D0131A8231A800793309 /* AKLocalFilesViewController.m */; };
+		73F8D0171A82449400793309 /* AKLocalFilesViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73F8D0121A8231A800793309 /* AKLocalFilesViewController.h */; };
+		73F8D0181A82450000793309 /* AKLocalFilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F8D0141A8231A800793309 /* AKLocalFilesViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,6 +191,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				73F8D0171A82449400793309 /* AKLocalFilesViewController.h in CopyFiles */,
 				7313F2C31A7A4B0B0069591F /* AKNetworkActivity.h in CopyFiles */,
 				731904FB1A78F19E001916D3 /* AKNamingViewController.h in CopyFiles */,
 				73CD5B111A72ACB5000A5523 /* AKUIViewController.h in CopyFiles */,
@@ -323,6 +328,9 @@
 		73B8C1501A5ECFF100571B28 /* AKConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKConstants.m; sourceTree = "<group>"; };
 		73B8C1CB1A60331700571B28 /* AKUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKUtility.h; sourceTree = "<group>"; };
 		73B8C1CC1A60331700571B28 /* AKUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKUtility.m; sourceTree = "<group>"; };
+		73F8D0121A8231A800793309 /* AKLocalFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLocalFilesViewController.h; sourceTree = "<group>"; };
+		73F8D0131A8231A800793309 /* AKLocalFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLocalFilesViewController.m; sourceTree = "<group>"; };
+		73F8D0141A8231A800793309 /* AKLocalFilesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKLocalFilesViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -403,6 +411,7 @@
 				736B57441A6D60C80096E4A9 /* AKUIViewController.m */,
 				7343F9851A69548300C0664A /* Accounts View Controller */,
 				7343F9891A69548300C0664A /* Browsing View Controller */,
+				73F8D00E1A82319300793309 /* Local Files View Controller */,
 				7343F9911A69548300C0664A /* Login View Controller */,
 				731904EA1A77DACF001916D3 /* Naming View Controller */,
 				7343F9961A69548300C0664A /* Picking View Controller */,
@@ -744,6 +753,16 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		73F8D00E1A82319300793309 /* Local Files View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				73F8D0121A8231A800793309 /* AKLocalFilesViewController.h */,
+				73F8D0131A8231A800793309 /* AKLocalFilesViewController.m */,
+				73F8D0141A8231A800793309 /* AKLocalFilesViewController.xib */,
+			);
+			path = "Local Files View Controller";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -766,6 +785,7 @@
 				73B8C1CD1A60331700571B28 /* AKUtility.h in Headers */,
 				7343F96C1A6812CC00C0664A /* AKLoginService.h in Headers */,
 				73B8C1251A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h in Headers */,
+				73F8D0151A8231A800793309 /* AKLocalFilesViewController.h in Headers */,
 				7343F9631A67DBF800C0664A /* UIImage+AlfrescoKit.h in Headers */,
 				7343F9AA1A6954EE00C0664A /* AKLoginEntryCell.h in Headers */,
 				73B8C1511A5ECFF100571B28 /* AKConstants.h in Headers */,
@@ -934,6 +954,7 @@
 				7374B96D1A657B800091A4FD /* large_xml.png in Resources */,
 				734CC37D1A6E6141005D148E /* AKSitesCell.xib in Resources */,
 				7374B9681A657B800091A4FD /* large_powerpoint@2x.png in Resources */,
+				73F8D0181A82450000793309 /* AKLocalFilesViewController.xib in Resources */,
 				7374B96A1A657B800091A4FD /* large_video@2x.png in Resources */,
 				7374B9761A657B800091A4FD /* small_excel@2x.png in Resources */,
 				7374B9711A657B800091A4FD /* small_audio.png in Resources */,
@@ -1013,6 +1034,7 @@
 				734CC3871A6E9F40005D148E /* AKScopeItem.m in Sources */,
 				7343F9641A67DBF800C0664A /* UIImage+AlfrescoKit.m in Sources */,
 				731904F21A77DAF3001916D3 /* AKNamingViewController.m in Sources */,
+				73F8D0161A8231A800793309 /* AKLocalFilesViewController.m in Sources */,
 				7343F99C1A69548300C0664A /* AKAlfrescoNodeListViewController.m in Sources */,
 				7343F9A21A69548300C0664A /* AKAlfrescoNodePickingListViewController.m in Sources */,
 				7343F99A1A69548300C0664A /* AKUserAccountListViewController.m in Sources */,

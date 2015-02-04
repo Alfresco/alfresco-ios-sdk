@@ -108,3 +108,8 @@
 "ak.naming.view.controller.cell.title" = "Name";
 "ak.naming.view.controller.cell.name.placeholder" = "Name here";
 "ak.naming.view.controller.select.button.title" = "Select";
+
+/**
+ * AKLocalFilesViewController
+ */
+"ak.local.files.view.controller.title" = "Local Files";

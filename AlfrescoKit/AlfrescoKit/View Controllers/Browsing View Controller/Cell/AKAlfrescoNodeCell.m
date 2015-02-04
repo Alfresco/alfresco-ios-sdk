@@ -42,6 +42,30 @@
     }
 }
 
+- (void)updateCellWithURL:(NSURL *)url
+{
+    NSString *name = url.path.lastPathComponent;
+    NSString *extension = url.path.pathExtension;
+    NSDictionary *fileAttributes = [[AlfrescoFileManager sharedManager] attributesOfItemAtPath:url.path error:nil];
+    unsigned long fileSize = [fileAttributes[kAlfrescoFileSize] longValue];
+    NSDate *modificationDate = [fileAttributes objectForKey:kAlfrescoFileLastModification];
+    
+    self.nodeTextLabel.text = name;
+    
+    if ([fileAttributes[kAlfrescoIsFolder] boolValue])
+    {
+        self.nodeImageView.image = [UIImage imageFromAlfrescoKitBundleNamed:@"small_folder"];
+        self.nodeDetailLabel.text = @"";
+    }
+    else
+    {
+        self.nodeImageView.image = [AKUtility smallIconForType:extension];
+        NSString *fileDateString = [AKUtility stringDateFromDate:modificationDate];
+        NSString *fileSizeString = [AKUtility stringForFileSize:fileSize];
+        self.nodeDetailLabel.text = [NSString stringWithFormat:@"%@ • %@", fileSizeString, fileDateString];
+    }
+}
+
 - (void)updateCellWithPickedIndicator:(BOOL)picked
 {
     if (picked)
