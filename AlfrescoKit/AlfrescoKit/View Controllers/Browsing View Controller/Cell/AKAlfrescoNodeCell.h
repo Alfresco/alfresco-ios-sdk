@@ -35,5 +35,6 @@
 
 - (void)updateCellWithAlfrescoNode:(AlfrescoNode *)node;
 - (void)updateCellWithPickedIndicator:(BOOL)picked;
+- (void)updateCellWithURL:(NSURL *)url;
 
 @end
