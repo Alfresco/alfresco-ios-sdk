@@ -111,7 +111,7 @@
         }
     }];
     
-    if (!request.isCancelled)
+    if (request && !request.isCancelled)
     {
         [self.delegate controller:self didStartRequest:request];
     }
