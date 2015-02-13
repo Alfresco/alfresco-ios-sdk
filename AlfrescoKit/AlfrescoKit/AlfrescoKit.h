@@ -42,5 +42,6 @@
 #import "AKScopePickingViewController.h"
 #import "AKNamingViewController.h"
 #import "AKLocalFilesViewController.h"
+#import "AKFavoritesListViewController.h"
 
 #endif

@@ -33,7 +33,7 @@
 typedef void (^AKLoginCompletionBlock)(BOOL successful, id<AlfrescoSession> session, NSError *error);
 
 // Max items
-extern NSUInteger const kMaximumItemsToRetrieveAtOneTime;
+extern int const kMaximumItemsToRetrieveAtOneTime;
 
 // AlfrescoKit bundle name
 extern NSString * const kAlfrescoKitBundleName;
