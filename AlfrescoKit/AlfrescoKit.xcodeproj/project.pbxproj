@@ -61,6 +61,10 @@
 		734CC3981A6EA8DF005D148E /* AKScopeItem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 734CC3841A6E9F40005D148E /* AKScopeItem.h */; };
 		734CC3991A6EAA71005D148E /* AKScopePickingViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 734CC38C1A6EA042005D148E /* AKScopePickingViewController.h */; };
 		734CC39A1A6EAAFE005D148E /* AKScopePickerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 734CC3951A6EA58A005D148E /* AKScopePickerCell.xib */; };
+		735BF40B1A8E0E2100E84021 /* AKFavoritesListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 735BF4081A8E0E2100E84021 /* AKFavoritesListViewController.h */; };
+		735BF40C1A8E0E2100E84021 /* AKFavoritesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 735BF4091A8E0E2100E84021 /* AKFavoritesListViewController.m */; };
+		735BF40D1A8E508800E84021 /* AKFavoritesListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 735BF4081A8E0E2100E84021 /* AKFavoritesListViewController.h */; };
+		735BF40E1A8E50E900E84021 /* AKFavoritesListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 735BF40A1A8E0E2100E84021 /* AKFavoritesListViewController.xib */; };
 		736B573A1A6D268B0096E4A9 /* AKSitesListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 736B57371A6D268B0096E4A9 /* AKSitesListViewController.h */; };
 		736B573B1A6D268B0096E4A9 /* AKSitesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 736B57381A6D268B0096E4A9 /* AKSitesListViewController.m */; };
 		736B573E1A6D41D50096E4A9 /* AKSitesListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 736B57391A6D268B0096E4A9 /* AKSitesListViewController.xib */; };
@@ -191,6 +195,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				735BF40D1A8E508800E84021 /* AKFavoritesListViewController.h in CopyFiles */,
 				73F8D0171A82449400793309 /* AKLocalFilesViewController.h in CopyFiles */,
 				7313F2C31A7A4B0B0069591F /* AKNetworkActivity.h in CopyFiles */,
 				731904FB1A78F19E001916D3 /* AKNamingViewController.h in CopyFiles */,
@@ -255,6 +260,9 @@
 		734CC3931A6EA58A005D148E /* AKScopePickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKScopePickerCell.h; sourceTree = "<group>"; };
 		734CC3941A6EA58A005D148E /* AKScopePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKScopePickerCell.m; sourceTree = "<group>"; };
 		734CC3951A6EA58A005D148E /* AKScopePickerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKScopePickerCell.xib; sourceTree = "<group>"; };
+		735BF4081A8E0E2100E84021 /* AKFavoritesListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKFavoritesListViewController.h; sourceTree = "<group>"; };
+		735BF4091A8E0E2100E84021 /* AKFavoritesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKFavoritesListViewController.m; sourceTree = "<group>"; };
+		735BF40A1A8E0E2100E84021 /* AKFavoritesListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKFavoritesListViewController.xib; sourceTree = "<group>"; };
 		736B57371A6D268B0096E4A9 /* AKSitesListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKSitesListViewController.h; sourceTree = "<group>"; };
 		736B57381A6D268B0096E4A9 /* AKSitesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKSitesListViewController.m; sourceTree = "<group>"; };
 		736B57391A6D268B0096E4A9 /* AKSitesListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKSitesListViewController.xib; sourceTree = "<group>"; };
@@ -411,6 +419,7 @@
 				736B57441A6D60C80096E4A9 /* AKUIViewController.m */,
 				7343F9851A69548300C0664A /* Accounts View Controller */,
 				7343F9891A69548300C0664A /* Browsing View Controller */,
+				735BF4041A8E0CF400E84021 /* Favourites View Controller */,
 				73F8D00E1A82319300793309 /* Local Files View Controller */,
 				7343F9911A69548300C0664A /* Login View Controller */,
 				731904EA1A77DACF001916D3 /* Naming View Controller */,
@@ -511,6 +520,16 @@
 				734CC3951A6EA58A005D148E /* AKScopePickerCell.xib */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		735BF4041A8E0CF400E84021 /* Favourites View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				735BF4081A8E0E2100E84021 /* AKFavoritesListViewController.h */,
+				735BF4091A8E0E2100E84021 /* AKFavoritesListViewController.m */,
+				735BF40A1A8E0E2100E84021 /* AKFavoritesListViewController.xib */,
+			);
+			path = "Favourites View Controller";
 			sourceTree = "<group>";
 		};
 		736B57331A6D26640096E4A9 /* Sites View Controller */ = {
@@ -785,6 +804,7 @@
 				73B8C1CD1A60331700571B28 /* AKUtility.h in Headers */,
 				7343F96C1A6812CC00C0664A /* AKLoginService.h in Headers */,
 				73B8C1251A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h in Headers */,
+				735BF40B1A8E0E2100E84021 /* AKFavoritesListViewController.h in Headers */,
 				73F8D0151A8231A800793309 /* AKLocalFilesViewController.h in Headers */,
 				7343F9631A67DBF800C0664A /* UIImage+AlfrescoKit.h in Headers */,
 				7343F9AA1A6954EE00C0664A /* AKLoginEntryCell.h in Headers */,
@@ -993,6 +1013,7 @@
 				7374B9751A657B800091A4FD /* small_excel.png in Resources */,
 				734CC3911A6EA058005D148E /* AKScopePickingViewController.xib in Resources */,
 				7374B96B1A657B800091A4FD /* large_word.png in Resources */,
+				735BF40E1A8E50E900E84021 /* AKFavoritesListViewController.xib in Resources */,
 				7374B9671A657B800091A4FD /* large_powerpoint.png in Resources */,
 				7343F9A51A69549A00C0664A /* AKAlfrescoNodeCell.xib in Resources */,
 				7374B9821A657B800091A4FD /* small_site@2x.png in Resources */,
@@ -1040,6 +1061,7 @@
 				7343F99A1A69548300C0664A /* AKUserAccountListViewController.m in Sources */,
 				7343F9A01A69548300C0664A /* AKLoginViewController.m in Sources */,
 				736B573B1A6D268B0096E4A9 /* AKSitesListViewController.m in Sources */,
+				735BF40C1A8E0E2100E84021 /* AKFavoritesListViewController.m in Sources */,
 				73B8C1CE1A60331700571B28 /* AKUtility.m in Sources */,
 				7343F96D1A6812CC00C0664A /* AKLoginService.m in Sources */,
 			);
