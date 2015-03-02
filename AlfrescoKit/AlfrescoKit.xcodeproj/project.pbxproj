@@ -48,6 +48,10 @@
 		7343F9AE1A69601E00C0664A /* AKAlfrescoNodeListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7343F98A1A69548300C0664A /* AKAlfrescoNodeListViewController.h */; };
 		7343F9AF1A69601E00C0664A /* AKLoginViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7343F9921A69548300C0664A /* AKLoginViewController.h */; };
 		7343F9B01A69601E00C0664A /* AKAlfrescoNodePickingListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7343F9971A69548300C0664A /* AKAlfrescoNodePickingListViewController.h */; };
+		734B876B1AA47E1D0093E702 /* AKInternalConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 734B87691AA47E1D0093E702 /* AKInternalConstants.h */; };
+		734B876C1AA47E1D0093E702 /* AKInternalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 734B876A1AA47E1D0093E702 /* AKInternalConstants.m */; };
+		734B87701AA4800B0093E702 /* AKConstants.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73B8C14F1A5ECFF100571B28 /* AKConstants.h */; };
+		734B87711AA481800093E702 /* AKLoginService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7343F96A1A6812CC00C0664A /* AKLoginService.h */; };
 		734CC37B1A6E6056005D148E /* AKSitesCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 734CC3781A6E6056005D148E /* AKSitesCell.h */; };
 		734CC37C1A6E6056005D148E /* AKSitesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 734CC3791A6E6056005D148E /* AKSitesCell.m */; };
 		734CC37D1A6E6141005D148E /* AKSitesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 734CC37A1A6E6056005D148E /* AKSitesCell.xib */; };
@@ -195,6 +199,8 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				734B87711AA481800093E702 /* AKLoginService.h in CopyFiles */,
+				734B87701AA4800B0093E702 /* AKConstants.h in CopyFiles */,
 				735BF40D1A8E508800E84021 /* AKFavoritesListViewController.h in CopyFiles */,
 				73F8D0171A82449400793309 /* AKLocalFilesViewController.h in CopyFiles */,
 				7313F2C31A7A4B0B0069591F /* AKNetworkActivity.h in CopyFiles */,
@@ -249,6 +255,8 @@
 		7343F9A71A6954EE00C0664A /* AKLoginEntryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginEntryCell.h; sourceTree = "<group>"; };
 		7343F9A81A6954EE00C0664A /* AKLoginEntryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginEntryCell.m; sourceTree = "<group>"; };
 		7343F9A91A6954EE00C0664A /* AKLoginEntryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKLoginEntryCell.xib; sourceTree = "<group>"; };
+		734B87691AA47E1D0093E702 /* AKInternalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKInternalConstants.h; sourceTree = "<group>"; };
+		734B876A1AA47E1D0093E702 /* AKInternalConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKInternalConstants.m; sourceTree = "<group>"; };
 		734CC3781A6E6056005D148E /* AKSitesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKSitesCell.h; sourceTree = "<group>"; };
 		734CC3791A6E6056005D148E /* AKSitesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKSitesCell.m; sourceTree = "<group>"; };
 		734CC37A1A6E6056005D148E /* AKSitesCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AKSitesCell.xib; sourceTree = "<group>"; };
@@ -759,6 +767,8 @@
 			children = (
 				73B8C14F1A5ECFF100571B28 /* AKConstants.h */,
 				73B8C1501A5ECFF100571B28 /* AKConstants.m */,
+				734B87691AA47E1D0093E702 /* AKInternalConstants.h */,
+				734B876A1AA47E1D0093E702 /* AKInternalConstants.m */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -798,6 +808,7 @@
 				734CC3861A6E9F40005D148E /* AKScopeItem.h in Headers */,
 				7343F99F1A69548300C0664A /* AKLoginViewController.h in Headers */,
 				731904F11A77DAF3001916D3 /* AKNamingViewController.h in Headers */,
+				734B876B1AA47E1D0093E702 /* AKInternalConstants.h in Headers */,
 				734CC38E1A6EA042005D148E /* AKScopePickingViewController.h in Headers */,
 				736B57451A6D60C80096E4A9 /* AKUIViewController.h in Headers */,
 				734CC37B1A6E6056005D148E /* AKSitesCell.h in Headers */,
@@ -1057,6 +1068,7 @@
 				731904F21A77DAF3001916D3 /* AKNamingViewController.m in Sources */,
 				73F8D0161A8231A800793309 /* AKLocalFilesViewController.m in Sources */,
 				7343F99C1A69548300C0664A /* AKAlfrescoNodeListViewController.m in Sources */,
+				734B876C1AA47E1D0093E702 /* AKInternalConstants.m in Sources */,
 				7343F9A21A69548300C0664A /* AKAlfrescoNodePickingListViewController.m in Sources */,
 				7343F99A1A69548300C0664A /* AKUserAccountListViewController.m in Sources */,
 				7343F9A01A69548300C0664A /* AKLoginViewController.m in Sources */,

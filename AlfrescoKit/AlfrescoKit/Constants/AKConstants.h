@@ -24,19 +24,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "NSBundle+AlfrescoKit.h"
-
-#define AKLocalizedString(key, comment) \
-        NSLocalizedStringFromTableInBundle((key), @"", [NSBundle alfrescoKitBundle], (comment))
 
 // Completion Blocks
 typedef void (^AKLoginCompletionBlock)(BOOL successful, id<AlfrescoSession> session, NSError *error);
-
-// Max items
-extern int const kMaximumItemsToRetrieveAtOneTime;
-
-// AlfrescoKit bundle name
-extern NSString * const kAlfrescoKitBundleName;
-
-// OnPremise server url format
-extern NSString * const kAlfrescoOnPremiseServerURLFormatString;
