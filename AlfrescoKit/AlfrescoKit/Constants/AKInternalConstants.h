@@ -18,8 +18,23 @@
  *****************************************************************************
  */
 
-#import <AlfrescoSDK-iOS/AlfrescoSDK.h>
-#import "AKInternalConstants.h"
-#import "AKUIViewController.h"
-#import "UIImage+AlfrescoKit.h"
+/** AlfrescoKit internal constants
+ 
+ Author: Tauseef Mughal (Alfresco)
+ */
+
+#import <Foundation/Foundation.h>
+#import "AKConstants.h"
 #import "NSBundle+AlfrescoKit.h"
+
+#define AKLocalizedString(key, comment) \
+NSLocalizedStringFromTableInBundle((key), @"", [NSBundle alfrescoKitBundle], (comment))
+
+// Max items
+extern int const kMaximumItemsToRetrieveAtOneTime;
+
+// AlfrescoKit bundle name
+extern NSString * const kAlfrescoKitBundleName;
+
+// OnPremise server url format
+extern NSString * const kAlfrescoOnPremiseServerURLFormatString;

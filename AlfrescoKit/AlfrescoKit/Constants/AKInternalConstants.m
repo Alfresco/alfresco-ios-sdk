@@ -18,8 +18,13 @@
  *****************************************************************************
  */
 
-#import <AlfrescoSDK-iOS/AlfrescoSDK.h>
 #import "AKInternalConstants.h"
-#import "AKUIViewController.h"
-#import "UIImage+AlfrescoKit.h"
-#import "NSBundle+AlfrescoKit.h"
+
+// Max items
+int const kMaximumItemsToRetrieveAtOneTime = 50;
+
+// AlfrescoKit bundle name
+NSString * const kAlfrescoKitBundleName = @"AlfrescoKitBundle";
+
+// OnPremise server url format
+NSString * const kAlfrescoOnPremiseServerURLFormatString = @"%@://%@:%@/alfresco";
