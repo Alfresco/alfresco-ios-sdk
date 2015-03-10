@@ -309,9 +309,8 @@ extern NSString * const kAlfrescoWorkflowVariableTaskTransition;
 extern NSString * const kAlfrescoWorkflowVariableTaskComment;
 extern NSString * const kAlfrescoWorkflowVariableTaskStatus;
 extern NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome;
+extern NSString * const kAlfrescoWorkflowVariableTaskInvitePendingOutcome;
 
 extern NSString * const kAlfrescoWorkflowTaskTransitionApprove;
+extern NSString * const kAlfrescoWorkflowTaskTransitionAccept;
 extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
-
-
-

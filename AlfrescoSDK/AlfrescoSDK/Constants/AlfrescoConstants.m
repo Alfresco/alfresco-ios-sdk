@@ -255,8 +255,8 @@ NSString * const kAlfrescoWorkflowVariableTaskTransition = @"transition";
 NSString * const kAlfrescoWorkflowVariableTaskComment = @"bpm:comment";
 NSString * const kAlfrescoWorkflowVariableTaskStatus = @"bpm:status";
 NSString * const kAlfrescoWorkflowVariableTaskReviewOutcome = @"wf:reviewOutcome";
+NSString * const kAlfrescoWorkflowVariableTaskInvitePendingOutcome = @"inwf:inviteOutcome";
 
 NSString * const kAlfrescoWorkflowTaskTransitionApprove = @"Approve";
+NSString * const kAlfrescoWorkflowTaskTransitionAccept = @"Accept";
 NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";
-
-
