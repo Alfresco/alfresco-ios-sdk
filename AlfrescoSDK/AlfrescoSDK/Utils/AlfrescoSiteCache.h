@@ -35,6 +35,10 @@
 @property (nonatomic, strong, readonly) NSArray *memberSites;
 @property (nonatomic, strong, readonly) NSArray *favoriteSites;
 @property (nonatomic, strong, readonly) NSArray *pendingSites;
+@property (nonatomic, strong, readonly) NSArray *allSites;
+@property (nonatomic, assign, readonly) BOOL hasAllSites;
+@property (nonatomic, assign, readonly) int totalSiteCount;
+
 
 - (AlfrescoRequest *)buildCacheWithDelegate:(id<AlfrescoSiteCacheDataDelegate>)delegate completionBlock:(AlfrescoBOOLCompletionBlock)completionBlock;
 
@@ -43,6 +47,12 @@
 - (void)cacheSite:(AlfrescoSite *)site member:(BOOL)member pending:(BOOL)pending favorite:(BOOL)favorite;
 
 - (AlfrescoSite *)siteWithShortName:(NSString *)shortName;
+
+- (void)cacheSiteToAllSites:(AlfrescoSite *)site atIndex:(NSUInteger)index totalSites:(NSUInteger)totalSites;
+
+- (BOOL)shouldUseAllSitesCacheForListingContext:(AlfrescoListingContext *)listingContext;
+
+- (NSArray *)cachedAllSitesForListingContext:(AlfrescoListingContext *)listingContext;
 
 - (void)clear;
 
