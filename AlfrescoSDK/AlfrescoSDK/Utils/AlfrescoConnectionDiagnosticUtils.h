@@ -22,7 +22,7 @@
 
 @interface AlfrescoConnectionDiagnosticUtils : NSObject
 
-+ (NSDictionary *) createDictionaryForStartEventForEventName:(NSString *)eventName;
-+ (NSDictionary *) changeDictionaryForEndEvent:(NSDictionary *) dict isSuccess:(BOOL) isSuccess withError:(NSError *)error;
++ (NSDictionary *)createDictionaryForStartEventForEventName:(NSString *)eventName;
++ (NSDictionary *)changeDictionaryForEndEvent:(NSDictionary *) dict isSuccess:(BOOL) isSuccess error:(NSError *)error;
 
 @end

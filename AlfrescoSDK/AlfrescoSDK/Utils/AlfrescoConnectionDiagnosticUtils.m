@@ -27,16 +27,16 @@
 {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     [dict setObject:eventName forKey:kAlfrescoConfigurationDiagnosticDictionaryEventName];
-    [dict setObject:[NSNumber numberWithBool:YES] forKey:kAlfrescoConfigurationDiagnosticDictionaryIsLoading];
+    [dict setObject:@YES forKey:kAlfrescoConfigurationDiagnosticDictionaryIsLoading];
     
     return dict;
 }
 
-+ (NSDictionary *)changeDictionaryForEndEvent:(NSDictionary *)dict isSuccess:(BOOL)isSuccess withError:(NSError *)error
++ (NSDictionary *)changeDictionaryForEndEvent:(NSDictionary *)dict isSuccess:(BOOL)isSuccess error:(NSError *)error
 {
     NSMutableDictionary *mutableDict = [dict mutableCopy];
-    [mutableDict setObject:[NSNumber numberWithBool:NO] forKey:kAlfrescoConfigurationDiagnosticDictionaryIsLoading];
-    [mutableDict setObject:[NSNumber numberWithBool:isSuccess] forKey:kAlfrescoConfigurationDiagnosticDictionaryIsSuccess];
+    [mutableDict setObject:@NO forKey:kAlfrescoConfigurationDiagnosticDictionaryIsLoading];
+    [mutableDict setObject:@(isSuccess) forKey:kAlfrescoConfigurationDiagnosticDictionaryIsSuccess];
     
     if(!isSuccess && error)
     {

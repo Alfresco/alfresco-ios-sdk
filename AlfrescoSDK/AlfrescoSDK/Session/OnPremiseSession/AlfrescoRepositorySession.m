@@ -71,7 +71,7 @@
     CMISReachability *reachability = [CMISReachability networkReachability];
     if (reachability.hasNetworkConnection)
     {
-        NSDictionary *endDict = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startDict isSuccess:YES withError:nil];
+        NSDictionary *endDict = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startDict isSuccess:YES error:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:endDict];
         [AlfrescoErrors assertArgumentNotNil:url argumentName:@"url"];
         [AlfrescoErrors assertArgumentNotNil:username argumentName:@"username"];
@@ -85,7 +85,7 @@
     }
     else
     {
-        NSDictionary *endDict = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startDict isSuccess:NO withError:nil];
+        NSDictionary *endDict = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startDict isSuccess:NO error:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:endDict];
         
         NSError *noConnectionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoNetworkConnection];
@@ -198,7 +198,7 @@
         NSDictionary *endDictionary;
         if (serverInfoData == nil)
         {
-            endDictionary = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startEventDict isSuccess:NO withError:serverInfoError];
+            endDictionary = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startEventDict isSuccess:NO error:serverInfoError];
             [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:endDictionary];
             
             AlfrescoLogError(@"Server info retrieval failed: %@", [serverInfoError localizedDescription]);
@@ -211,7 +211,7 @@
             id serverInfoDictionary = [NSJSONSerialization JSONObjectWithData:serverInfoData options:0 error:&parseError];
             if (serverInfoDictionary == nil)
             {
-                endDictionary = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startEventDict isSuccess:NO withError:parseError];
+                endDictionary = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startEventDict isSuccess:NO error:parseError];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:endDictionary];
                 
                 AlfrescoLogError(@"Failed to parse server version response", [parseError localizedDescription]);
@@ -219,7 +219,7 @@
             }
             else
             {
-                endDictionary = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startEventDict isSuccess:YES withError:nil];
+                endDictionary = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startEventDict isSuccess:YES error:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:endDictionary];
                 
                 // get the edition string
@@ -318,13 +318,13 @@
                     NSDictionary *repositoriesEndEventDict;
                     if (repositories == nil)
                     {
-                        repositoriesEndEventDict = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:repositoriesEventDict isSuccess:NO withError:error];
+                        repositoriesEndEventDict = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:repositoriesEventDict isSuccess:NO error:error];
                         NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
                         completionBlock(nil, alfrescoError);
                     }
                     else
                     {
-                        repositoriesEndEventDict = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:repositoriesEventDict isSuccess:YES withError:nil];
+                        repositoriesEndEventDict = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:repositoriesEventDict isSuccess:YES error:nil];
                         // establish the session
                         AlfrescoRequest *creationSessionRequest = [self establishAlfrescoSessionWithSessionParameters:cmisSessionParams
                                                                                                          repositories:repositories
@@ -403,7 +403,7 @@
                                                             
             if (cmisSession == nil)
             {
-                endConnectRepositoryEvent = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startConnectRepositoryEvent isSuccess:NO withError:cmisSessionError];
+                endConnectRepositoryEvent = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startConnectRepositoryEvent isSuccess:NO error:cmisSessionError];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:endConnectRepositoryEvent];
                 
                 AlfrescoLogError(@"CMIS session creation failed: %@", [cmisSessionError localizedDescription]);
@@ -412,7 +412,7 @@
             }
             else
             {
-                endConnectRepositoryEvent = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startConnectRepositoryEvent isSuccess:YES withError:nil];
+                endConnectRepositoryEvent = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startConnectRepositoryEvent isSuccess:YES error:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:endConnectRepositoryEvent];
                 
                 // store the CMIS session
@@ -435,7 +435,7 @@
                     NSDictionary *endRootForlderEvent;
                     if (rootFolder == nil)
                     {
-                        endRootForlderEvent = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startRootFolderEvent isSuccess:NO withError:rootFolderError];
+                        endRootForlderEvent = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startRootFolderEvent isSuccess:NO error:rootFolderError];
                         [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:endRootForlderEvent];
                         
                         AlfrescoLogError(@"Root folder retrieval failed: %@", [cmisSessionError localizedDescription]);
@@ -444,7 +444,7 @@
                     }
                     else
                     {
-                        endRootForlderEvent = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startRootFolderEvent isSuccess:YES withError:nil];
+                        endRootForlderEvent = [AlfrescoConnectionDiagnosticUtils changeDictionaryForEndEvent:startRootFolderEvent isSuccess:YES error:nil];
                         [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:endRootForlderEvent];
                         
                         AlfrescoCMISToAlfrescoObjectConverter *objectConverter = [[AlfrescoCMISToAlfrescoObjectConverter alloc] initWithSession:self];
