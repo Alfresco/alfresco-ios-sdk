@@ -314,3 +314,29 @@ extern NSString * const kAlfrescoWorkflowVariableTaskInvitePendingOutcome;
 extern NSString * const kAlfrescoWorkflowTaskTransitionApprove;
 extern NSString * const kAlfrescoWorkflowTaskTransitionAccept;
 extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
+
+/**---------------------------------------------------------------------------------------
+ * @name Connection Diagnostic Constants
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoConfigurationDiagnosticDidStartEventNotification;
+extern NSString * const kAlfrescoConfigurationDiagnosticDidEndEventNotification;
+
+extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryEventName;
+extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryError;
+extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryStatus;
+
+extern NSString * const kAlfrescoConfigurationDiagnosticReachabilityEvent;
+extern NSString * const kAlfrescoConfigurationDiagnosticServerVersionEvent;
+extern NSString * const kAlfrescoConfigurationDiagnosticRepositoriesAvailableEvent;
+extern NSString * const kAlfrescoConfigurationDiagnosticConnectRepositoryEvent;
+extern NSString * const kAlfrescoConfigurationDiagnosticRetrieveRootFolderEvent;
+
+/**---------------------------------------------------------------------------------------
+ * @name Connection Diagnostic Enums
+ --------------------------------------------------------------------------------------- */
+typedef NS_ENUM(NSInteger, ConnectionDiagnosticStatus)
+{
+    ConnectionDiagnosticStatusLoading = 0,
+    ConnectionDiagnosticStatusSuccess,
+    ConnectionDiagnosticStatusFailure
+};
