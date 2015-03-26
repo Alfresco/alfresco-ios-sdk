@@ -1265,47 +1265,63 @@
     
     // define completion block to fetch the sites
     AlfrescoRequest * (^fetchSites)(AlfrescoFolder *sitesFolder) = ^AlfrescoRequest * (AlfrescoFolder *sitesFolder) {
-        AlfrescoDocumentFolderService *docFolderSvc = [[AlfrescoDocumentFolderService alloc] initWithSession:weakSelf.session];
-        return [docFolderSvc retrieveChildrenInFolder:sitesFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
-            if (pagingResult != nil)
-            {
-                NSArray *children = pagingResult.objects;
-                NSMutableArray *sites = [NSMutableArray array];
-                AlfrescoSite *site = nil;
-                for (AlfrescoNode *node in children)
+        
+        AlfrescoRequest *childRequest = nil;
+        
+        // If we have the paging request result already cached, we simply return it. Else, send a request to retrieve them.
+        if ([self.siteCache shouldUseAllSitesCacheForListingContext:listingContext] || self.siteCache.hasAllSites)
+        {
+            AlfrescoLogDebug(@"Cache hit: returning all sites from cache");
+            
+            NSArray *sites = [self.siteCache cachedAllSitesForListingContext:listingContext];
+            
+            // filter sites
+            NSArray *filteredSites = [self sitesArrayByApplyingFilter:listingContext.listingFilter sites:sites];
+            
+            // call the completion
+            completionBlock([[AlfrescoPagingResult alloc] initWithArray:filteredSites
+                                                           hasMoreItems:!self.siteCache.hasAllSites
+                                                             totalItems:self.siteCache.totalSiteCount], nil);
+        }
+        else
+        {
+            AlfrescoDocumentFolderService *docFolderSvc = [[AlfrescoDocumentFolderService alloc] initWithSession:weakSelf.session];
+            childRequest = [docFolderSvc retrieveChildrenInFolder:sitesFolder listingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *error) {
+                if (pagingResult != nil)
                 {
-                    if (node.isFolder && [node.type isEqualToString:@"st:site"])
-                    {
-                        site = [weakSelf.siteCache siteWithShortName:node.name];
-                        if (site != nil)
+                    NSArray *children = pagingResult.objects;
+                    NSMutableArray *sites = [NSMutableArray array];
+                    __block AlfrescoSite *site = nil;
+                    
+                    [children enumerateObjectsUsingBlock:^(AlfrescoNode *node, NSUInteger idx, BOOL *stop) {
+                        if (node.isFolder && [node.type isEqualToString:@"st:site"])
                         {
-                            [sites addObject:site];
-                        }
-                        else
-                        {
-                            site = [weakSelf siteFromFolder:(AlfrescoFolder *)node];
-                            if (site != nil)
+                            site = [weakSelf.siteCache siteWithShortName:node.name];
+                            if (site == nil)
                             {
-                                [weakSelf.siteCache cacheSite:site];
-                                [sites addObject:site];
+                                site = [weakSelf siteFromFolder:(AlfrescoFolder *)node];
                             }
+                            [sites addObject:site];
+                            [weakSelf.siteCache cacheSiteToAllSites:site atIndex:(idx + listingContext.skipCount) totalSites:pagingResult.totalItems];
                         }
-                    }
+                    }];
+                    
+                    // filter sites
+                    NSArray *filteredSites = [self sitesArrayByApplyingFilter:listingContext.listingFilter sites:sites];
+                    
+                    // call the completion
+                    completionBlock([[AlfrescoPagingResult alloc] initWithArray:filteredSites
+                                                                   hasMoreItems:pagingResult.hasMoreItems
+                                                                     totalItems:pagingResult.totalItems], nil);
                 }
-                
-                // filter sites
-                NSArray *filteredSites = [self sitesArrayByApplyingFilter:listingContext.listingFilter sites:sites];
-                
-                // call the completion
-                completionBlock([[AlfrescoPagingResult alloc] initWithArray:filteredSites
-                                                               hasMoreItems:pagingResult.hasMoreItems
-                                                                 totalItems:pagingResult.totalItems], nil);
-            }
-            else
-            {
-                completionBlock(nil, error);
-            }
-        }];
+                else
+                {
+                    completionBlock(nil, error);
+                }
+            }];
+        }
+        
+        return childRequest;
     };
     
     if (self.sitesRootFolder == nil)
