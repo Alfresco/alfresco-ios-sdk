@@ -64,6 +64,7 @@
 		279C02B71892CEB200BC8628 /* AlfrescoWorkflowProcess.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73D268E717D76CEA00C49848 /* AlfrescoWorkflowProcess.h */; };
 		279C02B81892CEB700BC8628 /* AlfrescoWorkflowProcessDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73D268E917D76CEB00C49848 /* AlfrescoWorkflowProcessDefinition.h */; };
 		279C02BC1892CEEC00BC8628 /* AlfrescoWorkflowTask.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73D268EB17D76CEC00C49848 /* AlfrescoWorkflowTask.h */; };
+		27A3ED4C1AC4B65100DE3F3B /* AlfrescoConnectionDiagnosticUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7CECA11AC408610069FB44 /* AlfrescoConnectionDiagnosticUtils.m */; };
 		27B3A42718EC655B00925962 /* AlfrescoPublicAPIActivityStreamService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B3A42618EC655B00925962 /* AlfrescoPublicAPIActivityStreamService.m */; };
 		27B3A43418EC668A00925962 /* AlfrescoPublicAPICommentService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B3A42918EC668A00925962 /* AlfrescoPublicAPICommentService.m */; };
 		27B3A43518EC668A00925962 /* AlfrescoPublicAPIDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B3A42B18EC668A00925962 /* AlfrescoPublicAPIDocumentFolderService.m */; };
@@ -2050,6 +2051,7 @@
 				73D01DDC197FC3D00065E107 /* AlfrescoDefaultHTTPRequest.m in Sources */,
 				73D01DDD197FC3D00065E107 /* AlfrescoRequest.m in Sources */,
 				73D01DDE197FC3D00065E107 /* AlfrescoLog.m in Sources */,
+				27A3ED4C1AC4B65100DE3F3B /* AlfrescoConnectionDiagnosticUtils.m in Sources */,
 				73D01DDF197FC3D00065E107 /* AlfrescoSiteCache.m in Sources */,
 				73D01DE0197FC3D00065E107 /* AlfrescoContentStream.m in Sources */,
 				73D01DE1197FC3D00065E107 /* AlfrescoContent.m in Sources */,
