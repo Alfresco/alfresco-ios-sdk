@@ -321,13 +321,22 @@ extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
 extern NSString * const kAlfrescoConfigurationDiagnosticDidStartEventNotification;
 extern NSString * const kAlfrescoConfigurationDiagnosticDidEndEventNotification;
 
-extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryIsLoading;
-extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryIsSuccess;
 extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryEventName;
 extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryError;
+extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryStatus;
 
 extern NSString * const kAlfrescoConfigurationDiagnosticReachabilityEvent;
 extern NSString * const kAlfrescoConfigurationDiagnosticServerVersionEvent;
 extern NSString * const kAlfrescoConfigurationDiagnosticRepositoriesAvailableEvent;
 extern NSString * const kAlfrescoConfigurationDiagnosticConnectRepositoryEvent;
 extern NSString * const kAlfrescoConfigurationDiagnosticRetrieveRootFolderEvent;
+
+/**---------------------------------------------------------------------------------------
+ * @name Connection Diagnostic Enums
+ --------------------------------------------------------------------------------------- */
+typedef NS_ENUM(NSInteger, ConnectionDiagnosticStatus)
+{
+    ConnectionDiagnosticStatusLoading = 0,
+    ConnectionDiagnosticStatusSuccess,
+    ConnectionDiagnosticStatusFailure
+};

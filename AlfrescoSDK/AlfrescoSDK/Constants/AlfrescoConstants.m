@@ -267,10 +267,9 @@ NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";
 NSString *const kAlfrescoConfigurationDiagnosticDidStartEventNotification = @"ConfigurationDiagnosticDidStartEventNotification";
 NSString *const kAlfrescoConfigurationDiagnosticDidEndEventNotification = @"ConfigurationDiagnosticDidEndEventNotification";
 
-NSString * const kAlfrescoConfigurationDiagnosticDictionaryIsLoading = @"isLoading";
-NSString * const kAlfrescoConfigurationDiagnosticDictionaryIsSuccess = @"isSuccess";
 NSString * const kAlfrescoConfigurationDiagnosticDictionaryEventName = @"eventName";
 NSString * const kAlfrescoConfigurationDiagnosticDictionaryError = @"error";
+NSString * const kAlfrescoConfigurationDiagnosticDictionaryStatus = @"status";
 
 NSString * const kAlfrescoConfigurationDiagnosticReachabilityEvent = @"reachabilityEvent";
 NSString * const kAlfrescoConfigurationDiagnosticServerVersionEvent = @"serverVersionEvent";
