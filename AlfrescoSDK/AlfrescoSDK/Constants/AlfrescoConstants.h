@@ -314,3 +314,20 @@ extern NSString * const kAlfrescoWorkflowVariableTaskInvitePendingOutcome;
 extern NSString * const kAlfrescoWorkflowTaskTransitionApprove;
 extern NSString * const kAlfrescoWorkflowTaskTransitionAccept;
 extern NSString * const kAlfrescoWorkflowTaskTransitionReject;
+
+/**---------------------------------------------------------------------------------------
+ * @name Connection Diagnostic Constants
+ --------------------------------------------------------------------------------------- */
+extern NSString * const kAlfrescoConfigurationDiagnosticDidStartEventNotification;
+extern NSString * const kAlfrescoConfigurationDiagnosticDidEndEventNotification;
+
+extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryIsLoading;
+extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryIsSuccess;
+extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryEventName;
+extern NSString * const kAlfrescoConfigurationDiagnosticDictionaryError;
+
+extern NSString * const kAlfrescoConfigurationDiagnosticReachabilityEvent;
+extern NSString * const kAlfrescoConfigurationDiagnosticServerVersionEvent;
+extern NSString * const kAlfrescoConfigurationDiagnosticRepositoriesAvailableEvent;
+extern NSString * const kAlfrescoConfigurationDiagnosticConnectRepositoryEvent;
+extern NSString * const kAlfrescoConfigurationDiagnosticRetrieveRootFolderEvent;

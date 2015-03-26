@@ -260,3 +260,20 @@ NSString * const kAlfrescoWorkflowVariableTaskInvitePendingOutcome = @"inwf:invi
 NSString * const kAlfrescoWorkflowTaskTransitionApprove = @"Approve";
 NSString * const kAlfrescoWorkflowTaskTransitionAccept = @"Accept";
 NSString * const kAlfrescoWorkflowTaskTransitionReject = @"Reject";
+
+/**
+ Connection Diagnostic Constants
+ */
+NSString *const kAlfrescoConfigurationDiagnosticDidStartEventNotification = @"ConfigurationDiagnosticDidStartEventNotification";
+NSString *const kAlfrescoConfigurationDiagnosticDidEndEventNotification = @"ConfigurationDiagnosticDidEndEventNotification";
+
+NSString * const kAlfrescoConfigurationDiagnosticDictionaryIsLoading = @"isLoading";
+NSString * const kAlfrescoConfigurationDiagnosticDictionaryIsSuccess = @"isSuccess";
+NSString * const kAlfrescoConfigurationDiagnosticDictionaryEventName = @"eventName";
+NSString * const kAlfrescoConfigurationDiagnosticDictionaryError = @"error";
+
+NSString * const kAlfrescoConfigurationDiagnosticReachabilityEvent = @"reachabilityEvent";
+NSString * const kAlfrescoConfigurationDiagnosticServerVersionEvent = @"serverVersionEvent";
+NSString * const kAlfrescoConfigurationDiagnosticRepositoriesAvailableEvent = @"repositoriesAvailableEvent";
+NSString * const kAlfrescoConfigurationDiagnosticConnectRepositoryEvent = @"connectRepositoryEvent";
+NSString * const kAlfrescoConfigurationDiagnosticRetrieveRootFolderEvent = @"retreiveRootFolder";
