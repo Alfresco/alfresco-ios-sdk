@@ -31,6 +31,7 @@
 @property (nonatomic, strong, readwrite) NSDictionary *parameters;
 @property BOOL isLoginScreenLoad;
 @property BOOL hasValidAuthenticationCode;
+@property (nonatomic) CloudConnectionStatus cloudConnectionStatus;
 @end
 
 @implementation AlfrescoOAuthUILoginViewController
@@ -116,6 +117,7 @@
 {
     [super viewWillAppear:animated];
     self.isLoginScreenLoad = YES;
+    self.cloudConnectionStatus = CloudConnectionStatusInactive;
     [self loadWebView];
     
     if (!self.activityIndicator)
@@ -194,6 +196,7 @@
     if (nil != self.connection)
     {
         [self.connection cancel];
+        self.cloudConnectionStatus = CloudConnectionStatusInactive;
         self.connection = nil;
     }
     if ([self.activityIndicator isAnimating])
@@ -279,9 +282,10 @@
                 self.completionBlock(nil, error);
             }
         }
-        else
+        else if(self.cloudConnectionStatus == CloudConnectionStatusInactive)
         {
             [self.activityIndicator startAnimating];
+            self.cloudConnectionStatus = CloudConnectionStatusActive;
             self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
         }
         return NO;
@@ -356,13 +360,17 @@
         }
         else
         {
-            [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:self.completionBlock];
+            [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:^(AlfrescoOAuthData *oauthData, NSError *error) {
+                self.cloudConnectionStatus = error? CloudConnectionStatusInactive : CloudConnectionStatusGotAuthCode;
+                self.completionBlock(oauthData, error);
+            }];
         }
     }
     else
     {
         AlfrescoLogDebug(@"We don't have a valid authentication code");
         [self.activityIndicator stopAnimating];
+        self.cloudConnectionStatus = CloudConnectionStatusInactive;
         self.hasValidAuthenticationCode = NO;
     }
 }
