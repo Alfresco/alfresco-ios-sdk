@@ -334,9 +334,9 @@ extern NSString * const kAlfrescoConfigurationDiagnosticRetrieveRootFolderEvent;
 /**---------------------------------------------------------------------------------------
  * @name Connection Diagnostic Enums
  --------------------------------------------------------------------------------------- */
-typedef NS_ENUM(NSInteger, ConnectionDiagnosticStatus)
+typedef NS_ENUM(NSInteger, AlfrescoConnectionDiagnosticStatus)
 {
-    ConnectionDiagnosticStatusLoading = 0,
-    ConnectionDiagnosticStatusSuccess,
-    ConnectionDiagnosticStatusFailure
+    AlfrescoConnectionDiagnosticStatusLoading = 0,
+    AlfrescoConnectionDiagnosticStatusSuccess,
+    AlfrescoConnectionDiagnosticStatusFailure
 };

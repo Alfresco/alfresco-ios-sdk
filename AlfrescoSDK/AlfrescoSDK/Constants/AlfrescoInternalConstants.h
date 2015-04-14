@@ -387,3 +387,12 @@ extern NSString * const kAlfrescoPersonPropertyCompanyEmail;
 extern NSString * const kAlfrescoDefaultBackgroundNetworkSessionId;
 extern NSString * const kAlfrescoDefaultBackgroundNetworkSessionSharedContainerId;
 
+/**---------------------------------------------------------------------------------------
+ * @name Cloud Connection Status
+ --------------------------------------------------------------------------------------- */
+typedef NS_ENUM(NSInteger, AlfrescoCloudConnectionStatus)
+{
+    AlfrescoCloudConnectionStatusInactive = 0,
+    AlfrescoCloudConnectionStatusActive,
+    AlfrescoCloudConnectionStatusGotAuthCode
+};

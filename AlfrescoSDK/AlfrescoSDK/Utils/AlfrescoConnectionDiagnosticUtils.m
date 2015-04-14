@@ -27,7 +27,7 @@
 {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     [dict setObject:eventName forKey:kAlfrescoConfigurationDiagnosticDictionaryEventName];
-    [dict setObject:[NSNumber numberWithInteger:ConnectionDiagnosticStatusLoading] forKey:kAlfrescoConfigurationDiagnosticDictionaryStatus];
+    [dict setObject:[NSNumber numberWithInteger:AlfrescoConnectionDiagnosticStatusLoading] forKey:kAlfrescoConfigurationDiagnosticDictionaryStatus];
     
     return dict;
 }
@@ -38,11 +38,11 @@
     
     if(isSuccess)
     {
-        [mutableDict setObject:[NSNumber numberWithInteger:ConnectionDiagnosticStatusSuccess] forKey:kAlfrescoConfigurationDiagnosticDictionaryStatus];
+        [mutableDict setObject:[NSNumber numberWithInteger:AlfrescoConnectionDiagnosticStatusSuccess] forKey:kAlfrescoConfigurationDiagnosticDictionaryStatus];
     }
     else
     {
-        [mutableDict setObject:[NSNumber numberWithInteger:ConnectionDiagnosticStatusFailure] forKey:kAlfrescoConfigurationDiagnosticDictionaryStatus];
+        [mutableDict setObject:[NSNumber numberWithInteger:AlfrescoConnectionDiagnosticStatusFailure] forKey:kAlfrescoConfigurationDiagnosticDictionaryStatus];
     }
     
     if(!isSuccess && error)
