@@ -40,6 +40,8 @@ typedef NS_OPTIONS(NSUInteger, AKAlfrescoNodePickerType)
 
 @implementation AKAlfrescoNodePickingListViewController
 
+@dynamic delegate;
+
 - (instancetype)initAlfrescoFolderPickerWithRootFolder:(AlfrescoFolder *)folder
                                          selectedNodes:(NSMutableArray *)selectedNodes
                                               delegate:(id<AKAlfrescoNodePickingListViewControllerDelegate>)delegate
