@@ -34,7 +34,7 @@
 @property (nonatomic, strong, readwrite) NSDictionary *parameters;
 @property (nonatomic, assign) BOOL isLoginScreenLoad;
 @property (nonatomic, assign) BOOL hasValidAuthenticationCode;
-@property (nonatomic) CloudConnectionStatus cloudConnectionStatus;
+@property (nonatomic) AlfrescoCloudConnectionStatus cloudConnectionStatus;
 
 @end
 
@@ -122,7 +122,7 @@
     self.view = view;
     
     self.isLoginScreenLoad = YES;
-    self.cloudConnectionStatus = CloudConnectionStatusInactive;
+    self.cloudConnectionStatus = AlfrescoCloudConnectionStatusInactive;
     [self loadWebView];
     
 }
@@ -167,7 +167,7 @@
     if (nil != self.connection)
     {
         [self.connection cancel];
-        self.cloudConnectionStatus = CloudConnectionStatusInactive;
+        self.cloudConnectionStatus = AlfrescoCloudConnectionStatusInactive;
         self.connection = nil;
     }
     
@@ -258,10 +258,10 @@
                 self.completionBlock(nil, error);
             }
         }
-        else
+        else if(self.cloudConnectionStatus == AlfrescoCloudConnectionStatusInactive)
         {
             [self.activityIndicator startAnimation:self];
-            self.cloudConnectionStatus = CloudConnectionStatusActive;
+            self.cloudConnectionStatus = AlfrescoCloudConnectionStatusActive;
             self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
         }
         [listener ignore];
@@ -309,7 +309,7 @@
         else
         {
             [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:^(AlfrescoOAuthData *oauthData, NSError *error) {
-                self.cloudConnectionStatus = error? CloudConnectionStatusInactive : CloudConnectionStatusGotAuthCode;
+                self.cloudConnectionStatus = error? AlfrescoCloudConnectionStatusInactive : AlfrescoCloudConnectionStatusGotAuthCode;
                 self.completionBlock(oauthData, error);
             }];
         }
@@ -318,7 +318,7 @@
     {
         AlfrescoLogDebug(@"We don't have a valid authentication code");
         [self.activityIndicator stopAnimation:self];
-        self.cloudConnectionStatus = CloudConnectionStatusInactive;
+        self.cloudConnectionStatus = AlfrescoCloudConnectionStatusInactive;
         self.hasValidAuthenticationCode = NO;
     }
 }
