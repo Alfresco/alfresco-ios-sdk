@@ -18,33 +18,23 @@
  *****************************************************************************
  */
 
-/** AKUserAccount protocol
+/** AKAccountListItem
  
  Author: Tauseef Mughal (Alfresco)
  */
 
 #import <Foundation/Foundation.h>
 
-@class AlfrescoOAuthData;
+@protocol AKUserAccount;
 
-@protocol AKUserAccount <NSObject>
+@interface AKAccountListItem : NSObject
 
-// This protocol is subject to change
-@property (nonatomic, assign) BOOL isOnPremiseAccount;
+@property (nonatomic, strong, readonly) id<AKUserAccount> account;
+@property (nonatomic, strong, readonly) NSString *networkIdentifier;
+@property (nonatomic, strong, readonly) NSIndexPath *indexPath;
 
-// User for OnPremise Accounts
-@property (nonatomic, strong) NSString *identifier;
-@property (nonatomic, strong) NSString *username;
-@property (nonatomic, strong) NSString *password;
-@property (nonatomic, strong) NSString *accountDescription;
-@property (nonatomic, strong) NSString *serverAddress;
-@property (nonatomic, strong) NSString *serverPort;
-@property (nonatomic, strong) NSString *protocol;
-@property (nonatomic, strong) NSString *serviceDocument;
 
-// Used for Cloud Accounts
-@property (nonatomic, strong) NSString *selectedNetworkIdentifier;
-@property (nonatomic, strong) NSArray *networkIdentifiers;
-@property (nonatomic, strong) AlfrescoOAuthData *oAuthData;
++ (instancetype)itemWithAccount:(id<AKUserAccount>)account networkIdentifier:(NSString *)networkIdentifier indexPath:(NSIndexPath *)indexPath;
+- (instancetype)initWithAccount:(id<AKUserAccount>)account networkIdentifier:(NSString *)networkIdentifier indexPath:(NSIndexPath *)indexPath;
 
 @end
