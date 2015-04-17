@@ -129,6 +129,8 @@
 		7374B98D1A657B800091A4FD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9581A657B800091A4FD /* Info.plist */; };
 		7374B98E1A657B800091A4FD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9591A657B800091A4FD /* Localizable.strings */; };
 		7374B98F1A657B800091A4FD /* SmallThumbnailImageMapping.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7374B95A1A657B800091A4FD /* SmallThumbnailImageMapping.plist */; };
+		73A29D2F1ADFF67300345075 /* AKAccountListItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 73A29D2D1ADFF67300345075 /* AKAccountListItem.h */; };
+		73A29D301ADFF67300345075 /* AKAccountListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 73A29D2E1ADFF67300345075 /* AKAccountListItem.m */; };
 		73B8C09A1A5D9B3700571B28 /* libAlfrescoKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */; };
 		73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a */; };
 		73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */; };
@@ -331,6 +333,8 @@
 		7374B9581A657B800091A4FD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7374B9591A657B800091A4FD /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7374B95A1A657B800091A4FD /* SmallThumbnailImageMapping.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SmallThumbnailImageMapping.plist; sourceTree = "<group>"; };
+		73A29D2D1ADFF67300345075 /* AKAccountListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKAccountListItem.h; sourceTree = "<group>"; };
+		73A29D2E1ADFF67300345075 /* AKAccountListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKAccountListItem.m; sourceTree = "<group>"; };
 		73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAlfrescoKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		73B8C0991A5D9B3700571B28 /* AlfrescoKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfrescoKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		73B8C09F1A5D9B3700571B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -558,6 +562,8 @@
 				7313F2BE1A7A47B10069591F /* AKNetworkActivity.h */,
 				734CC3841A6E9F40005D148E /* AKScopeItem.h */,
 				734CC3851A6E9F40005D148E /* AKScopeItem.m */,
+				73A29D2D1ADFF67300345075 /* AKAccountListItem.h */,
+				73A29D2E1ADFF67300345075 /* AKAccountListItem.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -812,6 +818,7 @@
 				734CC38E1A6EA042005D148E /* AKScopePickingViewController.h in Headers */,
 				736B57451A6D60C80096E4A9 /* AKUIViewController.h in Headers */,
 				734CC37B1A6E6056005D148E /* AKSitesCell.h in Headers */,
+				73A29D2F1ADFF67300345075 /* AKAccountListItem.h in Headers */,
 				73B8C1CD1A60331700571B28 /* AKUtility.h in Headers */,
 				7343F96C1A6812CC00C0664A /* AKLoginService.h in Headers */,
 				73B8C1251A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h in Headers */,
@@ -1074,6 +1081,7 @@
 				7343F9A01A69548300C0664A /* AKLoginViewController.m in Sources */,
 				736B573B1A6D268B0096E4A9 /* AKSitesListViewController.m in Sources */,
 				735BF40C1A8E0E2100E84021 /* AKFavoritesListViewController.m in Sources */,
+				73A29D301ADFF67300345075 /* AKAccountListItem.m in Sources */,
 				73B8C1CE1A60331700571B28 /* AKUtility.m in Sources */,
 				7343F96D1A6812CC00C0664A /* AKLoginService.m in Sources */,
 			);

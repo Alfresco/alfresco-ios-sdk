@@ -22,6 +22,7 @@
 #import "AKUserAccount.h"
 #import "AKLoginService.h"
 #import "AKNetworkActivity.h"
+#import "AKAccountListItem.h"
 
 static CGFloat const kAccountCellMinimumHeight = 60.0f;
 
@@ -35,6 +36,7 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
 @interface AKUserAccountListViewController () <UITableViewDataSource, UITableViewDelegate>
 // Data Structure
 @property (nonatomic, strong) NSArray *accountList;
+@property (nonatomic, strong) NSArray *accountListItems;
 // Views
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 // Services
@@ -54,11 +56,43 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
     if (self)
     {
         self.accountList = accountList;
+        self.accountListItems = [self accountListItemsForAccounts:accountList];
         self.delegate = delegate;
         self.loginService = [[AKLoginService alloc] init];
         self.title = AKLocalizedString(@"ak.user.account.list.view.controller.title", @"Accounts Title");
     }
     return self;
+}
+
+#pragma mark - Private Methods
+
+- (NSArray *)accountListItemsForAccounts:(NSArray *)accounts
+{
+    NSMutableArray *returnArray = [NSMutableArray array];
+    
+    NSUInteger accountIndex = 0;
+    
+    for (id<AKUserAccount> account in accounts)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathWithIndex:accountIndex++];
+        
+        if (account.isOnPremiseAccount)
+        {
+            AKAccountListItem *listItem = [AKAccountListItem itemWithAccount:account networkIdentifier:nil indexPath:indexPath];
+            [returnArray addObject:listItem];
+        }
+        else
+        {
+            for (NSUInteger networkIndex = 0; networkIndex < account.networkIdentifiers.count; networkIndex++)
+            {
+                NSString *currentNetworkIdentifier = account.networkIdentifiers[networkIndex];
+                AKAccountListItem *listItem = [AKAccountListItem itemWithAccount:account networkIdentifier:currentNetworkIdentifier indexPath:[indexPath indexPathByAddingIndex:networkIndex]];
+                [returnArray addObject:listItem];
+            }
+        }
+    }
+    
+    return returnArray;
 }
 
 #pragma mark - UITableViewDataSource Methods
@@ -74,7 +108,7 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
     
     if (section == AccountTableViewControllerSectionAccount)
     {
-        numberOfRows = self.accountList.count;
+        numberOfRows = self.accountListItems.count;
     }
     
     return numberOfRows;
@@ -108,10 +142,25 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
     
     if (indexPath.section == AccountTableViewControllerSectionAccount)
     {
-        id<AKUserAccount> currentAccount = self.accountList[indexPath.row];
-        NSString *accountImageName = (currentAccount.isOnPremiseAccount) ? @"account-type-onpremise" : @"account-type-cloud";
+        NSInteger rowIndex = indexPath.row;
+        AKAccountListItem *currentAccountListItem = self.accountListItems[rowIndex];
+        NSIndexPath *indexPath = currentAccountListItem.indexPath;
+        id<AKUserAccount> currentAccount = currentAccountListItem.account;
+        
+        NSString *accountImageName = nil;
+        
+        if (!currentAccount.isOnPremiseAccount)
+        {
+            accountImageName =  @"account-type-cloud";
+            cell.textLabel.text = [NSString stringWithFormat:@"%@: %@", currentAccount.accountDescription, currentAccount.networkIdentifiers[[indexPath indexAtPosition:1]]];
+        }
+        else
+        {
+            accountImageName = @"account-type-onpremise";
+            cell.textLabel.text = currentAccount.accountDescription;
+        }
+        
         cell.imageView.image = [UIImage imageFromAlfrescoKitBundleNamed:accountImageName];
-        cell.textLabel.text = currentAccount.accountDescription;
     }
     else
     {
@@ -129,7 +178,10 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
     
     if (indexPath.section == AccountTableViewControllerSectionAccount)
     {
-        id<AKUserAccount> selectedAccount = self.accountList[indexPath.row];
+        NSInteger rowIndex = indexPath.row;
+        AKAccountListItem *currentAccountListItem = self.accountListItems[rowIndex];
+        id<AKUserAccount> selectedAccount = currentAccountListItem.account;
+        
         if ([self.delegate respondsToSelector:@selector(userAccountListViewController:didSelectUserAccount:)])
         {
             [self.delegate userAccountListViewController:self didSelectUserAccount:selectedAccount];
@@ -137,7 +189,7 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
         
         __weak typeof(self) weakSelf = self;
         __block AlfrescoRequest *request = nil;
-        NSString *networkIdentifier = (!selectedAccount.isOnPremiseAccount) ? selectedAccount.selectedNetworkIdentifier : nil;
+        NSString *networkIdentifier = currentAccountListItem.networkIdentifier;
         request = [self.loginService loginToAccount:selectedAccount networkIdentifier:networkIdentifier completionBlock:^(BOOL successful, id<AlfrescoSession> session, NSError *error) {
             [weakSelf.delegate controller:weakSelf didCompleteRequest:request error:error];
             [weakSelf.delegate userAccountListViewController:weakSelf didLoginSuccessfully:successful toAccount:selectedAccount creatingSession:session error:error];
