@@ -119,6 +119,18 @@
 - (void)setStringContainsAtIndex:(NSUInteger)parameterIndex string:(NSString*)string;
 
 /**
+ * Sets the designated parameter to the given list of strings.
+ * Strings will be concatenated by ','
+ * Use this method to proide a list of values for an IN (?) statement
+ *
+ * @param parameterIndex
+ *            the parameter index (one-based)
+ * @param stringArray
+ *            the values
+ */
+- (void)setStringArrayAtIndex:(NSUInteger)parameterIndex stringArray:(NSArray*)stringArray;
+
+/**
  * Sets the designated parameter to the given number.
  *
  * @param parameterIndex
