@@ -34,6 +34,7 @@
 @property (nonatomic, strong) NSHTTPURLResponse *response;
 @property (nonatomic, strong) CMISBindingSession *session;
 @property (nonatomic, copy) void (^completionBlock)(CMISHttpResponse *httpResponse, NSError *error);
+@property (nonatomic, weak) NSThread *originalThread;
 
 /**
  * starts a URL request for given HTTP method 
@@ -60,5 +61,11 @@
 
 /// Creates an appropriate task for the given request object.
 - (NSURLSessionTask *)taskForRequest:(NSURLRequest *)request;
+
+/// Call completion block with response returned from server
+- (void)executeCompletionBlockResponse:(CMISHttpResponse*)response;
+
+/// Call completion block with error returned from server
+- (void)executeCompletionBlockError:(NSError*)error;
 
 @end
