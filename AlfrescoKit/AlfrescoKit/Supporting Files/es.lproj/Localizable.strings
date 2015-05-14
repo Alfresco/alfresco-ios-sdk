@@ -69,7 +69,7 @@
 /**
  * AKAlfrescoNodePickingListViewController
  */
-"ak.alfresco.node.picking.list.view.controller" = "Choose";
+"ak.alfresco.node.picking.list.view.controller" = "Escoger";
 
 /**
  * AKUserAccountListViewController
@@ -100,7 +100,7 @@
 /**
  * AKScopePickingViewController
  */
-"ak.scope.picking.view.controller.title" = "Escoja una localización";
+"ak.scope.picking.view.controller.title" = "Escoger una ubicación";
 
 /**
  * AKNamingViewController
