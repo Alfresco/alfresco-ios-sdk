@@ -19,10 +19,12 @@
  */
 
 /**
- Localizable.strings
- AlfrescoKit
- 
- Author: Tauseef Mughal (Alfresco)
+ * Localizable.strings
+ * AlfrescoKit
+ *
+ * English (en)
+ *
+ * Author: Tauseef Mughal (Alfresco)
  */
 
 
@@ -83,8 +85,8 @@
  * AKUserAccountListViewController
  */
 "ak.login.view.controller.title" = "Accounts";
-"ak.login.view.controller.cell.username.title" = "Username";
-"ak.login.view.controller.cell.username.placeholder" = "Username here";
+"ak.login.view.controller.cell.username.title" = "User name";
+"ak.login.view.controller.cell.username.placeholder" = "User name here";
 "ak.login.view.controller.cell.password.title" = "Password";
 "ak.login.view.controller.cell.password.placeholder" = "Password here";
 "ak.login.view.controller.login.button.title" = "Login";
@@ -100,15 +102,15 @@
 /**
  * AKScopePickingViewController
  */
-"ak.scope.picking.view.controller.title" = "Select Location";
+"ak.scope.picking.view.controller.title" = "Choose Location";
 
 /**
  * AKNamingViewController
  */
 "ak.naming.view.controller.title" = "Name";
 "ak.naming.view.controller.cell.title" = "Name";
-"ak.naming.view.controller.cell.name.placeholder" = "Name here";
-"ak.naming.view.controller.select.button.title" = "Select";
+"ak.naming.view.controller.cell.name.placeholder" = "File Name";
+"ak.naming.view.controller.select.button.title" = "Save";
 
 /**
  * AKLocalFilesViewController

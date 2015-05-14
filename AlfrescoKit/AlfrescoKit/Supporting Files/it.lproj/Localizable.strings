@@ -1,0 +1,121 @@
+/*
+ ******************************************************************************
+ * Copyright (C) 2005-2015 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Mobile SDK.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *****************************************************************************
+ */
+
+/**
+ * Localizable.strings
+ * AlfrescoKit
+ *
+ * Italian (it)
+ */
+
+
+/**
+ * Relative Dates
+ */
+"relative.date.past.n-years" = "%d anni fa";
+"relative.date.past.one-year" = "Un anno fa";
+"relative.date.past.n-months" = "%d mesi fa";
+"relative.date.past.one-month" = "Un mese fa";
+"relative.date.past.n-weeks" = "%d settimane fa";
+"relative.date.past.one-week" = "Una settimana fa";
+"relative.date.past.n-days" = "%d giorni fa";
+"relative.date.past.one-day" = "Ieri";
+"relative.date.past.n-hours" = "%d ore fa";
+"relative.date.past.one-hour" = "Un'ora fa";
+"relative.date.past.n-minutes" = "%d minuti fa";
+"relative.date.past.one-minute" = "Un minuto fa";
+"relative.date.past.n-seconds" = "%d secondi fa";
+"relative.date.just-now" = "In questo momento";
+"relative.date.today" = "Oggi";
+"relative.date.future.n-seconds" = "Tra %d secondi";
+"relative.date.future.one-minute" = "Tra un minuto";
+"relative.date.future.n-minutes" = "Tra %d minuti";
+"relative.date.future.one-hour" = "Tra un'ora";
+"relative.date.future.n-hours" = "Tra %d ore";
+"relative.date.future.one-day" = "Domani";
+"relative.date.future.n-days" = "Tra %d giorni";
+"relative.date.future.one-week" = "Tra una settimana";
+"relative.date.future.n-weeks" = "Tra %d settimane";
+"relative.date.future.one-month" = "Tra un mese";
+"relative.date.future.n-months" = "Tra %d mesi";
+"relative.date.future.one-year" = "Tra un anno";
+"relative.date.future.n-years" = "Tra %d anni";
+
+/**
+ * File Sizes
+ */
+"file.size.bytes" = "byte";
+"file.size.kilobytes" = "KB";
+"file.size.megabytes" = "MB";
+"file.size.gigabytes" = "GB";
+
+/**
+ * AKAlfrescoNodePickingListViewController
+ */
+"ak.alfresco.node.picking.list.view.controller" = "Choose";
+
+/**
+ * AKUserAccountListViewController
+ */
+"ak.user.account.list.view.controller.title" = "Account";
+"ak.user.account.list.view.controller.section.header.accounts" = "Account";
+"ak.user.account.list.view.controller.section.header.local.files" = "File locali";
+"ak.user.account.list.view.controller.cell.local.files" = "File locali";
+
+/**
+ * AKUserAccountListViewController
+ */
+"ak.login.view.controller.title" = "Account";
+"ak.login.view.controller.cell.username.title" = "Nome utente";
+"ak.login.view.controller.cell.username.placeholder" = "Nome utente";
+"ak.login.view.controller.cell.password.title" = "Password";
+"ak.login.view.controller.cell.password.placeholder" = "Password";
+"ak.login.view.controller.login.button.title" = "Login";
+
+/**
+ * AKSitesListViewController
+ */
+"ak.sites.view.controller.title" = "Siti";
+"ak.sites.view.controller.segment.control.mysites" = "I miei siti"; // string length should not be extended
+"ak.sites.view.controller.segment.control.favourites" = "Siti preferiti"; // string length should not be extended
+"ak.sites.view.controller.segment.control.allsites" = "Tutti i siti"; // string length should not be extended
+
+/**
+ * AKScopePickingViewController
+ */
+"ak.scope.picking.view.controller.title" = "Seleziona posizione";
+
+/**
+ * AKNamingViewController
+ */
+"ak.naming.view.controller.title" = "Nome";
+"ak.naming.view.controller.cell.title" = "Nome";
+"ak.naming.view.controller.cell.name.placeholder" = "Nome file";
+"ak.naming.view.controller.select.button.title" = "Salva";
+
+/**
+ * AKLocalFilesViewController
+ */
+"ak.local.files.view.controller.title" = "File locali";
+
+/**
+ * AKFavoritesListViewController
+ */
+"ak.favourites.list.view.controller.title" = "Preferiti";
