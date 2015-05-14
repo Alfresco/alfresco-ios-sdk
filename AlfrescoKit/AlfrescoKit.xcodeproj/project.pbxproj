@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		272B63C91B04A1E20008A5D8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 272B63CB1B04A1E20008A5D8 /* Localizable.strings */; };
 		7313F2BF1A7A47B10069591F /* AKNetworkActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 7313F2BE1A7A47B10069591F /* AKNetworkActivity.h */; };
 		7313F2C31A7A4B0B0069591F /* AKNetworkActivity.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7313F2BE1A7A47B10069591F /* AKNetworkActivity.h */; };
 		731904F11A77DAF3001916D3 /* AKNamingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 731904EE1A77DAF3001916D3 /* AKNamingViewController.h */; };
@@ -127,7 +128,6 @@
 		7374B98B1A657B800091A4FD /* green_selected_circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9561A657B800091A4FD /* green_selected_circle.png */; };
 		7374B98C1A657B800091A4FD /* green_selected_circle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9571A657B800091A4FD /* green_selected_circle@2x.png */; };
 		7374B98D1A657B800091A4FD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9581A657B800091A4FD /* Info.plist */; };
-		7374B98E1A657B800091A4FD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9591A657B800091A4FD /* Localizable.strings */; };
 		7374B98F1A657B800091A4FD /* SmallThumbnailImageMapping.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7374B95A1A657B800091A4FD /* SmallThumbnailImageMapping.plist */; };
 		73A29D2F1ADFF67300345075 /* AKAccountListItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 73A29D2D1ADFF67300345075 /* AKAccountListItem.h */; };
 		73A29D301ADFF67300345075 /* AKAccountListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 73A29D2E1ADFF67300345075 /* AKAccountListItem.m */; };
@@ -223,6 +223,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		272B63CA1B04A1E20008A5D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		272B63D21B04A62E0008A5D8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		272B63DC1B04A6450008A5D8 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		272B63D41B04A6320008A5D8 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		272B63DA1B04A6400008A5D8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		272B63D81B04A63C0008A5D8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		272B63D61B04A6370008A5D8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		7313F2BE1A7A47B10069591F /* AKNetworkActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKNetworkActivity.h; sourceTree = "<group>"; };
 		731904EE1A77DAF3001916D3 /* AKNamingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKNamingViewController.h; sourceTree = "<group>"; };
 		731904EF1A77DAF3001916D3 /* AKNamingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKNamingViewController.m; sourceTree = "<group>"; };
@@ -331,7 +338,6 @@
 		7374B9561A657B800091A4FD /* green_selected_circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_selected_circle.png; sourceTree = "<group>"; };
 		7374B9571A657B800091A4FD /* green_selected_circle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_selected_circle@2x.png"; sourceTree = "<group>"; };
 		7374B9581A657B800091A4FD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7374B9591A657B800091A4FD /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7374B95A1A657B800091A4FD /* SmallThumbnailImageMapping.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SmallThumbnailImageMapping.plist; sourceTree = "<group>"; };
 		73A29D2D1ADFF67300345075 /* AKAccountListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKAccountListItem.h; sourceTree = "<group>"; };
 		73A29D2E1ADFF67300345075 /* AKAccountListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKAccountListItem.m; sourceTree = "<group>"; };
@@ -574,7 +580,7 @@
 				7374B9201A657B800091A4FD /* AlfrescoKit-Prefix.pch */,
 				7374B9211A657B800091A4FD /* Images */,
 				7374B9581A657B800091A4FD /* Info.plist */,
-				7374B9591A657B800091A4FD /* Localizable.strings */,
+				272B63CB1B04A1E20008A5D8 /* Localizable.strings */,
 				7374B95A1A657B800091A4FD /* SmallThumbnailImageMapping.plist */,
 			);
 			path = "Supporting Files";
@@ -917,6 +923,12 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				fr,
+				de,
+				"zh-Hans",
+				ja,
+				es,
+				it,
 			);
 			mainGroup = 73B8C0851A5D9B3700571B28;
 			productRefGroup = 73B8C08F1A5D9B3700571B28 /* Products */;
@@ -1026,7 +1038,7 @@
 				7374B9701A657B800091A4FD /* large_zip@2x.png in Resources */,
 				736B573E1A6D41D50096E4A9 /* AKSitesListViewController.xib in Resources */,
 				7374B98A1A657B800091A4FD /* small_zip@2x.png in Resources */,
-				7374B98E1A657B800091A4FD /* Localizable.strings in Resources */,
+				272B63C91B04A1E20008A5D8 /* Localizable.strings in Resources */,
 				7374B98F1A657B800091A4FD /* SmallThumbnailImageMapping.plist in Resources */,
 				7374B9751A657B800091A4FD /* small_excel.png in Resources */,
 				734CC3911A6EA058005D148E /* AKScopePickingViewController.xib in Resources */,
@@ -1115,6 +1127,23 @@
 			targetProxy = 73B8C0CE1A5D9D2000571B28 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		272B63CB1B04A1E20008A5D8 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				272B63CA1B04A1E20008A5D8 /* en */,
+				272B63D21B04A62E0008A5D8 /* fr */,
+				272B63DC1B04A6450008A5D8 /* it */,
+				272B63D41B04A6320008A5D8 /* de */,
+				272B63DA1B04A6400008A5D8 /* es */,
+				272B63D81B04A63C0008A5D8 /* ja */,
+				272B63D61B04A6370008A5D8 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		734CC3CE1A6FE339005D148E /* AdHoc */ = {

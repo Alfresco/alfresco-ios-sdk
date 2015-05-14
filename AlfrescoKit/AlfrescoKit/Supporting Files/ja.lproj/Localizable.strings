@@ -1,0 +1,121 @@
+/*
+ ******************************************************************************
+ * Copyright (C) 2005-2015 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Mobile SDK.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *****************************************************************************
+ */
+
+/**
+ * Localizable.strings
+ * AlfrescoKit
+ *
+ * Japanese (ja)
+ */
+
+
+/**
+ * Relative Dates
+ */
+"relative.date.past.n-years" = "%d 年前";
+"relative.date.past.one-year" = "1 年前";
+"relative.date.past.n-months" = "%d か月前";
+"relative.date.past.one-month" = "1 か月前";
+"relative.date.past.n-weeks" = "%d 週間前";
+"relative.date.past.one-week" = "1 週間前";
+"relative.date.past.n-days" = "%d 日前";
+"relative.date.past.one-day" = "昨日";
+"relative.date.past.n-hours" = "%d 時間前";
+"relative.date.past.one-hour" = "1 時間前";
+"relative.date.past.n-minutes" = "%d 分前";
+"relative.date.past.one-minute" = "1 分前";
+"relative.date.past.n-seconds" = "%d 秒前";
+"relative.date.just-now" = "今すぐ";
+"relative.date.today" = "今日";
+"relative.date.future.n-seconds" = "%d 秒後";
+"relative.date.future.one-minute" = "1 分後";
+"relative.date.future.n-minutes" = "%d 分後";
+"relative.date.future.one-hour" = "1 時間後";
+"relative.date.future.n-hours" = "%d 時間後";
+"relative.date.future.one-day" = "明日";
+"relative.date.future.n-days" = "%d 日後";
+"relative.date.future.one-week" = "1 週間後";
+"relative.date.future.n-weeks" = "%d 週間後";
+"relative.date.future.one-month" = "1 か月後";
+"relative.date.future.n-months" = "%d か月後";
+"relative.date.future.one-year" = "1 年後";
+"relative.date.future.n-years" = "%d 年後";
+
+/**
+ * File Sizes
+ */
+"file.size.bytes" = "バイト";
+"file.size.kilobytes" = "KB";
+"file.size.megabytes" = "MB";
+"file.size.gigabytes" = "GB";
+
+/**
+ * AKAlfrescoNodePickingListViewController
+ */
+"ak.alfresco.node.picking.list.view.controller" = "Choose";
+
+/**
+ * AKUserAccountListViewController
+ */
+"ak.user.account.list.view.controller.title" = "アカウント";
+"ak.user.account.list.view.controller.section.header.accounts" = "アカウント";
+"ak.user.account.list.view.controller.section.header.local.files" = "ローカルファイル";
+"ak.user.account.list.view.controller.cell.local.files" = "ローカルファイル";
+
+/**
+ * AKUserAccountListViewController
+ */
+"ak.login.view.controller.title" = "アカウント";
+"ak.login.view.controller.cell.username.title" = "ユーザー名";
+"ak.login.view.controller.cell.username.placeholder" = "ユーザー名";
+"ak.login.view.controller.cell.password.title" = "パスワード";
+"ak.login.view.controller.cell.password.placeholder" = "パスワード";
+"ak.login.view.controller.login.button.title" = "ログイン";
+
+/**
+ * AKSitesListViewController
+ */
+"ak.sites.view.controller.title" = "サイト";
+"ak.sites.view.controller.segment.control.mysites" = "あなたのサイト"; // string length should not be extended
+"ak.sites.view.controller.segment.control.favourites" = "お気に入りのサイト"; // string length should not be extended
+"ak.sites.view.controller.segment.control.allsites" = "すべてのサイト"; // string length should not be extended
+
+/**
+ * AKScopePickingViewController
+ */
+"ak.scope.picking.view.controller.title" = "場所を選択してください";
+
+/**
+ * AKNamingViewController
+ */
+"ak.naming.view.controller.title" = "名前";
+"ak.naming.view.controller.cell.title" = "名前";
+"ak.naming.view.controller.cell.name.placeholder" = "ファイル名";
+"ak.naming.view.controller.select.button.title" = "保存";
+
+/**
+ * AKLocalFilesViewController
+ */
+"ak.local.files.view.controller.title" = "ローカルファイル";
+
+/**
+ * AKFavoritesListViewController
+ */
+"ak.favourites.list.view.controller.title" = "お気に入り";

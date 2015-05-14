@@ -1,0 +1,121 @@
+/*
+ ******************************************************************************
+ * Copyright (C) 2005-2015 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Mobile SDK.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *****************************************************************************
+ */
+
+/**
+ * Localizable.strings
+ * AlfrescoKit
+ *
+ * Chinese (Simplified) (zh-cn)
+ */
+
+
+/**
+ * Relative Dates
+ */
+"relative.date.past.n-years" = "%d 年前";
+"relative.date.past.one-year" = "一年前";
+"relative.date.past.n-months" = "%d 个月前";
+"relative.date.past.one-month" = "一个月前";
+"relative.date.past.n-weeks" = "%d 周前";
+"relative.date.past.one-week" = "一周前";
+"relative.date.past.n-days" = "%d 天前";
+"relative.date.past.one-day" = "昨天";
+"relative.date.past.n-hours" = "%d 个小时前";
+"relative.date.past.one-hour" = "一个小时前";
+"relative.date.past.n-minutes" = "%d 分钟前";
+"relative.date.past.one-minute" = "一分钟前";
+"relative.date.past.n-seconds" = "%d 秒钟前";
+"relative.date.just-now" = "刚才";
+"relative.date.today" = "今天";
+"relative.date.future.n-seconds" = "从现在起 %d 秒钟之后";
+"relative.date.future.one-minute" = "从现在起一分钟之后";
+"relative.date.future.n-minutes" = "从现在起 %d 分钟之后";
+"relative.date.future.one-hour" = "从现在起一小时之后";
+"relative.date.future.n-hours" = "从现在起 %d 小时之后";
+"relative.date.future.one-day" = "明天";
+"relative.date.future.n-days" = "从现在起 %d 天之后";
+"relative.date.future.one-week" = "从现在起一周之后";
+"relative.date.future.n-weeks" = "从现在起 %d 周之后";
+"relative.date.future.one-month" = "从现在起一个月之后";
+"relative.date.future.n-months" = "从现在起 %d 个月之后";
+"relative.date.future.one-year" = "从现在起一年之后";
+"relative.date.future.n-years" = "从现在起 %d 年之后";
+
+/**
+ * File Sizes
+ */
+"file.size.bytes" = "字节";
+"file.size.kilobytes" = "KB";
+"file.size.megabytes" = "MB";
+"file.size.gigabytes" = "GB";
+
+/**
+ * AKAlfrescoNodePickingListViewController
+ */
+"ak.alfresco.node.picking.list.view.controller" = "Choose";
+
+/**
+ * AKUserAccountListViewController
+ */
+"ak.user.account.list.view.controller.title" = "帐户";
+"ak.user.account.list.view.controller.section.header.accounts" = "帐户";
+"ak.user.account.list.view.controller.section.header.local.files" = "本地文件";
+"ak.user.account.list.view.controller.cell.local.files" = "本地文件";
+
+/**
+ * AKUserAccountListViewController
+ */
+"ak.login.view.controller.title" = "帐户";
+"ak.login.view.controller.cell.username.title" = "用户名";
+"ak.login.view.controller.cell.username.placeholder" = "用户名";
+"ak.login.view.controller.cell.password.title" = "密码";
+"ak.login.view.controller.cell.password.placeholder" = "密码";
+"ak.login.view.controller.login.button.title" = "登录";
+
+/**
+ * AKSitesListViewController
+ */
+"ak.sites.view.controller.title" = "站点";
+"ak.sites.view.controller.segment.control.mysites" = "我的站点"; // string length should not be extended
+"ak.sites.view.controller.segment.control.favourites" = "收藏站点"; // string length should not be extended
+"ak.sites.view.controller.segment.control.allsites" = "所有站点"; // string length should not be extended
+
+/**
+ * AKScopePickingViewController
+ */
+"ak.scope.picking.view.controller.title" = "选择位置";
+
+/**
+ * AKNamingViewController
+ */
+"ak.naming.view.controller.title" = "名称";
+"ak.naming.view.controller.cell.title" = "名称";
+"ak.naming.view.controller.cell.name.placeholder" = "文件名";
+"ak.naming.view.controller.select.button.title" = "保存";
+
+/**
+ * AKLocalFilesViewController
+ */
+"ak.local.files.view.controller.title" = "本地文件";
+
+/**
+ * AKFavoritesListViewController
+ */
+"ak.favourites.list.view.controller.title" = "收藏夹";
