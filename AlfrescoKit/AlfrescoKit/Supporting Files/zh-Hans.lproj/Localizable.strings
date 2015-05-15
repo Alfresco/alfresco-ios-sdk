@@ -69,7 +69,7 @@
 /**
  * AKAlfrescoNodePickingListViewController
  */
-"ak.alfresco.node.picking.list.view.controller" = "Choose";
+"ak.alfresco.node.picking.list.view.controller" = "选择";
 
 /**
  * AKUserAccountListViewController
