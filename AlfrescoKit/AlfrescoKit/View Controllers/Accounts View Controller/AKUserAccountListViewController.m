@@ -164,7 +164,7 @@ typedef NS_ENUM(NSUInteger, AccountTableViewControllerSection)
     }
     else
     {
-        cell.imageView.image = [UIImage imageFromAlfrescoKitBundleNamed:@"account-local"];
+        cell.imageView.image = [UIImage imageFromAlfrescoKitBundleNamed:@"location-local"];
         cell.textLabel.text = AKLocalizedString(@"ak.user.account.list.view.controller.cell.local.files", @"Local Files");
     }
     return cell;

@@ -146,4 +146,42 @@ static NSString * const kSmallThumbnailImageMappingPlist = @"SmallThumbnailImage
     return [NSString stringWithFormat:kAlfrescoOnPremiseServerURLFormatString, protocol, serverAddress, port];
 }
 
++ (NSString *)imageNameFromAKScopeType:(AKScopeType)scopeType
+{
+    NSString *imageName = nil;
+    
+    switch (scopeType)
+    {
+        case AKScopeType_Repository:
+            imageName = @"location-repository";
+            break;
+        
+        case AKScopeType_Sites:
+            imageName = @"location-sites";
+            break;
+        
+        case AKScopeType_Favorites:
+            imageName = @"location-favourites";
+            break;
+            
+        case AKScopeType_Sync:
+            imageName = @"location-sync";
+            break;
+            
+        case AKScopeType_MyFiles:
+            imageName = @"location-myfiles";
+            break;
+            
+        case AKScopeType_SharedFiles:
+            imageName = @"location-sharedfiles";
+            break;
+            
+        default:
+            imageName = @"location-default";
+            break;
+    }
+    
+    return imageName;
+}
+
 @end

@@ -25,16 +25,28 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, AKScopeType)
+{
+    AKScopeType_NONE = 0,
+    AKScopeType_Repository,
+    AKScopeType_Sites,
+    AKScopeType_Favorites,
+    AKScopeType_Sync,
+    AKScopeType_MyFiles,
+    AKScopeType_SharedFiles,
+};
+
 @interface AKScopeItem : NSObject
 
 @property (nonatomic, strong, readonly) NSString *identifier;
 @property (nonatomic, strong, readonly) NSURL *imageURL;
+@property (nonatomic, assign, readonly) AKScopeType scopeType;
 @property (nonatomic, strong, readonly) NSString *name;
 @property (nonatomic, strong, readonly) id userInfo;
 
-- (instancetype)initWithImageURL:(NSURL *)imageURL name:(NSString *)name;
-- (instancetype)initWithImageURL:(NSURL *)imageURL name:(NSString *)name userInfo:(id)userInfo;
 - (instancetype)initWithIdentifier:(NSString *)identifier imageURL:(NSURL *)imageURL name:(NSString *)name;
 - (instancetype)initWithIdentifier:(NSString *)identifier imageURL:(NSURL *)imageURL name:(NSString *)name userInfo:(id)userInfo;
+- (instancetype)initWithIdentifier:(NSString *)identifier scopeType:(AKScopeType)scopeType name:(NSString *)name;
+- (instancetype)initWithIdentifier:(NSString *)identifier scopeType:(AKScopeType)scopeType name:(NSString *)name userInfo:(id)userInfo;
 
 @end

@@ -24,6 +24,7 @@
 
 @property (nonatomic, strong, readwrite) NSString *identifier;
 @property (nonatomic, strong, readwrite) NSURL *imageURL;
+@property (nonatomic, assign, readwrite) AKScopeType scopeType;
 @property (nonatomic, strong, readwrite) NSString *name;
 @property (nonatomic, strong, readwrite) id userInfo;
 
@@ -31,23 +32,27 @@
 
 @implementation AKScopeItem
 
-- (instancetype)initWithImageURL:(NSURL *)imageURL name:(NSString *)name
-{
-    
-    return [self initWithIdentifier:nil imageURL:imageURL name:name userInfo:nil];
-}
-
-- (instancetype)initWithImageURL:(NSURL *)imageURL name:(NSString *)name userInfo:(id)userInfo
-{
-    return [self initWithIdentifier:nil imageURL:imageURL name:name userInfo:userInfo];
-}
-
 - (instancetype)initWithIdentifier:(NSString *)identifier imageURL:(NSURL *)imageURL name:(NSString *)name
 {
-    return [self initWithIdentifier:identifier imageURL:imageURL name:name userInfo:nil];
+    return [self initWithIdentifier:identifier imageURL:imageURL scopeType:AKScopeType_NONE name:name userInfo:nil];
 }
 
 - (instancetype)initWithIdentifier:(NSString *)identifier imageURL:(NSURL *)imageURL name:(NSString *)name userInfo:(id)userInfo
+{
+    return [self initWithIdentifier:identifier imageURL:imageURL scopeType:AKScopeType_NONE name:name userInfo:userInfo];
+}
+
+- (instancetype)initWithIdentifier:(NSString *)identifier scopeType:(AKScopeType)scopeType name:(NSString *)name
+{
+    return [self initWithIdentifier:identifier imageURL:nil scopeType:scopeType name:name userInfo:nil];
+}
+
+- (instancetype)initWithIdentifier:(NSString *)identifier scopeType:(AKScopeType)scopeType name:(NSString *)name userInfo:(id)userInfo
+{
+    return [self initWithIdentifier:identifier imageURL:nil scopeType:scopeType name:name userInfo:userInfo];
+}
+
+- (instancetype)initWithIdentifier:(NSString *)identifier imageURL:(NSURL *)imageURL scopeType:(AKScopeType)scopeType name:(NSString *)name userInfo:(id)userInfo
 {
     self = [self init];
     if (self)
@@ -55,6 +60,7 @@
         self.identifier = (identifier) ?: [[NSUUID UUID] UUIDString];
         self.name = name;
         self.imageURL = imageURL;
+        self.scopeType = scopeType;
         self.userInfo = userInfo;
     }
     return self;
