@@ -26,6 +26,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "AKScopeItem.h"
+
 @interface AKUtility : NSObject
 
 + (NSString *)stringDateFromDate:(NSDate *)date;
@@ -33,5 +35,7 @@
 + (UIImage *)smallIconForType:(NSString *)type;
 
 + (NSString *)onPremiseServerURLWithProtocol:(NSString *)protocol serverAddress:(NSString *)serverAddress port:(NSString *)port;
+
++ (NSString *)imageNameFromAKScopeType:(AKScopeType)scopeType;
 
 @end

@@ -21,6 +21,7 @@
 #import "AKScopePickingViewController.h"
 #import "AKScopePickerCell.h"
 #import "AKScopeItem.h"
+#import "AKUtility.h"
 
 @interface AKScopePickingViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -72,7 +73,7 @@
     UIImage *imageForCell = [UIImage imageWithContentsOfFile:currentScopeItem.imageURL.path];
     if (!imageForCell)
     {
-        imageForCell = [UIImage imageFromAlfrescoKitBundleNamed:@"small_site"]; // TODO: Replace with a generic image
+        imageForCell = [[UIImage imageFromAlfrescoKitBundleNamed:[AKUtility imageNameFromAKScopeType:currentScopeItem.scopeType]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
     
     cell.scopeImageView.image = imageForCell;
