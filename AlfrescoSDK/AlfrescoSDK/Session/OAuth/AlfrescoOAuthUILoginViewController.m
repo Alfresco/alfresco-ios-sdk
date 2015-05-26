@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2015 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -173,7 +173,7 @@
     
     // load the authorization URL in the web view
     NSURL *authURL = [NSURL URLWithString:authURLString];
-    AlfrescoLogDebug(@"Loading webview with baseURL", self.baseURL);
+    AlfrescoLogDebug(@"Loading webview with baseURL: %@", self.baseURL);
     [self.webView loadRequest:[NSURLRequest requestWithURL:authURL]];
 }
 
@@ -282,11 +282,14 @@
                 self.completionBlock(nil, error);
             }
         }
-        else if(self.cloudConnectionStatus == AlfrescoCloudConnectionStatusInactive)
+        else if (self.cloudConnectionStatus == AlfrescoCloudConnectionStatusInactive)
         {
             [self.activityIndicator startAnimating];
             self.cloudConnectionStatus = AlfrescoCloudConnectionStatusActive;
-            self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
+            // MOBILE-3345: Workaround for regression in iOS 8.3
+            NSMutableURLRequest *oauthRequest = [request mutableCopy];
+            [oauthRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            self.connection = [NSURLConnection connectionWithRequest:oauthRequest delegate:self];
         }
         return NO;
     }
@@ -361,7 +364,7 @@
         else
         {
             [helper retrieveOAuthDataForAuthorizationCode:code oauthData:self.oauthData completionBlock:^(AlfrescoOAuthData *oauthData, NSError *error) {
-                self.cloudConnectionStatus = error? AlfrescoCloudConnectionStatusInactive : AlfrescoCloudConnectionStatusGotAuthCode;
+                self.cloudConnectionStatus = error ? AlfrescoCloudConnectionStatusInactive : AlfrescoCloudConnectionStatusGotAuthCode;
                 self.completionBlock(oauthData, error);
             }];
         }
@@ -424,7 +427,6 @@
             UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not obtain authentication code from server. Possibly incorrect password/username" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
             [alertview show];            
         }
-        
     }
 }
 
