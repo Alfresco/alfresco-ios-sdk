@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "73D01D89197FC3D00065E107"
-               BuildableName = "libAlfrescoSDK-OSXv1.4-dev.a"
+               BuildableName = "libAlfrescoSDK-OSXv1.4.0.a"
                BlueprintName = "AlfrescoSDK-OSX"
                ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
             </BuildableReference>
@@ -53,7 +53,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "73D01D89197FC3D00065E107"
-            BuildableName = "libAlfrescoSDK-OSXv1.4-dev.a"
+            BuildableName = "libAlfrescoSDK-OSXv1.4.0.a"
             BlueprintName = "AlfrescoSDK-OSX"
             ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
          </BuildableReference>

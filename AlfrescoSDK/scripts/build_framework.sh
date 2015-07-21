@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2005-2014 Alfresco Software Limited.
+# Copyright (C) 2005-2015 Alfresco Software Limited.
 #
 # This file is part of the Alfresco Mobile SDK.
 #
@@ -24,66 +24,76 @@
 . "$ALFRESCO_SDK_SCRIPT/build_library.sh" "$BUILD_CONFIGURATION" \
    || die "Static library failed to build."
 
-#
-# params
+
+# -----------------------------------------------------------------------------
+# Function parameters
 #    target name - e.g. "AlfrescoSDK-iOS" or "AlfrescoSDK-OSX"
-#    library location - e.g. /Users/[username]/AlfrescoSDK-iOSv1.0.a
-#    framework name - e.g. AlfrescoSDK-iOS.framework
-#    framework build path - e.g. /Users/[username]/AlfrescoSDK-iOS.framework
+#    library binary (absolute path) - e.g. /Users/[username]/AlfrescoSDK-iOSv1.0.a
+#    framework build path - e.g. /Users/[username]/alfresco-ios-sdk/build/AlfrescoSDK-iOS.framework
 #
 function build_framework() {
-  # local vars
-  local framework_target=${1}
-  local framework_library_location=${2}
-  local framework_name=${3}
-  local framework_path=${4}
-  local framework_library_header_root="$(dirname "$framework_library_location")"
+  # local variables
+  local framework_target_name=${1}
+  local framework_library_binary=${2}
+  local framework_path=${3}
+  local framework_library_header_root="$(dirname "$framework_library_binary")"
 
-  echo "PATH:$framework_path NAME:$framework_name TARGET:$framework_target Location:$framework_library_location"
+  progress_message "OUTPUT PATH:$framework_path TARGET:$framework_target_name LIBRARY BINARY:$framework_library_binary"
 
   # -----------------------------------------------------------------------------
   # Build .framework folder structure
   #
-  progress_message "Building $framework_name"
+  progress_message "Building $(basename $framework_path)"
 
-  \rm -rf "$framework_path"
-  mkdir "$framework_path" \
-     || die "Could not create directory $framework_path"
+  # Test the framework_path is a subfolder of the main build path
+  if [[ $framework_path =~ $ALFRESCO_SDK_BUILD ]]; then
+     \rm -rf "$framework_path"
+  else
+     die "framework_path is not a subfolder of $ALFRESCO_SDK_ROOT ($framework_path)"
+  fi
+  mkdir "$framework_path" || die "Could not create directory $framework_path"
   mkdir "$framework_path/Versions"
   mkdir "$framework_path/Versions/A"
   mkdir "$framework_path/Versions/A/Headers"
   mkdir "$framework_path/Versions/A/Resources"
 
-  \cp \
+  cp \
      "$ALFRESCO_SDK_SRC/Framework/Resources/"* \
      "$framework_path/Versions/A/Resources" \
      || die "Error building framework while copying Resources"
-  \cp \
-     "$framework_library_header_root/include/$framework_target/"*.h \
+  
+  # Update CFBundleExecutable to match the framework target name
+  /usr/libexec/PlistBuddy -c "Set CFBundleExecutable $framework_target_name" "$framework_path/Versions/A/Resources/Info.plist"
+
+  cp \
+     "$framework_library_header_root/include/"*.h \
      "$framework_path/Versions/A/Headers" \
      || die "Error building framework while copying SDK headers"
-  \cp \
-     "$framework_library_location" \
-     "$framework_path/Versions/A/$framework_target" \
+  
+  cp \
+     "$framework_library_binary" \
+     "$framework_path/Versions/A/$framework_target_name" \
      || die "Error building framework while copying AlfrescoSDK universal library"
 
   # Current directory matters to ln.
   cd "$framework_path"
   ln -s ./Versions/A/Headers ./Headers
   ln -s ./Versions/A/Resources ./Resources
-  ln -s ./Versions/A/$framework_target ./$framework_target
+  ln -s ./Versions/A/$framework_target_name ./$framework_target_name
   cd "$framework_path/Versions"
   ln -s ./A ./Current
 }
 
 build_framework "$ALFRESCO_IOS_SDK_PRODUCT_NAME" \
                 "$ALFRESCO_IOS_SDK_UNIVERSAL_LIBRARY" \
-                "$ALFRESCO_IOS_SDK_FRAMEWORK_NAME" \
                 "$ALFRESCO_IOS_SDK_FRAMEWORK"
 
+progress_message "**BUILD SUCCEEDED** - Created iOS framework at $ALFRESCO_IOS_SDK_FRAMEWORK"
+
 build_framework "$ALFRESCO_OSX_SDK_PRODUCT_NAME" \
-                "$ALFRESCO_OSX_SDK_UNIVERSAL_LIBRARY" \
-                "$ALFRESCO_OSX_SDK_FRAMEWORK_NAME" \
+                "$ALFRESCO_OSX_SDK_LIBRARY" \
                 "$ALFRESCO_OSX_SDK_FRAMEWORK"
+
+progress_message "**BUILD SUCCEEDED** - Created Mac OS X framework at $ALFRESCO_OSX_SDK_FRAMEWORK"
 
 cd "$ALFRESCO_SDK_ROOT"

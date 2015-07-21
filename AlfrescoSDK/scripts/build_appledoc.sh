@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2005-2014 Alfresco Software Limited.
+# Copyright (C) 2005-2015 Alfresco Software Limited.
 #
 # This file is part of the Alfresco Mobile SDK.
 #
@@ -16,9 +16,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-. ${ALFRESCO_SDK_SCRIPT:-$(dirname $0)}/common.sh
+. "${ALFRESCO_SDK_SCRIPT:-$(dirname "$0")}"/common.sh
 
-test -x "$APPLEDOC" || die 'Could not find appledoc in $PATH. Use "brew install appledoc"'
+test -x "$APPLEDOC" || die "Could not find appledoc in $PATH. Use \"brew install appledoc\""
 
 test -d "$ALFRESCO_SDK_BUILD" \
    || mkdir -p "$ALFRESCO_SDK_BUILD" \
@@ -29,12 +29,18 @@ test -d "$ALFRESCO_SDK_BUILD" \
 #
 cd "$ALFRESCO_SDK_ROOT"
 
-\rm -rf "$ALFRESCO_SDK_DOCSET_BUILD"
+# Test the ALFRESCO_SDK_DOCSET_BUILD is a subfolder of the main build path
+if [[ $ALFRESCO_SDK_DOCSET_BUILD =~ $ALFRESCO_SDK_BUILD ]]; then
+  \rm -rf "$ALFRESCO_SDK_DOCSET_BUILD"
+else
+  die "ALFRESCO_SDK_DOCSET_BUILD is not a subfolder of $ALFRESCO_SDK_ROOT ($ALFRESCO_SDK_DOCSET_BUILD)"
+fi
+
 mkdir "$ALFRESCO_SDK_DOCSET_BUILD" \
   || die "Could not create directory $ALFRESCO_SDK_DOCSET_BUILD"
 
 $APPLEDOC \
-   --project-name $ALFRESCO_SDK_PRODUCT_NAME \
+   --project-name "$ALFRESCO_SDK_PRODUCT_NAME" \
    --project-company "Alfresco" \
    --company-id "com.alfresco" \
    --output "$ALFRESCO_SDK_DOCSET_BUILD" \
@@ -49,4 +55,4 @@ $APPLEDOC \
    || die "appledoc failed to build documentation"
 
 cd "$ALFRESCO_SDK_DOCSET_BUILD"
-mv docset $ALFRESCO_SDK_DOCSET_NAME
+mv docset "$ALFRESCO_SDK_DOCSET_NAME"
