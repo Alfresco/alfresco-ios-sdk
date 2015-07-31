@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2015 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -36,17 +36,59 @@
     return self;
 }
 
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
 {
-    BOOL isExpectedHost = [self.requestURL.host isEqualToString:challenge.protectionSpace.host];
-    if (challenge.previousFailureCount == 0 && isExpectedHost && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate] && self.credential.identity)
+    if (challenge.previousFailureCount > 1)
+    {
+        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
+        return;
+    }
+    
+    NSURLProtectionSpace *protectionSpace = challenge.protectionSpace;
+    NSString *authenticationMethod = protectionSpace.authenticationMethod;
+    
+    BOOL isAllowedHost = [self verifyHost:self.requestURL.host matchesHost:challenge.protectionSpace.host];
+    if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate] && isAllowedHost && self.credential)
     {
         completionHandler(NSURLSessionAuthChallengeUseCredential, self.credential);
     }
+    else if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+    {
+        NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+        completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
+    }
     else
     {
-        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     }
+}
+
+- (BOOL)verifyHost:(NSString *)host1 matchesHost:(NSString *)host2
+{
+    if ([host1 isEqualToString:host2])
+    {
+        return YES;
+    }
+
+    NSArray *host1Components = [host1 componentsSeparatedByString:@"."];
+    NSArray *host2Components = [host2 componentsSeparatedByString:@"."];
+
+    if (host1Components.count != host2Components.count)
+    {
+        return NO;
+    }
+
+    NSUInteger index = [host1Components indexOfObjectPassingTest:^BOOL(NSString *component1, NSUInteger idx, BOOL *stop) {
+        NSString *component2 = host2Components[idx];
+        if ([component1 isEqualToString:@"*"] || [component2 isEqualToString:@"*"] || [component1 isEqualToString:component2])
+        {
+            return NO;
+        }
+
+        return YES;
+    }];
+
+    return index == NSNotFound;
 }
 
 @end
