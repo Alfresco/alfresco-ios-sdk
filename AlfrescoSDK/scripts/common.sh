@@ -65,7 +65,6 @@ if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
 
    # Extracts the Alfresco SDK Version from the project's xcconfig file.
    ALFRESCO_SDK_VERSION=$(sed -ne '/^ALFRESCO_SDK_VERSION=/s/.*=\([\^]*\)/\1/p' "$ALFRESCO_SDK_SRC/AlfrescoSDK.xcconfig")
-   progress_message "Alfresco SDK Version detected: $ALFRESCO_SDK_VERSION"
 
    ## iOS
 
@@ -156,5 +155,7 @@ if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
          clean build \
          || die "XCode build failed for configuration: $BUILD_CONFIGURATION."
    }
+
+   progress_message "Alfresco SDK Version detected: $ALFRESCO_SDK_VERSION"
 
 fi

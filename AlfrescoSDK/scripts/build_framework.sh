@@ -66,7 +66,7 @@ function build_framework() {
   /usr/libexec/PlistBuddy -c "Set CFBundleExecutable $framework_target_name" "$framework_path/Versions/A/Resources/Info.plist"
 
   cp \
-     "$framework_library_header_root/include/"*.h \
+     "$framework_library_header_root/include/$framework_target_name/"*.h \
      "$framework_path/Versions/A/Headers" \
      || die "Error building framework while copying SDK headers"
   
