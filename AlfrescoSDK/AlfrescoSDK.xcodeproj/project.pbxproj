@@ -446,7 +446,7 @@
 		279C02871892CC2100BC8628 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = include;
+			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
 				589AB47A1A3648B40029E5AD /* AlfrescoBatchProcessor.h in CopyFiles */,
@@ -515,7 +515,7 @@
 		73D01DF7197FC3D00065E107 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = include;
+			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
 				589AB47B1A3648BF0029E5AD /* AlfrescoBatchProcessor.h in CopyFiles */,
