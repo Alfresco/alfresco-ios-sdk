@@ -295,6 +295,7 @@ static NSString * const kAlfrescoTestServersPlist = @"test-servers.plist";
         parameters = [NSMutableDictionary dictionary];
     }
     [parameters setValue:@YES forKey:kAlfrescoAllowUntrustedSSLCertificate];
+    [parameters setValue:@NO forKey:kAlfrescoHTTPShouldHandleCookies];
     
     [AlfrescoRepositorySession connectWithUrl:[NSURL URLWithString:self.server]
                                      username:self.userName

@@ -89,6 +89,7 @@ extern NSString * const kAlfrescoRequestTimeout;
 extern NSString * const kAlfrescoUseBackgroundNetworkSession;
 extern NSString * const kAlfrescoBackgroundNetworkSessionId;
 extern NSString * const kAlfrescoBackgroundNetworkSessionSharedContainerId;
+extern NSString * const kAlfrescoHTTPShouldHandleCookies;
 
 /**---------------------------------------------------------------------------------------
  * @name thumbnail constant

@@ -95,8 +95,12 @@
     
     [urlRequest setHTTPMethod:method];
     
-    // never send cookies
-    urlRequest.HTTPShouldHandleCookies = NO;
+    // check whether default cookie handling behaviour has been configured
+    id httpShouldHandleCookies = [session objectForParameter:kAlfrescoHTTPShouldHandleCookies];
+    if (httpShouldHandleCookies != nil)
+    {
+        urlRequest.HTTPShouldHandleCookies = [httpShouldHandleCookies boolValue];
+    }
     
     [headers enumerateKeysAndObjectsUsingBlock:^(NSString *headerKey, NSString *headerValue, BOOL *stop){
         if ([AlfrescoLog sharedInstance].logLevel == AlfrescoLogLevelTrace)
