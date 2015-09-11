@@ -40,6 +40,7 @@ NSString * const kAlfrescoBackgroundNetworkSessionSharedContainerId = @"org.alfr
 NSString * const kAlfrescoAllowUntrustedSSLCertificate = @"org.alfresco.mobile.features.allowuntrustedsslcertificate";
 NSString * const kAlfrescoConnectUsingClientSSLCertificate = @"org.alfresco.mobile.features.connectusingclientsslcertificate";
 NSString * const kAlfrescoClientCertificateCredentials = @"org.alfresco.mobile.features.clientcertificatecredentials";
+NSString * const kAlfrescoHTTPShouldHandleCookies = @"org.alfresco.mobile.features.httpshouldhandlecookies";
 
 /**
  Thumbnail constants

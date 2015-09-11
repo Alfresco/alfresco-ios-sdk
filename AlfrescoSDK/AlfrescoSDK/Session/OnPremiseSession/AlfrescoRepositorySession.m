@@ -113,40 +113,17 @@
         }
         else
         {
-            self.sessionData = [NSMutableDictionary dictionaryWithCapacity:8];
+            self.sessionData = [[NSMutableDictionary alloc] init];
         }
-        if ([[parameters allKeys] containsObject:kAlfrescoMetadataExtraction])
-        {
-            [self setObject:[parameters valueForKey:kAlfrescoMetadataExtraction] forParameter:kAlfrescoMetadataExtraction];
-        }
-        else
+        
+        if (![parameters.allKeys containsObject:kAlfrescoMetadataExtraction])
         {
             [self setObject:@NO forParameter:kAlfrescoMetadataExtraction];
         }
         
-        if ([[parameters allKeys] containsObject:kAlfrescoThumbnailCreation])
-        {
-            [self setObject:[parameters valueForKey:kAlfrescoThumbnailCreation] forParameter:kAlfrescoThumbnailCreation];
-        }
-        else
+        if (![parameters.allKeys containsObject:kAlfrescoThumbnailCreation])
         {
             [self setObject:@NO forParameter:kAlfrescoThumbnailCreation];
-        }
-        
-        if ([[parameters allKeys] containsObject:kAlfrescoCMISNetworkProvider])
-        {
-            id customCMISNetworkProvider = parameters[kAlfrescoCMISNetworkProvider];
-            [self setObject:customCMISNetworkProvider forParameter:kAlfrescoCMISNetworkProvider];
-        }
-
-        if ([[parameters allKeys] containsObject:kAlfrescoAllowUntrustedSSLCertificate])
-        {
-            (self.sessionData)[kAlfrescoAllowUntrustedSSLCertificate] = [parameters valueForKey:kAlfrescoAllowUntrustedSSLCertificate];
-        }
-        
-        if ([[parameters allKeys] containsObject:kAlfrescoConnectUsingClientSSLCertificate])
-        {
-            (self.sessionData)[kAlfrescoConnectUsingClientSSLCertificate] = [parameters valueForKey:kAlfrescoConnectUsingClientSSLCertificate];
         }
         
         id customAlfrescoNetworkProvider = parameters[kAlfrescoNetworkProvider];
@@ -168,6 +145,11 @@
         else
         {
             self.networkProvider = [[AlfrescoDefaultNetworkProvider alloc] init];
+        }
+        
+        if (![parameters.allKeys containsObject:kAlfrescoHTTPShouldHandleCookies])
+        {
+            (self.sessionData)[kAlfrescoHTTPShouldHandleCookies] = @YES;
         }
         
         self.unremovableSessionKeys = @[kAlfrescoSessionKeyCmisSession, kAlfrescoAuthenticationProviderObjectKey];
@@ -250,7 +232,9 @@
                 cmisSessionParams.username = username;
                 cmisSessionParams.password = password;
                 cmisSessionParams.atomPubUrl = [NSURL URLWithString:cmisURL];
-                [cmisSessionParams setObject:@NO forKey:kCMISSessionParameterSendCookies];
+                
+                // default cookie handling behaviour may have been configured
+                [cmisSessionParams setObject:(self.sessionData)[kAlfrescoHTTPShouldHandleCookies] forKey:kCMISSessionParameterSendCookies];
                 
                 // setup custom CMIS network provider, if necessary
                 if ((self.sessionData)[kAlfrescoCMISNetworkProvider])
