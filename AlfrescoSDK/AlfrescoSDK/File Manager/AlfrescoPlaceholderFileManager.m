@@ -24,6 +24,8 @@
 
 @implementation AlfrescoPlaceholderFileManager
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
 - (id)init
 {
     NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
@@ -44,5 +46,6 @@
     }
     return (id)[[AlfrescoDefaultFileManager alloc] init];
 }
+#pragma clang diagnostic pop
 
 @end
