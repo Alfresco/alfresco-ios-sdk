@@ -1811,7 +1811,7 @@
                          }
                          else
                          {
-                             XCTAssertTrue(pagingResult.objects.count == numberOfDocs, @"Expected %ld documents, but got %lu", numberOfDocs, (unsigned long)pagingResult.objects.count);
+                             XCTAssertTrue(pagingResult.objects.count == numberOfDocs, @"Expected %@ documents, but got %@", @(numberOfDocs), @(pagingResult.objects.count));
                              XCTAssertFalse(pagingResult.hasMoreItems, @"we should not have more than %d items", maxItems);
                          }
                          

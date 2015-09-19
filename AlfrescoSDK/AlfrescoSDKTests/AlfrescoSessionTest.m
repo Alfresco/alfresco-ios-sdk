@@ -297,16 +297,16 @@
         AlfrescoFolder *sessionRootFolder = [self.currentSession rootFolder];
         
         XCTAssertNotNil(sessionRootFolder, @"Expected the root folder in the session not to be nil");
-        XCTAssertNotNil([sessionRootFolder.properties valueForKey:@"cmis:path"], @"Expected the path to the root folder not to be nil");
-        XCTAssertNotNil([sessionRootFolder.properties valueForKey:@"cmis:objectId"], @"Expected the objectId not to be nil");
-        XCTAssertNotNil([sessionRootFolder.properties valueForKey:@"cmis:objectTypeId"], @"Expected the objectTypeId not to be nil");
-        XCTAssertTrue([[sessionRootFolder.properties valueForKey:@"cmis:objectTypeId"] isEqualToString:@"cmis:folder"], @"Expected the objectTypeID to be a cmis folder type");
+        XCTAssertNotNil([(AlfrescoProperty *)sessionRootFolder.properties[@"cmis:path"] value], @"Expected the path to the root folder not to be nil");
+        XCTAssertNotNil([(AlfrescoProperty *)sessionRootFolder.properties[@"cmis:objectId"] value], @"Expected the objectId not to be nil");
+        XCTAssertNotNil([(AlfrescoProperty *)sessionRootFolder.properties[@"cmis:objectTypeId"] value], @"Expected the objectTypeId not to be nil");
+        XCTAssertTrue([[(AlfrescoProperty *)sessionRootFolder.properties[@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"], @"Expected the objectTypeID to be a cmis folder type");
 
         self.lastTestSuccessful = sessionRootFolder &&
-            [sessionRootFolder.properties valueForKey:@"cmis:path"] &&
-            [sessionRootFolder.properties valueForKey:@"cmis:objectId"] &&
-            [sessionRootFolder.properties valueForKey:@"cmis:objectTypeId"] &&
-            [[sessionRootFolder.properties valueForKey:@"cmis:objectTypeId"] isEqualToString:@"cmis:folder"];
+            [(AlfrescoProperty *)sessionRootFolder.properties[@"cmis:path"] value] &&
+            [(AlfrescoProperty *)sessionRootFolder.properties[@"cmis:objectId"] value] &&
+            [(AlfrescoProperty *)sessionRootFolder.properties[@"cmis:objectTypeId"] value] &&
+            [[(AlfrescoProperty *)sessionRootFolder.properties[@"cmis:objectTypeId"] value] isEqualToString:@"cmis:folder"];
         XCTAssertTrue(self.lastTestSuccessful, @"The session's root folder did not return correct values");
     }
     else
