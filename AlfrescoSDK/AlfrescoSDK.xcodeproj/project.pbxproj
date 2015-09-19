@@ -1730,7 +1730,7 @@
 		4EB0768E15B00D8E00DF7DED /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 4EB0769115B00D8E00DF7DED /* Build configuration list for PBXProject "AlfrescoSDK" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2175,6 +2175,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDK-iOSv$(ALFRESCO_SDK_VERSION).a";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = AdHoc;
@@ -2194,6 +2195,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2310,6 +2312,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDK-iOSv$(ALFRESCO_SDK_VERSION)-debug.a";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -2327,6 +2330,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDK-iOSv$(ALFRESCO_SDK_VERSION).a";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2342,6 +2346,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDK-OSXv$(ALFRESCO_SDK_VERSION)-debug.a";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};
@@ -2358,6 +2363,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDK-OSXv$(ALFRESCO_SDK_VERSION).a";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};
@@ -2374,6 +2380,7 @@
 				GCC_PREFIX_HEADER = "AlfrescoSDK/AlfrescoSDK-Prefix.pch";
 				INFOPLIST_FILE = "AlfrescoSDKTests/AlfrescoSDKTests-Info.plist";
 				OTHER_LDFLAGS = "$(BUILT_PRODUCTS_DIR)/libAlfrescoSDK-OSXv$(ALFRESCO_SDK_VERSION).a";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};

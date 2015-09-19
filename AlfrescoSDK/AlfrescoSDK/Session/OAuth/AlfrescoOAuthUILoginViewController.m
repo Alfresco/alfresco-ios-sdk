@@ -126,25 +126,15 @@
     }
 }
 
-#ifdef __IPHONE_6_0
 - (BOOL)shouldAutorotate
 {
     return YES;
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskAll;
 }
-#endif
-
-
-#if defined(__IPHONE_5_0) || defined (__IPHONE_5_1)
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    return YES;
-}
-#endif
 
 - (void)viewWillDisappear:(BOOL)animated
 {

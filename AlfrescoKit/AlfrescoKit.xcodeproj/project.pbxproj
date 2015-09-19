@@ -146,7 +146,7 @@
 		73A29D2F1ADFF67300345075 /* AKAccountListItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 73A29D2D1ADFF67300345075 /* AKAccountListItem.h */; };
 		73A29D301ADFF67300345075 /* AKAccountListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 73A29D2E1ADFF67300345075 /* AKAccountListItem.m */; };
 		73B8C09A1A5D9B3700571B28 /* libAlfrescoKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */; };
-		73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a */; };
+		73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a */; };
 		73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */; };
 		73B8C1251A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1231A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h */; };
 		73B8C1261A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1241A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m */; };
@@ -392,7 +392,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a in Frameworks */,
+				73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -789,9 +789,9 @@
 		73B8C0C01A5D9D1000571B28 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a */,
+				73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a */,
 				73B8C0C91A5D9D1100571B28 /* AlfrescoSDK-iOSTests.xctest */,
-				73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4-dev-debug.a */,
+				73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4.1-dev-debug.a */,
 				73B8C0CD1A5D9D1100571B28 /* AlfrescoSDK-OSXTests.xctest */,
 			);
 			name = Products;
@@ -953,7 +953,7 @@
 		73B8C0861A5D9B3700571B28 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Alfresco;
 				TargetAttributes = {
 					73B8C08D1A5D9B3700571B28 = {
@@ -999,10 +999,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4-dev-debug.a */ = {
+		73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libAlfrescoSDK-iOSv1.4-dev-debug.a";
+			path = "libAlfrescoSDK-iOSv1.4.1-dev-debug.a";
 			remoteRef = 73B8C0C61A5D9D1100571B28 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1013,10 +1013,10 @@
 			remoteRef = 73B8C0C81A5D9D1100571B28 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4-dev-debug.a */ = {
+		73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4.1-dev-debug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libAlfrescoSDK-OSXv1.4-dev-debug.a";
+			path = "libAlfrescoSDK-OSXv1.4.1-dev-debug.a";
 			remoteRef = 73B8C0CA1A5D9D1100571B28 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1264,6 +1264,7 @@
 				INFOPLIST_FILE = AlfrescoKitBundle/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1280,6 +1281,7 @@
 				);
 				INFOPLIST_FILE = AlfrescoKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = AdHoc;
@@ -1303,6 +1305,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1395,6 +1398,7 @@
 				);
 				INFOPLIST_FILE = AlfrescoKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1408,6 +1412,7 @@
 				);
 				INFOPLIST_FILE = AlfrescoKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1423,6 +1428,7 @@
 				INFOPLIST_FILE = AlfrescoKitBundle/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1438,6 +1444,7 @@
 				INFOPLIST_FILE = AlfrescoKitBundle/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
