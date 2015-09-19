@@ -984,4 +984,55 @@
     }
 }
 
+- (void)testSearchSitesWithKeywords
+{
+    if (self.setUpSuccess)
+    {
+        if (!self.isCloud)
+        {
+            self.siteService = [[AlfrescoSiteService alloc] initWithSession:self.currentSession];
+            
+            [self.siteService searchWithKeywords:@"ios"
+                                 completionBlock:^(NSArray *array, NSError *error) {
+                                            
+                if (nil == array)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [self failureMessageFromError:error];
+                    self.callbackCompleted = YES;
+                }
+                else
+                {
+                    XCTAssertTrue(array.count > 0, @"Site array length should be > 0 but it was %@", @(array.count));
+                    
+                    // Look for the two test sites
+                    BOOL didFindTestSite = NO;
+                    BOOL didFindModeratedSite = NO;
+                    
+                    for (AlfrescoSite *site in array)
+                    {
+                        if ([site.shortName isEqualToString:self.testSiteName])
+                        {
+                            didFindTestSite = YES;
+                        }
+                        
+                        if ([site.shortName isEqualToString:self.moderatedSiteName])
+                        {
+                            didFindModeratedSite = YES;
+                        }
+                    }
+                    
+                    self.lastTestSuccessful = didFindTestSite && didFindModeratedSite;
+                }
+                
+                self.callbackCompleted = YES;
+            }];
+        }
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
 @end

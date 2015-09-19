@@ -690,6 +690,32 @@
     return request;
 }
 
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                        completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [AlfrescoErrors assertArgumentNotNil:keywords argumentName:@"searchTerm"];
+    [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+    
+    NSString *requestString = [kAlfrescoLegacySiteSearchAPI stringByReplacingOccurrencesOfString:kAlfrescoSearchFilter withString:keywords];
+    NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:requestString];
+    
+    AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
+
+    [self.session.networkProvider executeRequestWithURL:url session:self.session method:kAlfrescoHTTPGet alfrescoRequest:request completionBlock:^(NSData *data, NSError *error) {
+        if (error || data == nil)
+        {
+            completionBlock(nil, error);
+        }
+        else
+        {
+            NSError *conversionError = nil;
+            NSArray *siteData = [self siteArrayFromJSONData:data error:&conversionError];
+            completionBlock(siteData, conversionError);
+        }
+    }];
+    return request;
+}
+
 #pragma mark Data parsing methods
 
 - (AlfrescoLegacyAPIJoinSiteRequest *)singleJoinRequestFromJSONData:(NSData *)data error:(NSError **)outError
@@ -824,7 +850,7 @@
     }
     NSError *error = nil;
     id jsonSiteArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-    if(error)
+    if (error)
     {
         *outError = [AlfrescoErrors alfrescoErrorWithUnderlyingError:error andAlfrescoErrorCode:kAlfrescoErrorCodeSites];
         return nil;

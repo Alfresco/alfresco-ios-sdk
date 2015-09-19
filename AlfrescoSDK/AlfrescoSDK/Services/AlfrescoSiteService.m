@@ -172,6 +172,13 @@
     return nil;
 }
 
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                        completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (void)clear
 {
     [self doesNotRecognizeSelector:_cmd];

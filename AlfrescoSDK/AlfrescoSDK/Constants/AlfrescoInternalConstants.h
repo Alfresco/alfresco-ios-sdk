@@ -138,6 +138,7 @@ extern NSString * const kAlfrescoLegacyRatingsLikingSchemeAPI;
 extern NSString * const kAlfrescoLegacyRatingsCount;
 extern NSString * const kAlfrescoLegacyLikesSchemeRatings;
 extern NSString * const kAlfrescoLegacySiteAPI;
+extern NSString * const kAlfrescoLegacySiteSearchAPI;
 extern NSString * const kAlfrescoLegacySiteForPersonAPI;
 extern NSString * const kAlfrescoLegacyFavoriteSiteForPersonAPI;
 extern NSString * const kAlfrescoLegacySitesShortnameAPI;

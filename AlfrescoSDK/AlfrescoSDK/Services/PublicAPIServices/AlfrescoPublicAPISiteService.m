@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "AlfrescoPublicAPISiteService.h"
+#import "AlfrescoLegacyAPISiteService.h"
 #import "AlfrescoInternalConstants.h"
 #import "AlfrescoAuthenticationProvider.h"
 #import "AlfrescoBasicAuthenticationProvider.h"
@@ -1130,6 +1131,13 @@
     }];
     
     return alfrescoRequest;
+}
+
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords completionBlock:(AlfrescoArrayCompletionBlock)completionBlock
+{
+    // Not supported with PublicAPI - defer to OnPremise APIs
+    AlfrescoLegacyAPISiteService *legacyAPI = [[AlfrescoLegacyAPISiteService alloc] initWithSession:self.session];
+    return [legacyAPI searchWithKeywords:keywords completionBlock:completionBlock];
 }
 
 #pragma mark Internal private methods

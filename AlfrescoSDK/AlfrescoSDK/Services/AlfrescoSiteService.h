@@ -207,6 +207,12 @@
                  memberOfSite:(AlfrescoSite *)site
               completionBlock:(AlfrescoMemberCompletionBlock)completionBlock;
 
+/** Returns an array of sites that match the search keywords.
+ @param keywords - keywords to pass to the site search API
+ */
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                        completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
 /** Clears the sites cache
  */
 - (void)clear;

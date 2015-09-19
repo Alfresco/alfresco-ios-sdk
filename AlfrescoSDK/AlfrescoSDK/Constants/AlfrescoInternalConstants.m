@@ -166,6 +166,7 @@ NSString * const kAlfrescoLegacyRatingsLikingSchemeAPI = @"node/{nodeRef}/rating
 NSString * const kAlfrescoLegacyRatingsCount = @"data.nodeStatistics.likesRatingScheme.ratingsCount";
 NSString * const kAlfrescoLegacyLikesSchemeRatings = @"data.ratings.likesRatingScheme.rating";
 NSString * const kAlfrescoLegacySiteAPI = @"sites?format=json";
+NSString * const kAlfrescoLegacySiteSearchAPI = @"sites?format=json&nf={filter}";
 NSString * const kAlfrescoLegacySiteForPersonAPI = @"people/{personID}/sites";
 NSString * const kAlfrescoLegacyFavoriteSiteForPersonAPI = @"people/{personID}/preferences?pf=org.alfresco.share.sites";
 NSString * const kAlfrescoLegacySitesShortnameAPI = @"sites/{siteID}";
