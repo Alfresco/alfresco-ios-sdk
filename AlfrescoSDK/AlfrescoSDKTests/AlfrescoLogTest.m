@@ -119,7 +119,7 @@
     // request the 5 entries just added
     NSArray *entries = [logger retrieveLogEntriesForApp:@"xctest" numberOfEntries:5];
     XCTAssertTrue(entries.count == 5,
-                  @"Expected there to be 5 log entries but there were %lu", (unsigned long)entries.count);
+                  @"5 entries test: Expected there to be 5 log entries but there were %lu", (unsigned long)entries.count);
     
     // check all messages contains "xctest", "INFO [AlfrescoLogTest testLogEntries]" and today's date
     NSDate *now = [NSDate date];
@@ -132,19 +132,19 @@
         
         if ([entry rangeOfString:@"xctest"].location == NSNotFound)
         {
-            XCTFail(@"All entries should contain the app name requested, but entry was: %@", entry);
+            XCTFail(@"5 entries test: All entries should contain the app name requested, but entry was: %@", entry);
             break;
         }
         
         if ([entry rangeOfString:@"INFO [AlfrescoLogTest testLogEntries]"].location == NSNotFound)
         {
-            XCTFail(@"All entries should contain the log level and method name, but entry was: %@", entry);
+            XCTFail(@"5 entries test: All entries should contain the log level and method name, but entry was: %@", entry);
             break;
         }
         
         if (![entry hasPrefix:nowString])
         {
-            XCTFail(@"All entries should start with the date and time, but entry was: %@", entry);
+            XCTFail(@"5 entries test: All entries should start with the date and time, but entry was: %@", entry);
             break;
         }
     }
@@ -153,33 +153,33 @@
     NSString *firstEntry = entries.firstObject;
     if ([firstEntry rangeOfString:@"First log message"].location == NSNotFound)
     {
-        XCTFail(@"First entry should contain 'First log message' but entry was: %@", firstEntry);
+        XCTFail(@"5 entries test: First entry should contain 'First log message' but entry was: %@\nEntries array: %@", firstEntry, entries);
     }
     
     NSString *lastEntry = entries.lastObject;
     if ([lastEntry rangeOfString:@"Fifth log message"].location == NSNotFound)
     {
-        XCTFail(@"Last entry should contain 'Fifth log message' but entry was: %@", lastEntry);
+        XCTFail(@"5 entries test: Last entry should contain 'Fifth log message' but entry was: %@\nEntries array: %@", lastEntry, entries);
     }
     
     // get as many entries as possible
     entries = [logger retrieveLogEntriesForApp:@"xctest" numberOfEntries:-1];
-    NSLog(@"Found %lu xctest entries", (unsigned long)entries.count);
+    NSLog(@"All entries for xctest test: Found %lu xctest entries", (unsigned long)entries.count);
     
     // check there are more than 5 entries
     XCTAssertTrue(entries.count > 5,
-                  @"Expected there to be more than 5 log entries but there were %lu", (unsigned long)entries.count);
+                  @"All entries for xctest test: Expected there to be more than 5 log entries but there were %lu", (unsigned long)entries.count);
     
     // check the last object contains "Fifth log message"
     lastEntry = entries.lastObject;
     if ([lastEntry rangeOfString:@"Fifth log message"].location == NSNotFound)
     {
-        XCTFail(@"Last entry should contain 'Fifth log message' but entry was: %@", lastEntry);
+        XCTFail(@"All entries for xctest test: Last entry should contain 'Fifth log message' but entry was: %@", lastEntry);
     }
     
     // get all possible entries
     entries = [logger retrieveLogEntriesForApp:nil numberOfEntries:-1];
-    NSLog(@"Found %lu log entries", (unsigned long)entries.count);
+    NSLog(@"All entries test: Found %lu log entries", (unsigned long)entries.count);
     
     // check at least one of the entries does NOT contain "xctest"
     BOOL foundNonAppEntry = NO;
@@ -191,7 +191,7 @@
             break;
         }
     }
-    XCTAssertTrue(foundNonAppEntry, @"Expected to find at least one log entry that was not from xctest");
+    XCTAssertTrue(foundNonAppEntry, @"All entries test: Expected to find at least one log entry that was not from xctest");
 }
 
 @end
