@@ -6174,6 +6174,12 @@
     }
 }
 
+/**
+ * Although the test code can be refectored with a __weak self, this warning can't be completely cleared
+ * as the XCTAssert... macros reference self and so trigger the same clang warning.
+ */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-retain-cycles"
 - (void)testAddAspects
 {
     if (self.setUpSuccess)
@@ -6251,6 +6257,7 @@
         XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
     }
 }
+#pragma clang diagnostic pop
 
 #pragma mark unit test internal methods
 
