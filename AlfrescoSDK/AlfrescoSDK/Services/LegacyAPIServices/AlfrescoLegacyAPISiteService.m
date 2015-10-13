@@ -880,7 +880,11 @@
     NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[jsonSiteArray count]];
     for (NSDictionary *siteDict in jsonSiteArray)
     {
-        [resultArray addObject:[[AlfrescoSite alloc] initWithProperties:siteDict]];
+        // If the retrieved site is cached then return that one, as it will have the correct status flags set
+        AlfrescoSite *retrievedSite = [[AlfrescoSite alloc] initWithProperties:siteDict];
+        AlfrescoSite *cachedSite = [self.siteCache siteWithShortName:retrievedSite.shortName];
+        
+        [resultArray addObject:cachedSite ?: retrievedSite];
     }
     return resultArray;
 }
@@ -920,12 +924,17 @@
         }
         return nil;
     }
-    if([[jsonSite valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
+    if ([[jsonSite valueForKeyPath:kAlfrescoJSONStatusCode] isEqualToNumber:@404])
     {
         //empty/non existent site - should this happen? error message?
         return nil;
     }
-    return [[AlfrescoSite alloc] initWithProperties:jsonSite];
+    
+    // If the retrieved site is cached then return that one, as it will have the correct status flags set
+    AlfrescoSite *retrievedSite = [[AlfrescoSite alloc] initWithProperties:jsonSite];
+    AlfrescoSite *cachedSite = [self.siteCache siteWithShortName:retrievedSite.shortName];
+    
+    return cachedSite ?: retrievedSite;
 }
 
 - (AlfrescoSite *)siteFromFolder:(AlfrescoFolder *)folder
@@ -949,9 +958,12 @@
     {
         siteProperties[kAlfrescoJSONVisibility] = visibilityProperty.value;
     }
+
+    // If the retrieved site is cached then return that one, as it will have the correct status flags set
+    AlfrescoSite *retrievedSite = [[AlfrescoSite alloc] initWithProperties:siteProperties];
+    AlfrescoSite *cachedSite = [self.siteCache siteWithShortName:retrievedSite.shortName];
     
-    // return a newly created site node
-    return [[AlfrescoSite alloc] initWithProperties:siteProperties];
+    return cachedSite ?: retrievedSite;
 }
 
 - (NSArray *)membersArrayFromJSONData:(NSData *)data error:(NSError *__autoreleasing *)outError
