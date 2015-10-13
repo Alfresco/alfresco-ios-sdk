@@ -61,6 +61,12 @@ static CGFloat const kUploadButtonContainerHeight = 50.0f;
     [self setupCells];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.namingCell.entryTextField becomeFirstResponder];
+}
+
 #pragma mark - Getters and Setters
 
 - (UIView *)uploadFooterView
