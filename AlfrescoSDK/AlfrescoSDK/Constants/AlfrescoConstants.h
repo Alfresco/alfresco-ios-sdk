@@ -128,8 +128,11 @@ extern NSString * const kAlfrescoFilterValueWorkflowPriorityHigh;
 
 extern NSString * const kAlfrescoFilterByWorkflowAssignee;
 extern NSString * const kAlfrescoFilterValueWorkflowAssigneeMe;
-extern NSString * const kAlfrescoFilterValueWorkflowAssigneeUnasssigned;
+extern NSString * const kAlfrescoFilterValueWorkflowAssigneeUnassigned;
 extern NSString * const kAlfrescoFilterValueWorkflowAssigneeAll;
+
+extern NSString * const kAlfrescoFilterByWorkflowInitiator;
+extern NSString * const kAlfrescoFilterValueWorkflowInitiatorMe;
 
 extern NSString * const kAlfrescoFilterBySiteVisibility;
 extern NSString * const kAlfrescoFilterValueSiteVisibilityPublic;

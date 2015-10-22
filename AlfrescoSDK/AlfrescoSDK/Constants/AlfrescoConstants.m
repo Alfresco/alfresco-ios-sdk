@@ -79,8 +79,11 @@ NSString * const kAlfrescoFilterValueWorkflowPriorityHigh = @"high";
 
 NSString * const kAlfrescoFilterByWorkflowAssignee = @"workflowAssignee";
 NSString * const kAlfrescoFilterValueWorkflowAssigneeMe = @"me";
-NSString * const kAlfrescoFilterValueWorkflowAssigneeUnasssigned = @"unassigned";
+NSString * const kAlfrescoFilterValueWorkflowAssigneeUnassigned = @"unassigned";
 NSString * const kAlfrescoFilterValueWorkflowAssigneeAll = @"all";
+
+NSString * const kAlfrescoFilterByWorkflowInitiator = @"workflowInitiator";
+NSString * const kAlfrescoFilterValueWorkflowInitiatorMe = @"me";
 
 NSString * const kAlfrescoFilterBySiteVisibility = @"siteVisibility";
 NSString * const kAlfrescoFilterValueSiteVisibilityPublic = @"public";

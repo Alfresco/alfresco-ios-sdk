@@ -183,7 +183,7 @@
             // determine filter
             BOOL shouldFilter = NO;
             NSPredicate *filterPredicate = nil;
-            if ([state isEqualToString:kAlfrescoLegacyAPIWorkflowStatusInProgress])
+            if ([state isEqualToString:kAlfrescoLegacyAPIWorkflowStatusActive])
             {
                 filterPredicate = [NSPredicate predicateWithFormat:@"endedAt == nil"];
                 shouldFilter = YES;
