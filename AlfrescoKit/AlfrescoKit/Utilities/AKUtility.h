@@ -27,6 +27,7 @@
 #import <UIKit/UIKit.h>
 
 #import "AKScopeItem.h"
+#import "AKUserAccount.h"
 
 @interface AKUtility : NSObject
 
@@ -34,7 +35,7 @@
 + (NSString *)stringForFileSize:(unsigned long long)fileSize;
 + (UIImage *)smallIconForType:(NSString *)type;
 
-+ (NSString *)onPremiseServerURLWithProtocol:(NSString *)protocol serverAddress:(NSString *)serverAddress port:(NSString *)port;
++ (NSURL *)onPremiseServerURLForAccount:(id<AKUserAccount>)account;
 
 + (NSString *)imageNameFromAKScopeType:(AKScopeType)scopeType;
 
