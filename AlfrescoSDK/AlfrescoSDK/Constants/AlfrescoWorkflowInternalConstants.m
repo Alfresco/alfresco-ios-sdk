@@ -54,10 +54,13 @@ NSString * const kAlfrescoPublicAPIWorkflowVariables = @"processes/{processId}/v
 
 // Workflows/Processes - Parameters
 NSString * const kAlfrescoLegacyAPIWorkflowProcessInitiator = @"initiator";
+
 NSString * const kAlfrescoLegacyAPIWorkflowProcessState = @"state";
-NSString * const kAlfrescoLegacyAPIWorkflowStatusInProgress = @"active";
+NSString * const kAlfrescoLegacyAPIWorkflowStatusActive = @"active";
 NSString * const kAlfrescoLegacyAPIWorkflowStatusCompleted = @"completed";
+NSString * const kAlfrescoLegacyAPIWorkflowStatusInProgress = @"in_progress";
 NSString * const kAlfrescoPublicAPIWorkflowProcessIncludeVariables = @"includeVariables";
+NSString * const kAlfrescoPublicAPIWorkflowProcessStartUserID = @"startUserId";
 
 // Tasks
 NSString * const kAlfrescoLegacyAPIWorkflowTasks = @"task-instances";
@@ -81,6 +84,8 @@ NSString * const kAlfrescoPublicAPIWorkflowTaskAssignee = @"assignee";
 NSString * const kAlfrescoPublicAPIWorkflowTaskCandidateUser = @"candidateUser";
 NSString * const kAlfrescoLegacyAPIWorkflowTaskAuthority = @"authority";
 NSString * const kAlfrescoLegacyAPIWorkflowTaskPooled = @"pooledTasks";
+NSString * const kAlfrescoLegacyAPIWorkflowTaskPooledFalse = @"false";
+NSString * const kAlfrescoLegacyAPIWorkflowTaskPooledTrue = @"true";
 NSString * const kAlfrescoLegacyAPIWorkflowItemKind = @"itemKind";
 NSString * const kAlfrescoLegacyAPIWorkflowItemTypeTask = @"task";
 NSString * const kAlfrescoLegacyAPIWorkflowItemID = @"itemId";

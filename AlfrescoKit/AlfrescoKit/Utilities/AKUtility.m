@@ -141,9 +141,17 @@ static NSString * const kSmallThumbnailImageMappingPlist = @"SmallThumbnailImage
     return [UIImage imageFromAlfrescoKitBundleNamed:imageName];
 }
 
-+ (NSString *)onPremiseServerURLWithProtocol:(NSString *)protocol serverAddress:(NSString *)serverAddress port:(NSString *)port
++ (NSURL *)onPremiseServerURLForAccount:(id<AKUserAccount>)account
 {
-    return [NSString stringWithFormat:kAlfrescoOnPremiseServerURLFormatString, protocol, serverAddress, port];
+    NSURLComponents *url = [[NSURLComponents alloc] init];
+    url.scheme = account.protocol;
+    url.host = account.serverAddress;
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.numberStyle = NSNumberFormatterDecimalStyle;
+    url.port = [formatter numberFromString:account.serverPort];
+    url.path = account.serviceDocument;
+    
+    return [url URL];
 }
 
 + (NSString *)imageNameFromAKScopeType:(AKScopeType)scopeType

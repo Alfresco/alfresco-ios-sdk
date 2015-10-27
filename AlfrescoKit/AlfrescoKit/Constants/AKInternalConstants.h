@@ -35,6 +35,3 @@ extern int const kMaximumItemsToRetrieveAtOneTime;
 
 // AlfrescoKit bundle name
 extern NSString * const kAlfrescoKitBundleName;
-
-// OnPremise server url format
-extern NSString * const kAlfrescoOnPremiseServerURLFormatString;

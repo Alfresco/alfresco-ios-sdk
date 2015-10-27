@@ -422,12 +422,18 @@
         listingContext = self.session.defaultListingContext;
     }
     
-    // construct the where clause from the listing context
+    // API endpoint
+    NSString *extensionURLString = kAlfrescoPublicAPIWorkflowTasks;
+
+    // Construct the where clause from the listing context
     NSString *whereClause = [self constructWhereClauseFromListingFilter:listingContext.listingFilter isProcess:NO includeVariables:NO];
+    if (whereClause)
+    {
+        NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowWhere : whereClause}];
+        extensionURLString = [extensionURLString stringByAppendingString:queryString];
+    }
     
-    // construct the URL
-    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowWhere : whereClause}];
-    NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowTasks stringByAppendingString:queryString];
+    // Construct the URL
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extensionURLString listingContext:listingContext];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -1083,12 +1089,18 @@
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
     [AlfrescoErrors assertArgumentNotNil:listingContext argumentName:@"listingContext"];
     
-    // construct the where clause from the listing context (without variables)
+    // API endpoint
+    NSString *extensionURLString = kAlfrescoPublicAPIWorkflowProcesses;
+
+    // Construct the where clause from the listing context (without variables)
     NSString *whereClause = [self constructWhereClauseFromListingFilter:listingContext.listingFilter isProcess:YES includeVariables:NO];
+    if (whereClause)
+    {
+        NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowWhere : whereClause}];
+        extensionURLString = [extensionURLString stringByAppendingString:queryString];
+    }
     
-    // construct the url
-    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowWhere : whereClause}];
-    NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
+    // Construct the url
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extensionURLString listingContext:listingContext];
     
     AlfrescoRequest *request = [[AlfrescoRequest alloc] init];
@@ -1181,13 +1193,19 @@
 {
     [AlfrescoErrors assertArgumentNotNil:listingContext argumentName:@"listingContext"];
     [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+
+    // API endpoint
+    NSString *extensionURLString = kAlfrescoPublicAPIWorkflowProcesses;
     
-    // construct the where clause from the listing context
+    // Construct the where clause from the listing context
     NSString *whereClause = [self constructWhereClauseFromListingFilter:listingContext.listingFilter isProcess:YES includeVariables:YES];
-    
-    // construct URL
-    NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowWhere : whereClause}];
-    NSString *extensionURLString = [kAlfrescoPublicAPIWorkflowProcesses stringByAppendingString:queryString];
+    if (whereClause)
+    {
+        NSString *queryString = [AlfrescoURLUtils buildQueryStringWithDictionary:@{kAlfrescoPublicAPIWorkflowWhere : whereClause}];
+        extensionURLString = [extensionURLString stringByAppendingString:queryString];
+    }
+
+    // Construct URL
     NSURL *url = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseApiUrl extensionURL:extensionURLString listingContext:listingContext];
     
     // retrieve processes
@@ -1238,146 +1256,164 @@
                                           isProcess:(BOOL)isProcess
                                    includeVariables:(BOOL)includeVariables
 {
-    NSMutableString *whereClause = [NSMutableString stringWithString:@"("];
+    NSMutableString *mutableString = [NSMutableString string];
+    
+    /**
+     * Assignee
+     */
+    
+    /**
+     * The workflow public API for tasks is returning other users tasks (MNT-11264), additionally the workflow API does not
+     * support the -me- identifer (ACE-1445) so we use person identifier stored in the session data.
+     */
+    NSString *currentUserIdentifier = [self.session objectForParameter:kAlfrescoSessionAlternatePersonIdentifier] ?: self.session.personIdentifier;
+    
+    if (isProcess)
+    {
+        if ([filter hasFilter:kAlfrescoFilterByWorkflowInitiator])
+        {
+            NSString *initiatorValue = [filter valueForFilter:kAlfrescoFilterByWorkflowInitiator];
+            
+            if ([initiatorValue isEqualToString:kAlfrescoFilterValueWorkflowInitiatorMe])
+            {
+                initiatorValue = currentUserIdentifier;
+            }
 
-    // generate status predicate (always add a value)
-    NSString *statusParameterValue = kAlfrescoPublicAPIWorkflowStatusActive;
-    if ([filter hasFilter:kAlfrescoFilterByWorkflowStatus])
-    {
-        if ([[filter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStatusCompleted])
-        {
-            statusParameterValue = kAlfrescoPublicAPIWorkflowStatusCompleted;
-        }
-        else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowStatus] isEqualToString:kAlfrescoFilterValueWorkflowStatusAny])
-        {
-            statusParameterValue = kAlfrescoPublicAPIWorkflowStatusAny;
-        }
-    }
-    
-    [self appendEnumPredicateToWhereClause:whereClause
-                                      name:kAlfrescoPublicAPIWorkflowStatus
-                                     value:statusParameterValue
-                                  operator:@"="];
-    
-    // generate predicates for tasks
-    if (!isProcess)
-    {
-        // generate priority predicate
-        if ([filter hasFilter:kAlfrescoFilterByWorkflowPriority])
-        {
-            int priority = 1;
-            if ([[filter valueForFilter:kAlfrescoFilterByWorkflowPriority] isEqualToString:kAlfrescoFilterValueWorkflowPriorityMedium])
-            {
-                priority = 2;
-            }
-            else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowPriority] isEqualToString:kAlfrescoFilterValueWorkflowPriorityLow])
-            {
-                priority = 3;
-            }
-            
-            [self appendNumberPredicateToWhereClause:whereClause
-                                                name:kAlfrescoPublicAPIWorkflowPriority
-                                               value:[NSNumber numberWithInt:priority]
-                                            operator:@"="];
-        }
-        
-        // generate due date predicate
-        if ([filter hasFilter:kAlfrescoFilterByWorkflowDueDate])
-        {
-            NSDate *now = [NSDate date];
-            NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-            
-            if ([[filter valueForFilter:kAlfrescoFilterByWorkflowDueDate] isEqualToString:kAlfrescoFilterValueWorkflowDueDateToday])
-            {
-                NSDateComponents *components = [NSDateComponents new];
-                components.day = -1;
-                NSDate *yesterday = [gregorian dateByAddingComponents:components toDate:now options:0];
-                [self appendStringPredicateToWhereClause:whereClause
-                                                    name:kAlfrescoPublicAPIWorkflowDueAt
-                                                   value:[self.dueDateFormatter stringFromDate:yesterday]
-                                                operator:@">"];
-                
-                components.day = 1;
-                NSDate *tomorrow = [gregorian dateByAddingComponents:components toDate:now options:0];
-                [self appendStringPredicateToWhereClause:whereClause
-                                                    name:kAlfrescoPublicAPIWorkflowDueAt
-                                                   value:[self.dueDateFormatter stringFromDate:tomorrow]
-                                                operator:@"<"];
-            }
-            else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowDueDate] isEqualToString:kAlfrescoFilterValueWorkflowDueDateTomorrow])
-            {
-                [self appendStringPredicateToWhereClause:whereClause
-                                                    name:kAlfrescoPublicAPIWorkflowDueAt
-                                                   value:[self.dueDateFormatter stringFromDate:now]
-                                                operator:@">"];
-                
-                NSDateComponents *components = [NSDateComponents new];
-                components.day = 2;
-                NSDate *dayAfterTomorrow = [gregorian dateByAddingComponents:components toDate:now options:0];
-                [self appendStringPredicateToWhereClause:whereClause
-                                                    name:kAlfrescoPublicAPIWorkflowDueAt
-                                                   value:[self.dueDateFormatter stringFromDate:dayAfterTomorrow]
-                                                operator:@"<"];
-            }
-            else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowDueDate] isEqualToString:kAlfrescoFilterValueWorkflowDueDate7Days])
-            {
-                NSDateComponents *components = [NSDateComponents new];
-                components.day = 7;
-                NSDate *oneWeek = [gregorian dateByAddingComponents:components toDate:now options:0];
-                
-                [self appendStringPredicateToWhereClause:whereClause
-                                                    name:kAlfrescoPublicAPIWorkflowDueAt
-                                                   value:[self.dueDateFormatter stringFromDate:oneWeek]
-                                                operator:@"<"];
-            }
-            else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowDueDate] isEqualToString:kAlfrescoFilterValueWorkflowDueDateOverdue])
-            {
-                [self appendStringPredicateToWhereClause:whereClause
-                                                    name:kAlfrescoPublicAPIWorkflowDueAt
-                                                   value:[self.dueDateFormatter stringFromDate:now]
-                                                operator:@"<"];
-            }
-        }
-        
-        // generate assignee predicate
-        
-        // workflow public API for tasks is returning other users tasks (MNT-11264), additionally the workflow API does not
-        // support the -me- identifer (ACE-1445) so we use person identifier stored in the session data. Furthermore, we always
-        // add the assignee predicate.
-        NSString *personIdentifier = [self.session objectForParameter:kAlfrescoSessionAlternatePersonIdentifier] ?: self.session.personIdentifier;
-        personIdentifier = [personIdentifier stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        
-        if ([filter hasFilter:kAlfrescoFilterByWorkflowAssignee] &&
-            [[filter valueForFilter:kAlfrescoFilterByWorkflowAssignee] isEqualToString:kAlfrescoFilterValueWorkflowAssigneeUnasssigned])
-        {
-            // NOTE: the "all" option is not possible on the public API so we only deal with unassigned here
-            
-            [self appendStringPredicateToWhereClause:whereClause
-                                                name:kAlfrescoPublicAPIWorkflowTaskCandidateUser
-                                               value:personIdentifier
-                                            operator:@"="];
+            [self appendStringPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowProcessStartUserID value:initiatorValue operator:@"="];
         }
         else
         {
-            // default to current user as assignee
-            [self appendStringPredicateToWhereClause:whereClause
-                                                name:kAlfrescoPublicAPIWorkflowTaskAssignee
-                                               value:personIdentifier
-                                            operator:@"="];
+            [self appendStringPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowProcessStartUserID value:currentUserIdentifier operator:@"="];
+        }
+    }
+    else
+    {
+        if ([filter hasFilter:kAlfrescoFilterByWorkflowAssignee])
+        {
+            NSString *assigneeValue = [filter valueForFilter:kAlfrescoFilterByWorkflowAssignee];
+            NSString *predicateName = kAlfrescoPublicAPIWorkflowTaskAssignee;
+            
+            if ([assigneeValue isEqualToString:kAlfrescoFilterValueWorkflowAssigneeMe])
+            {
+                assigneeValue = currentUserIdentifier;
+            }
+            else if ([assigneeValue isEqualToString:kAlfrescoFilterValueWorkflowAssigneeAll])
+            {
+                assigneeValue = nil;
+            }
+            else if ([assigneeValue isEqualToString:kAlfrescoFilterValueWorkflowAssigneeUnassigned])
+            {
+                assigneeValue = currentUserIdentifier;
+                predicateName = kAlfrescoPublicAPIWorkflowTaskCandidateUser;
+            }
+            
+            if (assigneeValue)
+            {
+                [self appendStringPredicateToWhereClause:mutableString name:predicateName value:assigneeValue operator:@"="];
+            }
+        }
+    }
+
+    /**
+     * Priority
+     */
+    
+    if ([filter hasFilter:kAlfrescoFilterByWorkflowPriority])
+    {
+        int priority = 1;
+
+        if ([[filter valueForFilter:kAlfrescoFilterByWorkflowPriority] isEqualToString:kAlfrescoFilterValueWorkflowPriorityMedium])
+        {
+            priority = 2;
+        }
+        else if ([[filter valueForFilter:kAlfrescoFilterByWorkflowPriority] isEqualToString:kAlfrescoFilterValueWorkflowPriorityLow])
+        {
+            priority = 3;
+        }
+        
+        [self appendNumberPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowPriority value:[NSNumber numberWithInt:priority] operator:@"="];
+    }
+
+
+    /**
+     * Status
+     */
+    
+    if ([filter hasFilter:kAlfrescoFilterByWorkflowStatus])
+    {
+        NSString *statusValue = [filter valueForFilter:kAlfrescoFilterByWorkflowStatus];
+        
+        if ([statusValue isEqualToString:kAlfrescoFilterValueWorkflowStatusAny])
+        {
+            [self appendEnumPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowStatus value:kAlfrescoPublicAPIWorkflowStatusAny operator:@"="];
+        }
+        else if ([statusValue isEqualToString:kAlfrescoFilterValueWorkflowStatusCompleted])
+        {
+            [self appendEnumPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowStatus value:kAlfrescoPublicAPIWorkflowStatusCompleted operator:@"="];
         }
     }
     
-    // append includeVariables predicate for processes
-    if (isProcess && includeVariables)
+    
+    /**
+     * Due Date
+     */
+    
+    if ([filter hasFilter:kAlfrescoFilterByWorkflowDueDate])
     {
-        [self appendBooleanPredicateToWhereClause:whereClause
-                                             name:kAlfrescoPublicAPIWorkflowProcessIncludeVariables
-                                            value:YES
-                                         operator:@"="];
+        NSDate *now = [NSDate date];
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        NSString *dueDateValue = [filter valueForFilter:kAlfrescoFilterByWorkflowDueDate];
+            
+        if ([dueDateValue isEqualToString:kAlfrescoFilterValueWorkflowDueDateToday])
+        {
+            NSDateComponents *components = [NSDateComponents new];
+            components.day = -1;
+            NSDate *yesterday = [gregorian dateByAddingComponents:components toDate:now options:0];
+            [self appendStringPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowDueAt value:[self.dueDateFormatter stringFromDate:yesterday] operator:@">"];
+            
+            components.day = 1;
+            NSDate *tomorrow = [gregorian dateByAddingComponents:components toDate:now options:0];
+            [self appendStringPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowDueAt value:[self.dueDateFormatter stringFromDate:tomorrow] operator:@"<"];
+        }
+        else if ([dueDateValue isEqualToString:kAlfrescoFilterValueWorkflowDueDateTomorrow])
+        {
+            [self appendStringPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowDueAt value:[self.dueDateFormatter stringFromDate:now] operator:@">"];
+            
+            NSDateComponents *components = [NSDateComponents new];
+            components.day = 2;
+            NSDate *dayAfterTomorrow = [gregorian dateByAddingComponents:components toDate:now options:0];
+            [self appendStringPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowDueAt value:[self.dueDateFormatter stringFromDate:dayAfterTomorrow] operator:@"<"];
+        }
+        else if ([dueDateValue isEqualToString:kAlfrescoFilterValueWorkflowDueDate7Days])
+        {
+            NSDateComponents *components = [NSDateComponents new];
+            components.day = 7;
+            NSDate *oneWeek = [gregorian dateByAddingComponents:components toDate:now options:0];
+            
+            [self appendStringPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowDueAt value:[self.dueDateFormatter stringFromDate:oneWeek] operator:@"<"];
+        }
+        else if ([dueDateValue isEqualToString:kAlfrescoFilterValueWorkflowDueDateOverdue])
+        {
+            [self appendStringPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowDueAt value:[self.dueDateFormatter stringFromDate:now] operator:@"<"];
+        }
+    }
+
+    
+    /**
+     * Include Variables
+     */
+    if (includeVariables)
+    {
+        [self appendBooleanPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowProcessIncludeVariables value:YES operator:@"="];
     }
     
-    // add trailing bracket
-    [whereClause appendString:@")"];
+
+    NSString *whereClause = nil;
+    
+    if (mutableString.length > 0)
+    {
+        whereClause = [NSString stringWithFormat:@"(%@)", mutableString];
+    }
     
     return whereClause;
 }
@@ -1424,7 +1460,7 @@
             [whereClause appendString:@" AND "];
         }
         
-        [whereClause appendFormat:@"%@%@%@", name, operator, value];
+        [whereClause appendFormat:@"%@%@%@", name, operator, [value stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
     }
 }
 

@@ -41,12 +41,9 @@
 
 - (AlfrescoRequest *)loginToOnPremiseRepositoryWithAccount:(id<AKUserAccount>)account username:(NSString *)username password:(NSString *)password completionBlock:(AKLoginCompletionBlock)completionBlock
 {
-    AlfrescoRequest *loginRequest = nil;
+    NSURL *repoURL = [AKUtility onPremiseServerURLForAccount:account];
     
-    NSString *repoServerURLString = [AKUtility onPremiseServerURLWithProtocol:account.protocol serverAddress:account.serverAddress port:account.serverPort];
-    NSURL *repoURL = [NSURL URLWithString:repoServerURLString];
-    
-    loginRequest = [AlfrescoRepositorySession connectWithUrl:repoURL username:username password:password completionBlock:^(id<AlfrescoSession> session, NSError *error) {
+    AlfrescoRequest *loginRequest = [AlfrescoRepositorySession connectWithUrl:repoURL username:username password:password completionBlock:^(id<AlfrescoSession> session, NSError *error) {
         if (error)
         {
             completionBlock(NO, nil, error);

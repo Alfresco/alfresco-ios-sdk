@@ -69,12 +69,9 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                     {
                         if ([task.processDefinitionIdentifier isEqualToString:reviewKey])
                         {
-                            XCTAssertTrue([task.identifier rangeOfString:kAlfrescoJBPMPrefix].location != NSNotFound,
-                                          @"Expected identifier to contain jbpm$ but it was %@", task.identifier);
-                            XCTAssertTrue([task.processIdentifier rangeOfString:kAlfrescoJBPMPrefix].location != NSNotFound,
-                                          @"Expected processIdentifier to contain jbpm$ but it was %@", task.processIdentifier);
-                            XCTAssertTrue([task.name isEqualToString:@"Review"],
-                                          @"Expected task summary to be 'Review' but it was %@", task.name);
+                            XCTAssertTrue([task.identifier rangeOfString:kAlfrescoJBPMPrefix].location != NSNotFound, @"Expected identifier to contain jbpm$ but it was %@", task.identifier);
+                            XCTAssertTrue([task.processIdentifier rangeOfString:kAlfrescoJBPMPrefix].location != NSNotFound, @"Expected processIdentifier to contain jbpm$ but it was %@", task.processIdentifier);
+                            XCTAssertTrue([task.name isEqualToString:@"Review"] || [task.name isEqualToString:@"Approved"], @"Expected task summary to be 'Review' or 'Approved' but it was %@", task.name);
                             
                             XCTAssertNotNil(task.summary, @"Expected the name property to be populated");
                             XCTAssertNotNil(task.type, @"Expected the type property to be populated");
@@ -336,7 +333,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
         self.workflowService = [[AlfrescoWorkflowService alloc] initWithSession:self.currentSession];
         
         AlfrescoListingFilter *listingFilter = [[AlfrescoListingFilter alloc]
-                                                initWithFilter:kAlfrescoFilterByWorkflowAssignee value:kAlfrescoFilterValueWorkflowAssigneeUnasssigned];
+                                                initWithFilter:kAlfrescoFilterByWorkflowAssignee value:kAlfrescoFilterValueWorkflowAssigneeUnassigned];
         AlfrescoListingContext *listingContext = [[AlfrescoListingContext alloc] initWithListingFilter:listingFilter];
         
         [self.workflowService retrieveTasksWithListingContext:listingContext completionBlock:^(AlfrescoPagingResult *pagingResult, NSError *retrieveError) {
