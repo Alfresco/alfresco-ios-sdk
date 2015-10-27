@@ -63,6 +63,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                 if (self.currentSession.repositoryInfo.capabilities.doesSupportJBPMWorkflowEngine)
                 {
                     NSString *reviewKey = [kAlfrescoJBPMPrefix stringByAppendingString:kAlfrescoJBPMReviewProcessDefinitionKey];
+                    NSArray *validTaskNames = @[@"Review", @"Approved", @"Rejected"];
                     
                     // go through the tasks looking for a review task
                     for (AlfrescoWorkflowTask *task in array)
@@ -71,7 +72,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                         {
                             XCTAssertTrue([task.identifier rangeOfString:kAlfrescoJBPMPrefix].location != NSNotFound, @"Expected identifier to contain jbpm$ but it was %@", task.identifier);
                             XCTAssertTrue([task.processIdentifier rangeOfString:kAlfrescoJBPMPrefix].location != NSNotFound, @"Expected processIdentifier to contain jbpm$ but it was %@", task.processIdentifier);
-                            XCTAssertTrue([task.name isEqualToString:@"Review"] || [task.name isEqualToString:@"Approved"], @"Expected task summary to be 'Review' or 'Approved' but it was %@", task.name);
+                            XCTAssertTrue([validTaskNames indexOfObject:task.name] != NSNotFound, @"Expected task summary to be 'Review' or 'Approved' but it was %@", task.name);
                             
                             XCTAssertNotNil(task.summary, @"Expected the name property to be populated");
                             XCTAssertNotNil(task.type, @"Expected the type property to be populated");
@@ -93,8 +94,7 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                             if ((self.isCloud && [task.processDefinitionIdentifier rangeOfString:kAlfrescoActivitiParallelReviewProcessDefinitionKey].location != NSNotFound) ||
                                 (!self.isCloud && [task.processDefinitionIdentifier rangeOfString:kAlfrescoActivitiReviewProcessDefinitionKey].location != NSNotFound))
                             {
-                                XCTAssertTrue([task.name isEqualToString:@"Review Task"],
-                                              @"Expected task name to be 'Review Task' but it was %@", task.name);
+                                XCTAssertTrue([task.name isEqualToString:@"Review Task"], @"Expected task name to be 'Review Task' but it was %@", task.name);
                                 
                                 XCTAssertNotNil(task.identifier, @"Expected the identifier property to be populated");
                                 XCTAssertNotNil(task.processIdentifier, @"Expected the processIdentifier property to be populated");
@@ -111,18 +111,16 @@ static NSString * const kAlfrescoActivitiParallelReviewProcessDefinitionKey = @"
                     else
                     {
                         NSString *reviewKey = [kAlfrescoActivitiPrefix stringByAppendingString:kAlfrescoActivitiReviewProcessDefinitionKey];
+                        NSArray *validTaskNames = @[@"Review", @"Approved", @"Rejected"];
                         
                         // go through the tasks looking for a review task
                         for (AlfrescoWorkflowTask *task in array)
                         {
                             if ([task.processDefinitionIdentifier isEqualToString:reviewKey])
                             {
-                                XCTAssertTrue([task.identifier rangeOfString:kAlfrescoActivitiPrefix].location != NSNotFound,
-                                              @"Expected identifier to contain activiti$ but it was %@", task.identifier);
-                                XCTAssertTrue([task.processIdentifier rangeOfString:kAlfrescoActivitiPrefix].location != NSNotFound,
-                                              @"Expected processIdentifier to contain activiti$ but it was %@", task.processIdentifier);
-                                XCTAssertTrue([task.name isEqualToString:@"Review"],
-                                              @"Expected task name to be 'Review' but it was %@", task.name);
+                                XCTAssertTrue([task.identifier rangeOfString:kAlfrescoActivitiPrefix].location != NSNotFound, @"Expected identifier to contain activiti$ but it was %@", task.identifier);
+                                XCTAssertTrue([task.processIdentifier rangeOfString:kAlfrescoActivitiPrefix].location != NSNotFound, @"Expected processIdentifier to contain activiti$ but it was %@", task.processIdentifier);
+                                XCTAssertTrue([validTaskNames indexOfObject:task.name] != NSNotFound, @"Expected task name to be 'Review' but it was %@", task.name);
                                 
                                 XCTAssertNotNil(task.summary, @"Expected the name property to be populated");
                                 XCTAssertNotNil(task.type, @"Expected the type property to be populated");
