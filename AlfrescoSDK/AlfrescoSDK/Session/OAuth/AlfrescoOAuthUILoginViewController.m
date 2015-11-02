@@ -105,10 +105,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIDevice *device = [UIDevice currentDevice];
-    [device beginGeneratingDeviceOrientationNotifications];
-    NSNotificationCenter *notificationCentre = [NSNotificationCenter defaultCenter];
-    [notificationCentre addObserver:self selector:@selector(reloadAndReset) name:UIDeviceOrientationDidChangeNotification object:device];
+
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view.autoresizesSubviews = YES;
 }
@@ -150,6 +147,8 @@
         self.webView = nil;
     }
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
     
