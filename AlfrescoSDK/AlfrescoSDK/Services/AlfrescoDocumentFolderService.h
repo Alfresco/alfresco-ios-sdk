@@ -558,6 +558,23 @@
                     completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock;
 
 
+/**---------------------------------------------------------------------------------------
+ * @name Special folder handling
+ *  ---------------------------------------------------------------------------------------
+ */
+
+/** Gets the current user's home folder
+ 
+ @param completionBlock - contains the AlfrescoFolder object which represents the hole folder, if one could be determined
+ */
+- (AlfrescoRequest *)retrieveHomeFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock;
+
+
+/**---------------------------------------------------------------------------------------
+ * @name Everything else
+ *  ---------------------------------------------------------------------------------------
+ */
+
 /** Retrieve the latest (and complete) metadata for the provided node.
  
  @param The node which is to be refreshed with its latest metadata

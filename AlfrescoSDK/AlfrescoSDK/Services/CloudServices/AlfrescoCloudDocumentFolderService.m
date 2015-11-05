@@ -38,4 +38,12 @@
     return self;
 }
 
+#pragma mark Special Folder Handling
+
+- (AlfrescoRequest *)retrieveHomeFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock
+{
+    // Not supported - userhome retrieval requires support for finding user's private home site
+    return nil;
+}
+
 @end

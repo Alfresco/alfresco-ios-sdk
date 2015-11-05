@@ -75,31 +75,31 @@
     if (AlfrescoSearchLanguageCMIS == language)
     {
         request.httpRequest = [self.cmisSession.binding.discoveryService
-         query:statement
-         searchAllVersions:NO
-         relationships:CMISIncludeRelationshipBoth
-         renditionFilter:nil
-         includeAllowableActions:YES
-         maxItems:@(self.session.defaultListingContext.maxItems)
-         skipCount:@(self.session.defaultListingContext.skipCount)
-         completionBlock:^(CMISObjectList *objectList, NSError *error){
-             if (nil == objectList)
-             {
-                 NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
-                 completionBlock(nil, alfrescoError);
-             }
-             else
-             {
-                 NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[objectList.objects count]];
-                 for (CMISObjectData *queryData in objectList.objects)
-                 {
-                     [resultArray addObject:[self.objectConverter nodeFromCMISObjectData:queryData]];
-                 }
-                 NSArray *sortedResultArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
-                 completionBlock(sortedResultArray, nil);
-             }
-             
-        }];
+                               query:statement
+                               searchAllVersions:NO
+                               relationships:CMISIncludeRelationshipBoth
+                               renditionFilter:nil
+                               includeAllowableActions:YES
+                               maxItems:@(self.session.defaultListingContext.maxItems)
+                               skipCount:@(self.session.defaultListingContext.skipCount)
+                               completionBlock:^(CMISObjectList *objectList, NSError *error){
+                                   if (nil == objectList)
+                                   {
+                                       NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
+                                       completionBlock(nil, alfrescoError);
+                                   }
+                                   else
+                                   {
+                                       NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[objectList.objects count]];
+                                       for (CMISObjectData *queryData in objectList.objects)
+                                       {
+                                           [resultArray addObject:[self.objectConverter nodeFromCMISObjectData:queryData]];
+                                       }
+                                       NSArray *sortedResultArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
+                                       completionBlock(sortedResultArray, nil);
+                                   }
+                                   
+                               }];
     }
     return request;
     
