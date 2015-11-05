@@ -33,6 +33,12 @@
 
 @class CMISSession, CMISFolder, CMISDocument, CMISObject, CMISObjectData, CMISQueryResult, CMISTypeDefinition;
 
+@interface NSMutableDictionary (AlfrescoCMISToAlfrescoObjectConverter)
+
+- (void)alf_setValueIfNotEmpty:(NSString *)value forKey:(NSString *)key;
+
+@end
+
 @interface AlfrescoCMISToAlfrescoObjectConverter : AlfrescoObjectConverter
 
 - (id)initWithSession:(id<AlfrescoSession>)session;

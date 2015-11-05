@@ -32,6 +32,21 @@
 #import "AlfrescoPropertyConstants.h"
 #import "CMISPropertyDefinition.h"
 
+static NSString * const kAlfrescoCMISEmptyString = @"(null)";
+
+@implementation NSMutableDictionary (AlfrescoCMISToAlfrescoObjectConverter)
+
+- (void)alf_setValueIfNotEmpty:(NSString *)value forKey:(NSString *)key
+{
+    if (value && key && ![value isEqualToString:kAlfrescoCMISEmptyString])
+    {
+        self[key] = value;
+    }
+}
+
+@end
+
+
 @interface AlfrescoCMISToAlfrescoObjectConverter ()
 @property (nonatomic, assign) BOOL isCloud;
 @property (nonatomic, strong)id<AlfrescoSession>session;
@@ -51,125 +66,83 @@
 }
 
 - (AlfrescoFolder *)folderFromCMISFolder:(CMISFolder *)cmisFolder
-                              properties:(NSDictionary *)properties
+                              properties:(NSMutableDictionary *)properties
 {
     if (nil == properties)
     {
         properties = [NSMutableDictionary dictionary];
     }
-    NSString *emptyString = @"(null)";
-    NSString *identifier = cmisFolder.identifier;
-    NSString *name = cmisFolder.name;
+
     NSString *objectType = cmisFolder.objectType;
-    NSString *createdBy = cmisFolder.createdBy;
-    NSString *lastModifiedBy = cmisFolder.lastModifiedBy;
-    if (![identifier isEqualToString:emptyString])
-    {
-        [properties setValue:identifier forKey:kCMISPropertyObjectId];
-    }
-    if (![name isEqualToString:emptyString])
-    {
-        [properties setValue:name forKey:kCMISPropertyName];
-    }
-    if (![objectType isEqualToString:emptyString])
+    if (![objectType isEqualToString:kAlfrescoCMISEmptyString])
     {
         NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueFolder withString:kAlfrescoModelTypeFolder];
-        [properties setValue:[self propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
+        properties[kCMISPropertyObjectTypeId] = [self propertyValueWithoutPrecursor:alfrescoObjectType];
     }
-    if (![createdBy isEqualToString:emptyString])
-    {
-        [properties setValue:createdBy forKey:kCMISPropertyCreatedBy];
-    }
-    if (![lastModifiedBy isEqualToString:emptyString])
-    {
-        [properties setValue:lastModifiedBy forKey:kCMISPropertyModifiedBy];
-    }
-    [properties setValue:cmisFolder.creationDate forKey:kCMISPropertyCreationDate];
-    [properties setValue:cmisFolder.lastModificationDate forKey:kCMISPropertyModificationDate];
-    return [[AlfrescoFolder alloc] initWithProperties:properties];
+
+    [properties alf_setValueIfNotEmpty:cmisFolder.identifier forKey:kCMISPropertyObjectId];
+    [properties alf_setValueIfNotEmpty:cmisFolder.name forKey:kCMISPropertyName];
+    [properties alf_setValueIfNotEmpty:cmisFolder.createdBy forKey:kCMISPropertyCreatedBy];
+    [properties alf_setValueIfNotEmpty:cmisFolder.lastModifiedBy forKey:kCMISPropertyModifiedBy];
     
+    properties[kCMISPropertyCreationDate] = cmisFolder.creationDate;
+    properties[kCMISPropertyModificationDate] = cmisFolder.lastModificationDate;
+
+    return [[AlfrescoFolder alloc] initWithProperties:properties];
 }
 
 - (AlfrescoDocument *)documentFromCMISDocument:(CMISDocument *)cmisDocument
-                                    properties:(NSDictionary *)properties
+                                    properties:(NSMutableDictionary *)properties
 {
     if (nil == properties)
     {
         properties = [NSMutableDictionary dictionary];
     }
-    NSString *emptyString = @"(null)";
-    NSString *identifier = cmisDocument.identifier;
-    NSString *name = cmisDocument.name;
-    NSString *objectType = cmisDocument.objectType;
-    NSString *createdBy = cmisDocument.createdBy;
-    NSString *lastModifiedBy = cmisDocument.lastModifiedBy;
-    NSString *versionLabel = cmisDocument.versionLabel;
-    NSString *contentStreamMediaType = cmisDocument.contentStreamMediaType;
 
-    if (![identifier isEqualToString:emptyString])
-    {
-        [properties setValue:identifier forKey:kCMISPropertyObjectId];
-    }
-    if (![name isEqualToString:emptyString])
-    {
-        [properties setValue:name forKey:kCMISPropertyName];
-    }
-    if (![objectType isEqualToString:emptyString])
+    NSString *objectType = cmisDocument.objectType;
+    if (![objectType isEqualToString:kAlfrescoCMISEmptyString])
     {
         NSString *alfrescoObjectType = [objectType stringByReplacingOccurrencesOfString:kCMISPropertyObjectTypeIdValueDocument withString:kAlfrescoModelTypeContent];
-        [properties setValue:[self propertyValueWithoutPrecursor:alfrescoObjectType] forKey:kCMISPropertyObjectTypeId];
+        properties[kCMISPropertyObjectTypeId] = [self propertyValueWithoutPrecursor:alfrescoObjectType];
     }
-    if (![createdBy isEqualToString:emptyString])
-    {
-        [properties setValue:createdBy forKey:kCMISPropertyCreatedBy];
-    }
-    if (![lastModifiedBy isEqualToString:emptyString])
-    {
-        [properties setValue:lastModifiedBy forKey:kCMISPropertyModifiedBy];
-    }
-    if (![versionLabel isEqualToString:emptyString])
-    {
-        [properties setValue:versionLabel forKey:kCMISPropertyVersionLabel];
-    }
-    if (![contentStreamMediaType isEqualToString:emptyString])
-    {
-        [properties setValue:contentStreamMediaType forKey:kCMISPropertyContentStreamMediaType];
-    }
-    
-    [properties setValue:cmisDocument.creationDate forKey:kCMISPropertyCreationDate];
-    [properties setValue:cmisDocument.lastModificationDate forKey:kCMISPropertyModificationDate];
-    NSNumber *length = @(cmisDocument.contentStreamLength);
-    [properties setValue:length forKey:kCMISPropertyContentStreamLength];
-    NSNumber *isLatest = @(cmisDocument.isLatestVersion);
-    [properties setValue:isLatest forKey:kCMISPropertyIsLatestVersion];
+
+    [properties alf_setValueIfNotEmpty:cmisDocument.identifier forKey:kCMISPropertyObjectId];
+    [properties alf_setValueIfNotEmpty:cmisDocument.name forKey:kCMISPropertyName];
+    [properties alf_setValueIfNotEmpty:cmisDocument.createdBy forKey:kCMISPropertyCreatedBy];
+    [properties alf_setValueIfNotEmpty:cmisDocument.lastModifiedBy forKey:kCMISPropertyModifiedBy];
+    [properties alf_setValueIfNotEmpty:cmisDocument.versionLabel forKey:kCMISPropertyVersionLabel];
+    [properties alf_setValueIfNotEmpty:cmisDocument.contentStreamMediaType forKey:kCMISPropertyContentStreamMediaType];
+
+    properties[kCMISPropertyCreationDate] = cmisDocument.creationDate;
+    properties[kCMISPropertyModificationDate] = cmisDocument.lastModificationDate;
+    properties[kCMISPropertyContentStreamLength] = @(cmisDocument.contentStreamLength);
+    properties[kCMISPropertyIsLatestVersion] = @(cmisDocument.isLatestVersion);
     
     return [[AlfrescoDocument alloc] initWithProperties:properties];
-    
 }
 
 - (AlfrescoNode *)nodeFromCMISObject:(CMISObject *)cmisObject
 {
     NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
-
     CMISProperties *properties = cmisObject.properties;
     NSArray *propertyArray = [properties propertyList];
-    
     NSMutableDictionary *alfPropertiesDict = [NSMutableDictionary dictionary];
+
     for (CMISPropertyData *propData in propertyArray)
     {
         NSMutableDictionary *propertyDictionary = [NSMutableDictionary dictionary];
         NSString *propertyStringType = propData.identifier;
         NSNumber *propTypeIndex = @([self typeForCMISPropertyTypeString:propertyStringType]);
-        [propertyDictionary setValue:propTypeIndex forKey:kAlfrescoPropertyType];
-        if(propData.values != nil && propData.values.count > 1)
+        propertyDictionary[kAlfrescoPropertyType] = propTypeIndex;
+        if (propData.values != nil && propData.values.count > 1)
         {
-            [propertyDictionary setValue:@YES forKey:kAlfrescoPropertyIsMultiValued];
-            [propertyDictionary setValue:propData.values forKey:kAlfrescoPropertyValue];
+            propertyDictionary[kAlfrescoPropertyIsMultiValued] = @YES;
+            propertyDictionary[kAlfrescoPropertyValue] = propData.values;
         }
         else 
         {
-            [propertyDictionary setValue:@NO forKey:kAlfrescoPropertyIsMultiValued];
-            [propertyDictionary setValue:propData.firstValue forKey:kAlfrescoPropertyValue];
+            propertyDictionary[kAlfrescoPropertyIsMultiValued] = @NO;
+            propertyDictionary[kAlfrescoPropertyValue] = propData.firstValue;
         }
         AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
         alfPropertiesDict[propData.identifier] = alfProperty;
@@ -189,17 +162,10 @@
                 NSString *correctedString = [self propertyValueWithoutPrecursor:type];
                 [strippedAspectTypes addObject:correctedString];
             }
-            NSString *title = [folder.properties propertyValueForId:kAlfrescoModelPropertyTitle];
-            if (![title isEqualToString:@"(null)"])
-            {
-                [propertyDictionary setValue:title forKey:kAlfrescoModelPropertyTitle];
-            }
-            NSString *description = [folder.properties propertyValueForId:kAlfrescoModelPropertyDescription];
-            if (![description isEqualToString:@"(null)"])
-            {
-                [propertyDictionary setValue:description forKey:kAlfrescoModelPropertyDescription];
-            }
-            [propertyDictionary setValue:strippedAspectTypes forKey:kAlfrescoNodeAspects];
+            propertyDictionary[kAlfrescoNodeAspects] = strippedAspectTypes;
+            
+            [propertyDictionary alf_setValueIfNotEmpty:[folder.properties propertyValueForId:kAlfrescoModelPropertyTitle] forKey:kAlfrescoModelPropertyTitle];
+            [propertyDictionary alf_setValueIfNotEmpty:[folder.properties propertyValueForId:kAlfrescoModelPropertyDescription] forKey:kAlfrescoModelPropertyDescription];
         }
         
         node = [self folderFromCMISFolder:(CMISFolder *)cmisObject properties:propertyDictionary];
@@ -215,22 +181,15 @@
                 NSString *correctedString = [self propertyValueWithoutPrecursor:type];
                 [strippedAspectTypes addObject:correctedString];
             }
-            NSString *title = [document.properties propertyValueForId:kAlfrescoModelPropertyTitle];
-            if (![title isEqualToString:@"(null)"])
-            {
-                [propertyDictionary setValue:title forKey:kAlfrescoModelPropertyTitle];
-            }
-            NSString *description = [document.properties propertyValueForId:kAlfrescoModelPropertyDescription];
-            if (![description isEqualToString:@"(null)"])
-            {
-                [propertyDictionary setValue:description forKey:kAlfrescoModelPropertyDescription];
-            }
-            
-            [propertyDictionary setValue:strippedAspectTypes forKey:kAlfrescoNodeAspects];
+            propertyDictionary[kAlfrescoNodeAspects] = strippedAspectTypes;
+
+            [propertyDictionary alf_setValueIfNotEmpty:[document.properties propertyValueForId:kAlfrescoModelPropertyTitle] forKey:kAlfrescoModelPropertyTitle];
+            [propertyDictionary alf_setValueIfNotEmpty:[document.properties propertyValueForId:kAlfrescoModelPropertyDescription] forKey:kAlfrescoModelPropertyDescription];
         }
         
         node = [self documentFromCMISDocument:(CMISDocument *)cmisObject properties:propertyDictionary];
     }
+    
     if (nil != node)
     {
         CMISAllowableActions *allowableActions = cmisObject.allowableActions;

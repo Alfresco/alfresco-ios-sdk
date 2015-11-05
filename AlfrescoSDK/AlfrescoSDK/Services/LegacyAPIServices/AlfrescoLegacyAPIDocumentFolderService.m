@@ -349,6 +349,15 @@
     return nil;
 }
 
+#pragma mark Special Folder Handling
+
+- (AlfrescoRequest *)retrieveHomeFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock
+{
+    // Not supported - userhome retrieval requires cmis:item support
+    return nil;
+}
+
+
 #pragma mark AlfrescoFavortiesCacheDataDelegate methods
 
 - (AlfrescoRequest *)retrieveFavoriteNodeDataWithCompletionBlock:(AlfrescoArrayCompletionBlock)completionBlock

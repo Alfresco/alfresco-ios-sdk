@@ -428,7 +428,11 @@
             NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:[objectList.objects count]];
             for (CMISObjectData *queryData in objectList.objects)
             {
-                [resultArray addObject:[self.objectConverter nodeFromCMISObjectData:queryData]];
+                AlfrescoNode *convertedNode = [self.objectConverter nodeFromCMISObjectData:queryData];
+                if (convertedNode != nil)
+                {
+                    [resultArray addObject:convertedNode];
+                }
             }
             
             // create paged result object
@@ -1191,6 +1195,12 @@
 
 - (AlfrescoRequest *)removeFavorite:(AlfrescoNode *)node
                     completionBlock:(AlfrescoFavoritedCompletionBlock)completionBlock
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (AlfrescoRequest *)retrieveHomeFolderWithCompletionBlock:(AlfrescoFolderCompletionBlock)completionBlock
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;

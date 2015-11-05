@@ -24,8 +24,6 @@
 #import "CMISQueryAtomEntryWriter.h"
 #import "CMISAtomFeedParser.h"
 
-NSString * const kAlfrescoSearchNotImplemented = @"searchWithKeywords is not implemented as Alfresco in the Cloud does not have this capability";
-
 @interface AlfrescoCloudPersonService ()
 @property (nonatomic, strong, readwrite) id<AlfrescoSession> session;
 @property (nonatomic, strong, readwrite) NSString *baseApiUrl;
