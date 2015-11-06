@@ -241,6 +241,7 @@ extern NSString * const kAlfrescoJSONVisibilityPRIVATE;
 extern NSString * const kAlfrescoJSONVisibilityMODERATED;
 extern NSString * const kAlfrescoJSONContainers;
 extern NSString * const kAlfrescoJSONNodeRef;
+extern NSString * const kAlfrescoJSONNode;
 extern NSString * const kAlfrescoJSONSiteID;
 extern NSString * const kAlfrescoJSONLikes;
 extern NSString * const kAlfrescoJSONMyRating;

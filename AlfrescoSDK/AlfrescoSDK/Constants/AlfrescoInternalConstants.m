@@ -281,6 +281,7 @@ NSString * const kAlfrescoJSONVisibilityPRIVATE = @"PRIVATE";
 NSString * const kAlfrescoJSONVisibilityMODERATED = @"MODERATED";
 NSString * const kAlfrescoJSONContainers = @"containers";
 NSString * const kAlfrescoJSONNodeRef = @"nodeRef";
+NSString * const kAlfrescoJSONNode = @"node";
 NSString * const kAlfrescoJSONSiteID = @"siteId";
 NSString * const kAlfrescoJSONLikes = @"likes";
 NSString * const kAlfrescoJSONMyRating = @"myRating";
