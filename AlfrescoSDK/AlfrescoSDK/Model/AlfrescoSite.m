@@ -104,6 +104,12 @@ static NSInteger kSiteModelVersion = 1;
         self.shortName = [properties valueForKey:kAlfrescoJSONShortname];
         self.identifier = self.shortName;
     }
+    
+    if ([keys containsObject:kAlfrescoJSONNode])
+    {
+        // Value will be of the format /alfresco/service/api/node/workspace/SpacesStore/118a38d6-1234-5678-abcd-0f455a3a3184
+        self.GUID = [properties[kAlfrescoJSONNode] lastPathComponent];
+    }
 }
 
 - (void)setUpCloudProperties:(NSDictionary *)properties keys:(NSArray *)keys
