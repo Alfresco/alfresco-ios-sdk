@@ -56,7 +56,7 @@ static const double kFavoritesRequestRateLimit = 0.1; // seconds between request
         id cachedObj = [self.session objectForParameter:kAlfrescoSessionCacheFavorites];
         if (cachedObj)
         {
-            AlfrescoLogDebug(@"Found an existing FavoritesCache in session");
+            AlfrescoLogTrace(@"Found an existing FavoritesCache in session");
             self.favoritesCache = (AlfrescoFavoritesCache *)cachedObj;
         }
         else

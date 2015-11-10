@@ -62,7 +62,7 @@
         id cachedObj = [self.session objectForParameter:kAlfrescoSessionCacheSites];
         if (cachedObj)
         {
-            AlfrescoLogDebug(@"Found an existing SiteCache in session");
+            AlfrescoLogTrace(@"Found an existing SiteCache in session");
             self.siteCache = (AlfrescoSiteCache *)cachedObj;
         }
         else
