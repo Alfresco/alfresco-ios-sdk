@@ -18,10 +18,10 @@
  *****************************************************************************
  */
 
-#import "AlfrescoConnectionDiagnosticUtils.h"
+#import "AlfrescoConnectionDiagnostic.h"
 #import "AlfrescoConstants.h" 
 
-@implementation AlfrescoConnectionDiagnosticUtils
+@implementation AlfrescoConnectionDiagnostic
 
 + (NSDictionary *)createDictionaryForStartEventForEventName:(NSString *)eventName
 {
