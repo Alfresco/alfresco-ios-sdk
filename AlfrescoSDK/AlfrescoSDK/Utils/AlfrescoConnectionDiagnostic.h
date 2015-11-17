@@ -22,7 +22,10 @@
 
 @interface AlfrescoConnectionDiagnostic : NSObject
 
-+ (NSDictionary *)createDictionaryForStartEventForEventName:(NSString *)eventName;
-+ (NSDictionary *)changeDictionaryForEndEvent:(NSDictionary *) dict isSuccess:(BOOL) isSuccess error:(NSError *)error;
+- (instancetype)initWithEventName:(NSString *)eventName;
+
+- (void)notifyEventStart;
+- (void)notifyEventSuccess;
+- (void)notifyEventFailureWithError:(NSError *)error;
 
 @end

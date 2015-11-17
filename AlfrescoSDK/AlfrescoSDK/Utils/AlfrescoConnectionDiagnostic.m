@@ -21,36 +21,50 @@
 #import "AlfrescoConnectionDiagnostic.h"
 #import "AlfrescoConstants.h" 
 
+@interface AlfrescoConnectionDiagnostic ()
+@property (nonatomic, strong) NSString *eventName;
+@end
+
 @implementation AlfrescoConnectionDiagnostic
 
-+ (NSDictionary *)createDictionaryForStartEventForEventName:(NSString *)eventName
+- (instancetype)initWithEventName:(NSString *)eventName
 {
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    [dict setObject:eventName forKey:kAlfrescoConfigurationDiagnosticDictionaryEventName];
-    [dict setObject:[NSNumber numberWithInteger:AlfrescoConnectionDiagnosticStatusLoading] forKey:kAlfrescoConfigurationDiagnosticDictionaryStatus];
-    
-    return dict;
+    self = [super init];
+    if (self)
+    {
+        _eventName = eventName;
+    }
+    return self;
 }
 
-+ (NSDictionary *)changeDictionaryForEndEvent:(NSDictionary *)dict isSuccess:(BOOL)isSuccess error:(NSError *)error
+- (void)notifyEventStart
 {
-    NSMutableDictionary *mutableDict = [dict mutableCopy];
-    
-    if(isSuccess)
-    {
-        [mutableDict setObject:[NSNumber numberWithInteger:AlfrescoConnectionDiagnosticStatusSuccess] forKey:kAlfrescoConfigurationDiagnosticDictionaryStatus];
-    }
-    else
-    {
-        [mutableDict setObject:[NSNumber numberWithInteger:AlfrescoConnectionDiagnosticStatusFailure] forKey:kAlfrescoConfigurationDiagnosticDictionaryStatus];
-    }
-    
-    if(!isSuccess && error)
-    {
-        [mutableDict setObject:error forKey:kAlfrescoConfigurationDiagnosticDictionaryError];
-    }
-    
-    return [mutableDict copy];
+    NSDictionary *userInfo = @{ kAlfrescoConfigurationDiagnosticDictionaryEventName : self.eventName,
+                                kAlfrescoConfigurationDiagnosticDictionaryStatus : @(AlfrescoConnectionDiagnosticStatusLoading) };
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidStartEventNotification object:nil userInfo:userInfo];
 }
+
+- (void)notifyEventSuccess
+{
+    NSDictionary *userInfo = @{ kAlfrescoConfigurationDiagnosticDictionaryEventName : self.eventName,
+                                kAlfrescoConfigurationDiagnosticDictionaryStatus : @(AlfrescoConnectionDiagnosticStatusSuccess) };
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:userInfo];
+}
+
+- (void)notifyEventFailureWithError:(NSError *)error
+{
+    NSDictionary *userInfo = @{ kAlfrescoConfigurationDiagnosticDictionaryEventName : self.eventName,
+                                kAlfrescoConfigurationDiagnosticDictionaryStatus : @(AlfrescoConnectionDiagnosticStatusFailure) };
+    
+    if (error)
+    {
+        NSMutableDictionary *mutable = [userInfo mutableCopy];
+        mutable[kAlfrescoConfigurationDiagnosticDictionaryError] = error;
+        userInfo = [NSDictionary dictionaryWithDictionary:mutable];
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAlfrescoConfigurationDiagnosticDidEndEventNotification object:nil userInfo:userInfo];
+}
+
 
 @end
