@@ -168,16 +168,48 @@
 
 - (void)createActivityView
 {
-    CGSize size = self.view.bounds.size;
-    CGFloat xOffset = size.width/2 - 50;
-    CGFloat yOffset = size.height/2 - 50;
-    CGRect viewFrame = CGRectMake(xOffset, yOffset, 100, 100);
-    
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     self.activityIndicator.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
-    self.activityIndicator.frame = viewFrame;
     self.activityIndicator.hidesWhenStopped = YES;
     [self.view insertSubview:self.activityIndicator aboveSubview:self.webView];
+    
+    // Width constraint
+    [self.activityIndicator addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
+                                                                       attribute:NSLayoutAttributeWidth
+                                                                       relatedBy:NSLayoutRelationEqual
+                                                                          toItem:nil
+                                                                       attribute:NSLayoutAttributeWidth
+                                                                      multiplier:1.0
+                                                                        constant:100]];
+    
+    // Height constraint
+    [self.activityIndicator addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
+                                                                       attribute:NSLayoutAttributeHeight
+                                                                       relatedBy:NSLayoutRelationEqual
+                                                                          toItem:nil
+                                                                       attribute:NSLayoutAttributeHeight
+                                                                      multiplier:1.0
+                                                                        constant:100]];
+    
+    // Center horizontally
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+    
+    // Center vertically
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+    
+    [self.activityIndicator setTranslatesAutoresizingMaskIntoConstraints:NO];
 }
 
 - (void)reloadAndReset
