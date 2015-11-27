@@ -170,12 +170,19 @@
     AlfrescoRequest *request = [AlfrescoRequest new];
     NSString *serverInfoString = [kAlfrescoLegacyAPIPath stringByAppendingString:kAlfrescoLegacyServerAPI];
     NSURL *serverInfoUrl = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:serverInfoString];
-    
+
+    // setup a temporary authentication provider to allow authenticating proxies to pass the request through
+    id<AlfrescoAuthenticationProvider> tempAuthProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
+                                                                                                            andPassword:password];
+    [self setObject:tempAuthProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
+
     AlfrescoConnectionDiagnostic *diagnostic = [[AlfrescoConnectionDiagnostic alloc] initWithEventName:kAlfrescoConfigurationDiagnosticServerVersionEvent];
     [diagnostic notifyEventStart];
     
-    [self.networkProvider executeRequestWithURL:serverInfoUrl session:self alfrescoRequest:request
-                                completionBlock:^(NSData *serverInfoData, NSError *serverInfoError) {
+    [self.networkProvider executeRequestWithURL:serverInfoUrl session:self alfrescoRequest:request completionBlock:^(NSData *serverInfoData, NSError *serverInfoError) {
+        // remove the temporart authentication provider
+        [self removeParameter:kAlfrescoAuthenticationProviderObjectKey];
+        
         if (serverInfoData == nil)
         {
             [diagnostic notifyEventFailureWithError:serverInfoError];
