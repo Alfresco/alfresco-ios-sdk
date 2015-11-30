@@ -103,7 +103,7 @@
 
 - (void)dealloc
 {
-    [self.currentRequest cancel];
+    [_currentRequest cancel];
 }
 
 #pragma mark - Getters and Setters
