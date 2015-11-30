@@ -1312,6 +1312,10 @@
                 [self appendStringPredicateToWhereClause:mutableString name:predicateName value:assigneeValue operator:@"="];
             }
         }
+        else
+        {
+            [self appendStringPredicateToWhereClause:mutableString name:kAlfrescoWorkflowPublicJSONAssignee value:currentUserIdentifier operator:@"="];
+        }
     }
 
     /**
@@ -1351,6 +1355,10 @@
         {
             [self appendEnumPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowStatus value:kAlfrescoPublicAPIWorkflowStatusCompleted operator:@"="];
         }
+    }
+    else
+    {
+        [self appendEnumPredicateToWhereClause:mutableString name:kAlfrescoPublicAPIWorkflowStatus value:kAlfrescoPublicAPIWorkflowStatusActive operator:@"="];
     }
     
     
