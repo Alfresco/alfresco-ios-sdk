@@ -16,7 +16,9 @@
 //  limitations under the License.
 //*****************************************************************************
 
+#include "../CMIS/ObjectiveCMIS/ObjectiveCMIS.xcconfig"
+
 ALFRESCO_SDK_VERSION=1.4.1-dev
 
 // Allow selected config variables to be accessible in code
-OTHER_CFLAGS=-DALFRESCO_SDK_VERSION="@\"${ALFRESCO_SDK_VERSION}\""
+OTHER_CFLAGS=-DOBJECTIVECMIS_VERSION="@\"${OBJECTIVECMIS_VERSION}\"" -DALFRESCO_SDK_VERSION="@\"${ALFRESCO_SDK_VERSION}\""
