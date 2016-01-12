@@ -31,6 +31,8 @@ NSString * const kCMISSessionParameterUseBackgroundNetworkSession = @"session_pa
 NSString * const kCMISSessionParameterBackgroundNetworkSessionId = @"session_param_background_session_id";
 NSString * const kCMISSessionParameterBackgroundNetworkSessionSharedContainerId = @"session_param_background_session_shared_container_id";
 
+NSString * const kCMISSessionParameterUploadBufferChunkSize = @"session_param_upload_chunk_size";
+
 @interface CMISSessionParameters ()
 @property (nonatomic, assign, readwrite) CMISBindingType bindingType;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;

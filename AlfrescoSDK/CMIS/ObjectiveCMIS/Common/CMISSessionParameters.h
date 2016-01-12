@@ -83,6 +83,12 @@ extern NSString * const kCMISSessionParameterBackgroundNetworkSessionId;
  */
 extern NSString * const kCMISSessionParameterBackgroundNetworkSessionSharedContainerId;
 
+/**
+ * Key for overriding the default upload buffer chunk size during the Base64 encoding phase.
+ * If not specified, the default chunk size of 32768 bytes will be used.
+ */
+extern NSString * const kCMISSessionParameterUploadBufferChunkSize;
+
 
 @interface CMISSessionParameters : NSObject
 
