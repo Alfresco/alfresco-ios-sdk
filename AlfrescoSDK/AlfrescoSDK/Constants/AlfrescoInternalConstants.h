@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -39,6 +39,7 @@ extern NSString * const kAlfrescoCMISNamespace;
 extern NSString * const kAlfrescoCMISSetAspects;
 extern NSString * const kAlfrescoCMISAspectsToAdd;
 extern NSString * const kAlfrescoCMISMandatoryAspects;
+extern NSUInteger const kAlfrescoCMISUploadBufferChunkSize;
 
 extern NSString * const kAlfrescoContentModelPrefix;
 extern NSString * const kAlfrescoSystemModelPrefix;
