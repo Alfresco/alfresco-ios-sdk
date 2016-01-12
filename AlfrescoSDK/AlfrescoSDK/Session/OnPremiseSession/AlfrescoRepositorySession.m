@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2016 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -381,6 +381,9 @@
         // setup CMIS session params
         cmisSessionParams.repositoryId = repoInfo.identifier;
         [cmisSessionParams setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
+        
+        // IOS-458: override CMIS upload buffer chunk size form it's default value of 32768 bytes
+        [cmisSessionParams setObject:@(kAlfrescoCMISUploadBufferChunkSize) forKey:kCMISSessionParameterUploadBufferChunkSize];
     
         // create CMIS session
         request.httpRequest = [CMISSession connectWithSessionParameters:cmisSessionParams

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2015 Alfresco Software Limited.
+ * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -93,6 +93,7 @@
     self = [super init];
     if (nil != self)
     {
+        self.parameters = parameters;
         self.oauthData = [[AlfrescoOAuthData alloc] initWithAPIKey:apiKey secretKey:secretKey redirectURI:redirectURI];
         self.completionBlock = completionBlock;
         self.baseURL = [AlfrescoOAuthHelper buildCloudURLFromParameters:parameters];
