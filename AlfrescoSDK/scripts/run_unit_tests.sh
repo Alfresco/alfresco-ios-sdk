@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2005-2014 Alfresco Software Limited.
+# Copyright (C) 2005-2016 Alfresco Software Limited.
 #
 # This file is part of the Alfresco Mobile SDK.
 #
@@ -52,7 +52,7 @@ else
          JUNIT_FLAG="true"
       else
          # define the main command
-         BUILD_OPTS=(test -scheme $ALFRESCO_SDK_PRODUCT_NAME -destination OS=latest,name="iPhone 6s" TEST_SERVER=${param})
+         BUILD_OPTS=(test -scheme $ALFRESCO_SDK_PRODUCT_NAME -destination OS=latest,name="iPhone 6" TEST_SERVER=${param})
       fi
    done
 fi
