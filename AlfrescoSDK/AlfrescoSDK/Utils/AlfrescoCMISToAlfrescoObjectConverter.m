@@ -134,18 +134,28 @@ static NSString * const kAlfrescoCMISEmptyString = @"(null)";
         NSString *propertyStringType = propData.identifier;
         NSNumber *propTypeIndex = @([self typeForCMISPropertyTypeString:propertyStringType]);
         propertyDictionary[kAlfrescoPropertyType] = propTypeIndex;
-        if (propData.values != nil && propData.values.count > 1)
+        if (propData.values != nil)
         {
-            propertyDictionary[kAlfrescoPropertyIsMultiValued] = @YES;
-            propertyDictionary[kAlfrescoPropertyValue] = propData.values;
+            id value = nil;
+            
+            if (propData.values.count > 1)
+            {
+                propertyDictionary[kAlfrescoPropertyIsMultiValued] = @YES;
+                value = propData.values;
+            }
+            else 
+            {
+                propertyDictionary[kAlfrescoPropertyIsMultiValued] = @NO;
+                value = propData.firstValue;
+            }
+
+            if (value != nil)
+            {
+                propertyDictionary[kAlfrescoPropertyValue] = value;
+                AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
+                alfPropertiesDict[propData.identifier] = alfProperty;
+            }
         }
-        else 
-        {
-            propertyDictionary[kAlfrescoPropertyIsMultiValued] = @NO;
-            propertyDictionary[kAlfrescoPropertyValue] = propData.firstValue;
-        }
-        AlfrescoProperty *alfProperty = [[AlfrescoProperty alloc] initWithProperties:propertyDictionary];
-        alfPropertiesDict[propData.identifier] = alfProperty;
     }
     
     [propertyDictionary setValue:alfPropertiesDict forKey:kAlfrescoNodeProperties];
