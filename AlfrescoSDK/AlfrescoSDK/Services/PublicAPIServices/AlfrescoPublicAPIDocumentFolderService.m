@@ -511,7 +511,14 @@ static const double kFavoritesRequestRateLimit = 0.1; // seconds between request
             
             if (object)
             {
-                NSString *homeFolderId = object[@"results"][0][@"succinctProperties"][@"cm:homeFolder"][0];
+                NSString *homeFolderId;
+                @try {
+                    homeFolderId = object[@"results"][0][@"succinctProperties"][@"cm:homeFolder"][0];
+                }
+                @catch (NSException *exception) {
+                    // No-op
+                }
+
                 if (homeFolderId.length > 0)
                 {
                     // We have the objectId, so now retrieve the folder itself
