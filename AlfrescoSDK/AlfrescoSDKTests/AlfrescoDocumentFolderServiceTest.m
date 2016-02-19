@@ -6259,6 +6259,50 @@
 }
 #pragma clang diagnostic pop
 
+- (void)testRetrieveHomeFolder
+{
+    if (self.setUpSuccess)
+    {
+        if (!self.isCloud)
+        {
+            self.dfService = [[AlfrescoDocumentFolderService alloc] initWithSession:self.currentSession];
+            
+            AlfrescoRequest *request = [self.dfService retrieveHomeFolderWithCompletionBlock:^(AlfrescoFolder *folder, NSError *error) {
+                if (folder == nil)
+                {
+                    self.lastTestSuccessful = NO;
+                    self.lastTestFailureMessage = [self failureMessageFromError:error];
+                }
+                else
+                {
+                    self.lastTestSuccessful = YES;
+                }
+                self.callbackCompleted = YES;
+            }];
+            
+            if (request == nil)
+            {
+                // Request will be denied for Alfresco Repositories older than 5.0
+                NSNumber *repoMinorVersion = [self.currentSession repositoryInfo].minorVersion;
+                NSNumber *repoMajorVersion = [self.currentSession repositoryInfo].majorVersion;
+                XCTAssertTrue(repoMajorVersion.integerValue < 5, @"Got a nil request object for a supported repo version: %@.%@", repoMajorVersion, repoMinorVersion);
+                self.lastTestSuccessful = YES;
+            }
+            else
+            {
+                [self waitUntilCompleteWithFixedTimeInterval];
+            }
+
+            XCTAssertTrue(self.lastTestSuccessful, @"%@", self.lastTestFailureMessage);
+        }
+    }
+    else
+    {
+        XCTFail(@"Could not run test case: %@", NSStringFromSelector(_cmd));
+    }
+}
+
+
 #pragma mark unit test internal methods
 
 - (BOOL)nodeArray:(NSArray *)nodeArray containsName:(NSString *)name
