@@ -280,7 +280,7 @@ extern NSString * const kAlfrescoJSONModifiedAt;
 extern NSString * const kAlfrescoJSONEdited;
 extern NSString * const kAlfrescoJSONCanEdit;
 extern NSString * const kAlfrescoJSONCanDelete;
-extern NSString * const kAlfrescoJSONEnabled;
+extern NSString * const kAlfrescoJSONEnable;
 extern NSString * const kAlfrescoJSONTag;
 extern NSString * const kAlfrescoJSONUserName;
 extern NSString * const kAlfrescoJSONFirstName;
