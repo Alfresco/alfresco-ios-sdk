@@ -156,11 +156,15 @@
                       completionBlock:(void (^)(NSError *error))completionBlock
                         progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock
 {
-    return [self.binding.objectService downloadContentOfObject:self.identifier
-                                                      streamId:nil
-                                                        toFile:filePath
-                                               completionBlock:completionBlock
-                                                 progressBlock:progressBlock];
+    return [self downloadContentToFile:filePath
+                                offset:nil
+                                length:nil
+                       completionBlock:completionBlock
+                         progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
+                             if (progressBlock) {
+                                 progressBlock(bytesDownloaded, bytesTotal);
+                             }
+                         }];
 }
 
 
@@ -172,7 +176,11 @@
                                         offset:nil
                                         length:nil
                                completionBlock:completionBlock
-                                 progressBlock:progressBlock];
+                                 progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
+                                     if (progressBlock) {
+                                         progressBlock(bytesDownloaded, bytesTotal);
+                                     }
+                                 }];
 }
 
 - (CMISRequest*)downloadContentToFile:(NSString *)filePath

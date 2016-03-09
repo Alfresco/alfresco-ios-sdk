@@ -51,10 +51,4 @@
  */
 - (void)didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 
-/**
- * callback when authentication challenge was received using NSURLSession
- */
-- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
-          completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler;
-
 @end
