@@ -275,6 +275,9 @@
                     cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
                 }
                 
+                /**
+                 * Background session not supported whilst using a rolled-back version of ObjectiveCMIS
+                 *
                 // setup background network session
                 BOOL useBackgroundSession = [(self.sessionData)[kAlfrescoUseBackgroundNetworkSession] boolValue];
                 if (useBackgroundSession)
@@ -295,6 +298,8 @@
                     [cmisSessionParams setObject:backgroundId forKey:kCMISSessionParameterBackgroundNetworkSessionId];
                     [cmisSessionParams setObject:containerId forKey:kCMISSessionParameterBackgroundNetworkSessionSharedContainerId];
                 }
+                 *
+                 */
                 
                 AlfrescoConnectionDiagnostic *diagnostic = [[AlfrescoConnectionDiagnostic alloc] initWithEventName:kAlfrescoConfigurationDiagnosticRepositoriesAvailableEvent];
                 [diagnostic notifyEventStart];
@@ -382,8 +387,13 @@
         cmisSessionParams.repositoryId = repoInfo.identifier;
         [cmisSessionParams setObject:NSStringFromClass([AlfrescoCMISObjectConverter class]) forKey:kCMISSessionParameterObjectConverterClassName];
         
+        /**
+         * Upload buffer size parameter not supported whilst using a rolled-back version of ObjectiveCMIS
+         *
         // IOS-458: override CMIS upload buffer chunk size form it's default value of 32768 bytes
         [cmisSessionParams setObject:@(kAlfrescoCMISUploadBufferChunkSize) forKey:kCMISSessionParameterUploadBufferChunkSize];
+         *
+         */
     
         // create CMIS session
         request.httpRequest = [CMISSession connectWithSessionParameters:cmisSessionParams

@@ -586,6 +586,9 @@ This authentication method authorises the user to access the home network assign
 
 - (void)setupCMISBackgroundNetworkSession:(CMISSessionParameters *)params
 {
+    /**
+     * Background session not supported whilst using a rolled-back version of ObjectiveCMIS
+     *
     BOOL useBackgroundSession = [(self.sessionData)[kAlfrescoUseBackgroundNetworkSession] boolValue];
     if (useBackgroundSession)
     {
@@ -605,6 +608,8 @@ This authentication method authorises the user to access the home network assign
         [params setObject:backgroundId forKey:kCMISSessionParameterBackgroundNetworkSessionId];
         [params setObject:containerId forKey:kCMISSessionParameterBackgroundNetworkSessionSharedContainerId];
     }
+     *
+     */
 }
 
 /**
