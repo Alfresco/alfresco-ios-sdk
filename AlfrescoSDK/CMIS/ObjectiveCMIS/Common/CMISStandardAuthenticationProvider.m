@@ -62,10 +62,6 @@
     return [NSDictionary dictionary];
 }
 
-- (void)updateWithHttpURLResponse:(NSHTTPURLResponse*)httpUrlResponse
-{
-    // nothing to do in the default implementation
-}
 
 - (BOOL)canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
 {
@@ -112,29 +108,11 @@
     }
 }
 
-- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
-          completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
+
+- (void)updateWithHttpURLResponse:(NSHTTPURLResponse*)httpUrlResponse
 {
-    if (challenge.previousFailureCount == 0) {
-        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate] &&
-            self.credential.identity) {
-            CMISLogDebug(@"Authenticating with client certificate");
-            completionHandler(NSURLSessionAuthChallengeUseCredential, self.credential);
-        } else if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodHTTPBasic] &&
-                   self.credential.user && self.credential.hasPassword) {
-            CMISLogDebug(@"Authenticating with username and password");
-            completionHandler(NSURLSessionAuthChallengeUseCredential, self.credential);
-        } else if (challenge.proposedCredential) {
-            CMISLogDebug(@"Authenticating with proposed credential");
-            completionHandler(NSURLSessionAuthChallengeUseCredential, challenge.proposedCredential);
-        } else {
-            CMISLogDebug(@"Authenticating without credential");
-            completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
-        }
-    } else {
-        CMISLogDebug(@"Authentication failed, cancelling logon");
-        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
-    }
+    // nothing to do in the default implementation
 }
+
 
 @end

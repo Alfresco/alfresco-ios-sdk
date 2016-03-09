@@ -18,7 +18,6 @@
  */
 
 #import "CMISStandardUntrustedSSLAuthenticationProvider.h"
-#import "CMISLog.h"
 
 @implementation CMISStandardUntrustedSSLAuthenticationProvider
 
@@ -41,23 +40,9 @@
     if ((challenge.previousFailureCount == 0) &&
         ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]))
     {
-        CMISLogWarning(@"Allowing self-signed certificate");
         [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
     } else {
         [super didReceiveAuthenticationChallenge:challenge];
-    }
-}
-
-- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
-          completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
-{
-    if ((challenge.previousFailureCount == 0) &&
-        ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]))
-    {
-        CMISLogWarning(@"Allowing self-signed certificate");
-        completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
-    } else {
-        [super didReceiveChallenge:challenge completionHandler:completionHandler];
     }
 }
 

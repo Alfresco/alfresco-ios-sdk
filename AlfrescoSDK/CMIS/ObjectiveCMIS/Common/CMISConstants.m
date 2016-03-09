@@ -45,7 +45,6 @@ NSString * const kCMISPropertyContentStreamId = @"cmis:contentStreamId";
 NSString * const kCMISPropertyContentStreamFileName = @"cmis:contentStreamFileName";
 NSString * const kCMISPropertyContentStreamLength = @"cmis:contentStreamLength";
 NSString * const kCMISPropertyContentStreamMediaType = @"cmis:contentStreamMimeType";
-NSString * const kCMISPropertyContentStreamHash = @"cmis:contentStreamHash";
 NSString * const kCMISPropertyObjectTypeId = @"cmis:objectTypeId";
 NSString * const kCMISPropertyVersionSeriesId = @"cmis:versionSeriesId";
 NSString * const kCMISPropertyVersionSeriesCheckedOutBy = @"cmis:versionSeriesCheckedOutBy";
@@ -151,14 +150,10 @@ NSString * const kCMISParameterValueReturnValueLatestMajor = @"latestmajor";
 // Common Media Types
 NSString * const kCMISMediaTypeOctetStream = @"application/octet-stream";
 
-// ContentStreamAllowed enum values
+//ContentStreamAllowed enum values
 NSString * const kCMISContentStreamAllowedValueRequired = @"required";
 NSString * const kCMISContentStreamAllowedValueAllowed = @"allowed";
 NSString * const kCMISContentStreamAllowedValueNotAllowed = @"notallowed";
-
-// Background network default values
-NSString * const kCMISDefaultBackgroundNetworkSessionId = @"ObjectiveCMIS";
-NSString * const kCMISDefaultBackgroundNetworkSessionSharedContainerId = @"ObjectiveCMISContainer";
 
 + (NSSet *)repositoryCapabilityKeys
 {

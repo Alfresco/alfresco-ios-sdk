@@ -30,14 +30,19 @@
 #import "CMISErrors.h"
 
 /**
- * The default buffer size for the input/output stream pair containing the base64 encoded data.
- * It can be overridden using the session parameter kCMISSessionParameterUploadBufferChunkSize
+ this is the buffer size for the input/output stream pair containing the base64 encoded data
  */
-const NSUInteger kDefaultBufferChunkSize = 32768;
+const NSUInteger kFullBufferSize = 32768;
+/**
+ this is the buffer size for the raw data. It must be an integer multiple of 3. Base64 encoding uses
+ 4 bytes for each 3 bytes of raw data. Therefore, the amount of raw data we take is
+ kFullBufferSize/4 * 3.
+ */
+const NSUInteger kRawBufferSize = 24576;
 
 /**
  A category that extends the NSStream class in order to pair an inputstream with an outputstream.
- The input stream will be used by NSURLSession via the HTTPBodyStream property of the URL request.
+ The input stream will be used by NSURLConnection via the HTTPBodyStream property of the URL request.
  The paired output stream will buffer base64 encoded as well as XML data.
  
  NOTE: the original sample code also provides a method for backward compatibility w.r.t  iOS versions below 5.0
@@ -47,14 +52,12 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
 
 @interface NSStream (StreamPair)
 + (void)createBoundInputStream:(NSInputStream **)inputStreamPtr
-                  outputStream:(NSOutputStream **)outputStreamPtr
-            transferBufferSize:(NSUInteger)transferBufferSize;
+                  outputStream:(NSOutputStream **)outputStreamPtr;
 @end
 
 @implementation NSStream (StreamPair)
 + (void)createBoundInputStream:(NSInputStream **)inputStreamPtr
                   outputStream:(NSOutputStream **)outputStreamPtr
-            transferBufferSize:(NSUInteger)transferBufferSize
 {
     CFReadStreamRef readStream;
     CFWriteStreamRef writeStream;
@@ -66,7 +69,7 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
     CFStreamCreateBoundPair(NULL,
                             ((inputStreamPtr != nil) ? &readStream : NULL),
                             ((outputStreamPtr != nil) ? &writeStream : NULL),
-                            (CFIndex)transferBufferSize);
+                            (CFIndex)kFullBufferSize);
     
     if (inputStreamPtr != NULL) {
         *inputStreamPtr  = CFBridgingRelease(readStream);
@@ -84,7 +87,6 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
 @property (nonatomic, copy) void (^progressBlock)(unsigned long long bytesUploaded, unsigned long long bytesTotal);
 @property (nonatomic, assign) BOOL useCombinedInputStream;
 @property (nonatomic, assign) BOOL base64Encoding;
-@property (nonatomic, assign) BOOL transferCompleted;
 @property (nonatomic, strong) NSInputStream *combinedInputStream;
 @property (nonatomic, strong) NSOutputStream *encoderStream;
 @property (nonatomic, strong) NSData *streamStartData;
@@ -93,7 +95,6 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
 @property (nonatomic, strong) NSData *dataBuffer;
 @property (nonatomic, assign, readwrite) size_t bufferOffset;
 @property (nonatomic, assign, readwrite) size_t bufferLimit;
-@property (nonatomic, assign) NSUInteger bufferChunkSize;
 
 @end
 
@@ -101,13 +102,13 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
 @implementation CMISHttpUploadRequest
 
 + (id)startRequest:(NSMutableURLRequest *)urlRequest
-        httpMethod:(CMISHttpRequestMethod)httpRequestMethod
-       inputStream:(NSInputStream*)inputStream
-           headers:(NSDictionary*)additionalHeaders
-     bytesExpected:(unsigned long long)bytesExpected
-           session:(CMISBindingSession *)session
-   completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
-     progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock
+                            httpMethod:(CMISHttpRequestMethod)httpRequestMethod
+                           inputStream:(NSInputStream*)inputStream
+                               headers:(NSDictionary*)additionalHeaders
+                         bytesExpected:(unsigned long long)bytesExpected
+                authenticationProvider:(id<CMISAuthenticationProvider>) authenticationProvider
+                       completionBlock:(void (^)(CMISHttpResponse *httpResponse, NSError *error))completionBlock
+                         progressBlock:(void (^)(unsigned long long bytesUploaded, unsigned long long bytesTotal))progressBlock
 {
     CMISHttpUploadRequest *httpRequest = [[self alloc] initWithHttpMethod:httpRequestMethod
                                                           completionBlock:completionBlock
@@ -115,13 +116,10 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
     httpRequest.inputStream = inputStream;
     httpRequest.additionalHeaders = additionalHeaders;
     httpRequest.bytesExpected = bytesExpected;
-    httpRequest.session = session;
+    httpRequest.authenticationProvider = authenticationProvider;
     httpRequest.useCombinedInputStream = NO;
-    httpRequest.base64Encoding = NO;
     httpRequest.combinedInputStream = nil;
     httpRequest.encoderStream = nil;
-    
-    [httpRequest processSessionParameters];
     
     if (![httpRequest startRequest:urlRequest]) {
         httpRequest = nil;
@@ -135,7 +133,7 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
        inputStream:(NSInputStream *)inputStream
            headers:(NSDictionary *)additionalHeaders
      bytesExpected:(unsigned long long)bytesExpected
-           session:(CMISBindingSession *)session
+authenticationProvider:(id<CMISAuthenticationProvider>)authenticationProvider
          startData:(NSData *)startData
            endData:(NSData *)endData
  useBase64Encoding:(BOOL)useBase64Encoding
@@ -151,13 +149,11 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
     httpRequest.streamEndData = endData;
     httpRequest.additionalHeaders = additionalHeaders;
     httpRequest.bytesExpected = bytesExpected;
-    httpRequest.session = session;
     httpRequest.useCombinedInputStream = YES;
     httpRequest.base64Encoding = useBase64Encoding;
+    httpRequest.authenticationProvider = authenticationProvider;
     
-    [httpRequest processSessionParameters];
     [httpRequest prepareStreams];
-
     if (![httpRequest startRequest:urlRequest]) {
         httpRequest = nil;
     }
@@ -174,10 +170,10 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
                      completionBlock:completionBlock];
     if (self) {
         _progressBlock = progressBlock;
-        _transferCompleted = NO;
     }
     return self;
 }
+
 
 /**
  if we are using on-the-go base64 encoding, we will use the combinedInputStream in URL connections/request.
@@ -186,14 +182,24 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
  */
 - (BOOL)startRequest:(NSMutableURLRequest*)urlRequest
 {
-    if (self.useCombinedInputStream && self.combinedInputStream && self.base64Encoding) {
-        NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithDictionary:self.additionalHeaders];
-        [headers setValue:[NSString stringWithFormat:@"%llu", self.encodedLength] forKey:@"Content-Length"];
-        self.additionalHeaders = [NSDictionary dictionaryWithDictionary:headers];
+    if (self.useCombinedInputStream)
+    {
+        if (self.combinedInputStream) {
+            urlRequest.HTTPBodyStream = self.combinedInputStream;
+            if(self.base64Encoding) {
+                NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithDictionary:self.additionalHeaders];
+                [headers setValue:[NSString stringWithFormat:@"%llu", self.encodedLength] forKey:@"Content-Length"];
+                self.additionalHeaders = [NSDictionary dictionaryWithDictionary:headers];
+            }
+        }
     }
-
+    else
+    {
+        if (self.inputStream) {
+            urlRequest.HTTPBodyStream = self.inputStream;
+        }
+    }
     BOOL startSuccess = [super startRequest:urlRequest];
-    
     if (self.useCombinedInputStream) {
         [self.encoderStream open];
     }
@@ -201,18 +207,9 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
     return startSuccess;
 }
 
-- (NSURLSessionTask *)taskForRequest:(NSURLRequest *)request
-{
-    return [self.urlSession uploadTaskWithStreamedRequest:request];
-}
-
-#pragma mark CMISCancellableRequest method
-
+#pragma CMISCancellableRequest method
 - (void)cancel
 {
-    if (self.transferCompleted) {
-        return;
-    }
     self.progressBlock = nil;
     
     [super cancel];
@@ -221,72 +218,67 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
     }
 }
 
-#pragma mark Session delegate methods
-
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task needNewBodyStream:(void (^)(NSInputStream *))completionHandler
+#pragma NSURLConnectionDataDelegate methods
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    if (self.combinedInputStream) {
-        completionHandler(self.combinedInputStream);
-    } else {
-        completionHandler(self.inputStream);
+    [super connection:connection didReceiveResponse:response];
+    
+    self.bytesUploaded = 0;
+}
+
+- (void)connection:(NSURLConnection *)connection
+   didSendBodyData:(NSInteger)bytesWritten
+ totalBytesWritten:(NSInteger)totalBytesWritten
+totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
+{
+    if (self.progressBlock) {
+        if (self.useCombinedInputStream && self.base64Encoding) {
+            // Show the actual transmitted raw data size to the user, not the base64 encoded size
+            totalBytesWritten = [CMISHttpUploadRequest rawEncodedLength:totalBytesWritten];
+            if (totalBytesWritten > totalBytesExpectedToWrite) {
+                totalBytesWritten = totalBytesExpectedToWrite;
+            }
+        }
+        
+        if (self.bytesExpected == 0) {
+            self.progressBlock((unsigned long long)totalBytesWritten, (unsigned long long)totalBytesExpectedToWrite);
+        } else {
+            self.progressBlock((unsigned long long)totalBytesWritten, self.bytesExpected);
+        }
     }
 }
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+
+/**
+ In addition to closing the connection we also have to close/reset all streams used in this class.
+ This is for base64 encoding only
+ */
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    [super URLSession:session task:task didCompleteWithError:error];
+    [super connection:connection didFailWithError:error];
     
     if (self.useCombinedInputStream) {
-        if (error) {
-            [self stopSendWithStatus:@"connection is being terminated with error."];
-        } else {
-            [self stopSendWithStatus:@"Connection finished as expected."];
-        }
+        [self stopSendWithStatus:@"connection is being terminated with error."];
+    }
+    self.progressBlock = nil;
+}
+
+
+/**
+ In addition to closing the connection we also have to close/reset all streams used in this class.
+ This is for base64 encoding only
+ */
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    [super connectionDidFinishLoading:connection];
+    if (self.useCombinedInputStream) {
+        [self stopSendWithStatus:@"Connection finished as expected."];
     }
     
     self.progressBlock = nil;
 }
 
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
-{
-    self.bytesUploaded = 0;
-    
-    [super URLSession:session dataTask:dataTask didReceiveResponse:response completionHandler:completionHandler];
-}
-
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
-{
-    if (self.progressBlock) {
-        if (self.useCombinedInputStream && self.base64Encoding) {
-            // Show the actual transmitted raw data size to the user, not the base64 encoded size
-            totalBytesSent = [CMISHttpUploadRequest rawEncodedLength:totalBytesSent];
-            if (totalBytesSent > totalBytesExpectedToSend) {
-                totalBytesSent = totalBytesExpectedToSend;
-            }
-        }
-        
-        if (self.bytesExpected == 0) {
-            if (totalBytesSent >= totalBytesExpectedToSend) {
-                self.transferCompleted = YES;
-            }
-            // pass progress to progressBlock, on the original thread
-            if (self.originalThread) {
-                [self performSelector:@selector(executeProgressBlock:) onThread:self.originalThread withObject:@[@(totalBytesSent), @(totalBytesExpectedToSend)] waitUntilDone:NO];
-            }
-        } else {
-            if (totalBytesSent >= self.bytesExpected) {
-                self.transferCompleted = YES;
-            }
-            // pass progress to progressBlock, on the original thread
-            if (self.originalThread) {
-                [self performSelector:@selector(executeProgressBlock:) onThread:self.originalThread withObject:@[@(totalBytesSent), @(self.bytesExpected)] waitUntilDone:NO];
-            }
-        }
-    }
-}
-
-#pragma mark NSStreamDelegate method
-
+#pragma NSStreamDelegate method
 /**
  For encoding base64 data - this is the meat of this class.
  The action is in the case where the eventCode == NSStreamEventHasSpaceAvailable
@@ -351,9 +343,9 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
                     self.bufferLimit = 0;
                 }
                 if (self.inputStream != nil) {
-                    NSUInteger rawBufferSize = [CMISHttpUploadRequest rawEncodedLength:self.bufferChunkSize];
-                    uint8_t rawBuffer[rawBufferSize];
-                    NSInteger rawBytesRead = [self.inputStream read:rawBuffer maxLength:rawBufferSize];
+                    NSInteger rawBytesRead;
+                    uint8_t rawBuffer[kRawBufferSize];
+                    rawBytesRead = [self.inputStream read:rawBuffer maxLength:kRawBufferSize];
                     if (-1 == rawBytesRead) {
                         [self stopSendWithStatus:@"Error while reading from source input stream"];
                     } else if (0 != rawBytesRead) {
@@ -401,10 +393,7 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
                 if (bytesWritten <= 0) {
                     [self stopSendWithStatus:@"Network write error"];
                     NSError *cmisError = [CMISErrors createCMISErrorWithCode:kCMISErrorCodeConnection detailedDescription:@"Network write error"];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnonnull"
-                    [self URLSession:nil task:nil didCompleteWithError:cmisError];
-#pragma clang diagnostic pop
+                    [self connection:nil didFailWithError:cmisError];
                 } else {
                     self.bufferOffset += bytesWritten;
                 }
@@ -428,13 +417,7 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
 }
 
 
-#pragma mark Private methods
-
-- (void)processSessionParameters
-{
-    // transfer buffer chunk size
-    self.bufferChunkSize = [[self.session objectForKey:kCMISSessionParameterUploadBufferChunkSize defaultValue:@(kDefaultBufferChunkSize)] unsignedIntegerValue];
-}
+#pragma private methods
 
 - (void)prepareStreams
 {
@@ -464,7 +447,7 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
     
     NSInputStream *requestInputStream;
     NSOutputStream *outputStream;
-    [NSStream createBoundInputStream:&requestInputStream outputStream:&outputStream transferBufferSize:self.bufferChunkSize];
+    [NSStream createBoundInputStream:&requestInputStream outputStream:&outputStream];
     assert(requestInputStream != nil);
     assert(outputStream != nil);
     self.combinedInputStream = requestInputStream;
@@ -485,49 +468,42 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
     return 4 * adjustedThirdPartOfSize;
 }
 
-+ (unsigned long long)rawEncodedLength:(unsigned long long)base64EncodedSize
++ (NSUInteger)rawEncodedLength:(NSUInteger)base64EncodedSize
 {
     if (0 == base64EncodedSize) {
         return 0;
     }
     
-    unsigned long long adjustedFourthPartOfSize = (base64EncodedSize / 4) + ( (0 == base64EncodedSize % 4 ) ? 0 : 1 );
+    NSUInteger adjustedFourthPartOfSize = (base64EncodedSize / 4) + ( (0 == base64EncodedSize % 4 ) ? 0 : 1 );
     return 3 * adjustedFourthPartOfSize;
 }
 
 - (void)stopSendWithStatus:(NSString *)statusString
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (nil != statusString) {
-            CMISLogTrace(@"Upload request terminated: Message is %@", statusString);
-        }
-        self.bufferOffset = 0;
-        self.bufferLimit  = 0;
-        self.dataBuffer = nil;
-        if (self.urlSession != nil) {
-            [self.urlSession invalidateAndCancel];
-            self.urlSession = nil;
-        }
-        if (self.encoderStream != nil) {
-            self.encoderStream.delegate = nil;
-            [self.encoderStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-            [self.encoderStream close];
-            self.encoderStream = nil;
-        }
-        self.combinedInputStream = nil;
-        if(self.inputStream != nil){
-            [self.inputStream close];
-            self.inputStream = nil;
-        }
-        self.streamEndData = nil;
-        self.streamStartData = nil;
-    });
+    if (nil != statusString) {
+        CMISLogTrace(@"Upload request terminated: Message is %@", statusString);
+    }
+    self.bufferOffset = 0;
+    self.bufferLimit  = 0;
+    self.dataBuffer = nil;
+    if (self.connection != nil) {
+        [self.connection cancel];
+        self.connection = nil;
+    }
+    if (self.encoderStream != nil) {
+        self.encoderStream.delegate = nil;
+        [self.encoderStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [self.encoderStream close];
+        self.encoderStream = nil;
+    }
+    self.combinedInputStream = nil;
+    if(self.inputStream != nil){
+        [self.inputStream close];
+        self.inputStream = nil;
+    }
+    self.streamEndData = nil;
+    self.streamStartData = nil;
 }
 
-- (void)executeProgressBlock:(NSArray*)valueArray {
-    if (self.progressBlock) {
-        self.progressBlock([valueArray[0] unsignedLongLongValue], [valueArray[1] unsignedLongLongValue]);
-    }
-}
 
 @end

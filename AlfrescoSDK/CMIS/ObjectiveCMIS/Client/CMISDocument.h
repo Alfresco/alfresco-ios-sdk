@@ -22,7 +22,7 @@
 @class CMISOperationContext;
 @class CMISRequest;
 
-@interface CMISDocument : CMISFileableObject
+@interface CMISDocument : CMISFileableObject <NSURLConnectionDataDelegate>
 
 @property (nonatomic, strong, readonly) NSString *contentStreamId;
 @property (nonatomic, strong, readonly) NSString *contentStreamFileName;

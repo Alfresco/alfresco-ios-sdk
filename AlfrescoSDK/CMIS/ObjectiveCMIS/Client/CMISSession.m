@@ -589,11 +589,12 @@
                             completionBlock:(void (^)(NSError *error))completionBlock
                               progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock
 {
-    return [self.binding.objectService downloadContentOfObject:objectId
-                                                      streamId:nil
-                                                        toFile:filePath
-                                               completionBlock:completionBlock
-                                                 progressBlock:progressBlock];
+    return [self downloadContentOfCMISObject:objectId
+                                      toFile:filePath
+                                      offset:nil
+                                      length:nil
+                             completionBlock:completionBlock
+                               progressBlock:progressBlock];
 }
 
 - (CMISRequest*)downloadContentOfCMISObject:(NSString *)objectId

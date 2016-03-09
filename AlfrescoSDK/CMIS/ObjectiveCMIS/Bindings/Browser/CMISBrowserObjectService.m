@@ -122,28 +122,17 @@
                         completionBlock:(void (^)(NSError *error))completionBlock
                           progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock
 {
-    CMISRequest *request = [[CMISRequest alloc] init];
-    
-    NSString *rootUrl = [self.bindingSession objectForKey:kCMISBrowserBindingSessionKeyRootFolderUrl];
-    
-    NSString *contentUrl = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterStreamId value:streamId urlString:rootUrl];
-    contentUrl = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterObjectId value:objectId urlString:contentUrl];
-    contentUrl = [CMISURLUtil urlStringByAppendingParameter:kCMISBrowserJSONParameterSelector value:kCMISBrowserJSONSelectorContent urlString:contentUrl];
-    
-    [self.bindingSession.networkProvider invoke:[NSURL URLWithString:contentUrl]
-                                     httpMethod:HTTP_GET
-                                        session:self.bindingSession
-                                 outputFilePath:filePath
-                                  bytesExpected:0
-                                    cmisRequest:request
-                                completionBlock:^(CMISHttpResponse *httpResponse, NSError *error)
-     {
-         if (completionBlock) {
-             completionBlock(error);
-         }
-     } progressBlock:progressBlock];
-    
-    return request;
+    return [self downloadContentOfObject:objectId
+                                streamId:streamId
+                                  toFile:filePath
+                                  offset:nil
+                                  length:nil
+                         completionBlock:completionBlock
+                           progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
+                               if (progressBlock) {
+                                   progressBlock(bytesDownloaded, bytesTotal);
+                               }
+                           }];
 }
 
 - (CMISRequest*)downloadContentOfObject:(NSString *)objectId
@@ -199,11 +188,13 @@
     contentUrl = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterObjectId value:objectId urlString:contentUrl];
     contentUrl = [CMISURLUtil urlStringByAppendingParameter:kCMISBrowserJSONParameterSelector value:kCMISBrowserJSONSelectorContent urlString:contentUrl];
 
+    unsigned long long streamLength = 0; //TODO do we need this?
+
     [self.bindingSession.networkProvider invoke:[NSURL URLWithString:contentUrl]
                                   httpMethod:HTTP_GET
                                      session:self.bindingSession
                                 outputStream:outputStream
-                               bytesExpected:0
+                               bytesExpected:streamLength
                                       offset:offset
                                       length:length
                                  cmisRequest:request

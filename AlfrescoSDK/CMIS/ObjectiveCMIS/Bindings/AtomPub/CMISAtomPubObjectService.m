@@ -87,44 +87,17 @@
                         completionBlock:(void (^)(NSError *error))completionBlock
                           progressBlock:(void (^)(unsigned long long bytesDownloaded, unsigned long long bytesTotal))progressBlock
 {
-    CMISRequest *request = [[CMISRequest alloc] init];
-    
-    [self retrieveObjectInternal:objectId cmisRequest:request completionBlock:^(CMISObjectData *objectData, NSError *error) {
-        if (error) {
-            if (completionBlock) {
-                completionBlock([CMISErrors cmisError:error cmisErrorCode:kCMISErrorCodeObjectNotFound]);
-            }
-        } else {
-            NSURL *contentUrl = objectData.contentUrl;
-         
-            if (contentUrl) {
-                if (streamId != nil) {
-                    contentUrl = [CMISURLUtil urlStringByAppendingParameter:kCMISParameterStreamId value:streamId url:contentUrl];
-                }
-                
-                unsigned long long streamLength = [[[objectData.properties.propertiesDictionary objectForKey:kCMISPropertyContentStreamLength] firstValue] unsignedLongLongValue];
-             
-                [self.bindingSession.networkProvider invoke:contentUrl
-                                                 httpMethod:HTTP_GET
-                                                    session:self.bindingSession
-                                             outputFilePath:filePath
-                                              bytesExpected:streamLength
-                                                cmisRequest:request
-                                            completionBlock:^(CMISHttpResponse *httpResponse, NSError *error) {
-                    if (completionBlock) {
-                        completionBlock(error);
-                    }
-                } progressBlock:progressBlock];
-                
-            } else {
-                if (completionBlock) {
-                    completionBlock(nil);
-                }
-            }
-        }
-    }];
-    
-    return request;
+    return [self downloadContentOfObject:objectId
+                         streamId:streamId
+                           toFile:filePath
+                           offset:nil
+                           length:nil
+                  completionBlock:completionBlock
+                    progressBlock:^(unsigned long long bytesDownloaded, unsigned long long bytesTotal) {
+                        if (progressBlock) {
+                            progressBlock(bytesDownloaded, bytesTotal);
+                        }
+                    }];
 }
 
 - (CMISRequest*)downloadContentOfObject:(NSString *)objectId

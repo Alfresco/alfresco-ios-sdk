@@ -25,14 +25,6 @@ NSString * const kCMISSessionParameterLinkCacheSize = @"session_param_cache_size
 NSString * const kCMISSessionParameterTypeDefinitionCacheSize = @"session_param_cache_size_type_definition";
 NSString * const kCMISSessionParameterSendCookies = @"session_param_send_cookies";
 
-NSString * const kCMISSessionParameterCheckNetworkReachability = @"session_param_check_network_reachability";
-NSString * const kCMISSessionParameterRequestTimeout = @"session_param_request_timeout";
-NSString * const kCMISSessionParameterUseBackgroundNetworkSession = @"session_param_use_background_session";
-NSString * const kCMISSessionParameterBackgroundNetworkSessionId = @"session_param_background_session_id";
-NSString * const kCMISSessionParameterBackgroundNetworkSessionSharedContainerId = @"session_param_background_session_shared_container_id";
-
-NSString * const kCMISSessionParameterUploadBufferChunkSize = @"session_param_upload_chunk_size";
-
 @interface CMISSessionParameters ()
 @property (nonatomic, assign, readwrite) CMISBindingType bindingType;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *sessionData;
