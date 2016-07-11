@@ -167,9 +167,9 @@
                                                  method:kAlfrescoHTTPPost
                                         alfrescoRequest:request
                                         completionBlock:^(NSData *data, NSError *responseError){
-        if (nil != error)
+        if (nil != responseError)
         {
-            completionBlock(NO, error);
+            completionBlock(NO, responseError);
         }
         else
         {
