@@ -450,8 +450,14 @@
         }
         if (showAlert)
         {
-            UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not obtain authentication code from server. Possibly incorrect password/username" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-            [alertview show];            
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                     message:@"Could not obtain authentication code from server. Possibly incorrect password/username."
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil];
+            [alertController addAction:okAction];
+            [self presentViewController:alertController animated:YES completion:nil];
         }
     }
 }
