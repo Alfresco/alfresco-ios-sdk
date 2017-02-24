@@ -33,7 +33,7 @@ static NSString * const kSmallThumbnailImageMappingPlist = @"SmallThumbnailImage
     }
     
     NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSUInteger preservedComponents = (NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit);
+    NSUInteger preservedComponents = (NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay);
     
     // Only keep the date components
     NSDate *today = [calendar dateFromComponents:[calendar components:preservedComponents fromDate:[NSDate date]]];

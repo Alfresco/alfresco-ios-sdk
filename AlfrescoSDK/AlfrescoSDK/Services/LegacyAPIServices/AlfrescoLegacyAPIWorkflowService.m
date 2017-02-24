@@ -1290,7 +1290,7 @@
         if ([filter hasFilter:kAlfrescoFilterByWorkflowDueDate])
         {
             NSDate *now = [NSDate date];
-            NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+            NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
             
             if ([[filter valueForFilter:kAlfrescoFilterByWorkflowDueDate] isEqualToString:kAlfrescoFilterValueWorkflowDueDateToday])
             {
