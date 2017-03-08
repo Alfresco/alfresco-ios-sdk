@@ -35,7 +35,7 @@ static const NSString *kCalendarKey = @"CMISCalendar";
     if (dateFormatter == nil) {
         dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.locale = [NSLocale systemLocale];
-        dateFormatter.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar]; // ISO8601 calendar not available
+        dateFormatter.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]; // ISO8601 calendar not available
         NSTimeZone *timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         dateFormatter.calendar.timeZone = timeZone;
         dateFormatter.timeZone = timeZone;
@@ -51,7 +51,7 @@ static const NSString *kCalendarKey = @"CMISCalendar";
     NSMutableDictionary *threadDictionary = [[NSThread currentThread] threadDictionary];
     NSCalendar *calendar = [threadDictionary objectForKey:kCalendarKey];
     if (calendar == nil) {
-        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar]; // ISO8601 calendar not available
+        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]; // ISO8601 calendar not available
         calendar.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0]; // default for formats without time
         
         [threadDictionary setObject:calendar forKey:kCalendarKey];

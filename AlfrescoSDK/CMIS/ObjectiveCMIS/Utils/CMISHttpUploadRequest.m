@@ -351,7 +351,7 @@ const NSUInteger kDefaultBufferChunkSize = 32768;
                     self.bufferLimit = 0;
                 }
                 if (self.inputStream != nil) {
-                    NSUInteger rawBufferSize = [CMISHttpUploadRequest rawEncodedLength:self.bufferChunkSize];
+                    NSUInteger rawBufferSize = (NSUInteger)[CMISHttpUploadRequest rawEncodedLength:self.bufferChunkSize];
                     uint8_t rawBuffer[rawBufferSize];
                     NSInteger rawBytesRead = [self.inputStream read:rawBuffer maxLength:rawBufferSize];
                     if (-1 == rawBytesRead) {

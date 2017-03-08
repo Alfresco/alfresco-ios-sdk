@@ -27,7 +27,7 @@
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco), Tauseef Mughal (Alfresco)
  */
 
-@interface AlfrescoOAuthUILoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, UIAlertViewDelegate>
+@interface AlfrescoOAuthUILoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 /// @param webView - holds the login HTML page
 @property (nonatomic, strong) UIWebView * webView;
 /// @param activityIndicator - indicates loading process
