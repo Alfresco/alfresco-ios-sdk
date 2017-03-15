@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -1138,6 +1138,15 @@
     // Not supported with PublicAPI - defer to OnPremise APIs
     AlfrescoLegacyAPISiteService *legacyAPI = [[AlfrescoLegacyAPISiteService alloc] initWithSession:self.session];
     return [legacyAPI searchWithKeywords:keywords completionBlock:completionBlock];
+}
+
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                         listingContext:(AlfrescoListingContext *)listingContext
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock
+{
+    // Not supported with PublicAPI - defer to OnPremise APIs
+    AlfrescoLegacyAPISiteService *legacyAPI = [[AlfrescoLegacyAPISiteService alloc] initWithSession:self.session];
+    return [legacyAPI searchWithKeywords:keywords listingContext:listingContext completionBlock:completionBlock];
 }
 
 #pragma mark Internal private methods

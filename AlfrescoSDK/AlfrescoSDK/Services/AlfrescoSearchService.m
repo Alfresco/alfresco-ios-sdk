@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -98,11 +98,9 @@
                                        NSArray *sortedResultArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
                                        completionBlock(sortedResultArray, nil);
                                    }
-                                   
                                }];
     }
     return request;
-    
 }
 
 
@@ -155,7 +153,6 @@
          }];
     }
     return request;
-    
 }
 
 - (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
@@ -218,13 +215,12 @@
                 [resultArray addObject:[self.objectConverter nodeFromCMISQueryResult:queryResult]];
             }
             NSArray *sortedArray = [AlfrescoSortingUtils sortedArrayForArray:resultArray sortKey:self.defaultSortKey ascending:YES];
-            AlfrescoPagingResult *pagingResult = [AlfrescoPagingUtils pagedResultFromArray:sortedArray listingContext:listingContext];
+            AlfrescoPagingResult *pagingResult = [[AlfrescoPagingResult alloc] initWithArray:sortedArray hasMoreItems:pagedResult.hasMoreItems totalItems:pagedResult.numItems];
             completionBlock(pagingResult, nil);            
         }        
     }];    
     return request;
 }
-
 
 #pragma mark Internal methods
 
@@ -283,6 +279,5 @@
     
     return searchQuery;
 }
-
 
 @end
