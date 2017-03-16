@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -21,6 +21,8 @@
 #import "AlfrescoPublicAPIDocumentFolderService.h"
 #import "AlfrescoErrors.h"
 #import "CMISOperationContext.h"
+#import "CMISPagedResult.h"
+#import "CMISQueryResult.h"
 #import "CMISSession.h"
 #import "AlfrescoCMISUtil.h"
 #import "CMISDocument.h"
@@ -494,40 +496,29 @@ static const double kFavoritesRequestRateLimit = 0.1; // seconds between request
     }
     
     // Construct the URL
-    NSURL *queryURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [self.session.baseUrl absoluteString], kAlfrescoPublicAPICMISBrowserPath]];
-    
-    // POST body
     NSString *queryStatement = [NSString stringWithFormat:@"SELECT cm:homeFolder FROM cm:person WHERE cm:userName = '%@'", self.session.personIdentifier];
-    NSString *postBody = [NSString stringWithFormat:@"searchAllVersions=false&skipCount=0&includeAllowableActions=false&maxItems=1&cmisaction=query&includeRelationships=none&succinct=true&statement=%@", queryStatement];
-    NSData *postData = [[postBody stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
     
     __block AlfrescoRequest *alfrescoRequest = [[AlfrescoRequest alloc] init];
-    [self.session.networkProvider executeRequestWithURL:queryURL session:self.session requestBody:postData method:kAlfrescoHTTPPost alfrescoRequest:alfrescoRequest completionBlock:^(NSData *data, NSError *error) {
-        if (data)
+    
+    CMISOperationContext *operationContext = [CMISOperationContext defaultOperationContext];
+    operationContext.includeAllowableActions = NO;
+    operationContext.maxItemsPerPage = 1;
+    [self.cmisSession query:queryStatement searchAllVersions:false operationContext:operationContext completionBlock:^(CMISPagedResult *pagedResult, NSError *error) {
+        if(pagedResult && pagedResult.resultArray.count > 0)
         {
-            // Looking for results[0].succinctProperties.cm:homeFolder[0]
-            NSError *error = nil;
-            id object = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            CMISQueryResult *queryResult = pagedResult.resultArray[0];
+            NSString *homeFolderId;
+            @try {
+                homeFolderId = [queryResult propertyValueForId:@"cm:homeFolder"];
+            }
+            @catch (NSException *exception) {
+                // No-op
+            }
             
-            if (object)
+            if (homeFolderId.length > 0)
             {
-                NSString *homeFolderId;
-                @try {
-                    homeFolderId = object[@"results"][0][@"succinctProperties"][@"cm:homeFolder"][0];
-                }
-                @catch (NSException *exception) {
-                    // No-op
-                }
-
-                if (homeFolderId.length > 0)
-                {
-                    // We have the objectId, so now retrieve the folder itself
-                    alfrescoRequest = [self retrieveNodeWithIdentifier:homeFolderId completionBlock:(AlfrescoNodeCompletionBlock)completionBlock];
-                }
-                else
-                {
-                    completionBlock(nil, error);
-                }
+                // We have the objectId, so now retrieve the folder itself
+                alfrescoRequest = [self retrieveNodeWithIdentifier:homeFolderId completionBlock:(AlfrescoNodeCompletionBlock)completionBlock];
             }
             else
             {
