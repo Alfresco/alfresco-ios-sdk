@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -212,6 +212,15 @@
  */
 - (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
                         completionBlock:(AlfrescoArrayCompletionBlock)completionBlock;
+
+/** Returns an array of sites that match the search keywords.
+ @param keywords - keywords to pass to the site search API
+ @param listingContext - The listing context with a paging definition that's used to retrieve sites.
+ @param completionBlock - contains Array of site objects if successful, or nil if not.
+ */
+- (AlfrescoRequest *)searchWithKeywords:(NSString *)keywords
+                         listingContext:(AlfrescoListingContext *)listingContext
+                        completionBlock:(AlfrescoPagingResultCompletionBlock)completionBlock;
 
 /** Clears the sites cache
  */
