@@ -46,6 +46,7 @@ static CMISReachability *networkReachability = NULL;
             handleFlags(currentFlags);
         }
     }
+    [networkReachability startNotifier];
     return networkReachability;
 }
 
