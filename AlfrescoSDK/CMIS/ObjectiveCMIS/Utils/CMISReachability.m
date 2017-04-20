@@ -41,12 +41,12 @@ static CMISReachability *networkReachability = NULL;
         zeroAddress.sin_len = sizeof(zeroAddress);
         zeroAddress.sin_family = AF_INET;
         networkReachability = [self reachabilityWithAddress:&zeroAddress];
-        SCNetworkReachabilityFlags currentFlags = 0;
-        if (SCNetworkReachabilityGetFlags(networkReachability->_networkReachabilityRef, &currentFlags)) {
-            handleFlags(currentFlags);
-        }
+        
     }
-    [networkReachability startNotifier];
+    SCNetworkReachabilityFlags currentFlags = 0;
+    if (SCNetworkReachabilityGetFlags(networkReachability->_networkReachabilityRef, &currentFlags)) {
+        handleFlags(currentFlags);
+    }
     return networkReachability;
 }
 
@@ -115,7 +115,7 @@ void handleFlags(SCNetworkReachabilityFlags flags)
     SCNetworkReachabilityContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
     
     if (SCNetworkReachabilitySetCallback(self.networkReachabilityRef, ReachabilityChangedCallback, &context)) {
-        if (SCNetworkReachabilityScheduleWithRunLoop(self.networkReachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode)) {
+        if (SCNetworkReachabilityScheduleWithRunLoop(self.networkReachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopCommonModes)) {
             started = YES;
         }
         else {
@@ -134,7 +134,7 @@ void handleFlags(SCNetworkReachabilityFlags flags)
     BOOL stopped = NO;
     
     if (self.networkReachabilityRef != NULL) {
-        if (SCNetworkReachabilityUnscheduleFromRunLoop(self.networkReachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode)) {
+        if (SCNetworkReachabilityUnscheduleFromRunLoop(self.networkReachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopCommonModes)) {
             stopped = YES;
         }
         else {
