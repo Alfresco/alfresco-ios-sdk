@@ -48,7 +48,6 @@ typedef NS_ENUM(NSInteger, AlfrescoErrorCodes)
     kAlfrescoErrorCodeInvalidGrant = 114,
     kAlfrescoErrorCodeAPIRateLimitExceeded = 115,
     kAlfrescoErrorCodeOAuthDataMissing = 116,
-    kAlfrescoErrorCodeSAMLDataMissing = 117,
 
     kAlfrescoErrorCodeJSONParsing = 200,
     kAlfrescoErrorCodeJSONParsingNilData = 201,
