@@ -229,6 +229,7 @@
     // process keywords into an array after replacing quotes and escaping apostrophes (MOBSDK-754)
     keywords = [keywords stringByReplacingOccurrencesOfString:@"\"" withString:@""];
     keywords = [keywords stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
+    keywords = [keywords stringByReplacingOccurrencesOfString:@"\u00A0" withString:@" "];
     NSArray *keywordArray = [keywords componentsSeparatedByString:@" "];
     
     NSMutableString *searchQuery = [NSMutableString stringWithFormat:@"SELECT * FROM %@ WHERE (", options.typeName];
