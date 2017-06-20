@@ -34,6 +34,9 @@
 #import "AlfrescoOAuthHelper.h"
 #import "AlfrescoOAuthLoginDelegate.h"
 #import "AlfrescoOAuthData.h"
+#import "AlfrescoSAMLAuthHelper.h"
+#import "AlfrescoSAMLData.h"
+#import "AlfrescoSAMLUILoginViewController.h"
 
 #if TARGET_OS_IPHONE
 #import "AlfrescoOAuthUILoginViewController.h"

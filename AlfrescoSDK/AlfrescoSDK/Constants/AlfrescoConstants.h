@@ -37,6 +37,7 @@
 #import "AlfrescoFolderTypeDefinition.h"
 #import "AlfrescoTaskTypeDefinition.h"
 #import "AlfrescoAspectDefinition.h"
+#import "AlfrescoSAMLData.h"
 
 @protocol AlfrescoSession;
 /** The AlfrescoConstants used in the SDK.
@@ -67,7 +68,8 @@ typedef void (^AlfrescoSiteCompletionBlock)(AlfrescoSite *site, NSError *error);
 typedef void (^AlfrescoSessionCompletionBlock)(id<AlfrescoSession> session, NSError *error);
 typedef void (^AlfrescoCommentCompletionBlock)(AlfrescoComment *comment, NSError *error);
 typedef void (^AlfrescoLikedCompletionBlock)(BOOL succeeded, BOOL isLiked, NSError *error);
-typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData * oauthData, NSError *error);
+typedef void (^AlfrescoOAuthCompletionBlock)(AlfrescoOAuthData *oauthData, NSError *error);
+typedef void (^AlfrescoSAMLAuthCompletionBlock)(AlfrescoSAMLData *samlData, NSError *error);
 typedef void (^AlfrescoMemberCompletionBlock)(BOOL succeeded, BOOL isMember, NSError *error);
 typedef void (^AlfrescoFavoritedCompletionBlock)(BOOL succeeded, BOOL isFavorited, NSError *error);
 typedef void (^AlfrescoProcessDefinitionCompletionBlock)(AlfrescoWorkflowProcessDefinition *processDefinition, NSError *error);
