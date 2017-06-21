@@ -1,5 +1,4 @@
-/*
- ******************************************************************************
+/*******************************************************************************
  * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
@@ -15,10 +14,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *****************************************************************************
- */
+ ******************************************************************************/
 
-#import "SAMLConstants.h"
+#import <Foundation/Foundation.h>
+#import "AlfrescoRequest.h"
+#import "AlfrescoConstants.h"
 
-NSString * const kAlfrescoSAMLAuthenticateSufix = @"saml/-default-/rest-api/authenticate";
-NSString * const kAlfrescoSAMLAuthenticateResponseSufix = @"saml/-default-/rest-api/authenticate-response?format=json";
+@interface AlfrescoSAMLAuthHelper : NSObject
+
+@property (nonatomic, strong, readonly) NSURL *baseURL;
+
+- (instancetype)initWithBaseURL:(NSURL *)baseURL;
+
+- (NSURL *)authenticateURL;
+- (NSURL *)authenticateResponseURL;
+- (NSURL *)infoURL;
+
++ (AlfrescoRequest *)checkIfSAMLIsEnabledForServerWithUrlString:(NSString *)urlString completionBlock:(AlfrescoSAMLAuthCompletionBlock)completionBlock;
+
+@end

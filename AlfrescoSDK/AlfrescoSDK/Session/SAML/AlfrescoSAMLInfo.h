@@ -1,5 +1,4 @@
-/*
- ******************************************************************************
+/*******************************************************************************
  * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
@@ -15,25 +14,17 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *****************************************************************************
- */
+ ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "AlfrescoConstants.h"
+#import <Foundation/Foundation.h>
 
-/** The AlfrescoSAMLUILoginViewController starts the SAML authentication processes.
- */
+@interface AlfrescoSAMLInfo : NSObject <NSCoding>
 
-@interface AlfrescoSAMLUILoginViewController : UIViewController
+@property (nonatomic, assign, readonly, getter=isSamlEnabled) BOOL samlEnabled;
+@property (nonatomic, assign, readonly, getter=isSamlEnforced) BOOL samlEnforced;
+@property (nonatomic, strong, readonly, getter=getIdpDescription) NSString *idpDescription;
+@property (nonatomic, strong, readonly, getter=getTenantDomain) NSString *tenantDomain;
 
-/**
- @name Initialisers
- */
-
-/**
- @param baseURLString
- @param completionBlock
- */
-- (instancetype)initWithBaseURLString:(NSString *)baseURLString completionBlock:(AlfrescoSAMLAuthCompletionBlock)completionBlock;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
 @end

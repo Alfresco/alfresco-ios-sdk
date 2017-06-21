@@ -18,22 +18,16 @@
  *****************************************************************************
  */
 
-#import <UIKit/UIKit.h>
-#import "AlfrescoConstants.h"
+#import "AlfrescoSAMLConstants.h"
 
-/** The AlfrescoSAMLUILoginViewController starts the SAML authentication processes.
- */
+// Root url path
+NSString * const kAlfrescoSAMLRootPath = @"service/saml/-default-/rest-api";
 
-@interface AlfrescoSAMLUILoginViewController : UIViewController
+// Url path to request authentication
+NSString * const kAlfrescoSAMLAuthenticateSufix = @"authenticate";
 
-/**
- @name Initialisers
- */
+// Url path to receive authentication token
+NSString * const kAlfrescoSAMLAuthenticateResponseSufix = @"authenticate-response?format=json";
 
-/**
- @param baseURLString
- @param completionBlock
- */
-- (instancetype)initWithBaseURLString:(NSString *)baseURLString completionBlock:(AlfrescoSAMLAuthCompletionBlock)completionBlock;
-
-@end
+// Url path to check if SAML is enabled
+NSString * const kAlfrescoSAMLEnabledSufix =  @"enabled";

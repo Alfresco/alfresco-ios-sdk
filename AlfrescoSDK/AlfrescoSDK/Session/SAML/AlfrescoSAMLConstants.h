@@ -18,5 +18,14 @@
  *****************************************************************************
  */
 
+// Root url path
+extern NSString * const kAlfrescoSAMLRootPath;
+
+// Url path to request authentication
 extern NSString * const kAlfrescoSAMLAuthenticateSufix;
+
+// Url path to receive authentication token
 extern NSString * const kAlfrescoSAMLAuthenticateResponseSufix;
+
+// Url path to check if SAML is enabled
+extern NSString * const kAlfrescoSAMLEnabledSufix;

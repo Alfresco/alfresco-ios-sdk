@@ -12,6 +12,34 @@
 		08FC125A17BE1EDD0096F21E /* AlfrescoCompany.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC125817BE1EDD0096F21E /* AlfrescoCompany.m */; };
 		08FC13FA1754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC13F81754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m */; };
 		08FC14041754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */; };
+		23A3DFAD1EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA01EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.m */; };
+		23A3DFAE1EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA01EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.m */; };
+		23A3DFAF1EF95EF90011842D /* AlfrescoSAMLAuthHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA21EF95EF90011842D /* AlfrescoSAMLAuthHelper.m */; };
+		23A3DFB01EF95EF90011842D /* AlfrescoSAMLAuthHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA21EF95EF90011842D /* AlfrescoSAMLAuthHelper.m */; };
+		23A3DFB11EF95EF90011842D /* AlfrescoSAMLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA41EF95EF90011842D /* AlfrescoSAMLConstants.m */; };
+		23A3DFB21EF95EF90011842D /* AlfrescoSAMLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA41EF95EF90011842D /* AlfrescoSAMLConstants.m */; };
+		23A3DFB31EF95EF90011842D /* AlfrescoSAMLData.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA61EF95EF90011842D /* AlfrescoSAMLData.m */; };
+		23A3DFB41EF95EF90011842D /* AlfrescoSAMLData.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA61EF95EF90011842D /* AlfrescoSAMLData.m */; };
+		23A3DFB51EF95EF90011842D /* AlfrescoSAMLInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA81EF95EF90011842D /* AlfrescoSAMLInfo.m */; };
+		23A3DFB61EF95EF90011842D /* AlfrescoSAMLInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFA81EF95EF90011842D /* AlfrescoSAMLInfo.m */; };
+		23A3DFB71EF95EF90011842D /* AlfrescoSAMLTicket.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFAA1EF95EF90011842D /* AlfrescoSAMLTicket.m */; };
+		23A3DFB81EF95EF90011842D /* AlfrescoSAMLTicket.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFAA1EF95EF90011842D /* AlfrescoSAMLTicket.m */; };
+		23A3DFB91EF95EF90011842D /* AlfrescoSAMLUILoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFAC1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.m */; };
+		23A3DFBA1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A3DFAC1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.m */; };
+		23A3DFBB1EF95F940011842D /* AlfrescoSAMLAuthenticationProvider.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DF9F1EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.h */; };
+		23A3DFBC1EF95F940011842D /* AlfrescoSAMLAuthHelper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA11EF95EF90011842D /* AlfrescoSAMLAuthHelper.h */; };
+		23A3DFBD1EF95F940011842D /* AlfrescoSAMLConstants.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA31EF95EF90011842D /* AlfrescoSAMLConstants.h */; };
+		23A3DFBE1EF95F940011842D /* AlfrescoSAMLData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA51EF95EF90011842D /* AlfrescoSAMLData.h */; };
+		23A3DFBF1EF95F940011842D /* AlfrescoSAMLInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA71EF95EF90011842D /* AlfrescoSAMLInfo.h */; };
+		23A3DFC01EF95F940011842D /* AlfrescoSAMLTicket.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA91EF95EF90011842D /* AlfrescoSAMLTicket.h */; };
+		23A3DFC11EF95F940011842D /* AlfrescoSAMLUILoginViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFAB1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.h */; };
+		23A3DFC21EF95FA80011842D /* AlfrescoSAMLAuthenticationProvider.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DF9F1EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.h */; };
+		23A3DFC31EF95FA80011842D /* AlfrescoSAMLAuthHelper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA11EF95EF90011842D /* AlfrescoSAMLAuthHelper.h */; };
+		23A3DFC41EF95FA80011842D /* AlfrescoSAMLConstants.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA31EF95EF90011842D /* AlfrescoSAMLConstants.h */; };
+		23A3DFC51EF95FA80011842D /* AlfrescoSAMLData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA51EF95EF90011842D /* AlfrescoSAMLData.h */; };
+		23A3DFC61EF95FA80011842D /* AlfrescoSAMLInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA71EF95EF90011842D /* AlfrescoSAMLInfo.h */; };
+		23A3DFC71EF95FA80011842D /* AlfrescoSAMLTicket.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA91EF95EF90011842D /* AlfrescoSAMLTicket.h */; };
+		23A3DFC81EF95FA80011842D /* AlfrescoSAMLUILoginViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFAB1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.h */; };
 		272A3CB61C43F857005CAF05 /* CMISAtomEntryParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A3BD81C43F856005CAF05 /* CMISAtomEntryParser.m */; };
 		272A3CB71C43F857005CAF05 /* CMISAtomEntryParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A3BD81C43F856005CAF05 /* CMISAtomEntryParser.m */; };
 		272A3CB81C43F857005CAF05 /* CMISAtomEntryWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A3BDA1C43F856005CAF05 /* CMISAtomEntryWriter.m */; };
@@ -274,8 +302,6 @@
 		27B3A43718EC668A00925962 /* AlfrescoPublicAPIRatingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B3A42F18EC668A00925962 /* AlfrescoPublicAPIRatingService.m */; };
 		27B3A43818EC668A00925962 /* AlfrescoPublicAPISiteService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B3A43118EC668A00925962 /* AlfrescoPublicAPISiteService.m */; };
 		27B3A43918EC668A00925962 /* AlfrescoPublicAPITaggingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B3A43318EC668A00925962 /* AlfrescoPublicAPITaggingService.m */; };
-		2B3054FE1EBC78440038675D /* AlfrescoSAMLUILoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3054FA1EBC78440038675D /* AlfrescoSAMLUILoginViewController.m */; };
-		2B3054FF1EBC78440038675D /* SAMLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3054FD1EBC78440038675D /* SAMLConstants.m */; };
 		2B7CECA21AC408610069FB44 /* AlfrescoConnectionDiagnostic.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7CECA11AC408610069FB44 /* AlfrescoConnectionDiagnostic.m */; };
 		4E0457C31608C124005A6C76 /* AlfrescoOAuthData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0457C11608C124005A6C76 /* AlfrescoOAuthData.m */; };
 		4E0C866D1612EB32008B71DB /* AlfrescoOAuthUILoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0C866B1612EB32008B71DB /* AlfrescoOAuthUILoginViewController.m */; };
@@ -651,6 +677,13 @@
 			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				23A3DFBB1EF95F940011842D /* AlfrescoSAMLAuthenticationProvider.h in CopyFiles */,
+				23A3DFBC1EF95F940011842D /* AlfrescoSAMLAuthHelper.h in CopyFiles */,
+				23A3DFBD1EF95F940011842D /* AlfrescoSAMLConstants.h in CopyFiles */,
+				23A3DFBE1EF95F940011842D /* AlfrescoSAMLData.h in CopyFiles */,
+				23A3DFBF1EF95F940011842D /* AlfrescoSAMLInfo.h in CopyFiles */,
+				23A3DFC01EF95F940011842D /* AlfrescoSAMLTicket.h in CopyFiles */,
+				23A3DFC11EF95F940011842D /* AlfrescoSAMLUILoginViewController.h in CopyFiles */,
 				589AB47A1A3648B40029E5AD /* AlfrescoBatchProcessor.h in CopyFiles */,
 				588A28B91A31FEC2005697FA /* AlfrescoAspectDefinition.h in CopyFiles */,
 				588A28BA1A31FEC2005697FA /* AlfrescoDocumentTypeDefinition.h in CopyFiles */,
@@ -720,6 +753,13 @@
 			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				23A3DFC21EF95FA80011842D /* AlfrescoSAMLAuthenticationProvider.h in CopyFiles */,
+				23A3DFC31EF95FA80011842D /* AlfrescoSAMLAuthHelper.h in CopyFiles */,
+				23A3DFC41EF95FA80011842D /* AlfrescoSAMLConstants.h in CopyFiles */,
+				23A3DFC51EF95FA80011842D /* AlfrescoSAMLData.h in CopyFiles */,
+				23A3DFC61EF95FA80011842D /* AlfrescoSAMLInfo.h in CopyFiles */,
+				23A3DFC71EF95FA80011842D /* AlfrescoSAMLTicket.h in CopyFiles */,
+				23A3DFC81EF95FA80011842D /* AlfrescoSAMLUILoginViewController.h in CopyFiles */,
 				589AB47B1A3648BF0029E5AD /* AlfrescoBatchProcessor.h in CopyFiles */,
 				588A28C01A31FED9005697FA /* AlfrescoAspectDefinition.h in CopyFiles */,
 				588A28C11A31FED9005697FA /* AlfrescoDocumentTypeDefinition.h in CopyFiles */,
@@ -795,6 +835,20 @@
 		08FC13F81754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoPlaceholderDocumentFolderService.m; path = PlaceholderServices/AlfrescoPlaceholderDocumentFolderService.m; sourceTree = "<group>"; };
 		08FC14011754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoCloudDocumentFolderService.h; path = CloudServices/AlfrescoCloudDocumentFolderService.h; sourceTree = "<group>"; };
 		08FC14021754DF08001D4AB7 /* AlfrescoCloudDocumentFolderService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoCloudDocumentFolderService.m; path = CloudServices/AlfrescoCloudDocumentFolderService.m; sourceTree = "<group>"; };
+		23A3DF9F1EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLAuthenticationProvider.h; sourceTree = "<group>"; };
+		23A3DFA01EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLAuthenticationProvider.m; sourceTree = "<group>"; };
+		23A3DFA11EF95EF90011842D /* AlfrescoSAMLAuthHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLAuthHelper.h; sourceTree = "<group>"; };
+		23A3DFA21EF95EF90011842D /* AlfrescoSAMLAuthHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLAuthHelper.m; sourceTree = "<group>"; };
+		23A3DFA31EF95EF90011842D /* AlfrescoSAMLConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLConstants.h; sourceTree = "<group>"; };
+		23A3DFA41EF95EF90011842D /* AlfrescoSAMLConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLConstants.m; sourceTree = "<group>"; };
+		23A3DFA51EF95EF90011842D /* AlfrescoSAMLData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLData.h; sourceTree = "<group>"; };
+		23A3DFA61EF95EF90011842D /* AlfrescoSAMLData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLData.m; sourceTree = "<group>"; };
+		23A3DFA71EF95EF90011842D /* AlfrescoSAMLInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLInfo.h; sourceTree = "<group>"; };
+		23A3DFA81EF95EF90011842D /* AlfrescoSAMLInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLInfo.m; sourceTree = "<group>"; };
+		23A3DFA91EF95EF90011842D /* AlfrescoSAMLTicket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLTicket.h; sourceTree = "<group>"; };
+		23A3DFAA1EF95EF90011842D /* AlfrescoSAMLTicket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLTicket.m; sourceTree = "<group>"; };
+		23A3DFAB1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLUILoginViewController.h; sourceTree = "<group>"; };
+		23A3DFAC1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLUILoginViewController.m; sourceTree = "<group>"; };
 		2719ECD5176A29D200A6F3DD /* AlfrescoTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlfrescoTestMacros.h; sourceTree = "<group>"; };
 		272A3BD71C43F856005CAF05 /* CMISAtomEntryParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAtomEntryParser.h; sourceTree = "<group>"; };
 		272A3BD81C43F856005CAF05 /* CMISAtomEntryParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomEntryParser.m; sourceTree = "<group>"; };
@@ -1034,11 +1088,6 @@
 		27B3A43318EC668A00925962 /* AlfrescoPublicAPITaggingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoPublicAPITaggingService.m; sourceTree = "<group>"; };
 		27D85CA017D7E3FC009D15C4 /* AlfrescoSDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = AlfrescoSDK.xcconfig; sourceTree = "<group>"; };
 		27E4C7F817F6554E002C0F77 /* AlfrescoSDKTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AlfrescoSDKTests.xcconfig; sourceTree = "<group>"; };
-		2B3054F91EBC78440038675D /* AlfrescoSAMLUILoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLUILoginViewController.h; sourceTree = "<group>"; };
-		2B3054FA1EBC78440038675D /* AlfrescoSAMLUILoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLUILoginViewController.m; sourceTree = "<group>"; };
-		2B3054FB1EBC78440038675D /* AlfrescoSAMLUILoginViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AlfrescoSAMLUILoginViewController.storyboard; sourceTree = "<group>"; };
-		2B3054FC1EBC78440038675D /* SAMLConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAMLConstants.h; sourceTree = "<group>"; };
-		2B3054FD1EBC78440038675D /* SAMLConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAMLConstants.m; sourceTree = "<group>"; };
 		2B7CECA01AC408610069FB44 /* AlfrescoConnectionDiagnostic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoConnectionDiagnostic.h; sourceTree = "<group>"; };
 		2B7CECA11AC408610069FB44 /* AlfrescoConnectionDiagnostic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoConnectionDiagnostic.m; sourceTree = "<group>"; };
 		4E0457C01608C124005A6C76 /* AlfrescoOAuthData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthData.h; path = OAuth/AlfrescoOAuthData.h; sourceTree = "<group>"; };
@@ -1110,7 +1159,7 @@
 		4EA177EA15E4DC3C00BE806B /* AlfrescoRepositoryCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoRepositoryCapabilities.m; sourceTree = "<group>"; };
 		4EA6D4E715D2B444004059AF /* AlfrescoSortingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSortingUtils.h; sourceTree = "<group>"; };
 		4EA6D4E815D2B444004059AF /* AlfrescoSortingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSortingUtils.m; sourceTree = "<group>"; };
-		4EB0769715B00D8E00DF7DED /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAlfrescoSDK-iOSv1.4.1-dev-debug.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EB0769715B00D8E00DF7DED /* libAlfrescoSDK-iOSv1.5-dev-debug.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAlfrescoSDK-iOSv1.5-dev-debug.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB0769A15B00D8E00DF7DED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4EB0769E15B00D8E00DF7DED /* AlfrescoSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "AlfrescoSDK-Prefix.pch"; sourceTree = "<group>"; };
 		4EB076A715B00D8E00DF7DED /* AlfrescoSDK-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AlfrescoSDK-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1292,7 +1341,7 @@
 		73AAFF3917CE4690000C4484 /* AlfrescoWorkflowInternalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowInternalConstants.h; sourceTree = "<group>"; };
 		73AAFF3A17CE4690000C4484 /* AlfrescoWorkflowInternalConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoWorkflowInternalConstants.m; sourceTree = "<group>"; };
 		73B4C32217DF737F00F0E2CF /* AlfrescoSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSDK.h; sourceTree = "<group>"; };
-		73D01E2D197FC3D00065E107 /* libAlfrescoSDK-OSXv1.4.1-dev-debug.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAlfrescoSDK-OSXv1.4.1-dev-debug.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		73D01E2D197FC3D00065E107 /* libAlfrescoSDK-OSXv1.5-dev-debug.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAlfrescoSDK-OSXv1.5-dev-debug.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		73D268E717D76CEA00C49848 /* AlfrescoWorkflowProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowProcess.h; sourceTree = "<group>"; };
 		73D268E817D76CEB00C49848 /* AlfrescoWorkflowProcess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoWorkflowProcess.m; sourceTree = "<group>"; };
 		73D268E917D76CEB00C49848 /* AlfrescoWorkflowProcessDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoWorkflowProcessDefinition.h; sourceTree = "<group>"; };
@@ -1355,6 +1404,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		23A3DF9E1EF95EF90011842D /* SAML */ = {
+			isa = PBXGroup;
+			children = (
+				23A3DF9F1EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.h */,
+				23A3DFA01EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.m */,
+				23A3DFA11EF95EF90011842D /* AlfrescoSAMLAuthHelper.h */,
+				23A3DFA21EF95EF90011842D /* AlfrescoSAMLAuthHelper.m */,
+				23A3DFA31EF95EF90011842D /* AlfrescoSAMLConstants.h */,
+				23A3DFA41EF95EF90011842D /* AlfrescoSAMLConstants.m */,
+				23A3DFA51EF95EF90011842D /* AlfrescoSAMLData.h */,
+				23A3DFA61EF95EF90011842D /* AlfrescoSAMLData.m */,
+				23A3DFA71EF95EF90011842D /* AlfrescoSAMLInfo.h */,
+				23A3DFA81EF95EF90011842D /* AlfrescoSAMLInfo.m */,
+				23A3DFA91EF95EF90011842D /* AlfrescoSAMLTicket.h */,
+				23A3DFAA1EF95EF90011842D /* AlfrescoSAMLTicket.m */,
+				23A3DFAB1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.h */,
+				23A3DFAC1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.m */,
+			);
+			path = SAML;
+			sourceTree = "<group>";
+		};
 		272A3BD41C43F856005CAF05 /* Bindings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1631,18 +1701,6 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		2B3054F81EBC78440038675D /* SAML */ = {
-			isa = PBXGroup;
-			children = (
-				2B3054F91EBC78440038675D /* AlfrescoSAMLUILoginViewController.h */,
-				2B3054FA1EBC78440038675D /* AlfrescoSAMLUILoginViewController.m */,
-				2B3054FB1EBC78440038675D /* AlfrescoSAMLUILoginViewController.storyboard */,
-				2B3054FC1EBC78440038675D /* SAMLConstants.h */,
-				2B3054FD1EBC78440038675D /* SAMLConstants.m */,
-			);
-			path = SAML;
-			sourceTree = "<group>";
-		};
 		4E0457BE1608C0EE005A6C76 /* OAuth */ = {
 			isa = PBXGroup;
 			children = (
@@ -1760,9 +1818,9 @@
 		4EB0769815B00D8E00DF7DED /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4EB0769715B00D8E00DF7DED /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a */,
+				4EB0769715B00D8E00DF7DED /* libAlfrescoSDK-iOSv1.5-dev-debug.a */,
 				4EB076A715B00D8E00DF7DED /* AlfrescoSDK-iOSTests.xctest */,
-				73D01E2D197FC3D00065E107 /* libAlfrescoSDK-OSXv1.4.1-dev-debug.a */,
+				73D01E2D197FC3D00065E107 /* libAlfrescoSDK-OSXv1.5-dev-debug.a */,
 				7333E5EA197FD15000B4CB1D /* AlfrescoSDK-OSXTests.xctest */,
 			);
 			name = Products;
@@ -2001,7 +2059,7 @@
 		4EB0774C15B00EE700DF7DED /* Session */ = {
 			isa = PBXGroup;
 			children = (
-				2B3054F81EBC78440038675D /* SAML */,
+				23A3DF9E1EF95EF90011842D /* SAML */,
 				4EB0774D15B00EE700DF7DED /* AlfrescoAuthenticationProvider.h */,
 				4EB0774E15B00EE700DF7DED /* AlfrescoBasicAuthenticationProvider.h */,
 				4EB0774F15B00EE700DF7DED /* AlfrescoBasicAuthenticationProvider.m */,
@@ -2150,7 +2208,7 @@
 			);
 			name = "AlfrescoSDK-iOS";
 			productName = AlfrescoSDK;
-			productReference = 4EB0769715B00D8E00DF7DED /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a */;
+			productReference = 4EB0769715B00D8E00DF7DED /* libAlfrescoSDK-iOSv1.5-dev-debug.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		4EB076A615B00D8E00DF7DED /* AlfrescoSDK-iOSTests */ = {
@@ -2203,7 +2261,7 @@
 			);
 			name = "AlfrescoSDK-OSX";
 			productName = AlfrescoSDK;
-			productReference = 73D01E2D197FC3D00065E107 /* libAlfrescoSDK-OSXv1.4.1-dev-debug.a */;
+			productReference = 73D01E2D197FC3D00065E107 /* libAlfrescoSDK-OSXv1.5-dev-debug.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -2280,6 +2338,7 @@
 				272A3CC01C43F857005CAF05 /* CMISAtomPubAllowableActionsParser.m in Sources */,
 				272A3CDA1C43F857005CAF05 /* CMISAtomPubDiscoveryService.m in Sources */,
 				4EB077B415B00EE800DF7DED /* AlfrescoListingContext.m in Sources */,
+				23A3DFB11EF95EF90011842D /* AlfrescoSAMLConstants.m in Sources */,
 				272A3D4E1C43F857005CAF05 /* CMISNewTypeSettableAttributes.m in Sources */,
 				4EB077B615B00EE800DF7DED /* AlfrescoNode.m in Sources */,
 				4EB077B815B00EE800DF7DED /* AlfrescoPagingResult.m in Sources */,
@@ -2311,6 +2370,8 @@
 				580800C518C0BFA4005D075A /* AlfrescoLegacyAPIWorkflowService.m in Sources */,
 				272A3D341C43F857005CAF05 /* CMISRendition.m in Sources */,
 				272A3D1A1C43F857005CAF05 /* CMISRelationshipTypeDefinition.m in Sources */,
+				23A3DFAD1EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.m in Sources */,
+				23A3DFB31EF95EF90011842D /* AlfrescoSAMLData.m in Sources */,
 				272A3D441C43F857005CAF05 /* CMISEnums.m in Sources */,
 				4EB077CF15B00EE800DF7DED /* AlfrescoPersonService.m in Sources */,
 				4EB077D115B00EE800DF7DED /* AlfrescoRatingService.m in Sources */,
@@ -2350,7 +2411,6 @@
 				58604D9F18F2A2BC002B09A5 /* AlfrescoLegacyAPIJoinSiteRequest.m in Sources */,
 				272A3D061C43F857005CAF05 /* CMISBindingFactory.m in Sources */,
 				58604DA218F2A2BC002B09A5 /* AlfrescoLegacyAPISiteService.m in Sources */,
-				2B3054FE1EBC78440038675D /* AlfrescoSAMLUILoginViewController.m in Sources */,
 				5841357B19D03DAC0045CA34 /* AlfrescoVersionInfo.m in Sources */,
 				58F4646118BF6B9300C8A28D /* AlfrescoRepositoryInfoBuilder.m in Sources */,
 				27B3A43818EC668A00925962 /* AlfrescoPublicAPISiteService.m in Sources */,
@@ -2383,6 +2443,7 @@
 				27B3A42718EC655B00925962 /* AlfrescoPublicAPIActivityStreamService.m in Sources */,
 				272A3CC61C43F857005CAF05 /* CMISAtomPubParserUtil.m in Sources */,
 				272A3D7C1C43F857005CAF05 /* CMISStringInOutParameter.m in Sources */,
+				23A3DFAF1EF95EF90011842D /* AlfrescoSAMLAuthHelper.m in Sources */,
 				4E944AF515E3AC8B00E89D69 /* AlfrescoTag.m in Sources */,
 				4E944AFC15E3D6AB00E89D69 /* AlfrescoRepositorySession.m in Sources */,
 				58DFDE471976BFF100BAAA79 /* AlfrescoPropertyConstants.m in Sources */,
@@ -2395,6 +2456,7 @@
 				272A3D3E1C43F857005CAF05 /* CMISAllowableActions.m in Sources */,
 				272A3D741C43F857005CAF05 /* CMISLog.m in Sources */,
 				272A3CCC1C43F857005CAF05 /* CMISAtomPubRepositoryInfoParser.m in Sources */,
+				23A3DFB51EF95EF90011842D /* AlfrescoSAMLInfo.m in Sources */,
 				272A3D661C43F857005CAF05 /* CMISDefaultNetworkProvider.m in Sources */,
 				272A3D301C43F857005CAF05 /* CMISOperationContext.m in Sources */,
 				4E944B0615E3D6BA00E89D69 /* AlfrescoCloudSession.m in Sources */,
@@ -2437,6 +2499,7 @@
 				272A3CE61C43F857005CAF05 /* CMISAtomPubTypeByIdUriBuilder.m in Sources */,
 				272A3CF21C43F857005CAF05 /* CMISBrowserBaseService.m in Sources */,
 				272A3D6E1C43F857005CAF05 /* CMISHttpRequest.m in Sources */,
+				23A3DFB71EF95EF90011842D /* AlfrescoSAMLTicket.m in Sources */,
 				580800BC18C0B0A0005D075A /* AlfrescoWorkflowService.m in Sources */,
 				737B2EE916B2BAC600AB99EC /* AlfrescoDefaultFileManager.m in Sources */,
 				588A28B11A31FE92005697FA /* AlfrescoModelDefinition.m in Sources */,
@@ -2448,7 +2511,6 @@
 				4E9CE53316D511CF004C7934 /* AlfrescoRequest.m in Sources */,
 				4E21EAE416DF88A800E3952C /* AlfrescoLog.m in Sources */,
 				4E43A19016EF3F6D00A835E7 /* AlfrescoSiteCache.m in Sources */,
-				2B3054FF1EBC78440038675D /* SAMLConstants.m in Sources */,
 				4E420BB2171578E5002D75D9 /* AlfrescoContentStream.m in Sources */,
 				272A3CF81C43F857005CAF05 /* CMISBrowserDiscoveryService.m in Sources */,
 				4E85F3851717DD8F005A43E1 /* AlfrescoContent.m in Sources */,
@@ -2477,6 +2539,7 @@
 				58604D9D18F2A2BC002B09A5 /* AlfrescoLegacyAPICommentService.m in Sources */,
 				272A3D4C1C43F857005CAF05 /* CMISLinkRelations.m in Sources */,
 				272A3CDE1C43F857005CAF05 /* CMISAtomPubObjectByIdUriBuilder.m in Sources */,
+				23A3DFB91EF95EF90011842D /* AlfrescoSAMLUILoginViewController.m in Sources */,
 				272A3D0E1C43F857005CAF05 /* CMISItemTypeDefinition.m in Sources */,
 				73FB56BE17D4DBEA0049E89D /* AlfrescoWorkflowObjectConverter.m in Sources */,
 				73D268F117D76CEE00C49848 /* AlfrescoWorkflowProcess.m in Sources */,
@@ -2558,6 +2621,7 @@
 				73D01D8E197FC3D00065E107 /* AlfrescoContentFile.m in Sources */,
 				73D01D8F197FC3D00065E107 /* AlfrescoDocument.m in Sources */,
 				73D01D90197FC3D00065E107 /* AlfrescoFolder.m in Sources */,
+				23A3DFB41EF95EF90011842D /* AlfrescoSAMLData.m in Sources */,
 				73D01D91197FC3D00065E107 /* AlfrescoKeywordSearchOptions.m in Sources */,
 				272A3CE11C43F857005CAF05 /* CMISAtomPubObjectByPathUriBuilder.m in Sources */,
 				272A3D171C43F857005CAF05 /* CMISQueryResult.m in Sources */,
@@ -2603,6 +2667,7 @@
 				272A3D3B1C43F857005CAF05 /* CMISAce.m in Sources */,
 				272A3D591C43F857005CAF05 /* CMISRepositoryCapabilities.m in Sources */,
 				272A3D391C43F857005CAF05 /* CMISSession.m in Sources */,
+				23A3DFB01EF95EF90011842D /* AlfrescoSAMLAuthHelper.m in Sources */,
 				272A3D271C43F857005CAF05 /* CMISDocument.m in Sources */,
 				272A3CE31C43F857005CAF05 /* CMISAtomPubObjectService.m in Sources */,
 				73D01DA3197FC3D00065E107 /* AlfrescoSearchService.m in Sources */,
@@ -2679,6 +2744,7 @@
 				73D01DC7197FC3D00065E107 /* AlfrescoRepositorySession.m in Sources */,
 				588D9F501A0928CB000E00B9 /* AlfrescoModelDefinitionService.m in Sources */,
 				272A3D0B1C43F857005CAF05 /* CMISDocumentTypeDefinition.m in Sources */,
+				23A3DFBA1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.m in Sources */,
 				73D01DC8197FC3D00065E107 /* AlfrescoCloudNetwork.m in Sources */,
 				73D01DC9197FC3D00065E107 /* AlfrescoLegacyAPIRatingService.m in Sources */,
 				272A3D671C43F857005CAF05 /* CMISDefaultNetworkProvider.m in Sources */,
@@ -2687,8 +2753,10 @@
 				73D01DCB197FC3D00065E107 /* AlfrescoRepositoryCapabilities.m in Sources */,
 				272A3D2F1C43F857005CAF05 /* CMISObjectId.m in Sources */,
 				272A3D7B1C43F857005CAF05 /* CMISReachability.m in Sources */,
+				23A3DFB81EF95EF90011842D /* AlfrescoSAMLTicket.m in Sources */,
 				272A3D131C43F857005CAF05 /* CMISObjectList.m in Sources */,
 				73D01DCC197FC3D00065E107 /* AlfrescoOAuthData.m in Sources */,
+				23A3DFAE1EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.m in Sources */,
 				588A28AC1A31FE92005697FA /* AlfrescoAspectDefinition.m in Sources */,
 				73D01DCE197FC3D00065E107 /* AlfrescoPublicAPIRatingService.m in Sources */,
 				272A3CE71C43F857005CAF05 /* CMISAtomPubTypeByIdUriBuilder.m in Sources */,
@@ -2716,6 +2784,7 @@
 				272A3D611C43F857005CAF05 /* CMISStandardUntrustedSSLAuthenticationProvider.m in Sources */,
 				73D01DDA197FC3D00065E107 /* AlfrescoWorkflowService.m in Sources */,
 				73D01DDB197FC3D00065E107 /* AlfrescoDefaultFileManager.m in Sources */,
+				23A3DFB21EF95EF90011842D /* AlfrescoSAMLConstants.m in Sources */,
 				272A3CEF1C43F857005CAF05 /* CMISAtomWorkspace.m in Sources */,
 				73D01DDC197FC3D00065E107 /* AlfrescoDefaultHTTPRequest.m in Sources */,
 				272A3D2B1C43F857005CAF05 /* CMISFolder.m in Sources */,
@@ -2724,6 +2793,7 @@
 				27A3ED4C1AC4B65100DE3F3B /* AlfrescoConnectionDiagnostic.m in Sources */,
 				272A3D5B1C43F857005CAF05 /* CMISRepositoryInfo.m in Sources */,
 				272A3D0D1C43F857005CAF05 /* CMISFolderTypeDefinition.m in Sources */,
+				23A3DFB61EF95EF90011842D /* AlfrescoSAMLInfo.m in Sources */,
 				73D01DDF197FC3D00065E107 /* AlfrescoSiteCache.m in Sources */,
 				73D01DE0197FC3D00065E107 /* AlfrescoContentStream.m in Sources */,
 				73D01DE1197FC3D00065E107 /* AlfrescoContent.m in Sources */,

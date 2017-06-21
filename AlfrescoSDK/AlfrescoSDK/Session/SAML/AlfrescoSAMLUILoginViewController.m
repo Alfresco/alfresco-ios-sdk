@@ -19,35 +19,51 @@
  */
 
 #import "AlfrescoSAMLUILoginViewController.h"
-#import "SAMLConstants.h"
+#import "AlfrescoSAMLConstants.h"
 #import "AlfrescoErrors.h"
 #import "AlfrescoLog.h"
+#import "AlfrescoSAMLAuthHelper.h"
 
 @interface AlfrescoSAMLUILoginViewController () <UIWebViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong) IBOutlet UIWebView *webView;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic) BOOL searchForResponse;
 @property (nonatomic, strong) NSString *baseURL;
-@property (nonatomic, copy) void (^completionBlock)(NSDictionary *, NSError *);
+@property (nonatomic, copy) AlfrescoSAMLAuthCompletionBlock completionBlock;
 
 @end
 
 @implementation AlfrescoSAMLUILoginViewController
 
-- (instancetype)initWithBaseURL:(NSString *)baseURLString completionBlock:(AlfrescoSAMLAuthCompletionBlock)completionBlock
+- (instancetype)initWithBaseURLString:(NSString *)baseURLString completionBlock:(AlfrescoSAMLAuthCompletionBlock)completionBlock
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:NSStringFromClass([AlfrescoSAMLUILoginViewController class]) bundle:nil];
-    self = [storyboard instantiateInitialViewController];
-    self.baseURL = baseURLString;
-    self.completionBlock = completionBlock;
+    if (self = [super init])
+    {
+        self.baseURL = baseURLString;
+        self.completionBlock = completionBlock;
+    }
+    
     return self;
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewDidLoad
 {
-    [super viewDidAppear:animated];
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
     [self loadWebView];
+    
+    if (!self.activityIndicator)
+    {
+        [self createActivityView];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -75,15 +91,22 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     [self.activityIndicator stopAnimating];
+    
     if(self.searchForResponse)
     {
+        self.webView.hidden = YES;
+        
         NSString *html = [webView stringByEvaluatingJavaScriptFromString:@"document.body.getElementsByTagName('pre')[0].innerHTML"];
         NSData *jsonData = [html dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
         NSError *error;
         NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:&error];
         if(jsonDict && jsonDict[@"entry"][@"id"])
         {
-            [self performCompletionBlockWithSAMLData:jsonDict andError:nil];
+            NSString *ticket = jsonDict[@"entry"][@"id"];
+            NSString *userID = jsonDict[@"entry"][@"userId"];
+            AlfrescoSAMLTicket *samlTicket = [[AlfrescoSAMLTicket alloc] initWithTicket:ticket userID:userID];
+            AlfrescoSAMLData *samlData = [[AlfrescoSAMLData alloc] initWithSamlInfo:nil samlTicket:samlTicket];
+            [self performCompletionBlockWithSAMLData:samlData andError:nil];
         }
         else
         {
@@ -105,14 +128,78 @@
 
 - (void)loadWebView
 {
-    NSURL *initialAuthURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", self.baseURL, kAlfrescoSAMLAuthenticateSufix]];
-    NSURLRequest *authRequest = [NSURLRequest requestWithURL:initialAuthURL];
+    if (nil != self.webView)
+    {
+        self.webView = nil;
+    }
+    self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.webView.delegate = self;
+    [self.view addSubview:self.webView];
+    
+    if (!self.activityIndicator)
+    {
+        [self createActivityView];
+    }
     [self.activityIndicator startAnimating];
+    
+    NSURL *baseURL = [NSURL URLWithString:self.baseURL];
+    AlfrescoSAMLAuthHelper *helper = [[AlfrescoSAMLAuthHelper alloc] initWithBaseURL:baseURL];
+    NSURL *initialAuthURL = [helper authenticateURL];
+    NSURLRequest *authRequest = [NSURLRequest requestWithURL:initialAuthURL];
+
     AlfrescoLogDebug(@"Loading webview with URL: %@", initialAuthURL);
     [self.webView loadRequest:authRequest];
 }
 
-- (void)performCompletionBlockWithSAMLData:(NSDictionary *)samlData andError:(NSError *)error
+- (void)createActivityView
+{
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activityIndicator.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    self.activityIndicator.hidesWhenStopped = YES;
+    [self.view insertSubview:self.activityIndicator aboveSubview:self.webView];
+    
+    // Width constraint
+    [self.activityIndicator addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
+                                                                       attribute:NSLayoutAttributeWidth
+                                                                       relatedBy:NSLayoutRelationEqual
+                                                                          toItem:nil
+                                                                       attribute:NSLayoutAttributeWidth
+                                                                      multiplier:1.0
+                                                                        constant:100]];
+    
+    // Height constraint
+    [self.activityIndicator addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
+                                                                       attribute:NSLayoutAttributeHeight
+                                                                       relatedBy:NSLayoutRelationEqual
+                                                                          toItem:nil
+                                                                       attribute:NSLayoutAttributeHeight
+                                                                      multiplier:1.0
+                                                                        constant:100]];
+    
+    // Center horizontally
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+    
+    // Center vertically
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.activityIndicator
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+    
+    [self.activityIndicator setTranslatesAutoresizingMaskIntoConstraints:NO];
+}
+
+- (void)performCompletionBlockWithSAMLData:(AlfrescoSAMLData *)samlData andError:(NSError *)error
 {
     if(self.completionBlock)
     {
