@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2012 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  * 
  * This file is part of the Alfresco Mobile SDK.
  * 
@@ -64,9 +64,34 @@
                          parameters:(NSDictionary *)parameters
                     completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
+/**---------------------------------------------------------------------------------------
+ * @name creates an authenticated instance of the AlfrescoRepositorySession
+ *  ---------------------------------------------------------------------------------------
+ */
+/**
+ @param url - the server URL used to establish a session - Required
+ @param samlData - The AlfrescoSAMLData. - Required
+ @param completionBlock (AlfrescoSessionCompletionBlock). The block that's called with the session in case the operation succeeds. - required
+ @return an instance of the repository session
+ */
++ (AlfrescoRequest *)connectWithUrl:(NSURL *)url
+                           SAMLData:(AlfrescoSAMLData *)samlData
+                    completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
+/**---------------------------------------------------------------------------------------
+ * @name creates an authenticated instance of the AlfrescoRepositorySession
+ *  ---------------------------------------------------------------------------------------
+ */
+/**
+ @param url - the server URL used to establish a session - Required
+ @param samlData - The AlfrescoSAMLData. - Required
+ @param parameters a dictionary containing parameters for the session. - Optional (can be nil)
+ @param completionBlock (AlfrescoSessionCompletionBlock). The block that's called with the session in case the operation succeeds. - required
+ @return an instance of the repository session
+ */
++ (AlfrescoRequest *)connectWithUrl:(NSURL *)url
+                           SAMLData:(AlfrescoSAMLData *)samlData
+                         parameters:(NSDictionary *)parameters
+                    completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
 @end
-
-
-

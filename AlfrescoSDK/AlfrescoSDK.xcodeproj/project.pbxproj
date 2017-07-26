@@ -38,6 +38,10 @@
 		23A3DFC51EF95FA80011842D /* AlfrescoSAMLData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA51EF95EF90011842D /* AlfrescoSAMLData.h */; };
 		23A3DFC61EF95FA80011842D /* AlfrescoSAMLInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA71EF95EF90011842D /* AlfrescoSAMLInfo.h */; };
 		23A3DFC71EF95FA80011842D /* AlfrescoSAMLTicket.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23A3DFA91EF95EF90011842D /* AlfrescoSAMLTicket.h */; };
+		23D9AD4C1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D9AD4B1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.m */; };
+		23D9AD4D1F28E7C500561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D9AD4B1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.m */; };
+		23D9AD4E1F28E7DA00561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23D9AD4A1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h */; };
+		23D9AD4F1F28E7E700561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 23D9AD4A1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h */; };
 		272A3CB61C43F857005CAF05 /* CMISAtomEntryParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A3BD81C43F856005CAF05 /* CMISAtomEntryParser.m */; };
 		272A3CB71C43F857005CAF05 /* CMISAtomEntryParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A3BD81C43F856005CAF05 /* CMISAtomEntryParser.m */; };
 		272A3CB81C43F857005CAF05 /* CMISAtomEntryWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 272A3BDA1C43F856005CAF05 /* CMISAtomEntryWriter.m */; };
@@ -675,6 +679,7 @@
 			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				23D9AD4E1F28E7DA00561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h in CopyFiles */,
 				23A3DFBB1EF95F940011842D /* AlfrescoSAMLAuthenticationProvider.h in CopyFiles */,
 				23A3DFBC1EF95F940011842D /* AlfrescoSAMLAuthHelper.h in CopyFiles */,
 				23A3DFBD1EF95F940011842D /* AlfrescoSAMLConstants.h in CopyFiles */,
@@ -751,6 +756,7 @@
 			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				23D9AD4F1F28E7E700561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h in CopyFiles */,
 				23A3DFC21EF95FA80011842D /* AlfrescoSAMLAuthenticationProvider.h in CopyFiles */,
 				23A3DFC31EF95FA80011842D /* AlfrescoSAMLAuthHelper.h in CopyFiles */,
 				23A3DFC41EF95FA80011842D /* AlfrescoSAMLConstants.h in CopyFiles */,
@@ -846,6 +852,8 @@
 		23A3DFAA1EF95EF90011842D /* AlfrescoSAMLTicket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLTicket.m; sourceTree = "<group>"; };
 		23A3DFAB1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLUILoginViewController.h; sourceTree = "<group>"; };
 		23A3DFAC1EF95EF90011842D /* AlfrescoSAMLUILoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLUILoginViewController.m; sourceTree = "<group>"; };
+		23D9AD4A1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h; sourceTree = "<group>"; };
+		23D9AD4B1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.m; sourceTree = "<group>"; };
 		2719ECD5176A29D200A6F3DD /* AlfrescoTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlfrescoTestMacros.h; sourceTree = "<group>"; };
 		272A3BD71C43F856005CAF05 /* CMISAtomEntryParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAtomEntryParser.h; sourceTree = "<group>"; };
 		272A3BD81C43F856005CAF05 /* CMISAtomEntryParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomEntryParser.m; sourceTree = "<group>"; };
@@ -1404,6 +1412,8 @@
 		23A3DF9E1EF95EF90011842D /* SAML */ = {
 			isa = PBXGroup;
 			children = (
+				23D9AD4A1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h */,
+				23D9AD4B1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.m */,
 				23A3DF9F1EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.h */,
 				23A3DFA01EF95EF90011842D /* AlfrescoSAMLAuthenticationProvider.m */,
 				23A3DFA11EF95EF90011842D /* AlfrescoSAMLAuthHelper.h */,
@@ -2524,6 +2534,7 @@
 				580800C818C0C0C9005D075A /* AlfrescoCloudWorkflowService.m in Sources */,
 				27786B88178DBC6E00E78A5D /* AlfrescoCMISPassThroughAuthenticationProvider.m in Sources */,
 				272A3CEC1C43F857005CAF05 /* CMISAtomLink.m in Sources */,
+				23D9AD4C1F28E7C200561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.m in Sources */,
 				272A3CD81C43F857005CAF05 /* CMISAtomPubConstants.m in Sources */,
 				0800984917A6B4B40018C20A /* AlfrescoFavoritesCache.m in Sources */,
 				272A3D4A1C43F857005CAF05 /* CMISExtensionElement.m in Sources */,
@@ -2730,6 +2741,7 @@
 				272A3CB71C43F857005CAF05 /* CMISAtomEntryParser.m in Sources */,
 				58F2A5AC1A07BBCB0071DCB5 /* AlfrescoPropertyConstants.m in Sources */,
 				272A3D111C43F857005CAF05 /* CMISLinkCache.m in Sources */,
+				23D9AD4D1F28E7C500561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.m in Sources */,
 				588A28B21A31FE92005697FA /* AlfrescoModelDefinition.m in Sources */,
 				73D01DC4197FC3D00065E107 /* AlfrescoPublicAPIDocumentFolderService.m in Sources */,
 				272A3CE51C43F857005CAF05 /* CMISAtomPubRepositoryService.m in Sources */,

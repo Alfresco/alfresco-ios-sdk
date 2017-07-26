@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2015 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -46,5 +46,8 @@
 @property (nonatomic, strong) NSString *selectedNetworkIdentifier;
 @property (nonatomic, strong) NSArray *networkIdentifiers;
 @property (nonatomic, strong) AlfrescoOAuthData *oAuthData;
+
+// Used for SAML
+@property (nonatomic, strong) AlfrescoSAMLData *samlData;
 
 @end
