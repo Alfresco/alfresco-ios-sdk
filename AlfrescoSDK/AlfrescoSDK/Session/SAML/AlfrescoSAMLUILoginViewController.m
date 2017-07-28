@@ -148,6 +148,10 @@
     AlfrescoSAMLAuthHelper *helper = [[AlfrescoSAMLAuthHelper alloc] initWithBaseURL:baseURL];
     NSURL *initialAuthURL = [helper authenticateURL];
     NSURLRequest *authRequest = [NSURLRequest requestWithURL:initialAuthURL];
+    
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage].cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:obj];
+    }];
 
     AlfrescoLogDebug(@"Loading webview with URL: %@", initialAuthURL);
     [self.webView loadRequest:authRequest];

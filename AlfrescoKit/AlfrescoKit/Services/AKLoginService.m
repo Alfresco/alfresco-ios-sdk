@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2005-2015 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Mobile SDK.
  *
@@ -42,8 +42,9 @@
 - (AlfrescoRequest *)loginToOnPremiseRepositoryWithAccount:(id<AKUserAccount>)account username:(NSString *)username password:(NSString *)password completionBlock:(AKLoginCompletionBlock)completionBlock
 {
     NSURL *repoURL = [AKUtility onPremiseServerURLForAccount:account];
+    AlfrescoRequest *loginRequest;
     
-    AlfrescoRequest *loginRequest = [AlfrescoRepositorySession connectWithUrl:repoURL username:username password:password completionBlock:^(id<AlfrescoSession> session, NSError *error) {
+    void (^connectCompletionBlock)(id<AlfrescoSession>, NSError *) = ^void(id<AlfrescoSession> session, NSError *error){
         if (error)
         {
             completionBlock(NO, nil, error);
@@ -52,7 +53,16 @@
         {
             completionBlock(YES, session, error);
         }
-    }];
+    };
+    
+    if ([account.samlData isSamlEnabled])
+    {
+        loginRequest = [AlfrescoRepositorySession connectWithUrl:repoURL SAMLData:account.samlData completionBlock:connectCompletionBlock];
+    }
+    else
+    {
+        loginRequest = [AlfrescoRepositorySession connectWithUrl:repoURL username:username password:password completionBlock:connectCompletionBlock];
+    }
     
     return loginRequest;
 }
