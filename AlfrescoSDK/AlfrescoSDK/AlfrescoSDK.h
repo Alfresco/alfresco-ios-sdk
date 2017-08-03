@@ -34,10 +34,13 @@
 #import "AlfrescoOAuthHelper.h"
 #import "AlfrescoOAuthLoginDelegate.h"
 #import "AlfrescoOAuthData.h"
+#import "AlfrescoSAMLAuthHelper.h"
+#import "AlfrescoSAMLData.h"
 
 #if TARGET_OS_IPHONE
 #import "AlfrescoOAuthUILoginViewController.h"
 #import "AlfrescoOAuthLoginViewController.h" // deprecated
+#import "AlfrescoSAMLUILoginViewController.h"
 #elif TARGET_OS_MAC
 #import "AlfrescoOAuthNSLoginViewController.h"
 #endif
