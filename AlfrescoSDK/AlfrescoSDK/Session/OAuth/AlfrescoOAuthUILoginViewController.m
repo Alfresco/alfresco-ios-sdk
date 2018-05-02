@@ -155,6 +155,10 @@
     self.webView.translatesAutoresizingMaskIntoConstraints = NO;
     self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.webView.delegate = self;
+    if (@available(iOS 11.0, *))
+    {
+        [self.webView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
     [self.view addSubview:self.webView];
     
     if (!self.activityIndicator)
