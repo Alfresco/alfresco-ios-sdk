@@ -50,7 +50,10 @@ $APPLEDOC \
    --ignore "AlfrescoSDKTests" \
    --ignore "CMIS" \
    --keep-intermediate-files \
+   --create-html \
+   --no-create-docset \
    --no-install-docset \
+   --no-publish-docset \
    . \
    || die "appledoc failed to build documentation"
 
