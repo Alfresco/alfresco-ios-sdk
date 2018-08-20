@@ -49,7 +49,7 @@
         mimeType = [AlfrescoContentFile mimeTypeFromFilename:filename];
     }
     
-    if ([url isFileReferenceURL])
+    if ([url isFileURL])
     {
         localFileUrl = url;
     }
