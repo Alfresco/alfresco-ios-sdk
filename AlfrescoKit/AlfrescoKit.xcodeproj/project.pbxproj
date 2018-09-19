@@ -141,12 +141,11 @@
 		7374B98A1A657B800091A4FD /* small_zip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9541A657B800091A4FD /* small_zip@2x.png */; };
 		7374B98B1A657B800091A4FD /* green_selected_circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9561A657B800091A4FD /* green_selected_circle.png */; };
 		7374B98C1A657B800091A4FD /* green_selected_circle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9571A657B800091A4FD /* green_selected_circle@2x.png */; };
-		7374B98D1A657B800091A4FD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7374B9581A657B800091A4FD /* Info.plist */; };
 		7374B98F1A657B800091A4FD /* SmallThumbnailImageMapping.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7374B95A1A657B800091A4FD /* SmallThumbnailImageMapping.plist */; };
 		73A29D2F1ADFF67300345075 /* AKAccountListItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 73A29D2D1ADFF67300345075 /* AKAccountListItem.h */; };
 		73A29D301ADFF67300345075 /* AKAccountListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 73A29D2E1ADFF67300345075 /* AKAccountListItem.m */; };
 		73B8C09A1A5D9B3700571B28 /* libAlfrescoKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */; };
-		73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a */; };
+		73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a */; };
 		73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */; };
 		73B8C1251A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1231A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h */; };
 		73B8C1261A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1241A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m */; };
@@ -392,7 +391,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a in Frameworks */,
+				73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -789,7 +788,7 @@
 		73B8C0C01A5D9D1000571B28 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a */,
+				73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a */,
 				73B8C0C91A5D9D1100571B28 /* AlfrescoSDK-iOSTests.xctest */,
 				73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4.1-dev-debug.a */,
 				73B8C0CD1A5D9D1100571B28 /* AlfrescoSDK-OSXTests.xctest */,
@@ -999,10 +998,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.4.1-dev-debug.a */ = {
+		73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libAlfrescoSDK-iOSv1.4.1-dev-debug.a";
+			path = "libAlfrescoSDK-iOSv1.5-dev-debug.a";
 			remoteRef = 73B8C0C61A5D9D1100571B28 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1016,7 +1015,7 @@
 		73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4.1-dev-debug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libAlfrescoSDK-OSXv1.4.1-dev-debug.a";
+			path = "libAlfrescoSDK-OSXv1.5-dev-debug.a";
 			remoteRef = 73B8C0CA1A5D9D1100571B28 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1073,7 +1072,6 @@
 				271F7A8A1B0CFC48005A391F /* location-sites@2x.png in Resources */,
 				7374B9841A657B800091A4FD /* small_video@2x.png in Resources */,
 				271F7A7F1B0CFC48005A391F /* location-favourites.png in Resources */,
-				7374B98D1A657B800091A4FD /* Info.plist in Resources */,
 				7343F9A31A69548A00C0664A /* AKUserAccountListViewController.xib in Resources */,
 				7374B9831A657B800091A4FD /* small_video.png in Resources */,
 				7374B96C1A657B800091A4FD /* large_word@2x.png in Resources */,
