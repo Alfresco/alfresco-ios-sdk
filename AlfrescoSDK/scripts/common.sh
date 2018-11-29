@@ -35,7 +35,7 @@ if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
    # Xcode build tools
    test -n "$XCODEBUILD"   || XCODEBUILD=$(which xcodebuild)
    test -n "$LIPO"         || LIPO=$(which lipo)
-   test -n "$APPLEDOC"     || APPLEDOC=$(which appledoc)
+   test -n "$JAZZY"        || JAZZY=$(which jazzy)
    
 
    # ---------------------------------------------------------------------------
@@ -99,7 +99,7 @@ if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
    ## Documentation
 
    # The name of the docset
-   ALFRESCO_SDK_DOCSET_NAME=com.alfresco.AlfrescoSDK.docset
+   ALFRESCO_SDK_DOCSET_NAME=Help
 
    # The directory where the docset is built
    ALFRESCO_SDK_DOCSET_BUILD=$ALFRESCO_SDK_BUILD/Help
@@ -152,7 +152,6 @@ if [ -z "$ALFRESCO_SDK_SCRIPT" ]; then
          TARGET_BUILD_DIR="$ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-${2}" \
          BUILT_PRODUCTS_DIR="$ALFRESCO_SDK_BUILD/$BUILD_CONFIGURATION-${2}" \
          SYMROOT="$ALFRESCO_SDK_BUILD" \
-         clean build \
          || die "XCode build failed for configuration: $BUILD_CONFIGURATION."
    }
 
