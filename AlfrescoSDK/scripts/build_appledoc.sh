@@ -18,7 +18,7 @@
 
 . "${ALFRESCO_SDK_SCRIPT:-$(dirname "$0")}"/common.sh
 
-test -x "$APPLEDOC" || die "Could not find appledoc in $PATH. Use \"brew install appledoc\""
+test -x "$JAZZY" || die "Could not find jazzy in $PATH. Use \"[sudo] gem install jazz\""
 
 test -d "$ALFRESCO_SDK_BUILD" \
    || mkdir -p "$ALFRESCO_SDK_BUILD" \
@@ -36,26 +36,8 @@ else
   die "ALFRESCO_SDK_DOCSET_BUILD is not a subfolder of $ALFRESCO_SDK_ROOT ($ALFRESCO_SDK_DOCSET_BUILD)"
 fi
 
-mkdir "$ALFRESCO_SDK_DOCSET_BUILD" \
-  || die "Could not create directory $ALFRESCO_SDK_DOCSET_BUILD"
+jazzy || die "jazzy failed to build documentation"
 
-$APPLEDOC \
-   --project-name "$ALFRESCO_SDK_PRODUCT_NAME" \
-   --project-company "Alfresco" \
-   --company-id "com.alfresco" \
-   --output "$ALFRESCO_SDK_DOCSET_BUILD" \
-   --exit-threshold 2 \
-   --ignore ".m" \
-   --ignore "build" \
-   --ignore "AlfrescoSDKTests" \
-   --ignore "CMIS" \
-   --keep-intermediate-files \
-   --create-html \
-   --no-create-docset \
-   --no-install-docset \
-   --no-publish-docset \
-   . \
-   || die "appledoc failed to build documentation"
-
+mv "$ALFRESCO_SDK_DOCSET_NAME" "$ALFRESCO_SDK_BUILD" \
+    || die "Could not create directory $ALFRESCO_SDK_DOCSET_BUILD"
 cd "$ALFRESCO_SDK_DOCSET_BUILD"
-mv docset "$ALFRESCO_SDK_DOCSET_NAME"

@@ -151,7 +151,7 @@ if [[ "$GENERATE_DOCS" == "true" ]] ; then
      die "ALFRESCO_SDK_DOCSET_ZIP is not a subfolder of $ALFRESCO_SDK_ROOT ($ALFRESCO_SDK_DOCSET_ZIP)"
    fi
 
-   pushd $ALFRESCO_SDK_DOCSET_BUILD
+   pushd $ALFRESCO_SDK_BUILD
    zip -r $ALFRESCO_SDK_DOCSET_ZIP $ALFRESCO_SDK_DOCSET_NAME
    popd
 
