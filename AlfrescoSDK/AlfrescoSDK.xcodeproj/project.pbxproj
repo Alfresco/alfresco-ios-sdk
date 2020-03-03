@@ -653,6 +653,8 @@
 		73FB56BE17D4DBEA0049E89D /* AlfrescoWorkflowObjectConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 73FB56BC17D4DBEA0049E89D /* AlfrescoWorkflowObjectConverter.m */; };
 		8218AF5916DFCC6D001CE051 /* AlfrescoLogTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8218AF5816DFCC6D001CE051 /* AlfrescoLogTest.m */; };
 		82DC7D651616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 82DC7D631616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.m */; };
+		E32CDDDF240E795A008BF80D /* AlfrescoPlaceholderDocumentFolderService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08FC13F71754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h */; };
+		E32CDDE0240E7966008BF80D /* AlfrescoPlaceholderDocumentFolderService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08FC13F71754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -679,6 +681,7 @@
 			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				E32CDDDF240E795A008BF80D /* AlfrescoPlaceholderDocumentFolderService.h in CopyFiles */,
 				23D9AD4E1F28E7DA00561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h in CopyFiles */,
 				23A3DFBB1EF95F940011842D /* AlfrescoSAMLAuthenticationProvider.h in CopyFiles */,
 				23A3DFBC1EF95F940011842D /* AlfrescoSAMLAuthHelper.h in CopyFiles */,
@@ -756,6 +759,7 @@
 			dstPath = "include/${TARGET_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				E32CDDE0240E7966008BF80D /* AlfrescoPlaceholderDocumentFolderService.h in CopyFiles */,
 				23D9AD4F1F28E7E700561509 /* AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h in CopyFiles */,
 				23A3DFC21EF95FA80011842D /* AlfrescoSAMLAuthenticationProvider.h in CopyFiles */,
 				23A3DFC31EF95FA80011842D /* AlfrescoSAMLAuthHelper.h in CopyFiles */,
@@ -2284,6 +2288,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 4EB0768C15B00D8E00DF7DED;
