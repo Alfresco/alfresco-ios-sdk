@@ -90,6 +90,7 @@
 #import "AlfrescoCommentService.h"
 #import "AlfrescoActivityStreamService.h"
 #import "AlfrescoWorkflowService.h"
+#import "AlfrescoPlaceholderDocumentFolderService.h"
 
 /**
  * Utils
