@@ -65,6 +65,33 @@ typedef NS_ENUM(NSUInteger, AlfrescoLogLevel)
 + (AlfrescoLog *)sharedInstance;
 
 /**
+ * Logs an error message using the given string and optional arguments
+ */
++ (void)logError:(NSString *)message;
+
+/**
+ * Logs a warning message using the given string and optional arguments
+ */
++ (void)logWarning:(NSString *)message;
+
+/**
+ * Logs an info message using the given string and optional arguments
+ */
++ (void)logInfo:(NSString *)message;
+
+/**
+ * Logs a debug message using the given string and optional arguments
+ */
++ (void)logDebug:(NSString *)message;
+
+/**
+ * Logs a trace message using the given string and optional arguments
+ */
++ (void)logTrace:(NSString *)message;
+
+
+
+/**
  * Returns the string representation of the given log level
  */
 - (NSString *)stringForLogLevel:(AlfrescoLogLevel)logLevel;
