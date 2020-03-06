@@ -89,8 +89,6 @@ typedef NS_ENUM(NSUInteger, AlfrescoLogLevel)
  */
 + (void)logTrace:(NSString *)message;
 
-
-
 /**
  * Returns the string representation of the given log level
  */

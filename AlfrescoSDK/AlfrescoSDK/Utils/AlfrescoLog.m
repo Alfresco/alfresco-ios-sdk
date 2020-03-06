@@ -127,6 +127,34 @@
     return result;
 }
 
+#pragma mark - Logging class methods
+
++ (void)logError:(NSString *)message
+{
+    AlfrescoLogError(message);
+}
+
++ (void)logWarning:(NSString *)message
+{
+    AlfrescoLogWarning(message);
+}
+
++ (void)logInfo:(NSString *)message
+{
+    AlfrescoLogInfo(message);
+}
+
++ (void)logDebug:(NSString *)message
+{
+    AlfrescoLogDebug(message);
+}
+
++ (void)logTrace:(NSString *)message
+{
+    AlfrescoLogTrace(message);
+}
+
+
 #pragma mark - Logging methods
 
 - (void)logErrorFromError:(NSError *)error
