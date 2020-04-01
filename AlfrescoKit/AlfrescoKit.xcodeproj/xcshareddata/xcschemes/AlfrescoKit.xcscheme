@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0820"
+   LastUpgradeVersion = "1140"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "73D01D89197FC3D00065E107"
-               BuildableName = "libAlfrescoSDK-OSXv1.5-dev.a"
-               BlueprintName = "AlfrescoSDK-OSX"
-               ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
+               BlueprintIdentifier = "73B8C08D1A5D9B3700571B28"
+               BuildableName = "libAlfrescoKit.a"
+               BlueprintName = "AlfrescoKit"
+               ReferencedContainer = "container:AlfrescoKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7333E5BE197FD15000B4CB1D"
-               BuildableName = "AlfrescoSDK-OSXTests.xctest"
-               BlueprintName = "AlfrescoSDK-OSXTests"
-               ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
+               BlueprintIdentifier = "73B8C0981A5D9B3700571B28"
+               BuildableName = "AlfrescoKitTests.xctest"
+               BlueprintName = "AlfrescoKitTests"
+               ReferencedContainer = "container:AlfrescoKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -50,15 +50,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "73D01D89197FC3D00065E107"
-            BuildableName = "libAlfrescoSDK-OSXv1.5-dev.a"
-            BlueprintName = "AlfrescoSDK-OSX"
-            ReferencedContainer = "container:AlfrescoSDK.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -66,6 +57,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "73B8C08D1A5D9B3700571B28"
+            BuildableName = "libAlfrescoKit.a"
+            BlueprintName = "AlfrescoKit"
+            ReferencedContainer = "container:AlfrescoKit.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
