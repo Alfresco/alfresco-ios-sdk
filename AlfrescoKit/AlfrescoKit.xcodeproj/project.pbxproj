@@ -145,7 +145,6 @@
 		73A29D2F1ADFF67300345075 /* AKAccountListItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 73A29D2D1ADFF67300345075 /* AKAccountListItem.h */; };
 		73A29D301ADFF67300345075 /* AKAccountListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 73A29D2E1ADFF67300345075 /* AKAccountListItem.m */; };
 		73B8C09A1A5D9B3700571B28 /* libAlfrescoKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C08E1A5D9B3700571B28 /* libAlfrescoKit.a */; };
-		73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a */; };
 		73B8C1131A5EAA4400571B28 /* AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C0B41A5D9C3200571B28 /* AlfrescoKit.h */; };
 		73B8C1251A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B8C1231A5EAD2E00571B28 /* NSBundle+AlfrescoKit.h */; };
 		73B8C1261A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 73B8C1241A5EAD2E00571B28 /* NSBundle+AlfrescoKit.m */; };
@@ -160,6 +159,7 @@
 		73F8D0161A8231A800793309 /* AKLocalFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73F8D0131A8231A800793309 /* AKLocalFilesViewController.m */; };
 		73F8D0171A82449400793309 /* AKLocalFilesViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 73F8D0121A8231A800793309 /* AKLocalFilesViewController.h */; };
 		73F8D0181A82450000793309 /* AKLocalFilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73F8D0141A8231A800793309 /* AKLocalFilesViewController.xib */; };
+		B95783492433948B00164F86 /* libAlfrescoSDK-iOSv1.5-dev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.5-dev.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -391,7 +391,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73B8C0D01A5D9D2800571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a in Frameworks */,
+				B95783492433948B00164F86 /* libAlfrescoSDK-iOSv1.5-dev.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,6 +733,7 @@
 				73B8C09D1A5D9B3700571B28 /* AlfrescoKitTests */,
 				73B8C11B1A5EAB1D00571B28 /* AlfrescoKitBundle */,
 				73B8C08F1A5D9B3700571B28 /* Products */,
+				B957833E24338CE900164F86 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -788,9 +789,9 @@
 		73B8C0C01A5D9D1000571B28 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a */,
+				73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.5-dev.a */,
 				73B8C0C91A5D9D1100571B28 /* AlfrescoSDK-iOSTests.xctest */,
-				73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4.1-dev-debug.a */,
+				73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.5-dev.a */,
 				73B8C0CD1A5D9D1100571B28 /* AlfrescoSDK-OSXTests.xctest */,
 			);
 			name = Products;
@@ -851,6 +852,13 @@
 				73F8D0141A8231A800793309 /* AKLocalFilesViewController.xib */,
 			);
 			path = "Local Files View Controller";
+			sourceTree = "<group>";
+		};
+		B957833E24338CE900164F86 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -971,6 +979,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				fr,
 				de,
@@ -998,10 +1007,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.5-dev-debug.a */ = {
+		73B8C0C71A5D9D1100571B28 /* libAlfrescoSDK-iOSv1.5-dev.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libAlfrescoSDK-iOSv1.5-dev-debug.a";
+			path = "libAlfrescoSDK-iOSv1.5-dev.a";
 			remoteRef = 73B8C0C61A5D9D1100571B28 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1012,10 +1021,10 @@
 			remoteRef = 73B8C0C81A5D9D1100571B28 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.4.1-dev-debug.a */ = {
+		73B8C0CB1A5D9D1100571B28 /* libAlfrescoSDK-OSXv1.5-dev.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libAlfrescoSDK-OSXv1.5-dev-debug.a";
+			path = "libAlfrescoSDK-OSXv1.5-dev.a";
 			remoteRef = 73B8C0CA1A5D9D1100571B28 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
