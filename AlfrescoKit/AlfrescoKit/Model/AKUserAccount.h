@@ -41,6 +41,10 @@
 @property (nonatomic, strong) NSString *serverPort;
 @property (nonatomic, strong) NSString *protocol;
 @property (nonatomic, strong) NSString *serviceDocument;
+@property (nonatomic, strong) NSString *contentAddress;
+@property (nonatomic, strong) NSString *realm;
+@property (nonatomic, strong) NSString *clientID;
+@property (nonatomic, strong) NSString *redirectURI;
 
 // Used for Cloud Accounts
 @property (nonatomic, strong) NSString *selectedNetworkIdentifier;

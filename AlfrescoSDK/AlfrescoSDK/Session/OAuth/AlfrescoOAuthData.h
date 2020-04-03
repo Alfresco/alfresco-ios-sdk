@@ -33,6 +33,25 @@
 @property (nonatomic, strong, readonly) NSString * apiKey;
 @property (nonatomic, strong, readonly) NSString * secretKey;
 @property (nonatomic, strong, readonly) NSString * redirectURI;
+@property (nonatomic, strong, readonly) NSString * sessionState;
+@property (nonatomic, strong, readonly) NSNumber * refreshTokenExpiresIn;
+
+/**---------------------------------------------------------------------------------------
+ * @name Initialisers for OAuth data
+ *  ---------------------------------------------------------------------------------------
+ */
+
+/**
+ This initialiser is typically used for the AIMS
+ @param tokenType
+ @param accessToken
+ */
+- (id)initWithTokenType:(NSString *)tokenType
+            accessToken:(NSString *)accessToken
+   accessTokenExpiresIn:(NSNumber *)expiresIn
+           refreshToken:(NSString *)refreshToken
+  refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
+           sessionState:(NSString *)sessionState;
 
 
 /**---------------------------------------------------------------------------------------
