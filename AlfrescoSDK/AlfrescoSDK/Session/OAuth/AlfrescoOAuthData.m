@@ -28,9 +28,37 @@
 @property (nonatomic, strong, readwrite) NSString           * apiKey;
 @property (nonatomic, strong, readwrite) NSString           * secretKey;
 @property (nonatomic, strong, readwrite) NSString           * redirectURI;
+@property (nonatomic, strong, readwrite) NSString           * sessionState;
+@property (nonatomic, strong, readwrite) NSNumber           * refreshTokenExpiresIn;
 @end
 
 @implementation AlfrescoOAuthData
+
+- (id)initWithTokenType:(NSString *)tokenType
+          accessToken:(NSString *)accessToken
+ accessTokenExpiresIn:(NSNumber *)expiresIn
+         refreshToken:(NSString *)refreshToken
+refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
+           sessionState:(NSString *)sessionState
+{
+    self = [super init];
+    
+    if (nil != self)
+    {
+        self.tokenType = tokenType;
+        self.accessToken = accessToken;
+        self.expiresIn = expiresIn;
+        self.refreshToken = refreshToken;
+        self.refreshTokenExpiresIn = refreshTokenExpiresIn;
+        self.sessionState = sessionState;
+        self.scope = nil;
+        self.apiKey = nil;
+        self.secretKey = nil;
+        self.redirectURI = nil;
+    }
+    
+    return self;
+}
 
 - (id)initWithAPIKey:(NSString *)apiKey secretKey:(NSString *)secretKey
 {
@@ -107,6 +135,14 @@
     {
         [aCoder encodeObject:self.scope forKey:@"scope"];
     }
+    if (nil != self.sessionState)
+    {
+        [aCoder encodeObject:self.scope forKey:@"sessionState"];
+    }
+    if (nil != self.refreshTokenExpiresIn)
+    {
+        [aCoder encodeObject:self.scope forKey:@"refreshTokenExpiresIn"];
+    }
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -120,7 +156,8 @@
     NSNumber *expiresIn = [aDecoder decodeObjectForKey:@"expiresIn"];
     NSString *tokenType = [aDecoder decodeObjectForKey:@"tokenType"];
     NSString *scope = [aDecoder decodeObjectForKey:@"scope"];
-    
+    NSString *sessionState = [aDecoder decodeObjectForKey:@"sessionState"];
+    NSNumber *refreshTokenExpiresIn = [aDecoder decodeObjectForKey:@"refreshTokenExpiresIn"];
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     if (nil != accessToken)
@@ -142,6 +179,10 @@
     if (nil != scope)
     {
         dictionary[kAlfrescoJSONScope] = scope;
+    }
+    if (nil != sessionState)
+    {
+        return [self initWithTokenType:tokenType accessToken:accessToken accessTokenExpiresIn:expiresIn refreshToken:refreshToken refreshTokenExpiresIn:refreshTokenExpiresIn sessionState:sessionState];
     }
     
     if (0 < dictionary.count)
