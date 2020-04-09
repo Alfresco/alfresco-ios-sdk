@@ -38,6 +38,7 @@
 #import "AlfrescoSAMLInfo.h"
 #import "AlfrescoSAMLAuthenticationProvider.h"
 #import "AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h"
+#import "AlfrescoAuthenticationRequestModel.h"
 
 @interface AlfrescoRepositorySession ()
 @property (nonatomic, strong, readwrite) NSURL *baseUrl;
@@ -54,6 +55,7 @@
 
 @implementation AlfrescoRepositorySession
 
+#pragma mark - Public interface
 
 + (AlfrescoRequest *)connectWithUrl:(NSURL *)url
                            username:(NSString *)username
@@ -84,7 +86,10 @@
         AlfrescoRepositorySession *sessionInstance = [[AlfrescoRepositorySession alloc] initWithUrl:url parameters:parameters];
         if (sessionInstance)
         {
-            return [sessionInstance authenticateWithUsername:username andPassword:password completionBlock:completionBlock];
+            AlfrescoAuthenticationRequestModel *baseAuthenticationRequest = [[AlfrescoAuthenticationRequestModel alloc] initWithUsername:username
+                                                                                                                                password:password];
+            return [sessionInstance authenticateWithRequest:baseAuthenticationRequest
+                                            completionBlock:completionBlock];
         }
     }
     else
@@ -127,7 +132,9 @@
         AlfrescoRepositorySession *sessionInstance = [[AlfrescoRepositorySession alloc] initWithUrl:url parameters:parameters];
         if (sessionInstance)
         {
-            return [sessionInstance authenticateWithSAMLData:samlData completionBlock:completionBlock];
+            AlfrescoAuthenticationRequestModel *samlAuthenticationRequest = [[AlfrescoAuthenticationRequestModel alloc] initWithSAMLData:samlData];
+            return [sessionInstance authenticateWithRequest:samlAuthenticationRequest
+                                            completionBlock:completionBlock];
         }
     }
     else
@@ -143,6 +150,45 @@
     }
     return nil;
 }
+
++ (AlfrescoRequest *)connectWithUrl:(NSURL *)url
+                          oauthData:(AlfrescoOAuthData *)oauthData
+                    completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+{
+    AlfrescoConnectionDiagnostic *diagnostic = [[AlfrescoConnectionDiagnostic alloc] initWithEventName:kAlfrescoConfigurationDiagnosticReachabilityEvent];
+    [diagnostic notifyEventStart];
+    
+    CMISReachability *reachability = [CMISReachability networkReachability];
+    if (reachability.hasNetworkConnection)
+    {
+        [AlfrescoErrors assertArgumentNotNil:url argumentName:@"url"];
+        [AlfrescoErrors assertArgumentNotNil:oauthData argumentName:@"oauthData"];
+        [AlfrescoErrors assertArgumentNotNil:completionBlock argumentName:@"completionBlock"];
+        AlfrescoRepositorySession *sessionInstance = [[AlfrescoRepositorySession alloc] initWithUrl:url parameters:nil];
+        
+        if (sessionInstance)
+        {
+            AlfrescoAuthenticationRequestModel *aimsAuthenticationRequest = [[AlfrescoAuthenticationRequestModel alloc] initWithOAuthData:oauthData];
+            return [sessionInstance authenticateWithRequest:aimsAuthenticationRequest
+                                            completionBlock:completionBlock];
+        }
+    }
+    else
+    {
+        [diagnostic notifyEventFailureWithError:nil];
+        
+        NSError *noConnectionError = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeNoNetworkConnection];
+        
+        if (completionBlock != NULL)
+        {
+            completionBlock(nil, noConnectionError);
+        }
+    }
+    
+    return nil;
+}
+
+#pragma mark - Private interface
 
 /**
  OnPremise services have a dedicated thumbnail rendition API, which we need to enable here.
@@ -209,8 +255,8 @@
     return self;
 }
 
-- (AlfrescoRequest *)authenticateWithSAMLData:(AlfrescoSAMLData *)samlData
-                              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
+- (AlfrescoRequest *)authenticateWithRequest:(AlfrescoAuthenticationRequestModel *)authenticationRequest
+                             completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
     // firstly call the "server" webscript to retrieve version information
     AlfrescoRequest *request = [AlfrescoRequest new];
@@ -218,7 +264,7 @@
     NSURL *serverInfoUrl = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:serverInfoString];
     
     // setup a temporary authentication provider to allow authenticating proxies to pass the request through
-    id<AlfrescoAuthenticationProvider> tempAuthProvider = [[AlfrescoSAMLAuthenticationProvider alloc] initWithSamlData:samlData];
+    id<AlfrescoAuthenticationProvider> tempAuthProvider = (id<AlfrescoAuthenticationProvider>) [authenticationRequest authenticationProvider];
     [self setObject:tempAuthProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
     
     AlfrescoConnectionDiagnostic *diagnostic = [[AlfrescoConnectionDiagnostic alloc] initWithEventName:kAlfrescoConfigurationDiagnosticServerVersionEvent];
@@ -276,9 +322,6 @@
                 
                 // setup CMIS session parameters
                 CMISSessionParameters *cmisSessionParams = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
-                //                cmisSessionParams.username = username;
-                cmisSessionParams.username = [samlData getUserID];
-                //                cmisSessionParams.password = password;
                 cmisSessionParams.atomPubUrl = [NSURL URLWithString:cmisURL];
                 
                 // default cookie handling behaviour may have been configured
@@ -301,8 +344,7 @@
                                                      userInfo:nil]);
                     }
                 }
-                
-                cmisSessionParams.authenticationProvider = [[AlfrescoSAMLAuthenticationProvider alloc] initWithSamlData:samlData];
+                [authenticationRequest updateCMISSessionParametersForAuthenticationType:cmisSessionParams];
                 
                 // setup SSL related features
                 BOOL allowUntrustedSSLCertificate = [(self.sessionData)[kAlfrescoAllowUntrustedSSLCertificate] boolValue];
@@ -312,14 +354,14 @@
                 {
                     // if client certificates are required, certificate credentials need to be setup for auth provider
                     NSURLCredential *credential = (self.sessionData)[kAlfrescoClientCertificateCredentials];
-                    AlfrescoSAMLAuthenticationProvider *authProvider = [[AlfrescoSAMLAuthenticationProvider alloc] initWithSamlData:samlData];
+                    CMISStandardAuthenticationProvider *authProvider = [authenticationRequest sslAuthenticationProvider];
                     authProvider.credential = credential;
                     cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
                 }
                 else if (allowUntrustedSSLCertificate)
                 {
                     // If connections are allowed for untrusted SSL certificates, we need a custom AlfrescoSAMLAuthenticationProvider: AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider
-                    AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider *authProvider = [[AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider alloc] initWithSamlData:samlData];
+                    CMISStandardAuthenticationProvider *authProvider = [authenticationRequest untrustedSSLAuthenticationProvider];
                     cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
                 }
                 
@@ -362,172 +404,7 @@
                         
                         // establish the session
                         AlfrescoRequest *creationSessionRequest = [self establishAlfrescoSessionWithSessionParameters:cmisSessionParams
-                                                                                                             samlData:samlData
-                                                                                                         repositories:repositories
-                                                                                                      completionBlock:completionBlock];
-                        request.httpRequest = creationSessionRequest.httpRequest;
-                    }
-                }];
-            }
-        }
-    }];
-    
-    return request;
-}
-
-- (AlfrescoRequest *)authenticateWithUsername:(NSString *)username
-                                  andPassword:(NSString *)password
-                              completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
-{
-    // firstly call the "server" webscript to retrieve version information
-    AlfrescoRequest *request = [AlfrescoRequest new];
-    NSString *serverInfoString = [kAlfrescoLegacyAPIPath stringByAppendingString:kAlfrescoLegacyServerAPI];
-    NSURL *serverInfoUrl = [AlfrescoURLUtils buildURLFromBaseURLString:self.baseUrl.absoluteString extensionURL:serverInfoString];
-
-    // setup a temporary authentication provider to allow authenticating proxies to pass the request through
-    id<AlfrescoAuthenticationProvider> tempAuthProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:username
-                                                                                                            andPassword:password];
-    [self setObject:tempAuthProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
-
-    AlfrescoConnectionDiagnostic *diagnostic = [[AlfrescoConnectionDiagnostic alloc] initWithEventName:kAlfrescoConfigurationDiagnosticServerVersionEvent];
-    [diagnostic notifyEventStart];
-    
-    [self.networkProvider executeRequestWithURL:serverInfoUrl session:self alfrescoRequest:request completionBlock:^(NSData *serverInfoData, NSError *serverInfoError) {
-        // remove the temporary authentication provider
-        [self removeParameter:kAlfrescoAuthenticationProviderObjectKey];
-        
-        if (serverInfoData == nil)
-        {
-            [diagnostic notifyEventFailureWithError:serverInfoError];
-            
-            AlfrescoLogError(@"Server info retrieval failed: %@", [serverInfoError localizedDescription]);
-            completionBlock(nil, serverInfoError);
-        }
-        else
-        {
-            // extract version info from the response
-            NSError *parseError = nil;
-            id serverInfoDictionary = [NSJSONSerialization JSONObjectWithData:serverInfoData options:0 error:&parseError];
-            if (serverInfoDictionary == nil)
-            {
-                [diagnostic notifyEventFailureWithError:parseError];
-                
-                AlfrescoLogError(@"Failed to parse server version response", [parseError localizedDescription]);
-                completionBlock(nil, [AlfrescoErrors alfrescoErrorWithUnderlyingError:parseError andAlfrescoErrorCode:kAlfrescoErrorCodeSession]);
-            }
-            else
-            {
-                [diagnostic notifyEventSuccess];
-                
-                // get the edition string
-                NSString *editionKeyPath = [[NSString alloc] initWithFormat:@"%@.%@", kAlfrescoJSONData, kAlfrescoRepositoryEdition];
-                NSString *edition = [serverInfoDictionary valueForKeyPath:editionKeyPath];
-                
-                // get the version string
-                NSString *versionKeyPath = [[NSString alloc] initWithFormat:@"%@.%@", kAlfrescoJSONData, kAlfrescoRepositoryVersion];
-                NSString *version = [serverInfoDictionary valueForKeyPath:versionKeyPath];
-                
-                // create and store the version info
-                AlfrescoVersionInfo *versionInfo = [[AlfrescoVersionInfo alloc] initWithVersionString:version edition:edition];
-                self.repositoryInfoBuilder.versionInfo = versionInfo;
-                
-                // determine which CMIS entry point to use
-                NSString *cmisURL = [self cmisURLForAlfrescoVersion:versionInfo];
-                
-                // determine if we have to use a custom binding URL
-                NSString *customBindingURL = (self.sessionData)[kAlfrescoCMISBindingURL];
-                if (customBindingURL)
-                {
-                    NSString *binding = ([customBindingURL hasPrefix:@"/"]) ? customBindingURL : [NSString stringWithFormat:@"/%@",customBindingURL];
-                    cmisURL = [[self.baseUrl absoluteString] stringByAppendingString:binding];
-                }
-                
-                // setup CMIS session parameters
-                CMISSessionParameters *cmisSessionParams = [[CMISSessionParameters alloc] initWithBindingType:CMISBindingTypeAtomPub];
-                cmisSessionParams.username = username;
-                cmisSessionParams.password = password;
-                cmisSessionParams.atomPubUrl = [NSURL URLWithString:cmisURL];
-                
-                // default cookie handling behaviour may have been configured
-                [cmisSessionParams setObject:(self.sessionData)[kAlfrescoHTTPShouldHandleCookies] forKey:kCMISSessionParameterSendCookies];
-                
-                // setup custom CMIS network provider, if necessary
-                if ((self.sessionData)[kAlfrescoCMISNetworkProvider])
-                {
-                    id customCMISNetworkProvider = (self.sessionData)[kAlfrescoCMISNetworkProvider];
-                    BOOL conformsToCMISNetworkProvider = [customCMISNetworkProvider conformsToProtocol:@protocol(CMISNetworkProvider)];
-                    
-                    if (conformsToCMISNetworkProvider)
-                    {
-                        cmisSessionParams.networkProvider = (id<CMISNetworkProvider>)customCMISNetworkProvider;
-                    }
-                    else
-                    {
-                        @throw([NSException exceptionWithName:@"Error with custom CMIS network provider"
-                                                       reason:@"The custom network provider must be an object that conforms to the CMISNetworkProvider protocol"
-                                                     userInfo:nil]);
-                    }
-                }
-                
-                // setup SSL related features
-                BOOL allowUntrustedSSLCertificate = [(self.sessionData)[kAlfrescoAllowUntrustedSSLCertificate] boolValue];
-                BOOL connectUsingSSLCertificate = [(self.sessionData)[kAlfrescoConnectUsingClientSSLCertificate] boolValue];
-                
-                if (connectUsingSSLCertificate)
-                {
-                    // if client certificates are required, certificate credentials need to be setup for auth provider
-                    NSURLCredential *credential = (self.sessionData)[kAlfrescoClientCertificateCredentials];
-                    CMISStandardAuthenticationProvider *authProvider = [[CMISStandardAuthenticationProvider alloc] initWithUsername:username password:password];
-                    authProvider.credential = credential;
-                    cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
-                }
-                else if (allowUntrustedSSLCertificate)
-                {
-                    // If connections are allowed for untrusted SSL certificates, we need a custom CMISAuthenticationProvider: CMISStandardUntrustedSSLAuthenticationProvider
-                    CMISStandardUntrustedSSLAuthenticationProvider *authProvider = [[CMISStandardUntrustedSSLAuthenticationProvider alloc] initWithUsername:username password:password];
-                    cmisSessionParams.authenticationProvider = (id<CMISAuthenticationProvider>)authProvider;
-                }
-                
-                // setup background network session
-                BOOL useBackgroundSession = [(self.sessionData)[kAlfrescoUseBackgroundNetworkSession] boolValue];
-                if (useBackgroundSession)
-                {
-                    NSString *backgroundId = self.sessionData[kAlfrescoBackgroundNetworkSessionId];
-                    if (!backgroundId)
-                    {
-                        backgroundId = kAlfrescoDefaultBackgroundNetworkSessionId;
-                    }
-                    
-                    NSString *containerId = self.sessionData[kAlfrescoBackgroundNetworkSessionSharedContainerId];
-                    if (!containerId)
-                    {
-                        containerId = kAlfrescoDefaultBackgroundNetworkSessionSharedContainerId;
-                    }
-                    
-                    [cmisSessionParams setObject:@(YES) forKey:kCMISSessionParameterUseBackgroundNetworkSession];
-                    [cmisSessionParams setObject:backgroundId forKey:kCMISSessionParameterBackgroundNetworkSessionId];
-                    [cmisSessionParams setObject:containerId forKey:kCMISSessionParameterBackgroundNetworkSessionSharedContainerId];
-                }
-                
-                AlfrescoConnectionDiagnostic *diagnostic = [[AlfrescoConnectionDiagnostic alloc] initWithEventName:kAlfrescoConfigurationDiagnosticRepositoriesAvailableEvent];
-                [diagnostic notifyEventStart];
-
-                AlfrescoLogDebug(@"Retrieving repositories using: %@", cmisURL);
-                request.httpRequest = [CMISSession arrayOfRepositories:cmisSessionParams completionBlock:^(NSArray *repositories, NSError *error) {
-                    if (repositories == nil)
-                    {
-                        [diagnostic notifyEventFailureWithError:error];
-
-                        NSError *alfrescoError = [AlfrescoCMISUtil alfrescoErrorWithCMISError:error];
-                        completionBlock(nil, alfrescoError);
-                    }
-                    else
-                    {
-                        [diagnostic notifyEventSuccess];
-
-                        // establish the session
-                        AlfrescoRequest *creationSessionRequest = [self establishAlfrescoSessionWithSessionParameters:cmisSessionParams
-                                                                                                             samlData:nil
+                                                                                                authenticationRequest:authenticationRequest
                                                                                                          repositories:repositories
                                                                                                       completionBlock:completionBlock];
                         request.httpRequest = creationSessionRequest.httpRequest;
@@ -572,7 +449,7 @@
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
 - (AlfrescoRequest *)establishAlfrescoSessionWithSessionParameters:(CMISSessionParameters *)cmisSessionParams
-                                                          samlData:(AlfrescoSAMLData *)samlData
+                                             authenticationRequest:(AlfrescoAuthenticationRequestModel *)authenticationRequest
                                                       repositories:(NSArray *)repositories
                                                    completionBlock:(AlfrescoSessionCompletionBlock)completionBlock
 {
@@ -617,18 +494,7 @@
                 self.repositoryInfoBuilder.cmisSession = cmisSession;
                 
                 // setup the authentication provider
-                id<AlfrescoAuthenticationProvider> authProvider;
-                
-                if (samlData == nil)
-                {
-                    authProvider = [[AlfrescoBasicAuthenticationProvider alloc] initWithUsername:cmisSessionParams.username
-                                                                                     andPassword:cmisSessionParams.password];
-                }
-                else
-                {
-                    authProvider = [[AlfrescoSAMLAuthenticationProvider alloc] initWithSamlData:samlData];
-                }
-                
+                id<AlfrescoAuthenticationProvider> authProvider = [authenticationRequest authenticationProvider];
                 [self setObject:authProvider forParameter:kAlfrescoAuthenticationProviderObjectKey];
                 
                 // store the current username for use by services

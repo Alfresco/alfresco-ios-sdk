@@ -653,6 +653,8 @@
 		73FB56BE17D4DBEA0049E89D /* AlfrescoWorkflowObjectConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 73FB56BC17D4DBEA0049E89D /* AlfrescoWorkflowObjectConverter.m */; };
 		8218AF5916DFCC6D001CE051 /* AlfrescoLogTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8218AF5816DFCC6D001CE051 /* AlfrescoLogTest.m */; };
 		82DC7D651616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 82DC7D631616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.m */; };
+		B99D7A64243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B99D7A63243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.m */; };
+		B99D7A65243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B99D7A63243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.m */; };
 		E32CDDDF240E795A008BF80D /* AlfrescoPlaceholderDocumentFolderService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08FC13F71754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h */; };
 		E32CDDE0240E7966008BF80D /* AlfrescoPlaceholderDocumentFolderService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 08FC13F71754DE21001D4AB7 /* AlfrescoPlaceholderDocumentFolderService.h */; };
 /* End PBXBuildFile section */
@@ -1365,6 +1367,8 @@
 		8218AF5816DFCC6D001CE051 /* AlfrescoLogTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoLogTest.m; sourceTree = "<group>"; };
 		82DC7D621616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlfrescoOAuthAuthenticationProvider.h; path = OAuth/AlfrescoOAuthAuthenticationProvider.h; sourceTree = "<group>"; };
 		82DC7D631616B1190007F49D /* AlfrescoOAuthAuthenticationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlfrescoOAuthAuthenticationProvider.m; path = OAuth/AlfrescoOAuthAuthenticationProvider.m; sourceTree = "<group>"; };
+		B99D7A62243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlfrescoAuthenticationRequestModel.h; sourceTree = "<group>"; };
+		B99D7A63243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlfrescoAuthenticationRequestModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2077,6 +2081,8 @@
 				4EB0775215B00EE700DF7DED /* AlfrescoSession.h */,
 				5841357919D03DAC0045CA34 /* AlfrescoVersionInfo.h */,
 				5841357A19D03DAC0045CA34 /* AlfrescoVersionInfo.m */,
+				B99D7A62243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.h */,
+				B99D7A63243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.m */,
 				4E944AF615E3D67200E89D69 /* CloudSession */,
 				4E0457BE1608C0EE005A6C76 /* OAuth */,
 				4E944AF715E3D67F00E89D69 /* OnPremiseSession */,
@@ -2466,6 +2472,7 @@
 				4E944B0415E3D6BA00E89D69 /* AlfrescoCloudNetwork.m in Sources */,
 				58604DA118F2A2BC002B09A5 /* AlfrescoLegacyAPIRatingService.m in Sources */,
 				272A3D3E1C43F857005CAF05 /* CMISAllowableActions.m in Sources */,
+				B99D7A64243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.m in Sources */,
 				272A3D741C43F857005CAF05 /* CMISLog.m in Sources */,
 				272A3CCC1C43F857005CAF05 /* CMISAtomPubRepositoryInfoParser.m in Sources */,
 				23A3DFB51EF95EF90011842D /* AlfrescoSAMLInfo.m in Sources */,
@@ -2802,6 +2809,7 @@
 				73D01DDC197FC3D00065E107 /* AlfrescoDefaultHTTPRequest.m in Sources */,
 				272A3D2B1C43F857005CAF05 /* CMISFolder.m in Sources */,
 				73D01DDD197FC3D00065E107 /* AlfrescoRequest.m in Sources */,
+				B99D7A65243DB40700F4F904 /* AlfrescoAuthenticationRequestModel.m in Sources */,
 				73D01DDE197FC3D00065E107 /* AlfrescoLog.m in Sources */,
 				27A3ED4C1AC4B65100DE3F3B /* AlfrescoConnectionDiagnostic.m in Sources */,
 				272A3D5B1C43F857005CAF05 /* CMISRepositoryInfo.m in Sources */,

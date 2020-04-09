@@ -21,5 +21,7 @@
 #import "AlfrescoAuthenticationProvider.h"
 
 @interface AlfrescoBasicAuthenticationProvider : NSObject <AlfrescoAuthenticationProvider>
+
 - (id)initWithUsername:(NSString *)username andPassword:(NSString *)password;
+
 @end
