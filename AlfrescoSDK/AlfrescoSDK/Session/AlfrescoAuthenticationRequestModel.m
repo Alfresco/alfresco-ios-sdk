@@ -27,6 +27,9 @@
 #import "AlfrescoSAMLStandardUntrustedSSLAuthenticationProvider.h"
 #import "CMISStandardUntrustedSSLAuthenticationProvider.h"
 #import "CMISStandardAuthenticationProvider.h"
+#import "AlfrescoOAuthAuthenticationProvider.h"
+#import "AlfrescoCMISPassThroughAuthenticationProvider.h"
+#import "AlfrescoInternalConstants.h"
 
 
 typedef NS_ENUM(NSUInteger, AuthenticationRequestType) {
@@ -106,7 +109,7 @@ typedef NS_ENUM(NSUInteger, AuthenticationRequestType) {
             
         case AuthenticationRequestTypeAIMS:
         {
-            
+            tempAuthProvider = [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:self.oauthData];
         }
             break;
             
@@ -137,7 +140,8 @@ typedef NS_ENUM(NSUInteger, AuthenticationRequestType) {
             
         case AuthenticationRequestTypeAIMS:
         {
-            
+            id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:self.oauthData];
+            authenticationProvider = [[AlfrescoCMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
         }
             break;
             
@@ -168,7 +172,8 @@ typedef NS_ENUM(NSUInteger, AuthenticationRequestType) {
             
         case AuthenticationRequestTypeAIMS:
         {
-            
+            id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:self.oauthData];
+            authenticationProvider = [[AlfrescoCMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
         }
             break;
             
@@ -197,6 +202,11 @@ typedef NS_ENUM(NSUInteger, AuthenticationRequestType) {
             
         case AuthenticationRequestTypeAIMS:
         {
+            id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:self.oauthData];
+            AlfrescoCMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[AlfrescoCMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
+            
+            cmisSessionParams.username = kAlfrescoMe;
+            cmisSessionParams.authenticationProvider = passthroughAuthProvider;
         }
             
         default:
