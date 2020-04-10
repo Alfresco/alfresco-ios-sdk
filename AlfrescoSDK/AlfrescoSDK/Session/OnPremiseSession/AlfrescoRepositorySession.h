@@ -94,4 +94,18 @@
                          parameters:(NSDictionary *)parameters
                     completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
 
+/**---------------------------------------------------------------------------------------
+ * @name creates an authenticated instance of the AlfrescoRepositorySession
+ *  ---------------------------------------------------------------------------------------
+ */
+/**
+ @param url - the server URL used to establish a session - Required
+ @param oauthData - OAuth structure containing session specific parameters. - Required
+ @param completionBlock (AlfrescoSessionCompletionBlock). The block that's called with the session in case the operation succeeds. - required
+ @return an instance of the repository session
+ */
++ (AlfrescoRequest *)connectWithUrl:(NSURL *)url
+                          oauthData:(AlfrescoOAuthData *)oauthData
+                    completionBlock:(AlfrescoSessionCompletionBlock)completionBlock;
+
 @end

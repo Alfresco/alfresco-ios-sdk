@@ -24,4 +24,5 @@
 @protocol AlfrescoAuthenticationProvider <NSObject>
 
 - (NSDictionary *)willApplyHTTPHeadersForSession:(id<AlfrescoSession>)session;
+
 @end
