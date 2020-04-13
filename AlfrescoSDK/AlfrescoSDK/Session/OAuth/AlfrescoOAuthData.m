@@ -195,4 +195,17 @@ refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
     }    
 }
 
+- (BOOL)areCredentialValid {
+    NSDate *tokenExpireDate = [NSDate dateWithTimeIntervalSince1970:self.expiresIn.doubleValue];
+    //Substract sessionExpirationTimeIntervalCheck time
+    NSDate *currentDateThreshold = [tokenExpireDate dateByAddingTimeInterval:-kAlfrescoSessionExpirationTimeIntervalCheck];
+    
+    if ([NSDate.date compare:currentDateThreshold] == NSOrderedDescending ||
+        [NSDate.date compare:tokenExpireDate] == NSOrderedDescending) {
+        return NO;
+    }
+    
+    return YES;
+}
+
 @end

@@ -118,6 +118,7 @@ NSString * const kAlfrescoSessionCacheSites = @"org.alfresco.mobile.internal.cac
 NSString * const kAlfrescoSessionCacheFavorites = @"org.alfresco.mobile.internal.cache.favorites";
 NSString * const kAlfrescoSessionCacheDefinitionType = @"org.alfresco.mobile.internal.cache.definition.type";
 NSString * const kAlfrescoSessionCacheDefinitionAspect = @"org.alfresco.mobile.internal.cache.definition.aspect";
+NSTimeInterval const kAlfrescoSessionExpirationTimeIntervalCheck = 20;
 // Temporary for ACE-1445
 NSString * const kAlfrescoSessionAlternatePersonIdentifier = @"org.alfresco.mobile.internal.session.personIdentifier";
 
