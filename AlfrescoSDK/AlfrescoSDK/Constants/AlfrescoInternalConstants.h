@@ -102,6 +102,7 @@ extern NSString * const kAlfrescoSessionCacheFavorites;
 extern NSString * const kAlfrescoSessionCacheDefinitionType;
 extern NSString * const kAlfrescoSessionCacheDefinitionAspect;
 extern NSString * const kAlfrescoSessionAlternatePersonIdentifier;
+extern NSTimeInterval const kAlfrescoSessionExpirationTimeIntervalCheck;
 
 extern NSString * const kAlfrescoSiteIsFavorite;
 extern NSString * const kAlfrescoSiteIsMember;
