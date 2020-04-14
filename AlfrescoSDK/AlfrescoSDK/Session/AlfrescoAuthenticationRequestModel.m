@@ -190,6 +190,7 @@ typedef NS_ENUM(NSUInteger, AuthenticationRequestType) {
         case AuthenticationRequestTypeBasicAuth:
         {
             cmisSessionParams.username = self.username;
+            cmisSessionParams.password = self.password;
         }
             break;
             
