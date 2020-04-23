@@ -400,3 +400,10 @@ typedef NS_ENUM(NSInteger, AlfrescoCloudConnectionStatus)
     AlfrescoCloudConnectionStatusActive,
     AlfrescoCloudConnectionStatusGotAuthCode
 };
+
+/**---------------------------------------------------------------------------------------
+* @name Payload Token Keys Constants
+--------------------------------------------------------------------------------------- */
+
+extern NSString * const kAlfrescoPayloadToken;
+extern NSString * const kAlfrescoPayloadTokenUsername;

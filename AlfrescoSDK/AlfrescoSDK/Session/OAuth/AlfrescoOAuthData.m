@@ -30,6 +30,7 @@
 @property (nonatomic, strong, readwrite) NSString           * redirectURI;
 @property (nonatomic, strong, readwrite) NSString           * sessionState;
 @property (nonatomic, strong, readwrite) NSNumber           * refreshTokenExpiresIn;
+@property (nonatomic, strong, readwrite) NSDictionary       * payloadToken;
 @end
 
 @implementation AlfrescoOAuthData
@@ -39,7 +40,8 @@
  accessTokenExpiresIn:(NSNumber *)expiresIn
          refreshToken:(NSString *)refreshToken
 refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
-           sessionState:(NSString *)sessionState
+         sessionState:(NSString *)sessionState
+         payloadToken:(NSDictionary *)payloadToken
 {
     self = [super init];
     
@@ -55,6 +57,7 @@ refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
         self.apiKey = nil;
         self.secretKey = nil;
         self.redirectURI = nil;
+        self.payloadToken = payloadToken;
     }
     
     return self;
@@ -101,6 +104,11 @@ refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
     return self;
 }
 
+- (NSString*)usernameFromPayloadToken
+{
+    return self.payloadToken[kAlfrescoPayloadToken][kAlfrescoPayloadTokenUsername];
+}
+
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     if (nil != self.apiKey)
@@ -143,6 +151,10 @@ refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
     {
         [aCoder encodeObject:self.scope forKey:@"refreshTokenExpiresIn"];
     }
+    if (nil != self.payloadToken)
+    {
+        [aCoder encodeObject:self.scope forKey:@"payloadToken"];
+    }
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -158,6 +170,7 @@ refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
     NSString *scope = [aDecoder decodeObjectForKey:@"scope"];
     NSString *sessionState = [aDecoder decodeObjectForKey:@"sessionState"];
     NSNumber *refreshTokenExpiresIn = [aDecoder decodeObjectForKey:@"refreshTokenExpiresIn"];
+    NSDictionary *payloadToken = [aDecoder decodeObjectForKey:@"payloadToken"];
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     if (nil != accessToken)
@@ -182,7 +195,7 @@ refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
     }
     if (nil != sessionState)
     {
-        return [self initWithTokenType:tokenType accessToken:accessToken accessTokenExpiresIn:expiresIn refreshToken:refreshToken refreshTokenExpiresIn:refreshTokenExpiresIn sessionState:sessionState];
+        return [self initWithTokenType:tokenType accessToken:accessToken accessTokenExpiresIn:expiresIn refreshToken:refreshToken refreshTokenExpiresIn:refreshTokenExpiresIn sessionState:sessionState payloadToken:payloadToken];
     }
     
     if (0 < dictionary.count)
