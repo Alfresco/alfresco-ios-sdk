@@ -35,6 +35,7 @@
 @property (nonatomic, strong, readonly) NSString * redirectURI;
 @property (nonatomic, strong, readonly) NSString * sessionState;
 @property (nonatomic, strong, readonly) NSNumber * refreshTokenExpiresIn;
+@property (nonatomic, strong, readonly) NSDictionary * payloadToken;
 
 /**---------------------------------------------------------------------------------------
  * @name Initialisers for OAuth data
@@ -51,7 +52,8 @@
    accessTokenExpiresIn:(NSNumber *)expiresIn
            refreshToken:(NSString *)refreshToken
   refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
-           sessionState:(NSString *)sessionState;
+           sessionState:(NSString *)sessionState
+           payloadToken:(NSDictionary *)payloadToken;
 
 
 /**---------------------------------------------------------------------------------------
@@ -99,4 +101,7 @@
            secretKey:(NSString *)secretKey
          redirectURI:(NSString *)redirectURI
       jsonDictionary:(NSDictionary *)jsonDictionary;
+
+- (NSString*)usernameFromPayloadToken;
+
 @end

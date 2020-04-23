@@ -433,3 +433,10 @@ NSString * const kAlfrescoPersonPropertyCompanyEmail = @"companyEmail";
 
 NSString * const kAlfrescoDefaultBackgroundNetworkSessionId = @"Alfresco-iOS-SDK";
 NSString * const kAlfrescoDefaultBackgroundNetworkSessionSharedContainerId = @"Alfresco-iOS-SDK-Container";
+
+/**
+ Payload Token Keys Constants
+*/
+
+NSString * const kAlfrescoPayloadToken = @"payload";
+NSString * const kAlfrescoPayloadTokenUsername = @"preferred_username";

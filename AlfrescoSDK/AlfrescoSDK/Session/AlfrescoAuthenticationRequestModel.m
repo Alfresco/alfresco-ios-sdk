@@ -206,7 +206,7 @@ typedef NS_ENUM(NSUInteger, AuthenticationRequestType) {
             id<AlfrescoAuthenticationProvider> authProvider = [[AlfrescoOAuthAuthenticationProvider alloc] initWithOAuthData:self.oauthData];
             AlfrescoCMISPassThroughAuthenticationProvider *passthroughAuthProvider = [[AlfrescoCMISPassThroughAuthenticationProvider alloc] initWithAlfrescoAuthenticationProvider:authProvider];
             
-            cmisSessionParams.username = kAlfrescoMe;
+            cmisSessionParams.username = [self.oauthData usernameFromPayloadToken];
             cmisSessionParams.authenticationProvider = passthroughAuthProvider;
         }
             
