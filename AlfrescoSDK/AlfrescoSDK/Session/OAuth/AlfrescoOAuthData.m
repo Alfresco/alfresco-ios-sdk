@@ -145,15 +145,15 @@ refreshTokenExpiresIn:(NSNumber *)refreshTokenExpiresIn
     }
     if (nil != self.sessionState)
     {
-        [aCoder encodeObject:self.scope forKey:@"sessionState"];
+        [aCoder encodeObject:self.sessionState forKey:@"sessionState"];
     }
     if (nil != self.refreshTokenExpiresIn)
     {
-        [aCoder encodeObject:self.scope forKey:@"refreshTokenExpiresIn"];
+        [aCoder encodeObject:self.refreshTokenExpiresIn forKey:@"refreshTokenExpiresIn"];
     }
     if (nil != self.payloadToken)
     {
-        [aCoder encodeObject:self.scope forKey:@"payloadToken"];
+        [aCoder encodeObject:self.payloadToken forKey:@"payloadToken"];
     }
 }
 
