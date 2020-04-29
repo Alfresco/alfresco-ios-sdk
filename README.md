@@ -16,7 +16,7 @@ More information about Alfresco's various Mobile offerings is on [our website](h
 
 A Note About Dependent Frameworks
 ---------------------------------
-Alfresco iOS SDK v1.3 contains code that checks for network connectivity. This introduces a dependency on the `SystemConfiguration.framework` which your own project will need to link to.
+Alfresco iOS SDK v1.5.1 contains code that checks for network connectivity. This introduces a dependency on the `SystemConfiguration.framework` which your own project will need to link to.
 
 The [LLVM compiler in Xcode 5](https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/WhatsNewXcode/Articles/xcode_5_0.html#//apple_ref/doc/uid/TP40012953-SW27) introduces an Auto Linking feature which makes linking system frameworks much simpler: simply search for and change the **Enable Modules (C and Objective-C)** setting in your project's configuration to **YES**. This setting is on by default for projects created with Xcode 5, so you may find it is already set.
 
