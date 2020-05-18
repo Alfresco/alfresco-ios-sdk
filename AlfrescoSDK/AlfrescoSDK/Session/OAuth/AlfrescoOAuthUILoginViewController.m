@@ -151,10 +151,10 @@
     {
         self.webView = nil;
     }
-    self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+    self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
     self.webView.translatesAutoresizingMaskIntoConstraints = NO;
     self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.webView.delegate = self;
+    self.webView.navigationDelegate = self;
     if (@available(iOS 11.0, *))
     {
         [self.webView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
@@ -239,9 +239,9 @@
     self.isLoginScreenLoad = YES;
 }
 
-#pragma WebViewDelegate methods
+#pragma WKwebview methods
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [self.activityIndicator stopAnimating];
     if (self.webView.loading)
@@ -263,27 +263,26 @@
         /**
          * Additional post-load steps if the current device is an iPad (not enough room on iPhones to see explanation text)
          *      Remove top margin on <ul> tag
-         *      Autofocus the username field and set UIWebView flag to ensure keyboard shows
+         *      Autofocus the username field and set WKWebView flag to ensure keyboard shows
          */
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
         {
-            webView.keyboardDisplayRequiresUserAction = NO;
             // Note: order matters
             javascript = [NSString stringWithFormat:@"document.getElementsByTagName('ul')[0].style.marginTop = 0; %@ u.focus(); ", javascript];
         }
-        
-        [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"void function(){ try { %@ } catch(e){} }();", javascript]];
+        [webView evaluateJavaScript:[NSString stringWithFormat:@"void function(){ try { %@ } catch(e){} }();", javascript] completionHandler:nil];
     }
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    switch (navigationType)
+    switch (navigationAction.navigationType)
     {
-        case UIWebViewNavigationTypeFormSubmitted:
+        case WKNavigationTypeFormSubmitted:
             self.isLoginScreenLoad = NO;
             break;
-        case UIWebViewNavigationTypeFormResubmitted:
+        case WKNavigationTypeFormResubmitted:
             self.isLoginScreenLoad = NO;
             break;
             
@@ -293,7 +292,7 @@
     
     if (!self.isLoginScreenLoad)
     {
-        NSArray *requestComponents = [[[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding] componentsSeparatedByString:@"&"];
+        NSArray *requestComponents = [[[NSString alloc] initWithData:navigationAction.request.HTTPBody encoding:NSUTF8StringEncoding] componentsSeparatedByString:@"&"];
         
         if ([requestComponents containsObject:kAlfrescoOAuthRequestDenyAction])
         {
@@ -317,23 +316,18 @@
             [self.activityIndicator startAnimating];
             self.cloudConnectionStatus = AlfrescoCloudConnectionStatusActive;
             // MOBILE-3345: Workaround for regression in iOS 8.3
-            NSMutableURLRequest *oauthRequest = [request mutableCopy];
+            NSMutableURLRequest *oauthRequest = [navigationAction.request mutableCopy];
             [oauthRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
             self.connection = [NSURLConnection connectionWithRequest:oauthRequest delegate:self];
         }
-        return NO;
+        decisionHandler(WKNavigationActionPolicyCancel);
     }
-    return YES;
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    AlfrescoLogDebug(@"UIWebviewDelegate webViewDidStartLoad");
-}
-
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
-    AlfrescoLogError(@"UIWebviewDelegate didFailLoadWithError");
+    AlfrescoLogError(@"WKWebviewDelegate didFailLoadWithError");
     AlfrescoLogError(@"Error occurred while loading page: %@ with code %d and reason %@", [error localizedDescription], [error code], [error localizedFailureReason]);
     if (nil != self.oauthDelegate)
     {
@@ -349,10 +343,14 @@
     }
     else
     {
-        [self reloadAndReset];        
+        [self reloadAndReset];
     }
 }
 
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
+{
+    AlfrescoLogDebug(@"WKWebviewDelegate webViewDidStartLoad");
+}
 #pragma NSURLConnection Delegate methods
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data

@@ -22,14 +22,16 @@
 #import "AlfrescoConstants.h"
 #import "AlfrescoOAuthLoginDelegate.h"
 
+@import WebKit;
+
 /** The AlfrescoOAuthUILoginViewController starts the OAuth authentication processes.
  
  Author: Gavin Cornwell (Alfresco), Tijs Rademakers (Alfresco), Peter Schmidt (Alfresco), Tauseef Mughal (Alfresco)
  */
 
-@interface AlfrescoOAuthUILoginViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+@interface AlfrescoOAuthUILoginViewController : UIViewController <WKNavigationDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 /// @param webView - holds the login HTML page
-@property (nonatomic, strong) UIWebView * webView;
+@property (nonatomic, strong) WKWebView * webView;
 /// @param activityIndicator - indicates loading process
 @property (nonatomic, strong) UIActivityIndicatorView * activityIndicator;
 /// @param oauthDelegate - call back for when things go wrong
