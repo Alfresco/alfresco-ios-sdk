@@ -24,9 +24,11 @@
 #import "AlfrescoLog.h"
 #import "AlfrescoSAMLAuthHelper.h"
 
-@interface AlfrescoSAMLUILoginViewController () <UIWebViewDelegate>
+@import WebKit;
 
-@property (nonatomic, strong) IBOutlet UIWebView *webView;
+@interface AlfrescoSAMLUILoginViewController () <WKNavigationDelegate>
+
+@property (nonatomic, strong) IBOutlet WKWebView *webView;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic) BOOL searchForResponse;
 @property (nonatomic, strong) NSString *baseURL;
@@ -77,48 +79,59 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-#pragma mark - UIWebViewDelegate methods
+#pragma mark - WKWebViewDelegate methods
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    if([request.URL.absoluteString containsString:kAlfrescoSAMLAuthenticateResponseSufix])
+    if([navigationAction.request.URL.absoluteString containsString:kAlfrescoSAMLAuthenticateResponseSufix])
     {
         self.searchForResponse = YES;
     }
-    return YES;
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [self.activityIndicator stopAnimating];
     
     if(self.searchForResponse)
     {
         self.webView.hidden = YES;
-        
-        NSString *html = [webView stringByEvaluatingJavaScriptFromString:@"document.body.getElementsByTagName('pre')[0].innerHTML"];
-        NSData *jsonData = [html dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
-        NSError *error;
-        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:&error];
-        if(jsonDict && jsonDict[@"entry"][@"id"])
-        {
-            NSString *ticket = jsonDict[@"entry"][@"id"];
-            NSString *userID = jsonDict[@"entry"][@"userId"];
-            AlfrescoSAMLTicket *samlTicket = [[AlfrescoSAMLTicket alloc] initWithTicket:ticket userID:userID];
-            AlfrescoSAMLData *samlData = [[AlfrescoSAMLData alloc] initWithSamlInfo:nil samlTicket:samlTicket];
-            [self performCompletionBlockWithSAMLData:samlData andError:nil];
-        }
-        else
-        {
-            NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSAMLDataMissing];
-            [self performCompletionBlockWithSAMLData:nil andError:error];
-        }
+        __weak typeof(self) weakSelf = self;
+        [webView evaluateJavaScript:@"document.body.getElementsByTagName('pre')[0].innerHTML"
+                  completionHandler:^(id result, NSError *errorWebview) {
+            __strong typeof(self) strongSelf = weakSelf;
+            NSString *html = @"";
+            if (errorWebview == nil) {
+                if (result != nil) {
+                    html = [NSString stringWithFormat:@"%@", result];
+                }
+            } else {
+                AlfrescoLogError(@"evaluateJavaScript error : %@", errorWebview.localizedDescription);
+            }
+            NSData *jsonData = [html dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
+            NSError *error;
+            NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:&error];
+            if(jsonDict && jsonDict[@"entry"][@"id"])
+            {
+                NSString *ticket = jsonDict[@"entry"][@"id"];
+                NSString *userID = jsonDict[@"entry"][@"userId"];
+                AlfrescoSAMLTicket *samlTicket = [[AlfrescoSAMLTicket alloc] initWithTicket:ticket userID:userID];
+                AlfrescoSAMLData *samlData = [[AlfrescoSAMLData alloc] initWithSamlInfo:nil samlTicket:samlTicket];
+                [strongSelf performCompletionBlockWithSAMLData:samlData andError:nil];
+            }
+            else
+            {
+                NSError *error = [AlfrescoErrors alfrescoErrorWithAlfrescoErrorCode:kAlfrescoErrorCodeSAMLDataMissing];
+                [strongSelf performCompletionBlockWithSAMLData:nil andError:error];
+            }
+        }];
     }
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    AlfrescoLogError(@"UIWebViewDelegate didFailLoadWithError");
+    AlfrescoLogError(@"WKWebViewDelegate didFailLoadWithError");
     AlfrescoLogError(@"Error occurred while loading page: %@ with code %d and reason %@", [error localizedDescription], [error code], [error localizedFailureReason]);
     [self.activityIndicator stopAnimating];
     [self performCompletionBlockWithSAMLData:nil andError:error];
@@ -132,10 +145,10 @@
     {
         self.webView = nil;
     }
-    self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+    self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
     self.webView.translatesAutoresizingMaskIntoConstraints = NO;
     self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.webView.delegate = self;
+    self.webView.navigationDelegate = self;
     if (@available(iOS 11.0, *))
     {
         [self.webView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
